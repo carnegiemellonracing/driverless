@@ -1,0 +1,1000 @@
+ 1045  kill -1 80974
+ 1046  kill -11 80974
+ 1047  ps
+ 1048  kill -13 80974
+ 1049  ps
+ 1050  kill -p 9 80974
+ 1051  kill 9 80974
+ 1052  kill -9 80974
+ 1053  ps
+ 1054  vim src/cmrdv_perceptions/cmrdv_perceptions/StereoCamNode.py 
+ 1055  clear
+ 1056  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1057  vim src/cmrdv_perceptions/cmrdv_perceptions/StereoCamNode.py 
+ 1058  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1059  vim src/cmrdv_perceptions/cmrdv_perceptions/StereoCamNode.py 
+ 1060  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1061  vim src/cmrdv_perceptions/cmrdv_perceptions/StereoCamNode.py 
+ 1062  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1063  vim src/cmrdv_perceptions/cmrdv_perceptions/StereoCamNode.py 
+ 1064  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1065  vim src/cmrdv_perceptions/cmrdv_perceptions/StereoCamNode.py 
+ 1066  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1067  vim src/cmrdv_perceptions/cmrdv_perceptions/StereoCamNode.py 
+ 1068  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1069  vim src/cmrdv_perceptions/cmrdv_perceptions/StereoCamNode.py 
+ 1070  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1071  vim src/cmrdv_perceptions/cmrdv_perceptions/StereoCamNode.py 
+ 1072  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1073  cat src/cmrdv_common/cmrdv_common/config/perceptions_config.py 
+ 1074  cat src/cmrdv_common/cmrdv_common/config/collection_config.py 
+ 1075  ros2 topic echo /data_time_sync
+ 1076  ros2 topic list
+ 1077  ros2 node list
+ 1078  ros2 topic hz /data_time_sync
+ 1079  ros2 topic echo /data_time_sync
+ 1080  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1081  vim src/cmrdv_perceptions/utils.py 
+ 1082  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1083  vim src/cmrdv_perceptions/stereo_vision/predict.py 
+ 1084  cat src/cmrdv_common/cmrdv_common/config/perceptions_config.py 
+ 1085  cat src/cmrdv_common/cmrdv_common/config/collection_config.py 
+ 1086  ros2 topic list
+ 1087  :q
+ 1088  ros2 topic info
+ 1089  ros2 topic info /data_time_sync
+ 1090  cat src/cmrdv_interfaces/msg/DataFrame.msg 
+ 1091  ros2 topic echo /zed2/zed_node/point_cloud/cloud_registered
+ 1092  rviz2
+ 1093  clear
+ 1094  ros2 topic list
+ 1095  rviz2
+ 1096  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1097  clear
+ 1098  cat src/cmrdv_interfaces/msg/DataFrame.msg 
+ 1099  ls
+ 1100  vim src/cmrdv_perceptions/stereo_vision/predict.py 
+ 1101  ls
+ 1102  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1103  vim src/cmrdv_perceptions/stereo_vision/predict.py 
+ 1104  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1105  vim src/cmrdv_common/cmrdv_common/conversions.py 
+ 1106  vim src/cmrdv_perceptions/stereo_vision/predict.py 
+ 1107  colcon build && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1108  cler
+ 1109  colcon build --packages-select cmrdv_perceptions && source install/setup.bash && ros2 run cmrdv_perceptions stereo_vision 
+ 1110  ls
+ 1111  vim src/cmrdv_perceptions/stereo_vision/predict.py 
+ 1112  git branch
+ 1113  git add .
+ 1114  git commit -m "Have a good day"
+ 1115  git push
+ 1116  git checkout 88-software-19a-brakes 
+ 1117  git pull
+ 1118  ls
+ 1119  cd src/cmrdv_actuators/
+ 1120  ls
+ 1121  cd cmrdv_actuators/
+ 1122  ls
+ 1123  potent_test.py
+ 1124  python3 potent_test.py
+ 1125  vim potent_test.py 
+ 1126  ls
+ 1127  vim potent_test.py 
+ 1128  python3 potent_test.py
+ 1129  pip3 adafruit_ads1x15
+ 1130  pip3 install adafruit_ads1x15
+ 1131  python3 potent_test.py
+ 1132  sudo pip3 install adafruit_ads1x15
+ 1133  python3 potent_test.py
+ 1134  pip3 list
+ 1135  sudo pip3 install Adafruit-ADS1x15
+ 1136  sudo pip3 install Adafruit-circuitpython-ads1x15
+ 1137  python3 potent_test.py
+ 1138  vim driver_board.py 
+ 1139  python3 potent_test.py
+ 1140  vim driver_board.py 
+ 1141  python3 potent_test.py
+ 1142  vim driver_board.py 
+ 1143  python3 potent_test.py
+ 1144  vim driver_board.py 
+ 1145  python3 potent_test.py
+ 1146  vim driver_board.py 
+ 1147  vim potent_test.py 
+ 1148  python3 potent_test.py
+ 1149  python3 brakes_node.py 
+ 1150  vim brakes_node.py 
+ 1151  python3 brakes_node.py 
+ 1152  vim brakes_node.py 
+ 1153  python3 brakes_node.py 
+ 1154  vim brakes_node.py 
+ 1155  python3 brakes_node.py 
+ 1156  vim brakes_node.py 
+ 1157  python3 brakes_node.py 
+ 1158  colcon build
+ 1159  cd ..
+ 1160  ls
+ 1161  cd ..
+ 1162  cd cmrdv_actuators/
+ 1163  ls
+ 1164  rm -rf build install log
+ 1165  ls
+ 1166  cd ..
+ 1167  colcon build
+ 1168  source install/setup.bash
+ 1169  ros2 run
+ 1170  ros2 run cmrdv_actuators brakes_node
+ 1171  cd src/cmrdv_actuators/cmrdv_actuators/
+ 1172  ls
+ 1173  cd ..
+ 1174  ls
+ 1175  vim setup.
+ 1176  vim setup.py 
+ 1177  cd ..
+ 1178  cd cmrdv_ws/
+ 1179  ls
+ 1180  ros2 run cmrdv_actuators brakes
+ 1181  ros2 run cmrdv_actuators brake
+ 1182  ls
+ 1183  colcon build
+ 1184  source install/setup.bash
+ 1185  ros2 run cmrdv_actuators brakes_node
+ 1186  ros2 run cmrdv_actuators brake
+ 1187  colcon build
+ 1188  source install/setup.bash
+ 1189  ros2 run cmrdv_actuators brake
+ 1190  colcon build --packages-select
+ 1191  colcon build --packages-select cmrdv_actuators
+ 1192  source install/setup.bash
+ 1193  ros2 run cmrdv_actuators brake
+ 1194  colcon build --packages-select cmrdv_actuators
+ 1195  colcon build --packages-select cmrdv_actuators && . install/setup.bash && ros2 run cmrdv_actuators brake
+ 1196  colcon build --packages-select cmrdv_actuators && . install/setup.bash && ros2 run cmrdv_actuators brake\
+ 1197  colcon build --packages-select cmrdv_actuators && . install/setup.bash && ros2 run cmrdv_actuators brake
+ 1198  colcon build
+ 1199  source install/setup.bash
+ 1200  ros2 run cmrdv_actuators brake
+ 1201  colcon build
+ 1202  source install/setup.bash
+ 1203  ros2 run cmrdv_actuators brake
+ 1204  colcon build --packages-select cmrdv_actuators && . install/setup.bash && ros2 run cmrdv_actuators brake
+ 1205  git add .
+ 1206  git commit -m "69-nice"
+ 1207  git push
+ 1208  ls
+ 1209  cd Documents/cmr-fsdv/cmrdv_ws/
+ 1210  ls
+ 1211  pwd
+ 1212  nano ~/.bashrc
+ 1213  source ~/.bashrc
+ 1214  source_ws
+ 1215  zed_launch
+ 1216  ls
+ 1217  cd src
+ 1218  ls
+ 1219  cd zed-ros2-wrapper/
+ 1220  ls
+ 1221  cd zed_wrapper/
+ 1222  ls
+ 1223  cd launch/
+ 1224  ls
+ 1225  nano ~/.bashrc
+ 1226  source ~/.bashrc
+ 1227  source_ws
+ 1228  zed_launch
+ 1229  source_ws
+ 1230  ls
+ 1231  cd Documents/
+ 1232  ls
+ 1233  cd cmr-fsdv/
+ 1234  ls
+ 1235  cd cmrdv_ws/
+ 1236  ls
+ 1237  source install/setup.bash 
+ 1238  ros2 run cmrdv_collection data_collection
+ 1239  ros2 run cmrdv_collection collection_node
+ 1240  ls
+ 1241  cd src
+ 1242  ls
+ 1243  cd cmrdv_collection/
+ 1244  ls
+ 1245  nano setup.py
+ 1246  git branch
+ 1247  git checkout 127-perceptions-collection-data-buffer 
+ 1248  cd ../..
+ 1249  ls
+ 1250  colcon build
+ 1251  source install/setup.bash 
+ 1252  ros2 run cmrdv_collection data_collection 
+ 1253  cd ..
+ 1254  ls
+ 1255  cd cmrdv_ws/
+ 1256  ls
+ 1257  nano ~/.bashrc
+ 1258  y
+ 1259  ls
+ 1260  cd Documents/
+ 1261  ls
+ 1262  cd cmr-fsdv/
+ 1263  ls
+ 1264  cd cmrdv_ws/
+ 1265  ls
+ 1266  source install/setup.bash 
+ 1267  colcon build 
+ 1268  source install/setup.bash 
+ 1269  ls
+ 1270  cd src/velodyne/
+ 1271  ls
+ 1272  cd velodyne
+ 1273  ls
+ 1274  cd launch/
+ 1275  ls
+ 1276  nano ~/.bashrc
+ 1277  ls
+ 1278  nano ~/.bashrc
+ 1279  cd ../../..
+ 1280  ls
+ 1281  cd zed-ros2-wrapper/
+ 1282  ls
+ 1283  cd zed_wrapper/
+ 1284  ls
+ 1285  cd launch/
+ 1286  ls
+ 1287  nano ~/.bashrc
+ 1288  source ~/.bashrc
+ 1289  cd ../../.
+ 1290  ls
+ 1291  cd ../..
+ 1292  ls
+ 1293  colcon build
+ 1294  source install/setup.bash
+ 1295  velodyne_launch
+ 1296  ros2 topic hz /data_time_sync
+ 1297  clear
+ 1298  ls
+ 1299  clear
+ 1300  nvidia
+ 1301  nvidia-smi
+ 1302  clear
+ 1303  lspci | grep NVIDIA
+ 1304  pytho3
+ 1305  python3
+ 1306  python3 pip freeze
+ 1307  python3 -m pip freeze
+ 1308  clea
+ 1309  clear
+ 1310  pythonb3
+ 1311  pythonn3
+ 1312  python3
+ 1313  clear
+ 1314  nvidia-smi
+ 1315  lspci
+ 1316  lspci | grep NVIDIA
+ 1317  optirun
+ 1318  clear
+ 1319  nvidia-settings
+ 1320  nvgpu
+ 1321  clear
+ 1322  c;lear
+ 1323  clear
+ 1324  hostname
+ 1325  nvcc
+ 1326  clrea
+ 1327  clear
+ 1328  nvcc --version
+ 1329  python3 -m pip freeze torch
+ 1330  cd ~/Desktop/
+ 1331  ls
+ 1332  clear
+ 1333  ls
+ 1334  python
+ 1335  clera
+ 1336  python3
+ 1337  python3 -m pip uninstall torch
+ 1338  python3 -m pip install torch-1.11.0-cp38-cp38-linux_aarch64.whl 
+ 1339  python3
+ 1340  python3 -m pip freeze
+ 1341  clear
+ 1342  python3
+ 1343  clear
+ 1344  ls
+ 1345  clear
+ 1346  nvcc --version
+ 1347  python3 -m pip uninstall torch
+ 1348  python3 -m pip uninstall torchvision
+ 1349  python3 -m pip install torch torchvision
+ 1350  python3
+ 1351  python3 -m pip version
+ 1352  python3 -m pip --version
+ 1353  python3 -m pip uninstall torch torchvision
+ 1354  clear
+ 1355  python3 -m pip install --no-cache-dir torch torchvision
+ 1356  python3 -m pip uninstall torch torchvision
+ 1357  python3 -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+ 1358  python3
+ 1359  ls'
+ 1360  ls
+ 1361  python3 -m pip uninstall torch
+ 1362  python3
+ 1363  python3 -m pip install torch-1.11.0-cp38-cp38-linux_aarch64.whl 
+ 1364  clear
+ 1365  python3 -m pip uninstall torch torchvision
+ 1366  clear
+ 1367  python3 -m pip install --no-cache https://developer.download.nvidia.cn/compute/redist/jp/v51/pytorch/torch-1.14.0a0+44dac51c.nv23.02-cp38-cp38-linux_aarch64.whl
+ 1368  python3
+ 1369  clea
+ 1370  python3
+ 1371  clear
+ 1372  python3 -m pip freeze
+ 1373  python3 -m pip install --no-cache-dir torchvision
+ 1374  python3
+ 1375  ls
+ 1376  clear
+ 1377  ls
+ 1378  python3 -m pip install torch-1.11.0-cp38-cp38-linux_aarch64.whl 
+ 1379  python3 -m pip install torchvision==0.12.0
+ 1380  python3
+ 1381  clear
+ 1382  ls
+ 1383  cat src/cmrdv_interfaces/msg/DataFrame.msg 
+ 1384  vim src/cmrdv_perceptions/utils.py 
+ 1385  vim src/cmrdv_perceptions/utils.py
+ 1386  ls
+ 1387  clear
+ 1388  ls
+ 1389  source install/setup.bash
+ 1390  ros2 launch velodyne velodyne-all-nodes-VLP16-launch.py 
+ 1391  tcpdump
+ 1392  sudo tcpdump
+ 1393  clear
+ 1394  ros2 launch velodyne velodyne-all-nodes-VLP16-launch.py 
+ 1395  cd ../Documents/
+ 1396  ls
+ 1397  clera
+ 1398  ls
+ 1399  cd cmr-fsdv/
+ 1400  ls
+ 1401  clear
+ 1402  ls
+ 1403  clear
+ 1404  ls
+ 1405  git branch
+ 1406  clearf
+ 1407  clear
+ 1408  ls
+ 1409  cd cmrdv_ws
+ 1410  ls
+ 1411  clear
+ 1412  ls
+ 1413  ls src/zed-ros2-wrapper/
+ 1414  history
+ 1415  ls
+ 1416  colcon build
+ 1417  l
+ 1418  cd ~
+ 1419  cd 
+ 1420  cd Desktop/
+ 1421  history > tmp.txt
+ 1422  vim tmp.txt 
+ 1423  rm tmp.txt 
+ 1424  ls
+ 1425  clear
+ 1426  ls
+ 1427  cd ..
+ 1428  ls
+ 1429  cd Documents/cmr-fsdv/
+ 1430  ls
+ 1431  cd cmrdv_ws/
+ 1432  ls
+ 1433  clear
+ 1434  ls
+ 1435  cd src/
+ 1436  ls
+ 1437  cd zed-ros2-wrapper/
+ 1438  ls
+ 1439  cd zed_wrapper]
+ 1440  cd zed_wrapper
+ 1441  ls
+ 1442  ls launch
+ 1443  cd ..
+ 1444  ls
+ 1445  cd ..ls
+ 1446  cd ..
+ 1447  ls
+ 1448  cd velodyne
+ 1449  ls
+ 1450  cd velodyne
+ 1451  ls
+ 1452  ls launc
+ 1453  ls launch/
+ 1454  ls
+ 1455  clear
+ 1456  ls
+ 1457  cd ..
+ 1458  ls
+ 1459  cd ..
+ 1460  ls
+ 1461  clear
+ 1462  l
+ 1463  clear
+ 1464  cd ll
+ 1465  ..
+ 1466  cd ..
+ 1467  ls
+ 1468  clear
+ 1469  ls
+ 1470  vim install/setup.bash
+ 1471  ls
+ 1472  clear
+ 1473  source install/setup.bash
+ 1474  clear
+ 1475  ros2 launch zed_wrapper zed.launch.py
+ 1476  ;s
+ 1477  c;ear
+ 1478  clear
+ 1479  ros2 launch zed_wrapper zed2.launch.py 
+ 1480  ls
+ 1481  clear
+ 1482  ls
+ 1483  clear
+ 1484  ls
+ 1485  source install/setup.bash
+ 1486  clear
+ 1487  ros2 run cmrdv_collection data_collection
+ 1488  clear
+ 1489  source ~/.bashrc
+ 1490  clear
+ 1491  ros2 run cmrdv_collection data_collection
+ 1492  clear
+ 1493  ros2 run cmrdv_collection data_collection\
+ 1494  clear
+ 1495  ros2 run cmrdv_collection data_collection
+ 1496  clear
+ 1497  ls
+ 1498  vim src/cmrdv_collection/cmrdv_collection/collection_node.py 
+ 1499  clear
+ 1500  ls
+ 1501  source install/setup.bash
+ 1502  clear
+ 1503  ls
+ 1504  clear
+ 1505  ros2 run cmrdv_collection data_collection 
+ 1506  touch goals.tx
+ 1507  rm goals.tx 
+ 1508  touch goals.txt
+ 1509  vim goals.txt 
+ 1510  ls
+ 1511  source_ws
+ 1512  ls
+ 1513  cd Documents/
+ 1514  ls
+ 1515  cd cmr-fsdv/
+ 1516  ls
+ 1517  cd cmrdv_ws/
+ 1518  ls
+ 1519  ros2 run cmrdv_perceptions stereo_vision
+ 1520  pip3 list | grep -i torch
+ 1521  pip3 install torch==1.7.0
+ 1522  pip3 install torch==1.8.0
+ 1523  pip3 list | grep -i torch
+ 1524  pip3 install torchvision==0.9.0
+ 1525  cd ~
+ 1526  ls
+ 1527  cd ..
+ 1528  ls
+ 1529  cd ..
+ 1530  ls
+ 1531  cd usr/src
+ 1532  ls
+ 1533  git clone https://github.com/pytorch/vision.git
+ 1534  sudo git clone https://github.com/pytorch/vision.git
+ 1535  ls
+ 1536  sudo git clone https://github.com/pytorch/vision.git -b v0.8.1
+ 1537  git branch
+ 1538  ls
+ 1539  cd vision
+ 1540  git branch
+ 1541  python3 setup.py install
+ 1542  sudo python3 setup.py install
+ 1543  pip3 list | grep -i torch
+ 1544  export FORCE_CUDA=1
+ 1545  FORCE_CUDA
+ 1546  $FORCE_CUDA
+ 1547  echo FORCE_CUDA
+ 1548  python3
+ 1549  pip3 uninstall torch
+ 1550  pip3 uninstall torchvision
+ 1551  pip3 list | grep -i torch
+ 1552  pip3 install torch
+ 1553  pip3 install torchvision
+ 1554  python3
+ 1555  pip3 list
+ 1556  nvcc --version
+ 1557  nvidia-sml
+ 1558  nviddia-sml
+ 1559  nvidia-sml
+ 1560  nvidia-smi
+ 1561  python3
+ 1562  pip3 uninstall torch
+ 1563  pip3 cache purge
+ 1564  pip3 check purge
+ 1565  pip3 purge
+ 1566  pip3 install torch -f https://download.pytorch.org/whl/torch_stable.html
+ 1567  python3
+ 1568  nvcc --version
+ 1569  cat /etc/nv_tegra_release
+ 1570  wget https://nvidia.box.com/shared/static/p57jwntv436lfrd78inwl7iml6p13fzh.whl -O torch-1.12.0a0+2c916ef.nv22.3-cp38-cp38-linux_aarch64.whl
+ 1571  cd ~/Documents/
+ 1572  ls
+ 1573  wget https://nvidia.box.com/shared/static/p57jwntv436lfrd78inwl7iml6p13fzh.whl -O torch-1.12.0a0+2c916ef.nv22.3-cp38-cp38-linux_aarch64.whl
+ 1574  sudo apt-get install python3-pip libopenblas-base libopenmpi-dev libomp-dev
+ 1575  pip3 install Cython
+ 1576  pip3 install numpy torch-1.8.0-cp36-cp36m-linux_aarch64.whl
+ 1577  ;s
+ 1578  ls
+ 1579  pip3 install numpy torch-1.12.0a0+2c916ef.nv22.3-cp38-cp38-linux_aarch64.whl
+ 1580  pip3 install torchvision==0.9.0
+ 1581  python3
+ 1582  pip3 list
+ 1583  python3
+ 1584  nano ~/.bashrc
+ 1585  ls
+ 1586  cd Documents/
+ 1587  ls
+ 1588  cd cmr-fsdv/
+ 1589  ls
+ 1590  cd cmrdv_ws/
+ 1591  ls
+ 1592  colcon build
+ 1593  source install/setup.bash 
+ 1594  ros2 run cmrdv_collection data_collection 
+ 1595  git branch
+ 1596  ls
+ 1597  cd src/
+ 1598  ls
+ 1599  cd cmrdv_collection/
+ 1600  ls
+ 1601  cd cmrdv_collection/
+ 1602  ls
+ 1603  nano collection_node.py 
+ 1604  source ~/.bashrc
+ 1605  cd ../../..
+ 1606  ls
+ 1607  ros2 run cmrdv_collection data_collection 
+ 1608  source_ws
+ 1609  velodyne_launch
+ 1610  source_ws
+ 1611  zed_launch
+ 1612  git pull
+ 1613  ls
+ 1614  git status
+ 1615  ls
+ 1616  cd cmrdv_ws/
+ 1617  ls
+ 1618  colcon build
+ 1619  source install/setup.bas
+ 1620  ros2 run cmrdv_actuators cmrd_actuators
+ 1621  ros2 run cmrdv_actuators brake
+ 1622  source ~/.bashrc
+ 1623  ros2 run cmrdv_actuators brake
+ 1624  git branch
+ 1625  git checkout 88-software-19a-brakes 
+ 1626  git pull
+ 1627  colcon build
+ 1628  source install/setup.bash
+ 1629  ros2 run cmrdv_actuators brake
+ 1630  source ~/.bashrc
+ 1631  ros2 run cmrdv_actuators brake
+ 1632  source ~/.bashrc
+ 1633  ros2 run cmrdv_actuators brake
+ 1634  colcon build
+ 1635  source ~/.bashrc
+ 1636  ros2 run cmrdv_actuators brake
+ 1637  source install/setup.bash
+ 1638  ros2 run cmrdv_actuators brake
+ 1639  source ~/.bashrc
+ 1640  ros2 run cmrdv_actuators brake
+ 1641  vim ~/.bashrc
+ 1642  ros2 run cmrdv_actuators fsm
+ 1643  ros2 run cmrdv_perceptions stereo_vision
+ 1644  echo $PYTHONPATH
+ 1645  git checkout 127-perceptions-collection-data-buffer 
+ 1646  colcon build
+ 1647  soure install/setup.bash
+ 1648  source install/setup.bash
+ 1649  source ~/.bashrc
+ 1650  ros2 run cmrdv_perceptions stereo_vision 
+ 1651  pip3 install torch
+ 1652  pip3 uninstall torch
+ 1653  pip3 install torch
+ 1654  ros2 run cmrdv_perceptions stereo_vision 
+ 1655  git checkout 88-software-19a-brakes 
+ 1656  git log
+ 1657  git revert 15f353793ba1eedcb665588bfbda2e656fb85076
+ 1658  git reset --hard HEAD
+ 1659  colcon build --packages-select cmrdv_actuators
+ 1660  source install/setup.bash
+ 1661  ros2 run cmrdv_actuators brake
+ 1662  colcon build --packages-select cmrdv_actuators && . install/setup.bash && ros2 run cmrdv_actuators brake
+ 1663  cd src/cmrdv_actuators/
+ 1664  colcon build --packages-select cmrdv_actuators && . install/setup.bash && ros2 run cmrdv_actuators brake
+ 1665  python3 
+ 1666  colcon build --packages-select cmrdv_actuators && . install/setup.bash && ros2 run cmrdv_actuators brake
+ 1667  i2cdetect
+ 1668  i2cdetect -F 1
+ 1669  i2cdetect -l
+ 1670  colcon build --packages-select cmrdv_actuators && . install/setup.bash && ros2 run cmrdv_actuators brake
+ 1671  git status
+ 1672  rm -rf temp.txt 
+ 1673  ls
+ 1674  git status
+ 1675  git add .
+ 1676  git commit -m "test brakes"
+ 1677  git push
+ 1678  git status
+ 1679  history
+ 1680  history>>temp.txt
+ 1681  vim temp.txt 
+ 1682  ros2 topic pub /BRAKES std_msgs/Int64 "data: -69
+ 1683  "
+ 1684  ros2 topic pub /BRAKES std_msgs/Int64 "data: 69"
+ 1685  ros2 topic pub /BRAKES std_msgs/Int64 "data: 6900"
+ 1686  ros2 topic pub /BRAKES std_msgs/Int64 "data: -69"
+ 1687  ros2 topic pub /BRAKES std_msgs/Int64 "data: 69"
+ 1688  ros2 topic pub /BRAKES std_msgs/Int64 "data: -69"
+ 1689  ros2 topic pub /BRAKES std_msgs/Int64 "data: 69"
+ 1690  ros2 topic pub /BRAKES std_msgs/Int64 "data: -69"
+ 1691  ros2 topic pub /BRAKES std_msgs/Int64 "data: 69"
+ 1692  ros2 topic pub /BRAKES std_msgs/Int64 "data: -69"
+ 1693  ros2 topic pub /BRAKES std_msgs/Int64 "data: 69"
+ 1694  ros2 topic pub /BRAKES std_msgs/Int64 "data: -69"
+ 1695  cd ~\
+ 1696  cd ~
+ 1697  apt-get install cuda-samples-7-0 -y
+ 1698  sudo apt-get install cuda-samples-7-0 -y
+ 1699  clear
+ 1700  ls
+ 1701  clear
+ 1702  cd ../Documents/
+ 1703  ls
+ 1704  clea
+ 1705  clear
+ 1706  ls
+ 1707  cd cmr-fsdv/
+ 1708  ls
+ 1709  clear
+ 1710  ls
+ 1711  cd cmrdv_ws
+ 1712  ls
+ 1713  clear
+ 1714  source ~/.bashrc
+ 1715  clear
+ 1716  colcon build
+ 1717  clear
+ 1718  git branch
+ 1719  git checkout 127-perceptions-collection-data-buffer 
+ 1720  clear
+ 1721  source ~/.bashrc
+ 1722  clear
+ 1723  colcon build
+ 1724  clear
+ 1725  source install/setup.bash
+ 1726  clear
+ 1727  vim src/cmrdv_common/launch
+ 1728  vim src/cmrdv_common/launch/data_perceptions.launch.py 
+ 1729  clear
+ 1730  ls
+ 1731  ls src/velodyne/velodyne_driver/
+ 1732  clear
+ 1733  ros2 launch cmrdv_common data_perceptions.launch.py
+ 1734  clear
+ 1735  ls
+ 1736  cd src/cmrdv_common/launch
+ 1737  ls
+ 1738  clear
+ 1739  ros2 launch data_perceptions.launch.py 
+ 1740  clear
+ 1741  cd ../../..
+ 1742  ls
+ 1743  clear
+ 1744  ros2 run cmrdv_collection data_collection 
+ 1745  clear
+ 1746  source ~/.bashrc
+ 1747  clear
+ 1748  ros2 run cmrdv_collection data_collection 
+ 1749  clear
+ 1750  velodyne_launch
+ 1751  source ~/.bashrc
+ 1752  source install/setup.bash
+ 1753  clear
+ 1754  zed_launch
+ 1755  ros2 run cmrdv_collection data_collection
+ 1756  ros2 run cmrdv_collect data
+ 1757  ls src
+ 1758  source ~/.bashrc
+ 1759  clear
+ 1760  source install/setup.bash
+ 1761  clear
+ 1762  ros2 run cmrdv_collection data_collection \
+ 1763  clear
+ 1764  ros2 run cmrdv_collection data_collection
+ 1765  source ~/.bashrc
+ 1766  clear
+ 1767  ros2 run cmrdv_collection data_collection
+ 1768  ros2 topic hz /data_time_sync
+ 1769  clear]
+ 1770  clear
+ 1771  python3 -m pip freeze
+ 1772  python3 -m pip uninstall torch torchvision
+ 1773  clear
+ 1774  python3
+ 1775  clear
+ 1776  python3 -m pip install torch==1.10.2 torchvision==0.11.3
+ 1777  python3
+ 1778  python3 -m pip uninstall torch torchvision
+ 1779  clear
+ 1780  python3 -m pip install cudatoolkit==10.1 torch==1.10.2 torchvision==0.11.3
+ 1781  python3 -m pip install torch===1.5.0 torchvision===0.6.0 -f https://download.pytorch.org/whl/torch_stable.html
+ 1782  python3 -m pip install torch===1.7.1+cu110 torchvision===0.8.2+cu110 torchaudio===0.7.2 -f https://download.pytorch.org/whl/torch_stable.html 
+ 1783  python3 -m pip install torch===1.7.1+cu110 torchvision===0.8.2+cu110
+ 1784  nvidia-cuda
+ 1785  cuda
+ 1786  nvidia
+ 1787  nvprof
+ 1788  nvcc
+ 1789  nvcc --help
+ 1790  nvcc --version
+ 1791  clear
+ 1792  nvcc --version
+ 1793  python3 -m pip freeze
+ 1794  clear
+ 1795  python3 -m pip install 2.0.0+cu118
+ 1796  python3 -m pip install torch==2.0.0+cu118
+ 1797  python3 -m pip show
+ 1798  python3 -m pip show numpy
+ 1799  python3 -m pip install --pre torch torchvision --extra-index-url 2.0.0+cu118
+ 1800  ps
+ 1801  kill -9 13239
+ 1802  python3 -m pip install --no-cache-dir --pre torch torchvision --extra-index-url 2.0.0+cu118
+ 1803  python3
+ 1804  python3 -m torch.utils.collect_env
+ 1805  python3 -m pip show cudatoolkit
+ 1806  python3 -m pip install cuda-python
+ 1807  python3 -m pip uninstall torch torchvision
+ 1808  conda
+ 1809  nvcc --version
+ 1810  clear
+ 1811  python3 -m pip install cupy-cuda11x
+ 1812  python
+ 1813  python3
+ 1814  clear
+ 1815  python3 -m pip show torch
+ 1816  pip3 install torch torchvision torchaudio
+ 1817  python3
+ 1818  cd ~
+ 1819  clear
+ 1820  sudo apt-get install cuda-samples-7-0 -y
+ 1821  sudo apt-get install cuda-samples -y
+ 1822  clear
+ 1823  cd /usr/local/cuda-11.4/samples
+ 1824  ls
+ 1825  make
+ 1826  \
+ 1827  sudo make
+ 1828  ls
+ 1829  cd bin
+ 1830  ls
+ 1831  clear
+ 1832  cd ../../..
+ 1833  ls
+ 1834  clear
+ 1835  ls
+ 1836  cd ../..
+ 1837  ks
+ 1838  cd ~
+ 1839  ls
+ 1840  clear
+ 1841  nvidia-smi
+ 1842  nvcc --version
+ 1843  clear
+ 1844  logout
+ 1845  ls
+ 1846  cd Documents/
+ 1847  ls
+ 1848  cd cmr-fsdv/
+ 1849  ls
+ 1850  cd cmrdv_ws/
+ 1851  ls
+ 1852  colcon build
+ 1853  source install/setup.bash 
+ 1854  ros2 launch cmrdv_common data.launch.py
+ 1855  source ~/.bashrc
+ 1856  ros2 launch cmrdv_common data.launch.py
+ 1857  clear
+ 1858  ros2 topic list
+ 1859  git branch
+ 1860  ls
+ 1861  cd Documents/
+ 1862  ls
+ 1863  cd cmr-fsdv/
+ 1864  ls
+ 1865  cd cmrdv_ws/
+ 1866  ls
+ 1867  cd src/
+ 1868  ls
+ 1869  git branch
+ 1870  git checkout 128-
+ 1871  git checkout 128-PATHPLANNING-ROS2-integration 
+ 1872  ls
+ 1873  cd cmrdv_planning/
+ 1874  ls
+ 1875  cmrdv_planning/
+ 1876  ls
+ 1877  cd cmrdv_planning/
+ 1878  ls
+ 1879  nano midline.py 
+ 1880  ls
+ 1881  cd ..
+ 1882  ls
+ 1883  cd planning_codebase/
+ 1884  ls
+ 1885  cd midpoint/
+ 1886  ls
+ 1887  nano generator.py 
+ 1888  cd ..
+ 1889  ls
+ 1890  cd ..
+ 1891  ls
+ 1892  cd ..
+ 1893  ls
+ 1894  cd cmrdv_common/
+ 1895  ls
+ 1896  cd launch/
+ 1897  ls
+ 1898  cd ..
+ 1899  ls
+ 1900  nano setup.py 
+ 1901  ls
+ 1902  cd launch/
+ 1903  ls
+ 1904  nano path_planning.launch.py 
+ 1905  cd ../../..
+ 1906  ls
+ 1907  colcon build
+ 1908  source install/setup.bash 
+ 1909  ros2 launch cmrdv_planning path_planning.launch.py
+ 1910  ros2 launch cmrdv_common path_planning.launch.py
+ 1911  clear
+ 1912  ros2 topic list
+ 1913  source_ws
+ 1914  ros2 launch cmrdv_common perceptions
+ 1915  ros2 topic list
+ 1916  ros2 topic hz /data_time_sync
+ 1917  source_ws
+ 1918  ros2 topic hz /data_time_sync
+ 1919  ls
+ 1920  cd src/cmrdv_planning/
+ 1921  cd cmrdv_planning/
+ 1922  ls
+ 1923  vim midline.py
+ 1924  clear
+ 1925  ls
+ 1926  clear
+ 1927  cd Documents/
+ 1928  ls
+ 1929  cd cmr-fsdv/
+ 1930  ls
+ 1931  clear
+ 1932  ls
+ 1933  clear
+ 1934  ls
+ 1935  clear
+ 1936  python3
+ 1937  ros2 topic list
+ 1938  cd Desktop/
+ 1939  ls
+ 1940  cd ..
+ 1941  ros2 topic list
+ 1942  ros2 topic echo carrot
+ 1943  source_ws
+ 1944  ros2 topic echo carrot
+ 1945  ros2 topic echo lap_num
+ 1946  rqt_graph
+ 1947  ros2 topic info lap_num
+ 1948  ros2 topic info \lap_num
+ 1949  ros2 topic info /lap_num
+ 1950  ros2 run controller_node
+ 1951  ros2 run controller
+ 1952  cd Documents/cmr-fsdv/cmrdv_ws/
+ 1953  ls
+ 1954  cd src
+ 1955  ls
+ 1956  cd cmrdv_controls/
+ 1957  ls
+ 1958  cat setup.py
+ 1959  ros2 run controller
+ 1960  ros2 run cmrdv_controls
+ 1961  ros2 run controller
+ 1962  ros2 run controller_node
+ 1963  cd cmrdv_controls/m
+ 1964  cd cmrdv_controls/
+ 1965  ls
+ 1966  vim controller_node.py
+ 1967  cd ..
+ 1968  ros2 run controller
+ 1969  cd src
+ 1970  ros2 run controller
+ 1971  ros2 run cmrdv_controls
+ 1972  ros2 run cmrdv_controls controller
+ 1973  pip3 install transforms3d
+ 1974  ros2 run cmrdv_controls controller
+ 1975  ls
+ 1976  cd cmrdv_common
+ 1977  ls
+ 1978  cd ..
+ 1979  cd cmrdv_controls
+ 1980  ls
+ 1981  cd cmrdv_controls
+ 1982  ls
+ 1983  vim state_spoofer.py
+ 1984  ls
+ 1985  cd Documents/
+ 1986  ls
+ 1987  cd cmr-fsdv/
+ 1988  colcon build
+ 1989  cd cmrdv_ws/
+ 1990  colcon build
+ 1991  git status
+ 1992  git add .
+ 1993  git pull
+ 1994  colcon build
+ 1995  source install/setup.bash
+ 1996  ros2 run cmrdv_planning midpoint
+ 1997  cd /home/cmr-driverless/Documents
+ 1998  ls
+ 1999  cd cmr-fsdv
+ 2000  git switch
+ 2001  git branch
+ 2002  git switch 88-software-19a-brakes
+ 2003  git commit -m state spoofing
+ 2004  git commit -m 'state spoofing'
+ 2005  git switch 88-software-19a-brakes
+ 2006  git status
+ 2007  git add .
+ 2008  git status
+ 2009  git commit -m 'state spoofing'
+ 2010  git branch
+ 2011  git switch 88-software-19a-brakes
+ 2012  git pull
+ 2013  LS
+ 2014  ls
+ 2015  cd cmrdv_ws
+ 2016  colcon build
+ 2017  ros2 run cmrdv_actuators steering
+ 2018  source install/setup.bash
+ 2019  source ~/.bashrc
+ 2020  ros2 run cmrdv_actuators steering
+ 2021  source ~/.bashrc
+ 2022  ros2 run cmrdv_actuators steering
+ 2023  ls
+ 2024  cd src
+ 2025  cd cmrdv_actuators
+ 2026  ros2 run cmrdv_actuators steering
+ 2027  colcom build
+ 2028  colcon build
+ 2029  source install/setup.bash
+ 2030  ros2 run cmrdv_actuators steering
+ 2031  colcon build
+ 2032  source install/setup.bash
+ 2033  ros2 run cmrdv_actuators steering
+ 2034  colcon build
+ 2035  source install/setup.bash
+ 2036  ros2 run cmrdv_actuators steering
+ 2037  colcon build
+ 2038  source install/setup.bash
+ 2039  ros2 run cmrdv_actuators steering
+ 2040  colcon build
+ 2041  source install/setup.bash
+ 2042  ros2 run cmrdv_actuators steering
+ 2043  ros2 run cmrdv_actuators brake
+ 2044  history >> temp.txt

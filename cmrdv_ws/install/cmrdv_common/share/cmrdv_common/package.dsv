@@ -1,0 +1,6 @@
+source;share/cmrdv_common/hook/pythonpath.ps1
+source;share/cmrdv_common/hook/pythonpath.dsv
+source;share/cmrdv_common/hook/pythonpath.sh
+source;share/cmrdv_common/hook/ament_prefix_path.ps1
+source;share/cmrdv_common/hook/ament_prefix_path.dsv
+source;share/cmrdv_common/hook/ament_prefix_path.sh

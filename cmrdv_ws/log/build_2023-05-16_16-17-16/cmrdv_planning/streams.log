@@ -1,0 +1,48 @@
+[0.761s] Invoking command in '/home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/src/cmrdv_planning': PYTHONPATH=/home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/prefix_override:/home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/cmrdv_planning build --build-base /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build install --record /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/install.log --single-version-externally-managed
+[0.948s] running egg_info
+[0.949s] creating ../../build/cmrdv_planning/cmrdv_planning.egg-info
+[0.949s] writing ../../build/cmrdv_planning/cmrdv_planning.egg-info/PKG-INFO
+[0.949s] writing dependency_links to ../../build/cmrdv_planning/cmrdv_planning.egg-info/dependency_links.txt
+[0.949s] writing entry points to ../../build/cmrdv_planning/cmrdv_planning.egg-info/entry_points.txt
+[0.949s] writing requirements to ../../build/cmrdv_planning/cmrdv_planning.egg-info/requires.txt
+[0.949s] writing top-level names to ../../build/cmrdv_planning/cmrdv_planning.egg-info/top_level.txt
+[0.951s] writing manifest file '../../build/cmrdv_planning/cmrdv_planning.egg-info/SOURCES.txt'
+[0.977s] reading manifest file '../../build/cmrdv_planning/cmrdv_planning.egg-info/SOURCES.txt'
+[0.978s] writing manifest file '../../build/cmrdv_planning/cmrdv_planning.egg-info/SOURCES.txt'
+[0.978s] running build
+[0.978s] running build_py
+[0.978s] creating /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build
+[0.978s] creating /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib
+[0.978s] creating /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib/cmrdv_planning
+[0.978s] copying cmrdv_planning/path_out.py -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib/cmrdv_planning
+[0.978s] copying cmrdv_planning/SLAM.py -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib/cmrdv_planning
+[0.978s] copying cmrdv_planning/midpoint.py -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib/cmrdv_planning
+[0.979s] copying cmrdv_planning/__init__.py -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib/cmrdv_planning
+[0.979s] copying cmrdv_planning/optimizer.py -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib/cmrdv_planning
+[0.979s] running install
+[0.979s] running install_lib
+[0.980s] creating /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+[0.980s] copying /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib/cmrdv_planning/path_out.py -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+[0.980s] copying /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib/cmrdv_planning/SLAM.py -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+[0.980s] copying /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib/cmrdv_planning/midpoint.py -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+[0.980s] copying /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib/cmrdv_planning/__init__.py -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+[0.981s] copying /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build/lib/cmrdv_planning/optimizer.py -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+[0.981s] byte-compiling /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/path_out.py to path_out.cpython-38.pyc
+[0.982s] byte-compiling /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/SLAM.py to SLAM.cpython-38.pyc
+[0.983s] byte-compiling /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/midpoint.py to midpoint.cpython-38.pyc
+[0.983s] byte-compiling /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/__init__.py to __init__.cpython-38.pyc
+[0.983s] byte-compiling /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/optimizer.py to optimizer.cpython-38.pyc
+[0.984s] running install_data
+[0.984s] creating /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/share/ament_index
+[0.985s] creating /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/share/ament_index/resource_index
+[0.985s] creating /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/share/ament_index/resource_index/packages
+[0.985s] copying resource/cmrdv_planning -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/share/ament_index/resource_index/packages
+[0.985s] copying package.xml -> /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/share/cmrdv_planning
+[0.985s] running install_egg_info
+[0.986s] Copying ../../build/cmrdv_planning/cmrdv_planning.egg-info to /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning-0.0.0-py3.8.egg-info
+[0.986s] running install_scripts
+[1.000s] Installing SLAM script to /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/cmrdv_planning
+[1.000s] Installing midpoint script to /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/cmrdv_planning
+[1.001s] Installing optimizer script to /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/cmrdv_planning
+[1.001s] writing list of installed files to '/home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/install.log'
+[1.026s] Invoked command in '/home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/src/cmrdv_planning' returned '0': PYTHONPATH=/home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/prefix_override:/home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../build/cmrdv_planning build --build-base /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/build install --record /home/ankit/Documents/Autonomous/cmr-fsdv/cmrdv_ws/build/cmrdv_planning/install.log --single-version-externally-managed

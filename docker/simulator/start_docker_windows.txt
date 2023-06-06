@@ -1,0 +1,1 @@
+sudo docker run -it --rm --net=host -e DISPLAY=$DISPLAY -v $PWD/../../..:/root/workspace akhandelwal2025/eufs:latest
