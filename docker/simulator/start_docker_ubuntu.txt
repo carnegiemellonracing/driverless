@@ -1,0 +1,2 @@
+xhost +
+sudo docker run -it --rm --net=host -e DISPLAY=$DISPLAY {ENTER_USERNAME_HERE}/eufs:latest
