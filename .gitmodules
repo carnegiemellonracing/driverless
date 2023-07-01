@@ -1,0 +1,3 @@
+[submodule "cmrdv_ws/src/eufs_msgs"]
+	path = cmrdv_ws/src/eufs_msgs
+	url = https://gitlab.com/eufs/eufs_msgs.git
