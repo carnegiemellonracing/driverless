@@ -1,5 +1,0 @@
-[console_scripts]
-SLAM = cmrdv_planning.SLAM:main
-midpoint = cmrdv_planning.midpoint:main
-optimizer = cmrdv_planning.optimizer:main
-

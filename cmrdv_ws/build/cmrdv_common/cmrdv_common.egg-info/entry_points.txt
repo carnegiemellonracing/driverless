@@ -1,8 +1,0 @@
-[console_scripts]
-dim = cmrdv_common.heartbeat.heart:dim
-dim_heartbeat = cmrdv_common.DIM.dim_heartbeat:main
-dim_request = cmrdv_common.DIM.dim_request:main
-heartbeat = cmrdv_common.heartbeat.global:main
-perceptions = cmrdv_common.heartbeat.heart:perceptions
-planning = cmrdv_common.heartbeat.heart:planning
-
