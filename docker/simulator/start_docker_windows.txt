@@ -1,1 +1,1 @@
-sudo docker run -it --rm --net=host -e DISPLAY=$DISPLAY -v $PWD/../../..:/root/workspace eufs:latest
+sudo docker run -it --rm --privileged --net=host -e DISPLAY=$DISPLAY eufs:latest
