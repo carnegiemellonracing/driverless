@@ -4,13 +4,13 @@ from rclpy.node import Node
 
 from std_msgs.msg import Int8
 from nav_msgs.msg import Odometry #TODO:make sure that the driver is actually installed
-from sbg_driver.msg import SbgGpsPos #TODO: make sure that the sbg drivers properly installed
+# from sbg_driver.msg import SbgGpsPos #TODO: make sure that the sbg drivers properly installed
 import message_filters #TODO Make sure that this is installed too
 from cmrdv_interfaces.msg import VehicleState, ConePositions,ConeList #be more specific later if this becomes huge
-from cmrdv_ws.src.cmrdv_common.cmrdv_common.config.collection_config import BEST_EFFORT_QOS_PROFILE
-from cmrdv_ws.src.cmrdv_common.cmrdv_common.config.planning_config import *
-from cmrdv_ws.src.cmrdv_planning.planning_codebase.ekf.map import *
-from cmrdv_ws.src.cmrdv_planning.planning_codebase.graph_slam import *
+from cmrdv_common.cmrdv_common.config.collection_config import BEST_EFFORT_QOS_PROFILE
+from cmrdv_common.cmrdv_common.config.planning_config import *
+from cmrdv_planning.planning_codebase.ekf.map import *
+from cmrdv_planning.planning_codebase.graph_slam import *
 from cmrdv_interfaces.msg import *
 import numpy as np
 from transforms3d import axangle2quat
