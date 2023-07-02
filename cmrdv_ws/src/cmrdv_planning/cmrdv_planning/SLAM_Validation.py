@@ -1,22 +1,23 @@
 from xmlrpc.server import DocXMLRPCRequestHandler
 import rclpy
 from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
 
 from std_msgs.msg import Int8
 from nav_msgs.msg import Odometry #TODO:make sure that the driver is actually installed
 # from sbg_driver.msg import SbgGpsPos #TODO: make sure that the sbg drivers properly installed
 import message_filters #TODO Make sure that this is installed too
 from cmrdv_interfaces.msg import VehicleState, ConePositions,ConeList #be more specific later if this becomes huge
-from cmrdv_common.cmrdv_common.config.collection_config import BEST_EFFORT_QOS_PROFILE
-from cmrdv_common.cmrdv_common.config.planning_config import *
-from cmrdv_planning.planning_codebase.ekf.map import *
-from cmrdv_planning.planning_codebase.graph_slam import *
+from cmrdv_common.config.collection_config import BEST_EFFORT_QOS_PROFILE
+from cmrdv_common.config.planning_config import *
+from cmrdv_ws.src.cmrdv_planning.planning_codebase.ekf.map import *
+from cmrdv_ws.src.cmrdv_planning.planning_codebase.graph_slam import *
 from cmrdv_interfaces.msg import *
 import numpy as np
-from transforms3d import axangle2quat
+from transforms3d.quaternions import axangle2quat
 
 #import all of the sufs messages
-from eufs.eufs_msgs.msg import *
+from eufs_msgs.msg import *
 
 
 VEHICLE_STATE_TOPIC = "/ground_truth/state"
@@ -31,21 +32,24 @@ class SLAMSubscriber(Node):
         super().__init__('slam_subscriber')
         #Subscribe to Perceptions Data #this is wrong - maybe need ,self.parsePerceptionCones
         # self.subscription_cone_data = message_filters.Subscriber(CONE_DATA_TOPIC, ConeList)
-        self.subscription_cone_data = message_filters.Subscriber(CONE_TOPIC, ConeArrayWithCovariance,self.parse_cones)
+        self.subscription_cone_data = message_filters.Subscriber(self, ConeArrayWithCovariance, '/cones')
+        self.subscription_cone_data.registerCallback(self.parse_cones)
 
         #Subscribe to Vehichle State
-        self.subscription_vehicle_data = message_filters.Subscriber(VEHICLE_STATE_TOPIC, VEHICLE_STATE_MSG,self.parse_state)
+        self.subscription_vehicle_data = message_filters.Subscriber(self, CarState, '/ground_truth/state')
+        self.subscription_vehicle_data.registerCallback(self.parse_state)
+
         #Synchronize gps and odometry data
-        self.ts = message_filters.TimeSynchronizer([self.subscription_cone_data, self.subscription_vehicle_data], 10)
+        self.ts = message_filters.ApproximateTimeSynchronizer([self.subscription_cone_data, self.subscription_vehicle_data], 10, slop=0.5)
         self.ts.registerCallback(self.runSLAM)
 
         self.subscription_cone_data  # prevent unused variable warning
         self.subscription_vehicle_data  # prevent unused variable warning
 
-        #Publishing Vehicle state and map of track
-        self.publisher_vehicle_state = self.create_publisher(VehicleState,VEHICLE_STATE_TOPIC,qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.publisher_cone_positions = self.create_publisher(ConePositions,MAP_TOPIC,qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.publisher_lap_num = self.create_publisher(Int8,LAP_NUM_TOPIC,qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # #Publishing Vehicle state and map of track
+        # self.publisher_vehicle_state = self.create_publisher(VehicleState, VEHICLE_STATE_TOPIC, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.publisher_cone_positions = self.create_publisher(ConePositions, MAP_TOPIC, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.publisher_lap_num = self.create_publisher(Int8, LAP_NUM_TOPIC, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
     
         #SLAM Variables
@@ -56,7 +60,7 @@ class SLAMSubscriber(Node):
         self.cone_positions = None
 
         self.EKF = Map()
-        self.GraphSlam = GraphSlam()
+        self.GraphSlam = GraphSlam(lc_limit=5)
 
 
         self.cones = None
@@ -122,24 +126,24 @@ class SLAMSubscriber(Node):
     def runSLAM(self,s_msg):
         self.ekf_output = self.runEKF(s_msg)
         self.gs_vehicle_state, self.cone_positions, self.optimized = self.runGraph(self.ekf_output)
-        if self.optimized == True:
-            p_msg = self.vehicleStateToMsg(self.gs_vehicle_state)
-            self.publisher_vehicle_state.publish(p_msg)
-            self.get_logger().info('Publishing GraphSlam Vehicle State:')
+        # if self.optimized == True:
+            # p_msg = self.vehicleStateToMsg(self.gs_vehicle_state)
+            # self.publisher_vehicle_state.publish(p_msg)
+            # self.get_logger().info('Publishing GraphSlam Vehicle State:')
 
-            p_msg = self.conePositionsToMsg(self.cone_positions)
-            self.publisher_cone_positions.publish(p_msg)
-            self.get_logger().info('Publishing GraphSlam Cone Positions:')
-        else:
-            p_msg = self.vehicleStateToMsg(self.ekf_vehicle_state)
-            self.publisher_vehicle_state.publish(p_msg)
-            self.get_logger().info('Publishing EKF Vehicle State:')
+            # p_msg = self.conePositionsToMsg(self.cone_positions)
+            # self.publisher_cone_positions.publish(p_msg)
+            # self.get_logger().info('Publishing GraphSlam Cone Positions:')
+        # else:
+        #     p_msg = self.vehicleStateToMsg(self.ekf_vehicle_state)
+        #     self.publisher_vehicle_state.publish(p_msg)
+        #     self.get_logger().info('Publishing EKF Vehicle State:')
         #publish if data collection lap has finished
         
-        if(self.GraphSlam.lap > 1):
-            msg = Int8()
-            msg.data = self.GraphSlam.lap
-            self.publisher_lap.publish(msg)
+        # if(self.GraphSlam.lap > 1):
+        #     msg = Int8()
+        #     msg.data = self.GraphSlam.lap
+        #     self.publisher_lap.publish(msg)
 
     def vehicleStateToMsg(self,vehicle_state): #6x1 array
         msg = VehicleState()

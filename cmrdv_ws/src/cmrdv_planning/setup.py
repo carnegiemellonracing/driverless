@@ -22,7 +22,8 @@ setup(
         'console_scripts': [ 
             'midpoint=cmrdv_planning.midpoint:main',
             'SLAM=cmrdv_planning.SLAM:main',
-            'optimizer=cmrdv_planning.optimizer:main'
+            'optimizer=cmrdv_planning.optimizer:main',
+            'SLAM_test=cmrdv_planning.SLAM_Validation:main'
         ],
     },
 )
