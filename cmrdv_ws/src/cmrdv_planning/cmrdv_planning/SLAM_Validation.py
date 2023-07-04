@@ -33,11 +33,11 @@ class SLAMSubscriber(Node):
         #Subscribe to Perceptions Data #this is wrong - maybe need ,self.parsePerceptionCones
         # self.subscription_cone_data = message_filters.Subscriber(CONE_DATA_TOPIC, ConeList)
         self.subscription_cone_data = message_filters.Subscriber(self, ConeArrayWithCovariance, '/cones')
-        self.subscription_cone_data.registerCallback(self.parse_cones)
+        # self.subscription_cone_data.registerCallback(self.parse_cones)
 
         #Subscribe to Vehichle State
         self.subscription_vehicle_data = message_filters.Subscriber(self, CarState, '/ground_truth/state')
-        self.subscription_vehicle_data.registerCallback(self.parse_state)
+        # self.subscription_vehicle_data.registerCallback(self.parse_state)
 
         #Synchronize gps and odometry data
         self.ts = message_filters.ApproximateTimeSynchronizer([self.subscription_cone_data, self.subscription_vehicle_data], 10, slop=0.5)
@@ -68,8 +68,8 @@ class SLAMSubscriber(Node):
         self.state = None
 
         #Time  Variables
-        self.prevTime = None
-        self.dTime = None
+        self.prevTime = self.get_clock().now().to_msg()
+        self.dTime = 0
  
 
     def parse_cones(self,msg):
@@ -91,7 +91,7 @@ class SLAMSubscriber(Node):
         
         parsed_cones = np.array(parsed_cones)
         self.cones = parsed_cones
-        return parsed_cones
+        # return parsed_cones
     
     def parse_state(self,msg):
         #update time
@@ -123,8 +123,10 @@ class SLAMSubscriber(Node):
         return self.state
 
 
-    def runSLAM(self,s_msg):
-        self.ekf_output = self.runEKF(s_msg)
+    def runSLAM(self, cones_msg, state_msg):
+        self.parse_cones(cones_msg)
+        self.parse_state(state_msg)
+        self.ekf_output = self.runEKF(state_msg.header.stamp)
         self.gs_vehicle_state, self.cone_positions, self.optimized = self.runGraph(self.ekf_output)
         # if self.optimized == True:
             # p_msg = self.vehicleStateToMsg(self.gs_vehicle_state)
@@ -168,19 +170,21 @@ class SLAMSubscriber(Node):
         return msg
     
     def updateTime(self,time): #Time data structure from header
-        self.dTime = self.prevTime-time
+        self.get_logger().info(f'{type(self.prevTime)} {type(time)}')
+        self.dTime = self.prevTime.nanosec-time.nanosec
         self.prevTime = time
 
     
-    def runEKF(self, msg): #TODO:verify message of this
+    def runEKF(self, time_stamp): #TODO:verify message of this
         #Parse perceptions data:
         self.get_logger().info('Cone data recieved:')
         #Parse Sensor Data
         self.get_logger().info('State data recieved:')
         #Update time and difference
-        self.updateTime(msg[1].data.header.stamp)
-        self.EKF.update_map(self.cones)
+        self.updateTime(time_stamp)
+        self.EKF.update_map(self.state, self.cones, time_stamp.nanosec)
         #TODO: Add dt
+        somelist = []
         if self.EKF.updated_cone:
             somelist = self.EKF.robot_cone_state()
         return somelist
