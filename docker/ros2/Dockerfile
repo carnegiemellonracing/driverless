@@ -13,7 +13,9 @@ RUN apt-get update && apt-get install -y \
   build-essential \
   sudo \
   xauth \
+  npm \
   ros-foxy-rviz2 \
+  ros-foxy-rosbridge-suite\
   && rm -rf /var/lib/apt/lists/*
 
 RUN /bin/bash -c "source /opt/ros/foxy/setup.bash"
