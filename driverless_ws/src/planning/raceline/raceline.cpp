@@ -7,19 +7,13 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_integration.h>
 #include <vector>
-
-int prefered_degree=3,overlap =0;
-
-struct polynomial
-{
-    int deg;
-    gsl_vector *nums;
-};
+#include "raceline.hpp"
 
 polynomial poly(int deg = 3){
     polynomial inst;
     inst.deg=deg;
     inst.nums = gsl_vector_alloc(deg+1);
+	return inst;
 }
 
 polynomial poly_one(){
@@ -43,7 +37,7 @@ polynomial polyder(polynomial p){
         gsl_vector_set(der.nums,i,coef);
     }
 
-
+	return der;
 }
 
 polynomial poly_mult(polynomial a,polynomial b){
@@ -55,70 +49,8 @@ polynomial poly_mult(polynomial a,polynomial b){
 
         }
     }
+	return mult;
 }
-
-class Spline
-{
-private:
-    polynomial spl_poly;
-    
-    gsl_matrix *points;
-    gsl_matrix *rotated_points;
-
-    gsl_matrix *Q;
-    gsl_vector *translation_vector;
-
-    polynomial first_der;
-    polynomial second_der;
-    
-
-    int path_id;
-    int sort_index;
-    double length;
-
-public:
-    polynomial get_SplPoly(){ return spl_poly;}
-    void set_SplPoly(polynomial p){
-        spl_poly.deg = p.deg;
-        spl_poly.nums = p.nums;
-        first_der = polyder(spl_poly);
-        second_der = polyder(first_der);
-    }
-
-    gsl_matrix* get_points(){return points;}
-    void set_points(gsl_matrix *newpoints){points = newpoints;}
-
-    gsl_matrix* get_rotated_points(){return rotated_points;}
-    void set_points(gsl_matrix *newpoints){rotated_points = newpoints;}
-
-    gsl_matrix* get_Q(){return Q;}
-    void set_Q(gsl_matrix *new_Q){Q=new_Q;}
-
-    gsl_vector* get_translation(){return translation_vector;}
-    void set_translation(gsl_vector *new_trans){translation_vector = new_trans;}
-
-    int get_path_id(){return path_id;}
-    void set_path_id(int new_id){path_id = new_id;}
-
-    int get_sort_index(){return sort_index;} 
-    void set_sort_index(int new_sort){sort_index = new_sort;}
-
-    double get_length(){return length;}
-    
-    std::vector<float> interpolate(Spline spline,int number, std::pair<float,float> bounds = std::make_pair(-1,-1)){
-        interpolate(spline,number,bounds);
-    }
-    
-
-
-
-    Spline(polynomial interpolation_poly,gsl_matrix *points_mat,gsl_matrix *rotated,gsl_matrix *Q_mat, gsl_vector *translation,polynomial first, polynomial second, int path, int sort_ind);
-    
-    
-    ~Spline();
-};
-
-
 
 Spline::Spline(polynomial interpolation_poly,gsl_matrix *points_mat,gsl_matrix *rotated,gsl_matrix *Q_mat, gsl_vector *translation,polynomial first, polynomial second, int path, int sort_ind)
 {
@@ -147,17 +79,17 @@ Spline::~Spline()
 
 }
 
-std::vector<float> interpolate(Spline spline,int number, std::pair<float,float> bounds = std::make_pair(-1,-1)){
-
-    if(bounds.first == -1 && bounds.second == -1){
-        double bound1 = gsl_matrix_get(spline.get_rotated_points(),1,0);
-        // MAKE PROPER BOUND 2
-        double bound2 = gsl_matrix_get(spline.get_rotated_points(),1,0);
-        bounds = std::make_pair(bound1,bound2);
-    }
-
-    
-}
+// std::vector<float> interpolate(Spline spline,int number, std::pair<float,float> bounds){
+//
+//     if(bounds.first == -1 && bounds.second == -1){
+//         double bound1 = gsl_matrix_get(spline.get_rotated_points(),1,0);
+//         // MAKE PROPER BOUND 2
+//         double bound2 = gsl_matrix_get(spline.get_rotated_points(),1,0);
+//         bounds = std::make_pair(bound1,bound2);
+//     }
+//
+// 	return 
+// }
 
 gsl_matrix* rotation_matrix_gen(gsl_matrix *pnts){
     gsl_vector *beg= gsl_vector_alloc_col_from_matrix(pnts,0);
@@ -270,23 +202,23 @@ double arclength_f(double, void* params){
     return x*x+1;
 }
 
-double arclength(polynomial poly, double x0,double x1){
+// double arclength(polynomial poly, double x0,double x1){
+//
+//     gsl_function F;
+//     F.function = &arclength_f;
+//     F.params = &poly;
+//
+//     double result, error;
+//     gsl_integration_workspace * w 
+//          = gsl_integration_workspace_alloc (1000);
+//
+//     gsl_integration_qags (&F, x0, x1, 0, 1e-7, 1000,
+//                              w, &result, &error);  
+//     gsl_integration_workspace_free(w); 
+//
+// }
 
-    gsl_function F;
-    F.function = &arclength_f;
-    F.params = &poly;
-
-    double result, error;
-    gsl_integration_workspace * w 
-         = gsl_integration_workspace_alloc (1000);
-
-    gsl_integration_qags (&F, x0, x1, 0, 1e-7, 1000,
-                             w, &result, &error);  
-    gsl_integration_workspace_free(w); 
-
-}
-
-std::pair<std::vector<Spline>,std::vector<int>> raceline_gen(gsl_matrix *res,int path_id,int points_per_spline = prefered_degree+1,bool loop = true){
+std::pair<std::vector<Spline>,std::vector<int>> raceline_gen(gsl_matrix *res,int path_id,int points_per_spline,bool loop){
 
     int n = res->size2;
 

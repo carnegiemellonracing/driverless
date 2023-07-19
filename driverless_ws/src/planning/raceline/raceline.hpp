@@ -8,7 +8,7 @@
 #include <gsl/gsl_integration.h>
 #include <vector>
 
-int prefered_degree,overlap;
+const int prefered_degree = 3,overlap = 0;
 #ifndef POLYNOMIAL
 #define POLYNOMIAL
 
@@ -63,7 +63,7 @@ public:
     void set_points(gsl_matrix *newpoints);
 
     gsl_matrix* get_rotated_points();
-    void set_points(gsl_matrix *newpoints);
+    void set_rotated_points(gsl_matrix *newpoints);
 
     gsl_matrix* get_Q();
     void set_Q(gsl_matrix *new_Q);
