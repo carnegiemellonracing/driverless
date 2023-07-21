@@ -8,10 +8,11 @@
 #include <gsl/gsl_integration.h>
 #include <vector>
 
-const int prefered_degree = 3,overlap = 0;
-#ifndef POLYNOMIAL
-#define POLYNOMIAL
 
+#ifndef RACELINE
+#define RACELINE
+
+const int prefered_degree = 3,overlap = 0;
 struct polynomial
 {
     int deg;
@@ -27,10 +28,8 @@ polynomial poly_root(double root);
 polynomial polyder(polynomial p);
 
 polynomial poly_mult(polynomial a,polynomial b);
-#endif
 
-#ifndef SPLINE
-#define SPLINE
+
 class Spline
 {
 private:
@@ -93,7 +92,7 @@ public:
 #endif
 
 
-std::vector<float> interpolate(Spline spline,int number, std::pair<float,float> bounds = std::make_pair(-1,-1));
+gsl_matrix *interpolate(Spline spline,int number, std::pair<float,float> bounds = std::make_pair(-1,-1));
 
 gsl_matrix* rotation_matrix_gen(gsl_matrix *pnts);
 gsl_vector *get_translation_vector(gsl_matrix *group);
