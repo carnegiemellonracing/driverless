@@ -1,5 +1,4 @@
 import numpy as np
-import cv2
 
 """
 Contains Map class for the map of landmarks and current robot position 
@@ -73,7 +72,7 @@ class Map:
         self.d_time = 0 #change in time for robot 
 
     # odometry and measurement sample, update robot's pose 
-    def __predict(self, movement, new_time, logger=None):
+    def __predict(self, movement, new_time):
         """Updates robot position given change in polar coordinates 
 
         Parameters 
@@ -94,8 +93,6 @@ class Map:
         new_y = movement[1]
         new_heading = movement[2] 
 
-        # logger.info(f'movement (state): x = {new_x}, y = {new_y}, heading = {new_heading}')
-
         # update previous states 
         self.prev_time = self.curr_time 
         self.prev_robot_state = np.copy(self.robot_state) 
@@ -105,14 +102,11 @@ class Map:
         self.robot_state = np.array((new_x, new_y, new_heading)) 
 
         # updates changes in position/time 
-        # time passed in as nanosec, want sec instead
-        # time is passed in as nanosec because ros seconds don't have sig figs
-        self.d_time = (self.curr_time - self.prev_time)/1e9 
+        self.d_time = self.curr_time - self.prev_time 
         self.d_robot_state = self.robot_state - self.prev_robot_state 
 
 
         dt = self.d_time 
-
         '''
         dt: int 
             change in time since previous robot movement 
@@ -132,7 +126,6 @@ class Map:
         n = len(self.state_mean)
         theta = self.state_mean[2]
         dtheta = dt * u_t[1] #change in theta
-
         dhalf_theta = dtheta / 2
         dtrans = dt * u_t[0] #change in translation 
 
@@ -145,7 +138,6 @@ class Map:
         F_x = np.append(np.eye(3),np.zeros((3,n-3)),axis=1)
 
         state_mean_bar = self.state_mean + (F_x.T).dot(pose_update)
-
         state_mean_bar[2] = (state_mean_bar[2] + 2 * np.pi) % (2 * np.pi)
 
         #calculate movement Jacobian 
@@ -169,17 +161,15 @@ class Map:
         state_cov_bar = (G_t.dot(self.state_cov).dot(G_t.T)) + F_x.T.dot(R_t).dot(F_x)
 
         #updated state mean after the prediction 
-        # logger.info(f'prev_state_mean = {self.state_mean}')
         self.state_mean = state_mean_bar
-        # logger.info(f'new_state_mean = {self.state_mean}')
 
         self.robot_state = self.state_mean[0:3]
-        # logger.info(f'robot_state: {self.robot_state[0]}, {self.robot_state[1]}, {self.robot_state[2]}')
+        
         self.state_cov = state_cov_bar
 
     
 
-    def __update(self, z, logger=None):
+    def __update(self, z):
         """Updates map of landmarks given potential observations 
 
         Parameters 
@@ -198,7 +188,7 @@ class Map:
         """
         # update change in time since its already been updated in predict
         dt = self.d_time 
-        # logger.info(f"dt: {dt}")
+
         #z: potential measurements of landmarks 
         state_mean_bar = self.state_mean
         state_cov_bar = self.state_cov
@@ -222,9 +212,7 @@ class Map:
 
 
             # TODO: possibly fix axis
-            # logger.info(f'state_mean before append: {state_mean_bar}')
             state_mean_temp = np.append(state_mean_bar, temp_mark, axis=0)
-            # logger.info(f'state_mean after append: {state_mean_temp}')
             state_cov_temp = np.append(state_cov_bar, np.zeros((np.shape(state_cov_bar)[0], 2)), axis=1)
             state_cov_temp = np.append(state_cov_temp, np.zeros((2, np.shape(state_cov_bar)[1] + 2)), axis=0)
                    
@@ -232,26 +220,22 @@ class Map:
             #initialize state covariance for new landmark proportional to range measurement squared
             for ii in range(np.shape(state_cov_temp)[0] - 2, np.shape(state_cov_temp)[0]):
                 state_cov_temp[ii][ii] = (z[k][0]**2) / 130
-                logger.info(f"  {state_cov_temp[ii][ii]}")
 
             
             #index for landmark with maximum association 
             max_j = -1
-            min_pi = 2 * np.ones((2,1))
-            min_pi.fill(100)
-            logger.info(f"Measurement = {temp_mark}")
-            logger.info(f"  N_LANDMARKS = {n_landmarks}")
+            min_pi = 10 * np.ones((2,1))
+
             #loop over all landmarks and compute likelihood of correspondence with new landmark 
             for j in range(n_landmarks + 1):
-                
                 delta = np.array([state_mean_temp[2*j+3] - state_mean_temp[0],
                                   state_mean_temp[2*j+4] - state_mean_temp[1]])
-                # logger.info(f'   delta = {delta[0]}, {delta[1]}')
-                q = delta.dot(delta)
-                r = np.sqrt(q) # predicted range to landmark
 
-                temp_theta = np.arctan2(delta[1], delta[0]) - state_mean_temp[2] #predicted theta was wrong 
-                # temp_theta = (temp_theta + 2 * np.pi) % (2 * np.pi) # predicted bearing to landmark
+                q = delta.dot(delta)
+                r = np.sqrt(q)
+
+                temp_theta = np.arctan2(delta[1], delta[0] - state_mean_temp[2])
+                temp_theta = (temp_theta + 2 * np.pi) % (2 * np.pi)
 
                 pred_z[:,j] = np.array([r, temp_theta], dtype=object)
 
@@ -259,38 +243,34 @@ class Map:
                 F_xj[0:3,0:3] = np.eye(3)
                 F_xj[3:5,2*j+3:2*j+5] = np.eye(2)
 
-                h_t = np.array([[delta[0]/r, -delta[1]/r,  0,   -delta[0]/r, delta[1]/r],
-                                [delta[1]/q,  delta[0]/q,   -1,  -delta[1]/q, -delta[0]/q]])
+                h_t = np.array([[-delta[0]/r, -delta[1]/r,  0,   delta[0]/r, delta[1]/r],
+                                [delta[1]/q,  -delta[0]/q,   -1,  -delta[1]/q, delta[0]/q]])
 
                 pred_H[j,:,:] = h_t @ F_xj
                 pred_psi[j,:,:] = np.squeeze(pred_H[j,:,:]) @ state_cov_temp @ \
                                   np.transpose(np.squeeze(pred_H[j,:,:])) + self.Q_t
-                
+
                 if j < n_landmarks:
-                    # logger.info("Seeing existing landmark")
                     pi_k[j] = (np.transpose(z[k,0:2]-pred_z[:,j]) \
-                                @ np.linalg.solve(np.squeeze(pred_psi[j,:,:]), z[k,0:2]-pred_z[:,j]))
+                                @ np.linalg.inv(np.squeeze(pred_psi[j,:,:]))) \
+                                @ (z[k,0:2]-pred_z[:,j])
                 else:
-                    # logger.info("Defaulting")
-                    pi_k[j] = 25; # alpha: min mahalanobis distance to
+                    pi_k[j] = 0.84; # alpha: min mahalanobis distance to
                                     #        add landmark to map
-                logger.info(f'  Landmark: {state_mean_temp[2*j+3]}, {state_mean_temp[2*j+4]} | delta: {delta[0]}, {delta[1]} | pred_z: {r}, {temp_theta} | Maha = {pi_k[j]}')
-                # tracking two best associations 
-                if j == 0 or pi_k[j] < min_pi[0]:
+
+                #tracking two best associations 
+                if pi_k[j] < min_pi[0]:
                     min_pi[1] = min_pi[0]
                     max_j = j
                     min_pi[0] = pi_k[j]
-            
+        
             H = np.squeeze(pred_H[max_j,:,:])
-            logger.info(f'  min_pi: {min_pi[1]}/{min_pi[0]} == {min_pi[1]/min_pi[0]}')
+
             #best association must be significantly better than second better than second best 
-            #otws, measurement is thrown out
-            # logger.info(f'pi_k (all correspondences): {pi_k}')
-            # logger.info(f'min_pi (min correspondences): {min_pi}')
-            if (min_pi[1] / min_pi[0]) > 1.6:
+            #otws, measurement is thrown out 
+            if (min_pi[1] / min_pi[0] > 1.6):
                 if max_j >= n_landmarks:
                     #new landmark is added, expand state and covariance matrices
-                    logger.info(f'{min_pi[1]}/{min_pi[0]} == {min_pi[1]/min_pi[0]} > 1.6')
                     state_mean_bar = state_mean_temp
                     state_cov_bar = state_cov_temp
                     n_landmarks += 1
@@ -337,17 +317,15 @@ class Map:
                 else: 
                     print("something is going wrong lol since cone is not identifiable to be left or right")
                     return 
-        
+                
+              
         #update state mean and covariance (map itself) 
         self.state_mean = state_mean_bar
         self.robot_state = self.state_mean[0:3]
         self.state_cov = state_cov_bar
         self.n_landmarks = n_landmarks
-        # logger.info(f'N_LANDMARKS = {self.n_landmarks}')
-        # logger.info('--------------------------------------------')
-        # logger.info('--------------------------------------------')
-        # self.get_logger().info(f'N_LANDMARKS = {n_landmarks}')
-        logger.info('---------------------------')
+    
+
     def robot_cone_state(self):
         """
         Returns the robot pose and if current cone is updated/changed from previous cone observations, return 
@@ -390,7 +368,7 @@ class Map:
             (self.d_robot_state[0], self.d_robot_state[1], self.d_robot_state[2])]
             #return only robot state 
 
-    def update_map(self, movement, measurements, new_time, logger=None):
+    def update_map(self, movement, measurements, new_time):
         """Updates map with given robot movement and landmark measurements after change in time dt 
 
         Parameters 
@@ -410,10 +388,9 @@ class Map:
         Updates the map of robot position and landmark postions 
 
         """
-        self.__predict(movement, new_time, logger)
-        self.__update(measurements, logger)
-        return self.state_mean, self.n_landmarks
-    
+        self.__predict(movement, new_time)
+        self.__update(measurements)
+
     def get_state(self, get_cov=False):
         if get_cov:
             return self.state_mean, self.state_cov

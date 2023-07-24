@@ -21,10 +21,14 @@ RUN apt-get install -y ros-foxy-gazebo-ros \
                        ros-foxy-gazebo-ros-pkgs \
                        ros-foxy-xacro \
                        ros-foxy-ackermann-msgs \
-                       ros-foxy-joint-state-publisher-gui
+                       ros-foxy-joint-state-publisher-gui \
+                       ros-foxy-sbg-driver
 RUN apt-get upgrade -y ros-foxy-geometry-msgs
+RUN pip3 install gtsam
+RUN pip3 install transform3d
 RUN echo 'export EUFS_MASTER=/eufs' >> ~/.bashrc
 RUN echo 'source /opt/ros/foxy/setup.bash' >> ~/.bashrc
+RUN echo 'export PYTHONPATH=$PYTHONPATH:/driverless' >> ~/.bashrc
 RUN source ~/.bashrc
 RUN apt-get -y install git
 RUN apt-get install -y python3-rosdep

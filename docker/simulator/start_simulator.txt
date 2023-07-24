@@ -1,4 +1,6 @@
 source ~/.bashrc
+ros2 daemon stop
+ros2 daemon start
 cd eufs
 colcon build
 . install/setup.bash

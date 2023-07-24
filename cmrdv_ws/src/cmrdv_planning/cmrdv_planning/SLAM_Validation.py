@@ -14,6 +14,8 @@ from cmrdv_ws.src.cmrdv_planning.planning_codebase.ekf.map import *
 from cmrdv_ws.src.cmrdv_planning.planning_codebase.graph_slam import *
 from cmrdv_interfaces.msg import *
 import numpy as np
+import math
+
 from transforms3d.quaternions import axangle2quat
 
 #import all of the sufs messages
@@ -105,6 +107,9 @@ class SLAMSubscriber(Node):
         y = pose.y
         #yaw
         quat = msg.pose.pose.orientation
+        q0, q1, q2, q3 = quat.w, quat.x, quat.y, quat.z
+        # following 11c from here: https://danceswithcode.net/engineeringnotes/quaternions/quaternions.html
+        yaw_heading = math.atan2(2*(q0*q3 + q1*q2), q0**2+q1**2-q2**2-q3**2)
         yaw_quat = quat
 
         #lin velocity x and y
@@ -118,16 +123,19 @@ class SLAMSubscriber(Node):
         ddx = acceleration.x
         ddy = acceleration.y
         ddyaw = 0 #Not given by vehicle state: acceleration.angular.z 
-
-        self.state = np.array([x,y,yaw_quat,dx,dy,dyaw,ddx,ddy,ddyaw])
+        #shouldn't be yaw_quat, should be yaw_angle i.e. heading
+        #TODO need to figure out how to convert the quat to yaw_angle
+        self.state = np.array([x,y,yaw_heading,dx,dy,dyaw,ddx,ddy,ddyaw])
         return self.state
 
 
     def runSLAM(self, cones_msg, state_msg):
         self.parse_cones(cones_msg)
         self.parse_state(state_msg)
-        self.ekf_output = self.runEKF(state_msg.header.stamp)
-        self.gs_vehicle_state, self.cone_positions, self.optimized = self.runGraph(self.ekf_output)
+        self.runEKF(state_msg.header.stamp)
+        # self.get_logger().info(f'{self.ekf_output}')
+
+        # self.gs_vehicle_state, self.cone_positions, self.optimized = self.runGraph(self.ekf_output)
         # if self.optimized == True:
             # p_msg = self.vehicleStateToMsg(self.gs_vehicle_state)
             # self.publisher_vehicle_state.publish(p_msg)
@@ -170,24 +178,43 @@ class SLAMSubscriber(Node):
         return msg
     
     def updateTime(self,time): #Time data structure from header
-        self.get_logger().info(f'{type(self.prevTime)} {type(time)}')
-        self.dTime = self.prevTime.nanosec-time.nanosec
+        # self.get_logger().info(f'{type(self.prevTime)} {type(time)}')
+        self.dTime = (self.prevTime.nanosec-time.nanosec)/1e9
+        # self.get_logger().info(f"time.sec: {time.sec}")
         self.prevTime = time
 
     
     def runEKF(self, time_stamp): #TODO:verify message of this
         #Parse perceptions data:
-        self.get_logger().info('Cone data recieved:')
+        # self.get_logger().info('Cone data recieved:')
         #Parse Sensor Data
-        self.get_logger().info('State data recieved:')
+        # self.get_logger().info('State data recieved:')
         #Update time and difference
         self.updateTime(time_stamp)
-        self.EKF.update_map(self.state, self.cones, time_stamp.nanosec)
+        map, n_landmarks = self.EKF.update_map(self.state, self.cones, time_stamp.nanosec, self.get_logger())
         #TODO: Add dt
-        somelist = []
-        if self.EKF.updated_cone:
-            somelist = self.EKF.robot_cone_state()
-        return somelist
+        # somelist = self.EKF.robot_cone_state()
+        # self.get_logger().info(f'map = {map}')
+        
+        self.plot_state_matrix(map, n_landmarks)
+
+    def plot_state_matrix(self, somelist, n_landmarks):
+        m_to_pix_factor_y = 35
+        m_to_pix_factor_x = 50
+        img = np.zeros([1024,1024,1],dtype=np.uint8)
+        img.fill(255)
+        robot_pose = (500, 900)
+        img = cv2.circle(img, (np.round(robot_pose[0]).astype("int"), np.round(robot_pose[1]).astype("int")), radius=1, color=(0, 0, 255), thickness=2)
+        for i in range(n_landmarks):
+            idx = 2*i + 3
+            pix_x = somelist[idx]
+            pix_y = somelist[idx+1]
+            cone_x = robot_pose[0] + pix_x*m_to_pix_factor_x
+            cone_y = robot_pose[1] - pix_y*m_to_pix_factor_y
+            # self.get_logger().info(f'x = {pix_x} -> {cone_x}     |  y = {pix_y} -> {cone_y}')
+            img = cv2.circle(img, (int(cone_x), int(cone_y)), radius=1, color=(0, 255, 0), thickness=2)
+        # cv2.imshow('current_map', img)
+        # cv2.waitKey(10)
 
     def runGraph(self, ekf_output):
         self.get_logger().info('EKF output recieved:')
