@@ -72,6 +72,11 @@ class Map:
         self.d_robot_state = np.zeros(3) #changes in [x,y,heading] in robot state 
         self.d_time = 0 #change in time for robot 
 
+    def print_matrices(self, logger, matrix, prefix):
+        logger.info(prefix)
+        for r in range(matrix.shape[0]):
+            logger.info(f"{matrix[r, :]}")
+
     # odometry and measurement sample, update robot's pose 
     def __predict(self, movement, new_time, logger=None):
         """Updates robot position given change in polar coordinates 
@@ -94,7 +99,7 @@ class Map:
         new_y = movement[1]
         new_heading = movement[2] 
 
-        # logger.info(f'movement (state): x = {new_x}, y = {new_y}, heading = {new_heading}')
+        logger.info(f'movement (state): x = {new_x}, y = {new_y}, heading = {new_heading}')
 
         # update previous states 
         self.prev_time = self.curr_time 
@@ -231,7 +236,7 @@ class Map:
 
             #initialize state covariance for new landmark proportional to range measurement squared
             for ii in range(np.shape(state_cov_temp)[0] - 2, np.shape(state_cov_temp)[0]):
-                state_cov_temp[ii][ii] = (z[k][0]**2) / 130
+                state_cov_temp[ii][ii] = (z[k][0]**2) / 25
                 logger.info(f"  {state_cov_temp[ii][ii]}")
 
             
@@ -251,7 +256,7 @@ class Map:
                 r = np.sqrt(q) # predicted range to landmark
 
                 temp_theta = np.arctan2(delta[1], delta[0]) - state_mean_temp[2] #predicted theta was wrong 
-                # temp_theta = (temp_theta + 2 * np.pi) % (2 * np.pi) # predicted bearing to landmark
+                temp_theta = (temp_theta + 2 * np.pi) % (2 * np.pi) # predicted bearing to landmark
 
                 pred_z[:,j] = np.array([r, temp_theta], dtype=object)
 
@@ -261,15 +266,16 @@ class Map:
 
                 h_t = np.array([[delta[0]/r, -delta[1]/r,  0,   -delta[0]/r, delta[1]/r],
                                 [delta[1]/q,  delta[0]/q,   -1,  -delta[1]/q, -delta[0]/q]])
-
+                # self.print_matrices(logger, h_t, "little_h (jacobian)")
                 pred_H[j,:,:] = h_t @ F_xj
-                pred_psi[j,:,:] = np.squeeze(pred_H[j,:,:]) @ state_cov_temp @ \
-                                  np.transpose(np.squeeze(pred_H[j,:,:])) + self.Q_t
-                
+                # self.print_matrices(logger, pred_H[j,:,:], "big_h (jacobian)")
+                pred_psi[j,:,:] = pred_H[j,:,:] @ state_cov_temp @ \
+                                  np.transpose(pred_H[j,:,:]) + self.Q_t
+                # self.print_matrices(logger, pred_psi[j,:,:], "pred_psi")
                 if j < n_landmarks:
                     # logger.info("Seeing existing landmark")
                     pi_k[j] = (np.transpose(z[k,0:2]-pred_z[:,j]) \
-                                @ np.linalg.solve(np.squeeze(pred_psi[j,:,:]), z[k,0:2]-pred_z[:,j]))
+                                @ np.linalg.solve(pred_psi[j,:,:], z[k,0:2]-pred_z[:,j]))
                 else:
                     # logger.info("Defaulting")
                     pi_k[j] = 25; # alpha: min mahalanobis distance to

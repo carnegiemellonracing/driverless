@@ -10,12 +10,13 @@ import message_filters #TODO Make sure that this is installed too
 from cmrdv_interfaces.msg import VehicleState, ConePositions,ConeList #be more specific later if this becomes huge
 from cmrdv_common.config.collection_config import BEST_EFFORT_QOS_PROFILE
 from cmrdv_common.config.planning_config import *
-from cmrdv_ws.src.cmrdv_planning.planning_codebase.ekf.map import *
+# from cmrdv_ws.src.cmrdv_planning.planning_codebase.ekf.map import *
+from cmrdv_ws.src.cmrdv_planning.planning_codebase.ekf.new_slam import *
 from cmrdv_ws.src.cmrdv_planning.planning_codebase.graph_slam import *
 from cmrdv_interfaces.msg import *
 import numpy as np
 import math
-
+import time
 from transforms3d.quaternions import axangle2quat
 
 #import all of the sufs messages
@@ -42,7 +43,7 @@ class SLAMSubscriber(Node):
         # self.subscription_vehicle_data.registerCallback(self.parse_state)
 
         #Synchronize gps and odometry data
-        self.ts = message_filters.ApproximateTimeSynchronizer([self.subscription_cone_data, self.subscription_vehicle_data], 10, slop=0.5)
+        self.ts = message_filters.ApproximateTimeSynchronizer([self.subscription_cone_data, self.subscription_vehicle_data], 10, slop=0.05)
         self.ts.registerCallback(self.runSLAM)
 
         self.subscription_cone_data  # prevent unused variable warning
@@ -61,7 +62,7 @@ class SLAMSubscriber(Node):
         self.ekf_vehicle_state = None
         self.cone_positions = None
 
-        self.EKF = Map()
+        # self.EKF = Map()
         self.GraphSlam = GraphSlam(lc_limit=5)
 
 
@@ -69,10 +70,14 @@ class SLAMSubscriber(Node):
         #robot state
         self.state = None
 
+        self.xEst = np.zeros((STATE_SIZE, 1))
+        self.pEst = np.eye(STATE_SIZE)
         #Time  Variables
         self.prevTime = self.get_clock().now().to_msg()
         self.dTime = 0
- 
+        self.car_states = []
+        self.gt_states = []
+        self.all_cones = []
 
     def parse_cones(self,msg):
         cones = msg.blue_cones
@@ -132,7 +137,7 @@ class SLAMSubscriber(Node):
     def runSLAM(self, cones_msg, state_msg):
         self.parse_cones(cones_msg)
         self.parse_state(state_msg)
-        self.runEKF(state_msg.header.stamp)
+        self.runEKF(self.get_clock().now().to_msg())
         # self.get_logger().info(f'{self.ekf_output}')
 
         # self.gs_vehicle_state, self.cone_positions, self.optimized = self.runGraph(self.ekf_output)
@@ -179,40 +184,93 @@ class SLAMSubscriber(Node):
     
     def updateTime(self,time): #Time data structure from header
         # self.get_logger().info(f'{type(self.prevTime)} {type(time)}')
-        self.dTime = (self.prevTime.nanosec-time.nanosec)/1e9
+        curr_time_ns = time.sec*1e9 + time.nanosec
+        prev_time_ns = self.prevTime.sec*1e9 + self.prevTime.nanosec
+        self.dTime = (curr_time_ns-prev_time_ns)/1e9
+        self.get_logger().info(f'Current Time: {time.nanosec}')
+        self.get_logger().info(f'Prev Time: {self.prevTime.nanosec}')
         # self.get_logger().info(f"time.sec: {time.sec}")
         self.prevTime = time
 
-    
+    def pi_2_pi(self, angle):
+        return (angle + math.pi) % (2 * math.pi) - math.pi
+
+    # def print_xEst(self):
+    #     # self.get_logger().info(f'Robot Pose: {self.xEst[0, 0], self.xEst[1, 0], self.xEst[2, 0] }')
+    #     # self.get_logger().info(f'{(self.xEst.shape[0]-3)/2}')
+    #     for i in range(int((self.xEst.shape[0]-3)/2)):
+    #         # self.get_logger().info(f'   Landmark {i}: {self.xEst[2*i+3, 0]}, {self.xEst[2*i+4, 0]}')
+    #     # self.get_logger().info(f'------------------------------------------')
+
     def runEKF(self, time_stamp): #TODO:verify message of this
-        #Parse perceptions data:
-        # self.get_logger().info('Cone data recieved:')
-        #Parse Sensor Data
-        # self.get_logger().info('State data recieved:')
-        #Update time and difference
         self.updateTime(time_stamp)
-        map, n_landmarks = self.EKF.update_map(self.state, self.cones, time_stamp.nanosec, self.get_logger())
+        car_x, car_y, car_heading = self.state[0], self.state[1], self.state[2]
+        u = np.array([[math.hypot(self.state[3], self.state[4]), self.state[5]]]).T
+        self.get_logger().info(f"linear: {u[0, 0]} | angular: {u[1, 0]}")
+        z = np.zeros((0, 3))
+        i = 0
+        for x, y, _ in self.cones:
+            dx = x - car_x
+            dy = y - car_y
+            dist = math.hypot(dx, dy)
+            angle = self.pi_2_pi(math.atan2(dy, dx) - car_heading)
+            zi = np.array([dist, angle, i])
+            z = np.vstack((z, zi))
+        self.xEst, self.pEst, cones = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger())
+        self.all_cones.extend(cones)
+        # self.get_logger().info(f'Num Landmarks = {(self.xEst.shape[0]-3)/2}')
+        # self.print_xEst()
+        self.plot_state_matrix()
         #TODO: Add dt
         # somelist = self.EKF.robot_cone_state()
         # self.get_logger().info(f'map = {map}')
         
-        self.plot_state_matrix(map, n_landmarks)
+        # self.plot_state_matrix(map, n_landmarks)
 
-    def plot_state_matrix(self, somelist, n_landmarks):
-        m_to_pix_factor_y = 35
-        m_to_pix_factor_x = 50
-        img = np.zeros([1024,1024,1],dtype=np.uint8)
-        img.fill(255)
-        robot_pose = (500, 900)
-        img = cv2.circle(img, (np.round(robot_pose[0]).astype("int"), np.round(robot_pose[1]).astype("int")), radius=1, color=(0, 0, 255), thickness=2)
-        for i in range(n_landmarks):
-            idx = 2*i + 3
-            pix_x = somelist[idx]
-            pix_y = somelist[idx+1]
-            cone_x = robot_pose[0] + pix_x*m_to_pix_factor_x
-            cone_y = robot_pose[1] - pix_y*m_to_pix_factor_y
-            # self.get_logger().info(f'x = {pix_x} -> {cone_x}     |  y = {pix_y} -> {cone_y}')
-            img = cv2.circle(img, (int(cone_x), int(cone_y)), radius=1, color=(0, 255, 0), thickness=2)
+    def plot_state_matrix(self):
+        plt.cla()
+        plt.gcf().canvas.mpl_connect(
+                'key_release_event',
+                lambda event: [exit(0) if event.key == 'escape' else None])
+        self.car_states.append(self.xEst[0:3])
+        self.gt_states.append([self.state[0], self.state[1], self.state[2]])
+        self.get_logger().info(f'Ground Truth: {self.state[0]}, {self.state[1]}, {self.state[2]}')
+        self.get_logger().info(f'Final Output: {self.xEst[0, 0]}, {self.xEst[1, 0]}, {self.xEst[2, 0]}')
+        # plt.plot(self.xEst[0, 0], self.xEst[1, 0], "or")
+        for gt_state in self.gt_states:
+            x, y, theta = gt_state[0], gt_state[1], gt_state[2]
+            r = 1
+            plt.arrow(x, y, r*math.cos(theta), r*math.sin(theta), color='red')
+        for car_state in self.car_states:
+            x, y, theta = car_state[0, 0], car_state[1, 0], car_state[2, 0]
+            r = 1
+            # self.get_logger().info(f'{x}, {y}, {theta}, {r*math.cos(theta)}, {r*math.sin(theta)}')
+            plt.arrow(x, y, r*math.cos(theta), r*math.sin(theta))
+        # for cone in self.all_cones:
+        #     x, y = cone[0], cone[1]
+        #     plt.plot(x, y, "or")
+        for i in range(int((self.xEst.shape[0]-3)/2)):
+            plt.plot(self.xEst[STATE_SIZE + i * 2],
+                     self.xEst[STATE_SIZE + i * 2 + 1], "xg")
+        # for x, y, _ in self.cones:
+        #     plt.plot(x, y, "or")
+        plt.axis("equal")
+        plt.grid(True)
+        plt.pause(0.001)
+        # m_to_pix_factor_y = 35
+        # m_to_pix_factor_x = 50
+        # img = np.zeros([1024,1024,1],dtype=np.uint8)
+        # img.fill(255)
+        # robot_pose = (500, 900)
+        # img = cv2.circle(img, (np.round(robot_pose[0]).astype("int"), np.round(robot_pose[1]).astype("int")), radius=1, color=(0, 0, 255), thickness=2)
+        # for i in range(n_landmarks):
+        #     idx = 2*i + 3
+        #     pix_x = somelist[idx]
+        #     pix_y = somelist[idx+1]
+        #     cone_x = robot_pose[0] + pix_x*m_to_pix_factor_x
+        #     cone_y = robot_pose[1] - pix_y*m_to_pix_factor_y
+        #     # self.get_logger().info(f'x = {pix_x} -> {cone_x}     |  y = {pix_y} -> {cone_y}')
+        #     img = cv2.circle(img, (int(cone_x), int(cone_y)), radius=1, color=(0, 255, 0), thickness=2)
         # cv2.imshow('current_map', img)
         # cv2.waitKey(10)
 
