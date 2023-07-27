@@ -43,12 +43,11 @@ def ekf_slam(xEst, PEst, u, z, dt, logger):
     # Update
     for iz in range(len(z[:, 0])):  # for each observation
         min_id = search_correspond_landmark_id(xEst, PEst, z[iz, 0:2], logger)
-
+        cones.append(calc_landmark_position(xEst, z[iz, :]))
         nLM = calc_n_lm(xEst)
         if min_id == nLM:
             print("New LM")
             # Extend state and covariance matrix
-            cones.append(calc_landmark_position(xEst, z[iz, :]))
             xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
             PAug = np.vstack((np.hstack((PEst, np.zeros((len(xEst), LM_SIZE)))),
                               np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))

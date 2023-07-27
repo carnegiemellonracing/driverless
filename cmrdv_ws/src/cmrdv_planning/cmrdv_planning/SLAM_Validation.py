@@ -210,10 +210,10 @@ class SLAMSubscriber(Node):
         z = np.zeros((0, 3))
         i = 0
         for x, y, _ in self.cones:
-            dx = x - car_x
-            dy = y - car_y
+            dx = x
+            dy = y
             dist = math.hypot(dx, dy)
-            angle = self.pi_2_pi(math.atan2(dy, dx) - car_heading)
+            angle = self.pi_2_pi(math.atan2(dy, dx))
             zi = np.array([dist, angle, i])
             z = np.vstack((z, zi))
         self.xEst, self.pEst, cones = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger())
