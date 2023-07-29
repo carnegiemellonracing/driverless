@@ -64,7 +64,6 @@ Spline::Spline(polynomial interpolation_poly,gsl_matrix *points_mat,gsl_matrix *
     path = path_id;
     sort_index = sort_ind;
 
-    length = arclength(interpolation_poly,gsl_matrix_get(points_mat,0,0),gsl_matrix_get(points_mat,0,points_mat->size2-1));
 }
 
 Spline::~Spline()
@@ -76,6 +75,122 @@ Spline::~Spline()
     gsl_matrix_free(Q);
     gsl_matrix_free(points);
     gsl_matrix_free(rotated_points);
+
+}
+
+double Spline::length(){
+    return arclength(this->spl_poly,gsl_matrix_get(this->rotated_points,0,0),gsl_matrix_get(this->rotated_points,0,this->rotated_points->size2-1));
+}
+
+gsl_matrix* Spline::interpolate(int number, std::pair<float, float> bounds){
+    return interpolate(*this,number,bounds);
+}
+
+bool Spline::operator==(Spline const & other) const{
+    return this->sort_index==other.sort_index;
+}
+
+bool Spline::operator<(Spline const & other) const{
+    return this->sort_index<other.sort_index;
+
+    
+
+}
+
+
+std::tuple<gsl_vector*,double, gsl_vector*,double> Spline::along(double progress, double point_index, int precision){
+    std::tuple<gsl_vector*,double, gsl_vector*,double> ret;
+
+
+    double len = this->length();
+
+
+    double first_x = gsl_matrix_get(this->get_rotated_points(),0,0);
+    double last_x = gsl_matrix_get(this->get_rotated_points(),0,this->get_rotated_points()->size2);
+
+    double delta = last_x - first_x;
+
+    std::pair<double,double> boundaries = std::make_pair(first_x,last_x);
+    int ratio = progress / len + 1;
+
+
+
+        if (ratio >= 2){
+            double x = first_x + delta*ratio;
+            double shoot = arclength(this->spl_poly,first_x,x);
+            
+            double lower_bound = first_x + delta * (ratio - 1);
+            double upper_bound =  first_x + delta * ratio;
+
+            if (shoot < progress){
+                while (shoot < progress){
+                    lower_bound = x;
+                    //  add approximately one spline length to shoot
+                    shoot = arclength(this->spl_poly,first_x,x+delta);
+                    x=x+delta;
+                }
+                upper_bound = x; // upper bound is direct first overshoot (separated by delta from the lower bound)
+            }
+            else if (shoot >= progress){ // equality not very important
+                while (shoot >= progress){
+                    upper_bound = x;
+                    // # remove approximately one splien length to shoot
+                    shoot = arclength(this->spl_poly,first_x,x - delta);
+                }
+                lower_bound = x; // lower bound is direct first undershoot (separated by delta from the upper bound)
+            }    
+            std::pair<double,double> boundaries = std::make_pair(lower_bound, upper_bound);
+            
+        }
+        //  Perform a more precise search between the two computed bounds
+
+        std::vector<double> guesses;
+        guesses.resize(precision+1);
+        for(int i=0;i<=precision;i++){
+            guesses[i] = (boundaries.first*i + boundaries.second*(precision-i))/precision;
+        }
+
+        //  Evaluate progress along the (extrapolated) spline
+        //  As arclength is expensive and cannot take multiple points
+        //  at the same time, it is faster to use a for loop
+        double past = -1, best_guess = -1, best_length = -1;
+        for (double guess : guesses){
+            double guess_length = arclength(this->spl_poly, first_x, guess);
+            if (abs(progress - guess_length) > abs(progress - past)) //# if we did worst than before
+                break;
+            best_guess = guess;
+            best_length = guess_length;
+            past = guess_length;
+        }
+        gsl_vector *rotated_point = gsl_vector_alloc(2);
+        gsl_vector_set(rotated_point,0,best_guess);
+        gsl_vector_set(rotated_point,1,gsl_poly_eval(this->spl_poly.nums->data,this->spl_poly.deg,best_guess));
+        
+        gsl_matrix *rotated_points = gsl_matrix_alloc(2,1);
+        gsl_matrix_set(rotated_points,0,0,rotated_point->data[0]);
+        gsl_matrix_set(rotated_points,0,1,rotated_point->data[1]);
+        
+        gsl_matrix *point_mat =reverse_transform(rotated_points,this->Q,this->translation_vector);
+        
+        gsl_vector *point = gsl_vector_alloc(2);
+        gsl_vector_set(point,0,point_mat->data[0]);
+        gsl_vector_set(point,0,point_mat->data[1]);
+
+        ret = std::make_tuple(point,best_length,rotated_point,best_guess);
+
+        return ret;
+}
+
+double Spline::getderiv(double x){
+    gsl_matrix *point_x = gsl_matrix_alloc(1,2);
+    gsl_matrix_set(point_x,0,0,x);
+    gsl_matrix_set(point_x,0,1,0);
+
+    gsl_matrix *gm= reverse_transform(point_x,this->Q,this->translation_vector);
+
+    return gsl_poly_eval(this->first_der.nums->data,this->first_der.deg,gm->data[0]);
+
+
 
 }
 
@@ -283,3 +398,4 @@ std::pair<std::vector<Spline>,std::vector<int>> raceline_gen(gsl_matrix *res,int
 
 
 }
+

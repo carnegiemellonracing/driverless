@@ -7,6 +7,7 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_integration.h>
 #include <vector>
+#include <tuple>
 
 
 #ifndef RACELINE
@@ -78,18 +79,25 @@ public:
 
     double get_length(){return length;}
     
-    std::vector<float> interpolate(Spline spline,int number, std::pair<float,float> bounds = std::make_pair(-1,-1));
+    gsl_matrix *interpolate(Spline spline,int number, std::pair<float,float> bounds = std::make_pair(-1,-1));
     
+    double length();
+    gsl_matrix *interpolate(int number,std::pair<float,float> bounds);
+
+    bool operator==(Spline const & other) const;
+    bool operator<(Spline const & other) const;
+
+    std::tuple<gsl_vector*,double, gsl_vector*,double> along(double progress, double point_index=0, int precision=20);
+    double getderiv(double x);
 
 
 
     Spline(polynomial interpolation_poly,gsl_matrix *points_mat,gsl_matrix *rotated,gsl_matrix *Q_mat, gsl_vector *translation,polynomial first, polynomial second, int path, int sort_ind);
     
-    
+
     ~Spline();
 };
 
-#endif
 
 
 gsl_matrix *interpolate(Spline spline,int number, std::pair<float,float> bounds = std::make_pair(-1,-1));
@@ -108,3 +116,5 @@ double arclength_f(double, void* params);
 double arclength(polynomial poly, double x0,double x1);
 
 std::pair<std::vector<Spline>,std::vector<int>> raceline_gen(gsl_matrix *res,int path_id,int points_per_spline = prefered_degree+1,bool loop = true);
+
+#endif
