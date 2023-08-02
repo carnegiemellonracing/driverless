@@ -11,6 +11,7 @@ import numpy as np
 
 # EKF state covariance
 Cx = np.diag([0.5, 0.5, np.deg2rad(30.0)]) ** 2
+alphas=np.array([0.11, 0.01, 0.18, 0.08, 0.0, 0.0])
 
 #  Simulation parameter
 Q_sim = np.diag([0.2, np.deg2rad(1.0)]) ** 2
@@ -33,9 +34,22 @@ def ekf_slam(xEst, PEst, u, z, dt, logger):
     # Predict
     S = STATE_SIZE
     # logger.info(f'{xEst[0:S]}')
-    # logger.info(f'{u}')
+    logger.info(f'{u}')
     logger.info(f"dt: {dt}")
     G, Fx = jacob_motion(xEst[0:S], u, dt, logger)
+
+    #calculate motion covariance in control space
+    M_t = np.array([[(alphas[0] * abs(u[0, 0]) + alphas[1] * abs(u[1, 0]))**2, 0],
+                        [0, (alphas[2] * abs(u[0, 0]) + alphas[3] * abs(u[1, 0]))**2]])
+    
+    x = xEst[0:S]
+    #calculate Jacobian to transform motion covariance to state space 
+    V_t = np.array([[np.cos(x[2, 0]), -0.5 * np.sin(x[2, 0])],
+                    [np.sin(x[2, 0]), 0.5 * np.cos(x[2, 0])],
+                    [0, 1]])
+    logger.info(f'M_t: {M_t}')
+    logger.info(f'V_t: {V_t}')
+    # Cx = V_t @ M_t @ V_t.T
     xEst[0:S] = motion_model(xEst[0:S], u, dt)
     PEst[0:S, 0:S] = G.T @ PEst[0:S, 0:S] @ G + Fx.T @ Cx @ Fx
     initP = np.eye(2)
