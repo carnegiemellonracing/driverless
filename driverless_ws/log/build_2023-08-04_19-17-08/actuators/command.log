@@ -1,0 +1,1 @@
+Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/actuators': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/actuators -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/actuators

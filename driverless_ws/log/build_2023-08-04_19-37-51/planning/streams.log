@@ -1,0 +1,30 @@
+[0.016s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/planning': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/planning -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/planning
+[0.028s] -- Found ament_cmake: 2.0.2 (/opt/ros/iron/share/ament_cmake/cmake)
+[0.110s] -- Found ament_lint_auto: 0.14.1 (/opt/ros/iron/share/ament_lint_auto/cmake)
+[0.179s] -- Found rclcpp: 21.1.1 (/opt/ros/iron/share/rclcpp/cmake)
+[0.204s] -- Found rosidl_generator_c: 4.0.0 (/opt/ros/iron/share/rosidl_generator_c/cmake)
+[0.210s] -- Found rosidl_generator_cpp: 4.0.0 (/opt/ros/iron/share/rosidl_generator_cpp/cmake)
+[0.220s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.232s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.345s] -- Found rmw_implementation_cmake: 7.1.0 (/opt/ros/iron/share/rmw_implementation_cmake/cmake)
+[0.346s] -- Found rmw_fastrtps_cpp: 7.1.1 (/opt/ros/iron/share/rmw_fastrtps_cpp/cmake)
+[0.413s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.563s] [31mCMake Error at CMakeLists.txt:38 (find_package):
+[0.563s]   By not providing "Findinterfaces.cmake" in CMAKE_MODULE_PATH this project
+[0.563s]   has asked CMake to find a package configuration file provided by
+[0.563s]   "interfaces", but CMake did not find one.
+[0.564s] 
+[0.564s]   Could not find a package configuration file provided by "interfaces" with
+[0.564s]   any of the following names:
+[0.564s] 
+[0.564s]     interfacesConfig.cmake
+[0.564s]     interfaces-config.cmake
+[0.564s] 
+[0.564s]   Add the installation prefix of "interfaces" to CMAKE_PREFIX_PATH or set
+[0.564s]   "interfaces_DIR" to a directory containing one of the above files.  If
+[0.564s]   "interfaces" provides a separate development package or SDK, be sure it has
+[0.564s]   been installed.
+[0.564s] 
+[0.564s] [0m
+[0.564s] -- Configuring incomplete, errors occurred!
+[0.571s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/planning' returned '1': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/planning -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/planning

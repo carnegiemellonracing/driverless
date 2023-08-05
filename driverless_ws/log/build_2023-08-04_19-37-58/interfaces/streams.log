@@ -1,0 +1,22 @@
+[0.079s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/interfaces': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/interfaces
+[0.102s] -- Found ament_cmake: 2.0.2 (/opt/ros/iron/share/ament_cmake/cmake)
+[1.464s] -- Found Python3: /home/ishin/Documents/cmr/driverless_py/bin/python3.11 (found version "3.11.3") found components: Interpreter 
+[1.576s] -- Found ament_lint_auto: 0.14.1 (/opt/ros/iron/share/ament_lint_auto/cmake)
+[1.711s] -- Added test 'copyright' to check source files copyright and LICENSE
+[1.722s] -- Added test 'lint_cmake' to check CMake code style
+[1.722s] -- Added test 'xmllint' to check XML markup files
+[1.724s] -- Found geometry_msgs: 5.0.0 (/opt/ros/iron/share/geometry_msgs/cmake)
+[1.783s] -- Found rosidl_generator_c: 4.0.0 (/opt/ros/iron/share/rosidl_generator_c/cmake)
+[1.797s] -- Found rosidl_generator_cpp: 4.0.0 (/opt/ros/iron/share/rosidl_generator_cpp/cmake)
+[1.818s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.848s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.995s] -- Found rosidl_default_generators: 1.5.0 (/opt/ros/iron/share/rosidl_default_generators/cmake)
+[2.009s] -- Found rosidl_adapter: 4.0.0 (/opt/ros/iron/share/rosidl_adapter/cmake)
+[2.014s] [31mCMake Error at /opt/ros/iron/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:64 (message):
+[2.015s]   rosidl_generate_interfaces() must be called before ament_package()
+[2.015s] Call Stack (most recent call first):
+[2.015s]   CMakeLists.txt:40 (rosidl_generate_interfaces)
+[2.015s] 
+[2.015s] [0m
+[2.017s] -- Configuring incomplete, errors occurred!
+[2.069s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/interfaces' returned '1': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/interfaces

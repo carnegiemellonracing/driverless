@@ -1,0 +1,11 @@
+[0.000000] (-) TimerEvent: {}
+[0.000220] (-) JobUnselected: {'identifier': 'actuators'}
+[0.000250] (-) JobUnselected: {'identifier': 'collection'}
+[0.000422] (-) JobUnselected: {'identifier': 'common'}
+[0.000538] (-) JobUnselected: {'identifier': 'controls'}
+[0.000580] (-) JobUnselected: {'identifier': 'interfaces'}
+[0.000759] (-) JobUnselected: {'identifier': 'perceptions'}
+[0.000800] (planning) JobQueued: {'identifier': 'planning', 'dependencies': OrderedDict([('interfaces', '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/interfaces')])}
+[0.000846] (planning) JobStarted: {'identifier': 'planning'}
+[0.030336] (planning) JobEnded: {'identifier': 'planning', 'rc': 1}
+[0.040731] (-) EventReactorShutdown: {}

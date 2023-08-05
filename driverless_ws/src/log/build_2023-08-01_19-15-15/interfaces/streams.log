@@ -1,0 +1,46 @@
+[0.016s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/interfaces
+[0.024s] -- Found ament_cmake: 2.0.2 (/opt/ros/iron/share/ament_cmake/cmake)
+[0.096s] -- Found ament_lint_auto: 0.14.1 (/opt/ros/iron/share/ament_lint_auto/cmake)
+[0.170s] -- Found geometry_msgs: 5.0.0 (/opt/ros/iron/share/geometry_msgs/cmake)
+[0.210s] -- Found rosidl_generator_c: 4.0.0 (/opt/ros/iron/share/rosidl_generator_c/cmake)
+[0.221s] -- Found rosidl_generator_cpp: 4.0.0 (/opt/ros/iron/share/rosidl_generator_cpp/cmake)
+[0.237s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.254s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.332s] -- Found rosidl_default_generators: 1.5.0 (/opt/ros/iron/share/rosidl_default_generators/cmake)
+[0.342s] -- Found rosidl_adapter: 4.0.0 (/opt/ros/iron/share/rosidl_adapter/cmake)
+[0.389s] [31mCMake Error at /opt/ros/iron/share/rosidl_adapter/cmake/rosidl_adapt_interfaces.cmake:57 (message):
+[0.389s]   execute_process(/home/ishin/Documents/cmr/driverless_py/bin/python3.11 -m
+[0.389s]   rosidl_adapter --package-name interfaces --arguments-file
+[0.389s]   /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces/rosidl_adapter__arguments__interfaces.json
+[0.389s]   --output-dir
+[0.389s]   /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces/rosidl_adapter/interfaces
+[0.389s]   --output-file
+[0.389s]   /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces/rosidl_adapter/interfaces.idls)
+[0.389s]   returned error code 1:
+[0.389s] 
+[0.389s]   Traceback (most recent call last):
+[0.389s] 
+[0.389s]     File "<frozen runpy>", line 198, in _run_module_as_main
+[0.389s]     File "<frozen runpy>", line 88, in _run_code
+[0.390s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/__main__.py", line 19, in <module>
+[0.390s]       sys.exit(main())
+[0.390s]                ^^^^^^
+[0.390s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/main.py", line 53, in main
+[0.390s]       abs_idl_file = convert_to_idl(
+[0.390s]                      ^^^^^^^^^^^^^^^
+[0.390s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/__init__.py", line 18, in convert_to_idl
+[0.390s]       from rosidl_adapter.msg import convert_msg_to_idl
+[0.390s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/msg/__init__.py", line 16, in <module>
+[0.390s]       from rosidl_adapter.resource import expand_template
+[0.390s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/resource/__init__.py", line 19, in <module>
+[0.390s]       import em
+[0.390s] 
+[0.390s]   ModuleNotFoundError: No module named 'em'
+[0.390s] 
+[0.390s] Call Stack (most recent call first):
+[0.390s]   /opt/ros/iron/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:132 (rosidl_adapt_interfaces)
+[0.390s]   CMakeLists.txt:28 (rosidl_generate_interfaces)
+[0.390s] 
+[0.390s] [0m
+[0.390s] -- Configuring incomplete, errors occurred!
+[0.394s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces' returned '1': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/interfaces

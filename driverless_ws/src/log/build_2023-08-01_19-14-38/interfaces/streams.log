@@ -1,0 +1,34 @@
+[0.020s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/interfaces
+[0.060s] -- The C compiler identification is GNU 13.1.1
+[0.124s] -- The CXX compiler identification is GNU 13.1.1
+[0.131s] -- Detecting C compiler ABI info
+[0.188s] -- Detecting C compiler ABI info - done
+[0.192s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.192s] -- Detecting C compile features
+[0.193s] -- Detecting C compile features - done
+[0.195s] -- Detecting CXX compiler ABI info
+[0.278s] -- Detecting CXX compiler ABI info - done
+[0.283s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.283s] -- Detecting CXX compile features
+[0.284s] -- Detecting CXX compile features - done
+[0.291s] -- Found ament_cmake: 2.0.2 (/opt/ros/iron/share/ament_cmake/cmake)
+[0.912s] -- Found Python3: /home/ishin/Documents/cmr/driverless_py/bin/python3.11 (found version "3.11.3") found components: Interpreter 
+[0.987s] -- Found ament_lint_auto: 0.14.1 (/opt/ros/iron/share/ament_lint_auto/cmake)
+[1.002s] Traceback (most recent call last):
+[1.002s]   File "/opt/ros/iron/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 22, in <module>
+[1.002s]     from catkin_pkg.package import parse_package_string
+[1.002s] ModuleNotFoundError: No module named 'catkin_pkg'
+[1.005s] [31mCMake Error at /opt/ros/iron/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:95 (message):
+[1.005s]   execute_process(/home/ishin/Documents/cmr/driverless_py/bin/python3.11
+[1.005s]   /opt/ros/iron/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py
+[1.005s]   /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces/package.xml
+[1.005s]   /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces/ament_cmake_core/package.cmake)
+[1.005s]   returned error code 1
+[1.005s] Call Stack (most recent call first):
+[1.006s]   /opt/ros/iron/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:49 (_ament_package_xml)
+[1.006s]   /opt/ros/iron/share/ament_lint_auto/cmake/ament_lint_auto_find_test_dependencies.cmake:31 (ament_package_xml)
+[1.006s]   CMakeLists.txt:23 (ament_lint_auto_find_test_dependencies)
+[1.006s] 
+[1.006s] [0m
+[1.006s] -- Configuring incomplete, errors occurred!
+[1.009s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces' returned '1': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/interfaces

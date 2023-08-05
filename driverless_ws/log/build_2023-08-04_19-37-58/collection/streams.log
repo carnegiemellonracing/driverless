@@ -1,0 +1,38 @@
+[0.064s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/collection': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/collection -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection
+[0.108s] -- Found ament_cmake: 2.0.2 (/opt/ros/iron/share/ament_cmake/cmake)
+[1.446s] -- Found Python3: /home/ishin/Documents/cmr/driverless_py/bin/python3.11 (found version "3.11.3") found components: Interpreter 
+[1.552s] -- Found ament_lint_auto: 0.14.1 (/opt/ros/iron/share/ament_lint_auto/cmake)
+[1.686s] -- Added test 'copyright' to check source files copyright and LICENSE
+[1.695s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[1.695s] -- Configured cppcheck include dirs: 
+[1.695s] -- Configured cppcheck exclude dirs and/or files: 
+[1.695s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[1.696s] -- Configured cpplint exclude dirs and/or files: 
+[1.696s] -- Added test 'lint_cmake' to check CMake code style
+[1.697s] -- Added test 'uncrustify' to check C / C++ code style
+[1.697s] -- Configured uncrustify additional arguments: 
+[1.697s] -- Added test 'xmllint' to check XML markup files
+[1.697s] -- Configuring done (1.6s)
+[1.699s] -- Generating done (0.0s)
+[1.700s] -- Build files have been written to: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/collection
+[1.704s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/collection' returned '0': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/collection -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection
+[1.705s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/collection': _=/usr/bin/env /usr/bin/cmake --build /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/collection -- -j8 -l8
+[1.761s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/collection' returned '0': _=/usr/bin/env /usr/bin/cmake --build /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/collection -- -j8 -l8
+[1.825s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/collection': _=/usr/bin/env /usr/bin/cmake --install /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/collection
+[1.840s] -- Install configuration: ""
+[1.841s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/ament_index/resource_index/package_run_dependencies/collection
+[1.841s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/ament_index/resource_index/parent_prefix_path/collection
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/environment/ament_prefix_path.sh
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/environment/ament_prefix_path.dsv
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/environment/path.sh
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/environment/path.dsv
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/local_setup.bash
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/local_setup.sh
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/local_setup.zsh
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/local_setup.dsv
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/package.dsv
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/ament_index/resource_index/packages/collection
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/cmake/collectionConfig.cmake
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/cmake/collectionConfig-version.cmake
+[1.844s] -- Installing: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/collection/share/collection/package.xml
+[1.885s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/collection' returned '0': _=/usr/bin/env /usr/bin/cmake --install /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/collection

@@ -1,0 +1,9 @@
+[0.000000] (-) TimerEvent: {}
+[0.000472] (-) JobUnselected: {'identifier': 'actuators'}
+[0.000552] (-) JobUnselected: {'identifier': 'collection'}
+[0.000577] (-) JobUnselected: {'identifier': 'common'}
+[0.000633] (-) JobUnselected: {'identifier': 'controls'}
+[0.000756] (-) JobUnselected: {'identifier': 'interfaces'}
+[0.001241] (-) JobUnselected: {'identifier': 'perceptions'}
+[0.001269] (-) JobUnselected: {'identifier': 'planning'}
+[0.001307] (-) EventReactorShutdown: {}

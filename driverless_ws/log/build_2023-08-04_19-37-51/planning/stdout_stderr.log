@@ -1,0 +1,28 @@
+-- Found ament_cmake: 2.0.2 (/opt/ros/iron/share/ament_cmake/cmake)
+-- Found ament_lint_auto: 0.14.1 (/opt/ros/iron/share/ament_lint_auto/cmake)
+-- Found rclcpp: 21.1.1 (/opt/ros/iron/share/rclcpp/cmake)
+-- Found rosidl_generator_c: 4.0.0 (/opt/ros/iron/share/rosidl_generator_c/cmake)
+-- Found rosidl_generator_cpp: 4.0.0 (/opt/ros/iron/share/rosidl_generator_cpp/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found rmw_implementation_cmake: 7.1.0 (/opt/ros/iron/share/rmw_implementation_cmake/cmake)
+-- Found rmw_fastrtps_cpp: 7.1.1 (/opt/ros/iron/share/rmw_fastrtps_cpp/cmake)
+-- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[31mCMake Error at CMakeLists.txt:38 (find_package):
+  By not providing "Findinterfaces.cmake" in CMAKE_MODULE_PATH this project
+  has asked CMake to find a package configuration file provided by
+  "interfaces", but CMake did not find one.
+
+  Could not find a package configuration file provided by "interfaces" with
+  any of the following names:
+
+    interfacesConfig.cmake
+    interfaces-config.cmake
+
+  Add the installation prefix of "interfaces" to CMAKE_PREFIX_PATH or set
+  "interfaces_DIR" to a directory containing one of the above files.  If
+  "interfaces" provides a separate development package or SDK, be sure it has
+  been installed.
+
+[0m
+-- Configuring incomplete, errors occurred!

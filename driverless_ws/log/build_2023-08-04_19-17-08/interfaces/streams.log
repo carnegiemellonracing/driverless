@@ -1,0 +1,7 @@
+[0.049s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/interfaces': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/interfaces
+[0.074s] [31mCMake Error at CMakeLists.txt:7:
+[0.074s]   Parse error.  Expected a command name, got unquoted argument with text "7".
+[0.074s] 
+[0.075s] [0m
+[0.075s] -- Configuring incomplete, errors occurred!
+[0.076s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/interfaces' returned '1': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/interfaces

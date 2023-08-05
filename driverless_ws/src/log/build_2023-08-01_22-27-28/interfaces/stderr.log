@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/opt/ros/iron/lib/rosidl_generator_type_description/rosidl_generator_type_description", line 21, in <module>
+    from rosidl_generator_type_description import generate_type_hash
+  File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_generator_type_description/__init__.py", line 24, in <module>
+    from rosidl_parser.parser import parse_idl_file
+  File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_parser/parser.py", line 20, in <module>
+    from lark import Lark
+ModuleNotFoundError: No module named 'lark'
+make[2]: *** [CMakeFiles/interfaces__rosidl_generator_type_description.dir/build.make:83: rosidl_generator_type_description/interfaces/msg/CarROT.json] Error 1
+make[1]: *** [CMakeFiles/Makefile2:215: CMakeFiles/interfaces__rosidl_generator_type_description.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:146: all] Error 2

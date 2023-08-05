@@ -1,13 +1,12 @@
 #include <memory>
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
-
+#include "msg/cone_list.hpp"
 using std::placeholders::_1;
 
 // class qos_profile : public rclcpp::QoS{
     
 // }
-
 
 
 class MidpointNode : public rclcpp::Node

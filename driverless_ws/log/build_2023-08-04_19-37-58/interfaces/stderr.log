@@ -1,0 +1,6 @@
+[31mCMake Error at /opt/ros/iron/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:64 (message):
+  rosidl_generate_interfaces() must be called before ament_package()
+Call Stack (most recent call first):
+  CMakeLists.txt:40 (rosidl_generate_interfaces)
+
+[0m

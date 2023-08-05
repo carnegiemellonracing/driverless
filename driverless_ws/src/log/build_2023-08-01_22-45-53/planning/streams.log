@@ -1,0 +1,66 @@
+[0.029s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/planning': LD_LIBRARY_PATH=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/interfaces/lib:/opt/ros/iron/opt/yaml_cpp_vendor/lib:/opt/ros/iron/opt/rviz_ogre_vendor/lib:/opt/ros/iron/lib:/opt/gurobi1001/linux64/lib _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/planning -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/planning
+[0.168s] -- The C compiler identification is GNU 13.1.1
+[0.308s] -- The CXX compiler identification is GNU 13.1.1
+[0.319s] -- Detecting C compiler ABI info
+[0.384s] -- Detecting C compiler ABI info - done
+[0.389s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.390s] -- Detecting C compile features
+[0.390s] -- Detecting C compile features - done
+[0.393s] -- Detecting CXX compiler ABI info
+[0.492s] -- Detecting CXX compiler ABI info - done
+[0.499s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.499s] -- Detecting CXX compile features
+[0.499s] -- Detecting CXX compile features - done
+[0.507s] -- Found ament_cmake: 2.0.2 (/opt/ros/iron/share/ament_cmake/cmake)
+[1.240s] -- Found Python3: /home/ishin/Documents/cmr/driverless_py/bin/python3.11 (found version "3.11.3") found components: Interpreter 
+[1.324s] -- Found ament_lint_auto: 0.14.1 (/opt/ros/iron/share/ament_lint_auto/cmake)
+[1.403s] -- Found rclcpp: 21.1.1 (/opt/ros/iron/share/rclcpp/cmake)
+[1.448s] -- Found rosidl_generator_c: 4.0.0 (/opt/ros/iron/share/rosidl_generator_c/cmake)
+[1.459s] -- Found rosidl_generator_cpp: 4.0.0 (/opt/ros/iron/share/rosidl_generator_cpp/cmake)
+[1.477s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.494s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.625s] -- Found rmw_implementation_cmake: 7.1.0 (/opt/ros/iron/share/rmw_implementation_cmake/cmake)
+[1.628s] -- Found rmw_fastrtps_cpp: 7.1.1 (/opt/ros/iron/share/rmw_fastrtps_cpp/cmake)
+[1.710s] -- Found OpenSSL: /usr/lib/libcrypto.so (found version "3.1.1")  
+[1.729s] -- Found FastRTPS: /opt/ros/iron/include  
+[1.749s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.893s] -- Found interfaces: 0.0.0 (/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/interfaces/share/interfaces/cmake)
+[2.034s] -- Added test 'copyright' to check source files copyright and LICENSE
+[2.035s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[2.035s] -- Configured cppcheck include dirs: 
+[2.035s] -- Configured cppcheck exclude dirs and/or files: 
+[2.036s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[2.036s] -- Configured cpplint exclude dirs and/or files: 
+[2.036s] -- Added test 'lint_cmake' to check CMake code style
+[2.037s] -- Added test 'uncrustify' to check C / C++ code style
+[2.037s] -- Configured uncrustify additional arguments: 
+[2.038s] -- Added test 'xmllint' to check XML markup files
+[2.039s] -- Configuring done (2.0s)
+[2.041s] [31mCMake Error at CMakeLists.txt:40 (add_executable):
+[2.041s]   Cannot find source file:
+[2.041s] 
+[2.041s]     src/publisher_member_function.cpp
+[2.041s] 
+[2.041s]   Tried extensions .c .C .c++ .cc .cpp .cxx .cu .mpp .m .M .mm .ixx .cppm .h
+[2.041s]   .hh .h++ .hm .hpp .hxx .in .txx .f .F .for .f77 .f90 .f95 .f03 .hip .ispc
+[2.041s] 
+[2.041s] [0m
+[2.041s] [31mCMake Error at CMakeLists.txt:43 (add_executable):
+[2.041s]   Cannot find source file:
+[2.041s] 
+[2.041s]     src/subscriber_member_function.cpp
+[2.042s] 
+[2.042s]   Tried extensions .c .C .c++ .cc .cpp .cxx .cu .mpp .m .M .mm .ixx .cppm .h
+[2.042s]   .hh .h++ .hm .hpp .hxx .in .txx .f .F .for .f77 .f90 .f95 .f03 .hip .ispc
+[2.042s] 
+[2.042s] [0m
+[2.042s] [31mCMake Error at CMakeLists.txt:40 (add_executable):
+[2.042s]   No SOURCES given to target: talker
+[2.042s] 
+[2.042s] [0m
+[2.042s] [31mCMake Error at CMakeLists.txt:43 (add_executable):
+[2.042s]   No SOURCES given to target: listener
+[2.042s] 
+[2.042s] [0m
+[2.042s] [0mCMake Generate step failed.  Build files cannot be regenerated correctly.[0m
+[2.051s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/planning' returned '1': LD_LIBRARY_PATH=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/interfaces/lib:/opt/ros/iron/opt/yaml_cpp_vendor/lib:/opt/ros/iron/opt/rviz_ogre_vendor/lib:/opt/ros/iron/lib:/opt/gurobi1001/linux64/lib _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/planning -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/planning

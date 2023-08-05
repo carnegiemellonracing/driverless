@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/opt/ros/iron/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 22, in <module>
+    from catkin_pkg.package import parse_package_string
+ModuleNotFoundError: No module named 'catkin_pkg'
+[31mCMake Error at /opt/ros/iron/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:95 (message):
+  execute_process(/home/ishin/Documents/cmr/driverless_py/bin/python3.11
+  /opt/ros/iron/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py
+  /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces/package.xml
+  /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces/ament_cmake_core/package.cmake)
+  returned error code 1
+Call Stack (most recent call first):
+  /opt/ros/iron/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:49 (_ament_package_xml)
+  /opt/ros/iron/share/ament_lint_auto/cmake/ament_lint_auto_find_test_dependencies.cmake:31 (ament_package_xml)
+  CMakeLists.txt:23 (ament_lint_auto_find_test_dependencies)
+
+[0m

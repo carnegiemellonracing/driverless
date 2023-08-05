@@ -1,0 +1,67 @@
+[0.017s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/interfaces
+[0.027s] -- Found ament_cmake: 2.0.2 (/opt/ros/iron/share/ament_cmake/cmake)
+[0.104s] -- Found ament_lint_auto: 0.14.1 (/opt/ros/iron/share/ament_lint_auto/cmake)
+[0.167s] -- Found geometry_msgs: 5.0.0 (/opt/ros/iron/share/geometry_msgs/cmake)
+[0.186s] -- Found rosidl_generator_c: 4.0.0 (/opt/ros/iron/share/rosidl_generator_c/cmake)
+[0.192s] -- Found rosidl_generator_cpp: 4.0.0 (/opt/ros/iron/share/rosidl_generator_cpp/cmake)
+[0.200s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.212s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.278s] -- Found rosidl_default_generators: 1.5.0 (/opt/ros/iron/share/rosidl_default_generators/cmake)
+[0.282s] -- Found rosidl_adapter: 4.0.0 (/opt/ros/iron/share/rosidl_adapter/cmake)
+[0.329s] [31mCMake Error at /opt/ros/iron/share/rosidl_adapter/cmake/rosidl_adapt_interfaces.cmake:57 (message):
+[0.329s]   execute_process(/home/ishin/Documents/cmr/driverless_py/bin/python3.11 -m
+[0.329s]   rosidl_adapter --package-name interfaces --arguments-file
+[0.329s]   /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces/rosidl_adapter__arguments__interfaces.json
+[0.329s]   --output-dir
+[0.329s]   /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces/rosidl_adapter/interfaces
+[0.329s]   --output-file
+[0.329s]   /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces/rosidl_adapter/interfaces.idls)
+[0.330s]   returned error code 1:
+[0.330s] 
+[0.330s]   AttributeError processing template 'msg.idl.em'
+[0.330s] 
+[0.330s]   Traceback (most recent call last):
+[0.330s] 
+[0.330s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/resource/__init__.py", line 48, in evaluate_template
+[0.330s]       _interpreter = em.Interpreter(
+[0.330s]                      ^^^^^^^^^^^^^^
+[0.330s] 
+[0.330s]   AttributeError: module 'em' has no attribute 'Interpreter'
+[0.330s] 
+[0.330s] 
+[0.330s] 
+[0.330s]   During handling of the above exception, another exception occurred:
+[0.330s] 
+[0.330s] 
+[0.330s] 
+[0.330s]   Traceback (most recent call last):
+[0.330s] 
+[0.330s]     File "<frozen runpy>", line 198, in _run_module_as_main
+[0.330s]     File "<frozen runpy>", line 88, in _run_code
+[0.330s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/__main__.py", line 19, in <module>
+[0.330s]       sys.exit(main())
+[0.330s]                ^^^^^^
+[0.330s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/main.py", line 53, in main
+[0.330s]       abs_idl_file = convert_to_idl(
+[0.330s]                      ^^^^^^^^^^^^^^^
+[0.330s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/__init__.py", line 19, in convert_to_idl
+[0.330s]       return convert_msg_to_idl(
+[0.330s]              ^^^^^^^^^^^^^^^^^^^
+[0.330s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/msg/__init__.py", line 39, in convert_msg_to_idl
+[0.330s]       expand_template('msg.idl.em', data, output_file, encoding='iso-8859-1')
+[0.331s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/resource/__init__.py", line 23, in expand_template
+[0.331s]       content = evaluate_template(template_name, data)
+[0.331s]                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[0.331s]     File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/resource/__init__.py", line 69, in evaluate_template
+[0.331s]       _interpreter.shutdown()
+[0.331s]       ^^^^^^^^^^^^^^^^^^^^^
+[0.331s] 
+[0.331s]   AttributeError: 'NoneType' object has no attribute 'shutdown'
+[0.331s] 
+[0.331s] Call Stack (most recent call first):
+[0.331s]   /opt/ros/iron/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:132 (rosidl_adapt_interfaces)
+[0.331s]   CMakeLists.txt:28 (rosidl_generate_interfaces)
+[0.331s] 
+[0.331s] [0m
+[0.331s] -- Configuring incomplete, errors occurred!
+[0.335s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces' returned '1': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/interfaces

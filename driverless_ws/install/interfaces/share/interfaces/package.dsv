@@ -1,0 +1,14 @@
+source;share/interfaces/hook/cmake_prefix_path.ps1
+source;share/interfaces/hook/cmake_prefix_path.dsv
+source;share/interfaces/hook/cmake_prefix_path.sh
+source;share/interfaces/hook/ld_library_path_lib.ps1
+source;share/interfaces/hook/ld_library_path_lib.dsv
+source;share/interfaces/hook/ld_library_path_lib.sh
+source;share/interfaces/hook/pythonpath.ps1
+source;share/interfaces/hook/pythonpath.dsv
+source;share/interfaces/hook/pythonpath.sh
+source;share/interfaces/local_setup.bash
+source;share/interfaces/local_setup.dsv
+source;share/interfaces/local_setup.ps1
+source;share/interfaces/local_setup.sh
+source;share/interfaces/local_setup.zsh

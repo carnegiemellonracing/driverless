@@ -1,0 +1,34 @@
+[31mCMake Error at /opt/ros/iron/share/rosidl_adapter/cmake/rosidl_adapt_interfaces.cmake:57 (message):
+  execute_process(/home/ishin/Documents/cmr/driverless_py/bin/python3.11 -m
+  rosidl_adapter --package-name interfaces --arguments-file
+  /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces/rosidl_adapter__arguments__interfaces.json
+  --output-dir
+  /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces/rosidl_adapter/interfaces
+  --output-file
+  /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces/rosidl_adapter/interfaces.idls)
+  returned error code 1:
+
+  Traceback (most recent call last):
+
+    File "<frozen runpy>", line 198, in _run_module_as_main
+    File "<frozen runpy>", line 88, in _run_code
+    File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/__main__.py", line 19, in <module>
+      sys.exit(main())
+               ^^^^^^
+    File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/main.py", line 53, in main
+      abs_idl_file = convert_to_idl(
+                     ^^^^^^^^^^^^^^^
+    File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/__init__.py", line 18, in convert_to_idl
+      from rosidl_adapter.msg import convert_msg_to_idl
+    File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/msg/__init__.py", line 16, in <module>
+      from rosidl_adapter.resource import expand_template
+    File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_adapter/resource/__init__.py", line 19, in <module>
+      import em
+
+  ModuleNotFoundError: No module named 'em'
+
+Call Stack (most recent call first):
+  /opt/ros/iron/share/rosidl_cmake/cmake/rosidl_generate_interfaces.cmake:132 (rosidl_adapt_interfaces)
+  CMakeLists.txt:28 (rosidl_generate_interfaces)
+
+[0m

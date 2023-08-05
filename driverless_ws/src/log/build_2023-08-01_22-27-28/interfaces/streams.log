@@ -1,0 +1,49 @@
+[0.038s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/interfaces
+[0.086s] -- Found ament_cmake: 2.0.2 (/opt/ros/iron/share/ament_cmake/cmake)
+[0.241s] -- Found ament_lint_auto: 0.14.1 (/opt/ros/iron/share/ament_lint_auto/cmake)
+[0.332s] -- Found geometry_msgs: 5.0.0 (/opt/ros/iron/share/geometry_msgs/cmake)
+[0.377s] -- Found rosidl_generator_c: 4.0.0 (/opt/ros/iron/share/rosidl_generator_c/cmake)
+[0.387s] -- Found rosidl_generator_cpp: 4.0.0 (/opt/ros/iron/share/rosidl_generator_cpp/cmake)
+[0.415s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.455s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.543s] -- Found rosidl_default_generators: 1.5.0 (/opt/ros/iron/share/rosidl_default_generators/cmake)
+[0.551s] -- Found rosidl_adapter: 4.0.0 (/opt/ros/iron/share/rosidl_adapter/cmake)
+[0.723s] -- Found ament_cmake_ros: 0.11.2 (/opt/ros/iron/share/ament_cmake_ros/cmake)
+[0.921s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.985s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.001s] -- Found python_cmake_module: 0.10.2 (/opt/ros/iron/share/python_cmake_module/cmake)
+[1.018s] -- Using PYTHON_EXECUTABLE: /home/ishin/Documents/cmr/driverless_py/bin/python3
+[1.018s] -- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.11
+[1.018s] -- Using PYTHON_LIBRARIES: /usr/lib/libpython3.11.so
+[1.218s] -- Using numpy include directory: /home/ishin/Documents/cmr/driverless_py/lib/python3.11/site-packages/numpy/core/include
+[1.234s] -- Added test 'lint_cmake' to check CMake code style
+[1.236s] -- Added test 'xmllint' to check XML markup files
+[1.242s] -- Configuring done (1.2s)
+[1.277s] -- Generating done (0.0s)
+[1.279s] -- Build files have been written to: /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces
+[1.287s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces' returned '0': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/install/interfaces
+[1.288s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces': _=/usr/bin/env /usr/bin/cmake --build /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces -- -j8 -l8
+[1.336s] [  1%] [34m[1mGenerating type hashes for ROS interfaces[0m
+[1.341s] [  1%] Built target ament_cmake_python_copy_interfaces
+[1.361s] Traceback (most recent call last):
+[1.361s]   File "/opt/ros/iron/lib/rosidl_generator_type_description/rosidl_generator_type_description", line 21, in <module>
+[1.361s]     from rosidl_generator_type_description import generate_type_hash
+[1.361s]   File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_generator_type_description/__init__.py", line 24, in <module>
+[1.361s]     from rosidl_parser.parser import parse_idl_file
+[1.361s]   File "/opt/ros/iron/lib/python3.11/site-packages/rosidl_parser/parser.py", line 20, in <module>
+[1.361s]     from lark import Lark
+[1.361s] ModuleNotFoundError: No module named 'lark'
+[1.365s] make[2]: *** [CMakeFiles/interfaces__rosidl_generator_type_description.dir/build.make:83: rosidl_generator_type_description/interfaces/msg/CarROT.json] Error 1
+[1.366s] make[1]: *** [CMakeFiles/Makefile2:215: CMakeFiles/interfaces__rosidl_generator_type_description.dir/all] Error 2
+[1.366s] make[1]: *** Waiting for unfinished jobs....
+[1.672s] running egg_info
+[1.673s] creating interfaces.egg-info
+[1.678s] writing interfaces.egg-info/PKG-INFO
+[1.679s] writing dependency_links to interfaces.egg-info/dependency_links.txt
+[1.679s] writing top-level names to interfaces.egg-info/top_level.txt
+[1.679s] writing manifest file 'interfaces.egg-info/SOURCES.txt'
+[1.695s] reading manifest file 'interfaces.egg-info/SOURCES.txt'
+[1.695s] writing manifest file 'interfaces.egg-info/SOURCES.txt'
+[1.737s] [  1%] Built target ament_cmake_python_build_interfaces_egg
+[1.738s] make: *** [Makefile:146: all] Error 2
+[1.739s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces' returned '2': _=/usr/bin/env /usr/bin/cmake --build /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/build/interfaces -- -j8 -l8

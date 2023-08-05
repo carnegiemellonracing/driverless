@@ -1,0 +1,32 @@
+[0.021s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/planning': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/planning -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/planning
+[0.068s] -- The C compiler identification is GNU 13.1.1
+[0.140s] -- The CXX compiler identification is GNU 13.1.1
+[0.147s] -- Detecting C compiler ABI info
+[0.202s] -- Detecting C compiler ABI info - done
+[0.208s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.208s] -- Detecting C compile features
+[0.208s] -- Detecting C compile features - done
+[0.210s] -- Detecting CXX compiler ABI info
+[0.298s] -- Detecting CXX compiler ABI info - done
+[0.307s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.308s] -- Detecting CXX compile features
+[0.308s] -- Detecting CXX compile features - done
+[0.319s] [31mCMake Error at CMakeLists.txt:19 (find_package):
+[0.319s]   By not providing "Findament_cmake.cmake" in CMAKE_MODULE_PATH this project
+[0.319s]   has asked CMake to find a package configuration file provided by
+[0.319s]   "ament_cmake", but CMake did not find one.
+[0.319s] 
+[0.319s]   Could not find a package configuration file provided by "ament_cmake" with
+[0.319s]   any of the following names:
+[0.319s] 
+[0.319s]     ament_cmakeConfig.cmake
+[0.319s]     ament_cmake-config.cmake
+[0.319s] 
+[0.319s]   Add the installation prefix of "ament_cmake" to CMAKE_PREFIX_PATH or set
+[0.319s]   "ament_cmake_DIR" to a directory containing one of the above files.  If
+[0.319s]   "ament_cmake" provides a separate development package or SDK, be sure it
+[0.319s]   has been installed.
+[0.319s] 
+[0.319s] [0m
+[0.319s] -- Configuring incomplete, errors occurred!
+[0.322s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/planning' returned '1': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/planning -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/planning

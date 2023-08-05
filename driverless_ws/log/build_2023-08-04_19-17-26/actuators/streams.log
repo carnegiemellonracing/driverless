@@ -1,0 +1,20 @@
+[0.039s] Invoking command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/actuators': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/actuators -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/actuators
+[0.065s] [31mCMake Error at CMakeLists.txt:19 (find_package):
+[0.065s]   By not providing "Findament_cmake.cmake" in CMAKE_MODULE_PATH this project
+[0.065s]   has asked CMake to find a package configuration file provided by
+[0.065s]   "ament_cmake", but CMake did not find one.
+[0.065s] 
+[0.065s]   Could not find a package configuration file provided by "ament_cmake" with
+[0.065s]   any of the following names:
+[0.065s] 
+[0.065s]     ament_cmakeConfig.cmake
+[0.065s]     ament_cmake-config.cmake
+[0.065s] 
+[0.065s]   Add the installation prefix of "ament_cmake" to CMAKE_PREFIX_PATH or set
+[0.065s]   "ament_cmake_DIR" to a directory containing one of the above files.  If
+[0.065s]   "ament_cmake" provides a separate development package or SDK, be sure it
+[0.066s]   has been installed.
+[0.066s] 
+[0.066s] [0m
+[0.066s] -- Configuring incomplete, errors occurred!
+[0.087s] Invoked command in '/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/actuators' returned '1': _=/usr/bin/env /usr/bin/cmake /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/actuators -DCMAKE_INSTALL_PREFIX=/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/install/actuators
