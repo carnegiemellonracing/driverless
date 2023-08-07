@@ -1,6 +1,0 @@
-Invoking command in '/driverless/driverless_ws/build/common': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /driverless/driverless_ws/src/common -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/driverless/driverless_ws/install/common
-Invoked command in '/driverless/driverless_ws/build/common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /driverless/driverless_ws/src/common -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/driverless/driverless_ws/install/common
-Invoking command in '/driverless/driverless_ws/build/common': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/driverless_ws/build/common -- -j8 -l8
-Invoked command in '/driverless/driverless_ws/build/common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/driverless_ws/build/common -- -j8 -l8
-Invoking command in '/driverless/driverless_ws/build/common': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/driverless_ws/build/common
-Invoked command in '/driverless/driverless_ws/build/common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/driverless_ws/build/common

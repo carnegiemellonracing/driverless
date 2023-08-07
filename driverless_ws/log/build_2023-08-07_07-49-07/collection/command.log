@@ -1,4 +1,0 @@
-Invoking command in '/driverless/driverless_ws/build/collection': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/driverless_ws/build/collection -- -j8 -l8
-Invoked command in '/driverless/driverless_ws/build/collection' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/driverless_ws/build/collection -- -j8 -l8
-Invoking command in '/driverless/driverless_ws/build/collection': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/driverless_ws/build/collection
-Invoked command in '/driverless/driverless_ws/build/collection' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/driverless_ws/build/collection

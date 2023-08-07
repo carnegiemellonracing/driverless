@@ -1,9 +1,0 @@
-/driverless/driverless_ws/build/controls/CMakeFiles/install/strip.dir
-/driverless/driverless_ws/build/controls/CMakeFiles/install/local.dir
-/driverless/driverless_ws/build/controls/CMakeFiles/install.dir
-/driverless/driverless_ws/build/controls/CMakeFiles/list_install_components.dir
-/driverless/driverless_ws/build/controls/CMakeFiles/rebuild_cache.dir
-/driverless/driverless_ws/build/controls/CMakeFiles/edit_cache.dir
-/driverless/driverless_ws/build/controls/CMakeFiles/test.dir
-/driverless/driverless_ws/build/controls/CMakeFiles/controls_uninstall.dir
-/driverless/driverless_ws/build/controls/CMakeFiles/uninstall.dir

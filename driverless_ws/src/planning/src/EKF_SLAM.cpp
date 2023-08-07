@@ -1,13 +1,17 @@
 #include <memory>
+#include <string>
+#include <cstring>
 
 #include "rclcpp/rclcpp.hpp"
-
-#include <message_filters/subscriber.h>
-#include <message_filters/synchronizer.h>
-#include <message_filters/sync_policies/approximate_time.h>
-
+//Message includes
+#include "std_msgs/msg/string.hpp"
+#include "sensor_msgs/msg/temperature.hpp"
 #include "eufs_msgs/msg/cone_array_with_covariance.hpp"
 #include "eufs_msgs/msg/car_state.hpp"
+
+//Message Filter
+#include "message_filters/subscriber.h"
+#include "message_filters/time_synchronizer.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -15,19 +19,17 @@
 #define VEHICLE_DATA_TOPIC "/ground_truth/state"
 
 using std::placeholders::_1;
+using std::placeholders::_2;
 
 class SLAMValidation : public rclcpp::Node {
   public:
     SLAMValidation(): Node("EKF_SLAM"){
       cone_sub.subscribe(this, CONE_DATA_TOPIC);
       vehicle_state_sub.subscribe(this, VEHICLE_DATA_TOPIC);
-      typedef message_filters::sync_policies::ApproximateTime<eufs_msgs::msg::ConeArrayWithCovariance, 
-                                                            eufs_msgs::msg::CarState> approx_sync_policy;
-      message_filters::Synchronizer<approx_sync_policy> approx_sync(approx_sync_policy(10), cone_sub, vehicle_state_sub);
-      approx_sync.setMaxIntervalDuration(rclcpp::Duration(0, 100000000));
-      approx_sync.registerCallback(std::bind(&SLAMValidation::run_slam, this, std::placeholders::_1, std::placeholders::_2));
-      // sync.reset(new Sync(MySyncPolicy(10), cone_sub, vehicle_state_sub));
-      // sync->registerCallback(boost::bind(&SLAMValidation::run_slam, this, _1, _2));
+
+      sync_ = std::make_shared<message_filters::TimeSynchronizer<eufs_msgs::msg::ConeArrayWithCovariance, 
+                                                            eufs_msgs::msg::CarState>>(cone_sub, vehicle_state_sub, 3);
+      sync_->registerCallback(std::bind(&SLAMValidation::topic_callback, this, _1, _2));
     }
 
     void run_slam(const eufs_msgs::msg::ConeArrayWithCovariance::SharedPtr cone_data, 
@@ -49,6 +51,14 @@ class SLAMValidation : public rclcpp::Node {
   private:
     message_filters::Subscriber<eufs_msgs::msg::ConeArrayWithCovariance> cone_sub;
     message_filters::Subscriber<eufs_msgs::msg::CarState> vehicle_state_sub;
+    std::shared_ptr<message_filters::TimeSynchronizer<eufs_msgs::msg::ConeArrayWithCovariance, eufs_msgs::msg::CarState>> sync_;
+
+  void topic_callback(const eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr& tmp_1, 
+                        const eufs_msgs::msg::CarState::ConstSharedPtr& tmp_2) const{
+    const char *temp_1 = std::to_string(tmp_1->header.stamp.sec).c_str(); //change to actual values
+    const char *temp_2 = std::to_string(tmp_2->header.stamp.sec).c_str();
+    RCLCPP_INFO(this->get_logger(), "Cone Array Time: '%s' \n Car State time: '%s'", temp_1, temp_2);
+  }
 };
 
 int main(int argc, char * argv[]){

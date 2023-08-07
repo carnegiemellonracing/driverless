@@ -1,4 +1,0 @@
-Invoking command in '/driverless/driverless_ws/build/actuators': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/driverless_ws/build/actuators -- -j8 -l8
-Invoked command in '/driverless/driverless_ws/build/actuators' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/driverless_ws/build/actuators -- -j8 -l8
-Invoking command in '/driverless/driverless_ws/build/actuators': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/driverless_ws/build/actuators
-Invoked command in '/driverless/driverless_ws/build/actuators' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/driverless_ws/build/actuators
