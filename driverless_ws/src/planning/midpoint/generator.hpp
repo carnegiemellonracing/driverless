@@ -1,7 +1,13 @@
 #include "raceline.hpp"
+#include "random.h"
 
 #ifndef MIDPOINTGENERATOR
 #define MIDPOINTGENERATOR
+
+struct perceptionsData{
+
+    std::vector<std::pair<double,double>> bluecones,yellowcones,orangecones;
+};
 
 class MidpointGenerator
 {
@@ -25,14 +31,16 @@ public:
     ~MidpointGenerator();
     gsl_matrix *sorted_by_norm(gsl_matrix *list);
 
-    gsl_matrix *midpoint(gsl_matrix *inner,gsl_matrix *outer);
-    std::vector<Spline> generate_splines(gsl_matrix *midpoints);
-    gsl_matrix *generate_points(gsl_matrix *perceptions_data);
+    std::vector<Spline> generate_splines(gsl_matrix *midpoints);    
+    gsl_matrix* generate_points(perceptionsData perceptions_data);  
+    // gsl_matrix *generate_points(perceptionsData *perceptions_data);
 
     std::vector<float> interpolate_cones(gsl_matrix *perceptions_data);
-    Spline spline_from_cones(gsl_matrix *perceptions_data);
+    Spline spline_from_cones(perceptionsData *perceptions_data);
 
 };
+
+gsl_matrix *midpoint(gsl_matrix *inner,gsl_matrix *outer);
 
 #endif
 

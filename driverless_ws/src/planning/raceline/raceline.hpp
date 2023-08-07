@@ -115,6 +115,6 @@ double arclength_f(double, void* params);
 
 double arclength(polynomial poly, double x0,double x1);
 
-std::pair<std::vector<Spline>,std::vector<int>> raceline_gen(gsl_matrix *res,int path_id,int points_per_spline = prefered_degree+1,bool loop = true);
+std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(gsl_matrix *res,int path_id =std::rand() ,int points_per_spline = prefered_degree+1,bool loop = true);
 
 #endif
