@@ -1,0 +1,202 @@
+[35m[1mScanning dependencies of target slam_test[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o[0m
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:[m[K In constructor ‘[01m[KSLAMValidation::SLAMValidation()[m[K’:
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:26:103:[m[K [01;31m[Kerror: [m[K‘[01m[Kvehicle_state_pub[m[K’ was not declared in this scope; did you mean ‘[01m[Kvehicle_state_sub[m[K’?
+   26 |       message_filters::Synchronizer<approx_sync_policy> approx_sync(approx_sync_policy(10), cone_sub, [01;31m[Kvehicle_state_pub[m[K);
+      |                                                                                                       [01;31m[K^~~~~~~~~~~~~~~~~[m[K
+      |                                                                                                       [32m[Kvehicle_state_sub[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:56:33:[m[K [01;31m[Kerror: [m[K‘[01m[KMinimalSubscriber[m[K’ was not declared in this scope
+   56 |   rclcpp::spin(std::make_shared<[01;31m[KMinimalSubscriber[m[K>());
+      |                                 [01;31m[K^~~~~~~~~~~~~~~~~[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:56:52:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kmake_shared<<expression error> >()[m[K’
+   56 |   rclcpp::spin(std::make_shared<MinimalSubscriber>([01;31m[K)[m[K);
+      |                                                    [01;31m[K^[m[K
+In file included from [01m[K/usr/include/c++/9/memory:81[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:1[m[K:
+[01m[K/usr/include/c++/9/bits/shared_ptr.h:714:5:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class _Tp, class ... _Args> std::shared_ptr<_Tp> std::make_shared(_Args&& ...)[m[K’
+  714 |     [01;36m[Kmake_shared[m[K(_Args&&... __args)
+      |     [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/usr/include/c++/9/bits/shared_ptr.h:714:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:56:52:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+   56 |   rclcpp::spin(std::make_shared<MinimalSubscriber>([01;31m[K)[m[K);
+      |                                                    [01;31m[K^[m[K
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+/opt/ros/foxy/include/message_filters/synchronizer.h: In instantiation of ‘[01m[Kmessage_filters::Connection message_filters::Synchronizer<Policy>::registerCallback(const C&, T*) [with C = void (SLAMValidation::*)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const; T = SLAMValidation; Policy = message_filters::sync_policies::ApproximateTime<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >, eufs_msgs::msg::CarState_<std::allocator<void> > >][m[K’:
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:28:67:[m[K   required from here
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kmessage_filters::Signal9<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >, eufs_msgs::msg::CarState_<std::allocator<void> >, message_filters::NullType, message_filters::NullType, message_filters::NullType, message_filters::NullType, message_filters::NullType, message_filters::NullType, message_filters::NullType>::addCallback(void (SLAMValidation::* const&)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const, SLAMValidation*&)[m[K’
+  304 |     return signal_.addCallback(callback, t[01;31m[K)[m[K;
+      |                                           [01;31m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:170:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(const std::function<void(P0, P1, P2, P3, P4, P5, P6, P7, P8)>&) [with P0 = P0; P1 = P1; P2 = P2; P3 = P3; P4 = P4; P5 = P5; P6 = P6; P7 = P7; P8 = P8; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  170 |   Connection [01;36m[KaddCallback[m[K(const std::function<void(P0, P1, P2, P3, P4, P5, P6, P7, P8)>& callback)
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:170:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kconst std::function<void(P0, P1, P2, P3, P4, P5, P6, P7, P8)>[m[K’ and ‘[01m[Kvoid (SLAMValidation::* const)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:180:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class P0, class P1> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (*)(P0, P1)) [with P0 = P0; P1 = P1; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  180 |   Connection [01;36m[KaddCallback[m[K(void(*callback)(P0, P1))
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:180:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kvoid (*)(P0, P1)[m[K’ and ‘[01m[Kvoid (SLAMValidation::*)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:186:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class P0, class P1, class P2> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (*)(P0, P1, P2)) [with P0 = P0; P1 = P1; P2 = P2; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  186 |   Connection [01;36m[KaddCallback[m[K(void(*callback)(P0, P1, P2))
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:186:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kvoid (*)(P0, P1, P2)[m[K’ and ‘[01m[Kvoid (SLAMValidation::*)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:192:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class P0, class P1, class P2, class P3> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (*)(P0, P1, P2, P3)) [with P0 = P0; P1 = P1; P2 = P2; P3 = P3; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  192 |   Connection [01;36m[KaddCallback[m[K(void(*callback)(P0, P1, P2, P3))
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:192:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kvoid (*)(P0, P1, P2, P3)[m[K’ and ‘[01m[Kvoid (SLAMValidation::*)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:198:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class P0, class P1, class P2, class P3, class P4> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (*)(P0, P1, P2, P3, P4)) [with P0 = P0; P1 = P1; P2 = P2; P3 = P3; P4 = P4; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  198 |   Connection [01;36m[KaddCallback[m[K(void(*callback)(P0, P1, P2, P3, P4))
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:198:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kvoid (*)(P0, P1, P2, P3, P4)[m[K’ and ‘[01m[Kvoid (SLAMValidation::*)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:204:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class P0, class P1, class P2, class P3, class P4, class P5> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (*)(P0, P1, P2, P3, P4, P5)) [with P0 = P0; P1 = P1; P2 = P2; P3 = P3; P4 = P4; P5 = P5; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  204 |   Connection [01;36m[KaddCallback[m[K(void(*callback)(P0, P1, P2, P3, P4, P5))
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:204:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kvoid (*)(P0, P1, P2, P3, P4, P5)[m[K’ and ‘[01m[Kvoid (SLAMValidation::*)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:210:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class P0, class P1, class P2, class P3, class P4, class P5, class P6> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (*)(P0, P1, P2, P3, P4, P5, P6)) [with P0 = P0; P1 = P1; P2 = P2; P3 = P3; P4 = P4; P5 = P5; P6 = P6; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  210 |   Connection [01;36m[KaddCallback[m[K(void(*callback)(P0, P1, P2, P3, P4, P5, P6))
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:210:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kvoid (*)(P0, P1, P2, P3, P4, P5, P6)[m[K’ and ‘[01m[Kvoid (SLAMValidation::*)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:216:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (*)(P0, P1, P2, P3, P4, P5, P6, P7)) [with P0 = P0; P1 = P1; P2 = P2; P3 = P3; P4 = P4; P5 = P5; P6 = P6; P7 = P7; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  216 |   Connection [01;36m[KaddCallback[m[K(void(*callback)(P0, P1, P2, P3, P4, P5, P6, P7))
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:216:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kvoid (*)(P0, P1, P2, P3, P4, P5, P6, P7)[m[K’ and ‘[01m[Kvoid (SLAMValidation::*)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:222:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (*)(P0, P1, P2, P3, P4, P5, P6, P7, P8)) [with P0 = P0; P1 = P1; P2 = P2; P3 = P3; P4 = P4; P5 = P5; P6 = P6; P7 = P7; P8 = P8; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  222 |   Connection [01;36m[KaddCallback[m[K(void(*callback)(P0, P1, P2, P3, P4, P5, P6, P7, P8))
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:222:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  mismatched types ‘[01m[Kvoid (*)(P0, P1, P2, P3, P4, P5, P6, P7, P8)[m[K’ and ‘[01m[Kvoid (SLAMValidation::*)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:228:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T, class P0, class P1> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (T::*)(P0, P1), T*) [with T = T; P0 = P0; P1 = P1; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  228 |   Connection [01;36m[KaddCallback[m[K(void(T::*callback)(P0, P1), T* t)
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:228:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  types ‘[01m[Kvoid (T::)(P0, P1)[m[K’ and ‘[01m[Kvoid (SLAMValidation::)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’ have incompatible cv-qualifiers
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:234:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T, class P0, class P1, class P2> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (T::*)(P0, P1, P2), T*) [with T = T; P0 = P0; P1 = P1; P2 = P2; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  234 |   Connection [01;36m[KaddCallback[m[K(void(T::*callback)(P0, P1, P2), T* t)
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:234:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  types ‘[01m[Kvoid (T::)(P0, P1, P2)[m[K’ and ‘[01m[Kvoid (SLAMValidation::)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’ have incompatible cv-qualifiers
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:240:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T, class P0, class P1, class P2, class P3> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (T::*)(P0, P1, P2, P3), T*) [with T = T; P0 = P0; P1 = P1; P2 = P2; P3 = P3; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  240 |   Connection [01;36m[KaddCallback[m[K(void(T::*callback)(P0, P1, P2, P3), T* t)
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:240:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  types ‘[01m[Kvoid (T::)(P0, P1, P2, P3)[m[K’ and ‘[01m[Kvoid (SLAMValidation::)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’ have incompatible cv-qualifiers
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:246:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T, class P0, class P1, class P2, class P3, class P4> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (T::*)(P0, P1, P2, P3, P4), T*) [with T = T; P0 = P0; P1 = P1; P2 = P2; P3 = P3; P4 = P4; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  246 |   Connection [01;36m[KaddCallback[m[K(void(T::*callback)(P0, P1, P2, P3, P4), T* t)
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:246:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  types ‘[01m[Kvoid (T::)(P0, P1, P2, P3, P4)[m[K’ and ‘[01m[Kvoid (SLAMValidation::)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’ have incompatible cv-qualifiers
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:252:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T, class P0, class P1, class P2, class P3, class P4, class P5> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (T::*)(P0, P1, P2, P3, P4, P5), T*) [with T = T; P0 = P0; P1 = P1; P2 = P2; P3 = P3; P4 = P4; P5 = P5; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  252 |   Connection [01;36m[KaddCallback[m[K(void(T::*callback)(P0, P1, P2, P3, P4, P5), T* t)
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:252:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  types ‘[01m[Kvoid (T::)(P0, P1, P2, P3, P4, P5)[m[K’ and ‘[01m[Kvoid (SLAMValidation::)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’ have incompatible cv-qualifiers
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:258:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T, class P0, class P1, class P2, class P3, class P4, class P5, class P6> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (T::*)(P0, P1, P2, P3, P4, P5, P6), T*) [with T = T; P0 = P0; P1 = P1; P2 = P2; P3 = P3; P4 = P4; P5 = P5; P6 = P6; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  258 |   Connection [01;36m[KaddCallback[m[K(void(T::*callback)(P0, P1, P2, P3, P4, P5, P6), T* t)
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:258:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  types ‘[01m[Kvoid (T::)(P0, P1, P2, P3, P4, P5, P6)[m[K’ and ‘[01m[Kvoid (SLAMValidation::)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’ have incompatible cv-qualifiers
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:264:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class T, class P0, class P1, class P2, class P3, class P4, class P5, class P6, class P7> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(void (T::*)(P0, P1, P2, P3, P4, P5, P6, P7), T*) [with T = T; P0 = P0; P1 = P1; P2 = P2; P3 = P3; P4 = P4; P5 = P5; P6 = P6; P7 = P7; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  264 |   Connection [01;36m[KaddCallback[m[K(void(T::*callback)(P0, P1, P2, P3, P4, P5, P6, P7), T* t)
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:264:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  types ‘[01m[Kvoid (T::)(P0, P1, P2, P3, P4, P5, P6, P7)[m[K’ and ‘[01m[Kvoid (SLAMValidation::)(std::shared_ptr<eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> > >, std::shared_ptr<eufs_msgs::msg::CarState_<std::allocator<void> > >) const[m[K’ have incompatible cv-qualifiers
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:47[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:270:14:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class C> message_filters::Connection message_filters::Signal9<M0, M1, M2, M3, M4, M5, M6, M7, M8>::addCallback(C&) [with C = C; M0 = eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >; M1 = eufs_msgs::msg::CarState_<std::allocator<void> >; M2 = message_filters::NullType; M3 = message_filters::NullType; M4 = message_filters::NullType; M5 = message_filters::NullType; M6 = message_filters::NullType; M7 = message_filters::NullType; M8 = message_filters::NullType][m[K’
+  270 |   Connection [01;36m[KaddCallback[m[K( C& callback)
+      |              [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/message_filters/signal9.h:270:14:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+In file included from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/message_filters/synchronizer.h:304:43:[m[K [01;36m[Knote: [m[K  candidate expects 1 argument, 2 provided
+  304 |     return signal_.addCallback(callback, t[01;36m[K)[m[K;
+      |                                           [01;36m[K^[m[K
+make[2]: *** [CMakeFiles/slam_test.dir/build.make:63: CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/slam_test.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2

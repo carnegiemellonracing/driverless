@@ -1,0 +1,11 @@
+[0.010s] Invoking command in '/driverless/driverless_ws/build/planning': AMENT_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/driverless_ws/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --build /driverless/driverless_ws/build/planning -- -j8 -l8
+[0.050s] [35m[1mScanning dependencies of target slam_test[0m
+[0.075s] [ 50%] [32mBuilding CXX object CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o[0m
+[0.152s] [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:4:10:[m[K [01;31m[Kfatal error: [m[Kros/ros.h: No such file or directory
+[0.152s]     4 | #include [01;31m[K<ros/ros.h>[m[K
+[0.152s]       |          [01;31m[K^~~~~~~~~~~[m[K
+[0.152s] compilation terminated.
+[0.154s] make[2]: *** [CMakeFiles/slam_test.dir/build.make:63: CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o] Error 1
+[0.155s] make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/slam_test.dir/all] Error 2
+[0.155s] make: *** [Makefile:141: all] Error 2
+[0.158s] Invoked command in '/driverless/driverless_ws/build/planning' returned '2': AMENT_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/driverless_ws/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --build /driverless/driverless_ws/build/planning -- -j8 -l8

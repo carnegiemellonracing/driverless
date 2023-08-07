@@ -1,0 +1,48 @@
+[0.079s] Invoking command in '/driverless/driverless_ws/build/actuators': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /driverless/driverless_ws/src/actuators -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/driverless/driverless_ws/install/actuators
+[0.134s] -- The C compiler identification is GNU 9.4.0
+[0.200s] -- The CXX compiler identification is GNU 9.4.0
+[0.213s] -- Check for working C compiler: /usr/bin/cc
+[0.289s] -- Check for working C compiler: /usr/bin/cc -- works
+[0.290s] -- Detecting C compiler ABI info
+[0.367s] -- Detecting C compiler ABI info - done
+[0.381s] -- Detecting C compile features
+[0.382s] -- Detecting C compile features - done
+[0.386s] -- Check for working CXX compiler: /usr/bin/c++
+[0.488s] -- Check for working CXX compiler: /usr/bin/c++ -- works
+[0.489s] -- Detecting CXX compiler ABI info
+[0.601s] -- Detecting CXX compiler ABI info - done
+[0.618s] -- Detecting CXX compile features
+[0.619s] -- Detecting CXX compile features - done
+[0.624s] -- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)
+[0.663s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+[0.663s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[0.850s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.876s] -- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)
+[1.053s] -- Added test 'copyright' to check source files copyright and LICENSE
+[1.055s] -- Added test 'lint_cmake' to check CMake code style
+[1.056s] -- Added test 'xmllint' to check XML markup files
+[1.060s] -- Configuring done
+[1.063s] -- Generating done
+[1.070s] -- Build files have been written to: /driverless/driverless_ws/build/actuators
+[1.077s] Invoked command in '/driverless/driverless_ws/build/actuators' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /driverless/driverless_ws/src/actuators -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/driverless/driverless_ws/install/actuators
+[1.079s] Invoking command in '/driverless/driverless_ws/build/actuators': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/driverless_ws/build/actuators -- -j8 -l8
+[1.173s] Invoked command in '/driverless/driverless_ws/build/actuators' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/driverless_ws/build/actuators -- -j8 -l8
+[1.218s] Invoking command in '/driverless/driverless_ws/build/actuators': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/driverless_ws/build/actuators
+[1.228s] -- Install configuration: ""
+[1.230s] -- Execute custom install script
+[1.233s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/ament_index/resource_index/package_run_dependencies/actuators
+[1.239s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/ament_index/resource_index/parent_prefix_path/actuators
+[1.247s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/environment/ament_prefix_path.sh
+[1.257s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/environment/ament_prefix_path.dsv
+[1.267s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/environment/path.sh
+[1.277s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/environment/path.dsv
+[1.287s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/local_setup.bash
+[1.298s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/local_setup.sh
+[1.311s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/local_setup.zsh
+[1.318s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/local_setup.dsv
+[1.328s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/package.dsv
+[1.339s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/ament_index/resource_index/packages/actuators
+[1.349s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/cmake/actuatorsConfig.cmake
+[1.360s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/cmake/actuatorsConfig-version.cmake
+[1.371s] -- Symlinking: /driverless/driverless_ws/install/actuators/share/actuators/package.xml
+[1.451s] Invoked command in '/driverless/driverless_ws/build/actuators' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/driverless_ws/build/actuators

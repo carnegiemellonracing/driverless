@@ -1,0 +1,53 @@
+[0.009s] Invoking command in '/driverless/driverless_ws/build/planning': AMENT_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/driverless_ws/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake /driverless/driverless_ws/src/planning -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/driverless/driverless_ws/install/planning
+[0.059s] -- The C compiler identification is GNU 9.4.0
+[0.102s] -- The CXX compiler identification is GNU 9.4.0
+[0.105s] -- Check for working C compiler: /usr/bin/cc
+[0.162s] -- Check for working C compiler: /usr/bin/cc -- works
+[0.163s] -- Detecting C compiler ABI info
+[0.219s] -- Detecting C compiler ABI info - done
+[0.228s] -- Detecting C compile features
+[0.228s] -- Detecting C compile features - done
+[0.230s] -- Check for working CXX compiler: /usr/bin/c++
+[0.298s] -- Check for working CXX compiler: /usr/bin/c++ -- works
+[0.299s] -- Detecting CXX compiler ABI info
+[0.364s] -- Detecting CXX compiler ABI info - done
+[0.375s] -- Detecting CXX compile features
+[0.375s] -- Detecting CXX compile features - done
+[0.378s] -- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)
+[0.398s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+[0.399s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[0.516s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.538s] -- Found rclcpp: 2.4.3 (/opt/ros/foxy/share/rclcpp/cmake)
+[0.577s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.583s] -- Found rosidl_adapter: 1.3.1 (/opt/ros/foxy/share/rosidl_adapter/cmake)
+[0.658s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.1f")  
+[0.690s] -- Found FastRTPS: /opt/ros/foxy/include  
+[0.759s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.803s] -- Found rmw_implementation_cmake: 1.0.4 (/opt/ros/foxy/share/rmw_implementation_cmake/cmake)
+[0.804s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.805s] -- Looking for pthread.h
+[0.875s] -- Looking for pthread.h - found
+[0.875s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[0.938s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+[0.938s] -- Looking for pthread_create in pthreads
+[0.987s] -- Looking for pthread_create in pthreads - not found
+[0.987s] -- Looking for pthread_create in pthread
+[1.044s] -- Looking for pthread_create in pthread - found
+[1.045s] -- Found Threads: TRUE  
+[1.162s] -- Found message_filters: 3.2.7 (/opt/ros/foxy/share/message_filters/cmake)
+[1.163s] -- Found eufs_msgs: 2.0.0 (/driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake)
+[1.500s] -- Configuring done
+[1.507s] -- Generating done
+[1.509s] -- Build files have been written to: /driverless/driverless_ws/build/planning
+[1.515s] Invoked command in '/driverless/driverless_ws/build/planning' returned '0': AMENT_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/driverless_ws/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake /driverless/driverless_ws/src/planning -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/driverless/driverless_ws/install/planning
+[1.518s] Invoking command in '/driverless/driverless_ws/build/planning': AMENT_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/driverless_ws/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --build /driverless/driverless_ws/build/planning -- -j8 -l8
+[1.550s] [35m[1mScanning dependencies of target slam_test[0m
+[1.614s] [ 50%] [32mBuilding CXX object CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o[0m
+[1.710s] [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:8:10:[m[K [01;31m[Kfatal error: [m[Keufs_msgs/msg/ConeArrayWithCovariance.hpp: No such file or directory
+[1.710s]     8 | #include [01;31m[K"eufs_msgs/msg/ConeArrayWithCovariance.hpp"[m[K
+[1.710s]       |          [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[1.710s] compilation terminated.
+[1.712s] make[2]: *** [CMakeFiles/slam_test.dir/build.make:63: CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o] Error 1
+[1.712s] make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/slam_test.dir/all] Error 2
+[1.713s] make: *** [Makefile:141: all] Error 2
+[1.715s] Invoked command in '/driverless/driverless_ws/build/planning' returned '2': AMENT_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/driverless_ws/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --build /driverless/driverless_ws/build/planning -- -j8 -l8

@@ -1,0 +1,38 @@
+[0.010s] Invoking command in '/driverless/driverless_ws/build/planning': AMENT_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/driverless_ws/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --build /driverless/driverless_ws/build/planning -- -j8 -l8
+[0.046s] [35m[1mScanning dependencies of target slam_test[0m
+[0.071s] [ 50%] [32mBuilding CXX object CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o[0m
+[1.064s] [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:[m[K In constructor ‘[01m[KSLAMValidation::SLAMValidation()[m[K’:
+[1.064s] [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:30:13:[m[K [01;31m[Kerror: [m[Krequest for member ‘[01m[KregisterCallback[m[K’ in ‘[01m[K* sync[m[K’, which is of non-class type ‘[01m[Kvoid() throw ()[m[K’ {aka ‘[01m[Kvoid()[m[K’}
+[1.064s]    30 |       sync->[01;31m[KregisterCallback[m[K(boost::bind(&SLAMValidation::run_slam, this, _1, _2));
+[1.064s]       |             [01;31m[K^~~~~~~~~~~~~~~~[m[K
+[1.065s] [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:30:37:[m[K [01;31m[Kerror: [m[K‘[01m[Kbind[m[K’ is not a member of ‘[01m[Kboost[m[K’; did you mean ‘[01m[Kstd::bind[m[K’?
+[1.065s]    30 |       sync->registerCallback(boost::[01;31m[Kbind[m[K(&SLAMValidation::run_slam, this, _1, _2));
+[1.065s]       |                                     [01;31m[K^~~~[m[K
+[1.065s] In file included from [01m[K/opt/ros/foxy/include/rclcpp/context.hpp:19[m[K,
+[1.065s]                  from [01m[K/opt/ros/foxy/include/rclcpp/contexts/default_context.hpp:18[m[K,
+[1.065s]                  from [01m[K/opt/ros/foxy/include/rclcpp/executor.hpp:32[m[K,
+[1.065s]                  from [01m[K/opt/ros/foxy/include/rclcpp/executors/multi_threaded_executor.hpp:26[m[K,
+[1.065s]                  from [01m[K/opt/ros/foxy/include/rclcpp/executors.hpp:21[m[K,
+[1.065s]                  from [01m[K/opt/ros/foxy/include/rclcpp/rclcpp.hpp:146[m[K,
+[1.065s]                  from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:3[m[K:
+[1.065s] [01m[K/usr/include/c++/9/functional:832:5:[m[K [01;36m[Knote: [m[K‘[01m[Kstd::bind[m[K’ declared here
+[1.065s]   832 |     [01;36m[Kbind[m[K(_Func&& __f, _BoundArgs&&... __args)
+[1.065s]       |     [01;36m[K^~~~[m[K
+[1.066s] [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:30:79:[m[K [01;31m[Kerror: [m[K‘[01m[K_2[m[K’ was not declared in this scope; did you mean ‘[01m[Kstd::placeholders::_2[m[K’?
+[1.066s]    30 |       sync->registerCallback(boost::bind(&SLAMValidation::run_slam, this, _1, [01;31m[K_2[m[K));
+[1.066s]       |                                                                               [01;31m[K^~[m[K
+[1.066s]       |                                                                               [32m[Kstd::placeholders::_2[m[K
+[1.066s] In file included from [01m[K/opt/ros/foxy/include/rclcpp/context.hpp:19[m[K,
+[1.066s]                  from [01m[K/opt/ros/foxy/include/rclcpp/contexts/default_context.hpp:18[m[K,
+[1.066s]                  from [01m[K/opt/ros/foxy/include/rclcpp/executor.hpp:32[m[K,
+[1.066s]                  from [01m[K/opt/ros/foxy/include/rclcpp/executors/multi_threaded_executor.hpp:26[m[K,
+[1.066s]                  from [01m[K/opt/ros/foxy/include/rclcpp/executors.hpp:21[m[K,
+[1.066s]                  from [01m[K/opt/ros/foxy/include/rclcpp/rclcpp.hpp:146[m[K,
+[1.066s]                  from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:3[m[K:
+[1.066s] [01m[K/usr/include/c++/9/functional:212:34:[m[K [01;36m[Knote: [m[K‘[01m[Kstd::placeholders::_2[m[K’ declared here
+[1.066s]   212 |     extern const _Placeholder<2> [01;36m[K_2[m[K;
+[1.066s]       |                                  [01;36m[K^~[m[K
+[2.952s] make[2]: *** [CMakeFiles/slam_test.dir/build.make:63: CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o] Error 1
+[2.952s] make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/slam_test.dir/all] Error 2
+[2.953s] make: *** [Makefile:141: all] Error 2
+[2.955s] Invoked command in '/driverless/driverless_ws/build/planning' returned '2': AMENT_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/driverless_ws/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --build /driverless/driverless_ws/build/planning -- -j8 -l8

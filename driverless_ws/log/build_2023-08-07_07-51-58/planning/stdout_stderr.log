@@ -1,0 +1,82 @@
+[35m[1mScanning dependencies of target slam_test[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o[0m
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:19:23:[m[K [01;31m[Kerror: [m[KISO C++ forbids declaration of ‘[01m[KMinimalSubscriber[m[K’ with no type [[01;31m[K-fpermissive[m[K]
+   19 |     MinimalSubscriber([01;31m[K)[m[K: Node("EKF_SLAM"){
+      |                       [01;31m[K^[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:49:5:[m[K [01;31m[Kerror: [m[K‘[01m[Kboost[m[K’ does not name a type
+   49 |     [01;31m[Kboost[m[K::shared_ptr<Sync> sync;
+      |     [01;31m[K^~~~~[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:[m[K In member function ‘[01m[Kint SLAMValidation::MinimalSubscriber()[m[K’:
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:19:26:[m[K [01;31m[Kerror: [m[Konly constructors take member initializers
+   19 |     MinimalSubscriber(): [01;31m[KNode[m[K("EKF_SLAM"){
+      |                          [01;31m[K^~~~[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:20:7:[m[K [01;31m[Kerror: [m[K‘[01m[Ksub_1_[m[K’ was not declared in this scope
+   20 |       [01;31m[Ksub_1_[m[K.subscribe(this, CONE_DATA_TOPIC, 10);
+      |       [01;31m[K^~~~~~[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:21:7:[m[K [01;31m[Kerror: [m[K‘[01m[Ksub_2_[m[K’ was not declared in this scope
+   21 |       [01;31m[Ksub_2_[m[K.subscribe(this, VEHICLE_DATA_TOPIC, 10);
+      |       [01;31m[K^~~~~~[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:22:7:[m[K [01;31m[Kerror: [m[K‘[01m[Ksync[m[K’ was not declared in this scope; did you mean ‘[01m[KSync[m[K’?
+   22 |       [01;31m[Ksync[m[K.reset(new Sync(MySyncPolicy(10), cone_sub, vehicle_state_sub));
+      |       [01;31m[K^~~~[m[K
+      |       [32m[KSync[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:23:30:[m[K [01;31m[Kerror: [m[K‘[01m[Kboost[m[K’ has not been declared
+   23 |       sync->registerCallback([01;31m[Kboost[m[K::bind(&SLAMValidation::run_slam, this, _1, _2));
+      |                              [01;31m[K^~~~~[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:23:79:[m[K [01;31m[Kerror: [m[K‘[01m[K_2[m[K’ was not declared in this scope; did you mean ‘[01m[Kstd::placeholders::_2[m[K’?
+   23 |       sync->registerCallback(boost::bind(&SLAMValidation::run_slam, this, _1, [01;31m[K_2[m[K));
+      |                                                                               [01;31m[K^~[m[K
+      |                                                                               [32m[Kstd::placeholders::_2[m[K
+In file included from [01m[K/opt/ros/foxy/include/rclcpp/context.hpp:19[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/contexts/default_context.hpp:18[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/executor.hpp:32[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/executors/multi_threaded_executor.hpp:26[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/executors.hpp:21[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/rclcpp.hpp:146[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:3[m[K:
+[01m[K/usr/include/c++/9/functional:212:34:[m[K [01;36m[Knote: [m[K‘[01m[Kstd::placeholders::_2[m[K’ declared here
+  212 |     extern const _Placeholder<2> [01;36m[K_2[m[K;
+      |                                  [01;36m[K^~[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:24:5:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+   24 |     [01;35m[K}[m[K
+      |     [01;35m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/rclcpp/client.hpp:40[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/callback_group.hpp:23[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/any_executable.hpp:20[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/memory_strategy.hpp:24[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/memory_strategies.hpp:18[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/executor_options.hpp:20[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/executor.hpp:33[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/executors/multi_threaded_executor.hpp:26[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/executors.hpp:21[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/rclcpp.hpp:146[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:3[m[K:
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:[m[K In member function ‘[01m[Kvoid SLAMValidation::run_slam(eufs_msgs::msg::ConeArrayWithCovariance_<std::allocator<void> >::SharedPtr, eufs_msgs::msg::CarState_<std::allocator<void> >::SharedPtr) const[m[K’:
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:35:43:[m[K [01;31m[Kerror: [m[Kbase operand of ‘[01m[K->[m[K’ has non-pointer type ‘[01m[Keufs_msgs::msg::CarState_<std::allocator<void> >::_pose_type[m[K’ {aka ‘[01m[Kgeometry_msgs::msg::PoseWithCovariance_<std::allocator<void> >[m[K’}
+   35 |                   vehicle_state_data->pose[01;31m[K->[m[Kpoint->x,
+      |                                           [01;31m[K^~[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:36:43:[m[K [01;31m[Kerror: [m[Kbase operand of ‘[01m[K->[m[K’ has non-pointer type ‘[01m[Keufs_msgs::msg::CarState_<std::allocator<void> >::_pose_type[m[K’ {aka ‘[01m[Kgeometry_msgs::msg::PoseWithCovariance_<std::allocator<void> >[m[K’}
+   36 |                   vehicle_state_data->pose[01;31m[K->[m[Kpoint->y,
+      |                                           [01;31m[K^~[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:37:43:[m[K [01;31m[Kerror: [m[Kbase operand of ‘[01m[K->[m[K’ has non-pointer type ‘[01m[Keufs_msgs::msg::CarState_<std::allocator<void> >::_pose_type[m[K’ {aka ‘[01m[Kgeometry_msgs::msg::PoseWithCovariance_<std::allocator<void> >[m[K’}
+   37 |                   vehicle_state_data->pose[01;31m[K->[m[Kpoint->z);
+      |                                           [01;31m[K^~[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:54:33:[m[K [01;31m[Kerror: [m[K‘[01m[KMinimalSubscriber[m[K’ was not declared in this scope
+   54 |   rclcpp::spin(std::make_shared<[01;31m[KMinimalSubscriber[m[K>());
+      |                                 [01;31m[K^~~~~~~~~~~~~~~~~[m[K
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:54:52:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kmake_shared<<expression error> >()[m[K’
+   54 |   rclcpp::spin(std::make_shared<MinimalSubscriber>([01;31m[K)[m[K);
+      |                                                    [01;31m[K^[m[K
+In file included from [01m[K/usr/include/c++/9/memory:81[m[K,
+                 from [01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:1[m[K:
+[01m[K/usr/include/c++/9/bits/shared_ptr.h:714:5:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class _Tp, class ... _Args> std::shared_ptr<_Tp> std::make_shared(_Args&& ...)[m[K’
+  714 |     [01;36m[Kmake_shared[m[K(_Args&&... __args)
+      |     [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/usr/include/c++/9/bits/shared_ptr.h:714:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:54:52:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+   54 |   rclcpp::spin(std::make_shared<MinimalSubscriber>([01;31m[K)[m[K);
+      |                                                    [01;31m[K^[m[K
+make[2]: *** [CMakeFiles/slam_test.dir/build.make:63: CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/slam_test.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2

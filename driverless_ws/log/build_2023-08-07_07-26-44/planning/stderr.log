@@ -1,0 +1,7 @@
+[01m[K/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:4:10:[m[K [01;31m[Kfatal error: [m[Knode_handle.h: No such file or directory
+    4 | #include [01;31m[K<node_handle.h>[m[K
+      |          [01;31m[K^~~~~~~~~~~~~~~[m[K
+compilation terminated.
+make[2]: *** [CMakeFiles/slam_test.dir/build.make:63: CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/slam_test.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2

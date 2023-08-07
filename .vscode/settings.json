@@ -1,6 +1,7 @@
 {
     "cmake.sourceDirectory": "/home/ankit/Documents/Autonomous/driverless/driverless_ws/src/perceptions",
     "files.associations": {
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "functional": "cpp"
     }
 }
