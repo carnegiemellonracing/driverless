@@ -16,6 +16,14 @@ struct projection {
   float min_distance;  // For testing
   float curvature;
   float velocity;
+
+  projection(float progress,int min_index,float min_distance,float curvature,float velocity){
+    this->progress = progress;
+    this->min_index = min_index;
+    this->min_distance = min_distance;
+    this->curvature = curvature;
+    this->velocity = velocity;
+  }
 };
 
 projection frenet(float x, float y, std::vector<Spline> path,

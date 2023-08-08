@@ -59,6 +59,9 @@ public:
         second_der = polyder(first_der);
     }
 
+    polynomial get_first_der();
+    polynomial get_second_der();
+
     gsl_matrix* get_points();
     void set_points(gsl_matrix *newpoints);
 
