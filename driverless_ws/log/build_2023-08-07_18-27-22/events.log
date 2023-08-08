@@ -1,0 +1,627 @@
+[0.000000] (-) TimerEvent: {}
+[0.000309] (-) JobUnselected: {'identifier': 'actuators'}
+[0.000375] (-) JobUnselected: {'identifier': 'collection'}
+[0.000421] (-) JobUnselected: {'identifier': 'common'}
+[0.000473] (-) JobUnselected: {'identifier': 'controls'}
+[0.000712] (-) JobUnselected: {'identifier': 'eufs_msgs'}
+[0.000780] (-) JobUnselected: {'identifier': 'interfaces'}
+[0.000872] (-) JobUnselected: {'identifier': 'perceptions'}
+[0.000922] (planning) JobQueued: {'identifier': 'planning', 'dependencies': OrderedDict([('eufs_msgs', '/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs')])}
+[0.000973] (planning) JobStarted: {'identifier': 'planning'}
+[0.097745] (-) TimerEvent: {}
+[0.198180] (-) TimerEvent: {}
+[0.218492] (planning) JobProgress: {'identifier': 'planning', 'progress': 'cmake'}
+[0.219671] (planning) Command: {'cmd': ['/usr/bin/cmake', '/home/andrewwhong/workspace/driverless/driverless_ws/src/planning', '-DCMAKE_INSTALL_PREFIX=/home/andrewwhong/workspace/driverless/driverless_ws/install/planning'], 'cwd': '/home/andrewwhong/workspace/driverless/driverless_ws/build/planning', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'andrewwhong'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs/lib:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('HOME', '/home/andrewwhong'), ('OLDPWD', '//home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase'), ('TERM_PROGRAM_VERSION', '1.80.1'), ('VSCODE_IPC_HOOK_CLI', '/tmp/vscode-ipc-1019c375-9cc7-4f75-b423-dc1faf2d613c.sock'), ('ROS_PYTHON_VERSION', '3'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('COLCON_PREFIX_PATH', '/home/andrewwhong/workspace/driverless/driverless_ws/install'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'andrewwhong'), ('NAME', 'DESKTOP-NJ9IVDT'), ('WSL_INTEROP', '/run/WSL/12_interop'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/andrewwhong/.vscode-server/bin/74f6148eb9ea00507ec113ec51c489d6ffb4b771/bin/remote-cli:/home/andrewwhong/.local/bin:/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/VMware/VMware Workstation/bin/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.5/bin:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.5/libnvvp:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files/Wolfram Research/WolframScript/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/110/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/120/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/120/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/120/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/MATLAB/R2022b/runtime/win64:/mnt/c/Program Files/MATLAB/R2022b/bin:/mnt/c/Program Files/MATLAB/R2021b/runtime/win64:/mnt/c/Program Files/MATLAB/R2021b/bin:/mnt/c/Program Files/MATLAB/R2021a/bin:/mnt/c/Program Files/NVIDIA Corporation/Nsight Compute 2021.3.0/:/mnt/c/Program Files/dotnet/:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/TortoiseSVN/bin:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/Program Files/Common Files/Autodesk Shared/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/WireGuard/:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/Andrew Chong/AppData/Local/Programs/Python/Python39:/mnt/c/Users/Andrew Chong/AppData/Local/Programs/Python/Python39/Scripts/:/mnt/c/Users/Andrew Chong/AppData/Local/Programs/Python/Python39/:/mnt/c/Users/Andrew Chong/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Andrew Chong/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Andrew Chong/GitHubDesktop/bin:/mnt/c/Program Files/CMake/bin:/mnt/c/Users/Andrew Chong/AppData/Local/GitHubDesktop/bin:/mnt/c/msys64/mingw64/bin:/snap/bin'), ('DISPLAY', '192.168.136.1:0.0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/tmp/vscode-git-5118adeae3.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/andrewwhong/workspace/driverless/driverless_ws/build/planning'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('HOSTTYPE', 'x86_64'), ('CMAKE_PREFIX_PATH', '/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:/home/andrewwhong/workspace/driverless/driverless_ws/install/perceptions:/home/andrewwhong/workspace/driverless/driverless_ws/install/interfaces:/home/andrewwhong/workspace/driverless/driverless_ws/install/controls:/home/andrewwhong/workspace/driverless/driverless_ws/install/common:/home/andrewwhong/workspace/driverless/driverless_ws/install/collection:/home/andrewwhong/workspace/driverless/driverless_ws/install/actuators:/opt/ros/foxy'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up')]), 'shell': False}
+[0.236572] (planning) StdoutLine: {'line': b'-- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)\n'}
+[0.258459] (planning) StdoutLine: {'line': b'-- Using PYTHON_EXECUTABLE: /usr/bin/python3\n'}
+[0.298329] (-) TimerEvent: {}
+[0.398754] (-) TimerEvent: {}
+[0.454127] (planning) StdoutLine: {'line': b'-- Found rclcpp: 2.4.3 (/opt/ros/foxy/share/rclcpp/cmake)\n'}
+[0.498883] (-) TimerEvent: {}
+[0.599319] (-) TimerEvent: {}
+[0.673712] (planning) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.676636] (planning) StdoutLine: {'line': b'-- Found rosidl_adapter: 1.3.1 (/opt/ros/foxy/share/rosidl_adapter/cmake)\n'}
+[0.699442] (-) TimerEvent: {}
+[0.799903] (-) TimerEvent: {}
+[0.900346] (-) TimerEvent: {}
+[1.000773] (-) TimerEvent: {}
+[1.101175] (-) TimerEvent: {}
+[1.201612] (-) TimerEvent: {}
+[1.302057] (-) TimerEvent: {}
+[1.402498] (-) TimerEvent: {}
+[1.502881] (-) TimerEvent: {}
+[1.603280] (-) TimerEvent: {}
+[1.703725] (-) TimerEvent: {}
+[1.804226] (-) TimerEvent: {}
+[1.904654] (-) TimerEvent: {}
+[2.005029] (-) TimerEvent: {}
+[2.105429] (-) TimerEvent: {}
+[2.205813] (-) TimerEvent: {}
+[2.306189] (-) TimerEvent: {}
+[2.406587] (-) TimerEvent: {}
+[2.506996] (-) TimerEvent: {}
+[2.607388] (-) TimerEvent: {}
+[2.707782] (-) TimerEvent: {}
+[2.808197] (-) TimerEvent: {}
+[2.908607] (-) TimerEvent: {}
+[3.009054] (-) TimerEvent: {}
+[3.109469] (-) TimerEvent: {}
+[3.209948] (-) TimerEvent: {}
+[3.310362] (-) TimerEvent: {}
+[3.410795] (-) TimerEvent: {}
+[3.511194] (-) TimerEvent: {}
+[3.611657] (-) TimerEvent: {}
+[3.712058] (-) TimerEvent: {}
+[3.812466] (-) TimerEvent: {}
+[3.912890] (-) TimerEvent: {}
+[4.013288] (-) TimerEvent: {}
+[4.113733] (-) TimerEvent: {}
+[4.214120] (-) TimerEvent: {}
+[4.314516] (-) TimerEvent: {}
+[4.414896] (-) TimerEvent: {}
+[4.515280] (-) TimerEvent: {}
+[4.615714] (-) TimerEvent: {}
+[4.716145] (-) TimerEvent: {}
+[4.816544] (-) TimerEvent: {}
+[4.916935] (-) TimerEvent: {}
+[5.017354] (-) TimerEvent: {}
+[5.117787] (-) TimerEvent: {}
+[5.218209] (-) TimerEvent: {}
+[5.318675] (-) TimerEvent: {}
+[5.419051] (-) TimerEvent: {}
+[5.519416] (-) TimerEvent: {}
+[5.619799] (-) TimerEvent: {}
+[5.720182] (-) TimerEvent: {}
+[5.820570] (-) TimerEvent: {}
+[5.881657] (planning) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[5.920737] (-) TimerEvent: {}
+[5.929933] (planning) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 1.0.4 (/opt/ros/foxy/share/rmw_implementation_cmake/cmake)\n'}
+[5.931229] (planning) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[6.020929] (-) TimerEvent: {}
+[6.070361] (planning) StdoutLine: {'line': b'-- Found message_filters: 3.2.7 (/opt/ros/foxy/share/message_filters/cmake)\n'}
+[6.072444] (planning) StdoutLine: {'line': b'-- Found eufs_msgs: 2.0.0 (/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake)\n'}
+[6.121078] (-) TimerEvent: {}
+[6.221538] (-) TimerEvent: {}
+[6.322037] (-) TimerEvent: {}
+[6.422490] (-) TimerEvent: {}
+[6.514302] (planning) StdoutLine: {'line': b'-- Configuring done\n'}
+[6.522605] (-) TimerEvent: {}
+[6.525031] (planning) StdoutLine: {'line': b'-- Generating done\n'}
+[6.526512] (planning) StdoutLine: {'line': b'-- Build files have been written to: /home/andrewwhong/workspace/driverless/driverless_ws/build/planning\n'}
+[6.533825] (planning) CommandEnded: {'returncode': 0}
+[6.534690] (planning) JobProgress: {'identifier': 'planning', 'progress': 'build'}
+[6.536883] (planning) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/andrewwhong/workspace/driverless/driverless_ws/build/planning', '--', '-j12', '-l12'], 'cwd': '/home/andrewwhong/workspace/driverless/driverless_ws/build/planning', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'andrewwhong'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs/lib:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('HOME', '/home/andrewwhong'), ('OLDPWD', '//home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase'), ('TERM_PROGRAM_VERSION', '1.80.1'), ('VSCODE_IPC_HOOK_CLI', '/tmp/vscode-ipc-1019c375-9cc7-4f75-b423-dc1faf2d613c.sock'), ('ROS_PYTHON_VERSION', '3'), ('COLORTERM', 'truecolor'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('COLCON_PREFIX_PATH', '/home/andrewwhong/workspace/driverless/driverless_ws/install'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'andrewwhong'), ('NAME', 'DESKTOP-NJ9IVDT'), ('WSL_INTEROP', '/run/WSL/12_interop'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/andrewwhong/.vscode-server/bin/74f6148eb9ea00507ec113ec51c489d6ffb4b771/bin/remote-cli:/home/andrewwhong/.local/bin:/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/VMware/VMware Workstation/bin/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.5/bin:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.5/libnvvp:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files/Wolfram Research/WolframScript/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/110/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/120/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/120/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/120/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/MATLAB/R2022b/runtime/win64:/mnt/c/Program Files/MATLAB/R2022b/bin:/mnt/c/Program Files/MATLAB/R2021b/runtime/win64:/mnt/c/Program Files/MATLAB/R2021b/bin:/mnt/c/Program Files/MATLAB/R2021a/bin:/mnt/c/Program Files/NVIDIA Corporation/Nsight Compute 2021.3.0/:/mnt/c/Program Files/dotnet/:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/TortoiseSVN/bin:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/Program Files/Common Files/Autodesk Shared/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/WireGuard/:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/Andrew Chong/AppData/Local/Programs/Python/Python39:/mnt/c/Users/Andrew Chong/AppData/Local/Programs/Python/Python39/Scripts/:/mnt/c/Users/Andrew Chong/AppData/Local/Programs/Python/Python39/:/mnt/c/Users/Andrew Chong/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Andrew Chong/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/ProgramData/Andrew Chong/GitHubDesktop/bin:/mnt/c/Program Files/CMake/bin:/mnt/c/Users/Andrew Chong/AppData/Local/GitHubDesktop/bin:/mnt/c/msys64/mingw64/bin:/snap/bin'), ('DISPLAY', '192.168.136.1:0.0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/tmp/vscode-git-5118adeae3.sock'), ('TERM_PROGRAM', 'vscode'), ('AMENT_PREFIX_PATH', '/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/andrewwhong/workspace/driverless/driverless_ws/build/planning'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('HOSTTYPE', 'x86_64'), ('CMAKE_PREFIX_PATH', '/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:/home/andrewwhong/workspace/driverless/driverless_ws/install/perceptions:/home/andrewwhong/workspace/driverless/driverless_ws/install/interfaces:/home/andrewwhong/workspace/driverless/driverless_ws/install/controls:/home/andrewwhong/workspace/driverless/driverless_ws/install/common:/home/andrewwhong/workspace/driverless/driverless_ws/install/collection:/home/andrewwhong/workspace/driverless/driverless_ws/install/actuators:/opt/ros/foxy'), ('WSLENV', 'VSCODE_WSL_EXT_LOCATION/up')]), 'shell': False}
+[6.568913] (planning) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target slam_test2\x1b[0m\n'}
+[6.570117] (planning) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target slam_test\x1b[0m\n'}
+[6.577276] (planning) StdoutLine: {'line': b'[ 25%] \x1b[32mBuilding CXX object CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o\x1b[0m\n'}
+[6.594435] (planning) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o\x1b[0m\n'}
+[6.622773] (-) TimerEvent: {}
+[6.723348] (-) TimerEvent: {}
+[6.822514] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:\x1b[m\x1b[K In function \xe2\x80\x98\x1b[01m\x1b[Kgsl_matrix* motion_model(gsl_matrix*, gsl_matrix*, double)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[6.822761] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:90:9:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kvariable \xe2\x80\x98\x1b[01m\x1b[Ki\x1b[m\x1b[K\xe2\x80\x99 set but not used [\x1b[01;35m\x1b[K-Wunused-but-set-variable\x1b[m\x1b[K]\n'}
+[6.822902] (planning) StderrLine: {'line': b'   90 |     int \x1b[01;35m\x1b[Ki\x1b[m\x1b[K = gsl_linalg_matmult(F,x,arr1);\n'}
+[6.823011] (planning) StderrLine: {'line': b'      |         \x1b[01;35m\x1b[K^\x1b[m\x1b[K\n'}
+[6.823432] (-) TimerEvent: {}
+[6.823705] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:\x1b[m\x1b[K In function \xe2\x80\x98\x1b[01m\x1b[Kgsl_matrix* jacob_h(double, gsl_matrix*, gsl_matrix*, double)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[6.823809] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:168:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.823882] (planning) StderrLine: {'line': b'  168 |         for(int c = 0; \x1b[01;35m\x1b[Kc < F1->size2\x1b[m\x1b[K; c++)\n'}
+[6.823945] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.824520] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:\x1b[m\x1b[K In function \xe2\x80\x98\x1b[01m\x1b[Kgsl_matrix** calc_innovation(gsl_matrix*, gsl_matrix*, gsl_matrix*, gsl_matrix*, double)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[6.824629] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:247:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.824709] (planning) StderrLine: {'line': b'  247 |         for(int c = 0; \x1b[01;35m\x1b[Kc < lm->size2\x1b[m\x1b[K; c++)\n'}
+[6.824772] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.825321] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:\x1b[m\x1b[K In function \xe2\x80\x98\x1b[01m\x1b[Kgsl_matrix* get_landmark_position_from_state(gsl_matrix*, int)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[6.825550] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:314:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.825748] (planning) StderrLine: {'line': b'  314 |         for(int c = 0; \x1b[01;35m\x1b[Kc < x->size2\x1b[m\x1b[K; c++)\n'}
+[6.825860] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.826271] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:\x1b[m\x1b[K In function \xe2\x80\x98\x1b[01m\x1b[Kdouble* findMinLocation(gsl_matrix*)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[6.826527] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:331:22:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.826968] (planning) StderrLine: {'line': b'  331 |     for(int r = 0; \x1b[01;35m\x1b[Kr < mat->size1\x1b[m\x1b[K; r++)\n'}
+[6.827162] (planning) StderrLine: {'line': b'      |                    \x1b[01;35m\x1b[K~~^~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.827379] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:333:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.827566] (planning) StderrLine: {'line': b'  333 |         for(int c = 0; \x1b[01;35m\x1b[Kc < mat->size2\x1b[m\x1b[K; c++)\n'}
+[6.827745] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.827922] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:\x1b[m\x1b[K In function \xe2\x80\x98\x1b[01m\x1b[Kint search_correspond_landmark_id(gsl_matrix*, gsl_matrix*, gsl_matrix*)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[6.828361] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:394:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.828479] (planning) StderrLine: {'line': b'  394 |             for(int j = 0; \x1b[01;35m\x1b[Kj < min_dist->size2\x1b[m\x1b[K; j++)\n'}
+[6.828546] (planning) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.828610] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:403:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.828676] (planning) StderrLine: {'line': b'  403 |             for(int j = 0; \x1b[01;35m\x1b[Kj < new_min_dist->size2\x1b[m\x1b[K; j++)\n'}
+[6.828738] (planning) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.828798] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:365:21:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[KH\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-variable\x1b[m\x1b[K]\n'}
+[6.828868] (planning) StderrLine: {'line': b'  365 |         gsl_matrix* \x1b[01;35m\x1b[KH\x1b[m\x1b[K = arrs[2];\n'}
+[6.828928] (planning) StderrLine: {'line': b'      |                     \x1b[01;35m\x1b[K^\x1b[m\x1b[K\n'}
+[6.828988] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:425:22:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.829051] (planning) StderrLine: {'line': b'  425 |     for(int j = 0; \x1b[01;35m\x1b[Kj < min_dist->size2\x1b[m\x1b[K; j++)\n'}
+[6.829109] (planning) StderrLine: {'line': b'      |                    \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.829170] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:432:22:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.829398] (planning) StderrLine: {'line': b'  432 |     for(int j = 0; \x1b[01;35m\x1b[Kj < new_min_dist->size2\x1b[m\x1b[K; j++)\n'}
+[6.829531] (planning) StderrLine: {'line': b'      |                    \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.829638] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:355:12:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[Kr\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-variable\x1b[m\x1b[K]\n'}
+[6.829789] (planning) StderrLine: {'line': b'  355 |     double \x1b[01;35m\x1b[Kr\x1b[m\x1b[K = gsl_matrix_get(zi,0,0);\n'}
+[6.830176] (planning) StderrLine: {'line': b'      |            \x1b[01;35m\x1b[K^\x1b[m\x1b[K\n'}
+[6.830406] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:356:12:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused variable \xe2\x80\x98\x1b[01m\x1b[Ktheta\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-variable\x1b[m\x1b[K]\n'}
+[6.830980] (planning) StderrLine: {'line': b'  356 |     double \x1b[01;35m\x1b[Ktheta\x1b[m\x1b[K = gsl_matrix_get(zi,0,1);\n'}
+[6.831059] (planning) StderrLine: {'line': b'      |            \x1b[01;35m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[6.831124] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:\x1b[m\x1b[K In function \xe2\x80\x98\x1b[01m\x1b[KekfPackage ekf_slam(gsl_matrix*, gsl_matrix*, gsl_matrix*, gsl_matrix*, double)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[6.831195] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:453:22:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.831472] (planning) StderrLine: {'line': b'  453 |     for(int r = 0; \x1b[01;35m\x1b[Kr < x->size1\x1b[m\x1b[K; r++)\n'}
+[6.831669] (planning) StderrLine: {'line': b'      |                    \x1b[01;35m\x1b[K~~^~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.831853] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:455:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.832243] (planning) StderrLine: {'line': b'  455 |         for(int c = 0; \x1b[01;35m\x1b[Kc < x->size2\x1b[m\x1b[K; c++)\n'}
+[6.832352] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.832414] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:479:22:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.832486] (planning) StderrLine: {'line': b'  479 |     for(int r = 0; \x1b[01;35m\x1b[Kr < x->size1\x1b[m\x1b[K; r++)\n'}
+[6.832546] (planning) StderrLine: {'line': b'      |                    \x1b[01;35m\x1b[K~~^~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.832604] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:481:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.832665] (planning) StderrLine: {'line': b'  481 |         for(int c = 0; \x1b[01;35m\x1b[Kc < x->size2\x1b[m\x1b[K; c++)\n'}
+[6.832723] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.832779] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:555:24:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.832891] (planning) StderrLine: {'line': b'  555 |     for(int iz = 0; \x1b[01;35m\x1b[Kiz < z->size1\x1b[m\x1b[K; iz++)\n'}
+[6.832956] (planning) StderrLine: {'line': b'      |                     \x1b[01;35m\x1b[K~~~^~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.833016] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:562:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.833077] (planning) StderrLine: {'line': b'  562 |         for(int c = 0; \x1b[01;35m\x1b[Kc < z->size2\x1b[m\x1b[K; c++)\n'}
+[6.833136] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.833259] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:574:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.833328] (planning) StderrLine: {'line': b'  574 |             for(int i = 0; \x1b[01;35m\x1b[Ki < xEst->size1\x1b[m\x1b[K; i++)\n'}
+[6.833389] (planning) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.833447] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:582:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.833509] (planning) StderrLine: {'line': b'  582 |             for(int r = 0; \x1b[01;35m\x1b[Kr < PEst->size1\x1b[m\x1b[K; r++)\n'}
+[6.833567] (planning) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.833625] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:584:34:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.833693] (planning) StderrLine: {'line': b'  584 |                 for(int c = 0; \x1b[01;35m\x1b[Kc < PEst->size2\x1b[m\x1b[K; c++)\n'}
+[6.833753] (planning) StderrLine: {'line': b'      |                                \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.833813] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:592:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.833874] (planning) StderrLine: {'line': b'  592 |             for(int r = 0; \x1b[01;35m\x1b[Kr < initP->size1\x1b[m\x1b[K; r++)\n'}
+[6.833937] (planning) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.834000] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:594:34:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.834061] (planning) StderrLine: {'line': b'  594 |                 for(int c = 0; \x1b[01;35m\x1b[Kc < initP->size2\x1b[m\x1b[K; c++)\n'}
+[6.834119] (planning) StderrLine: {'line': b'      |                                \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.834243] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:603:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.834322] (planning) StderrLine: {'line': b'  603 |             for(int r = 0; \x1b[01;35m\x1b[Kr < xaug->size1\x1b[m\x1b[K; r++)\n'}
+[6.834385] (planning) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.834447] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:605:34:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.834513] (planning) StderrLine: {'line': b'  605 |                 for(int c = 0; \x1b[01;35m\x1b[Kc < xaug->size2\x1b[m\x1b[K; c++)\n'}
+[6.834574] (planning) StderrLine: {'line': b'      |                                \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.834636] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:615:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.834699] (planning) StderrLine: {'line': b'  615 |             for(int r = 0; \x1b[01;35m\x1b[Kr < paug->size1\x1b[m\x1b[K; r++)\n'}
+[6.834762] (planning) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.834823] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:617:34:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.834890] (planning) StderrLine: {'line': b'  617 |                 for(int c = 0; \x1b[01;35m\x1b[Kc < paug->size2\x1b[m\x1b[K; c++)\n'}
+[6.834951] (planning) StderrLine: {'line': b'      |                                \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.835011] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:654:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.835081] (planning) StderrLine: {'line': b'  654 |         for(int r = 0; \x1b[01;35m\x1b[Kr < xEst_3->size1\x1b[m\x1b[K; r++)\n'}
+[6.835184] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.835252] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:656:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.835317] (planning) StderrLine: {'line': b'  656 |             for(int c = 0; \x1b[01;35m\x1b[Kc < xEst_3->size2\x1b[m\x1b[K; c++)\n'}
+[6.835378] (planning) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.835445] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:663:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.835513] (planning) StderrLine: {'line': b'  663 |         for(int r = 0; \x1b[01;35m\x1b[Kr < K_3->size1\x1b[m\x1b[K; r++)\n'}
+[6.835578] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.835640] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:665:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.835704] (planning) StderrLine: {'line': b'  665 |             for(int c = 0; \x1b[01;35m\x1b[Kc < K_3->size2\x1b[m\x1b[K; c++)\n'}
+[6.835765] (planning) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~^~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.835824] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:678:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.835891] (planning) StderrLine: {'line': b'  678 |         for(int r = 3; \x1b[01;35m\x1b[Kr < xEst->size1\x1b[m\x1b[K; r++)\n'}
+[6.835953] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.836014] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:680:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.836121] (planning) StderrLine: {'line': b'  680 |             for(int c = 0; \x1b[01;35m\x1b[Kc < xEst->size2\x1b[m\x1b[K; c++)\n'}
+[6.836202] (planning) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.836265] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:691:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.836330] (planning) StderrLine: {'line': b'  691 |         for(int i = 0; \x1b[01;35m\x1b[Ki < xEst->size1\x1b[m\x1b[K; i++)\n'}
+[6.836392] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.836452] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:704:26:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.836515] (planning) StderrLine: {'line': b'  704 |         for(int r = 0; \x1b[01;35m\x1b[Kr < prod->size1\x1b[m\x1b[K; r++)\n'}
+[6.836575] (planning) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.836634] (planning) StderrLine: {'line': b'\x1b[01m\x1b[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/planning_codebase/new_slam.cpp:706:30:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kcomparison of integer expressions of different signedness: \xe2\x80\x98\x1b[01m\x1b[Kint\x1b[m\x1b[K\xe2\x80\x99 and \xe2\x80\x98\x1b[01m\x1b[Ksize_t\x1b[m\x1b[K\xe2\x80\x99 {aka \xe2\x80\x98\x1b[01m\x1b[Klong unsigned int\x1b[m\x1b[K\xe2\x80\x99} [\x1b[01;35m\x1b[K-Wsign-compare\x1b[m\x1b[K]\n'}
+[6.836697] (planning) StderrLine: {'line': b'  706 |             for(int c = 0; \x1b[01;35m\x1b[Kc < prod->size2\x1b[m\x1b[K; c++)\n'}
+[6.836757] (planning) StderrLine: {'line': b'      |                            \x1b[01;35m\x1b[K~~^~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[6.923601] (-) TimerEvent: {}
+[6.997037] (planning) StdoutLine: {'line': b'[ 75%] \x1b[32m\x1b[1mLinking CXX executable slam_test2\x1b[0m\n'}
+[7.023755] (-) TimerEvent: {}
+[7.124115] (-) TimerEvent: {}
+[7.224571] (-) TimerEvent: {}
+[7.226896] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `motion_model(gsl_matrix*, gsl_matrix*, double)':\n"}
+[7.229030] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x5a): undefined reference to `gsl_matrix_calloc'\n"}
+[7.229988] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x80): undefined reference to `gsl_matrix_set'\n"}
+[7.230211] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xa2): undefined reference to `gsl_matrix_set'\n"}
+[7.231309] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xc4): undefined reference to `gsl_matrix_set'\n"}
+[7.231627] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xd3): undefined reference to `gsl_matrix_calloc'\n"}
+[7.231825] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xed): undefined reference to `gsl_matrix_get'\n"}
+[7.232008] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x11f): undefined reference to `gsl_matrix_set'\n"}
+[7.232195] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x148): undefined reference to `gsl_matrix_set'\n"}
+[7.232716] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x167): undefined reference to `gsl_matrix_set'\n"}
+[7.233461] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x181): undefined reference to `gsl_matrix_alloc'\n"}
+[7.233776] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x19c): undefined reference to `gsl_linalg_matmult'\n"}
+[7.234274] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1b9): undefined reference to `gsl_matrix_alloc'\n"}
+[7.235010] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1d4): undefined reference to `gsl_linalg_matmult'\n"}
+[7.235302] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1ea): undefined reference to `gsl_matrix_add'\n"}
+[7.235491] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1fd): undefined reference to `gsl_matrix_memcpy'\n"}
+[7.235959] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x209): undefined reference to `gsl_matrix_free'\n"}
+[7.236160] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x215): undefined reference to `gsl_matrix_free'\n"}
+[7.236347] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x221): undefined reference to `gsl_matrix_free'\n"}
+[7.236531] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x22d): undefined reference to `gsl_matrix_free'\n"}
+[7.236720] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `calc_landmark_position(gsl_matrix*, gsl_matrix*)':\n"}
+[7.236906] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x2f6): undefined reference to `gsl_matrix_calloc'\n"}
+[7.237088] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x310): undefined reference to `gsl_matrix_get'\n"}
+[7.237286] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x32b): undefined reference to `gsl_matrix_get'\n"}
+[7.237933] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x346): undefined reference to `gsl_matrix_get'\n"}
+[7.238167] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x361): undefined reference to `gsl_matrix_get'\n"}
+[7.238532] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x399): undefined reference to `gsl_matrix_set'\n"}
+[7.238843] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3af): undefined reference to `gsl_matrix_get'\n"}
+[7.239493] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3ca): undefined reference to `gsl_matrix_get'\n"}
+[7.239763] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3e5): undefined reference to `gsl_matrix_get'\n"}
+[7.240004] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x400): undefined reference to `gsl_matrix_get'\n"}
+[7.240673] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x438): undefined reference to `gsl_matrix_set'\n"}
+[7.241267] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `jacob_h(double, gsl_matrix*, gsl_matrix*, double)':\n"}
+[7.241510] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x482): undefined reference to `gsl_matrix_calloc'\n"}
+[7.241886] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x4b2): undefined reference to `gsl_matrix_get'\n"}
+[7.242120] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x4cd): undefined reference to `gsl_matrix_set'\n"}
+[7.242334] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x4f9): undefined reference to `gsl_matrix_get'\n"}
+[7.242521] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x514): undefined reference to `gsl_matrix_set'\n"}
+[7.242705] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x52a): undefined reference to `gsl_matrix_get'\n"}
+[7.242890] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x545): undefined reference to `gsl_matrix_set'\n"}
+[7.243271] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x55b): undefined reference to `gsl_matrix_get'\n"}
+[7.243459] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x576): undefined reference to `gsl_matrix_set'\n"}
+[7.243639] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x58c): undefined reference to `gsl_matrix_get'\n"}
+[7.243818] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x5a2): undefined reference to `gsl_matrix_set'\n"}
+[7.243994] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x5b8): undefined reference to `gsl_matrix_get'\n"}
+[7.244181] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x5da): undefined reference to `gsl_matrix_set'\n"}
+[7.244376] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x601): undefined reference to `gsl_matrix_set'\n"}
+[7.244561] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x617): undefined reference to `gsl_matrix_get'\n"}
+[7.244740] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x639): undefined reference to `gsl_matrix_set'\n"}
+[7.244920] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x64f): undefined reference to `gsl_matrix_get'\n"}
+[7.245110] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x665): undefined reference to `gsl_matrix_set'\n"}
+[7.245288] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x67e): undefined reference to `gsl_matrix_scale'\n"}
+[7.245496] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x6a4): undefined reference to `gsl_matrix_calloc'\n"}
+[7.245673] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x6ca): undefined reference to `gsl_matrix_set'\n"}
+[7.245880] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x6ec): undefined reference to `gsl_matrix_set'\n"}
+[7.246101] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x70e): undefined reference to `gsl_matrix_set'\n"}
+[7.246436] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x799): undefined reference to `gsl_matrix_calloc'\n"}
+[7.246627] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x811): undefined reference to `gsl_matrix_set'\n"}
+[7.247046] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x885): undefined reference to `gsl_matrix_set'\n"}
+[7.247239] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x89a): undefined reference to `gsl_matrix_calloc'\n"}
+[7.247449] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x8ee): undefined reference to `gsl_matrix_get'\n"}
+[7.247644] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x909): undefined reference to `gsl_matrix_set'\n"}
+[7.247839] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x929): undefined reference to `gsl_matrix_get'\n"}
+[7.248081] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x944): undefined reference to `gsl_matrix_set'\n"}
+[7.248373] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x962): undefined reference to `gsl_matrix_free'\n"}
+[7.248809] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x96e): undefined reference to `gsl_matrix_free'\n"}
+[7.249087] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x988): undefined reference to `gsl_matrix_calloc'\n"}
+[7.249285] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x9a3): undefined reference to `gsl_linalg_matmult'\n"}
+[7.249478] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x9af): undefined reference to `gsl_matrix_free'\n"}
+[7.249674] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x9bb): undefined reference to `gsl_matrix_free'\n"}
+[7.249945] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `jacob_motion(gsl_matrix*, gsl_matrix*, double)':\n"}
+[7.250032] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0xa48): undefined reference to `gsl_matrix_calloc'\n"}
+[7.250102] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xa80): undefined reference to `gsl_matrix_set'\n"}
+[7.250174] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xae6): undefined reference to `gsl_matrix_calloc'\n"}
+[7.250240] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xafd): undefined reference to `gsl_matrix_transpose_memcpy'\n"}
+[7.250319] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xb0c): undefined reference to `gsl_matrix_calloc'\n"}
+[7.250380] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xb26): undefined reference to `gsl_matrix_get'\n"}
+[7.250441] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xb60): undefined reference to `gsl_matrix_get'\n"}
+[7.250501] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xb80): undefined reference to `gsl_matrix_set'\n"}
+[7.250562] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xbb1): undefined reference to `gsl_matrix_get'\n"}
+[7.250625] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xbd1): undefined reference to `gsl_matrix_set'\n"}
+[7.250724] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xbeb): undefined reference to `gsl_matrix_calloc'\n"}
+[7.250790] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xc06): undefined reference to `gsl_linalg_matmult'\n"}
+[7.250879] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xc20): undefined reference to `gsl_matrix_calloc'\n"}
+[7.250954] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xc3b): undefined reference to `gsl_linalg_matmult'\n"}
+[7.251019] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xc4a): undefined reference to `gsl_matrix_calloc'\n"}
+[7.251083] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xc82): undefined reference to `gsl_matrix_set'\n"}
+[7.251146] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xc9b): undefined reference to `gsl_matrix_add'\n"}
+[7.251207] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xcc1): undefined reference to `gsl_matrix_free'\n"}
+[7.251364] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xccd): undefined reference to `gsl_matrix_free'\n"}
+[7.251431] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xcd9): undefined reference to `gsl_matrix_free'\n"}
+[7.251492] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xce5): undefined reference to `gsl_matrix_free'\n"}
+[7.251629] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `calc_innovation(gsl_matrix*, gsl_matrix*, gsl_matrix*, gsl_matrix*, double)':\n"}
+[7.251698] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0xd3e): undefined reference to `gsl_matrix_calloc'\n"}
+[7.251760] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xd62): undefined reference to `gsl_matrix_calloc'\n"}
+[7.251838] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xdae): undefined reference to `gsl_matrix_get'\n"}
+[7.251915] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xdc9): undefined reference to `gsl_matrix_set'\n"}
+[7.251976] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xdeb): undefined reference to `gsl_matrix_memcpy'\n"}
+[7.252042] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xdfe): undefined reference to `gsl_matrix_sub'\n"}
+[7.252104] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xe18): undefined reference to `gsl_matrix_calloc'\n"}
+[7.252164] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xe2f): undefined reference to `gsl_matrix_transpose_memcpy'\n"}
+[7.252229] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xe49): undefined reference to `gsl_matrix_calloc'\n"}
+[7.252305] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xe64): undefined reference to `gsl_linalg_matmult'\n"}
+[7.252367] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xe7a): undefined reference to `gsl_matrix_get'\n"}
+[7.252429] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xe99): undefined reference to `gsl_matrix_get'\n"}
+[7.252491] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xeb7): undefined reference to `gsl_matrix_get'\n"}
+[7.252557] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xeed): undefined reference to `gsl_matrix_get'\n"}
+[7.252619] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xf11): undefined reference to `gsl_matrix_calloc'\n"}
+[7.252681] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xf2e): undefined reference to `gsl_matrix_get'\n"}
+[7.252742] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xf6a): undefined reference to `gsl_matrix_set'\n"}
+[7.252854] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xf83): undefined reference to `gsl_matrix_get'\n"}
+[7.252934] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xfbf): undefined reference to `gsl_matrix_set'\n"}
+[7.253000] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xfd5): undefined reference to `gsl_matrix_get'\n"}
+[7.253062] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0xff0): undefined reference to `gsl_matrix_set'\n"}
+[7.253123] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1045): undefined reference to `gsl_matrix_calloc'\n"}
+[7.253185] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x105c): undefined reference to `gsl_matrix_transpose_memcpy'\n"}
+[7.253247] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1079): undefined reference to `gsl_matrix_calloc'\n"}
+[7.253309] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1097): undefined reference to `gsl_linalg_matmult'\n"}
+[7.253371] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x10b1): undefined reference to `gsl_matrix_calloc'\n"}
+[7.253433] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x10cc): undefined reference to `gsl_linalg_matmult'\n"}
+[7.253496] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x10db): undefined reference to `gsl_matrix_calloc'\n"}
+[7.253558] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1144): undefined reference to `gsl_matrix_set'\n"}
+[7.253625] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1163): undefined reference to `gsl_matrix_add'\n"}
+[7.253687] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x11a6): undefined reference to `gsl_matrix_free'\n"}
+[7.253747] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x11b2): undefined reference to `gsl_matrix_free'\n"}
+[7.253843] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x11be): undefined reference to `gsl_matrix_free'\n"}
+[7.253909] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x11ca): undefined reference to `gsl_matrix_free'\n"}
+[7.253971] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x11d6): undefined reference to `gsl_matrix_free'\n"}
+[7.254033] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o:new_slam.cpp:(.text+0x11e2): more undefined references to `gsl_matrix_free' follow\n"}
+[7.254096] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `get_landmark_position_from_state(gsl_matrix*, int)':\n"}
+[7.254163] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x1261): undefined reference to `gsl_matrix_calloc'\n"}
+[7.254232] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x12ae): undefined reference to `gsl_matrix_get'\n"}
+[7.254295] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x12c9): undefined reference to `gsl_matrix_set'\n"}
+[7.254357] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `findMinLocation(gsl_matrix*)':\n"}
+[7.254419] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x1313): undefined reference to `gsl_matrix_get'\n"}
+[7.254481] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x136a): undefined reference to `gsl_matrix_get'\n"}
+[7.254541] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `search_correspond_landmark_id(gsl_matrix*, gsl_matrix*, gsl_matrix*)':\n"}
+[7.254603] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x1441): undefined reference to `gsl_matrix_get'\n"}
+[7.254663] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1466): undefined reference to `gsl_matrix_get'\n"}
+[7.254724] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1488): undefined reference to `gsl_matrix_calloc'\n"}
+[7.254836] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1530): undefined reference to `gsl_matrix_calloc'\n"}
+[7.254909] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1547): undefined reference to `gsl_matrix_transpose_memcpy'\n"}
+[7.255002] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1556): undefined reference to `gsl_permutation_calloc'\n"}
+[7.255068] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1589): undefined reference to `gsl_linalg_LU_decomp'\n"}
+[7.255132] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x15a3): undefined reference to `gsl_matrix_calloc'\n"}
+[7.255194] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x15be): undefined reference to `gsl_linalg_LU_invert'\n"}
+[7.255255] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x15d8): undefined reference to `gsl_matrix_calloc'\n"}
+[7.255317] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x15f3): undefined reference to `gsl_linalg_matmult'\n"}
+[7.255378] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1602): undefined reference to `gsl_matrix_calloc'\n"}
+[7.255441] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x161d): undefined reference to `gsl_linalg_matmult'\n"}
+[7.255505] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1633): undefined reference to `gsl_matrix_get'\n"}
+[7.255569] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1667): undefined reference to `gsl_matrix_set'\n"}
+[7.255633] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1692): undefined reference to `gsl_matrix_calloc'\n"}
+[7.255708] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x16d6): undefined reference to `gsl_matrix_get'\n"}
+[7.255839] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x16f0): undefined reference to `gsl_matrix_set'\n"}
+[7.255948] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x171e): undefined reference to `gsl_matrix_set'\n"}
+[7.256067] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x172d): undefined reference to `gsl_matrix_free'\n"}
+[7.256169] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1742): undefined reference to `gsl_matrix_calloc'\n"}
+[7.256288] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1783): undefined reference to `gsl_matrix_get'\n"}
+[7.256383] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x17a0): undefined reference to `gsl_matrix_set'\n"}
+[7.256502] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x17b5): undefined reference to `gsl_matrix_free'\n"}
+[7.256627] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x17c4): undefined reference to `gsl_matrix_free'\n"}
+[7.256758] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x17d7): undefined reference to `gsl_matrix_free'\n"}
+[7.256834] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x17ea): undefined reference to `gsl_matrix_free'\n"}
+[7.256900] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x180c): undefined reference to `gsl_matrix_free'\n"}
+[7.256964] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o:new_slam.cpp:(.text+0x1818): more undefined references to `gsl_matrix_free' follow\n"}
+[7.257043] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `search_correspond_landmark_id(gsl_matrix*, gsl_matrix*, gsl_matrix*)':\n"}
+[7.257145] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x183c): undefined reference to `gsl_permutation_free'\n"}
+[7.257214] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x187a): undefined reference to `gsl_matrix_calloc'\n"}
+[7.257277] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x18be): undefined reference to `gsl_matrix_get'\n"}
+[7.257354] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x18d8): undefined reference to `gsl_matrix_set'\n"}
+[7.257416] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1909): undefined reference to `gsl_matrix_set'\n"}
+[7.257511] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1918): undefined reference to `gsl_matrix_free'\n"}
+[7.257576] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x192d): undefined reference to `gsl_matrix_calloc'\n"}
+[7.257639] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x196e): undefined reference to `gsl_matrix_get'\n"}
+[7.257743] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x198b): undefined reference to `gsl_matrix_set'\n"}
+[7.257812] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x19a0): undefined reference to `gsl_matrix_free'\n"}
+[7.257877] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x19ee): undefined reference to `gsl_matrix_free'\n"}
+[7.257939] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `ekf_slam(gsl_matrix*, gsl_matrix*, gsl_matrix*, gsl_matrix*, double)':\n"}
+[7.258003] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x1aad): undefined reference to `gsl_matrix_calloc'\n"}
+[7.258066] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1b21): undefined reference to `gsl_matrix_get'\n"}
+[7.258127] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1b45): undefined reference to `gsl_matrix_set'\n"}
+[7.258194] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1bb8): undefined reference to `gsl_matrix_calloc'\n"}
+[7.258275] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1be8): undefined reference to `gsl_matrix_get'\n"}
+[7.258339] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1c26): undefined reference to `gsl_matrix_get'\n"}
+[7.258404] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1c7a): undefined reference to `gsl_matrix_get'\n"}
+[7.258468] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1cb8): undefined reference to `gsl_matrix_get'\n"}
+[7.258532] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1d08): undefined reference to `gsl_matrix_set'\n"}
+[7.258595] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1d2d): undefined reference to `gsl_matrix_set'\n"}
+[7.258676] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1d46): undefined reference to `gsl_matrix_get'\n"}
+[7.258758] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1d61): undefined reference to `gsl_matrix_calloc'\n"}
+[7.258829] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1d92): undefined reference to `gsl_matrix_set'\n"}
+[7.258893] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1dc8): undefined reference to `gsl_matrix_set'\n"}
+[7.258957] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1df2): undefined reference to `gsl_matrix_set'\n"}
+[7.259020] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1e28): undefined reference to `gsl_matrix_set'\n"}
+[7.259082] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1e4d): undefined reference to `gsl_matrix_set'\n"}
+[7.259145] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1ee6): undefined reference to `gsl_matrix_get'\n"}
+[7.259207] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1f0a): undefined reference to `gsl_matrix_set'\n"}
+[7.259270] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1f2e): undefined reference to `gsl_matrix_free'\n"}
+[7.259333] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x1fc7): undefined reference to `gsl_matrix_calloc'\n"}
+[7.259400] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2032): undefined reference to `gsl_matrix_get'\n"}
+[7.259463] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2056): undefined reference to `gsl_matrix_set'\n"}
+[7.259527] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x208b): undefined reference to `gsl_matrix_calloc'\n"}
+[7.259589] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x20ab): undefined reference to `gsl_matrix_transpose_memcpy'\n"}
+[7.259692] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x20cb): undefined reference to `gsl_matrix_calloc'\n"}
+[7.259764] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x20eb): undefined reference to `gsl_matrix_transpose_memcpy'\n"}
+[7.259828] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x20fa): undefined reference to `gsl_matrix_calloc'\n"}
+[7.259891] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2185): undefined reference to `gsl_matrix_set'\n"}
+[7.259952] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x21ba): undefined reference to `gsl_matrix_calloc'\n"}
+[7.260014] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x21e1): undefined reference to `gsl_linalg_matmult'\n"}
+[7.260078] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2201): undefined reference to `gsl_matrix_calloc'\n"}
+[7.260176] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2228): undefined reference to `gsl_linalg_matmult'\n"}
+[7.260260] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2248): undefined reference to `gsl_matrix_calloc'\n"}
+[7.260325] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x226f): undefined reference to `gsl_linalg_matmult'\n"}
+[7.260388] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x228f): undefined reference to `gsl_matrix_calloc'\n"}
+[7.260457] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x22b6): undefined reference to `gsl_linalg_matmult'\n"}
+[7.260519] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x22cf): undefined reference to `gsl_matrix_add'\n"}
+[7.260582] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2333): undefined reference to `gsl_matrix_get'\n"}
+[7.260644] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2357): undefined reference to `gsl_matrix_set'\n"}
+[7.260706] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x237b): undefined reference to `gsl_matrix_free'\n"}
+[7.260767] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x238a): undefined reference to `gsl_matrix_free'\n"}
+[7.260829] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2399): undefined reference to `gsl_matrix_free'\n"}
+[7.260897] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x23a8): undefined reference to `gsl_matrix_free'\n"}
+[7.260959] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x23b7): undefined reference to `gsl_matrix_calloc'\n"}
+[7.261021] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x23e3): undefined reference to `gsl_matrix_set'\n"}
+[7.261084] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2408): undefined reference to `gsl_matrix_set'\n"}
+[7.261180] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2417): undefined reference to `gsl_matrix_free'\n"}
+[7.261252] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2426): undefined reference to `gsl_matrix_free'\n"}
+[7.261315] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2435): undefined reference to `gsl_matrix_free'\n"}
+[7.261378] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2444): undefined reference to `gsl_matrix_free'\n"}
+[7.261440] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2453): undefined reference to `gsl_matrix_free'\n"}
+[7.261502] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o:new_slam.cpp:(.text+0x247b): more undefined references to `gsl_matrix_free' follow\n"}
+[7.261565] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `ekf_slam(gsl_matrix*, gsl_matrix*, gsl_matrix*, gsl_matrix*, double)':\n"}
+[7.261628] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x24c3): undefined reference to `gsl_matrix_calloc'\n"}
+[7.261690] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2510): undefined reference to `gsl_matrix_get'\n"}
+[7.261752] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2529): undefined reference to `gsl_matrix_set'\n"}
+[7.261815] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2549): undefined reference to `gsl_matrix_get'\n"}
+[7.261879] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2562): undefined reference to `gsl_matrix_set'\n"}
+[7.261942] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x25a0): undefined reference to `gsl_matrix_calloc'\n"}
+[7.262004] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x25ee): undefined reference to `gsl_matrix_get'\n"}
+[7.262065] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2612): undefined reference to `gsl_matrix_set'\n"}
+[7.262181] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x264a): undefined reference to `gsl_matrix_free'\n"}
+[7.262310] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x26ca): undefined reference to `gsl_matrix_calloc'\n"}
+[7.262403] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2713): undefined reference to `gsl_matrix_get'\n"}
+[7.262470] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2733): undefined reference to `gsl_matrix_set'\n"}
+[7.262533] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2755): undefined reference to `gsl_matrix_get'\n"}
+[7.262597] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2776): undefined reference to `gsl_matrix_set'\n"}
+[7.262667] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x278f): undefined reference to `gsl_matrix_get'\n"}
+[7.262730] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x27b4): undefined reference to `gsl_matrix_set'\n"}
+[7.262826] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x288c): undefined reference to `gsl_matrix_calloc'\n"}
+[7.262916] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2900): undefined reference to `gsl_matrix_get'\n"}
+[7.262983] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2924): undefined reference to `gsl_matrix_set'\n"}
+[7.263053] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2a48): undefined reference to `gsl_matrix_get'\n"}
+[7.263151] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2a7c): undefined reference to `gsl_matrix_set'\n"}
+[7.263220] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2aa0): undefined reference to `gsl_matrix_free'\n"}
+[7.263284] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2ac0): undefined reference to `gsl_matrix_calloc'\n"}
+[7.263348] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2b34): undefined reference to `gsl_matrix_get'\n"}
+[7.263410] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2b58): undefined reference to `gsl_matrix_set'\n"}
+[7.263473] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2b7c): undefined reference to `gsl_matrix_free'\n"}
+[7.263535] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2b8b): undefined reference to `gsl_matrix_free'\n"}
+[7.263597] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2bab): undefined reference to `gsl_matrix_calloc'\n"}
+[7.263660] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2c1f): undefined reference to `gsl_matrix_get'\n"}
+[7.263721] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2c43): undefined reference to `gsl_matrix_set'\n"}
+[7.263790] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2c67): undefined reference to `gsl_matrix_free'\n"}
+[7.263852] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2c76): undefined reference to `gsl_matrix_free'\n"}
+[7.263945] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2d13): undefined reference to `gsl_matrix_calloc'\n"}
+[7.264016] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2d2a): undefined reference to `gsl_matrix_transpose_memcpy'\n"}
+[7.264111] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2d3c): undefined reference to `gsl_permutation_calloc'\n"}
+[7.264183] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2d72): undefined reference to `gsl_linalg_LU_decomp'\n"}
+[7.264270] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2d92): undefined reference to `gsl_matrix_calloc'\n"}
+[7.264337] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2db0): undefined reference to `gsl_linalg_LU_invert'\n"}
+[7.264402] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2dbc): undefined reference to `gsl_permutation_free'\n"}
+[7.264466] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2def): undefined reference to `gsl_matrix_calloc'\n"}
+[7.264530] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2e13): undefined reference to `gsl_linalg_matmult'\n"}
+[7.264593] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2e30): undefined reference to `gsl_matrix_calloc'\n"}
+[7.264656] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2e4e): undefined reference to `gsl_linalg_matmult'\n"}
+[7.264718] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2e5d): undefined reference to `gsl_matrix_free'\n"}
+[7.264781] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2e81): undefined reference to `gsl_matrix_calloc'\n"}
+[7.264843] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2eeb): undefined reference to `gsl_matrix_get'\n"}
+[7.264906] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2f0c): undefined reference to `gsl_matrix_set'\n"}
+[7.264969] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2f3f): undefined reference to `gsl_matrix_calloc'\n"}
+[7.265046] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2fa9): undefined reference to `gsl_matrix_get'\n"}
+[7.265156] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2fca): undefined reference to `gsl_matrix_set'\n"}
+[7.265226] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x2ffc): undefined reference to `gsl_matrix_calloc'\n"}
+[7.265292] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3020): undefined reference to `gsl_linalg_matmult'\n"}
+[7.265358] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3036): undefined reference to `gsl_matrix_add'\n"}
+[7.265423] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3045): undefined reference to `gsl_matrix_free'\n"}
+[7.265488] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x30b2): undefined reference to `gsl_matrix_get'\n"}
+[7.265553] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x30d6): undefined reference to `gsl_matrix_set'\n"}
+[7.265617] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3105): undefined reference to `gsl_matrix_calloc'\n"}
+[7.265681] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3129): undefined reference to `gsl_linalg_matmult'\n"}
+[7.265744] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3148): undefined reference to `gsl_matrix_calloc'\n"}
+[7.265807] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x319b): undefined reference to `gsl_matrix_set'\n"}
+[7.265870] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x31ba): undefined reference to `gsl_matrix_sub'\n"}
+[7.265933] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x31d7): undefined reference to `gsl_matrix_calloc'\n"}
+[7.265997] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x31f5): undefined reference to `gsl_linalg_matmult'\n"}
+[7.266100] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3204): undefined reference to `gsl_matrix_free'\n"}
+[7.266168] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3213): undefined reference to `gsl_matrix_free'\n"}
+[7.266234] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x322d): undefined reference to `gsl_matrix_calloc'\n"}
+[7.266300] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3294): undefined reference to `gsl_matrix_get'\n"}
+[7.266364] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x32b8): undefined reference to `gsl_matrix_set'\n"}
+[7.266427] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x32dc): undefined reference to `gsl_matrix_free'\n"}
+[7.266492] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x32ee): undefined reference to `gsl_matrix_free'\n"}
+[7.266601] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3304): undefined reference to `gsl_matrix_free'\n"}
+[7.266672] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x331a): undefined reference to `gsl_matrix_free'\n"}
+[7.266736] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x333f): undefined reference to `gsl_matrix_free'\n"}
+[7.266800] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o:new_slam.cpp:(.text+0x334b): more undefined references to `gsl_matrix_free' follow\n"}
+[7.266864] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `ekf_slam(gsl_matrix*, gsl_matrix*, gsl_matrix*, gsl_matrix*, double)':\n"}
+[7.266929] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x33bb): undefined reference to `gsl_matrix_get'\n"}
+[7.266993] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x33d9): undefined reference to `gsl_matrix_set'\n"}
+[7.267063] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `printGSLMatrix(gsl_matrix*)':\n"}
+[7.267134] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x35f4): undefined reference to `gsl_matrix_get'\n"}
+[7.267203] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `calc_input()':\n"}
+[7.267267] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x3669): undefined reference to `gsl_matrix_calloc'\n"}
+[7.267331] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x368c): undefined reference to `gsl_matrix_set'\n"}
+[7.267395] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x36ab): undefined reference to `gsl_matrix_set'\n"}
+[7.267458] (planning) StderrLine: {'line': b"/usr/bin/ld: CMakeFiles/slam_test2.dir/planning_codebase/new_slam.cpp.o: in function `main':\n"}
+[7.267542] (planning) StderrLine: {'line': b"new_slam.cpp:(.text+0x36cc): undefined reference to `gsl_matrix_calloc'\n"}
+[7.267623] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x36e8): undefined reference to `gsl_matrix_set_all'\n"}
+[7.267687] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3703): undefined reference to `gsl_matrix_calloc'\n"}
+[7.267751] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x371f): undefined reference to `gsl_matrix_set_all'\n"}
+[7.267814] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3745): undefined reference to `gsl_matrix_calloc'\n"}
+[7.267878] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3760): undefined reference to `gsl_linalg_matmult'\n"}
+[7.267943] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x376c): undefined reference to `gsl_matrix_free'\n"}
+[7.268007] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3778): undefined reference to `gsl_matrix_free'\n"}
+[7.268072] (planning) StderrLine: {'line': b"/usr/bin/ld: new_slam.cpp:(.text+0x3790): undefined reference to `gsl_matrix_free'\n"}
+[7.268136] (planning) StderrLine: {'line': b'collect2: error: ld returned 1 exit status\n'}
+[7.268200] (planning) StderrLine: {'line': b'make[2]: *** [CMakeFiles/slam_test2.dir/build.make:131: slam_test2] Error 1\n'}
+[7.268264] (planning) StderrLine: {'line': b'make[1]: *** [CMakeFiles/Makefile2:80: CMakeFiles/slam_test2.dir/all] Error 2\n'}
+[7.268327] (planning) StderrLine: {'line': b'make[1]: *** Waiting for unfinished jobs....\n'}
+[7.324769] (-) TimerEvent: {}
+[7.425149] (-) TimerEvent: {}
+[7.525592] (-) TimerEvent: {}
+[7.626017] (-) TimerEvent: {}
+[7.726507] (-) TimerEvent: {}
+[7.826908] (-) TimerEvent: {}
+[7.927295] (-) TimerEvent: {}
+[8.027709] (-) TimerEvent: {}
+[8.128122] (-) TimerEvent: {}
+[8.228548] (-) TimerEvent: {}
+[8.329899] (-) TimerEvent: {}
+[8.430325] (-) TimerEvent: {}
+[8.530738] (-) TimerEvent: {}
+[8.631154] (-) TimerEvent: {}
+[8.731590] (-) TimerEvent: {}
+[8.831956] (-) TimerEvent: {}
+[8.932372] (-) TimerEvent: {}
+[9.032821] (-) TimerEvent: {}
+[9.133227] (-) TimerEvent: {}
+[9.233627] (-) TimerEvent: {}
+[9.334050] (-) TimerEvent: {}
+[9.434458] (-) TimerEvent: {}
+[9.534828] (-) TimerEvent: {}
+[9.635213] (-) TimerEvent: {}
+[9.735629] (-) TimerEvent: {}
+[9.836061] (-) TimerEvent: {}
+[9.936498] (-) TimerEvent: {}
+[10.036927] (-) TimerEvent: {}
+[10.137332] (-) TimerEvent: {}
+[10.237739] (-) TimerEvent: {}
+[10.338188] (-) TimerEvent: {}
+[10.438621] (-) TimerEvent: {}
+[10.539000] (-) TimerEvent: {}
+[10.639387] (-) TimerEvent: {}
+[10.739784] (-) TimerEvent: {}
+[10.840189] (-) TimerEvent: {}
+[10.940598] (-) TimerEvent: {}
+[11.041005] (-) TimerEvent: {}
+[11.141372] (-) TimerEvent: {}
+[11.241761] (-) TimerEvent: {}
+[11.342160] (-) TimerEvent: {}
+[11.442559] (-) TimerEvent: {}
+[11.542914] (-) TimerEvent: {}
+[11.643266] (-) TimerEvent: {}
+[11.743635] (-) TimerEvent: {}
+[11.843999] (-) TimerEvent: {}
+[11.944370] (-) TimerEvent: {}
+[12.044765] (-) TimerEvent: {}
+[12.145187] (-) TimerEvent: {}
+[12.245560] (-) TimerEvent: {}
+[12.345968] (-) TimerEvent: {}
+[12.446380] (-) TimerEvent: {}
+[12.546748] (-) TimerEvent: {}
+[12.647114] (-) TimerEvent: {}
+[12.747472] (-) TimerEvent: {}
+[12.847843] (-) TimerEvent: {}
+[12.948201] (-) TimerEvent: {}
+[13.048521] (-) TimerEvent: {}
+[13.148934] (-) TimerEvent: {}
+[13.249316] (-) TimerEvent: {}
+[13.349749] (-) TimerEvent: {}
+[13.450202] (-) TimerEvent: {}
+[13.550640] (-) TimerEvent: {}
+[13.629098] (planning) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable slam_test\x1b[0m\n'}
+[13.650753] (-) TimerEvent: {}
+[13.751060] (-) TimerEvent: {}
+[13.851463] (-) TimerEvent: {}
+[13.951867] (-) TimerEvent: {}
+[14.052340] (-) TimerEvent: {}
+[14.064730] (planning) StdoutLine: {'line': b'[100%] Built target slam_test\n'}
+[14.065726] (planning) StderrLine: {'line': b'make: *** [Makefile:141: all] Error 2\n'}
+[14.067689] (planning) CommandEnded: {'returncode': 2}
+[14.109676] (planning) JobEnded: {'identifier': 'planning', 'rc': 2}
+[14.120362] (-) EventReactorShutdown: {}

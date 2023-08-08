@@ -93,9 +93,14 @@ bool Spline::operator==(Spline const & other) const{
 
 bool Spline::operator<(Spline const & other) const{
     return this->sort_index<other.sort_index;
+}
 
-    
+polynomial get_first_der(){
+    return this->first_der;
+}
 
+polynomial get_second_der(){
+    return this->second_der;
 }
 
 

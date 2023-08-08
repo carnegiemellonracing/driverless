@@ -1,0 +1,19 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from eufs_msgs/msg/WaypointArrayStamped.msg
+// generated code does not contain a copyright notice
+
+#include "eufs_msgs/msg/Waypoint.idl"
+#include "std_msgs/msg/Header.idl"
+
+module eufs_msgs {
+  module msg {
+    @verbatim (language="comment", text=
+      " This message is used by planning nodes to advertise suggested trajectory waypoints" "\n"
+      " as well as suggested velocity and steering at each waypoint.")
+    struct WaypointArrayStamped {
+      std_msgs::msg::Header header;
+
+      sequence<eufs_msgs::msg::Waypoint> waypoints;
+    };
+  };
+};

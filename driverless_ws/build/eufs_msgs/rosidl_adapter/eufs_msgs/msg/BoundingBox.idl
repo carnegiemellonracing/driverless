@@ -1,0 +1,32 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from eufs_msgs/msg/BoundingBox.msg
+// generated code does not contain a copyright notice
+
+
+module eufs_msgs {
+  module msg {
+    module BoundingBox_Constants {
+      const int32 PIXEL = 0;
+      const int32 PERCENTAGE = 1;
+    };
+    @verbatim (language="comment", text=
+      "Enum of types for the message." "\n"
+      "PIXEL = use the pixel coordinates for xmin, xmax...." "\n"
+      "PERCENTAGE = use the percentage into the frame for xmin, xmax....")
+    struct BoundingBox {
+      string color;
+
+      double probability;
+
+      int32 type;
+
+      double xmin;
+
+      double ymin;
+
+      double xmax;
+
+      double ymax;
+    };
+  };
+};
