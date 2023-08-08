@@ -1,17 +1,13 @@
 #include <memory>
-#include <string>
-#include <cstring>
 
 #include "rclcpp/rclcpp.hpp"
-//Message includes
-#include "std_msgs/msg/string.hpp"
-#include "sensor_msgs/msg/temperature.hpp"
+
+#include <message_filters/subscriber.h>
+#include <message_filters/synchronizer.h>
+#include <message_filters/sync_policies/approximate_time.h>
+
 #include "eufs_msgs/msg/cone_array_with_covariance.hpp"
 #include "eufs_msgs/msg/car_state.hpp"
-
-//Message Filter
-#include "message_filters/subscriber.h"
-#include "message_filters/time_synchronizer.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -19,51 +15,89 @@
 #define VEHICLE_DATA_TOPIC "/ground_truth/state"
 
 using std::placeholders::_1;
-using std::placeholders::_2;
 
-class SLAMValidation : public rclcpp::Node {
+class SLAMValidation : public rclcpp::Node
+{
   public:
-    SLAMValidation(): Node("EKF_SLAM"){
-      cone_sub.subscribe(this, CONE_DATA_TOPIC);
-      vehicle_state_sub.subscribe(this, VEHICLE_DATA_TOPIC);
-
-      sync_ = std::make_shared<message_filters::TimeSynchronizer<eufs_msgs::msg::ConeArrayWithCovariance, 
-                                                            eufs_msgs::msg::CarState>>(cone_sub, vehicle_state_sub, 3);
-      sync_->registerCallback(std::bind(&SLAMValidation::topic_callback, this, _1, _2));
-    }
-
-    void run_slam(const eufs_msgs::msg::ConeArrayWithCovariance::SharedPtr cone_data, 
-                  const eufs_msgs::msg::CarState::SharedPtr vehicle_state_data) const {
-      RCLCPP_INFO(this->get_logger(), 
-                  "Blue: %i, Yellow: %i, Orange: %i\n", 
-                  sizeof(cone_data->blue_cones)/sizeof(cone_data->blue_cones[0]),
-                  sizeof(cone_data->yellow_cones)/sizeof(cone_data->yellow_cones[0]),
-                  sizeof(cone_data->orange_cones)/sizeof(cone_data->orange_cones[0]));
-      RCLCPP_INFO(this->get_logger(), 
-                  "X: %f, Y: %f, Z: %f\n", 
-                  vehicle_state_data->pose.pose.position.x,
-                  vehicle_state_data->pose.pose.position.y,
-                  vehicle_state_data->pose.pose.position.z);
-      RCLCPP_INFO(this->get_logger(),
-                  "-------------------------------\n\n");
+    SLAMValidation(): Node("slam_validation"){
+      cone_sub = this->create_subscription<eufs_msgs::msg::ConeArrayWithCovariance>(
+      "/cones", 10, std::bind(&SLAMValidation::cone_callback, this, _1));
+      vehicle_state_sub = this->create_subscription<eufs_msgs::msg::CarState>(
+      "/ground_truth/state", 10, std::bind(&SLAMValidation::vehicle_state_callback, this, _1));
     }
 
   private:
-    message_filters::Subscriber<eufs_msgs::msg::ConeArrayWithCovariance> cone_sub;
-    message_filters::Subscriber<eufs_msgs::msg::CarState> vehicle_state_sub;
-    std::shared_ptr<message_filters::TimeSynchronizer<eufs_msgs::msg::ConeArrayWithCovariance, eufs_msgs::msg::CarState>> sync_;
-
-  void topic_callback(const eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr& tmp_1, 
-                        const eufs_msgs::msg::CarState::ConstSharedPtr& tmp_2) const{
-    const char *temp_1 = std::to_string(tmp_1->header.stamp.sec).c_str(); //change to actual values
-    const char *temp_2 = std::to_string(tmp_2->header.stamp.sec).c_str();
-    RCLCPP_INFO(this->get_logger(), "Cone Array Time: '%s' \n Car State time: '%s'", temp_1, temp_2);
-  }
+    void cone_callback(const eufs_msgs::msg::ConeArrayWithCovariance::SharedPtr cone_data) const{
+      RCLCPP_INFO(this->get_logger(), "cones\n");
+    }
+    void vehicle_state_callback(const eufs_msgs::msg::CarState::SharedPtr vehicle_state_data) const{
+      RCLCPP_INFO(this->get_logger(), "vehicle state\n");
+    }
+    rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr cone_sub;
+    rclcpp::Subscription<eufs_msgs::msg::CarState>::SharedPtr vehicle_state_sub;
 };
+
+// class SLAMValidation : public rclcpp::Node {
+//   public:
+//     SLAMValidation(): Node("EKF_SLAM"){
+//       RCLCPP_INFO(this->get_logger(), "ur mom was here\n");
+//       cone_sub = this->create_subscription<eufs_msgs::msg::ConeArrayWithCovariance>("/cones", 10, std::bind(&SLAMValidation::cone_callback, this, _1));
+//       vehicle_state_sub = this->create_subscription<eufs_msgs::msg::ConeArrayWithCovariance>("/ground_truth/state", 10, std::bind(&SLAMValidation::vehicle_state_callback, this, _1));
+//       // this->create_subscription<eufs_msgs::msg::ConeArrayWithCovariance>("/cones", 10, std::bind(&SLAMValidation::topic_callback, this, _1));
+//       // cone_sub = message_filters::Subscriber<eufs_msgs::msg::ConeArrayWithCovariance>(this, "/cones");
+//       // vehicle_state_sub = message_filters::Subscriber<eufs_msgs::msg::CarState>(this, "/ground_truth/state");
+//       // typedef message_filters::sync_policies::ApproximateTime<eufs_msgs::msg::ConeArrayWithCovariance, 
+//       //                                                       eufs_msgs::msg::CarState> approx_sync_policy;
+//       // message_filters::Synchronizer<approx_sync_policy> approx_sync(approx_sync_policy(10), cone_sub, vehicle_state_sub);
+//       // approx_sync.setMaxIntervalDuration(rclcpp::Duration(1, 0));
+//       // approx_sync.registerCallback(std::bind(&SLAMValidation::run_slam, this, std::placeholders::_1, std::placeholders::_2));
+//       // sync.reset(new Sync(MySyncPolicy(10), cone_sub, vehicle_state_sub));
+//       // sync->registerCallback(boost::bind(&SLAMValidation::run_slam, this, _1, _2));
+//     }
+
+//     void cone_callback(const eufs_msgs::msg::ConeArrayWithCovariance::SharedPtr cone_data){
+//       RCLCPP_INFO(this->get_logger(), "cones\n");
+//     };
+
+//     void vehicle_state_callback(const eufs_msgs::msg::CarState::SharedPtr vehicle_state_data){
+//       RCLCPP_INFO(this->get_logger(), "vehicle state\n");
+//     };
+//     void run_slam(const eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr cone_data, 
+//                   const eufs_msgs::msg::CarState::ConstSharedPtr vehicle_state_data) const {
+//       RCLCPP_INFO(this->get_logger(), 
+//                   "Blue: %i, Yellow: %i, Orange: %i\n", 
+//                   sizeof(cone_data->blue_cones)/sizeof(cone_data->blue_cones[0]),
+//                   sizeof(cone_data->yellow_cones)/sizeof(cone_data->yellow_cones[0]),
+//                   sizeof(cone_data->orange_cones)/sizeof(cone_data->orange_cones[0]));
+//       RCLCPP_INFO(this->get_logger(), 
+//                   "X: %f, Y: %f, Z: %f\n", 
+//                   vehicle_state_data->pose.pose.position.x,
+//                   vehicle_state_data->pose.pose.position.y,
+//                   vehicle_state_data->pose.pose.position.z);
+//       RCLCPP_INFO(this->get_logger(),
+//                   "-------------------------------\n\n");
+//     }
+  
+//   private:
+//     // void topic_callback(const eufs_msgs::msg::ConeArrayWithCovariance msg) const
+//     // {
+//     //   RCLCPP_INFO(this->get_logger(), 
+//     //               "Blue: %i, Yellow: %i, Orange: %i\n", 
+//     //               sizeof(cone_data->blue_cones)/sizeof(cone_data->blue_cones[0]),
+//     //               sizeof(cone_data->yellow_cones)/sizeof(cone_data->yellow_cones[0]),
+//     //               sizeof(cone_data->orange_cones)/sizeof(cone_data->orange_cones[0]));
+//     // }
+//     // message_filters::Subscriber<eufs_msgs::msg::ConeArrayWithCovariance> cone_sub;
+//     // message_filters::Subscriber<eufs_msgs::msg::CarState> vehicle_state_sub;
+//     rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance> cone_sub;
+//     rclcpp::Subscription<eufs_msgs::msg::CarState> vehicle_state_sub;
+
+    
+
+// };
 
 int main(int argc, char * argv[]){
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<SLAMValidation>());
-  rclcpp::shutdown();
   return 0;
 }
