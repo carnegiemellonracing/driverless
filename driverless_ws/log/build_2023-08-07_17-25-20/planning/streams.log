@@ -1,0 +1,67 @@
+[0.266s] Invoking command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/planning': AMENT_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:/home/andrewwhong/workspace/driverless/driverless_ws/install/perceptions:/home/andrewwhong/workspace/driverless/driverless_ws/install/interfaces:/home/andrewwhong/workspace/driverless/driverless_ws/install/controls:/home/andrewwhong/workspace/driverless/driverless_ws/install/common:/home/andrewwhong/workspace/driverless/driverless_ws/install/collection:/home/andrewwhong/workspace/driverless/driverless_ws/install/actuators:/opt/ros/foxy /usr/bin/cmake /home/andrewwhong/workspace/driverless/driverless_ws/src/planning -DCMAKE_INSTALL_PREFIX=/home/andrewwhong/workspace/driverless/driverless_ws/install/planning
+[0.563s] -- The C compiler identification is GNU 9.4.0
+[1.062s] -- The CXX compiler identification is GNU 9.4.0
+[1.381s] -- Check for working C compiler: /usr/bin/cc
+[1.653s] -- Check for working C compiler: /usr/bin/cc -- works
+[1.654s] -- Detecting C compiler ABI info
+[1.906s] -- Detecting C compiler ABI info - done
+[1.921s] -- Detecting C compile features
+[1.921s] -- Detecting C compile features - done
+[1.924s] -- Check for working CXX compiler: /usr/bin/c++
+[2.262s] -- Check for working CXX compiler: /usr/bin/c++ -- works
+[2.264s] -- Detecting CXX compiler ABI info
+[2.601s] -- Detecting CXX compiler ABI info - done
+[2.624s] -- Detecting CXX compile features
+[2.624s] -- Detecting CXX compile features - done
+[2.627s] -- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)
+[2.668s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+[2.668s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[2.992s] -- Found rclcpp: 2.4.3 (/opt/ros/foxy/share/rclcpp/cmake)
+[3.321s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[3.329s] -- Found rosidl_adapter: 1.3.1 (/opt/ros/foxy/share/rosidl_adapter/cmake)
+[5.934s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.1f")  
+[8.721s] -- Found FastRTPS: /opt/ros/foxy/include  
+[12.632s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[12.707s] -- Found rmw_implementation_cmake: 1.0.4 (/opt/ros/foxy/share/rmw_implementation_cmake/cmake)
+[12.710s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[12.711s] -- Looking for pthread.h
+[13.040s] -- Looking for pthread.h - found
+[13.041s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[13.295s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+[13.295s] -- Looking for pthread_create in pthreads
+[13.561s] -- Looking for pthread_create in pthreads - not found
+[13.562s] -- Looking for pthread_create in pthread
+[13.799s] -- Looking for pthread_create in pthread - found
+[13.800s] -- Found Threads: TRUE  
+[13.986s] -- Found message_filters: 3.2.7 (/opt/ros/foxy/share/message_filters/cmake)
+[13.989s] -- Found eufs_msgs: 2.0.0 (/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake)
+[14.505s] -- Configuring done
+[14.514s] -- Generating done
+[14.516s] -- Build files have been written to: /home/andrewwhong/workspace/driverless/driverless_ws/build/planning
+[14.527s] Invoked command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/planning' returned '0': AMENT_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:/home/andrewwhong/workspace/driverless/driverless_ws/install/perceptions:/home/andrewwhong/workspace/driverless/driverless_ws/install/interfaces:/home/andrewwhong/workspace/driverless/driverless_ws/install/controls:/home/andrewwhong/workspace/driverless/driverless_ws/install/common:/home/andrewwhong/workspace/driverless/driverless_ws/install/collection:/home/andrewwhong/workspace/driverless/driverless_ws/install/actuators:/opt/ros/foxy /usr/bin/cmake /home/andrewwhong/workspace/driverless/driverless_ws/src/planning -DCMAKE_INSTALL_PREFIX=/home/andrewwhong/workspace/driverless/driverless_ws/install/planning
+[14.528s] Invoking command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/planning': AMENT_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:/home/andrewwhong/workspace/driverless/driverless_ws/install/perceptions:/home/andrewwhong/workspace/driverless/driverless_ws/install/interfaces:/home/andrewwhong/workspace/driverless/driverless_ws/install/controls:/home/andrewwhong/workspace/driverless/driverless_ws/install/common:/home/andrewwhong/workspace/driverless/driverless_ws/install/collection:/home/andrewwhong/workspace/driverless/driverless_ws/install/actuators:/opt/ros/foxy /usr/bin/cmake --build /home/andrewwhong/workspace/driverless/driverless_ws/build/planning -- -j12 -l12
+[14.563s] [35m[1mScanning dependencies of target slam_test[0m
+[14.599s] [ 50%] [32mBuilding CXX object CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o[0m
+[22.083s] [100%] [32m[1mLinking CXX executable slam_test[0m
+[22.547s] [100%] Built target slam_test
+[22.557s] Invoked command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/planning' returned '0': AMENT_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:/home/andrewwhong/workspace/driverless/driverless_ws/install/perceptions:/home/andrewwhong/workspace/driverless/driverless_ws/install/interfaces:/home/andrewwhong/workspace/driverless/driverless_ws/install/controls:/home/andrewwhong/workspace/driverless/driverless_ws/install/common:/home/andrewwhong/workspace/driverless/driverless_ws/install/collection:/home/andrewwhong/workspace/driverless/driverless_ws/install/actuators:/opt/ros/foxy /usr/bin/cmake --build /home/andrewwhong/workspace/driverless/driverless_ws/build/planning -- -j12 -l12
+[22.583s] Invoking command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/planning': AMENT_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:/home/andrewwhong/workspace/driverless/driverless_ws/install/perceptions:/home/andrewwhong/workspace/driverless/driverless_ws/install/interfaces:/home/andrewwhong/workspace/driverless/driverless_ws/install/controls:/home/andrewwhong/workspace/driverless/driverless_ws/install/common:/home/andrewwhong/workspace/driverless/driverless_ws/install/collection:/home/andrewwhong/workspace/driverless/driverless_ws/install/actuators:/opt/ros/foxy /usr/bin/cmake --install /home/andrewwhong/workspace/driverless/driverless_ws/build/planning
+[22.590s] -- Install configuration: ""
+[22.590s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/lib/planning/slam_test
+[22.592s] -- Set runtime path of "/home/andrewwhong/workspace/driverless/driverless_ws/install/planning/lib/planning/slam_test" to ""
+[22.593s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/ament_index/resource_index/package_run_dependencies/planning
+[22.593s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/ament_index/resource_index/parent_prefix_path/planning
+[22.593s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/environment/ament_prefix_path.sh
+[22.593s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/environment/ament_prefix_path.dsv
+[22.594s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/environment/path.sh
+[22.594s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/environment/path.dsv
+[22.594s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/local_setup.bash
+[22.594s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/local_setup.sh
+[22.594s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/local_setup.zsh
+[22.595s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/local_setup.dsv
+[22.595s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/package.dsv
+[22.595s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/ament_index/resource_index/packages/planning
+[22.595s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/cmake/planningConfig.cmake
+[22.595s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/cmake/planningConfig-version.cmake
+[22.595s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/planning/share/planning/package.xml
+[22.600s] Invoked command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/planning' returned '0': AMENT_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/andrewwhong/workspace/driverless/driverless_ws/install/eufs_msgs:/home/andrewwhong/workspace/driverless/driverless_ws/install/perceptions:/home/andrewwhong/workspace/driverless/driverless_ws/install/interfaces:/home/andrewwhong/workspace/driverless/driverless_ws/install/controls:/home/andrewwhong/workspace/driverless/driverless_ws/install/common:/home/andrewwhong/workspace/driverless/driverless_ws/install/collection:/home/andrewwhong/workspace/driverless/driverless_ws/install/actuators:/opt/ros/foxy /usr/bin/cmake --install /home/andrewwhong/workspace/driverless/driverless_ws/build/planning

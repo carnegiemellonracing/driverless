@@ -8,6 +8,8 @@
 
 #include "raceline.hpp"
 const float prev_progress_flag = -std::numeric_limits<float>::max();
+
+//Projection class for storing result from minimization and related data
 struct projection {
   float progress;
   int min_index;       // For testing

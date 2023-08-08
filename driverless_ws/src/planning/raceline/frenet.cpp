@@ -20,13 +20,14 @@ gsl_matrix *mat_mul(gsl_matrix *A, gsl_matrix *B) {
 double poly_eval(polynomial poly, double x) {
   return gsl_poly_eval(poly.nums->data, poly.deg + 1, x);
 }
-
+//Curvature at point(s) `min_x` based on 2d curvature equation https://mathworld.wolfram.com/Curvature.html
 double get_curvature(polynomial poly_der_1, polynomial poly_der_2,
                      double min_x) {
   return poly_eval(poly_der_2, min_x) /
          (1 + pow(pow(poly_eval(poly_der_1, min_x), 2), 3 / 2));
 }
 
+//Rotates points based on the rotation and transformation matrices
 std::vector<gsl_matrix *> rotate_points(
     std::vector<gsl_matrix *> points, std::vector<gsl_matrix *> poly_Qs,
     std::vector<gsl_matrix *> poly_transMats) {
@@ -43,6 +44,13 @@ std::vector<gsl_matrix *> rotate_points(
   return rotated_points;
 }
 
+/*
+  Finds the point on each spline that minimizes the distance to the point.
+
+  Uses Netwon's method for minimization
+
+  https://drive.google.com/file/d/1MP-jhWPXpNb3WEztvSrkW7iTVYgKsy9l/view?usp=share_link for more details
+*/
 std::pair<double, double> get_closest_distance(
     gsl_matrix *x_point, gsl_matrix *y_point,
     std::vector<gsl_matrix *> poly_coeffs,
@@ -51,6 +59,7 @@ std::pair<double, double> get_closest_distance(
   assert(n == poly_roots.size());
 }
 
+// Finds the progress (length) and curvature of point on a raceline generated from splines
 projection frenet(float x, float y, std::vector<Spline> path,
                   std::vector<float> lengths, float prev_progress, float v_x,
                   float v_y) {
@@ -60,14 +69,15 @@ projection frenet(float x, float y, std::vector<Spline> path,
   size_t index_offset = 0;
   size_t size = n;
   std::vector<size_t> indexes;
-  if (prev_progress != prev_progress_flag) {
+  if (prev_progress != prev_progress_flag) {  //what does this flag do?
+    //Lengths must be sorted for bisect to work since its binary search
     assert(is_sorted(lengths.begin(), lengths.end()));
     index_offset =
         std::lower_bound(lengths.begin(), lengths.end(), prev_progress) -
         lengths.begin();
     size = std::min(n, index_offset + 30);
   }
-
+  //get index where all elements in lengths[index:] are >= prev_progress
   for (size_t i = index_offset; i < size; ++i) indexes.push_back(i % n);
 
   std::vector<Spline> explore_space;
@@ -79,7 +89,7 @@ projection frenet(float x, float y, std::vector<Spline> path,
   gsl_matrix *poly_roots = gsl_matrix_alloc(explore_space_n, num_points);
   std::vector<gsl_matrix *> poly_Qs;
   std::vector<gsl_matrix *> poly_transMats;
-  for (size_t i = 0; i < size; ++i) {
+  for (size_t i = 0; i < explore_space_n; ++i) { //used to be size: check if this is right
     Spline spline = path[i];
     gsl_vector *nums = spline.get_SplPoly().nums;
     gsl_matrix *rotated_points = spline.get_rotated_points();
@@ -101,4 +111,8 @@ projection frenet(float x, float y, std::vector<Spline> path,
   std::vector<gsl_matrix *> points = {point};
   std::vector<gsl_matrix *> rotated_points =
       rotate_points(points, poly_Qs, poly_transMats);
+
+  gsl_matrix *opt_xs = gsl_matrix_alloc();
+  gsl_matrix *distances = gsl_matrix_alloc();
+
 }

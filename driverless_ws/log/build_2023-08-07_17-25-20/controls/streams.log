@@ -1,0 +1,46 @@
+[0.048s] Invoking command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/controls': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake /home/andrewwhong/workspace/driverless/driverless_ws/src/controls -DCMAKE_INSTALL_PREFIX=/home/andrewwhong/workspace/driverless/driverless_ws/install/controls
+[0.286s] -- The C compiler identification is GNU 9.4.0
+[0.651s] -- The CXX compiler identification is GNU 9.4.0
+[0.802s] -- Check for working C compiler: /usr/bin/cc
+[1.008s] -- Check for working C compiler: /usr/bin/cc -- works
+[1.009s] -- Detecting C compiler ABI info
+[1.222s] -- Detecting C compiler ABI info - done
+[1.243s] -- Detecting C compile features
+[1.244s] -- Detecting C compile features - done
+[1.247s] -- Check for working CXX compiler: /usr/bin/c++
+[1.499s] -- Check for working CXX compiler: /usr/bin/c++ -- works
+[1.501s] -- Detecting CXX compiler ABI info
+[1.724s] -- Detecting CXX compiler ABI info - done
+[1.738s] -- Detecting CXX compile features
+[1.739s] -- Detecting CXX compile features - done
+[1.741s] -- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)
+[1.772s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+[1.772s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[2.102s] -- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)
+[2.311s] -- Added test 'copyright' to check source files copyright and LICENSE
+[2.313s] -- Added test 'lint_cmake' to check CMake code style
+[2.314s] -- Added test 'xmllint' to check XML markup files
+[2.319s] -- Configuring done
+[2.324s] -- Generating done
+[2.325s] -- Build files have been written to: /home/andrewwhong/workspace/driverless/driverless_ws/build/controls
+[2.335s] Invoked command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/controls' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake /home/andrewwhong/workspace/driverless/driverless_ws/src/controls -DCMAKE_INSTALL_PREFIX=/home/andrewwhong/workspace/driverless/driverless_ws/install/controls
+[2.340s] Invoking command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/controls': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/andrewwhong/workspace/driverless/driverless_ws/build/controls -- -j12 -l12
+[2.408s] Invoked command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/controls' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/andrewwhong/workspace/driverless/driverless_ws/build/controls -- -j12 -l12
+[2.445s] Invoking command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/controls': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/andrewwhong/workspace/driverless/driverless_ws/build/controls
+[2.461s] -- Install configuration: ""
+[2.461s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/ament_index/resource_index/package_run_dependencies/controls
+[2.462s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/ament_index/resource_index/parent_prefix_path/controls
+[2.462s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/environment/ament_prefix_path.sh
+[2.462s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/environment/ament_prefix_path.dsv
+[2.462s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/environment/path.sh
+[2.462s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/environment/path.dsv
+[2.463s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/local_setup.bash
+[2.463s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/local_setup.sh
+[2.463s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/local_setup.zsh
+[2.463s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/local_setup.dsv
+[2.463s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/package.dsv
+[2.464s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/ament_index/resource_index/packages/controls
+[2.464s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/cmake/controlsConfig.cmake
+[2.464s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/cmake/controlsConfig-version.cmake
+[2.464s] -- Installing: /home/andrewwhong/workspace/driverless/driverless_ws/install/controls/share/controls/package.xml
+[2.511s] Invoked command in '/home/andrewwhong/workspace/driverless/driverless_ws/build/controls' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/andrewwhong/workspace/driverless/driverless_ws/build/controls
