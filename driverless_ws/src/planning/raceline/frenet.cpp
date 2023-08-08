@@ -7,11 +7,6 @@
 #include "frenet.hpp"
 #include "raceline.hpp"
 
-
-
-
-projection::projection(float progress,int min_index,float min_distance,float curvature,float velocity);
-
 gsl_matrix *mat_mul(gsl_matrix *A, gsl_matrix *B) {
   assert(A->size2 == B->size1);
   gsl_matrix_view A_view = gsl_matrix_submatrix(A, 0, 0, A->size1, A->size2);
