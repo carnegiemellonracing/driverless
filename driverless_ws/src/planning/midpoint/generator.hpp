@@ -33,10 +33,9 @@ public:
 
     std::vector<Spline> generate_splines(gsl_matrix *midpoints);    
     gsl_matrix* generate_points(perceptionsData perceptions_data);  
-    // gsl_matrix *generate_points(perceptionsData *perceptions_data);
-
-    std::vector<float> interpolate_cones(gsl_matrix *perceptions_data);
-    Spline spline_from_cones(perceptionsData *perceptions_data);
+    gsl_matrix* interpolate_cones(perceptionsData perceptions_data, int interpolation_number = -1);
+    Spline spline_from_cones(perceptionsData perceptions_data);
+    Spline spline_from_cone_side(std::vector<std::pair<double,double>> side);
 
 };
 
