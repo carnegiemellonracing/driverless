@@ -84,6 +84,8 @@ std::pair<gsl_matrix *, gsl_matrix *> get_closest_distance(
     c7 = d**2
   */
 
+
+  //redo some of this with cblas
   gsl_vector *c1 = gsl_vector_alloc(n);
   gsl_vector *c2 = gsl_vector_alloc(n);
   gsl_vector *c3 = gsl_vector_alloc(n);
@@ -205,20 +207,60 @@ std::pair<gsl_matrix *, gsl_matrix *> get_closest_distance(
     x_p = between;
   }
   for(int i = 0; i < precision; i++){
-    //define powers
+    //TODO:define powers
     //define the vander
     //gsl_matrix *vander =  gsl_matrix_alloc(1,1);
+    //TODO:vanderbonde
     powers = vandermonde(x,n_coeffs);
     gsl_matrix *ddx =  gsl_matrix_alloc(1,1);
     gsl_matrix *dddx =  gsl_matrix_alloc(1,1);
-    ddx = 
-    dddx = 
-    //make al zero entries in dddx nonzero
+    ddx = mat_mul(powers,d_dist_coeffs);
+    dddx = mat_mul(powers,dd_dist_coeffs);
+    //TODO:make all zero entries in dddx nonzero
+    //TODO: this python
+    //x = x - (ddx / dddx)[:, :, 0]
+  }
+  //TODO: implement this
+  // x = np.apply_along_axis(
+  //     lambda i: np.clip(i, poly_roots[:, 0], poly_roots[:, -1]), 0, x
+  // )
+  // powers = np.apply_along_axis(
+  //     lambda x: np.vander(x, n_coeffs, increasing=True), 1, x
+  // )
 
-    //x = x - (ddx/dddx)[;,;,0]
-
+  gsl_matrix *distances = mat_mul(powers,dist_coeffs);
+  //take argmin of the first row TODO:see if there's native implementation or make generalized argmin
+  double min = 9999999;
+  int minIndex = -1;
+  for(int i = 0; i < distances->size2; i++){
+    if(gsl_matrix_get(distances,0,i) < min){
+      min = gsl_matrix_get(distances,0,i);
+      minIndex = i;
+    }
+  }
+  //TODO:check if this is just a single number
+  gsl_matrix *min_indices = gsl_matrix_alloc(1,1);
+  gsl_matrix_set(min_indices,0,0,minIndex);
+  
+  //TODO:Find better way of doing a linspace
+  int di_len = int(poly_roots->size1);
+  gsl_matrix *di = gsl_matrix_alloc(1,di_len);
+  double temp = 0;
+  for(int i = 0; i<di_len;i++){ //no +1 since the arrange is exclusive to end
+    gsl_matrix_set(di,0,i,temp);
+    temp+=distances->size2;
   }
 
+  gsl_matrix *min_x = gsl_matrix_alloc(1,di->size2+1);//assuming min_indices is a single number
+  gsl_matrix *min_dist = gsl_matrix_alloc(1,di->size2+1);//assuming min_indices is a single number
+  //implement np.take
+  for(int i = 0; i<di->size2+1;i++){ //no +1 since the arrange is exclusive to end
+    //set ith element of min_x as the value of the ith min_index from x
+    gsl_matrix_set(min_x,0,i, gsl_matrix_get(x,0, gsl_matrix_get(min_indices,0,i)));
+    gsl_matrix_set(min_dist,0,i, gsl_matrix_get(distances,0, gsl_matrix_get(min_indices,0,i)));
+  } 
+  std::pair<gsl_matrix *, gsl_matrix *> result = {min_x,min_dist};
+  return result;
 }
 
 //Argmin in row,col form assuming 2d matrix
