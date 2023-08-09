@@ -105,6 +105,31 @@ gsl_matrix* MidpointGenerator::generate_points(perceptionsData perceptions_data)
 }
 
 
-std::vector<float> MidpointGenerator::interpolate_cones(gsl_matrix *perceptions_data){
-    
+gsl_matrix MidpointGenerator::interpolate_cones(perceptionsData perceptions_data,int interpolation_number){
+    return spline_from_cones(perceptions_data).interpolate(interpolation_number,std::make_pair(-1,-1));
+}
+
+Spline MidpointGenerator::spline_from_cones(perceptionsData perceptions_data){
+    gsl_matrix *midpoints= generate_points(perceptions_data);
+    std::vector<Spline> splines = generate_splines(midpoints);
+    gsl_matrix_free(midpoints);
+    return splines[0];
+}
+
+gsl_matrix* vector_to_mat(std::vector<std::pair<double,double>> side){
+    gsl_matrix *mat = gsl_matrix_alloc(2,side.size());
+    for(int i=0;i<side.size();i++){
+        gsl_matrix_set(mat,0,i,side[i].first);
+        gsl_matrix_set(mat,1,i,side[i].second);
+    }
+
+    return mat;
+}
+
+Spline MidpointGenerator::spline_from_cone_side(std::vector<std::pair<double,double>> side){
+
+    gsl_matrix *side_mat= vector_to_mat(side);
+    std::vector<Spline> splines = generate_splines(side_mat);
+    gsl_matrix_free(side_mat);
+    return splines[0];
 }
