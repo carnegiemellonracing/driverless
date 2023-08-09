@@ -6,6 +6,8 @@
 
 #include "frenet.hpp"
 #include "raceline.hpp"
+#include <gsl/gsl_blas.h>
+
 
 gsl_matrix *mat_mul(gsl_matrix *A, gsl_matrix *B) {
   assert(A->size2 == B->size1);
@@ -28,6 +30,7 @@ double get_curvature(polynomial poly_der_1, polynomial poly_der_2,
 }
 
 //Rotates points based on the rotation and transformation matrices
+//Why aren't the matrices converted into vectors?
 std::vector<gsl_matrix *> rotate_points(
     std::vector<gsl_matrix *> points, std::vector<gsl_matrix *> poly_Qs,
     std::vector<gsl_matrix *> poly_transMats) {
@@ -44,11 +47,13 @@ std::vector<gsl_matrix *> rotate_points(
   return rotated_points;
 }
 
-std::pair<double, double> get_closest_distance(
+static const int n_coeffs =  7;
+//x and y are a set of points
+std::pair<gsl_matrix *, gsl_matrix *> get_closest_distance(
     double x, double y,
     gsl_matrix * poly_coeffs,
     gsl_matrix * poly_roots,
-    int precision, int samples)
+    int precision=2, int samples=5)
 {
 
   size_t n = poly_coeffs->size1;
@@ -186,10 +191,52 @@ std::pair<double, double> get_closest_distance(
   gsl_matrix_set_row(dd_dist_coeffs, 5, tmp1);
   gsl_matrix_set_row(dd_dist_coeffs, 6, tmp1);
 
+  //x and powers
+  gsl_matrix *dd_dist_coeffs = gsl_matrix_alloc(n, 7);
+  //define x
+  //define power:
+  gsl_matrix *x_p = gsl_matrix_alloc(n,7);
+  gsl_matrix *powers = gsl_matrix_alloc(n,7);
+  assert(poly_roots->size2 > 0);
+  for(int i = 0; i < poly_roots->size2-1; i++){
+    gsl_matrix *between = gsl_matrix_alloc(1,1);
+    //Define between using some linspace
+    //Define x as concatenatiing x and between
+    x_p = between;
+  }
+  for(int i = 0; i < precision; i++){
+    //define powers
+    //define the vander
+    //gsl_matrix *vander =  gsl_matrix_alloc(1,1);
+    powers = vandermonde(x,n_coeffs);
+    gsl_matrix *ddx =  gsl_matrix_alloc(1,1);
+    gsl_matrix *dddx =  gsl_matrix_alloc(1,1);
+    ddx = 
+    dddx = 
+    //make al zero entries in dddx nonzero
 
+    //x = x - (ddx/dddx)[;,;,0]
 
+  }
 
 }
+
+//Argmin in row,col form assuming 2d matrix
+std::pair<int,int> argmin(gsl_matrix * m){
+  double min = 9999999;
+  std::pair<int,int> minIndex = {-1,-1};
+  for(int i = 0; i < m->size1; i++){
+    for(int j = 0; j < m->size2; j++){
+      if(gsl_matrix_get(m,i,j) < min){
+        min = gsl_matrix_get(m,i,j);
+        minIndex = {i,j};
+      }
+    }
+  }
+  return minIndex;
+}
+
+//Vector of 
 
 // Finds the progress (length) and curvature of point on a raceline generated from splines
 projection frenet(float x, float y, std::vector<Spline> path,
@@ -241,14 +288,20 @@ projection frenet(float x, float y, std::vector<Spline> path,
   gsl_matrix_set(point, 0, 0, x);
   gsl_matrix_set(point, 0, 1, y);
   std::vector<gsl_matrix *> points = {point};
+  //returns a single rotated point
   std::vector<gsl_matrix *> rotated_points =
       rotate_points(points, poly_Qs, poly_transMats);
   
+  
   //Dimensions are explore_space_n: CHECK if this is correct
+  //opt_xs and distances can be vectors instead
   gsl_matrix *opt_xs = gsl_matrix_alloc(explore_space_n,1);
   gsl_matrix *distances = gsl_matrix_alloc(explore_space_n,1);
-  gsl_matrix *x_point = gsl_matrix_alloc(explore_space_n,1);
-  gsl_matrix *y_point = gsl_matrix_alloc(explore_space_n,1);
+  // gsl_matrix *x_point = gsl_matrix_alloc(explore_space_n,1);
+  // gsl_matrix *y_point = gsl_matrix_alloc(explore_space_n,1);
+  //Just x and y from the one row in the matrix
+  double x_point = gsl_matrix_get(rotated_points[0],0,0);
+  double y_point = gsl_matrix_get(rotated_points[0],0,1);
 
   //find how to get the columns from the vector of matrices
   std::pair< gsl_matrix *,gsl_matrix *> dist = get_closest_distance(x_point, y_point,
@@ -256,7 +309,8 @@ projection frenet(float x, float y, std::vector<Spline> path,
   opt_xs = dist.first;
   distances = dist.second;
 
-  int i = argmin(distances); //argmin for gsl vector
+  std::pair<int,int> distArgmin = argmin(distances); //argmin for gsl vector
+  int i = distArgmin.second; //first row, ith col
   int min_index = (i+index_offset)%n;
   polynomial min_polynomial = path[i].get_SplPoly();
   double min_x = gsl_matrix_get(opt_xs,i,1);
