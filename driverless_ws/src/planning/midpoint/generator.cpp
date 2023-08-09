@@ -1,18 +1,19 @@
 #include "generator.hpp"
 
-
 MidpointGenerator::MidpointGenerator(int interpolation_num){
     interpolation_number=interpolation_num;
 
 }
 
-gsl_matrix* MidpointGenerator::sorted_by_norm(gsl_matrix *list){
-    gsl_matrix *res = gsl_matrix_alloc(list->size1,list->size2);
-    for(int i=0;i<list->size1;i++)
-        for(int j=0;j<list->size1;j++)
-        gsl_matrix_set(res,i,j,gsl_matrix_get(list,i,j));
+bool ptnrm_cmp(std::pair<double,double> a,std::pair<double,double> b){
+    return hypot(a.first,a.second) < hypot(b.first,b.second);
+}
 
-// IMPLEMENT SORT
+std::vector<std::pair<double,double>>  MidpointGenerator::sorted_by_norm(std::vector<std::pair<double,double>> inp){
+
+    std::sort(inp.begin(),inp.end(),ptnrm_cmp);
+    
+    return inp;
 }
 
 
@@ -42,6 +43,8 @@ std::vector<Spline> MidpointGenerator::generate_splines(gsl_matrix *midpoints){
 
 gsl_matrix* MidpointGenerator::generate_points(perceptionsData perceptions_data){ 
     // LEFT ==BLUE
+    perceptions_data.bluecones  = sorted_by_norm(perceptions_data.bluecones);
+    perceptions_data.yellowcones  = sorted_by_norm(perceptions_data.yellowcones);
     if (perceptions_data.bluecones.size()>0 && perceptions_data.yellowcones.size()==0){
         gsl_matrix *left = gsl_matrix_alloc(2,perceptions_data.bluecones.size());
         gsl_matrix *right = gsl_matrix_alloc(2,perceptions_data.bluecones.size());
