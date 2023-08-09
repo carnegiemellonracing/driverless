@@ -1,8 +1,0 @@
-CMake Error at CMakeLists.txt:27 (add_executable):
-  add_executable cannot create target "slam_test" because another target with
-  the same name already exists.  The existing target is an executable created
-  in source directory
-  "/home/andrewwhong/workspace/driverless/driverless_ws/src/planning".  See
-  documentation for policy CMP0002 for more details.
-
-

@@ -1,9 +1,0 @@
-/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/perceptions/CMakeFiles/uninstall.dir
-/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/perceptions/CMakeFiles/perceptions_uninstall.dir
-/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/perceptions/CMakeFiles/test.dir
-/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/perceptions/CMakeFiles/edit_cache.dir
-/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/perceptions/CMakeFiles/rebuild_cache.dir
-/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/perceptions/CMakeFiles/list_install_components.dir
-/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/perceptions/CMakeFiles/install.dir
-/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/perceptions/CMakeFiles/install/local.dir
-/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/build/perceptions/CMakeFiles/install/strip.dir
