@@ -1,0 +1,17 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from eufs_msgs/msg/PathIntegralStatus.msg
+// generated code does not contain a copyright notice
+
+#include "std_msgs/msg/Header.idl"
+
+module eufs_msgs {
+  module msg {
+    struct PathIntegralStatus {
+      std_msgs::msg::Header header;
+
+      string info;
+
+      int32 status;
+    };
+  };
+};

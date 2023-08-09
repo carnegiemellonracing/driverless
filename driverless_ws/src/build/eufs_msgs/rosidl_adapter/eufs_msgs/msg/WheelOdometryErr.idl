@@ -1,0 +1,27 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from eufs_msgs/msg/WheelOdometryErr.msg
+// generated code does not contain a copyright notice
+
+#include "std_msgs/msg/Header.idl"
+
+module eufs_msgs {
+  module msg {
+    @verbatim (language="comment", text=
+      " Message for the error of Wheel Odometry. Error based on euclidean distance.")
+    struct WheelOdometryErr {
+      std_msgs::msg::Header header;
+
+      double position_err;
+
+      double orientation_err;
+
+      double linear_vel_err;
+
+      double angular_vel_err;
+
+      @verbatim (language="comment", text=
+        " Just a-axis motion, since that has special importance for Wheel Odometry")
+      double forward_vel_err;
+    };
+  };
+};
