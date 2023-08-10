@@ -7,10 +7,12 @@ RUN apt-get install -y \
     python3-pip \
     tmux \
     vim \
+    neovim \
     nano
 RUN pip3 install colcon-common-extensions -U
 RUN apt-get install -y python3-tk
 RUN apt-get install -y software-properties-common
+RUN apt-get install -y libpcl-dev # added to include PCL package into perceptions
 RUN add-apt-repository universe
 RUN apt-get update && apt-get install -y curl
 RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
@@ -23,7 +25,6 @@ RUN apt-get install -y ros-foxy-gazebo-ros \
                        ros-foxy-ackermann-msgs \
                        ros-foxy-joint-state-publisher-gui
 RUN apt-get upgrade -y ros-foxy-geometry-msgs
-RUN echo 'export EUFS_MASTER=/eufs' >> ~/.bashrc
 RUN echo 'source /opt/ros/foxy/setup.bash' >> ~/.bashrc
 RUN source ~/.bashrc
 RUN apt-get -y install git
@@ -34,4 +35,7 @@ RUN cd eufs && \
     git clone https://gitlab.com/eufs/eufs_sim.git && \
     git clone https://gitlab.com/eufs/eufs_msgs.git && \
     git clone https://gitlab.com/eufs/eufs_rviz_plugins.git
+RUN git clone https://gitlab.com/libeigen/eigen.git /usr/local/include
 RUN cd eufs && rosdep update && rosdep install --from-paths /eufs --ignore-src -r -y
+RUN source /opt/ros/foxy/setup.sh
+ENV EUFS_MASTER=/eufs
