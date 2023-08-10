@@ -9,6 +9,14 @@
 #include "eufs_msgs/msg/cone_array_with_covariance.hpp"
 #include "eufs_msgs/msg/car_state.hpp"
 
+#include <gsl/gsl_block.h>
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_linalg.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_permutation.h>
+
+#include "new_slam.cpp"
+
 #include <boost/shared_ptr.hpp>
 #include <vector>
 #include <cmath>
@@ -38,6 +46,7 @@ class SLAMValidation : public rclcpp::Node
 {
   public:
     SLAMValidation(): Node("slam_validation"){
+      gsl_matrix_set_identity(pEst);
       cone_sub = this->create_subscription<eufs_msgs::msg::ConeArrayWithCovariance>(
       "/cones", 10, std::bind(&SLAMValidation::cone_callback, this, _1));
       vehicle_state_sub = this->create_subscription<eufs_msgs::msg::CarState>(
@@ -80,13 +89,55 @@ class SLAMValidation : public rclcpp::Node
       vpos_is_jacob.dyaw = vehicle_state_data->twist.twist.angular.z;
     }
     void timer_callback(){
-      run_slam(std::chrono::system_clock::now());
+      run_slam();
     }
 
-    void run_slam(auto curr_time){
-      dt = std::chrono::duration_cast<std::chrono::microseconds>(curr_time - prev_time).count() / 1000000.0;
-      prev_time = curr_time;
-      RCLCPP_INFO(this->get_logger(), "curr_time: %d | prev_time: %d | dt: %d\n", curr_time.count(), prev_time.count(), dt);
+    void run_slam(){
+      // dt = std::chrono::duration_cast<std::chrono::microseconds>(curr_time - prev_time).count() / 1000000.0;
+      // prev_time = curr_time;
+      // RCLCPP_INFO(this->get_logger(), "curr_time: %d | prev_time: %d | dt: %d\n", curr_time.count(), prev_time.count(), dt);
+      // Time difference from one callback to another is so close to 0.1 seconds, gonna assume 0.1 everywhere
+      // Cuz elapsed time stuff not working rn
+      gsl_matrix* u = gsl_matrix_calloc(2, 1);
+      gsl_matrix_set(u, 0, 0, hypot(vpos_is_jacob.dx, vpos_is_jacob.dy));
+      gsl_matrix_set(u, 1, 0, vpos_is_jacob.dyaw);
+
+      int n = blue_cones.size() + yellow_cones.size() + orange_cones.size();
+      int idx = 0;
+      gsl_matrix* z = gsl_matrix_calloc(n, 3);
+
+      for(int i = 0; i < blue_cones.size(); i++){
+        Cone c = blue_cones[i];
+        double dist = hypot(c.x, c.y);
+        double angle = atan2(c.y, c.x);
+        double corrected_angle = std::fmod(angle + M_PI, 2 * M_PI) - M_PI;
+        gsl_matrix_set(z, idx, 0, dist);
+        gsl_matrix_set(z, idx, 1, angle);
+        idx++;
+      }
+
+      for(int i = 0; i < yellow_cones.size(); i++){
+        Cone c = yellow_cones[i];
+        double dist = hypot(c.x, c.y);
+        double angle = atan2(c.y, c.x);
+        double corrected_angle = std::fmod(angle + M_PI, 2 * M_PI) - M_PI;
+        gsl_matrix_set(z, idx, 0, dist);
+        gsl_matrix_set(z, idx, 1, angle);
+        idx++;
+      }
+
+      for(int i = 0; i < orange_cones.size(); i++){
+        Cone c = orange_cones[i];
+        double dist = hypot(c.x, c.y);
+        double angle = atan2(c.y, c.x);
+        double corrected_angle = std::fmod(angle + M_PI, 2 * M_PI) - M_PI;
+        gsl_matrix_set(z, idx, 0, dist);
+        gsl_matrix_set(z, idx, 1, angle);
+        idx++;
+      }
+      slam_output = ekf_slam(xEst, pEst, u, z, 0.1, this->get_logger());
+      xEst = slam_output.x;
+      pEst = slam_output.p;
 
     }
     rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr cone_sub;
@@ -98,8 +149,11 @@ class SLAMValidation : public rclcpp::Node
     VehiclePosition vpos_is_jacob;
     rclcpp::TimerBase::SharedPtr timer;
 
-    auto prev_time;
+    gsl_matrix* xEst = gsl_matrix_calloc(STATE_SIZE, 1);
+    gsl_matrix* pEst = gsl_matrix_calloc(STATE_SIZE, STATE_SIZE);
     double dt;
+
+    ekfPackage slam_output;
 };
 
 // class SLAMValidation : public rclcpp::Node {

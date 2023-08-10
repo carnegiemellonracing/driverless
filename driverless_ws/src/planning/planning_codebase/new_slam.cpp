@@ -446,8 +446,9 @@ int search_correspond_landmark_id(gsl_matrix* xAug, gsl_matrix* PAug, gsl_matrix
 }
 
 //
-ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matrix* z, double dt)
+ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matrix* z, double dt, auto logger)
 {
+    RCLCPP_INFO(logger, "woah this works?!\n"); 
     double S = STATE_SIZE;
     gsl_matrix* x = gsl_matrix_calloc(S,xEst->size2);
     for(int r = 0; r < x->size1; r++)
@@ -458,6 +459,7 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         }
     }
     gsl_matrix** gFx = jacob_motion(x,u,dt);
+    RCLCPP_INFO(logger, "past jacob_motion\n");
     gsl_matrix* G = gFx[0];
     gsl_matrix* Fx = gFx[1];
 
@@ -484,7 +486,7 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         }
     }
     gsl_matrix_free(mm);
-
+    RCLCPP_INFO(logger, "past this free\n");
     gsl_matrix* PEst_S = gsl_matrix_calloc(S,S);
     for(int r = 0; r < S; r++)
     {
@@ -527,22 +529,36 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         }
     }
     gsl_matrix_free(arr1);
+    RCLCPP_INFO(logger, "arr1\n");
     gsl_matrix_free(arr2);
+    RCLCPP_INFO(logger, "arr2\n");
     gsl_matrix_free(arr3);
+    RCLCPP_INFO(logger, "arr3\n");
     gsl_matrix_free(arr4);
+    RCLCPP_INFO(logger, "arr4\n");
     gsl_matrix* initP = gsl_matrix_calloc(2,2);
     gsl_matrix_set(initP,0,0,1);
     gsl_matrix_set(initP,1,1,1);
     gsl_matrix_free(x);
+    RCLCPP_INFO(logger, "x\n");
     gsl_matrix_free(G);
+    RCLCPP_INFO(logger, "G\n");
     gsl_matrix_free(GT);
+    RCLCPP_INFO(logger, "GT\n");
     gsl_matrix_free(Fx);
+    RCLCPP_INFO(logger, "Fx\n");
     gsl_matrix_free(FxT);
+    RCLCPP_INFO(logger, "FxT\n");
     delete gFx;
+    RCLCPP_INFO(logger, "past whatever the fuck this is\n");
     gsl_matrix_free(M_t);
+    RCLCPP_INFO(logger, "mt\n");
     gsl_matrix_free(V_t);
-    gsl_matrix_free(PEst_S);
+    RCLCPP_INFO(logger, "vt\n");
+    // gsl_matrix_free(PEst_S);
+    RCLCPP_INFO(logger, "pest s\n");
     gsl_matrix_free(Cxmat);
+    RCLCPP_INFO(logger, "cxmat\n");
     
     
 
@@ -720,13 +736,13 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         gsl_matrix_free(K_3);
         gsl_matrix_free(eye);
         gsl_matrix_free(prod);
-
+        RCLCPP_INFO(logger, "past these frees\n");
 
     
         
     }
     gsl_matrix_free(newZ);
-
+    RCLCPP_INFO(logger, "newZ\n");
     gsl_matrix_set(xEst,2,0,pi_2_pi(gsl_matrix_get(xEst,2,0)));
 
     ekfPackage result;
@@ -786,28 +802,28 @@ gsl_matrix* calc_input(){
 
 
 
-int main() {
+// int main() {
     
-    gsl_matrix * r = gsl_matrix_calloc(3,3);
-    gsl_matrix_set_all(r,2);
-    printGSLMatrix(r);
+//     gsl_matrix * r = gsl_matrix_calloc(3,3);
+//     gsl_matrix_set_all(r,2);
+//     printGSLMatrix(r);
 
-    gsl_matrix *g = gsl_matrix_calloc(3,1);
-    gsl_matrix_set_all(g,1);
-    printGSLMatrix(g);
+//     gsl_matrix *g = gsl_matrix_calloc(3,1);
+//     gsl_matrix_set_all(g,1);
+//     printGSLMatrix(g);
 
-    gsl_matrix* ans = gsl_matrix_calloc(r->size1,g->size2);
+//     gsl_matrix* ans = gsl_matrix_calloc(r->size1,g->size2);
 
-    gsl_linalg_matmult(r,g,ans);
-    gsl_matrix_free(r);
-    gsl_matrix_free(g);
-    printGSLMatrix(ans);
+//     gsl_linalg_matmult(r,g,ans);
+//     gsl_matrix_free(r);
+//     gsl_matrix_free(g);
+//     printGSLMatrix(ans);
     
-    gsl_matrix_free(ans);
+//     gsl_matrix_free(ans);
     
     
 
 
-    cout << "Hello World" << endl;
-    return 0;
-}
+//     cout << "Hello World" << endl;
+//     return 0;
+// }

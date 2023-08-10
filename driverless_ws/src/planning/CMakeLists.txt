@@ -20,9 +20,10 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(eufs_msgs REQUIRED)
+find_package(GSL REQUIRED)
 
-add_executable(slam_test src/EKF_SLAM.cpp)
-ament_target_dependencies(slam_test rclcpp message_filters eufs_msgs)
+add_executable(slam_test planning_codebase/EKF_SLAM.cpp)
+ament_target_dependencies(slam_test rclcpp message_filters eufs_msgs GSL)
 
 install(TARGETS
   slam_test
