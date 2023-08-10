@@ -1,5 +1,7 @@
 #include "raceline.hpp"
 #include "random.h"
+#include <math.h>
+#include <algorithm>
 
 #ifndef MIDPOINTGENERATOR
 #define MIDPOINTGENERATOR
@@ -29,7 +31,8 @@ public:
     MidpointGenerator(int interpolation_number=30);
 
     ~MidpointGenerator();
-    gsl_matrix *sorted_by_norm(gsl_matrix *list);
+    std::vector<std::pair<double,double>> sorted_by_norm(std::vector<std::pair<double,double>> inp);
+    // gsl_matrix *sorted_by_norm(gsl_matrix *list);
 
     std::vector<Spline> generate_splines(gsl_matrix *midpoints);    
     gsl_matrix* generate_points(perceptionsData perceptions_data);  
