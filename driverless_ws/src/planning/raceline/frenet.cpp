@@ -47,6 +47,20 @@ std::vector<gsl_matrix *> rotate_points(
   return rotated_points;
 }
 
+
+gsl_matrix *matrix_nonzero(gsl_matrix* m,double nonzero=0.0001){
+    for(int i = 0; i < m->size1; i++){
+      for(int j = 0; j < m->size2; j++){
+        if(gsl_matrix_get(m,i,j) == 0){
+          gsl_matrix_set(m,i,j,nonzero);
+        }
+      }
+    }
+    return m;
+}
+
+
+
 static const int n_coeffs =  7;
 //x and y are a set of points
 std::pair<gsl_matrix *, gsl_matrix *> get_closest_distance(
@@ -216,7 +230,8 @@ std::pair<gsl_matrix *, gsl_matrix *> get_closest_distance(
     gsl_matrix *dddx =  gsl_matrix_alloc(1,1);
     ddx = mat_mul(powers,d_dist_coeffs);
     dddx = mat_mul(powers,dd_dist_coeffs);
-    //TODO:make all zero entries in dddx nonzero
+    //Make all zero entries in dddx nonzero
+    dddx = matrix_nonzero(dddx);
     //TODO: this python
     //x = x - (ddx / dddx)[:, :, 0]
   }
@@ -333,7 +348,6 @@ projection frenet(float x, float y, std::vector<Spline> path,
   //returns a single rotated point
   std::vector<gsl_matrix *> rotated_points =
       rotate_points(points, poly_Qs, poly_transMats);
-  
   
   //Dimensions are explore_space_n: CHECK if this is correct
   //opt_xs and distances can be vectors instead
