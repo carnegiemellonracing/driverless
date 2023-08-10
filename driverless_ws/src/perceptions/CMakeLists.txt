@@ -17,9 +17,36 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(eufs_msgs REQUIRED)
+find_package(PCL 1.1 REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+
+# PCL-related linking commands
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
+add_executable(lidar_sub 
+	src/lidar_node.cpp)
+ament_target_dependencies(lidar_sub
+	rclcpp
+	std_msgs
+	sensor_msgs
+	geometry_msgs
+	eufs_msgs)
+
+# PCL-related linking commands
+target_link_libraries(lidar_sub ${PCL_LIBRARIES})
+
+install(TARGETS
+	lidar_sub
+	DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
