@@ -59,16 +59,23 @@ class MidpointNode : public rclcpp::Node
 
 
       std::vector<double> rcl_pt_x,rcl_pt_y,rcl_pt_wr, rcl_pt_wl;
-      for(int i=0;i<generator_mid.cumulated_lengths.back()/DELTA;i++){
-        int left_ptr=0,right_ptr=0,mid_ptr=0;
-        while(mid_ptr*DELTA <generator_mid.cumulated_lengths[i]){
-          mid_ptr++;
+      double x,y,wl,wr,rptr,lptr;
+
+      for(int i =0;i<generator_mid.cumulated_splines.size();i++){
+        auto e = generator_mid.cumulated_splines[i];
+
+        for(int j=0;j<e.get_points()->size2-1;j++){
+          x=gsl_matrix_get(e.get_points(),0,j);
+          y=gsl_matrix_get(e.get_points(),1,j);
+          double len=0; 
+          if (i>0) len = generator_mid.cumulated_lengths[i-1];
+
+          wl = frenet(x,y,generator_left.cumulated_splines,generator_left.cumulated_lengths,generator_mid.cumulated_lengths[i-1]).min_distance;
+          wr = frenet(x,y,generator_right.cumulated_splines,generator_right.cumulated_lengths,generator_mid.cumulated_lengths[i-1]).min_distance;
+
         }
-        double x,y,w_l,w_r;
-        generator_mid;  timer_ = this->create_wall_timer(
-      // 500ms, std::bind(&MinimalPublish
-        rcl_pt_wr.push_back(w_r);
       }
+
 
       auto message  = interfaces::msg::OptimizerPoints();
       message.x = rcl_pt_x;

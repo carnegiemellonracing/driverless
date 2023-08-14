@@ -52,7 +52,7 @@ std::pair<double, double> get_closest_distance(
 }
 
 projection frenet(float x, float y, std::vector<Spline> path,
-                  std::vector<float> lengths, float prev_progress, float v_x,
+                  std::vector<double> lengths, float prev_progress, float v_x,
                   float v_y) {
   assert(path.size() == lengths.size());
   const size_t num_points = prefered_degree + 1;
