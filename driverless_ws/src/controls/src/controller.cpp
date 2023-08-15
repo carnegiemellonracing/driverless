@@ -144,6 +144,51 @@ namespace controls {
         throw new std::runtime_error("lap info parsing not implemented");
     }
 
+    double ControllerNode::getFastLapTorque() const {
+        const double progressTillCorner = findNearestCorner();
+
+        if (progressTillCorner >= m_lastCornerDistance
+                                + SEGMENT_CHANGE_TOLERANCE
+         && m_lastCornerDistance < MIN_SEGMENT_CHANGE_CORNER_DIST) {
+            m_accelerationPhase = true;
+        }
+        m_lastCornerDistance = progressTillCorner;
+
+        const ReferenceSpline::Frame cornerFrame =
+                m_pReferenceSpline->poseAtDistance(progressTillCorner);
+
+        const double currSpeed = m_vehicleState.x_dot;
+        const double desiredCornerSpeed = TRACTIVE_DOGSHIT_COEF
+                                        * m_ggv.getTractiveCapability(
+                                                currSpeed,
+                                                cornerFrame.curvature);
+
+        const double requiredDeceleration =
+                (currSpeed * currSpeed
+                - desiredCornerSpeed * desiredCornerSpeed)
+                / (2 * progressTillCorner);
+
+        if (m_accelerationPhase) {
+            if (requiredDeceleration < TARGET_BRAKE) {
+                return TARGET_ACCEL;
+            } else {
+                m_accelerationPhase = false;
+            }
+        }
+
+        m_brakePid.recordState(requiredDeceleration, TARGET_BRAKE, now());
+        return -m_brakePid.getAction();
+    }
+
+    double ControllerNode::findNearestCorner() const {
+        // TODO: figure out how to find corners
+        throw new std::runtime_error("corner finding not implemented");
+    }
+
+    void ControllerNode::loadGGV() {
+        // TODO: implement GGV representation, storage, and loading
+        throw new std::runtime_error("ggv loading not implemented");
+    }
 
 
     // ***** PID *****
@@ -185,5 +230,13 @@ namespace controls {
 
     void PIDController1D::clear() {
         m_init = false;
+    }
+
+
+    // ***** GGV *****
+
+    double GGV::getTractiveCapability(double speed, double curvature) const {
+        // TODO: Implement GGV
+        throw new std::runtime_error("ggv not implemented");
     }
 }

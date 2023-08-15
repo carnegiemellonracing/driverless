@@ -40,6 +40,23 @@ namespace controls {
     constexpr double SLOW_LAP_SPEED = 5;
     constexpr auto PID_INIT_TIME = 0.1s;
     constexpr double TARGET_ACCEL = 7.5, TARGET_BRAKE = 7.5;  // m/s^2
+    constexpr double MAX_BRAKE = 10.;  // m/s^2
+
+    /** Proportion of calculated capacity we try to attain */
+    constexpr double TRACTIVE_DOGSHIT_COEF = 0.5;
+
+
+    /**
+     * How close we have to have been to a corner for a distance increase to
+     * signal a new segment
+     */
+    constexpr double MIN_SEGMENT_CHANGE_CORNER_DIST = 1.;  // m
+
+    /**
+     * How much the corner distance needs to jump to be sure we changed segments
+     */
+    constexpr double SEGMENT_CHANGE_TOLERANCE  = 2.; // m
+
 
     /** Entry point to controller node. Spawns node and performs cleanup. */
     int main(int argc, char *argv[]);
@@ -123,6 +140,11 @@ namespace controls {
             double data[CONTROL_ACTION_DIMS];
         }
     }
+
+    class GGV {
+    public:
+        double getTractiveCapability(double speed, double curvature) const;
+    };
 
     /**
      * Spline representing desired trajectory of the vehicle. This type is 
@@ -345,12 +367,52 @@ namespace controls {
         bool isSlowLap();
 
         /**
+         * Generate the torque appropriate during a fast lap.
+         *
+         * If the average deceleration needed to reach the next corner at the
+         * desired fraction of the maximum tractive capability is lower than
+         * the target deceleration, than we request acceleration.
+         *
+         * Otherwise, a PID controller is used to control the deceleration of
+         * the car such that the car enters the corner at the set speed.
+         *
+         * @return Total torque
+         */
+        double getFastLapTorque() const;
+
+        /**
+         * Find the nearest corner (maximal curvature point) on the stored
+         * reference spline
+         *
+         * @return Track progress until the corner
+         */
+        double findNearestCorner() const;
+
+        /** Load ggv from config */
+        void loadGGV();
+
+        /**
          * Whether or not the node is waiting for the first spline. If true,
          * no extra threads are running and no control actions are being
          * published.
         */
         bool m_waitingForFirstSpline = true;
 
+        /**
+         * Whether we have hit the brake point in the current segment (where the
+         * target braking is TARGET_BRAKE). Only valid on fast laps.
+         */
+        bool m_accelerationPhase = true;
+
+        /**
+         * Last distance to corner. If this jumps up a huge amount from near 0,
+         * we assume we've moved on to a new segment.
+         */
+        double m_lastCornerDistance = 0;
+
+        /**
+         * Future representing state of torque planning task
+         */
         std::future<std::array<double, N_TIRES>> m_torquePlanningFuture;
 
         /**
@@ -382,5 +444,8 @@ namespace controls {
 
         /** Subscriber to path planning spline */
         rclcpp::Subscription<SplineMsg>::SharedPtr m_splineSubscription;
+
+        /** Performance envelope of vehicle */
+        GGV m_ggv;
     }
 }
