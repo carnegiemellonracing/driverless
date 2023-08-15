@@ -136,6 +136,7 @@ class SLAMValidation : public rclcpp::Node
         idx++;
       }
       slam_output = ekf_slam(xEst, pEst, u, z, 0.1, this->get_logger());
+      RCLCPP_INFO(this->get_logger(), "got output\n");
       xEst = slam_output.x;
       pEst = slam_output.p;
 
