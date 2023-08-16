@@ -3,7 +3,11 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
-#include "eufs_msgs/msg/ConeArray.hpp"
+
+#include "eufs_msgs/msg/cone_array_with_covariance.hpp"
+#include "eufs_msgs/msg/cone_with_covariance.hpp"
+#include "geometry_msgs/msg/point.hpp"
+
 
 #include "pcl_conversions.h"
 
@@ -23,6 +27,32 @@
 
 #include <Eigen/Dense>
 
+void create_cones(std::vector<pcl::PointXYZ> &centers, eufs_msgs::msg::ConeArrayWithCovariance::SharedPtr &msg) {
+	std::vector<eufs_msgs::msg::ConeWithCovariance> blue_cones;
+	std::vector<eufs_msgs::msg::ConeWithCovariance> yellow_cones;
+
+	for (const auto& p: centers) {
+		geometry_msgs::msg::Point point;
+		point.x = p.x;
+		point.y = p.y;
+		point.z = p.z;
+
+		eufs_msgs::msg::ConeWithCovariance cone;
+		cone.point = point;
+		cone.covariance = { 1.f, 0.f, 0.f, 1.f };
+				
+		if (p.x < 0) {
+			blue_cones.push_back(cone);
+		} else {
+			yellow_cones.push_back(cone);
+		}
+
+	}
+
+	msg->blue_cones = blue_cones;
+	msg->yellow_cones = yellow_cones;
+}
+
 
 class LidarSubscriber : public rclcpp::Node {
 	public:
@@ -32,9 +62,12 @@ class LidarSubscriber : public rclcpp::Node {
 			ground_publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/ground_points", 10);
 			non_ground_publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/non_ground_points", 10);
 			center_publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/center_points", 10);
+			cone_publisher_ = this->create_publisher<eufs_msgs::msg::ConeArrayWithCovariance>("/lidar_cones", 10);
 		}
-
 	private:
+		
+		
+
 		void callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg) const {
 			pcl::PointCloud<pcl::PointXYZ>::Ptr pcl(new pcl::PointCloud<pcl::PointXYZ>);
 			pcl::fromROSMsg(*msg, *pcl);
@@ -127,6 +160,13 @@ class LidarSubscriber : public rclcpp::Node {
 			cloud_centers->height = 1;
 			cloud_centers->is_dense = true;
 
+			// get color information for the centers
+			
+
+			// create output message type
+			eufs_msgs::msg::ConeArrayWithCovariance::SharedPtr message_cones (new eufs_msgs::msg::ConeArrayWithCovariance());
+			create_cones(centers, message_cones);
+
 			// publish point cloud information
 			sensor_msgs::msg::PointCloud2::SharedPtr message_ground (new sensor_msgs::msg::PointCloud2());
 			sensor_msgs::msg::PointCloud2::SharedPtr message_non_ground (new sensor_msgs::msg::PointCloud2());
@@ -139,6 +179,7 @@ class LidarSubscriber : public rclcpp::Node {
 			ground_publisher_->publish(*message_ground);
 			non_ground_publisher_->publish(*message_non_ground);
 			center_publisher_->publish(*message_center);
+			cone_publisher_->publish(*message_cones);
 
 
 						
@@ -148,6 +189,7 @@ class LidarSubscriber : public rclcpp::Node {
 		rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr ground_publisher_;
 		rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr non_ground_publisher_;
 		rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr center_publisher_;
+		rclcpp::Publisher<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr cone_publisher_;
 		pcl::PointCloud<pcl::PointXYZ> cloud;
 };
 
