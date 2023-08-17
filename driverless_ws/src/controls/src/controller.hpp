@@ -41,6 +41,9 @@ namespace controls {
     constexpr auto PID_INIT_TIME = 0.1s;
     constexpr double TARGET_ACCEL = 7.5, TARGET_BRAKE = 7.5;  // m/s^2
     constexpr double MAX_BRAKE = 10.;  // m/s^2
+    constexpr double LAT_MU = 1.;
+    constexpr double TOTAL_MASS = 200.; // kg
+    constexpr double GRAVITY = 9.81;
 
     /** Proportion of calculated capacity we try to attain */
     constexpr double TRACTIVE_DOGSHIT_COEF = 0.5;

@@ -186,8 +186,10 @@ namespace controls {
     }
 
     void ControllerNode::loadGGV() {
-        // TODO: implement GGV representation, storage, and loading
-        throw new std::runtime_error("ggv loading not implemented");
+        // Eventually, we will implement a real GGV which will need to be loaded
+        // This function was declared just so we don't forget :P
+
+        return;
     }
 
 
@@ -236,7 +238,7 @@ namespace controls {
     // ***** GGV *****
 
     double GGV::getTractiveCapability(double speed, double curvature) const {
-        // TODO: Implement GGV
-        throw new std::runtime_error("ggv not implemented");
+        // TODO: Implement an actual GGV
+        return sqrt(GRAVITY * LAT_MU / curvature);
     }
 }
