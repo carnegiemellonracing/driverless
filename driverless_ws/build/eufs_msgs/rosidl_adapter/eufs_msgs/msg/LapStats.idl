@@ -1,0 +1,33 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from eufs_msgs/msg/LapStats.msg
+// generated code does not contain a copyright notice
+
+#include "std_msgs/msg/Header.idl"
+
+module eufs_msgs {
+  module msg {
+    struct LapStats {
+      std_msgs::msg::Header header;
+
+      int64 lap_number;
+
+      double lap_time;
+
+      double avg_speed;
+
+      double max_speed;
+
+      double speed_var;
+
+      double max_slip;
+
+      double max_lateral_accel;
+
+      double normalized_deviation_mse;
+
+      double deviation_var;
+
+      double max_deviation;
+    };
+  };
+};
