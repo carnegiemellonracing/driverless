@@ -1,0 +1,12 @@
+[0.000000] (-) TimerEvent: {}
+[0.001027] (-) JobUnselected: {'identifier': 'actuators'}
+[0.001534] (-) JobUnselected: {'identifier': 'collection'}
+[0.003960] (-) JobUnselected: {'identifier': 'common'}
+[0.004120] (-) JobUnselected: {'identifier': 'controls'}
+[0.004178] (-) JobUnselected: {'identifier': 'eufs_msgs'}
+[0.004239] (-) JobUnselected: {'identifier': 'interfaces'}
+[0.004284] (-) JobUnselected: {'identifier': 'planning'}
+[0.004447] (perceptions) JobQueued: {'identifier': 'perceptions', 'dependencies': OrderedDict([('eufs_msgs', '/driverless/driverless_ws/install/eufs_msgs')])}
+[0.004515] (perceptions) JobStarted: {'identifier': 'perceptions'}
+[0.070334] (perceptions) JobEnded: {'identifier': 'perceptions', 'rc': 1}
+[0.081184] (-) EventReactorShutdown: {}

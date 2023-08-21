@@ -1,0 +1,1025 @@
+[0.000000] (-) TimerEvent: {}
+[0.000312] (-) JobUnselected: {'identifier': 'actuators'}
+[0.000367] (-) JobUnselected: {'identifier': 'collection'}
+[0.000395] (-) JobUnselected: {'identifier': 'common'}
+[0.000415] (-) JobUnselected: {'identifier': 'controls'}
+[0.000435] (-) JobUnselected: {'identifier': 'interfaces'}
+[0.000454] (-) JobUnselected: {'identifier': 'planning'}
+[0.000474] (eufs_msgs) JobQueued: {'identifier': 'eufs_msgs', 'dependencies': OrderedDict()}
+[0.000498] (perceptions) JobQueued: {'identifier': 'perceptions', 'dependencies': OrderedDict([('eufs_msgs', '/driverless/driverless_ws/install/eufs_msgs')])}
+[0.000793] (eufs_msgs) JobStarted: {'identifier': 'eufs_msgs'}
+[0.025140] (eufs_msgs) JobProgress: {'identifier': 'eufs_msgs', 'progress': 'cmake'}
+[0.025905] (eufs_msgs) JobProgress: {'identifier': 'eufs_msgs', 'progress': 'build'}
+[0.026791] (eufs_msgs) Command: {'cmd': ['/usr/bin/cmake', '--build', '/driverless/driverless_ws/build/eufs_msgs', '--', '-j8', '-l8'], 'cwd': '/driverless/driverless_ws/build/eufs_msgs', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('TMUX', '/tmp//tmux-0/default,332,0'), ('HOSTNAME', 'ankit-XPS-13-9310'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('HOME', '/root'), ('OLDPWD', '/driverless'), ('ROS_PYTHON_VERSION', '3'), ('LC_CTYPE', 'C.UTF-8'), ('ROS_DISTRO', 'foxy'), ('EUFS_MASTER', '/eufs'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'screen'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('DISPLAY', ':0'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('DEBIAN_FRONTEND', 'noninteractive'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/driverless/driverless_ws/build/eufs_msgs'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages:/driverless:/driverless'), ('COLCON', '1'), ('TMUX_PANE', '%3'), ('CMAKE_PREFIX_PATH', '/opt/ros/foxy')]), 'shell': False}
+[0.099715] (-) TimerEvent: {}
+[0.117495] (eufs_msgs) StdoutLine: {'line': b'[  0%] Built target eufs_msgs__cpp\n'}
+[0.132883] (eufs_msgs) StdoutLine: {'line': b'[ 12%] Built target eufs_msgs__rosidl_generator_c\n'}
+[0.176886] (eufs_msgs) StdoutLine: {'line': b'[ 24%] Built target eufs_msgs__rosidl_typesupport_cpp\n'}
+[0.182692] (eufs_msgs) StdoutLine: {'line': b'[ 37%] Built target eufs_msgs__rosidl_typesupport_introspection_cpp\n'}
+[0.190440] (eufs_msgs) StdoutLine: {'line': b'[ 49%] Built target eufs_msgs__rosidl_typesupport_fastrtps_cpp\n'}
+[0.193890] (eufs_msgs) StdoutLine: {'line': b'[ 62%] Built target eufs_msgs__rosidl_typesupport_introspection_c\n'}
+[0.197361] (eufs_msgs) StdoutLine: {'line': b'[ 75%] Built target eufs_msgs__rosidl_typesupport_c\n'}
+[0.199813] (-) TimerEvent: {}
+[0.242827] (eufs_msgs) StdoutLine: {'line': b'[ 88%] Built target eufs_msgs__rosidl_typesupport_fastrtps_c\n'}
+[0.267984] (eufs_msgs) StdoutLine: {'line': b'[ 88%] Built target eufs_msgs\n'}
+[0.293713] (eufs_msgs) StdoutLine: {'line': b'[ 88%] Built target eufs_msgs__py\n'}
+[0.299929] (-) TimerEvent: {}
+[0.352177] (eufs_msgs) StdoutLine: {'line': b'[100%] Built target eufs_msgs__python\n'}
+[0.389581] (eufs_msgs) StdoutLine: {'line': b'[100%] Built target eufs_msgs__rosidl_typesupport_introspection_c__pyext\n'}
+[0.390429] (eufs_msgs) StdoutLine: {'line': b'[100%] Built target eufs_msgs__rosidl_typesupport_fastrtps_c__pyext\n'}
+[0.391653] (eufs_msgs) StdoutLine: {'line': b'[100%] Built target eufs_msgs__rosidl_typesupport_c__pyext\n'}
+[0.400032] (-) TimerEvent: {}
+[0.404852] (eufs_msgs) CommandEnded: {'returncode': 0}
+[0.500181] (-) TimerEvent: {}
+[0.600830] (-) TimerEvent: {}
+[0.701246] (-) TimerEvent: {}
+[0.801646] (-) TimerEvent: {}
+[0.901993] (-) TimerEvent: {}
+[1.002408] (-) TimerEvent: {}
+[1.055160] (eufs_msgs) JobProgress: {'identifier': 'eufs_msgs', 'progress': 'install'}
+[1.066343] (eufs_msgs) Command: {'cmd': ['/usr/bin/cmake', '--install', '/driverless/driverless_ws/build/eufs_msgs'], 'cwd': '/driverless/driverless_ws/build/eufs_msgs', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('TMUX', '/tmp//tmux-0/default,332,0'), ('HOSTNAME', 'ankit-XPS-13-9310'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('HOME', '/root'), ('OLDPWD', '/driverless'), ('ROS_PYTHON_VERSION', '3'), ('LC_CTYPE', 'C.UTF-8'), ('ROS_DISTRO', 'foxy'), ('EUFS_MASTER', '/eufs'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'screen'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('DISPLAY', ':0'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('DEBIAN_FRONTEND', 'noninteractive'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/driverless/driverless_ws/build/eufs_msgs'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages:/driverless:/driverless'), ('COLCON', '1'), ('TMUX_PANE', '%3'), ('CMAKE_PREFIX_PATH', '/opt/ros/foxy')]), 'shell': False}
+[1.077697] (eufs_msgs) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[1.078851] (eufs_msgs) StdoutLine: {'line': b'-- Execute custom install script\n'}
+[1.079229] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/ament_index/resource_index/rosidl_interfaces/eufs_msgs\n'}
+[1.081470] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/check_for_objects.h\n'}
+[1.081801] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/detail/check_for_objects__functions.h\n'}
+[1.081949] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/detail/check_for_objects__struct.h\n'}
+[1.082143] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/detail/check_for_objects__type_support.h\n'}
+[1.082270] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/bounding_box.h\n'}
+[1.082389] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/bounding_boxes.h\n'}
+[1.082507] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/can_state.h\n'}
+[1.082700] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/car_state.h\n'}
+[1.082878] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/chassis_command.h\n'}
+[1.083072] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/chassis_state.h\n'}
+[1.083227] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/cone_array.h\n'}
+[1.083570] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/cone_array_with_covariance.h\n'}
+[1.083718] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/cone_with_covariance.h\n'}
+[1.083826] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/costmap.h\n'}
+[1.083936] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_box__functions.h\n'}
+[1.084066] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_box__struct.h\n'}
+[1.084176] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_box__type_support.h\n'}
+[1.084295] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_boxes__functions.h\n'}
+[1.084443] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_boxes__struct.h\n'}
+[1.084597] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_boxes__type_support.h\n'}
+[1.084924] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/can_state__functions.h\n'}
+[1.085099] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/can_state__struct.h\n'}
+[1.085235] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/can_state__type_support.h\n'}
+[1.085370] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/car_state__functions.h\n'}
+[1.085547] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/car_state__struct.h\n'}
+[1.085720] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/car_state__type_support.h\n'}
+[1.085892] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_command__functions.h\n'}
+[1.086063] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_command__struct.h\n'}
+[1.086244] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_command__type_support.h\n'}
+[1.086419] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_state__functions.h\n'}
+[1.086672] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_state__struct.h\n'}
+[1.086819] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_state__type_support.h\n'}
+[1.087001] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array__functions.h\n'}
+[1.087180] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array__struct.h\n'}
+[1.087383] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array__type_support.h\n'}
+[1.087558] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array_with_covariance__functions.h\n'}
+[1.087737] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array_with_covariance__struct.h\n'}
+[1.087921] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array_with_covariance__type_support.h\n'}
+[1.088098] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_with_covariance__functions.h\n'}
+[1.088275] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_with_covariance__struct.h\n'}
+[1.088466] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_with_covariance__type_support.h\n'}
+[1.088656] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/costmap__functions.h\n'}
+[1.089004] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/costmap__struct.h\n'}
+[1.089141] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/costmap__type_support.h\n'}
+[1.089262] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_err__functions.h\n'}
+[1.089426] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_err__struct.h\n'}
+[1.089607] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_err__type_support.h\n'}
+[1.089869] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_state__functions.h\n'}
+[1.090017] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_state__struct.h\n'}
+[1.090179] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_state__type_support.h\n'}
+[1.090354] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/full_state__functions.h\n'}
+[1.090531] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/full_state__struct.h\n'}
+[1.090979] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/full_state__type_support.h\n'}
+[1.091081] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/heartbeat__functions.h\n'}
+[1.091210] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/heartbeat__struct.h\n'}
+[1.091346] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/heartbeat__type_support.h\n'}
+[1.091726] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/integration_err__functions.h\n'}
+[1.091857] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/integration_err__struct.h\n'}
+[1.091991] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/integration_err__type_support.h\n'}
+[1.092174] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/lap_stats__functions.h\n'}
+[1.092446] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/lap_stats__struct.h\n'}
+[1.092613] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/lap_stats__type_support.h\n'}
+[1.092769] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/mpc_state__functions.h\n'}
+[1.092941] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/mpc_state__struct.h\n'}
+[1.093043] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/mpc_state__type_support.h\n'}
+[1.093163] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state__functions.h\n'}
+[1.093342] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state__struct.h\n'}
+[1.093516] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state__type_support.h\n'}
+[1.093692] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state_array__functions.h\n'}
+[1.093867] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state_array__struct.h\n'}
+[1.094049] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state_array__type_support.h\n'}
+[1.094224] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_params__functions.h\n'}
+[1.094400] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_params__struct.h\n'}
+[1.094578] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_params__type_support.h\n'}
+[1.094757] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_stats__functions.h\n'}
+[1.094934] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_stats__struct.h\n'}
+[1.095114] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_stats__type_support.h\n'}
+[1.095290] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_status__functions.h\n'}
+[1.095468] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_status__struct.h\n'}
+[1.095645] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_status__type_support.h\n'}
+[1.095819] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_timing__functions.h\n'}
+[1.095996] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_timing__struct.h\n'}
+[1.096181] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_timing__type_support.h\n'}
+[1.096378] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/planning_mode__functions.h\n'}
+[1.096612] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/planning_mode__struct.h\n'}
+[1.096769] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/planning_mode__type_support.h\n'}
+[1.096949] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array__functions.h\n'}
+[1.097130] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array__struct.h\n'}
+[1.097342] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array__type_support.h\n'}
+[1.097633] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array_stamped__functions.h\n'}
+[1.097777] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array_stamped__struct.h\n'}
+[1.097932] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array_stamped__type_support.h\n'}
+[1.098114] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint__functions.h\n'}
+[1.098314] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint__struct.h\n'}
+[1.098539] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint__type_support.h\n'}
+[1.098690] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint_array_stamped__functions.h\n'}
+[1.098878] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint_array_stamped__struct.h\n'}
+[1.099059] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint_array_stamped__type_support.h\n'}
+[1.099238] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/runstop__functions.h\n'}
+[1.099412] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/runstop__struct.h\n'}
+[1.099708] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/runstop__type_support.h\n'}
+[1.099866] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_err__functions.h\n'}
+[1.100038] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_err__struct.h\n'}
+[1.100207] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_err__type_support.h\n'}
+[1.100497] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_state__functions.h\n'}
+[1.100681] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_state__struct.h\n'}
+[1.100848] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_state__type_support.h\n'}
+[1.101021] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/state_machine_state__functions.h\n'}
+[1.101188] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/state_machine_state__struct.h\n'}
+[1.101356] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/state_machine_state__type_support.h\n'}
+[1.101761] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/system_status__functions.h\n'}
+[1.101899] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/system_status__struct.h\n'}
+[1.102021] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/system_status__type_support.h\n'}
+[1.102128] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/topic_status__functions.h\n'}
+[1.102376] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/topic_status__struct.h\n'}
+[1.102484] (-) TimerEvent: {}
+[1.102938] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/topic_status__type_support.h\n'}
+[1.103170] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands__functions.h\n'}
+[1.103286] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands__struct.h\n'}
+[1.103376] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands__type_support.h\n'}
+[1.103494] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands_stamped__functions.h\n'}
+[1.103583] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands_stamped__struct.h\n'}
+[1.103696] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands_stamped__type_support.h\n'}
+[1.103838] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint__functions.h\n'}
+[1.104006] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint__struct.h\n'}
+[1.104174] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint__type_support.h\n'}
+[1.104341] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint_array_stamped__functions.h\n'}
+[1.104532] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint_array_stamped__struct.h\n'}
+[1.104697] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint_array_stamped__type_support.h\n'}
+[1.104868] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_odometry_err__functions.h\n'}
+[1.105040] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_odometry_err__struct.h\n'}
+[1.105208] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_odometry_err__type_support.h\n'}
+[1.105375] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds__functions.h\n'}
+[1.105544] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds__struct.h\n'}
+[1.105712] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds__type_support.h\n'}
+[1.105887] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds_stamped__functions.h\n'}
+[1.106056] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds_stamped__struct.h\n'}
+[1.106228] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds_stamped__type_support.h\n'}
+[1.106401] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/ekf_err.h\n'}
+[1.106571] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/ekf_state.h\n'}
+[1.106833] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/full_state.h\n'}
+[1.106976] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/heartbeat.h\n'}
+[1.107144] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/integration_err.h\n'}
+[1.107605] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/lap_stats.h\n'}
+[1.107691] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/mpc_state.h\n'}
+[1.107806] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/node_state.h\n'}
+[1.107907] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/node_state_array.h\n'}
+[1.107987] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/path_integral_params.h\n'}
+[1.108077] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/path_integral_stats.h\n'}
+[1.108175] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/path_integral_status.h\n'}
+[1.108274] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/path_integral_timing.h\n'}
+[1.108388] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/planning_mode.h\n'}
+[1.108499] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/point_array.h\n'}
+[1.108606] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/point_array_stamped.h\n'}
+[1.108702] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/pure_pursuit_checkpoint.h\n'}
+[1.108836] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/pure_pursuit_checkpoint_array_stamped.h\n'}
+[1.108999] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/rosidl_generator_c__visibility_control.h\n'}
+[1.109168] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/runstop.h\n'}
+[1.109334] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/slam_err.h\n'}
+[1.109503] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/slam_state.h\n'}
+[1.109665] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/state_machine_state.h\n'}
+[1.109835] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/system_status.h\n'}
+[1.110003] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/topic_status.h\n'}
+[1.110178] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/vehicle_commands.h\n'}
+[1.110346] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/vehicle_commands_stamped.h\n'}
+[1.110516] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/waypoint.h\n'}
+[1.110685] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/waypoint_array_stamped.h\n'}
+[1.110857] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/wheel_odometry_err.h\n'}
+[1.111035] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/wheel_speeds.h\n'}
+[1.111213] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/wheel_speeds_stamped.h\n'}
+[1.111392] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/register__functions.h\n'}
+[1.111638] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/register__struct.h\n'}
+[1.111792] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/register__type_support.h\n'}
+[1.111954] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/set_can_state__functions.h\n'}
+[1.112124] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/set_can_state__struct.h\n'}
+[1.112332] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/set_can_state__type_support.h\n'}
+[1.112510] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/register.h\n'}
+[1.112677] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/set_can_state.h\n'}
+[1.113012] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/environment/library_path.sh\n'}
+[1.114698] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/environment/library_path.dsv\n'}
+[1.114889] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/detail/check_for_objects__rosidl_typesupport_fastrtps_c.h\n'}
+[1.115020] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_box__rosidl_typesupport_fastrtps_c.h\n'}
+[1.115203] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_boxes__rosidl_typesupport_fastrtps_c.h\n'}
+[1.116494] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/can_state__rosidl_typesupport_fastrtps_c.h\n'}
+[1.116773] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/car_state__rosidl_typesupport_fastrtps_c.h\n'}
+[1.116912] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_command__rosidl_typesupport_fastrtps_c.h\n'}
+[1.117007] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_state__rosidl_typesupport_fastrtps_c.h\n'}
+[1.117125] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array__rosidl_typesupport_fastrtps_c.h\n'}
+[1.117253] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array_with_covariance__rosidl_typesupport_fastrtps_c.h\n'}
+[1.117389] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_with_covariance__rosidl_typesupport_fastrtps_c.h\n'}
+[1.117503] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/costmap__rosidl_typesupport_fastrtps_c.h\n'}
+[1.117620] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_err__rosidl_typesupport_fastrtps_c.h\n'}
+[1.117721] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_state__rosidl_typesupport_fastrtps_c.h\n'}
+[1.117840] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/full_state__rosidl_typesupport_fastrtps_c.h\n'}
+[1.117939] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/heartbeat__rosidl_typesupport_fastrtps_c.h\n'}
+[1.118056] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/integration_err__rosidl_typesupport_fastrtps_c.h\n'}
+[1.118193] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/lap_stats__rosidl_typesupport_fastrtps_c.h\n'}
+[1.118288] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/mpc_state__rosidl_typesupport_fastrtps_c.h\n'}
+[1.118412] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state__rosidl_typesupport_fastrtps_c.h\n'}
+[1.118510] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state_array__rosidl_typesupport_fastrtps_c.h\n'}
+[1.118636] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_params__rosidl_typesupport_fastrtps_c.h\n'}
+[1.118729] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_stats__rosidl_typesupport_fastrtps_c.h\n'}
+[1.118874] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_status__rosidl_typesupport_fastrtps_c.h\n'}
+[1.119011] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_timing__rosidl_typesupport_fastrtps_c.h\n'}
+[1.119187] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/planning_mode__rosidl_typesupport_fastrtps_c.h\n'}
+[1.119361] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array__rosidl_typesupport_fastrtps_c.h\n'}
+[1.119544] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array_stamped__rosidl_typesupport_fastrtps_c.h\n'}
+[1.119724] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint__rosidl_typesupport_fastrtps_c.h\n'}
+[1.119909] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint_array_stamped__rosidl_typesupport_fastrtps_c.h\n'}
+[1.120092] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/runstop__rosidl_typesupport_fastrtps_c.h\n'}
+[1.120276] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_err__rosidl_typesupport_fastrtps_c.h\n'}
+[1.120474] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_state__rosidl_typesupport_fastrtps_c.h\n'}
+[1.120656] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/state_machine_state__rosidl_typesupport_fastrtps_c.h\n'}
+[1.120833] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/system_status__rosidl_typesupport_fastrtps_c.h\n'}
+[1.121009] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/topic_status__rosidl_typesupport_fastrtps_c.h\n'}
+[1.121193] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands__rosidl_typesupport_fastrtps_c.h\n'}
+[1.121369] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands_stamped__rosidl_typesupport_fastrtps_c.h\n'}
+[1.121615] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint__rosidl_typesupport_fastrtps_c.h\n'}
+[1.121753] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint_array_stamped__rosidl_typesupport_fastrtps_c.h\n'}
+[1.121939] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_odometry_err__rosidl_typesupport_fastrtps_c.h\n'}
+[1.122120] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds__rosidl_typesupport_fastrtps_c.h\n'}
+[1.122333] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds_stamped__rosidl_typesupport_fastrtps_c.h\n'}
+[1.122509] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/rosidl_typesupport_fastrtps_c__visibility_control.h\n'}
+[1.122689] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/register__rosidl_typesupport_fastrtps_c.h\n'}
+[1.122888] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/set_can_state__rosidl_typesupport_fastrtps_c.h\n'}
+[1.123338] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/libeufs_msgs__rosidl_typesupport_fastrtps_c.so\n'}
+[1.125127] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/detail/check_for_objects__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.125311] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_box__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.125459] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_boxes__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.125645] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/can_state__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.125823] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/car_state__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.126004] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_command__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.126191] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_state__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.126373] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.126642] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array_with_covariance__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.126793] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_with_covariance__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.126957] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/costmap__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.127134] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_err__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.127379] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_state__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.127549] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/full_state__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.127739] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/heartbeat__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.127938] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/integration_err__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.128113] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/lap_stats__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.128293] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/mpc_state__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.128494] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.128676] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state_array__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.129517] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_params__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.129709] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_stats__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.129805] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_status__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.129936] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_timing__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.130026] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/planning_mode__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.130151] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.130258] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array_stamped__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.130389] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.130519] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint_array_stamped__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.130705] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/runstop__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.130886] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_err__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.131066] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_state__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.131248] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/state_machine_state__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.131432] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/system_status__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.131613] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/topic_status__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.131798] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.133189] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands_stamped__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.133414] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.133522] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint_array_stamped__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.133631] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_odometry_err__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.133714] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.133799] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds_stamped__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.133885] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h\n'}
+[1.133974] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/register__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.134062] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/set_can_state__rosidl_typesupport_fastrtps_cpp.hpp\n'}
+[1.134201] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/libeufs_msgs__rosidl_typesupport_fastrtps_cpp.so\n'}
+[1.135150] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/detail/check_for_objects__rosidl_typesupport_introspection_c.h\n'}
+[1.135332] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_box__rosidl_typesupport_introspection_c.h\n'}
+[1.135508] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_boxes__rosidl_typesupport_introspection_c.h\n'}
+[1.135692] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/can_state__rosidl_typesupport_introspection_c.h\n'}
+[1.135876] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/car_state__rosidl_typesupport_introspection_c.h\n'}
+[1.136058] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_command__rosidl_typesupport_introspection_c.h\n'}
+[1.136237] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_state__rosidl_typesupport_introspection_c.h\n'}
+[1.136497] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array__rosidl_typesupport_introspection_c.h\n'}
+[1.136650] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array_with_covariance__rosidl_typesupport_introspection_c.h\n'}
+[1.136833] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_with_covariance__rosidl_typesupport_introspection_c.h\n'}
+[1.137645] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/costmap__rosidl_typesupport_introspection_c.h\n'}
+[1.137846] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_err__rosidl_typesupport_introspection_c.h\n'}
+[1.137940] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_state__rosidl_typesupport_introspection_c.h\n'}
+[1.138058] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/full_state__rosidl_typesupport_introspection_c.h\n'}
+[1.138147] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/heartbeat__rosidl_typesupport_introspection_c.h\n'}
+[1.138257] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/integration_err__rosidl_typesupport_introspection_c.h\n'}
+[1.138347] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/lap_stats__rosidl_typesupport_introspection_c.h\n'}
+[1.138467] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/mpc_state__rosidl_typesupport_introspection_c.h\n'}
+[1.138603] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state__rosidl_typesupport_introspection_c.h\n'}
+[1.138780] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state_array__rosidl_typesupport_introspection_c.h\n'}
+[1.138957] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_params__rosidl_typesupport_introspection_c.h\n'}
+[1.139147] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_stats__rosidl_typesupport_introspection_c.h\n'}
+[1.139301] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_status__rosidl_typesupport_introspection_c.h\n'}
+[1.139401] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_timing__rosidl_typesupport_introspection_c.h\n'}
+[1.139538] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/planning_mode__rosidl_typesupport_introspection_c.h\n'}
+[1.139681] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array__rosidl_typesupport_introspection_c.h\n'}
+[1.139823] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array_stamped__rosidl_typesupport_introspection_c.h\n'}
+[1.139960] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint__rosidl_typesupport_introspection_c.h\n'}
+[1.140098] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint_array_stamped__rosidl_typesupport_introspection_c.h\n'}
+[1.140261] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/runstop__rosidl_typesupport_introspection_c.h\n'}
+[1.140486] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_err__rosidl_typesupport_introspection_c.h\n'}
+[1.140641] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_state__rosidl_typesupport_introspection_c.h\n'}
+[1.140818] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/state_machine_state__rosidl_typesupport_introspection_c.h\n'}
+[1.141016] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/system_status__rosidl_typesupport_introspection_c.h\n'}
+[1.141192] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/topic_status__rosidl_typesupport_introspection_c.h\n'}
+[1.141391] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands__rosidl_typesupport_introspection_c.h\n'}
+[1.141648] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands_stamped__rosidl_typesupport_introspection_c.h\n'}
+[1.141794] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint__rosidl_typesupport_introspection_c.h\n'}
+[1.141982] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint_array_stamped__rosidl_typesupport_introspection_c.h\n'}
+[1.142166] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_odometry_err__rosidl_typesupport_introspection_c.h\n'}
+[1.142392] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds__rosidl_typesupport_introspection_c.h\n'}
+[1.142561] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds_stamped__rosidl_typesupport_introspection_c.h\n'}
+[1.142718] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/rosidl_typesupport_introspection_c__visibility_control.h\n'}
+[1.142872] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/register__rosidl_typesupport_introspection_c.h\n'}
+[1.143039] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/set_can_state__rosidl_typesupport_introspection_c.h\n'}
+[1.144982] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/check_for_objects.hpp\n'}
+[1.145143] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/detail/check_for_objects__builder.hpp\n'}
+[1.145241] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/detail/check_for_objects__struct.hpp\n'}
+[1.145343] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/detail/check_for_objects__traits.hpp\n'}
+[1.145440] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/detail/check_for_objects__type_support.hpp\n'}
+[1.145539] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/bounding_box.hpp\n'}
+[1.145647] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/bounding_boxes.hpp\n'}
+[1.145755] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/can_state.hpp\n'}
+[1.145864] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/car_state.hpp\n'}
+[1.145977] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/chassis_command.hpp\n'}
+[1.146107] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/chassis_state.hpp\n'}
+[1.146297] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/cone_array.hpp\n'}
+[1.146467] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/cone_array_with_covariance.hpp\n'}
+[1.146657] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/cone_with_covariance.hpp\n'}
+[1.146798] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/costmap.hpp\n'}
+[1.146968] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_box__builder.hpp\n'}
+[1.147135] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_box__struct.hpp\n'}
+[1.147333] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_box__traits.hpp\n'}
+[1.147531] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_box__type_support.hpp\n'}
+[1.147981] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_boxes__builder.hpp\n'}
+[1.148080] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_boxes__struct.hpp\n'}
+[1.148425] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_boxes__traits.hpp\n'}
+[1.148537] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_boxes__type_support.hpp\n'}
+[1.148643] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/can_state__builder.hpp\n'}
+[1.148739] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/can_state__struct.hpp\n'}
+[1.148820] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/can_state__traits.hpp\n'}
+[1.148924] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/can_state__type_support.hpp\n'}
+[1.149086] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/car_state__builder.hpp\n'}
+[1.149289] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/car_state__struct.hpp\n'}
+[1.149449] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/car_state__traits.hpp\n'}
+[1.149550] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/car_state__type_support.hpp\n'}
+[1.149661] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_command__builder.hpp\n'}
+[1.149788] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_command__struct.hpp\n'}
+[1.149914] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_command__traits.hpp\n'}
+[1.150044] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_command__type_support.hpp\n'}
+[1.150199] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_state__builder.hpp\n'}
+[1.150325] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_state__struct.hpp\n'}
+[1.150446] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_state__traits.hpp\n'}
+[1.150573] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_state__type_support.hpp\n'}
+[1.150696] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array__builder.hpp\n'}
+[1.150828] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array__struct.hpp\n'}
+[1.150953] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array__traits.hpp\n'}
+[1.151083] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array__type_support.hpp\n'}
+[1.151257] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array_with_covariance__builder.hpp\n'}
+[1.151431] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array_with_covariance__struct.hpp\n'}
+[1.151684] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array_with_covariance__traits.hpp\n'}
+[1.151806] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array_with_covariance__type_support.hpp\n'}
+[1.151916] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_with_covariance__builder.hpp\n'}
+[1.152058] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_with_covariance__struct.hpp\n'}
+[1.152234] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_with_covariance__traits.hpp\n'}
+[1.152437] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_with_covariance__type_support.hpp\n'}
+[1.152611] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/costmap__builder.hpp\n'}
+[1.152737] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/costmap__struct.hpp\n'}
+[1.152855] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/costmap__traits.hpp\n'}
+[1.152970] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/costmap__type_support.hpp\n'}
+[1.153096] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_err__builder.hpp\n'}
+[1.153205] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_err__struct.hpp\n'}
+[1.153343] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_err__traits.hpp\n'}
+[1.153469] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_err__type_support.hpp\n'}
+[1.153589] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_state__builder.hpp\n'}
+[1.153710] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_state__struct.hpp\n'}
+[1.153829] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_state__traits.hpp\n'}
+[1.153935] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_state__type_support.hpp\n'}
+[1.154056] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/full_state__builder.hpp\n'}
+[1.154187] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/full_state__struct.hpp\n'}
+[1.154328] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/full_state__traits.hpp\n'}
+[1.154442] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/full_state__type_support.hpp\n'}
+[1.154555] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/heartbeat__builder.hpp\n'}
+[1.154669] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/heartbeat__struct.hpp\n'}
+[1.154792] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/heartbeat__traits.hpp\n'}
+[1.154920] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/heartbeat__type_support.hpp\n'}
+[1.155046] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/integration_err__builder.hpp\n'}
+[1.155164] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/integration_err__struct.hpp\n'}
+[1.155280] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/integration_err__traits.hpp\n'}
+[1.155384] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/integration_err__type_support.hpp\n'}
+[1.155492] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/lap_stats__builder.hpp\n'}
+[1.155601] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/lap_stats__struct.hpp\n'}
+[1.155707] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/lap_stats__traits.hpp\n'}
+[1.155816] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/lap_stats__type_support.hpp\n'}
+[1.155924] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/mpc_state__builder.hpp\n'}
+[1.156030] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/mpc_state__struct.hpp\n'}
+[1.156167] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/mpc_state__traits.hpp\n'}
+[1.156337] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/mpc_state__type_support.hpp\n'}
+[1.156577] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state__builder.hpp\n'}
+[1.156978] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state__struct.hpp\n'}
+[1.157097] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state__traits.hpp\n'}
+[1.157206] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state__type_support.hpp\n'}
+[1.157435] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state_array__builder.hpp\n'}
+[1.157555] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state_array__struct.hpp\n'}
+[1.157697] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state_array__traits.hpp\n'}
+[1.157885] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state_array__type_support.hpp\n'}
+[1.158009] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_params__builder.hpp\n'}
+[1.158134] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_params__struct.hpp\n'}
+[1.158259] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_params__traits.hpp\n'}
+[1.158391] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_params__type_support.hpp\n'}
+[1.158623] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_stats__builder.hpp\n'}
+[1.158739] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_stats__struct.hpp\n'}
+[1.158853] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_stats__traits.hpp\n'}
+[1.158964] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_stats__type_support.hpp\n'}
+[1.159085] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_status__builder.hpp\n'}
+[1.159216] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_status__struct.hpp\n'}
+[1.159348] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_status__traits.hpp\n'}
+[1.159473] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_status__type_support.hpp\n'}
+[1.159600] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_timing__builder.hpp\n'}
+[1.159728] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_timing__struct.hpp\n'}
+[1.159856] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_timing__traits.hpp\n'}
+[1.159996] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_timing__type_support.hpp\n'}
+[1.160128] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/planning_mode__builder.hpp\n'}
+[1.160255] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/planning_mode__struct.hpp\n'}
+[1.160401] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/planning_mode__traits.hpp\n'}
+[1.160525] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/planning_mode__type_support.hpp\n'}
+[1.160803] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array__builder.hpp\n'}
+[1.160913] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array__struct.hpp\n'}
+[1.161050] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array__traits.hpp\n'}
+[1.161165] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array__type_support.hpp\n'}
+[1.161296] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array_stamped__builder.hpp\n'}
+[1.161481] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array_stamped__struct.hpp\n'}
+[1.161682] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array_stamped__traits.hpp\n'}
+[1.161925] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array_stamped__type_support.hpp\n'}
+[1.163027] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint__builder.hpp\n'}
+[1.163189] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint__struct.hpp\n'}
+[1.163295] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint__traits.hpp\n'}
+[1.163408] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint__type_support.hpp\n'}
+[1.163493] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint_array_stamped__builder.hpp\n'}
+[1.163614] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint_array_stamped__struct.hpp\n'}
+[1.163695] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint_array_stamped__traits.hpp\n'}
+[1.163801] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint_array_stamped__type_support.hpp\n'}
+[1.163884] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/runstop__builder.hpp\n'}
+[1.163970] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/runstop__struct.hpp\n'}
+[1.164053] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/runstop__traits.hpp\n'}
+[1.165450] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/runstop__type_support.hpp\n'}
+[1.165620] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_err__builder.hpp\n'}
+[1.165703] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_err__struct.hpp\n'}
+[1.165786] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_err__traits.hpp\n'}
+[1.165869] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_err__type_support.hpp\n'}
+[1.165950] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_state__builder.hpp\n'}
+[1.166031] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_state__struct.hpp\n'}
+[1.166116] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_state__traits.hpp\n'}
+[1.166248] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_state__type_support.hpp\n'}
+[1.166334] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/state_machine_state__builder.hpp\n'}
+[1.166424] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/state_machine_state__struct.hpp\n'}
+[1.166536] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/state_machine_state__traits.hpp\n'}
+[1.166649] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/state_machine_state__type_support.hpp\n'}
+[1.166752] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/system_status__builder.hpp\n'}
+[1.166986] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/system_status__struct.hpp\n'}
+[1.167076] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/system_status__traits.hpp\n'}
+[1.167156] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/system_status__type_support.hpp\n'}
+[1.167241] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/topic_status__builder.hpp\n'}
+[1.167450] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/topic_status__struct.hpp\n'}
+[1.167655] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/topic_status__traits.hpp\n'}
+[1.167739] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/topic_status__type_support.hpp\n'}
+[1.167818] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands__builder.hpp\n'}
+[1.167902] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands__struct.hpp\n'}
+[1.168034] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands__traits.hpp\n'}
+[1.168115] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands__type_support.hpp\n'}
+[1.168232] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands_stamped__builder.hpp\n'}
+[1.168371] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands_stamped__struct.hpp\n'}
+[1.168478] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands_stamped__traits.hpp\n'}
+[1.168587] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands_stamped__type_support.hpp\n'}
+[1.168707] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint__builder.hpp\n'}
+[1.168838] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint__struct.hpp\n'}
+[1.168964] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint__traits.hpp\n'}
+[1.169092] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint__type_support.hpp\n'}
+[1.169224] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint_array_stamped__builder.hpp\n'}
+[1.169349] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint_array_stamped__struct.hpp\n'}
+[1.169479] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint_array_stamped__traits.hpp\n'}
+[1.169609] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint_array_stamped__type_support.hpp\n'}
+[1.169735] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_odometry_err__builder.hpp\n'}
+[1.169869] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_odometry_err__struct.hpp\n'}
+[1.169994] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_odometry_err__traits.hpp\n'}
+[1.170130] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_odometry_err__type_support.hpp\n'}
+[1.170254] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds__builder.hpp\n'}
+[1.170390] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds__struct.hpp\n'}
+[1.170608] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds__traits.hpp\n'}
+[1.170728] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds__type_support.hpp\n'}
+[1.170849] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds_stamped__builder.hpp\n'}
+[1.170966] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds_stamped__struct.hpp\n'}
+[1.171073] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds_stamped__traits.hpp\n'}
+[1.171235] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds_stamped__type_support.hpp\n'}
+[1.171421] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/ekf_err.hpp\n'}
+[1.171647] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/ekf_state.hpp\n'}
+[1.171814] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/full_state.hpp\n'}
+[1.171965] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/heartbeat.hpp\n'}
+[1.172141] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/integration_err.hpp\n'}
+[1.172324] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/lap_stats.hpp\n'}
+[1.172536] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/mpc_state.hpp\n'}
+[1.172728] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/node_state.hpp\n'}
+[1.172939] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/node_state_array.hpp\n'}
+[1.173068] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/path_integral_params.hpp\n'}
+[1.173195] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/path_integral_stats.hpp\n'}
+[1.173326] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/path_integral_status.hpp\n'}
+[1.173448] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/path_integral_timing.hpp\n'}
+[1.173576] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/planning_mode.hpp\n'}
+[1.173703] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/point_array.hpp\n'}
+[1.173830] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/point_array_stamped.hpp\n'}
+[1.173960] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/pure_pursuit_checkpoint.hpp\n'}
+[1.174156] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/pure_pursuit_checkpoint_array_stamped.hpp\n'}
+[1.174275] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/rosidl_generator_cpp__visibility_control.hpp\n'}
+[1.174395] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/runstop.hpp\n'}
+[1.174524] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/slam_err.hpp\n'}
+[1.174647] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/slam_state.hpp\n'}
+[1.174773] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/state_machine_state.hpp\n'}
+[1.174898] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/system_status.hpp\n'}
+[1.175024] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/topic_status.hpp\n'}
+[1.175150] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/vehicle_commands.hpp\n'}
+[1.175282] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/vehicle_commands_stamped.hpp\n'}
+[1.175593] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/waypoint.hpp\n'}
+[1.175723] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/waypoint_array_stamped.hpp\n'}
+[1.175830] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/wheel_odometry_err.hpp\n'}
+[1.175916] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/wheel_speeds.hpp\n'}
+[1.176041] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/wheel_speeds_stamped.hpp\n'}
+[1.176158] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/register__builder.hpp\n'}
+[1.177070] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/register__struct.hpp\n'}
+[1.177380] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/register__traits.hpp\n'}
+[1.177467] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/register__type_support.hpp\n'}
+[1.177551] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/set_can_state__builder.hpp\n'}
+[1.177776] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/set_can_state__struct.hpp\n'}
+[1.177863] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/set_can_state__traits.hpp\n'}
+[1.177947] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/set_can_state__type_support.hpp\n'}
+[1.178173] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/register.hpp\n'}
+[1.178262] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/set_can_state.hpp\n'}
+[1.178771] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/action/detail/check_for_objects__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.178912] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_box__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.179051] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/bounding_boxes__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.179183] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/can_state__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.179316] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/car_state__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.179452] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_command__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.179584] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/chassis_state__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.179731] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.179870] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_array_with_covariance__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.180006] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/cone_with_covariance__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.181779] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/costmap__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.181902] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_err__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.182000] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/ekf_state__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.182084] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/full_state__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.182167] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/heartbeat__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.182248] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/integration_err__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.182388] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/lap_stats__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.182542] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/mpc_state__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.182632] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.182739] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/node_state_array__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.182825] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_params__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.182907] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_stats__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.182989] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_status__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.183073] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/path_integral_timing__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.183156] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/planning_mode__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.183241] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.183370] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/point_array_stamped__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.183475] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.183592] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/pure_pursuit_checkpoint_array_stamped__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.183705] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/runstop__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.183795] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_err__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.183906] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/slam_state__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.184021] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/state_machine_state__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.184137] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/system_status__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.184247] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/topic_status__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.184332] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.184473] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/vehicle_commands_stamped__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.184583] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.184670] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/waypoint_array_stamped__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.184810] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_odometry_err__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.184898] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.185025] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/msg/detail/wheel_speeds_stamped__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.185142] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/register__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.185266] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/include/eufs_msgs/srv/detail/set_can_state__rosidl_typesupport_introspection_cpp.hpp\n'}
+[1.185472] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/environment/pythonpath.sh\n'}
+[1.185682] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/environment/pythonpath.dsv\n'}
+[1.185900] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/__init__.py\n'}
+[1.187569] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/__init__.py\n'}
+[1.187984] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_bounding_box.py\n'}
+[1.188246] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_bounding_boxes.py\n'}
+[1.188440] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_can_state.py\n'}
+[1.188548] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_car_state.py\n'}
+[1.188666] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_chassis_command.py\n'}
+[1.188769] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_chassis_state.py\n'}
+[1.188904] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_cone_array.py\n'}
+[1.189189] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_cone_array_with_covariance.py\n'}
+[1.189343] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_cone_with_covariance.py\n'}
+[1.189476] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_costmap.py\n'}
+[1.189576] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_ekf_err.py\n'}
+[1.189700] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_ekf_state.py\n'}
+[1.189795] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_full_state.py\n'}
+[1.189921] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_heartbeat.py\n'}
+[1.190086] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_integration_err.py\n'}
+[1.190261] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_lap_stats.py\n'}
+[1.190438] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_mpc_state.py\n'}
+[1.190611] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_node_state.py\n'}
+[1.190942] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_node_state_array.py\n'}
+[1.191080] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_path_integral_params.py\n'}
+[1.192301] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_path_integral_stats.py\n'}
+[1.192496] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_path_integral_status.py\n'}
+[1.192592] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_path_integral_timing.py\n'}
+[1.192720] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_planning_mode.py\n'}
+[1.192809] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_point_array.py\n'}
+[1.192947] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_point_array_stamped.py\n'}
+[1.193045] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_pure_pursuit_checkpoint.py\n'}
+[1.193170] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_pure_pursuit_checkpoint_array_stamped.py\n'}
+[1.193261] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_runstop.py\n'}
+[1.193392] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_slam_err.py\n'}
+[1.193481] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_slam_state.py\n'}
+[1.193601] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_state_machine_state.py\n'}
+[1.193778] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_system_status.py\n'}
+[1.193953] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_topic_status.py\n'}
+[1.194128] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_vehicle_commands.py\n'}
+[1.194304] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_vehicle_commands_stamped.py\n'}
+[1.194482] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_waypoint.py\n'}
+[1.194660] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_waypoint_array_stamped.py\n'}
+[1.195178] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_wheel_odometry_err.py\n'}
+[1.195322] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_wheel_speeds.py\n'}
+[1.195412] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/msg/_wheel_speeds_stamped.py\n'}
+[1.195925] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/action/__init__.py\n'}
+[1.196857] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/action/_check_for_objects.py\n'}
+[1.197059] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/srv/__init__.py\n'}
+[1.197533] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/srv/_register.py\n'}
+[1.198445] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/srv/_set_can_state.py\n'}
+[1.198599] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/eufs_msgs_s__rosidl_typesupport_fastrtps_c.cpython-38-x86_64-linux-gnu.so\n'}
+[1.198695] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/eufs_msgs_s__rosidl_typesupport_introspection_c.cpython-38-x86_64-linux-gnu.so\n'}
+[1.198790] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages/eufs_msgs/eufs_msgs_s__rosidl_typesupport_c.cpython-38-x86_64-linux-gnu.so\n'}
+[1.198958] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/lib/libeufs_msgs__python.so\n'}
+[1.199225] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/BoundingBox.idl\n'}
+[1.199485] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/BoundingBoxes.idl\n'}
+[1.199740] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/CanState.idl\n'}
+[1.199987] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/CarState.idl\n'}
+[1.200240] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/ChassisCommand.idl\n'}
+[1.200499] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/ChassisState.idl\n'}
+[1.200741] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/ConeArray.idl\n'}
+[1.200987] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/ConeArrayWithCovariance.idl\n'}
+[1.201231] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/ConeWithCovariance.idl\n'}
+[1.201475] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/Costmap.idl\n'}
+[1.201796] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/EKFErr.idl\n'}
+[1.202027] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/EKFState.idl\n'}
+[1.202328] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/FullState.idl\n'}
+[1.202565] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/Heartbeat.idl\n'}
+[1.202659] (-) TimerEvent: {}
+[1.202866] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/IntegrationErr.idl\n'}
+[1.203183] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/LapStats.idl\n'}
+[1.203380] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/MPCState.idl\n'}
+[1.203634] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/NodeState.idl\n'}
+[1.203883] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/NodeStateArray.idl\n'}
+[1.204127] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PathIntegralParams.idl\n'}
+[1.204383] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PathIntegralStats.idl\n'}
+[1.204629] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PathIntegralStatus.idl\n'}
+[1.204877] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PathIntegralTiming.idl\n'}
+[1.205124] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PlanningMode.idl\n'}
+[1.205441] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PointArray.idl\n'}
+[1.205700] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PointArrayStamped.idl\n'}
+[1.205944] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PurePursuitCheckpoint.idl\n'}
+[1.206207] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PurePursuitCheckpointArrayStamped.idl\n'}
+[1.206455] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/Runstop.idl\n'}
+[1.206776] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/SLAMErr.idl\n'}
+[1.207045] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/SLAMState.idl\n'}
+[1.207630] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/StateMachineState.idl\n'}
+[1.207757] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/SystemStatus.idl\n'}
+[1.207895] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/TopicStatus.idl\n'}
+[1.208141] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/VehicleCommands.idl\n'}
+[1.208401] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/VehicleCommandsStamped.idl\n'}
+[1.208639] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/Waypoint.idl\n'}
+[1.208891] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/WaypointArrayStamped.idl\n'}
+[1.209143] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/WheelOdometryErr.idl\n'}
+[1.209387] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/WheelSpeeds.idl\n'}
+[1.209642] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/WheelSpeedsStamped.idl\n'}
+[1.209892] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/action/CheckForObjects.idl\n'}
+[1.210169] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/srv/Register.idl\n'}
+[1.210374] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/srv/SetCanState.idl\n'}
+[1.210610] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/BoundingBox.msg\n'}
+[1.210854] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/BoundingBoxes.msg\n'}
+[1.211115] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/CanState.msg\n'}
+[1.211365] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/CarState.msg\n'}
+[1.211681] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/ChassisCommand.msg\n'}
+[1.211947] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/ChassisState.msg\n'}
+[1.212150] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/ConeArray.msg\n'}
+[1.212474] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/ConeArrayWithCovariance.msg\n'}
+[1.212707] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/ConeWithCovariance.msg\n'}
+[1.212849] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/Costmap.msg\n'}
+[1.213036] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/EKFErr.msg\n'}
+[1.213233] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/EKFState.msg\n'}
+[1.213581] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/FullState.msg\n'}
+[1.213818] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/Heartbeat.msg\n'}
+[1.214066] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/IntegrationErr.msg\n'}
+[1.214321] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/LapStats.msg\n'}
+[1.214586] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/MPCState.msg\n'}
+[1.214833] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/NodeState.msg\n'}
+[1.215078] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/NodeStateArray.msg\n'}
+[1.215317] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PathIntegralParams.msg\n'}
+[1.215556] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PathIntegralStats.msg\n'}
+[1.215806] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PathIntegralStatus.msg\n'}
+[1.216050] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PathIntegralTiming.msg\n'}
+[1.216310] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PlanningMode.msg\n'}
+[1.216594] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PointArray.msg\n'}
+[1.216900] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PointArrayStamped.msg\n'}
+[1.217059] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PurePursuitCheckpoint.msg\n'}
+[1.217301] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/PurePursuitCheckpointArrayStamped.msg\n'}
+[1.217464] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/Runstop.msg\n'}
+[1.217646] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/SLAMErr.msg\n'}
+[1.217834] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/SLAMState.msg\n'}
+[1.218002] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/StateMachineState.msg\n'}
+[1.218180] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/SystemStatus.msg\n'}
+[1.218356] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/TopicStatus.msg\n'}
+[1.218536] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/VehicleCommands.msg\n'}
+[1.218721] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/VehicleCommandsStamped.msg\n'}
+[1.218922] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/Waypoint.msg\n'}
+[1.219159] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/WaypointArrayStamped.msg\n'}
+[1.219398] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/WheelOdometryErr.msg\n'}
+[1.219657] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/WheelSpeeds.msg\n'}
+[1.219869] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/msg/WheelSpeedsStamped.msg\n'}
+[1.220108] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/action/CheckForObjects.action\n'}
+[1.220361] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/srv/Register.srv\n'}
+[1.220608] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/srv/Register_Request.msg\n'}
+[1.220850] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/srv/Register_Response.msg\n'}
+[1.221920] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/srv/SetCanState.srv\n'}
+[1.222084] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/srv/SetCanState_Request.msg\n'}
+[1.222180] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/srv/SetCanState_Response.msg\n'}
+[1.222267] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/ament_index/resource_index/package_run_dependencies/eufs_msgs\n'}
+[1.222463] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/ament_index/resource_index/parent_prefix_path/eufs_msgs\n'}
+[1.222677] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/environment/ament_prefix_path.sh\n'}
+[1.222930] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/environment/ament_prefix_path.dsv\n'}
+[1.223189] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/environment/path.sh\n'}
+[1.223432] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/environment/path.dsv\n'}
+[1.223677] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/local_setup.bash\n'}
+[1.223923] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/local_setup.sh\n'}
+[1.224254] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/local_setup.zsh\n'}
+[1.224420] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/local_setup.dsv\n'}
+[1.224910] (eufs_msgs) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/package.dsv\n'}
+[1.234158] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/ament_index/resource_index/packages/eufs_msgs\n'}
+[1.234360] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/rosidl_cmake-extras.cmake\n'}
+[1.234521] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/ament_cmake_export_dependencies-extras.cmake\n'}
+[1.234726] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/ament_cmake_export_libraries-extras.cmake\n'}
+[1.234924] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/ament_cmake_export_targets-extras.cmake\n'}
+[1.235126] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/ament_cmake_export_include_directories-extras.cmake\n'}
+[1.235323] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake\n'}
+[1.235524] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake\n'}
+[1.235723] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgsConfig.cmake\n'}
+[1.235853] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgsConfig-version.cmake\n'}
+[1.236052] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date symlink: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/package.xml\n'}
+[1.236330] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/lib/libeufs_msgs__rosidl_generator_c.so\n'}
+[1.236742] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/lib/libeufs_msgs__rosidl_typesupport_introspection_c.so\n'}
+[1.237100] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/lib/libeufs_msgs__rosidl_typesupport_c.so\n'}
+[1.237469] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/lib/libeufs_msgs__rosidl_typesupport_introspection_cpp.so\n'}
+[1.237818] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/lib/libeufs_msgs__rosidl_typesupport_cpp.so\n'}
+[1.272036] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgs__rosidl_generator_cExport.cmake\n'}
+[1.272211] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgs__rosidl_generator_cExport-noconfig.cmake\n'}
+[1.272366] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgs__rosidl_typesupport_introspection_cExport.cmake\n'}
+[1.272436] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgs__rosidl_typesupport_introspection_cExport-noconfig.cmake\n'}
+[1.272569] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgs__rosidl_typesupport_cExport.cmake\n'}
+[1.272676] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgs__rosidl_typesupport_cExport-noconfig.cmake\n'}
+[1.272760] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgs__rosidl_generator_cppExport.cmake\n'}
+[1.272907] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgs__rosidl_typesupport_introspection_cppExport.cmake\n'}
+[1.273136] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgs__rosidl_typesupport_introspection_cppExport-noconfig.cmake\n'}
+[1.273216] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgs__rosidl_typesupport_cppExport.cmake\n'}
+[1.273290] (eufs_msgs) StdoutLine: {'line': b'-- Up-to-date: /driverless/driverless_ws/install/eufs_msgs/share/eufs_msgs/cmake/eufs_msgs__rosidl_typesupport_cppExport-noconfig.cmake\n'}
+[1.275396] (eufs_msgs) CommandEnded: {'returncode': 0}
+[1.303281] (-) TimerEvent: {}
+[1.403692] (-) TimerEvent: {}
+[1.504097] (-) TimerEvent: {}
+[1.604526] (-) TimerEvent: {}
+[1.704785] (-) TimerEvent: {}
+[1.805063] (-) TimerEvent: {}
+[1.905510] (-) TimerEvent: {}
+[2.011390] (-) TimerEvent: {}
+[2.029936] (eufs_msgs) JobEnded: {'identifier': 'eufs_msgs', 'rc': 0}
+[2.043754] (perceptions) JobStarted: {'identifier': 'perceptions'}
+[2.051527] (perceptions) JobProgress: {'identifier': 'perceptions', 'progress': 'cmake'}
+[2.052547] (perceptions) JobProgress: {'identifier': 'perceptions', 'progress': 'build'}
+[2.052933] (perceptions) Command: {'cmd': ['/usr/bin/cmake', '--build', '/driverless/driverless_ws/build/perceptions', '--', '-j8', '-l8'], 'cwd': '/driverless/driverless_ws/build/perceptions', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('TMUX', '/tmp//tmux-0/default,332,0'), ('HOSTNAME', 'ankit-XPS-13-9310'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/driverless/driverless_ws/install/eufs_msgs/lib:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('HOME', '/root'), ('OLDPWD', '/driverless'), ('ROS_PYTHON_VERSION', '3'), ('LC_CTYPE', 'C.UTF-8'), ('ROS_DISTRO', 'foxy'), ('EUFS_MASTER', '/eufs'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'screen'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('DISPLAY', ':0'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy'), ('DEBIAN_FRONTEND', 'noninteractive'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/driverless/driverless_ws/build/perceptions'), ('PYTHONPATH', '/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages:/driverless:/driverless'), ('COLCON', '1'), ('TMUX_PANE', '%3'), ('CMAKE_PREFIX_PATH', '/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy')]), 'shell': False}
+[2.103215] (perceptions) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target lidar_sub\x1b[0m\n'}
+[2.111503] (-) TimerEvent: {}
+[2.158026] (perceptions) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/lidar_sub.dir/src/lidar_node.cpp.o\x1b[0m\n'}
+[2.211609] (-) TimerEvent: {}
+[2.311922] (-) TimerEvent: {}
+[2.412323] (-) TimerEvent: {}
+[2.512652] (-) TimerEvent: {}
+[2.612933] (-) TimerEvent: {}
+[2.713282] (-) TimerEvent: {}
+[2.813625] (-) TimerEvent: {}
+[2.913976] (-) TimerEvent: {}
+[3.014321] (-) TimerEvent: {}
+[3.114727] (-) TimerEvent: {}
+[3.215169] (-) TimerEvent: {}
+[3.315477] (-) TimerEvent: {}
+[3.415906] (-) TimerEvent: {}
+[3.516198] (-) TimerEvent: {}
+[3.616541] (-) TimerEvent: {}
+[3.716960] (-) TimerEvent: {}
+[3.817309] (-) TimerEvent: {}
+[3.917669] (-) TimerEvent: {}
+[4.017959] (-) TimerEvent: {}
+[4.118252] (-) TimerEvent: {}
+[4.218580] (-) TimerEvent: {}
+[4.318865] (-) TimerEvent: {}
+[4.419142] (-) TimerEvent: {}
+[4.519454] (-) TimerEvent: {}
+[4.619775] (-) TimerEvent: {}
+[4.720157] (-) TimerEvent: {}
+[4.820551] (-) TimerEvent: {}
+[4.920906] (-) TimerEvent: {}
+[5.021234] (-) TimerEvent: {}
+[5.121579] (-) TimerEvent: {}
+[5.221917] (-) TimerEvent: {}
+[5.322252] (-) TimerEvent: {}
+[5.422831] (-) TimerEvent: {}
+[5.523122] (-) TimerEvent: {}
+[5.623475] (-) TimerEvent: {}
+[5.723837] (-) TimerEvent: {}
+[5.824122] (-) TimerEvent: {}
+[5.924489] (-) TimerEvent: {}
+[6.024862] (-) TimerEvent: {}
+[6.125186] (-) TimerEvent: {}
+[6.225567] (-) TimerEvent: {}
+[6.325912] (-) TimerEvent: {}
+[6.426199] (-) TimerEvent: {}
+[6.526560] (-) TimerEvent: {}
+[6.626873] (-) TimerEvent: {}
+[6.727201] (-) TimerEvent: {}
+[6.827719] (-) TimerEvent: {}
+[6.928083] (-) TimerEvent: {}
+[7.028433] (-) TimerEvent: {}
+[7.128806] (-) TimerEvent: {}
+[7.229184] (-) TimerEvent: {}
+[7.329611] (-) TimerEvent: {}
+[7.429907] (-) TimerEvent: {}
+[7.530266] (-) TimerEvent: {}
+[7.630559] (-) TimerEvent: {}
+[7.730931] (-) TimerEvent: {}
+[7.831795] (-) TimerEvent: {}
+[7.932260] (-) TimerEvent: {}
+[8.032796] (-) TimerEvent: {}
+[8.133138] (-) TimerEvent: {}
+[8.233440] (-) TimerEvent: {}
+[8.333808] (-) TimerEvent: {}
+[8.434220] (-) TimerEvent: {}
+[8.534672] (-) TimerEvent: {}
+[8.635131] (-) TimerEvent: {}
+[8.735560] (-) TimerEvent: {}
+[8.835982] (-) TimerEvent: {}
+[8.936326] (-) TimerEvent: {}
+[9.036721] (-) TimerEvent: {}
+[9.137228] (-) TimerEvent: {}
+[9.237564] (-) TimerEvent: {}
+[9.337892] (-) TimerEvent: {}
+[9.438243] (-) TimerEvent: {}
+[9.538582] (-) TimerEvent: {}
+[9.638929] (-) TimerEvent: {}
+[9.739272] (-) TimerEvent: {}
+[9.841507] (-) TimerEvent: {}
+[9.941882] (-) TimerEvent: {}
+[10.042223] (-) TimerEvent: {}
+[10.142760] (-) TimerEvent: {}
+[10.243114] (-) TimerEvent: {}
+[10.343381] (-) TimerEvent: {}
+[10.443719] (-) TimerEvent: {}
+[10.546963] (-) TimerEvent: {}
+[10.647307] (-) TimerEvent: {}
+[10.747677] (-) TimerEvent: {}
+[10.848032] (-) TimerEvent: {}
+[10.948514] (-) TimerEvent: {}
+[11.048946] (-) TimerEvent: {}
+[11.149324] (-) TimerEvent: {}
+[11.249625] (-) TimerEvent: {}
+[11.349938] (-) TimerEvent: {}
+[11.450237] (-) TimerEvent: {}
+[11.550639] (-) TimerEvent: {}
+[11.650954] (-) TimerEvent: {}
+[11.751253] (-) TimerEvent: {}
+[11.851819] (-) TimerEvent: {}
+[11.952203] (-) TimerEvent: {}
+[12.052530] (-) TimerEvent: {}
+[12.152895] (-) TimerEvent: {}
+[12.253337] (-) TimerEvent: {}
+[12.353627] (-) TimerEvent: {}
+[12.454117] (-) TimerEvent: {}
+[12.554419] (-) TimerEvent: {}
+[12.654801] (-) TimerEvent: {}
+[12.755160] (-) TimerEvent: {}
+[12.855512] (-) TimerEvent: {}
+[12.955900] (-) TimerEvent: {}
+[13.056329] (-) TimerEvent: {}
+[13.156721] (-) TimerEvent: {}
+[13.257077] (-) TimerEvent: {}
+[13.358049] (-) TimerEvent: {}
+[13.458429] (-) TimerEvent: {}
+[13.558779] (-) TimerEvent: {}
+[13.659138] (-) TimerEvent: {}
+[13.759502] (-) TimerEvent: {}
+[13.859839] (-) TimerEvent: {}
+[13.960269] (-) TimerEvent: {}
+[14.060868] (-) TimerEvent: {}
+[14.161231] (-) TimerEvent: {}
+[14.261840] (-) TimerEvent: {}
+[14.362203] (-) TimerEvent: {}
+[14.462709] (-) TimerEvent: {}
+[14.563077] (-) TimerEvent: {}
+[14.663455] (-) TimerEvent: {}
+[14.763824] (-) TimerEvent: {}
+[14.864218] (-) TimerEvent: {}
+[14.964641] (-) TimerEvent: {}
+[15.065033] (-) TimerEvent: {}
+[15.165445] (-) TimerEvent: {}
+[15.265856] (-) TimerEvent: {}
+[15.366691] (-) TimerEvent: {}
+[15.467046] (-) TimerEvent: {}
+[15.567427] (-) TimerEvent: {}
+[15.667785] (-) TimerEvent: {}
+[15.768140] (-) TimerEvent: {}
+[15.868545] (-) TimerEvent: {}
+[15.968867] (-) TimerEvent: {}
+[16.069181] (-) TimerEvent: {}
+[16.169500] (-) TimerEvent: {}
+[16.269807] (-) TimerEvent: {}
+[16.370189] (-) TimerEvent: {}
+[16.470619] (-) TimerEvent: {}
+[16.570960] (-) TimerEvent: {}
+[16.671275] (-) TimerEvent: {}
+[16.771617] (-) TimerEvent: {}
+[16.871900] (-) TimerEvent: {}
+[16.972252] (-) TimerEvent: {}
+[17.072851] (-) TimerEvent: {}
+[17.173179] (-) TimerEvent: {}
+[17.273607] (-) TimerEvent: {}
+[17.373986] (-) TimerEvent: {}
+[17.474294] (-) TimerEvent: {}
+[17.554904] (perceptions) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable lidar_sub\x1b[0m\n'}
+[17.574416] (-) TimerEvent: {}
+[17.674802] (-) TimerEvent: {}
+[17.775273] (-) TimerEvent: {}
+[17.875638] (-) TimerEvent: {}
+[17.976005] (-) TimerEvent: {}
+[18.076601] (-) TimerEvent: {}
+[18.176977] (-) TimerEvent: {}
+[18.277297] (-) TimerEvent: {}
+[18.378126] (-) TimerEvent: {}
+[18.478493] (-) TimerEvent: {}
+[18.578946] (-) TimerEvent: {}
+[18.679354] (-) TimerEvent: {}
+[18.779668] (-) TimerEvent: {}
+[18.879982] (-) TimerEvent: {}
+[18.980400] (-) TimerEvent: {}
+[19.080733] (-) TimerEvent: {}
+[19.155376] (perceptions) StdoutLine: {'line': b'[100%] Built target lidar_sub\n'}
+[19.166895] (perceptions) CommandEnded: {'returncode': 0}
+[19.180854] (-) TimerEvent: {}
+[19.191263] (perceptions) JobProgress: {'identifier': 'perceptions', 'progress': 'install'}
+[19.191778] (perceptions) Command: {'cmd': ['/usr/bin/cmake', '--install', '/driverless/driverless_ws/build/perceptions'], 'cwd': '/driverless/driverless_ws/build/perceptions', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('TMUX', '/tmp//tmux-0/default,332,0'), ('HOSTNAME', 'ankit-XPS-13-9310'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/driverless/driverless_ws/install/eufs_msgs/lib:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('HOME', '/root'), ('OLDPWD', '/driverless'), ('ROS_PYTHON_VERSION', '3'), ('LC_CTYPE', 'C.UTF-8'), ('ROS_DISTRO', 'foxy'), ('EUFS_MASTER', '/eufs'), ('_', '/usr/local/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'screen'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('DISPLAY', ':0'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy'), ('DEBIAN_FRONTEND', 'noninteractive'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/driverless/driverless_ws/build/perceptions'), ('PYTHONPATH', '/driverless/driverless_ws/install/eufs_msgs/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages:/driverless:/driverless'), ('COLCON', '1'), ('TMUX_PANE', '%3'), ('CMAKE_PREFIX_PATH', '/driverless/driverless_ws/install/eufs_msgs:/opt/ros/foxy')]), 'shell': False}
+[19.201246] (perceptions) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[19.201773] (perceptions) StdoutLine: {'line': b'-- Execute custom install script\n'}
+[19.202273] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/lib/perceptions/lidar_sub\n'}
+[19.211711] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/ament_index/resource_index/package_run_dependencies/perceptions\n'}
+[19.221387] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/ament_index/resource_index/parent_prefix_path/perceptions\n'}
+[19.230796] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/environment/ament_prefix_path.sh\n'}
+[19.240860] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/environment/ament_prefix_path.dsv\n'}
+[19.254017] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/environment/path.sh\n'}
+[19.265632] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/environment/path.dsv\n'}
+[19.278705] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/local_setup.bash\n'}
+[19.280935] (-) TimerEvent: {}
+[19.289847] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/local_setup.sh\n'}
+[19.304077] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/local_setup.zsh\n'}
+[19.314112] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/local_setup.dsv\n'}
+[19.322743] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/package.dsv\n'}
+[19.331642] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/ament_index/resource_index/packages/perceptions\n'}
+[19.342466] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/cmake/perceptionsConfig.cmake\n'}
+[19.351122] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/cmake/perceptionsConfig-version.cmake\n'}
+[19.359887] (perceptions) StdoutLine: {'line': b'-- Symlinking: /driverless/driverless_ws/install/perceptions/share/perceptions/package.xml\n'}
+[19.372325] (perceptions) CommandEnded: {'returncode': 0}
+[19.384821] (-) TimerEvent: {}
+[19.448825] (perceptions) JobEnded: {'identifier': 'perceptions', 'rc': 0}
+[19.449793] (-) EventReactorShutdown: {}
