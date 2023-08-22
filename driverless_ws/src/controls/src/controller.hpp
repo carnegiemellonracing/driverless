@@ -8,11 +8,18 @@
 #include <mutex>
 #include <future>
 #include <cstddef>
+#include <planning/raceline.hpp>
 
 using namespace std::literals::chrono_literals;
 
 namespace controls {
     /* ALL COORDINATES ARE X-FORWARD, Z-UP, RIGHT-HANDED */
+
+    /**
+         * Spline message type. Until this is determined, I'm using a string
+         * type as a placeholder.
+        */
+    using SplineMsg = std_msgs::msg::String;
 
     /** Number of dimensions in vehicle state */
     constexpr uint VEHICLE_STATE_DIMS = 6;
@@ -47,6 +54,7 @@ namespace controls {
 
     /** Proportion of calculated capacity we try to attain */
     constexpr double TRACTIVE_DOGSHIT_COEF = 0.5;
+    constexpr uint POLY_DEG = 3;
 
 
     /**
@@ -204,6 +212,9 @@ namespace controls {
          * @return Total length of spline, in meters
          */
         double getLength() const;
+
+    private:
+        std::vector<Spline> m_splines;
     };
 
     /**
@@ -311,12 +322,6 @@ namespace controls {
         ControllerNode();
 
     private:
-        /** 
-         * Spline message type. Until this is determined, I'm using a string
-         * type as a placeholder.
-        */
-        using SplineMsg = std_msgs::msg::String;
-
         /**
          * Callback which publishes the control action. Keeping this on a timer
          * allows it to be used as a heartbeat for the node. 

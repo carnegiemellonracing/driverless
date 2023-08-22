@@ -9,6 +9,7 @@
 #include <cmath>
 #include <exception>
 #include <cassert>
+#include <gsl/gsl.hpp>
 
 namespace controls {
 
@@ -240,5 +241,25 @@ namespace controls {
     double GGV::getTractiveCapability(double speed, double curvature) const {
         // TODO: Implement an actual GGV
         return sqrt(GRAVITY * LAT_MU / curvature);
+    }
+
+
+    // ***** REFERENCE SPLINE *****
+
+    ReferenceSpline::ReferenceSpline(const SplineMsg& rSplineMsg) {
+        m_splines = std::vector<Spline>();
+        for (auto splineMsg : rSplineMsg.splines) {
+            Spline spline {};
+
+            spline.spl_poly = polynomial {
+                POLY_DEG,
+                gsl_vector_alloc(POLY_DEG + 1);
+            };
+            for (int i = 0; i <= POLY_DEG; i++) {
+                gsl_vector_set(spline.spl_poly, i, splineMsg.spl_poly_coefs[i]);
+            }
+
+            throw new std::runtime_error("spline deserialization not implemented");
+        }
     }
 }

@@ -90,10 +90,11 @@ public:
     std::tuple<gsl_vector*,double, gsl_vector*,double> along(double progress, double point_index=0, int precision=20);
     double getderiv(double x);
 
-
+    std::pair<double, double> along(double progress) const;
 
     Spline(polynomial interpolation_poly,gsl_matrix *points_mat,gsl_matrix *rotated,gsl_matrix *Q_mat, gsl_vector *translation,polynomial first, polynomial second, int path, int sort_ind);
-    
+
+    Spline() {};
 
     ~Spline();
 };
