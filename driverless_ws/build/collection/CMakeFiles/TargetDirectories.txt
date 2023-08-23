@@ -1,9 +1,0 @@
-/home/griffin/driverless/driverless_ws/build/collection/CMakeFiles/install/strip.dir
-/home/griffin/driverless/driverless_ws/build/collection/CMakeFiles/install/local.dir
-/home/griffin/driverless/driverless_ws/build/collection/CMakeFiles/install.dir
-/home/griffin/driverless/driverless_ws/build/collection/CMakeFiles/list_install_components.dir
-/home/griffin/driverless/driverless_ws/build/collection/CMakeFiles/rebuild_cache.dir
-/home/griffin/driverless/driverless_ws/build/collection/CMakeFiles/edit_cache.dir
-/home/griffin/driverless/driverless_ws/build/collection/CMakeFiles/test.dir
-/home/griffin/driverless/driverless_ws/build/collection/CMakeFiles/collection_uninstall.dir
-/home/griffin/driverless/driverless_ws/build/collection/CMakeFiles/uninstall.dir

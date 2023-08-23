@@ -1,4 +1,0 @@
-Invoking command in '/home/griffin/driverless/driverless_ws/build/perceptions': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/perceptions -- -j12 -l12
-Invoked command in '/home/griffin/driverless/driverless_ws/build/perceptions' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/perceptions -- -j12 -l12
-Invoking command in '/home/griffin/driverless/driverless_ws/build/perceptions': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/perceptions
-Invoked command in '/home/griffin/driverless/driverless_ws/build/perceptions' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/perceptions

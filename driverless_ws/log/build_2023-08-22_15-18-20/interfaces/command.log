@@ -1,1 +1,0 @@
-Invoking command in '/home/griffin/driverless/driverless_ws/build/interfaces': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/interfaces -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/interfaces

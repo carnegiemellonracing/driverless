@@ -1,1 +1,0 @@
-Invoking command in '/home/griffin/driverless/driverless_ws/build/interfaces': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/interfaces -- -j12 -l12
