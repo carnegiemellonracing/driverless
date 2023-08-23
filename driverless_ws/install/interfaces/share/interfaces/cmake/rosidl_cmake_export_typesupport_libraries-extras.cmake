@@ -23,13 +23,10 @@ if(NOT _exported_typesupport_libraries STREQUAL "")
 
       if(NOT _lib)
         # the library wasn't found
-        message(FATAL_ERROR
-          "Package 'interfaces' exports the typesupport library '${_library}' which couldn't be found")
+        message(FATAL_ERROR "Package 'interfaces' exports the typesupport library '${_library}' which couldn't be found")
       elseif(NOT IS_ABSOLUTE "${_lib}")
         # the found library must be an absolute path
-        message(FATAL_ERROR
-          "Package 'interfaces' found the typesupport library '${_library}' at '${_lib}' "
-          "which is not an absolute path")
+        message(FATAL_ERROR "Package 'interfaces' found the typesupport library '${_library}' at '${_lib}' which is not an absolute path")
       elseif(NOT EXISTS "${_lib}")
         # the found library must exist
         message(FATAL_ERROR "Package 'interfaces' found the typesupport library '${_lib}' which doesn't exist")

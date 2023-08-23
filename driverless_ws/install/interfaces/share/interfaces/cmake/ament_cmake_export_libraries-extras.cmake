@@ -125,8 +125,7 @@ if(NOT _exported_library_names STREQUAL "")
       )
       if(NOT _lib)
         # warn about not existing library and later ignore it
-        message(WARNING
-          "Package 'interfaces' exports library '${_library_name}' with LIBRARY_DIRS '${_library_dirs}' which couldn't be found")
+        message(WARNING "Package 'interfaces' exports library '${_library_name}' with LIBRARY_DIRS '${_library_dirs}' which couldn't be found")
       endif()
     endif()
     if(_lib)

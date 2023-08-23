@@ -1,0 +1,128 @@
+[0.084s] Invoking command in '/home/griffin/driverless/driverless_ws/build/interfaces': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/interfaces -- -j12 -l12
+[0.104s] 
+[0.105s] [0/63] Generating C code for ROS interfaces[K
+[0.433s] [0/63] Generating C++ code for ROS interfaces[K
+[0.433s] [1/63] Generating C code for ROS interfaces[K
+[0.433s] [1/63] Building C object CMakeFiles/interfaces__rosidl_generator_c.dir/rosidl_generator_c/interfaces/msg/detail/car_rot__functions.c.o[K
+[0.433s] [1/63] Building C object CMakeFiles/interfaces__rosidl_generator_c.dir/rosidl_generator_c/interfaces/msg/detail/cone_list__functions.c.o[K
+[0.433s] [1/63] Building C object CMakeFiles/interfaces__rosidl_generator_c.dir/rosidl_generator_c/interfaces/msg/detail/cone_positions__functions.c.o[K
+[0.433s] [1/63] Building C object CMakeFiles/interfaces__rosidl_generator_c.dir/rosidl_generator_c/interfaces/msg/detail/pair_rot__functions.c.o[K
+[0.437s] [1/63] Building C object CMakeFiles/interfaces__rosidl_generator_c.dir/rosidl_generator_c/interfaces/msg/detail/points__functions.c.o[K
+[0.437s] [2/63] Generating C++ code for ROS interfaces[K
+[0.437s] [2/63] Generating C++ type support for eProsima Fast-RTPS[K
+[0.437s] [2/63] Generating C++ type support dispatch for ROS interfaces[K
+[0.462s] [2/63] Generating C++ introspection for ROS interfaces[K
+[0.462s] [3/63] Building C object CMakeFiles/interfaces__rosidl_generator_c.dir/rosidl_generator_c/interfaces/msg/detail/car_rot__functions.c.o[K
+[0.462s] [4/63] Building C object CMakeFiles/interfaces__rosidl_generator_c.dir/rosidl_generator_c/interfaces/msg/detail/points__functions.c.o[K
+[0.474s] [5/63] Building C object CMakeFiles/interfaces__rosidl_generator_c.dir/rosidl_generator_c/interfaces/msg/detail/cone_positions__functions.c.o[K
+[0.475s] [6/63] Building C object CMakeFiles/interfaces__rosidl_generator_c.dir/rosidl_generator_c/interfaces/msg/detail/pair_rot__functions.c.o[K
+[0.475s] [7/63] Building C object CMakeFiles/interfaces__rosidl_generator_c.dir/rosidl_generator_c/interfaces/msg/detail/cone_list__functions.c.o[K
+[0.490s] [7/63] Linking C shared library libinterfaces__rosidl_generator_c.so[K
+[0.490s] [8/63] Linking C shared library libinterfaces__rosidl_generator_c.so[K
+[0.490s] [8/63] Generating C type support dispatch for ROS interfaces[K
+[0.667s] [8/63] Generating C introspection for ROS interfaces[K
+[0.667s] [9/63] Generating C++ type support dispatch for ROS interfaces[K
+[0.667s] [9/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces/msg/car_rot__type_support.cpp.o[K
+[0.667s] [9/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces/msg/cone_list__type_support.cpp.o[K
+[0.668s] [9/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces/msg/cone_positions__type_support.cpp.o[K
+[0.668s] [9/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces/msg/pair_rot__type_support.cpp.o[K
+[0.739s] [9/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces/msg/points__type_support.cpp.o[K
+[0.739s] [10/63] Generating C type support dispatch for ROS interfaces[K
+[0.739s] [10/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces/msg/car_rot__type_support.cpp.o[K
+[0.739s] [10/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces/msg/cone_list__type_support.cpp.o[K
+[0.739s] [10/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces/msg/cone_positions__type_support.cpp.o[K
+[0.764s] [10/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces/msg/pair_rot__type_support.cpp.o[K
+[0.764s] [11/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces/msg/car_rot__type_support.cpp.o[K
+[0.764s] [11/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces/msg/points__type_support.cpp.o[K
+[0.764s] [12/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces/msg/cone_list__type_support.cpp.o[K
+[0.767s] [13/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces/msg/pair_rot__type_support.cpp.o[K
+[0.779s] [14/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces/msg/cone_positions__type_support.cpp.o[K
+[0.779s] [15/63] Generating C introspection for ROS interfaces[K
+[0.779s] [15/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces/msg/detail/car_rot__type_support.c.o[K
+[0.779s] [15/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces/msg/detail/cone_list__type_support.c.o[K
+[0.780s] [15/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces/msg/detail/cone_positions__type_support.c.o[K
+[0.790s] [15/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces/msg/detail/pair_rot__type_support.c.o[K
+[0.790s] [16/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_c.dir/rosidl_typesupport_c/interfaces/msg/points__type_support.cpp.o[K
+[0.808s] [16/63] Linking CXX shared library libinterfaces__rosidl_typesupport_c.so[K
+[0.809s] [17/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces/msg/detail/car_rot__type_support.c.o[K
+[0.809s] [17/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces/msg/detail/points__type_support.c.o[K
+[0.811s] [18/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces/msg/detail/pair_rot__type_support.c.o[K
+[0.813s] [19/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces/msg/detail/cone_positions__type_support.c.o[K
+[0.829s] [20/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces/msg/detail/cone_list__type_support.c.o[K
+[0.830s] [21/63] Linking CXX shared library libinterfaces__rosidl_typesupport_c.so[K
+[0.830s] [22/63] Generating C++ type support for eProsima Fast-RTPS[K
+[0.830s] [22/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces/msg/detail/dds_fastrtps/car_rot__type_support.cpp.o[K
+[0.830s] [22/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces/msg/detail/dds_fastrtps/cone_list__type_support.cpp.o[K
+[0.830s] [22/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces/msg/detail/dds_fastrtps/cone_positions__type_support.cpp.o[K
+[0.830s] [22/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces/msg/detail/dds_fastrtps/pair_rot__type_support.cpp.o[K
+[0.831s] [22/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces/msg/detail/dds_fastrtps/points__type_support.cpp.o[K
+[0.831s] [23/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/interfaces/msg/detail/points__type_support.c.o[K
+[0.855s] [23/63] Linking C shared library libinterfaces__rosidl_typesupport_introspection_c.so[K
+[0.857s] [24/63] Linking C shared library libinterfaces__rosidl_typesupport_introspection_c.so[K
+[0.857s] [25/63] Generating C++ introspection for ROS interfaces[K
+[0.857s] [25/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces/msg/detail/car_rot__type_support.cpp.o[K
+[0.947s] [25/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces/msg/detail/cone_list__type_support.cpp.o[K
+[0.947s] [26/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces/msg/cone_positions__type_support.cpp.o[K
+[1.003s] [26/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces/msg/detail/cone_positions__type_support.cpp.o[K
+[1.003s] [27/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces/msg/points__type_support.cpp.o[K
+[1.022s] [27/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces/msg/detail/pair_rot__type_support.cpp.o[K
+[1.022s] [28/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces/msg/cone_list__type_support.cpp.o[K
+[1.022s] [28/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces/msg/detail/points__type_support.cpp.o[K
+[1.036s] [29/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces/msg/pair_rot__type_support.cpp.o[K
+[1.036s] [30/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/interfaces/msg/car_rot__type_support.cpp.o[K
+[1.065s] [30/63] Linking CXX shared library libinterfaces__rosidl_typesupport_cpp.so[K
+[1.193s] [31/63] Linking CXX shared library libinterfaces__rosidl_typesupport_cpp.so[K
+[1.219s] [32/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces/msg/detail/cone_list__type_support.cpp.o[K
+[1.290s] [33/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces/msg/detail/car_rot__type_support.cpp.o[K
+[1.300s] [34/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces/msg/detail/points__type_support.cpp.o[K
+[1.343s] [35/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces/msg/detail/dds_fastrtps/car_rot__type_support.cpp.o[K
+[1.355s] [36/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces/msg/detail/dds_fastrtps/pair_rot__type_support.cpp.o[K
+[1.362s] [37/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces/msg/detail/pair_rot__type_support.cpp.o[K
+[1.362s] [38/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/interfaces/msg/detail/cone_positions__type_support.cpp.o[K
+[1.390s] [38/63] Linking CXX shared library libinterfaces__rosidl_typesupport_introspection_cpp.so[K
+[1.400s] [39/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces/msg/detail/dds_fastrtps/cone_positions__type_support.cpp.o[K
+[1.401s] [40/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces/msg/detail/dds_fastrtps/points__type_support.cpp.o[K
+[1.401s] [41/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/interfaces/msg/detail/dds_fastrtps/cone_list__type_support.cpp.o[K
+[1.406s] [41/63] Linking CXX shared library libinterfaces__rosidl_typesupport_fastrtps_cpp.so[K
+[1.452s] [42/63] Linking CXX shared library libinterfaces__rosidl_typesupport_introspection_cpp.so[K
+[1.452s] [43/63] Linking CXX shared library libinterfaces__rosidl_typesupport_fastrtps_cpp.so[K
+[1.706s] [43/63] Generating C type support for eProsima Fast-RTPS[K
+[1.706s] [44/63] Generating C type support for eProsima Fast-RTPS[K
+[1.706s] [44/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces/msg/detail/car_rot__type_support_c.cpp.o[K
+[1.706s] [44/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces/msg/detail/cone_list__type_support_c.cpp.o[K
+[1.706s] [44/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces/msg/detail/cone_positions__type_support_c.cpp.o[K
+[1.706s] [44/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces/msg/detail/pair_rot__type_support_c.cpp.o[K
+[1.968s] [44/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces/msg/detail/points__type_support_c.cpp.o[K
+[1.969s] [45/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces/msg/detail/car_rot__type_support_c.cpp.o[K
+[1.969s] [46/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces/msg/detail/cone_list__type_support_c.cpp.o[K
+[1.969s] [47/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces/msg/detail/pair_rot__type_support_c.cpp.o[K
+[1.973s] [48/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces/msg/detail/cone_positions__type_support_c.cpp.o[K
+[1.973s] [49/63] Building CXX object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/interfaces/msg/detail/points__type_support_c.cpp.o[K
+[2.021s] [49/63] Linking CXX shared library libinterfaces__rosidl_typesupport_fastrtps_c.so[K
+[2.021s] [50/63] Linking CXX shared library libinterfaces__rosidl_typesupport_fastrtps_c.so[K
+[2.542s] [50/63] Generating Python code for ROS interfaces[K
+[2.542s] [51/63] Generating Python code for ROS interfaces[K
+[2.542s] [51/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c__pyext.dir/rosidl_generator_py/interfaces/_interfaces_s.ep.rosidl_typesupport_introspection_c.c.o[K
+[2.542s] [51/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_c__pyext.dir/rosidl_generator_py/interfaces/_interfaces_s.ep.rosidl_typesupport_c.c.o[K
+[2.542s] [51/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c__pyext.dir/rosidl_generator_py/interfaces/_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c.o[K
+[2.542s] [51/63] Building C object CMakeFiles/interfaces__python.dir/rosidl_generator_py/interfaces/msg/_car_rot_s.c.o[K
+[2.543s] [51/63] Building C object CMakeFiles/interfaces__python.dir/rosidl_generator_py/interfaces/msg/_cone_list_s.c.o[K
+[2.543s] [51/63] Building C object CMakeFiles/interfaces__python.dir/rosidl_generator_py/interfaces/msg/_cone_positions_s.c.o[K
+[2.543s] [51/63] Building C object CMakeFiles/interfaces__python.dir/rosidl_generator_py/interfaces/msg/_pair_rot_s.c.o[K
+[2.613s] [51/63] Building C object CMakeFiles/interfaces__python.dir/rosidl_generator_py/interfaces/msg/_points_s.c.o[K
+[2.613s] [52/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_fastrtps_c__pyext.dir/rosidl_generator_py/interfaces/_interfaces_s.ep.rosidl_typesupport_fastrtps_c.c.o[K
+[2.613s] [53/63] Building C object CMakeFiles/interfaces__python.dir/rosidl_generator_py/interfaces/msg/_points_s.c.o[K
+[2.613s] [54/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_introspection_c__pyext.dir/rosidl_generator_py/interfaces/_interfaces_s.ep.rosidl_typesupport_introspection_c.c.o[K
+[2.639s] [55/63] Building C object CMakeFiles/interfaces__python.dir/rosidl_generator_py/interfaces/msg/_cone_positions_s.c.o[K
+[2.640s] [56/63] Building C object CMakeFiles/interfaces__python.dir/rosidl_generator_py/interfaces/msg/_pair_rot_s.c.o[K
+[2.644s] [57/63] Building C object CMakeFiles/interfaces__python.dir/rosidl_generator_py/interfaces/msg/_car_rot_s.c.o[K
+[2.647s] [58/63] Building C object CMakeFiles/interfaces__rosidl_typesupport_c__pyext.dir/rosidl_generator_py/interfaces/_interfaces_s.ep.rosidl_typesupport_c.c.o[K
+[2.647s] [59/63] Building C object CMakeFiles/interfaces__python.dir/rosidl_generator_py/interfaces/msg/_cone_list_s.c.o[K
+[2.666s] [59/63] Linking C shared library rosidl_generator_py/interfaces/libinterfaces__python.so[K
+[2.666s] [60/63] Linking C shared library rosidl_generator_py/interfaces/libinterfaces__python.so[K
+[2.666s] [60/63] Linking C shared library rosidl_generator_py/interfaces/interfaces_s__rosidl_typesupport_introspection_c.cpython-38-x86_64-linux-gnu.so[K
+[2.666s] [60/63] Linking C shared library rosidl_generator_py/interfaces/interfaces_s__rosidl_typesupport_c.cpython-38-x86_64-linux-gnu.so[K
+[2.682s] [60/63] Linking CXX shared library rosidl_generator_py/interfaces/interfaces_s__rosidl_typesupport_fastrtps_c.cpython-38-x86_64-linux-gnu.so[K
+[2.682s] [61/63] Linking C shared library rosidl_generator_py/interfaces/interfaces_s__rosidl_typesupport_c.cpython-38-x86_64-linux-gnu.so[K
+[2.702s] [62/63] Linking C shared library rosidl_generator_py/interfaces/interfaces_s__rosidl_typesupport_introspection_c.cpython-38-x86_64-linux-gnu.so[K
+[2.702s] [63/63] Linking CXX shared library rosidl_generator_py/interfaces/interfaces_s__rosidl_typesupport_fastrtps_c.cpython-38-x86_64-linux-gnu.so[K

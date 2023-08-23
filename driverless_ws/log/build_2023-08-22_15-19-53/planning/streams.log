@@ -1,0 +1,17 @@
+[0.007s] Invoking command in '/home/griffin/driverless/driverless_ws/build/planning': AMENT_PREFIX_PATH=/home/griffin/driverless/driverless_ws/install/interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/griffin/driverless/driverless_ws/install/interfaces:/opt/ros/foxy LD_LIBRARY_PATH=/home/griffin/driverless/driverless_ws/install/interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/griffin/driverless/driverless_ws/install/interfaces/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/planning -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/planning
+[0.014s] CMake Error: The current CMakeCache.txt directory /home/griffin/driverless/driverless_ws/src/planning/CMakeCache.txt is different than the directory /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/planning where CMakeCache.txt was created. This may result in binaries being created in the wrong place. If you are not sure, reedit the CMakeCache.txt
+[0.015s] Invoked command in '/home/griffin/driverless/driverless_ws/build/planning' returned '1': AMENT_PREFIX_PATH=/home/griffin/driverless/driverless_ws/install/interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/griffin/driverless/driverless_ws/install/interfaces:/opt/ros/foxy LD_LIBRARY_PATH=/home/griffin/driverless/driverless_ws/install/interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/griffin/driverless/driverless_ws/install/interfaces/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/planning -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/planning
+[0.016s] Traceback (most recent call last):
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_core/executor/__init__.py", line 91, in __call__
+    rc = await self.task(*args, **kwargs)
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_core/task/__init__.py", line 93, in __call__
+    return await task_method(*args, **kwargs)
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_ros/task/ament_cmake/build.py", line 59, in build
+    rc = await extension.build(
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_cmake/task/cmake/build.py", line 87, in build
+    rc = await self._reconfigure(args, env)
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_cmake/task/cmake/build.py", line 182, in _reconfigure
+    buildfile = get_buildfile(cmake_cache)
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_cmake/task/cmake/__init__.py", line 112, in get_buildfile
+    if 'Ninja' in generator:
+TypeError: argument of type 'NoneType' is not iterable

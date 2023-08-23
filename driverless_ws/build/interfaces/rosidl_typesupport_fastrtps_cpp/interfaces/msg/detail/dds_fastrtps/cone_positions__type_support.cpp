@@ -2,7 +2,6 @@
 // with input from interfaces:msg/ConePositions.idl
 // generated code does not contain a copyright notice
 #include "interfaces/msg/detail/cone_positions__rosidl_typesupport_fastrtps_cpp.hpp"
-#include "interfaces/msg/detail/cone_positions__functions.h"
 #include "interfaces/msg/detail/cone_positions__struct.hpp"
 
 #include <limits>
@@ -35,7 +34,6 @@ size_t get_serialized_size(
 size_t
 max_serialized_size_Header(
   bool & full_bounded,
-  bool & is_plain,
   size_t current_alignment);
 }  // namespace typesupport_fastrtps_cpp
 }  // namespace msg
@@ -59,7 +57,6 @@ size_t get_serialized_size(
 size_t
 max_serialized_size_Float32(
   bool & full_bounded,
-  bool & is_plain,
   size_t current_alignment);
 }  // namespace typesupport_fastrtps_cpp
 }  // namespace msg
@@ -162,7 +159,6 @@ size_t
 ROSIDL_TYPESUPPORT_FASTRTPS_CPP_PUBLIC_interfaces
 max_serialized_size_ConePositions(
   bool & full_bounded,
-  bool & is_plain,
   size_t current_alignment)
 {
   size_t initial_alignment = current_alignment;
@@ -171,9 +167,7 @@ max_serialized_size_ConePositions(
   const size_t wchar_size = 4;
   (void)padding;
   (void)wchar_size;
-
-  full_bounded = true;
-  is_plain = true;
+  (void)full_bounded;
 
 
   // Member: header
@@ -182,13 +176,9 @@ max_serialized_size_ConePositions(
 
 
     for (size_t index = 0; index < array_size; ++index) {
-      bool inner_full_bounded;
-      bool inner_is_plain;
       current_alignment +=
         std_msgs::msg::typesupport_fastrtps_cpp::max_serialized_size_Header(
-        inner_full_bounded, inner_is_plain, current_alignment);
-      full_bounded &= inner_full_bounded;
-      is_plain &= inner_is_plain;
+        full_bounded, current_alignment);
     }
   }
 
@@ -196,19 +186,14 @@ max_serialized_size_ConePositions(
   {
     size_t array_size = 0;
     full_bounded = false;
-    is_plain = false;
     current_alignment += padding +
       eprosima::fastcdr::Cdr::alignment(current_alignment, padding);
 
 
     for (size_t index = 0; index < array_size; ++index) {
-      bool inner_full_bounded;
-      bool inner_is_plain;
       current_alignment +=
         std_msgs::msg::typesupport_fastrtps_cpp::max_serialized_size_Float32(
-        inner_full_bounded, inner_is_plain, current_alignment);
-      full_bounded &= inner_full_bounded;
-      is_plain &= inner_is_plain;
+        full_bounded, current_alignment);
     }
   }
 
@@ -244,18 +229,9 @@ static uint32_t _ConePositions__get_serialized_size(
   return static_cast<uint32_t>(get_serialized_size(*typed_message, 0));
 }
 
-static size_t _ConePositions__max_serialized_size(char & bounds_info)
+static size_t _ConePositions__max_serialized_size(bool & full_bounded)
 {
-  bool full_bounded;
-  bool is_plain;
-  size_t ret_val;
-
-  ret_val = max_serialized_size_ConePositions(full_bounded, is_plain, 0);
-
-  bounds_info =
-    is_plain ? ROSIDL_TYPESUPPORT_FASTRTPS_PLAIN_TYPE :
-    full_bounded ? ROSIDL_TYPESUPPORT_FASTRTPS_BOUNDED_TYPE : ROSIDL_TYPESUPPORT_FASTRTPS_UNBOUNDED_TYPE;
-  return ret_val;
+  return max_serialized_size_ConePositions(full_bounded, 0);
 }
 
 static message_type_support_callbacks_t _ConePositions__callbacks = {
@@ -271,9 +247,6 @@ static rosidl_message_type_support_t _ConePositions__handle = {
   rosidl_typesupport_fastrtps_cpp::typesupport_identifier,
   &_ConePositions__callbacks,
   get_message_typesupport_handle_function,
-  &interfaces__msg__ConePositions__get_type_hash,
-  &interfaces__msg__ConePositions__get_type_description,
-  &interfaces__msg__ConePositions__get_type_description_sources,
 };
 
 }  // namespace typesupport_fastrtps_cpp

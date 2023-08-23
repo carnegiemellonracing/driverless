@@ -1,0 +1,15 @@
+CMake Error: The current CMakeCache.txt directory /home/griffin/driverless/driverless_ws/src/planning/CMakeCache.txt is different than the directory /home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/planning where CMakeCache.txt was created. This may result in binaries being created in the wrong place. If you are not sure, reedit the CMakeCache.txt
+Traceback (most recent call last):
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_core/executor/__init__.py", line 91, in __call__
+    rc = await self.task(*args, **kwargs)
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_core/task/__init__.py", line 93, in __call__
+    return await task_method(*args, **kwargs)
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_ros/task/ament_cmake/build.py", line 59, in build
+    rc = await extension.build(
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_cmake/task/cmake/build.py", line 87, in build
+    rc = await self._reconfigure(args, env)
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_cmake/task/cmake/build.py", line 182, in _reconfigure
+    buildfile = get_buildfile(cmake_cache)
+  File "/home/griffin/.local/lib/python3.8/site-packages/colcon_cmake/task/cmake/__init__.py", line 112, in get_buildfile
+    if 'Ninja' in generator:
+TypeError: argument of type 'NoneType' is not iterable

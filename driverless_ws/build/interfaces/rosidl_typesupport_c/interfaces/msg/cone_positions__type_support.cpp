@@ -4,9 +4,8 @@
 
 #include "cstddef"
 #include "rosidl_runtime_c/message_type_support_struct.h"
+#include "interfaces/msg/rosidl_typesupport_c__visibility_control.h"
 #include "interfaces/msg/detail/cone_positions__struct.h"
-#include "interfaces/msg/detail/cone_positions__type_support.h"
-#include "interfaces/msg/detail/cone_positions__functions.h"
 #include "rosidl_typesupport_c/identifier.h"
 #include "rosidl_typesupport_c/message_type_support_dispatch.h"
 #include "rosidl_typesupport_c/type_support_map.h"
@@ -73,9 +72,6 @@ static const rosidl_message_type_support_t ConePositions_message_type_support_ha
   rosidl_typesupport_c__typesupport_identifier,
   reinterpret_cast<const type_support_map_t *>(&_ConePositions_message_typesupport_map),
   rosidl_typesupport_c__get_message_typesupport_handle_function,
-  &interfaces__msg__ConePositions__get_type_hash,
-  &interfaces__msg__ConePositions__get_type_description,
-  &interfaces__msg__ConePositions__get_type_description_sources,
 };
 
 }  // namespace rosidl_typesupport_c
@@ -89,6 +85,7 @@ extern "C"
 {
 #endif
 
+ROSIDL_TYPESUPPORT_C_EXPORT_interfaces
 const rosidl_message_type_support_t *
 ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_c, interfaces, msg, ConePositions)() {
   return &::interfaces::msg::rosidl_typesupport_c::ConePositions_message_type_support_handle;

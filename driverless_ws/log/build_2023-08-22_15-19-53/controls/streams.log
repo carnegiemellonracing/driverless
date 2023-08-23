@@ -1,0 +1,29 @@
+[0.037s] Invoking command in '/home/griffin/driverless/driverless_ws/build/controls': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/controls -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/controls
+[0.050s] -- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)
+[0.066s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[0.201s] -- Found rclcpp: 2.4.3 (/opt/ros/foxy/share/rclcpp/cmake)
+[0.225s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.226s] -- Found rosidl_adapter: 1.3.1 (/opt/ros/foxy/share/rosidl_adapter/cmake)
+[0.310s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.351s] -- Found rmw_implementation_cmake: 1.0.4 (/opt/ros/foxy/share/rmw_implementation_cmake/cmake)
+[0.352s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.471s] CMake Error at CMakeLists.txt:25 (find_package):
+[0.471s]   By not providing "Findlibgsl.cmake" in CMAKE_MODULE_PATH this project has
+[0.471s]   asked CMake to find a package configuration file provided by "libgsl", but
+[0.471s]   CMake did not find one.
+[0.471s] 
+[0.471s]   Could not find a package configuration file provided by "libgsl" with any
+[0.472s]   of the following names:
+[0.472s] 
+[0.472s]     libgslConfig.cmake
+[0.472s]     libgsl-config.cmake
+[0.472s] 
+[0.472s]   Add the installation prefix of "libgsl" to CMAKE_PREFIX_PATH or set
+[0.472s]   "libgsl_DIR" to a directory containing one of the above files.  If "libgsl"
+[0.472s]   provides a separate development package or SDK, be sure it has been
+[0.472s]   installed.
+[0.472s] 
+[0.472s] 
+[0.472s] -- Configuring incomplete, errors occurred!
+[0.472s] See also "/home/griffin/driverless/driverless_ws/build/controls/CMakeFiles/CMakeOutput.log".
+[0.473s] See also "/home/griffin/driverless/driverless_ws/build/controls/CMakeFiles/CMakeError.log".

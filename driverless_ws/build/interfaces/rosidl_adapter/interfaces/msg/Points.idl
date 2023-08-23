@@ -8,7 +8,7 @@
 module interfaces {
   module msg {
     @verbatim (language="comment", text=
-      "Array of 3D cone positions")
+      " Array of 3D cone positions")
     struct Points {
       std_msgs::msg::Header header;
 

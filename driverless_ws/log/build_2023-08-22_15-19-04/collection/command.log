@@ -1,0 +1,4 @@
+Invoking command in '/home/griffin/driverless/driverless_ws/build/collection': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/collection -- -j12 -l12
+Invoked command in '/home/griffin/driverless/driverless_ws/build/collection' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/collection -- -j12 -l12
+Invoking command in '/home/griffin/driverless/driverless_ws/build/collection': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/collection
+Invoked command in '/home/griffin/driverless/driverless_ws/build/collection' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/collection

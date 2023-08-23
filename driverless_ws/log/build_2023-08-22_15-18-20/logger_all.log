@@ -1,0 +1,435 @@
+[0.359s] DEBUG:colcon:Command line arguments: ['/home/griffin/.local/bin/colcon', 'build', '--cmake-args', '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja']
+[0.359s] DEBUG:colcon:Parsed command line arguments: Namespace(ament_cmake_args=None, base_paths=['.'], build_base='build', catkin_cmake_args=None, catkin_skip_building_tests=False, cmake_args=['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja'], cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, cmake_target=None, cmake_target_skip_unavailable=False, continue_on_error=False, event_handlers=None, executor='parallel', ignore_user_meta=False, install_base='install', log_base=None, log_level=None, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7efc8afabd30>>, merge_install=False, metas=['./colcon.meta'], packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=None, packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=None, packages_up_to_regex=None, parallel_workers=12, paths=None, symlink_install=False, test_result_base=None, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7efc8afabd30>, verb_name='build', verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7efc8afb62e0>)
+[0.381s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.381s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.381s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.381s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.381s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.381s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.381s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/griffin/driverless/driverless_ws'
+[0.381s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.381s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.381s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.381s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.381s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.381s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.381s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.381s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.381s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[0.397s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_pkg']
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_pkg'
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_meta']
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_meta'
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['cmake', 'python']
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src/actuators) by extensions ['ignore', 'ignore_ament_install']
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src/actuators) by extension 'ignore'
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src/actuators) by extension 'ignore_ament_install'
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src/actuators) by extensions ['colcon_pkg']
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src/actuators) by extension 'colcon_pkg'
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src/actuators) by extensions ['colcon_meta']
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src/actuators) by extension 'colcon_meta'
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src/actuators) by extensions ['ros']
+[0.398s] Level 1:colcon.colcon_core.package_identification:_identify(src/actuators) by extension 'ros'
+[0.400s] DEBUG:colcon.colcon_core.package_identification:Package 'src/actuators' with type 'ros.ament_cmake' and name 'actuators'
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/build) by extensions ['ignore', 'ignore_ament_install']
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/build) by extension 'ignore'
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/build) ignored
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/collection) by extensions ['ignore', 'ignore_ament_install']
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/collection) by extension 'ignore'
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/collection) by extension 'ignore_ament_install'
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/collection) by extensions ['colcon_pkg']
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/collection) by extension 'colcon_pkg'
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/collection) by extensions ['colcon_meta']
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/collection) by extension 'colcon_meta'
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/collection) by extensions ['ros']
+[0.400s] Level 1:colcon.colcon_core.package_identification:_identify(src/collection) by extension 'ros'
+[0.401s] DEBUG:colcon.colcon_core.package_identification:Package 'src/collection' with type 'ros.ament_cmake' and name 'collection'
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/common) by extensions ['ignore', 'ignore_ament_install']
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/common) by extension 'ignore'
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/common) by extension 'ignore_ament_install'
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/common) by extensions ['colcon_pkg']
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/common) by extension 'colcon_pkg'
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/common) by extensions ['colcon_meta']
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/common) by extension 'colcon_meta'
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/common) by extensions ['ros']
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/common) by extension 'ros'
+[0.401s] DEBUG:colcon.colcon_core.package_identification:Package 'src/common' with type 'ros.ament_cmake' and name 'common'
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/controls) by extensions ['ignore', 'ignore_ament_install']
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/controls) by extension 'ignore'
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/controls) by extension 'ignore_ament_install'
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/controls) by extensions ['colcon_pkg']
+[0.401s] Level 1:colcon.colcon_core.package_identification:_identify(src/controls) by extension 'colcon_pkg'
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/controls) by extensions ['colcon_meta']
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/controls) by extension 'colcon_meta'
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/controls) by extensions ['ros']
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/controls) by extension 'ros'
+[0.402s] DEBUG:colcon.colcon_core.package_identification:Package 'src/controls' with type 'ros.ament_cmake' and name 'controls'
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extensions ['ignore', 'ignore_ament_install']
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extension 'ignore'
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extension 'ignore_ament_install'
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extensions ['colcon_pkg']
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extension 'colcon_pkg'
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extensions ['colcon_meta']
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extension 'colcon_meta'
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extensions ['ros']
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extension 'ros'
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extensions ['cmake', 'python']
+[0.402s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extension 'cmake'
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extension 'python'
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extensions ['python_setup_py']
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/eufs_msgs) by extension 'python_setup_py'
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/install) by extensions ['ignore', 'ignore_ament_install']
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/install) by extension 'ignore'
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/install) ignored
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/interfaces) by extensions ['ignore', 'ignore_ament_install']
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/interfaces) by extension 'ignore'
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/interfaces) by extension 'ignore_ament_install'
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/interfaces) by extensions ['colcon_pkg']
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/interfaces) by extension 'colcon_pkg'
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/interfaces) by extensions ['colcon_meta']
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/interfaces) by extension 'colcon_meta'
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/interfaces) by extensions ['ros']
+[0.403s] Level 1:colcon.colcon_core.package_identification:_identify(src/interfaces) by extension 'ros'
+[0.404s] DEBUG:colcon.colcon_core.package_identification:Package 'src/interfaces' with type 'ros.ament_cmake' and name 'interfaces'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/log) by extensions ['ignore', 'ignore_ament_install']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/log) by extension 'ignore'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/log) ignored
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/perceptions) by extensions ['ignore', 'ignore_ament_install']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/perceptions) by extension 'ignore'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/perceptions) by extension 'ignore_ament_install'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/perceptions) by extensions ['colcon_pkg']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/perceptions) by extension 'colcon_pkg'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/perceptions) by extensions ['colcon_meta']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/perceptions) by extension 'colcon_meta'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/perceptions) by extensions ['ros']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/perceptions) by extension 'ros'
+[0.404s] DEBUG:colcon.colcon_core.package_identification:Package 'src/perceptions' with type 'ros.ament_cmake' and name 'perceptions'
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/planning) by extensions ['ignore', 'ignore_ament_install']
+[0.404s] Level 1:colcon.colcon_core.package_identification:_identify(src/planning) by extension 'ignore'
+[0.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/planning) by extension 'ignore_ament_install'
+[0.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/planning) by extensions ['colcon_pkg']
+[0.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/planning) by extension 'colcon_pkg'
+[0.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/planning) by extensions ['colcon_meta']
+[0.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/planning) by extension 'colcon_meta'
+[0.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/planning) by extensions ['ros']
+[0.405s] Level 1:colcon.colcon_core.package_identification:_identify(src/planning) by extension 'ros'
+[0.405s] DEBUG:colcon.colcon_core.package_identification:Package 'src/planning' with type 'ros.ament_cmake' and name 'planning'
+[0.405s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.405s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.405s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.405s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.405s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.433s] Level 5:colcon.colcon_core.verb:set package 'actuators' build argument 'cmake_args' from command line to '['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja']'
+[0.433s] Level 5:colcon.colcon_core.verb:set package 'actuators' build argument 'cmake_target' from command line to 'None'
+[0.433s] Level 5:colcon.colcon_core.verb:set package 'actuators' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.433s] Level 5:colcon.colcon_core.verb:set package 'actuators' build argument 'cmake_clean_cache' from command line to 'False'
+[0.433s] Level 5:colcon.colcon_core.verb:set package 'actuators' build argument 'cmake_clean_first' from command line to 'False'
+[0.433s] Level 5:colcon.colcon_core.verb:set package 'actuators' build argument 'cmake_force_configure' from command line to 'False'
+[0.433s] Level 5:colcon.colcon_core.verb:set package 'actuators' build argument 'ament_cmake_args' from command line to 'None'
+[0.433s] Level 5:colcon.colcon_core.verb:set package 'actuators' build argument 'catkin_cmake_args' from command line to 'None'
+[0.433s] Level 5:colcon.colcon_core.verb:set package 'actuators' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.433s] DEBUG:colcon.colcon_core.verb:Building package 'actuators' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/griffin/driverless/driverless_ws/build/actuators', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/griffin/driverless/driverless_ws/install/actuators', 'merge_install': False, 'path': '/home/griffin/driverless/driverless_ws/src/actuators', 'symlink_install': False, 'test_result_base': None}
+[0.438s] Level 5:colcon.colcon_core.verb:set package 'collection' build argument 'cmake_args' from command line to '['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja']'
+[0.438s] Level 5:colcon.colcon_core.verb:set package 'collection' build argument 'cmake_target' from command line to 'None'
+[0.438s] Level 5:colcon.colcon_core.verb:set package 'collection' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.438s] Level 5:colcon.colcon_core.verb:set package 'collection' build argument 'cmake_clean_cache' from command line to 'False'
+[0.438s] Level 5:colcon.colcon_core.verb:set package 'collection' build argument 'cmake_clean_first' from command line to 'False'
+[0.438s] Level 5:colcon.colcon_core.verb:set package 'collection' build argument 'cmake_force_configure' from command line to 'False'
+[0.438s] Level 5:colcon.colcon_core.verb:set package 'collection' build argument 'ament_cmake_args' from command line to 'None'
+[0.438s] Level 5:colcon.colcon_core.verb:set package 'collection' build argument 'catkin_cmake_args' from command line to 'None'
+[0.438s] Level 5:colcon.colcon_core.verb:set package 'collection' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.438s] DEBUG:colcon.colcon_core.verb:Building package 'collection' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/griffin/driverless/driverless_ws/build/collection', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/griffin/driverless/driverless_ws/install/collection', 'merge_install': False, 'path': '/home/griffin/driverless/driverless_ws/src/collection', 'symlink_install': False, 'test_result_base': None}
+[0.444s] Level 5:colcon.colcon_core.verb:set package 'common' build argument 'cmake_args' from command line to '['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja']'
+[0.444s] Level 5:colcon.colcon_core.verb:set package 'common' build argument 'cmake_target' from command line to 'None'
+[0.444s] Level 5:colcon.colcon_core.verb:set package 'common' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.444s] Level 5:colcon.colcon_core.verb:set package 'common' build argument 'cmake_clean_cache' from command line to 'False'
+[0.444s] Level 5:colcon.colcon_core.verb:set package 'common' build argument 'cmake_clean_first' from command line to 'False'
+[0.444s] Level 5:colcon.colcon_core.verb:set package 'common' build argument 'cmake_force_configure' from command line to 'False'
+[0.444s] Level 5:colcon.colcon_core.verb:set package 'common' build argument 'ament_cmake_args' from command line to 'None'
+[0.444s] Level 5:colcon.colcon_core.verb:set package 'common' build argument 'catkin_cmake_args' from command line to 'None'
+[0.444s] Level 5:colcon.colcon_core.verb:set package 'common' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.444s] DEBUG:colcon.colcon_core.verb:Building package 'common' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/griffin/driverless/driverless_ws/build/common', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/griffin/driverless/driverless_ws/install/common', 'merge_install': False, 'path': '/home/griffin/driverless/driverless_ws/src/common', 'symlink_install': False, 'test_result_base': None}
+[0.450s] Level 5:colcon.colcon_core.verb:set package 'controls' build argument 'cmake_args' from command line to '['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja']'
+[0.450s] Level 5:colcon.colcon_core.verb:set package 'controls' build argument 'cmake_target' from command line to 'None'
+[0.450s] Level 5:colcon.colcon_core.verb:set package 'controls' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.450s] Level 5:colcon.colcon_core.verb:set package 'controls' build argument 'cmake_clean_cache' from command line to 'False'
+[0.450s] Level 5:colcon.colcon_core.verb:set package 'controls' build argument 'cmake_clean_first' from command line to 'False'
+[0.450s] Level 5:colcon.colcon_core.verb:set package 'controls' build argument 'cmake_force_configure' from command line to 'False'
+[0.450s] Level 5:colcon.colcon_core.verb:set package 'controls' build argument 'ament_cmake_args' from command line to 'None'
+[0.450s] Level 5:colcon.colcon_core.verb:set package 'controls' build argument 'catkin_cmake_args' from command line to 'None'
+[0.450s] Level 5:colcon.colcon_core.verb:set package 'controls' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.450s] DEBUG:colcon.colcon_core.verb:Building package 'controls' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/griffin/driverless/driverless_ws/build/controls', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/griffin/driverless/driverless_ws/install/controls', 'merge_install': False, 'path': '/home/griffin/driverless/driverless_ws/src/controls', 'symlink_install': False, 'test_result_base': None}
+[0.456s] Level 5:colcon.colcon_core.verb:set package 'interfaces' build argument 'cmake_args' from command line to '['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja']'
+[0.456s] Level 5:colcon.colcon_core.verb:set package 'interfaces' build argument 'cmake_target' from command line to 'None'
+[0.456s] Level 5:colcon.colcon_core.verb:set package 'interfaces' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.456s] Level 5:colcon.colcon_core.verb:set package 'interfaces' build argument 'cmake_clean_cache' from command line to 'False'
+[0.456s] Level 5:colcon.colcon_core.verb:set package 'interfaces' build argument 'cmake_clean_first' from command line to 'False'
+[0.456s] Level 5:colcon.colcon_core.verb:set package 'interfaces' build argument 'cmake_force_configure' from command line to 'False'
+[0.456s] Level 5:colcon.colcon_core.verb:set package 'interfaces' build argument 'ament_cmake_args' from command line to 'None'
+[0.456s] Level 5:colcon.colcon_core.verb:set package 'interfaces' build argument 'catkin_cmake_args' from command line to 'None'
+[0.456s] Level 5:colcon.colcon_core.verb:set package 'interfaces' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.456s] DEBUG:colcon.colcon_core.verb:Building package 'interfaces' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/griffin/driverless/driverless_ws/build/interfaces', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/griffin/driverless/driverless_ws/install/interfaces', 'merge_install': False, 'path': '/home/griffin/driverless/driverless_ws/src/interfaces', 'symlink_install': False, 'test_result_base': None}
+[0.461s] Level 5:colcon.colcon_core.verb:set package 'perceptions' build argument 'cmake_args' from command line to '['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja']'
+[0.462s] Level 5:colcon.colcon_core.verb:set package 'perceptions' build argument 'cmake_target' from command line to 'None'
+[0.462s] Level 5:colcon.colcon_core.verb:set package 'perceptions' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.462s] Level 5:colcon.colcon_core.verb:set package 'perceptions' build argument 'cmake_clean_cache' from command line to 'False'
+[0.462s] Level 5:colcon.colcon_core.verb:set package 'perceptions' build argument 'cmake_clean_first' from command line to 'False'
+[0.462s] Level 5:colcon.colcon_core.verb:set package 'perceptions' build argument 'cmake_force_configure' from command line to 'False'
+[0.462s] Level 5:colcon.colcon_core.verb:set package 'perceptions' build argument 'ament_cmake_args' from command line to 'None'
+[0.462s] Level 5:colcon.colcon_core.verb:set package 'perceptions' build argument 'catkin_cmake_args' from command line to 'None'
+[0.462s] Level 5:colcon.colcon_core.verb:set package 'perceptions' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.462s] DEBUG:colcon.colcon_core.verb:Building package 'perceptions' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/griffin/driverless/driverless_ws/build/perceptions', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/griffin/driverless/driverless_ws/install/perceptions', 'merge_install': False, 'path': '/home/griffin/driverless/driverless_ws/src/perceptions', 'symlink_install': False, 'test_result_base': None}
+[0.467s] Level 5:colcon.colcon_core.verb:set package 'planning' build argument 'cmake_args' from command line to '['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja']'
+[0.467s] Level 5:colcon.colcon_core.verb:set package 'planning' build argument 'cmake_target' from command line to 'None'
+[0.467s] Level 5:colcon.colcon_core.verb:set package 'planning' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.467s] Level 5:colcon.colcon_core.verb:set package 'planning' build argument 'cmake_clean_cache' from command line to 'False'
+[0.467s] Level 5:colcon.colcon_core.verb:set package 'planning' build argument 'cmake_clean_first' from command line to 'False'
+[0.467s] Level 5:colcon.colcon_core.verb:set package 'planning' build argument 'cmake_force_configure' from command line to 'False'
+[0.467s] Level 5:colcon.colcon_core.verb:set package 'planning' build argument 'ament_cmake_args' from command line to 'None'
+[0.467s] Level 5:colcon.colcon_core.verb:set package 'planning' build argument 'catkin_cmake_args' from command line to 'None'
+[0.467s] Level 5:colcon.colcon_core.verb:set package 'planning' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.467s] DEBUG:colcon.colcon_core.verb:Building package 'planning' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/griffin/driverless/driverless_ws/build/planning', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-G', 'Ninja'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/griffin/driverless/driverless_ws/install/planning', 'merge_install': False, 'path': '/home/griffin/driverless/driverless_ws/src/planning', 'symlink_install': False, 'test_result_base': None}
+[0.469s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.478s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.478s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/griffin/driverless/driverless_ws/src/interfaces' with build type 'ament_cmake'
+[0.478s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/griffin/driverless/driverless_ws/src/interfaces'
+[0.484s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.485s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.485s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.493s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/griffin/driverless/driverless_ws/src/actuators' with build type 'ament_cmake'
+[0.494s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/griffin/driverless/driverless_ws/src/actuators'
+[0.498s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.498s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.506s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/griffin/driverless/driverless_ws/src/collection' with build type 'ament_cmake'
+[0.506s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/griffin/driverless/driverless_ws/src/collection'
+[0.511s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.511s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.520s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/griffin/driverless/driverless_ws/src/common' with build type 'ament_cmake'
+[0.520s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/griffin/driverless/driverless_ws/src/common'
+[0.524s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.524s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.532s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/griffin/driverless/driverless_ws/src/controls' with build type 'ament_cmake'
+[0.532s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/griffin/driverless/driverless_ws/src/controls'
+[0.537s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.537s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.545s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/griffin/driverless/driverless_ws/src/perceptions' with build type 'ament_cmake'
+[0.546s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/griffin/driverless/driverless_ws/src/perceptions'
+[0.550s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.550s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.562s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/interfaces': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/interfaces -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/interfaces
+[0.564s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/actuators': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/actuators -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/actuators
+[0.568s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/collection': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/collection -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/collection
+[0.571s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/common': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/common -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/common
+[0.575s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/controls': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/controls -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/controls
+[0.578s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/perceptions': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/perceptions -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/perceptions
+[1.100s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/common -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/common
+[1.104s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/common': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/common -- -j12 -l12
+[1.108s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/actuators' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/actuators -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/actuators
+[1.108s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/actuators': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/actuators -- -j12 -l12
+[1.111s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/collection' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/collection -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/collection
+[1.112s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/collection': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/collection -- -j12 -l12
+[1.113s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/perceptions' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/perceptions -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/perceptions
+[1.116s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/perceptions': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/perceptions -- -j12 -l12
+[1.117s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/common -- -j12 -l12
+[1.139s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/common': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/common
+[1.141s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/actuators' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/actuators -- -j12 -l12
+[1.154s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/actuators': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/actuators
+[1.158s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/perceptions' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/perceptions -- -j12 -l12
+[1.169s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/perceptions': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/perceptions
+[1.170s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/collection' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/collection -- -j12 -l12
+[1.183s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/griffin/driverless/driverless_ws/build/collection': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/collection
+[1.184s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(common)
+[1.186s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/common' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/common
+[1.195s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common' for CMake module files
+[1.195s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common' for CMake config files
+[1.196s] Level 1:colcon.colcon_core.shell:create_environment_hook('common', 'cmake_prefix_path')
+[1.200s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/common/share/common/hook/cmake_prefix_path.ps1'
+[1.200s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/griffin/driverless/driverless_ws/install/common/share/common/hook/cmake_prefix_path.dsv'
+[1.201s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/common/share/common/hook/cmake_prefix_path.sh'
+[1.202s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common/bin'
+[1.202s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common/lib/pkgconfig/common.pc'
+[1.202s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common/lib/python3.8/site-packages'
+[1.202s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common/bin'
+[1.207s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/common/share/common/package.ps1'
+[1.208s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/griffin/driverless/driverless_ws/install/common/share/common/package.dsv'
+[1.208s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/common/share/common/package.sh'
+[1.209s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/common/share/common/package.bash'
+[1.209s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/common/share/common/package.zsh'
+[1.210s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/griffin/driverless/driverless_ws/install/common/share/colcon-core/packages/common)
+[1.226s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(common)
+[1.231s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common' for CMake module files
+[1.231s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common' for CMake config files
+[1.231s] Level 1:colcon.colcon_core.shell:create_environment_hook('common', 'cmake_prefix_path')
+[1.236s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/common/share/common/hook/cmake_prefix_path.ps1'
+[1.236s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/griffin/driverless/driverless_ws/install/common/share/common/hook/cmake_prefix_path.dsv'
+[1.237s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/common/share/common/hook/cmake_prefix_path.sh'
+[1.238s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common/bin'
+[1.238s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common/lib/pkgconfig/common.pc'
+[1.238s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common/lib/python3.8/site-packages'
+[1.238s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/common/bin'
+[1.242s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/common/share/common/package.ps1'
+[1.243s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/griffin/driverless/driverless_ws/install/common/share/common/package.dsv'
+[1.243s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/common/share/common/package.sh'
+[1.243s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/common/share/common/package.bash'
+[1.244s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/common/share/common/package.zsh'
+[1.244s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/griffin/driverless/driverless_ws/install/common/share/colcon-core/packages/common)
+[1.245s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(perceptions)
+[1.250s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions' for CMake module files
+[1.251s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/perceptions' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/perceptions
+[1.251s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions' for CMake config files
+[1.251s] Level 1:colcon.colcon_core.shell:create_environment_hook('perceptions', 'cmake_prefix_path')
+[1.255s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/hook/cmake_prefix_path.ps1'
+[1.256s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/hook/cmake_prefix_path.dsv'
+[1.256s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/hook/cmake_prefix_path.sh'
+[1.256s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions/bin'
+[1.256s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions/lib/pkgconfig/perceptions.pc'
+[1.257s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions/lib/python3.8/site-packages'
+[1.257s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions/bin'
+[1.261s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.ps1'
+[1.261s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.dsv'
+[1.262s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.sh'
+[1.262s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.bash'
+[1.262s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.zsh'
+[1.262s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/griffin/driverless/driverless_ws/install/perceptions/share/colcon-core/packages/perceptions)
+[1.279s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(perceptions)
+[1.285s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions' for CMake module files
+[1.286s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions' for CMake config files
+[1.286s] Level 1:colcon.colcon_core.shell:create_environment_hook('perceptions', 'cmake_prefix_path')
+[1.290s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/hook/cmake_prefix_path.ps1'
+[1.291s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/hook/cmake_prefix_path.dsv'
+[1.291s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/hook/cmake_prefix_path.sh'
+[1.292s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions/bin'
+[1.292s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions/lib/pkgconfig/perceptions.pc'
+[1.292s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions/lib/python3.8/site-packages'
+[1.292s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/perceptions/bin'
+[1.297s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.ps1'
+[1.297s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.dsv'
+[1.297s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.sh'
+[1.298s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.bash'
+[1.298s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.zsh'
+[1.298s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/griffin/driverless/driverless_ws/install/perceptions/share/colcon-core/packages/perceptions)
+[1.298s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(actuators)
+[1.305s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators' for CMake module files
+[1.306s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/actuators' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/actuators
+[1.306s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators' for CMake config files
+[1.306s] Level 1:colcon.colcon_core.shell:create_environment_hook('actuators', 'cmake_prefix_path')
+[1.311s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/hook/cmake_prefix_path.ps1'
+[1.311s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/hook/cmake_prefix_path.dsv'
+[1.312s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/hook/cmake_prefix_path.sh'
+[1.312s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators/bin'
+[1.312s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators/lib/pkgconfig/actuators.pc'
+[1.312s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators/lib/python3.8/site-packages'
+[1.312s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators/bin'
+[1.317s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/package.ps1'
+[1.317s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/package.dsv'
+[1.318s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/package.sh'
+[1.318s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/package.bash'
+[1.318s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/package.zsh'
+[1.318s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/griffin/driverless/driverless_ws/install/actuators/share/colcon-core/packages/actuators)
+[1.337s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(actuators)
+[1.342s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators' for CMake module files
+[1.342s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators' for CMake config files
+[1.343s] Level 1:colcon.colcon_core.shell:create_environment_hook('actuators', 'cmake_prefix_path')
+[1.347s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/hook/cmake_prefix_path.ps1'
+[1.348s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/hook/cmake_prefix_path.dsv'
+[1.348s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/hook/cmake_prefix_path.sh'
+[1.349s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators/bin'
+[1.349s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators/lib/pkgconfig/actuators.pc'
+[1.349s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators/lib/python3.8/site-packages'
+[1.349s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/actuators/bin'
+[1.354s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/package.ps1'
+[1.354s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/package.dsv'
+[1.354s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/package.sh'
+[1.355s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/package.bash'
+[1.355s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/actuators/share/actuators/package.zsh'
+[1.355s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/griffin/driverless/driverless_ws/install/actuators/share/colcon-core/packages/actuators)
+[1.356s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(collection)
+[1.361s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection' for CMake module files
+[1.362s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/collection' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/collection
+[1.362s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection' for CMake config files
+[1.362s] Level 1:colcon.colcon_core.shell:create_environment_hook('collection', 'cmake_prefix_path')
+[1.368s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/collection/share/collection/hook/cmake_prefix_path.ps1'
+[1.368s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/griffin/driverless/driverless_ws/install/collection/share/collection/hook/cmake_prefix_path.dsv'
+[1.368s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/collection/share/collection/hook/cmake_prefix_path.sh'
+[1.369s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection/bin'
+[1.369s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection/lib/pkgconfig/collection.pc'
+[1.369s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection/lib/python3.8/site-packages'
+[1.369s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection/bin'
+[1.374s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/collection/share/collection/package.ps1'
+[1.374s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/griffin/driverless/driverless_ws/install/collection/share/collection/package.dsv'
+[1.374s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/collection/share/collection/package.sh'
+[1.375s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/collection/share/collection/package.bash'
+[1.375s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/collection/share/collection/package.zsh'
+[1.375s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/griffin/driverless/driverless_ws/install/collection/share/colcon-core/packages/collection)
+[1.394s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(collection)
+[1.403s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection' for CMake module files
+[1.404s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection' for CMake config files
+[1.404s] Level 1:colcon.colcon_core.shell:create_environment_hook('collection', 'cmake_prefix_path')
+[1.411s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/collection/share/collection/hook/cmake_prefix_path.ps1'
+[1.412s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/griffin/driverless/driverless_ws/install/collection/share/collection/hook/cmake_prefix_path.dsv'
+[1.412s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/griffin/driverless/driverless_ws/install/collection/share/collection/hook/cmake_prefix_path.sh'
+[1.412s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection/bin'
+[1.412s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection/lib/pkgconfig/collection.pc'
+[1.413s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection/lib/python3.8/site-packages'
+[1.413s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/collection/bin'
+[1.417s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/collection/share/collection/package.ps1'
+[1.417s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/griffin/driverless/driverless_ws/install/collection/share/collection/package.dsv'
+[1.418s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/collection/share/collection/package.sh'
+[1.418s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/collection/share/collection/package.bash'
+[1.418s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/collection/share/collection/package.zsh'
+[1.418s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/griffin/driverless/driverless_ws/install/collection/share/colcon-core/packages/collection)
+[1.487s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/griffin/driverless/driverless_ws/build/controls' returned '1': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/controls -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/controls
+[1.496s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(controls)
+[1.501s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/controls' for CMake module files
+[1.501s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/controls' for CMake config files
+[1.502s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/controls/bin'
+[1.502s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/controls/lib/pkgconfig/controls.pc'
+[1.502s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/controls/lib/python3.8/site-packages'
+[1.502s] Level 1:colcon.colcon_core.environment:checking '/home/griffin/driverless/driverless_ws/install/controls/bin'
+[1.506s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/controls/share/controls/package.ps1'
+[1.507s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/griffin/driverless/driverless_ws/install/controls/share/controls/package.dsv'
+[1.507s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/controls/share/controls/package.sh'
+[1.507s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/controls/share/controls/package.bash'
+[1.507s] INFO:colcon.colcon_core.shell:Creating package script '/home/griffin/driverless/driverless_ws/install/controls/share/controls/package.zsh'
+[1.508s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/griffin/driverless/driverless_ws/install/controls/share/colcon-core/packages/controls)
+[1.882s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[1.882s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[1.882s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '1'
+[1.882s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[1.891s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[1.891s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[1.891s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[1.903s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[1.907s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/griffin/driverless/driverless_ws/install/local_setup.ps1'
+[1.908s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/griffin/driverless/driverless_ws/install/_local_setup_util_ps1.py'
+[1.909s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/griffin/driverless/driverless_ws/install/setup.ps1'
+[1.912s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/griffin/driverless/driverless_ws/install/local_setup.sh'
+[1.912s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/griffin/driverless/driverless_ws/install/_local_setup_util_sh.py'
+[1.913s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/griffin/driverless/driverless_ws/install/setup.sh'
+[1.916s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/griffin/driverless/driverless_ws/install/local_setup.bash'
+[1.917s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/griffin/driverless/driverless_ws/install/setup.bash'
+[1.920s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/griffin/driverless/driverless_ws/install/local_setup.zsh'
+[1.920s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/griffin/driverless/driverless_ws/install/setup.zsh'

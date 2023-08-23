@@ -1,0 +1,21 @@
+[0.026s] Invoking command in '/home/griffin/driverless/driverless_ws/build/perceptions': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/perceptions -- -j12 -l12
+[0.032s] ninja: no work to do.
+[0.165s] Invoked command in '/home/griffin/driverless/driverless_ws/build/perceptions' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/perceptions -- -j12 -l12
+[0.176s] Invoking command in '/home/griffin/driverless/driverless_ws/build/perceptions': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/perceptions
+[0.188s] -- Install configuration: ""
+[0.188s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/ament_index/resource_index/package_run_dependencies/perceptions
+[0.188s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/ament_index/resource_index/parent_prefix_path/perceptions
+[0.188s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/environment/ament_prefix_path.sh
+[0.188s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/environment/ament_prefix_path.dsv
+[0.188s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/environment/path.sh
+[0.188s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/environment/path.dsv
+[0.188s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/local_setup.bash
+[0.188s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/local_setup.sh
+[0.188s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/local_setup.zsh
+[0.188s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/local_setup.dsv
+[0.189s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.dsv
+[0.189s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/ament_index/resource_index/packages/perceptions
+[0.189s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/cmake/perceptionsConfig.cmake
+[0.189s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/cmake/perceptionsConfig-version.cmake
+[0.189s] -- Up-to-date: /home/griffin/driverless/driverless_ws/install/perceptions/share/perceptions/package.xml
+[0.291s] Invoked command in '/home/griffin/driverless/driverless_ws/build/perceptions' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/perceptions

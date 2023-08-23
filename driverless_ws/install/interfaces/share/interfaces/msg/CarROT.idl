@@ -10,7 +10,7 @@ module interfaces {
       std_msgs::msg::Header header;
 
       @verbatim (language="comment", text=
-        "relative to car")
+        " relative to car")
       double x;
 
       double y;

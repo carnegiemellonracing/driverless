@@ -4,7 +4,6 @@
 
 #include "cstddef"
 #include "rosidl_runtime_c/message_type_support_struct.h"
-#include "interfaces/msg/detail/cone_positions__functions.h"
 #include "interfaces/msg/detail/cone_positions__struct.hpp"
 #include "rosidl_typesupport_cpp/identifier.hpp"
 #include "rosidl_typesupport_cpp/message_type_support.hpp"
@@ -73,9 +72,6 @@ static const rosidl_message_type_support_t ConePositions_message_type_support_ha
   ::rosidl_typesupport_cpp::typesupport_identifier,
   reinterpret_cast<const type_support_map_t *>(&_ConePositions_message_typesupport_map),
   ::rosidl_typesupport_cpp::get_message_typesupport_handle_function,
-  &interfaces__msg__ConePositions__get_type_hash,
-  &interfaces__msg__ConePositions__get_type_description,
-  &interfaces__msg__ConePositions__get_type_description_sources,
 };
 
 }  // namespace rosidl_typesupport_cpp

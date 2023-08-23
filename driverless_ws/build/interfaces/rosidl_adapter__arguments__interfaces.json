@@ -1,10 +1,10 @@
 {
   "package_name": "interfaces",
   "non_idl_tuples": [
-    "/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces:msg/CarROT.msg",
-    "/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces:msg/ConeList.msg",
-    "/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces:msg/ConePositions.msg",
-    "/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces:msg/PairROT.msg",
-    "/home/ishin/Documents/cmr/driverless_py/driverless/driverless_ws/src/interfaces:msg/Points.msg"
+    "/home/griffin/driverless/driverless_ws/src/interfaces:msg/CarROT.msg",
+    "/home/griffin/driverless/driverless_ws/src/interfaces:msg/ConeList.msg",
+    "/home/griffin/driverless/driverless_ws/src/interfaces:msg/ConePositions.msg",
+    "/home/griffin/driverless/driverless_ws/src/interfaces:msg/PairROT.msg",
+    "/home/griffin/driverless/driverless_ws/src/interfaces:msg/Points.msg"
   ]
 }

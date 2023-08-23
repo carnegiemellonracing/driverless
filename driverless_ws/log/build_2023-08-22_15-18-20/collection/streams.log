@@ -1,0 +1,54 @@
+[0.061s] Invoking command in '/home/griffin/driverless/driverless_ws/build/collection': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/collection -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/collection
+[0.110s] -- The C compiler identification is GNU 9.4.0
+[0.158s] -- The CXX compiler identification is GNU 9.4.0
+[0.163s] -- Check for working C compiler: /usr/bin/cc
+[0.194s] -- Check for working C compiler: /usr/bin/cc -- works
+[0.195s] -- Detecting C compiler ABI info
+[0.226s] -- Detecting C compiler ABI info - done
+[0.234s] -- Detecting C compile features
+[0.235s] -- Detecting C compile features - done
+[0.237s] -- Check for working CXX compiler: /usr/bin/c++
+[0.276s] -- Check for working CXX compiler: /usr/bin/c++ -- works
+[0.277s] -- Detecting CXX compiler ABI info
+[0.319s] -- Detecting CXX compiler ABI info - done
+[0.328s] -- Detecting CXX compile features
+[0.328s] -- Detecting CXX compile features - done
+[0.330s] -- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)
+[0.348s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+[0.348s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[0.504s] -- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)
+[0.588s] -- Added test 'copyright' to check source files copyright and LICENSE
+[0.589s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[0.589s] -- Configured cppcheck include dirs: 
+[0.589s] -- Configured cppcheck exclude dirs and/or files: 
+[0.590s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[0.590s] -- Configured cpplint exclude dirs and/or files: 
+[0.591s] -- Added test 'lint_cmake' to check CMake code style
+[0.591s] -- Added test 'uncrustify' to check C / C++ code style
+[0.591s] -- Configured uncrustify additional arguments: 
+[0.592s] -- Added test 'xmllint' to check XML markup files
+[0.594s] -- Configuring done
+[0.600s] -- Generating done
+[0.601s] -- Build files have been written to: /home/griffin/driverless/driverless_ws/build/collection
+[0.605s] Invoked command in '/home/griffin/driverless/driverless_ws/build/collection' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/griffin/driverless/driverless_ws/src/collection -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -DCMAKE_INSTALL_PREFIX=/home/griffin/driverless/driverless_ws/install/collection
+[0.605s] Invoking command in '/home/griffin/driverless/driverless_ws/build/collection': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/collection -- -j12 -l12
+[0.613s] ninja: no work to do.
+[0.664s] Invoked command in '/home/griffin/driverless/driverless_ws/build/collection' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/griffin/driverless/driverless_ws/build/collection -- -j12 -l12
+[0.676s] Invoking command in '/home/griffin/driverless/driverless_ws/build/collection': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/collection
+[0.683s] -- Install configuration: ""
+[0.683s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/ament_index/resource_index/package_run_dependencies/collection
+[0.683s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/ament_index/resource_index/parent_prefix_path/collection
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/environment/ament_prefix_path.sh
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/environment/ament_prefix_path.dsv
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/environment/path.sh
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/environment/path.dsv
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/local_setup.bash
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/local_setup.sh
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/local_setup.zsh
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/local_setup.dsv
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/package.dsv
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/ament_index/resource_index/packages/collection
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/cmake/collectionConfig.cmake
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/cmake/collectionConfig-version.cmake
+[0.684s] -- Installing: /home/griffin/driverless/driverless_ws/install/collection/share/collection/package.xml
+[0.855s] Invoked command in '/home/griffin/driverless/driverless_ws/build/collection' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/griffin/driverless/driverless_ws/build/collection
