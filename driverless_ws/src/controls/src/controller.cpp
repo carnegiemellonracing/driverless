@@ -1,7 +1,5 @@
 /** 
- * Controller implementation 
- * 
- * @author Griffin Teller <gteller@andrew.cmu.edu>
+ * Controller implementation
 */
 
 #include "controller.hpp"
@@ -9,7 +7,11 @@
 #include <cmath>
 #include <exception>
 #include <cassert>
-#include <gsl/gsl.hpp>
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_matrix>
+#include <planning/raceline/raceline.hpp>
+
+using std::placeholders::_1;
 
 namespace controls {
 
@@ -24,18 +26,16 @@ namespace controls {
     }
 
 
-
     // ***** CONTROLLER NODE ******
 
-    ControllerNode::ControllerNode() {
+    ControllerNode::ControllerNode()
+        : Node(NODE_NAME) {
         /* Creates controller node and initializes spline subscription, but 
            waits for first spline to start optimization threads and 
            publishers. */
 
-        m_subscription = create_subscription<SplineMsg>(
-            SPLINE_TOPIC_NAME, 10, [=] (auto msg) {
-                splineCallback(msg);
-            }
+        m_splineSubscription = create_subscription<SplineMsg>(
+            SPLINE_TOPIC_NAME, 10, std::bind(&ControllerNode::splineCallback, this, _1)
         );
 
         // needs to be initialized in case first spline comes before first timer
@@ -51,31 +51,34 @@ namespace controls {
 
         ControlAction action = m_lastAction;
 
-        if (m_torquePlanningFuture.valid) {
-            if (m_torquePlanningFuture.wait_for(0) == future_status::ready) {
+        if (m_torquePlanningFuture.valid()) {
+            if (m_torquePlanningFuture.wait_for(0ms) == std::future_status::ready) {
                 auto torques = m_torquePlanningFuture.get();
                 std::copy(torques.begin(), torques.end(),
                           &action.data[1]);
             } else {
-                RCPCPP_INFO_ONCE("Controller received timer but torque planning"
-                                 " is still running. Sending last torque...");
+                RCLCPP_INFO_ONCE(get_logger(), "Controller received timer but"
+                                               " torque planning is still"
+                                               " running. Sending last torque...");
             }
         } else {
-            RCPCPP_INFO_ONCE("Controller received timer but torque planning "
-                             "is not active. Sending last torque...");
+            RCLCPP_INFO_ONCE(get_logger(), "Controller received timer but torque"
+                                           " planning is not active. Sending"
+                                           " last torque...");
         }
 
         // TODO: implement control action I/O
         throw std::runtime_error("control action i/o not implemented");
     }
 
-    void ControllerNode::splineCallback(SplineMsg::SharedPtr msg) {
+    void ControllerNode::splineCallback(const SplineMsg::SharedPtr msg) {
         /* Update reference spline and start torque planning thread, if it is
            not active */
 
         if (m_torquePlanningFuture.valid()) {
-            RCPCPP_INFO_ONCE("Controller received spline but torque planning "
-                             "has not finished. Ignoring...");
+            RCLCPP_INFO_ONCE(get_logger(), "Controller received spline but"
+                                           " torque planning has not finished."
+                                           " Ignoring...");
             return;
         }
 
@@ -86,7 +89,7 @@ namespace controls {
 
         m_torquePlanningFuture = std::async([=] () {
             return calculateTorques();
-        })
+        });
     }
 
     double ControllerNode::calculateSteering() const {
@@ -99,15 +102,15 @@ namespace controls {
             m_pReferenceSpline->poseAtDistance(lookahead);
 
         const double headingDeviation = lookaheadSplineFrame.tangentRad;
-        const lookaheadStraightDistance = sqrt(
+        const double lookaheadStraightDistance = sqrt(
             lookaheadSplineFrame.x * lookaheadSplineFrame.x
           + lookaheadSplineFrame.y * lookaheadSplineFrame.y
         );
-        const discSub = 2 * REAR_BASE_FRAC * WHEELBASE * sin(headingDeviation);
+        const double discSub = 2 * REAR_BASE_FRAC * WHEELBASE * sin(headingDeviation);
 
-        const lookaheadStraightDistance2 = 
+        const double lookaheadStraightDistance2 =
             lookaheadStraightDistance * lookaheadStraightDistance;
-        const discSub2 = discSub * discSub;
+        const double discSub2 = discSub * discSub;
 
         return atan(
             2 * WHEELBASE * sin(headingDeviation) / 
@@ -115,17 +118,12 @@ namespace controls {
         );
     }
 
-    std::array<double, N_TIRES>
-    ControllerNode::calculateTorques(VehicleState vehicleState) const {
-        double totalTorque;
-        if (isSlowLap) {
-            totalTorque = m_speedPid.getAction();
-        } else {
-            const double distToCorner
-        }
+    std::array<double, N_TIRES> ControllerNode::calculateTorques() {
+        double totalTorque = isSlowLap() ?
+                m_speedPid.getAction() : getFastLapTorque();
 
         std::array<double, N_TIRES> res;
-        for (int i = 0; i < N_TIRES; i++) {
+        for (uint i = 0; i < N_TIRES; i++) {
             res[i] = totalTorque / N_TIRES;
         }
         return res;
@@ -145,7 +143,7 @@ namespace controls {
         throw new std::runtime_error("lap info parsing not implemented");
     }
 
-    double ControllerNode::getFastLapTorque() const {
+    double ControllerNode::getFastLapTorque() {
         const double progressTillCorner = findNearestCorner();
 
         if (progressTillCorner >= m_lastCornerDistance
@@ -159,8 +157,7 @@ namespace controls {
                 m_pReferenceSpline->poseAtDistance(progressTillCorner);
 
         const double currSpeed = m_vehicleState.x_dot;
-        const double desiredCornerSpeed = TRACTIVE_DOGSHIT_COEF
-                                        * m_ggv.getTractiveCapability(
+        const double desiredCornerSpeed = m_ggv.getTractiveCapability(
                                                 currSpeed,
                                                 cornerFrame.curvature);
 
@@ -206,10 +203,11 @@ namespace controls {
     }
 
     void PIDController1D::recordState(double state, double setpoint,
-                                      rclcpp:Time time) {
+                                      rclcpp::Time time) {
         if (!m_init) {
             m_lastTime = time - rclcpp::Duration(PID_INIT_TIME);
             m_lastError = setpoint - state;
+            m_init = true;
         } else {
             m_lastTime = m_currTime;
             m_lastError = m_currError;
@@ -238,9 +236,9 @@ namespace controls {
 
     // ***** GGV *****
 
-    double GGV::getTractiveCapability(double speed, double curvature) const {
+    double GGV::getTractiveCapability(double curvature) const {
         // TODO: Implement an actual GGV
-        return sqrt(GRAVITY * LAT_MU / curvature);
+        return sqrt(GRAVITY * TRACTIVE_DOGSHIT_COEF * LAT_MU / curvature);
     }
 
 
@@ -251,14 +249,23 @@ namespace controls {
         for (auto splineMsg : rSplineMsg.splines) {
             Spline spline {};
 
-            spline.spl_poly = polynomial {
-                POLY_DEG,
-                gsl_vector_alloc(POLY_DEG + 1);
-            };
-            for (int i = 0; i <= POLY_DEG; i++) {
-                gsl_vector_set(spline.spl_poly, i, splineMsg.spl_poly_coefs[i]);
+            // Set spl_poly
+            polynomial poly {};
+            poly.deg = POLY_DEG;
+            poly.nums = gsl_vector_alloc(POLY_DEG + 1);
+
+            for (uint i = 0; i <= POLY_DEG; i++) {
+                gsl_vector_set(poly.nums, i, splineMsg.spl_poly_coefs[i]);
             }
 
+            spline.set_SplPoly(poly);
+
+            // Set points
+            gsl_matrix *points = gsl_matrix_alloc(
+                    splineMsg.points.height, splineMsg.points.width);
+
+
+            // TODO: finish implementing spline deserialization
             throw new std::runtime_error("spline deserialization not implemented");
         }
     }

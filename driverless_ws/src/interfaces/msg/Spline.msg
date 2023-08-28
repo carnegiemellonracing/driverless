@@ -4,7 +4,7 @@ float64[4] spl_poly_coefs
 
 sensor_msgs/Image points
 sensor_msgs/Image rotated_points
-sensor_msgs/Image Q
+sensor_msgs/Image q
 
 float64[2] translation_vector
 

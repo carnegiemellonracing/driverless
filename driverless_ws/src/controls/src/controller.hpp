@@ -8,7 +8,10 @@
 #include <mutex>
 #include <future>
 #include <cstddef>
-#include <planning/raceline.hpp>
+#include <interfaces/msg/spline_list.hpp>
+#include <interfaces/msg/spline.hpp>
+#include <planning/raceline/raceline.hpp>
+
 
 using namespace std::literals::chrono_literals;
 
@@ -19,7 +22,7 @@ namespace controls {
          * Spline message type. Until this is determined, I'm using a string
          * type as a placeholder.
         */
-    using SplineMsg = std_msgs::msg::String;
+    using SplineMsg = interfaces::msg::SplineList;
 
     /** Number of dimensions in vehicle state */
     constexpr uint VEHICLE_STATE_DIMS = 6;
@@ -104,7 +107,7 @@ namespace controls {
 
                 /** Angular velocity (rad/s) about z-axis */
                 double yaw_dot;
-            }
+            };
 
             /** 
              * All struct members reinterpreted as an array. This is a little
@@ -112,8 +115,8 @@ namespace controls {
              * everytime passing as a vector is required.
              */
             double data[VEHICLE_STATE_DIMS];
-        }
-    }
+        };
+    };
 
     /**
      * Control action data structure. Contains steering wheel angle and torques
@@ -141,7 +144,7 @@ namespace controls {
 
                 /** Output torque of rear-right tire */
                 double torque_rr;
-            }
+            };
 
             /** 
              * All struct members reinterpreted as an array. This is a little 
@@ -149,12 +152,17 @@ namespace controls {
              * everytime passing as a vector is required.
              */
             double data[CONTROL_ACTION_DIMS];
-        }
-    }
+        };
+    };
 
     class GGV {
     public:
-        double getTractiveCapability(double speed, double curvature) const;
+        /**
+         * Determine maximum safe speed through a corner
+         * @param curvature Corner curvature. Signed-ness not considered.
+         * @return Maximum safe speed to travel through corner
+         */
+        double getTractiveCapability(double curvature) const;
     };
 
     /**
@@ -291,7 +299,7 @@ namespace controls {
 
         /** Whether first state has been recorded */
         bool m_init = false;
-    }
+    };
 
     /**
      * 22a Controller Node. This node executes three main processes:
@@ -331,7 +339,7 @@ namespace controls {
         /**
          * Callback taking new spline information and updating ReferenceSpline
          */
-        void splineCallback(SplineMsg::SharedPtr msg);
+        void splineCallback(const SplineMsg::SharedPtr msg);
 
         /**
          * Perform pure pursuit steering calculations, and write the result
@@ -348,8 +356,7 @@ namespace controls {
          * 
          * @return Torque for each tire
          */
-        std::array<double, N_TIRES>
-        calculateTorques(VehicleState vehicleState) const;
+        std::array<double, N_TIRES> calculateTorques();
 
         /**
          * Calculate vehicle state based on stored reference spline and imu/gps
@@ -372,7 +379,7 @@ namespace controls {
          *
          * @return True if slow lap, false otherwise
          */
-        bool isSlowLap();
+        bool isSlowLap() const;
 
         /**
          * Generate the torque appropriate during a fast lap.
@@ -386,7 +393,7 @@ namespace controls {
          *
          * @return Total torque
          */
-        double getFastLapTorque() const;
+        double getFastLapTorque();
 
         /**
          * Find the nearest corner (maximal curvature point) on the stored
@@ -455,5 +462,5 @@ namespace controls {
 
         /** Performance envelope of vehicle */
         GGV m_ggv;
-    }
+    };
 }
