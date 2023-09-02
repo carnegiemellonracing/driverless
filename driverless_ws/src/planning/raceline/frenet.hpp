@@ -27,7 +27,7 @@ struct projection {
 };
 
 projection frenet(float x, float y, std::vector<Spline> path,
-                  std::vector<float> lengths,
+                  std::vector<double> lengths,
                   float prev_progress = prev_progress_flag, float v_x = 0,
                   float v_y = 0);
 

@@ -1,3 +1,15 @@
-driverless_ws/build
-driverless_ws/install
-driverless_ws/log
+# IDE stuff
+**/.vscode/
+**/.idea/
+./CMakeLists.txt  # top level cmake files can help with autocompletion, but should not be in repo
+./driverless_ws/CMakeLists.txt
+
+# ROS Stuff
+**/build/
+**/install/
+**/log/
+**/cmake-build-*/
+**/CMakeFiles/
+**/CMakeCache.txt
+
+**/__pycache__/

@@ -25,7 +25,7 @@ public:
     int ORANGE = 3;
     int interpolation_number;
     std::vector<Spline> cumulated_splines;
-    std::vector<int> cumulated_lengths;
+    std::vector<double> cumulated_lengths;
 
 
     MidpointGenerator(int interpolation_number=30);

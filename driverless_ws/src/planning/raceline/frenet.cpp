@@ -297,7 +297,7 @@ std::pair<int,int> argmin(gsl_matrix * m){
 
 // Finds the progress (length) and curvature of point on a raceline generated from splines
 projection frenet(float x, float y, std::vector<Spline> path,
-                  std::vector<float> lengths, float prev_progress, float v_x,
+                  std::vector<double> lengths, float prev_progress, float v_x,
                   float v_y) {
   assert(path.size() == lengths.size());
   const size_t num_points = prefered_degree + 1;

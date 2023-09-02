@@ -8,11 +8,21 @@
 #include <mutex>
 #include <future>
 #include <cstddef>
+#include <interfaces/msg/spline_list.hpp>
+#include <interfaces/msg/spline.hpp>
+#include <planning/raceline/raceline.hpp>
+
 
 using namespace std::literals::chrono_literals;
 
 namespace controls {
     /* ALL COORDINATES ARE X-FORWARD, Z-UP, RIGHT-HANDED */
+
+    /**
+         * Spline message type. Until this is determined, I'm using a string
+         * type as a placeholder.
+        */
+    using SplineMsg = interfaces::msg::SplineList;
 
     /** Number of dimensions in vehicle state */
     constexpr uint VEHICLE_STATE_DIMS = 6;
@@ -40,6 +50,27 @@ namespace controls {
     constexpr double SLOW_LAP_SPEED = 5;
     constexpr auto PID_INIT_TIME = 0.1s;
     constexpr double TARGET_ACCEL = 7.5, TARGET_BRAKE = 7.5;  // m/s^2
+    constexpr double MAX_BRAKE = 10.;  // m/s^2
+    constexpr double LAT_MU = 1.;
+    constexpr double TOTAL_MASS = 200.; // kg
+    constexpr double GRAVITY = 9.81;
+
+    /** Proportion of calculated capacity we try to attain */
+    constexpr double TRACTIVE_DOGSHIT_COEF = 0.5;
+    constexpr uint POLY_DEG = 3;
+
+
+    /**
+     * How close we have to have been to a corner for a distance increase to
+     * signal a new segment
+     */
+    constexpr double MIN_SEGMENT_CHANGE_CORNER_DIST = 1.;  // m
+
+    /**
+     * How much the corner distance needs to jump to be sure we changed segments
+     */
+    constexpr double SEGMENT_CHANGE_TOLERANCE  = 2.; // m
+
 
     /** Entry point to controller node. Spawns node and performs cleanup. */
     int main(int argc, char *argv[]);
@@ -76,7 +107,7 @@ namespace controls {
 
                 /** Angular velocity (rad/s) about z-axis */
                 double yaw_dot;
-            }
+            };
 
             /** 
              * All struct members reinterpreted as an array. This is a little
@@ -84,8 +115,8 @@ namespace controls {
              * everytime passing as a vector is required.
              */
             double data[VEHICLE_STATE_DIMS];
-        }
-    }
+        };
+    };
 
     /**
      * Control action data structure. Contains steering wheel angle and torques
@@ -113,7 +144,7 @@ namespace controls {
 
                 /** Output torque of rear-right tire */
                 double torque_rr;
-            }
+            };
 
             /** 
              * All struct members reinterpreted as an array. This is a little 
@@ -121,8 +152,18 @@ namespace controls {
              * everytime passing as a vector is required.
              */
             double data[CONTROL_ACTION_DIMS];
-        }
-    }
+        };
+    };
+
+    class GGV {
+    public:
+        /**
+         * Determine maximum safe speed through a corner
+         * @param curvature Corner curvature. Signed-ness not considered.
+         * @return Maximum safe speed to travel through corner
+         */
+        double getTractiveCapability(double curvature) const;
+    };
 
     /**
      * Spline representing desired trajectory of the vehicle. This type is 
@@ -179,6 +220,9 @@ namespace controls {
          * @return Total length of spline, in meters
          */
         double getLength() const;
+
+    private:
+        std::vector<Spline> m_splines;
     };
 
     /**
@@ -255,7 +299,7 @@ namespace controls {
 
         /** Whether first state has been recorded */
         bool m_init = false;
-    }
+    };
 
     /**
      * 22a Controller Node. This node executes three main processes:
@@ -286,12 +330,6 @@ namespace controls {
         ControllerNode();
 
     private:
-        /** 
-         * Spline message type. Until this is determined, I'm using a string
-         * type as a placeholder.
-        */
-        using SplineMsg = std_msgs::msg::String;
-
         /**
          * Callback which publishes the control action. Keeping this on a timer
          * allows it to be used as a heartbeat for the node. 
@@ -301,7 +339,7 @@ namespace controls {
         /**
          * Callback taking new spline information and updating ReferenceSpline
          */
-        void splineCallback(SplineMsg::SharedPtr msg);
+        void splineCallback(const SplineMsg::SharedPtr msg);
 
         /**
          * Perform pure pursuit steering calculations, and write the result
@@ -318,8 +356,7 @@ namespace controls {
          * 
          * @return Torque for each tire
          */
-        std::array<double, N_TIRES>
-        calculateTorques(VehicleState vehicleState) const;
+        std::array<double, N_TIRES> calculateTorques();
 
         /**
          * Calculate vehicle state based on stored reference spline and imu/gps
@@ -342,7 +379,32 @@ namespace controls {
          *
          * @return True if slow lap, false otherwise
          */
-        bool isSlowLap();
+        bool isSlowLap() const;
+
+        /**
+         * Generate the torque appropriate during a fast lap.
+         *
+         * If the average deceleration needed to reach the next corner at the
+         * desired fraction of the maximum tractive capability is lower than
+         * the target deceleration, than we request acceleration.
+         *
+         * Otherwise, a PID controller is used to control the deceleration of
+         * the car such that the car enters the corner at the set speed.
+         *
+         * @return Total torque
+         */
+        double getFastLapTorque();
+
+        /**
+         * Find the nearest corner (maximal curvature point) on the stored
+         * reference spline
+         *
+         * @return Track progress until the corner
+         */
+        double findNearestCorner() const;
+
+        /** Load ggv from config */
+        void loadGGV();
 
         /**
          * Whether or not the node is waiting for the first spline. If true,
@@ -351,6 +413,21 @@ namespace controls {
         */
         bool m_waitingForFirstSpline = true;
 
+        /**
+         * Whether we have hit the brake point in the current segment (where the
+         * target braking is TARGET_BRAKE). Only valid on fast laps.
+         */
+        bool m_accelerationPhase = true;
+
+        /**
+         * Last distance to corner. If this jumps up a huge amount from near 0,
+         * we assume we've moved on to a new segment.
+         */
+        double m_lastCornerDistance = 0;
+
+        /**
+         * Future representing state of torque planning task
+         */
         std::future<std::array<double, N_TIRES>> m_torquePlanningFuture;
 
         /**
@@ -382,5 +459,8 @@ namespace controls {
 
         /** Subscriber to path planning spline */
         rclcpp::Subscription<SplineMsg>::SharedPtr m_splineSubscription;
-    }
+
+        /** Performance envelope of vehicle */
+        GGV m_ggv;
+    };
 }
