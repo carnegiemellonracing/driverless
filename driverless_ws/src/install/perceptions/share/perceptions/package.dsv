@@ -1,8 +1,0 @@
-source;share/perceptions/hook/cmake_prefix_path.ps1
-source;share/perceptions/hook/cmake_prefix_path.dsv
-source;share/perceptions/hook/cmake_prefix_path.sh
-source;share/perceptions/local_setup.bash
-source;share/perceptions/local_setup.dsv
-source;share/perceptions/local_setup.ps1
-source;share/perceptions/local_setup.sh
-source;share/perceptions/local_setup.zsh

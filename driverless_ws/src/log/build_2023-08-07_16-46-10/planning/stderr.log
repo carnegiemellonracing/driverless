@@ -1,7 +1,0 @@
-[01m[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:[m[K In member function ‘[01m[Kvoid SLAMValidation::topic_callback(const ConstSharedPtr&, const ConstSharedPtr&) const[m[K’:
-[01m[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:62:5:[m[K [01;35m[Kwarning: [m[Kstatement has no effect [[01;35m[K-Wunused-value[m[K]
-   62 |     [01;35m[Ktmp_1[m[K;
-      |     [01;35m[K^~~~~[m[K
-[01m[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:63:5:[m[K [01;35m[Kwarning: [m[Kstatement has no effect [[01;35m[K-Wunused-value[m[K]
-   63 |     [01;35m[Ktmp_2[m[K;
-      |     [01;35m[K^~~~~[m[K
