@@ -23,28 +23,20 @@ find_package(eufs_msgs REQUIRED)
 
 add_executable(slam_test src/planning_codebase/EKF_SLAM.cpp)
 ament_target_dependencies(slam_test rclcpp message_filters eufs_msgs)
+ament_export_include_directories(source)
 
 install(TARGETS
   slam_test
   DESTINATION lib/${PROJECT_NAME})
 
+#TESTING NUMCPP
 find_package(interfaces REQUIRED)                         # CHANGE
 find_package(std_msgs REQUIRED)
-
-# add_executable(talker src/publisher_member_function.cpp)
-# ament_target_dependencies(talker rclcpp interfaces)         # CHANGE
-
-# add_executable(listener src/subscriber_member_function.cpp)
-# ament_target_dependencies(listener rclcpp interfaces)     # CHANGE
-
-# install(TARGETS
-#   talker
-#   listener
-#   DESTINATION lib/${PROJECT_NAME})
 
 add_executable(planning src/planning_codebase/hello.cpp)
 find_package(NumCpp 2.11.0 REQUIRED)
 target_link_libraries(planning
        NumCpp::NumCpp)
+##################
 ament_environment_hooks()
 ament_package()

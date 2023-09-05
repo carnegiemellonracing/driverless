@@ -8,7 +8,7 @@
 #include <exception>
 #include <cassert>
 #include <gsl/gsl_vector.h>
-#include <gsl/gsl_matrix>
+#include <gsl/gsl_matrix.h>
 
 using std::placeholders::_1;
 
