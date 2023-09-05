@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <interfaces/msg/spline_list.hpp>
 #include <interfaces/msg/spline.hpp>
-#include <planning/raceline/raceline.hpp>
+#include <planning/src/raceline/raceline.hpp>
 
 
 using namespace std::literals::chrono_literals;

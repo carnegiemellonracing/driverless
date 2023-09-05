@@ -21,7 +21,7 @@ find_package(rclcpp REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(eufs_msgs REQUIRED)
 
-add_executable(slam_test src/EKF_SLAM.cpp)
+add_executable(slam_test src/planning_codebase/EKF_SLAM.cpp)
 ament_target_dependencies(slam_test rclcpp message_filters eufs_msgs)
 
 install(TARGETS
@@ -42,7 +42,7 @@ find_package(std_msgs REQUIRED)
 #   listener
 #   DESTINATION lib/${PROJECT_NAME})
 
-add_executable(planning planning_codebase/hello.cpp)
+add_executable(planning src/planning_codebase/hello.cpp)
 find_package(NumCpp 2.11.0 REQUIRED)
 target_link_libraries(planning
        NumCpp::NumCpp)

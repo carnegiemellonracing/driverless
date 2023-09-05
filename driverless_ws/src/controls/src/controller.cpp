@@ -9,7 +9,6 @@
 #include <cassert>
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_matrix>
-#include <planning/raceline/raceline.hpp>
 
 using std::placeholders::_1;
 
