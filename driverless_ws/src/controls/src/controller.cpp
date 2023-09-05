@@ -243,10 +243,22 @@ namespace controls {
 
     // ***** REFERENCE SPLINE *****
 
+    void gsl_matrix_set_vec(gsl_matrix* mat, const std::vector<uint8_t>& vec) {
+        for (uint i = 0; i < mat->size1; i++) {
+            for (uint j = 0; j < mat->size2; j++) {
+                gsl_matrix_set(mat, i, j,
+                               reinterpret_cast<const double*>(
+                                   vec.data()
+                               )[i * mat->size2 + j]);
+            }
+        }
+    }
+
     ReferenceSpline::ReferenceSpline(const SplineMsg& rSplineMsg) {
         m_splines = std::vector<Spline>();
         for (auto splineMsg : rSplineMsg.splines) {
-            Spline spline {};
+            m_splines.emplace_back();
+            Spline& spline = m_splines.back();
 
             // Set spl_poly
             polynomial poly {};
@@ -262,10 +274,41 @@ namespace controls {
             // Set points
             gsl_matrix *points = gsl_matrix_alloc(
                     splineMsg.points.height, splineMsg.points.width);
+            gsl_matrix_set_vec(points, splineMsg.points);
+            spline.set_points(points);
 
+            // set rotated_points
+            gsl_matrix *rotated_points = gsl_matrix_alloc(
+                    splineMsg.rotated_points.height,
+                    splineMsg.rotated_points.width);
+            gsl_matrix_set_vec(rotated_points, splineMsg.rotated_points);
+            spline.set_rotated_points(rotated_points);
 
-            // TODO: finish implementing spline deserialization
-            throw new std::runtime_error("spline deserialization not implemented");
+            // set q
+            gsl_matrix *q = gsl_matrix_alloc(
+                    splineMsg.q.height, splineMsg.q.width);
+            gsl_matrix_set_vec(q, splineMsg.q);
+            spline.set_Q(q);
+
+            // set translation_vector
+            gsl_vector *translation_vector = gsl_vector_alloc(
+                    splineMsg.translation_vector.size());
+            for (uint i = 0; i < splineMsg.translation_vector.size(); i++) {
+                gsl_vector_set(translation_vector, i,
+                               splineMsg.translation_vector[i]);
+            }
+            spline.set_translation(translation_vector);
+
+            spline.set_path_id(splineMsg.path_id);
+            spline.set_sort_index(splineMsg.sort_index);
+            spline.set_length(splineMsg.length);
         }
+    }
+
+    ReferenceSpline::Frame
+    ReferenceSpline::poseAtDistance(double distance) const {
+        return Frame {
+
+        };
     }
 }
