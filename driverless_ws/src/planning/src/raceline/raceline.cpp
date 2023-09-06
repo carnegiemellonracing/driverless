@@ -103,6 +103,31 @@ polynomial Spline::get_second_der(){
     return this->second_der;
 }
 
+gsl_matrix* Spline::get_points(){
+    return points;}
+
+gsl_matrix* Spline::get_rotated_points(){
+    return rotated_points;
+}
+
+gsl_matrix* Spline::get_Q(){
+    return Q;
+}
+
+gsl_vector* Spline::get_translation(){
+    return translation_vector;
+}
+
+int Spline::get_path_id(){
+    return path_id;
+}
+
+int Spline::get_sort_index(){
+    return sort_index;
+}
+
+
+
 
 std::tuple<gsl_vector*,double, gsl_vector*,double> Spline::along(double progress, double point_index, int precision){
     std::tuple<gsl_vector*,double, gsl_vector*,double> ret;
