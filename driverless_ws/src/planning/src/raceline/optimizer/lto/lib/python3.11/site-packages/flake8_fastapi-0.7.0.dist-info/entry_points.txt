@@ -1,0 +1,3 @@
+[flake8.extension]
+CF=flake8_fastapi.plugin:FastAPIPlugin
+

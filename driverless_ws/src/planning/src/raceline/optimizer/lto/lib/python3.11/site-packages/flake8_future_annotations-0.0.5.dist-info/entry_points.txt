@@ -1,0 +1,2 @@
+[flake8.extension]
+FA = flake8_future_annotations.checker:FutureAnnotationsChecker

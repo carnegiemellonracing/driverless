@@ -1,0 +1,184 @@
+Metadata-Version: 2.1
+Name: flake8-helper
+Version: 0.2.1
+Summary: A helper library for Flake8 plugins.
+Author-email: Dominic Davis-Foster <dominic@davis-foster.co.uk>
+License: MIT
+Keywords: flake8
+Home-page: https://github.com/python-formate/flake8-helper
+Project-URL: Issue Tracker, https://github.com/python-formate/flake8-helper/issues
+Project-URL: Source Code, https://github.com/python-formate/flake8-helper
+Project-URL: Documentation, https://flake8-helper.readthedocs.io/en/latest
+Platform: Windows
+Platform: macOS
+Platform: Linux
+Classifier: Development Status :: 4 - Beta
+Classifier: Framework :: Flake8
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Utilities
+Classifier: Typing :: Typed
+Requires-Python: >=3.6
+Requires-Dist: flake8>=3.8.4
+Description-Content-Type: text/x-rst
+
+
+##############
+flake8-helper
+##############
+
+.. start short_desc
+
+**A helper library for Flake8 plugins.**
+
+.. end short_desc
+
+
+.. start shields
+
+.. list-table::
+	:stub-columns: 1
+	:widths: 10 90
+
+	* - Docs
+	  - |docs| |docs_check|
+	* - Tests
+	  - |actions_linux| |actions_windows| |actions_macos| |coveralls|
+	* - PyPI
+	  - |pypi-version| |supported-versions| |supported-implementations| |wheel|
+	* - Anaconda
+	  - |conda-version| |conda-platform|
+	* - Activity
+	  - |commits-latest| |commits-since| |maintained| |pypi-downloads|
+	* - QA
+	  - |codefactor| |actions_flake8| |actions_mypy|
+	* - Other
+	  - |license| |language| |requires|
+
+.. |docs| image:: https://img.shields.io/readthedocs/flake8-helper/latest?logo=read-the-docs
+	:target: https://flake8-helper.readthedocs.io/en/latest
+	:alt: Documentation Build Status
+
+.. |docs_check| image:: https://github.com/python-formate/flake8-helper/workflows/Docs%20Check/badge.svg
+	:target: https://github.com/python-formate/flake8-helper/actions?query=workflow%3A%22Docs+Check%22
+	:alt: Docs Check Status
+
+.. |actions_linux| image:: https://github.com/python-formate/flake8-helper/workflows/Linux/badge.svg
+	:target: https://github.com/python-formate/flake8-helper/actions?query=workflow%3A%22Linux%22
+	:alt: Linux Test Status
+
+.. |actions_windows| image:: https://github.com/python-formate/flake8-helper/workflows/Windows/badge.svg
+	:target: https://github.com/python-formate/flake8-helper/actions?query=workflow%3A%22Windows%22
+	:alt: Windows Test Status
+
+.. |actions_macos| image:: https://github.com/python-formate/flake8-helper/workflows/macOS/badge.svg
+	:target: https://github.com/python-formate/flake8-helper/actions?query=workflow%3A%22macOS%22
+	:alt: macOS Test Status
+
+.. |actions_flake8| image:: https://github.com/python-formate/flake8-helper/workflows/Flake8/badge.svg
+	:target: https://github.com/python-formate/flake8-helper/actions?query=workflow%3A%22Flake8%22
+	:alt: Flake8 Status
+
+.. |actions_mypy| image:: https://github.com/python-formate/flake8-helper/workflows/mypy/badge.svg
+	:target: https://github.com/python-formate/flake8-helper/actions?query=workflow%3A%22mypy%22
+	:alt: mypy status
+
+.. |requires| image:: https://dependency-dash.herokuapp.com/github/python-formate/flake8-helper/badge.svg
+	:target: https://dependency-dash.herokuapp.com/github/python-formate/flake8-helper/
+	:alt: Requirements Status
+
+.. |coveralls| image:: https://img.shields.io/coveralls/github/python-formate/flake8-helper/master?logo=coveralls
+	:target: https://coveralls.io/github/python-formate/flake8-helper?branch=master
+	:alt: Coverage
+
+.. |codefactor| image:: https://img.shields.io/codefactor/grade/github/python-formate/flake8-helper?logo=codefactor
+	:target: https://www.codefactor.io/repository/github/python-formate/flake8-helper
+	:alt: CodeFactor Grade
+
+.. |pypi-version| image:: https://img.shields.io/pypi/v/flake8-helper
+	:target: https://pypi.org/project/flake8-helper/
+	:alt: PyPI - Package Version
+
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/flake8-helper?logo=python&logoColor=white
+	:target: https://pypi.org/project/flake8-helper/
+	:alt: PyPI - Supported Python Versions
+
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/flake8-helper
+	:target: https://pypi.org/project/flake8-helper/
+	:alt: PyPI - Supported Implementations
+
+.. |wheel| image:: https://img.shields.io/pypi/wheel/flake8-helper
+	:target: https://pypi.org/project/flake8-helper/
+	:alt: PyPI - Wheel
+
+.. |conda-version| image:: https://img.shields.io/conda/v/domdfcoding/flake8-helper?logo=anaconda
+	:target: https://anaconda.org/domdfcoding/flake8-helper
+	:alt: Conda - Package Version
+
+.. |conda-platform| image:: https://img.shields.io/conda/pn/domdfcoding/flake8-helper?label=conda%7Cplatform
+	:target: https://anaconda.org/domdfcoding/flake8-helper
+	:alt: Conda - Platform
+
+.. |license| image:: https://img.shields.io/github/license/python-formate/flake8-helper
+	:target: https://github.com/python-formate/flake8-helper/blob/master/LICENSE
+	:alt: License
+
+.. |language| image:: https://img.shields.io/github/languages/top/python-formate/flake8-helper
+	:alt: GitHub top language
+
+.. |commits-since| image:: https://img.shields.io/github/commits-since/python-formate/flake8-helper/v0.2.1
+	:target: https://github.com/python-formate/flake8-helper/pulse
+	:alt: GitHub commits since tagged version
+
+.. |commits-latest| image:: https://img.shields.io/github/last-commit/python-formate/flake8-helper
+	:target: https://github.com/python-formate/flake8-helper/commit/master
+	:alt: GitHub last commit
+
+.. |maintained| image:: https://img.shields.io/maintenance/yes/2022
+	:alt: Maintenance
+
+.. |pypi-downloads| image:: https://img.shields.io/pypi/dm/flake8-helper
+	:target: https://pypi.org/project/flake8-helper/
+	:alt: PyPI - Downloads
+
+.. end shields
+
+Installation
+--------------
+
+.. start installation
+
+``flake8-helper`` can be installed from PyPI or Anaconda.
+
+To install with ``pip``:
+
+.. code-block:: bash
+
+	$ python -m pip install flake8-helper
+
+To install with ``conda``:
+
+	* First add the required channels
+
+	.. code-block:: bash
+
+		$ conda config --add channels https://conda.anaconda.org/conda-forge
+		$ conda config --add channels https://conda.anaconda.org/domdfcoding
+
+	* Then install
+
+	.. code-block:: bash
+
+		$ conda install flake8-helper
+
+.. end installation

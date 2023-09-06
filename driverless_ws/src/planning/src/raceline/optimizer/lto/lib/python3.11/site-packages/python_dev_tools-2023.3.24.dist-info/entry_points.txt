@@ -1,0 +1,6 @@
+[console_scripts]
+whataformatter=python_dev_tools.whataformatter:main
+
+[flake8.extension]
+WAL=python_dev_tools.whatalinter:WhatALinter
+

@@ -8,7 +8,7 @@
 #include <gsl/gsl_integration.h>
 #include <vector>
 #include "raceline.hpp"
-#include "random.h"
+// #include "random.h"
 
 polynomial poly(int deg = 3){
     polynomial inst;
@@ -95,11 +95,11 @@ bool Spline::operator<(Spline const & other) const{
     return this->sort_index<other.sort_index;
 }
 
-polynomial get_first_der(){
+polynomial Spline::get_first_der(){
     return this->first_der;
 }
 
-polynomial get_second_der(){
+polynomial Spline::get_second_der(){
     return this->second_der;
 }
 
@@ -266,7 +266,6 @@ gsl_matrix *transform_points(gsl_matrix *points, gsl_matrix *Q, gsl_vector *get_
     gsl_matrix *ret = gsl_matrix_alloc(points->size1,points->size2);
     gsl_linalg_matmult(temp,Q,ret);
     gsl_matrix_free(temp);
-            self.cumulated_splines = [*self.cumulated_splines, *splines]
     gsl_matrix *temp = gsl_matrix_alloc(Q->size1,Q->size2);
     for(int i=0;i<Q->size2;++i){
         gsl_matrix_set(temp,0,i,gsl_matrix_get(Q,0,i)+gsl_vector_get(get_translation_vector,0));
@@ -349,7 +348,7 @@ double arclength(polynomial poly, double x0,double x1){
 
 }
 
-std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(gsl_matrix *res,int path_id = ,int points_per_spline,bool loop){
+std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(gsl_matrix *res,int path_id = rand(),int points_per_spline,bool loop){
 
     int n = res->size2;
 
@@ -387,9 +386,9 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(gsl_matrix *res,
         
         
         splines.push_back(spline);
-        lengths.push_back(spline.get_length());
+        lengths.push_back(spline.length());
 
-        cumsum.push_back(cumsum.back()+spline.get_length());
+        cumsum.push_back(cumsum.back()+spline.length());
 
     }
 

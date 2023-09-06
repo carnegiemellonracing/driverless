@@ -1,0 +1,3 @@
+[console_scripts]
+flake8-markdown=flake8_markdown:main
+

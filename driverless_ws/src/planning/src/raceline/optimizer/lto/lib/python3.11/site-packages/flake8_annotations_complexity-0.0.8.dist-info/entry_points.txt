@@ -1,0 +1,2 @@
+[flake8.extension]
+TAE002 = flake8_annotations_complexity.checker:AnnotationsComplexityChecker

@@ -48,7 +48,6 @@ private:
 
     int path_id;
     int sort_index;
-    double length;
 
 public:
     polynomial get_SplPoly(){ return spl_poly;}
@@ -80,7 +79,6 @@ public:
     int get_sort_index();
     void set_sort_index(int new_sort);
 
-    double get_length(){return length;}
     
     gsl_matrix *interpolate(Spline spline,int number, std::pair<float,float> bounds = std::make_pair(-1,-1));
     

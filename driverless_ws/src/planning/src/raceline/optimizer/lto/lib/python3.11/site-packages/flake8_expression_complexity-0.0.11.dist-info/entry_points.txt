@@ -1,0 +1,3 @@
+[flake8.extension]
+ECE = flake8_expression_complexity.checker:ExpressionComplexityChecker
+
