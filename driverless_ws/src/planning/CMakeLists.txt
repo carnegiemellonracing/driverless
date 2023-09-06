@@ -29,14 +29,5 @@ install(TARGETS
   slam_test
   DESTINATION lib/${PROJECT_NAME})
 
-#TESTING NUMCPP
-find_package(interfaces REQUIRED)                         # CHANGE
-find_package(std_msgs REQUIRED)
-
-add_executable(planning src/planning_codebase/hello.cpp)
-find_package(NumCpp 2.11.0 REQUIRED)
-target_link_libraries(planning
-       NumCpp::NumCpp)
-##################
 ament_environment_hooks()
 ament_package()
