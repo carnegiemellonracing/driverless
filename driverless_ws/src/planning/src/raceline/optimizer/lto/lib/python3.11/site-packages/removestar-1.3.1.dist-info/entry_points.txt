@@ -1,0 +1,3 @@
+[console_scripts]
+removestar = removestar.__main__:main
+

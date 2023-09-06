@@ -1,0 +1,2 @@
+[flake8.extension]
+CFQ = flake8_functions.checker:FunctionChecker

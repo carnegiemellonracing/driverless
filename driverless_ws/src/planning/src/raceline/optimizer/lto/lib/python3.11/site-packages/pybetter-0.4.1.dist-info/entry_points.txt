@@ -1,0 +1,3 @@
+[console_scripts]
+pybetter=pybetter.cli:main
+

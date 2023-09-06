@@ -1,0 +1,2 @@
+[flake8.extension]
+TYP = flake8_typing_imports:Plugin

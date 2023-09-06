@@ -1,0 +1,3 @@
+[flake8.extension]
+C10 = flake8_coding:CodingChecker
+

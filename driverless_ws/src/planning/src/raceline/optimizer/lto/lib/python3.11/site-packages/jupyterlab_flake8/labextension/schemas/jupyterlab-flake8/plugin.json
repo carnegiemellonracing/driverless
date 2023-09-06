@@ -1,0 +1,56 @@
+{
+  "jupyter.lab.setting-icon-label": "Flake8",
+  "jupyter.lab.setting-icon-class": "jp-SettingsIcon",
+  "jupyter.lab.shortcuts": [],
+  "title": "Jupyterlab-Flake8",
+  "description": "Jupyterlab-Flake8 Linter settings.",
+  "type": "object",
+  "properties": {
+    "toggled": {
+      "type": "boolean",
+      "description": "Whether or not the linter is enabled",
+      "default": true
+    },
+    "lint_on_change": {
+      "type": "boolean",
+      "description": "Run linter when notebook/editor is changed",
+      "default": true
+    },
+    "logging": {
+      "type": "boolean",
+      "description": "Log linter messages to the console for debugging",
+      "default": false
+    },
+    "highlight_color": {
+      "type": "string",
+      "description": "Highlight color. You may use css variables here (i.e. var(--jp-error-color3) )",
+      "default": "var(--jp-warn-color3)"
+    },
+    "gutter_color": {
+      "type": "string",
+      "description": "Gutter icon color. You may use css variables here (i.e. var(--jp-error-color0) )",
+      "default": "var(--jp-error-color0)"
+    },
+    "term_timeout": {
+      "type": "integer",
+      "description": "Timeout for terminal initiation",
+      "default": 5000
+    },
+    "conda_env": {
+      "type": "string",
+      "description": "Conda environment to use for flake8 linter",
+      "default": "base"
+    },
+    "terminal_name": {
+      "type": "string",
+      "description": "Persistent internal terminal name. This is set automatically on each run",
+      "default": "flake8term"
+    },
+    "configuration_file": {
+      "type": "string",
+      "description": "Base configuration file option to pass to flake8.",
+      "default": ""
+    }
+  },
+  "additionalProperties": false
+}

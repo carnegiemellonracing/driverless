@@ -1,0 +1,3 @@
+# Ensure these are imported before the current directory appears on path
+import code
+import doctest

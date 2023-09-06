@@ -1,0 +1,3 @@
+[flake8.extension]
+LIT0 = flake8_literal.quote_checker:QuoteChecker
+LIT1 = flake8_literal.raw_checker:RawChecker
