@@ -36,6 +36,7 @@ endif()
 
 find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/CarROT.msg"
@@ -45,7 +46,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Points.msg"
   "msg/Spline.msg"
   "msg/SplineList.msg"
-  DEPENDENCIES geometry_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
+  DEPENDENCIES geometry_msgs sensor_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 ament_package()
 
