@@ -8,7 +8,7 @@
 #include "raceline.hpp"
 #include <gsl/gsl_blas.h>
 
-
+//TODOPut this in a utilities file
 gsl_matrix *mat_mul(gsl_matrix *A, gsl_matrix *B) {
   assert(A->size2 == B->size1);
   gsl_matrix_view A_view = gsl_matrix_submatrix(A, 0, 0, A->size1, A->size2);
