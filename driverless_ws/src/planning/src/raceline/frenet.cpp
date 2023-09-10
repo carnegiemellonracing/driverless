@@ -51,8 +51,8 @@ std::vector<gsl_matrix *> rotate_points(
 }
 
 gsl_matrix *matrix_nonzero(gsl_matrix *m, double nonzero = 0.0001) {
-  for (int i = 0; i < m->size1; i++) {
-    for (int j = 0; j < m->size2; j++) {
+  for (size_t i = 0; i < m->size1; i++) {
+    for (size_t j = 0; j < m->size2; j++) {
       if (gsl_matrix_get(m, i, j) == 0) {
         gsl_matrix_set(m, i, j, nonzero);
       }
@@ -64,15 +64,15 @@ gsl_matrix *matrix_nonzero(gsl_matrix *m, double nonzero = 0.0001) {
 struct minimization_params {
   double car_x;
   double car_y;
-  polynomial polynomial;
+  polynomial poly;
 };
 double minimization_f(double x, void *p) {
   struct minimization_params *params = (struct minimization_params *)p;
   return pow((params->car_x - x), 2) +
-         pow((params->car_y - poly_eval(params->polynomial, x)), 2);
+         pow((params->car_y - poly_eval(params->poly, x)), 2);
 }
 
-static const int n_coeffs = 7;
+static const size_t n_coeffs = 7;
 // x and y are a set of points
 std::pair<std::vector<double>, std::vector<double>> get_closest_distance(
     double x, double y, std::vector<polynomial> polys, gsl_matrix *poly_coeffs,
@@ -86,7 +86,8 @@ std::pair<std::vector<double>, std::vector<double>> get_closest_distance(
   std::pair<std::vector<double>, std::vector<double>> results;
   for (size_t i = 0; i < n; ++i) {
     polynomial poly = polys[i];
-    int status, iter = 0;
+    int status;
+    size_t iter = 0;
     double x_min = gsl_matrix_get(poly_roots, i, poly.deg + 1), x_lower = 0,
            x_upper = x_min;
     gsl_function f;
@@ -117,8 +118,8 @@ std::pair<std::vector<double>, std::vector<double>> get_closest_distance(
 std::pair<int, int> argmin(gsl_matrix *m) {
   double min = 9999999;
   std::pair<int, int> minIndex = {-1, -1};
-  for (int i = 0; i < m->size1; i++) {
-    for (int j = 0; j < m->size2; j++) {
+  for (size_t i = 0; i < m->size1; i++) {
+    for (size_t j = 0; j < m->size2; j++) {
       if (gsl_matrix_get(m, i, j) < min) {
         min = gsl_matrix_get(m, i, j);
         minIndex = {i, j};
@@ -198,13 +199,15 @@ projection frenet(float x, float y, std::vector<Spline> path,
   // find how to get the columns from the vector of matrices
   // std::pair< gsl_matrix *,gsl_matrix *> dist = get_closest_distance(x_point,
   // y_point, poly_coeffs,poly_roots);
-	std::pair<std::vector<double>, std::vector<double>> optimization_result =  get_closest_distance(x_point, y_point, polys, poly_coeffs, poly_roots);
-	std::vector<double> opt_xs = optimization_result.first;
-	assert(opt_xs.size() > 0);
-	std::vector<double> distances = optimization_result.second;
-	assert(distances.size() > 0);
+  std::pair<std::vector<double>, std::vector<double>> optimization_result =
+      get_closest_distance(x_point, y_point, polys, poly_coeffs, poly_roots);
+  std::vector<double> opt_xs = optimization_result.first;
+  assert(opt_xs.size() > 0);
+  std::vector<double> distances = optimization_result.second;
+  assert(distances.size() > 0);
 
-  size_t i = std::min_element(distances.begin(), distances.end()) - distances.begin();
+  size_t i =
+      std::min_element(distances.begin(), distances.end()) - distances.begin();
   size_t min_index = (i + index_offset) % n;
   polynomial min_polynomial = path[i].get_SplPoly();
   double min_x = opt_xs[i];
