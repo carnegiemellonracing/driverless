@@ -14,8 +14,6 @@
 #include <cstdlib>
 #include <list>
 
-
-
 using namespace std;
 
 struct ArrStruct {
@@ -60,14 +58,6 @@ double const STATE_SIZE = 3;  //# State size [x,y,yaw]
 double const LM_SIZE = 2;  //# LM state size [x,y]
 
 bool show_animation = true;
-
-
-
-
-
-
-
-
 
 gsl_matrix* motion_model(gsl_matrix* x, gsl_matrix* u, double dt)
 {
@@ -349,13 +339,15 @@ double* findMinLocation(gsl_matrix* mat)
     return res;
 }
 
-int search_correspond_landmark_id(gsl_matrix* xAug, gsl_matrix* PAug, gsl_matrix* zi)
+int search_correspond_landmark_id(gsl_matrix* xAug, gsl_matrix* PAug, gsl_matrix* zi, auto logger)
 {
     int nLM = calc_n_lm(xAug);
     double r = gsl_matrix_get(zi,0,0);
     double theta = gsl_matrix_get(zi,0,1);
     int start = 1;
+    // logger.info(f'  Landmark {i}: {lm[0]}, {lm[1]} | Mahalanobis: {y.T @ np.linalg.inv(S) @ y}')
     gsl_matrix* min_dist = gsl_matrix_calloc(1,1);
+    RCLCPP_INFO(logger, "Measurement: %f, %f", gsl_matrix_get(zi, 0, 0), gsl_matrix_get(zi, 0, 1));
     for(int i = 0; i < nLM; i++)
     {
         gsl_matrix* lm = get_landmark_position_from_state(xAug,i);
@@ -381,7 +373,7 @@ int search_correspond_landmark_id(gsl_matrix* xAug, gsl_matrix* PAug, gsl_matrix
         gsl_linalg_matmult(arr1,y,arr2);
 
         double val = gsl_matrix_get(arr2,0,0);
-        
+        RCLCPP_INFO(logger, "   Landmark %i: %f, %f | Mahalanobis: %f", i, gsl_matrix_get(lm, 0, 0), gsl_matrix_get(lm, 1, 0), val);
         //appending the array by remaking it
         if(start==1)
         {
@@ -420,6 +412,7 @@ int search_correspond_landmark_id(gsl_matrix* xAug, gsl_matrix* PAug, gsl_matrix
 
 
     }
+    RCLCPP_INFO(logger, "-----------------------------\n");
     //appending M_DIST_TH
     gsl_matrix* new_min_dist = gsl_matrix_calloc(1,min_dist->size2+1);
     for(int j = 0; j < min_dist->size2; j++)
@@ -448,7 +441,14 @@ int search_correspond_landmark_id(gsl_matrix* xAug, gsl_matrix* PAug, gsl_matrix
 //
 ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matrix* z, double dt, auto logger)
 {
-    RCLCPP_INFO(logger, "woah this works?!\n"); 
+    // for(int r = 0; r<z->size1; r++){
+    //     for(int c = 0; c<z->size2; c++){
+    //         //RCLCPP_INFO(logger, " %d", gsl_matrix_get(z, r, c));
+    //     }
+    //     //RCLCPP_INFO(logger, "\n");
+    // }
+    
+    //RCLCPP_INFO(logger, "woah this works?!\n"); 
     double S = STATE_SIZE;
     gsl_matrix* x = gsl_matrix_calloc(S,xEst->size2);
     for(int r = 0; r < x->size1; r++)
@@ -459,7 +459,7 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         }
     }
     gsl_matrix** gFx = jacob_motion(x,u,dt);
-    RCLCPP_INFO(logger, "past jacob_motion\n");
+    //RCLCPP_INFO(logger, "past jacob_motion\n");
     gsl_matrix* G = gFx[0];
     gsl_matrix* Fx = gFx[1];
 
@@ -486,7 +486,7 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         }
     }
     gsl_matrix_free(mm);
-    RCLCPP_INFO(logger, "past this free\n");
+    //RCLCPP_INFO(logger, "past this free\n");
     gsl_matrix* PEst_S = gsl_matrix_calloc(S,S);
     for(int r = 0; r < S; r++)
     {
@@ -529,36 +529,36 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         }
     }
     gsl_matrix_free(arr1);
-    RCLCPP_INFO(logger, "arr1\n");
+    //RCLCPP_INFO(logger, "arr1\n");
     gsl_matrix_free(arr2);
-    RCLCPP_INFO(logger, "arr2\n");
+    //RCLCPP_INFO(logger, "arr2\n");
     gsl_matrix_free(arr3);
-    RCLCPP_INFO(logger, "arr3\n");
+    //RCLCPP_INFO(logger, "arr3\n");
     gsl_matrix_free(arr4);
-    RCLCPP_INFO(logger, "arr4\n");
+    //RCLCPP_INFO(logger, "arr4\n");
     gsl_matrix* initP = gsl_matrix_calloc(2,2);
     gsl_matrix_set(initP,0,0,1);
     gsl_matrix_set(initP,1,1,1);
     gsl_matrix_free(x);
-    RCLCPP_INFO(logger, "x\n");
+    //RCLCPP_INFO(logger, "x\n");
     gsl_matrix_free(G);
-    RCLCPP_INFO(logger, "G\n");
+    //RCLCPP_INFO(logger, "G\n");
     gsl_matrix_free(GT);
-    RCLCPP_INFO(logger, "GT\n");
+    //RCLCPP_INFO(logger, "GT\n");
     gsl_matrix_free(Fx);
-    RCLCPP_INFO(logger, "Fx\n");
+    //RCLCPP_INFO(logger, "Fx\n");
     gsl_matrix_free(FxT);
-    RCLCPP_INFO(logger, "FxT\n");
+    //RCLCPP_INFO(logger, "FxT\n");
     delete gFx;
-    RCLCPP_INFO(logger, "past whatever the fuck this is\n");
+    //RCLCPP_INFO(logger, "past whatever the fuck this is\n");
     gsl_matrix_free(M_t);
-    RCLCPP_INFO(logger, "mt\n");
+    //RCLCPP_INFO(logger, "mt\n");
     gsl_matrix_free(V_t);
-    RCLCPP_INFO(logger, "vt\n");
+    //RCLCPP_INFO(logger, "vt\n");
     // gsl_matrix_free(PEst_S);
-    RCLCPP_INFO(logger, "pest s\n");
+    //RCLCPP_INFO(logger, "pest s\n");
     gsl_matrix_free(Cxmat);
-    RCLCPP_INFO(logger, "cxmat\n");
+    //RCLCPP_INFO(logger, "cxmat\n");
     
     
 
@@ -570,32 +570,35 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
     gsl_matrix* newZ = gsl_matrix_calloc(1,2);
     for(int iz = 0; iz < z->size1; iz++)
     {
+        //RCLCPP_INFO(logger, "BACK UP HERE\n");
         gsl_matrix_set(newZ,0,0,gsl_matrix_get(z,iz,0));
         gsl_matrix_set(newZ,0,1,gsl_matrix_get(z,iz,1));
 
-        int min_id = search_correspond_landmark_id(xEst,PEst,newZ);
+        int min_id = search_correspond_landmark_id(xEst,PEst,newZ, logger);
+        //RCLCPP_INFO(logger, "past correspond landmark\n");
         gsl_matrix* zRow = gsl_matrix_calloc(1,z->size2);
         for(int c = 0; c < z->size2; c++)
         {
-            gsl_matrix_set(zRow,iz,c,gsl_matrix_get(z,iz,c));
+            gsl_matrix_set(zRow,0,c,gsl_matrix_get(z,iz,c));
         }
+        ////RCLCPP_INFO(logger, "yo mama\n");
         gsl_matrix* landPos = calc_landmark_position(xEst,zRow);
         gsl_matrix_free(zRow);
         cones.push_back(landPos);
         int nLM = calc_n_lm(xEst);
 
         if(min_id==nLM) {
-            cout << "New LM" << endl;
-            RCLCPP_INFO(logger, "xEST SIZE: (%i, %i)", xEst->size1, xEst->size2);
+            RCLCPP_INFO(logger, "New LM\n\n");
+            ////RCLCPP_INFO(logger, "xEST SIZE: (%i, %i)", xEst->size1, xEst->size2);
             gsl_matrix* xaug = gsl_matrix_calloc(xEst->size1+2,1);
             for(int i = 0; i < xEst->size1; i++)
             {
                 gsl_matrix_set(xaug,i,0,gsl_matrix_get(xEst,i,0));
             }
-            RCLCPP_INFO(logger, "past 1\n");
+            ////RCLCPP_INFO(logger, "past 1\n");
             gsl_matrix_set(xaug,xEst->size1,0,gsl_matrix_get(landPos,0,0));
             gsl_matrix_set(xaug,xEst->size1+1,0,gsl_matrix_get(landPos,1,0));
-            RCLCPP_INFO(logger, "past 2\n");
+            ////RCLCPP_INFO(logger, "past 2\n");
             gsl_matrix* paug = gsl_matrix_calloc(PEst->size1 + LM_SIZE, PEst->size2 + LM_SIZE);
             for(int r = 0; r < PEst->size1; r++)
             {
@@ -604,23 +607,25 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
                     gsl_matrix_set(paug,r,c,gsl_matrix_get(PEst,r,c));
                 }
             }
-            RCLCPP_INFO(logger, "past 3\n");
-            int rowOffset = PEst->size1 + xEst->size1 - initP->size1;
-            RCLCPP_INFO(logger, "past 4\n");
-            int colOffset = PEst->size2 + LM_SIZE - initP->size2;
-            RCLCPP_INFO(logger, "past 4\n");
+            //RCLCPP_INFO(logger, "past 3\n");
+            // int rowOffset = PEst->size1 + xEst->size1 - initP->size1;
+            //RCLCPP_INFO(logger, "past 4\n");
+            // int colOffset = PEst->size2 + LM_SIZE - initP->size2;
+            //RCLCPP_INFO(logger, "past 4\n");
+            int rowOffset = PEst->size1;
+            int colOffset = PEst->size2;
             for(int r = 0; r < initP->size1; r++)
             {
                 for(int c = 0; c < initP->size2; c++)
                 {
-                    RCLCPP_INFO(logger, "r: %i| c: %i\n", r, c);
+                    //RCLCPP_INFO(logger, "r: %i| c: %i\n", r, c);
                     gsl_matrix_set(paug,r+rowOffset,c+colOffset,gsl_matrix_get(initP,r,c));
                 }
             }
-            RCLCPP_INFO(logger, "past 4\n");
+            //RCLCPP_INFO(logger, "past 4\n");
             gsl_matrix_free(xEst);
             xEst = gsl_matrix_calloc(xaug->size1,xaug->size2);
-            RCLCPP_INFO(logger, "past 5\n");
+            //RCLCPP_INFO(logger, "past 5\n");
             for(int r = 0; r < xaug->size1; r++)
             {
                 for(int c = 0; c < xaug->size2; c++)
@@ -629,7 +634,7 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
                 }
             }
             gsl_matrix_free(xaug);
-            RCLCPP_INFO(logger, "past 6\n");
+            //RCLCPP_INFO(logger, "past 6\n");
             gsl_matrix_free(PEst);
             PEst = gsl_matrix_calloc(paug->size1,paug->size2);
 
@@ -641,18 +646,20 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
                 }
             }
             gsl_matrix_free(paug);
-            RCLCPP_INFO(logger, "past 7\n");
+            //RCLCPP_INFO(logger, "past 7\n");
 
         }
         gsl_matrix_free(landPos);
         gsl_matrix* lm = get_landmark_position_from_state(xEst,min_id);
-        RCLCPP_INFO(logger, "past landmark pos\n");
+        //RCLCPP_INFO(logger, "past landmark pos\n");
         gsl_matrix** ySH = calc_innovation(lm,xEst,PEst,newZ,min_id);
-        RCLCPP_INFO(logger, "past calc_innov\n");
+        //RCLCPP_INFO(logger, "past calc_innov\n");
         gsl_matrix* y = ySH[0];
         gsl_matrix* Smat = ySH[1];
         gsl_matrix* H = ySH[2];
-        RCLCPP_INFO(logger, "past all this shit\n");
+        //RCLCPP_INFO(logger, "y: (%i, %i) | Smat: (%i, %i) | H: (%i, %i)", y->size1, y->size2,
+        // Smat->size1, Smat->size2, H->size1, H->size2);
+        //RCLCPP_INFO(logger, "past all this shit\n");
         gsl_matrix* HT = gsl_matrix_calloc(H->size2,H->size1);
         gsl_matrix_transpose_memcpy(HT,H);
 
@@ -662,14 +669,17 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         gsl_linalg_LU_decomp(Smat,p,signum);
         gsl_matrix* S_inverse = gsl_matrix_calloc(Smat->size1,Smat->size2);
         gsl_linalg_LU_invert(Smat,p,S_inverse);
+        //RCLCPP_INFO(logger, "Smat: (%i, %i)\n", Smat->size1, Smat->size2);
         gsl_permutation_free(p);
 
         delete signum;
 
 
         arr1 = gsl_matrix_calloc(PEst->size1,HT->size2);
+        //RCLCPP_INFO(logger, "arr1: (%i, %i)\n", arr1->size1, arr1->size2);
         gsl_linalg_matmult(PEst,HT,arr1);
         gsl_matrix* K = gsl_matrix_calloc(arr1->size1,S_inverse->size2);
+        //RCLCPP_INFO(logger, "K: (%i, %i)\n", K->size1, K->size2);
         gsl_linalg_matmult(arr1,S_inverse,K);
         gsl_matrix_free(arr1);
 
@@ -678,37 +688,43 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         {
             for(int c = 0; c < xEst_3->size2; c++)
             {
+                //RCLCPP_INFO(logger, "setting xEst_3-> r: %i| c: %i\n", r, c);
                 gsl_matrix_set(xEst_3,r,c,gsl_matrix_get(xEst,r+3,c));
             }
         }
-
+        //RCLCPP_INFO(logger, "K->size1: %i | K-size1-3: %i\n", K->size1, K->size1-3);
         gsl_matrix* K_3 = gsl_matrix_calloc(K->size1-3, K->size2);
         for(int r = 0; r < K_3->size1; r++)
         {
             for(int c = 0; c < K_3->size2; c++)
             {
-                gsl_matrix_set(xEst_3,r,c,gsl_matrix_get(xEst,r+3,c));
+                //RCLCPP_INFO(logger, "setting K_3-> r: %i| c: %i\n", r, c);
+                gsl_matrix_set(K_3,r,c,gsl_matrix_get(K,r+3,c));
             }
         }
 
         
         arr1 = gsl_matrix_calloc(K_3->size1, y->size2);
+        //RCLCPP_INFO(logger, "K_3 size: (%i, %i) | y_size: (%i, %i)\n", K_3->size1, K_3->size2, y->size1, y->size2);
         gsl_linalg_matmult(K_3,y,arr1);
+        //RCLCPP_INFO(logger, "first\n");
         gsl_matrix_add(xEst_3,arr1);
         gsl_matrix_free(arr1);
 
-
+        //RCLCPP_INFO(logger, "starting XEST-3\n");
         for(int r = 3; r < xEst->size1; r++)
         {
             for(int c = 0; c < xEst->size2; c++)
             {
+                //RCLCPP_INFO(logger, "setting xEst_3 pt2-> r: %i| c: %i\n", r, c);
                 gsl_matrix_set(xEst,r,c,gsl_matrix_get(xEst_3,r-3,c));
             }
         }
         
         
         arr2 = gsl_matrix_calloc(K->size1,H->size2);
-        gsl_linalg_matmult(K_3,y,arr2);
+        gsl_linalg_matmult(K,H,arr2);
+        //RCLCPP_INFO(logger, "second\n");
 
         gsl_matrix* eye = gsl_matrix_calloc(xEst->size1,xEst->size1);
         for(int i = 0; i < xEst->size1; i++)
@@ -719,15 +735,17 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         gsl_matrix_sub(eye,arr2);
         gsl_matrix* prod = gsl_matrix_calloc(eye->size1,PEst->size2);
         gsl_linalg_matmult(eye,PEst,prod);
+        //RCLCPP_INFO(logger, "third\n");
         gsl_matrix_free(arr2);
 
         gsl_matrix_free(PEst);
         PEst = gsl_matrix_calloc(prod->size1,prod->size2);
-
+        //RCLCPP_INFO(logger, "prod: (%i, %i) | PEst: (%i, %i)", prod->size1, prod->size2, PEst->size1, PEst->size2);
         for(int r = 0; r < prod->size1; r++)
         {
             for(int c = 0; c < prod->size2; c++)
             {
+                //RCLCPP_INFO(logger, "r: %i | c: %i\n", r, c);
                 gsl_matrix_set(PEst,r,c,gsl_matrix_get(prod,r,c));
             }
         }
@@ -743,15 +761,15 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         gsl_matrix_free(K_3);
         gsl_matrix_free(eye);
         gsl_matrix_free(prod);
-        RCLCPP_INFO(logger, "past these frees\n");
+        //RCLCPP_INFO(logger, "past these frees\n");
 
     
         
     }
     gsl_matrix_free(newZ);
-    RCLCPP_INFO(logger, "newZ\n");
+    //RCLCPP_INFO(logger, "newZ\n");
     gsl_matrix_set(xEst,2,0,pi_2_pi(gsl_matrix_get(xEst,2,0)));
-
+    //RCLCPP_INFO(logger, "yaboi\n");
     ekfPackage result;
     result.x = xEst;
     result.p = PEst;

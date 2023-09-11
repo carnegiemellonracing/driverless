@@ -55,7 +55,10 @@ class SLAMValidation : public rclcpp::Node
     }
   private:
     void cone_callback(const eufs_msgs::msg::ConeArrayWithCovariance::SharedPtr cone_data){
-      // RCLCPP_INFO(this->get_logger(), "B: %i| Y: %i| O: %i", cone_data->blue_cones.size(), cone_data->yellow_cones.size(), cone_data->orange_cones.size());
+      RCLCPP_INFO(this->get_logger(), "CONECALLBACK: B: %i| Y: %i| O: %i", cone_data->blue_cones.size(), cone_data->yellow_cones.size(), cone_data->orange_cones.size());
+      blue_cones.clear();
+      yellow_cones.clear();
+      orange_cones.clear();
       for(int i = 0; i < cone_data->blue_cones.size(); i++){
         Cone to_add;
         to_add.x = cone_data->blue_cones[i].point.x;
@@ -105,7 +108,7 @@ class SLAMValidation : public rclcpp::Node
       int n = blue_cones.size() + yellow_cones.size() + orange_cones.size();
       int idx = 0;
       gsl_matrix* z = gsl_matrix_calloc(n, 3);
-
+      RCLCPP_INFO(this->get_logger(), "RUNSLAM: B: %i | Y: %i | O: %i\n", blue_cones.size(), yellow_cones.size(), orange_cones.size());
       for(int i = 0; i < blue_cones.size(); i++){
         Cone c = blue_cones[i];
         double dist = hypot(c.x, c.y);
@@ -137,6 +140,7 @@ class SLAMValidation : public rclcpp::Node
       }
       slam_output = ekf_slam(xEst, pEst, u, z, 0.1, this->get_logger());
       RCLCPP_INFO(this->get_logger(), "got output\n");
+      RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", (xEst->size1-3)/2);
       xEst = slam_output.x;
       pEst = slam_output.p;
 
