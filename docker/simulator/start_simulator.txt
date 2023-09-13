@@ -1,7 +1,7 @@
 source ~/.bashrc
 ros2 daemon stop
 ros2 daemon start
-cd eufs
+cd ~/../eufs
 colcon build
 . install/setup.bash
 ros2 launch eufs_launcher eufs_launcher.launch.py
