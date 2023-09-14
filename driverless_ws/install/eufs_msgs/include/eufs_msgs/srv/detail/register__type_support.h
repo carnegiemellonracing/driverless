@@ -1,1 +1,0 @@
-/driverless/driverless_ws/build/eufs_msgs/rosidl_generator_c/eufs_msgs/srv/detail/register__type_support.h
