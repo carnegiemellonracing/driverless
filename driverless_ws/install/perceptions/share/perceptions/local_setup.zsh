@@ -1,1 +1,0 @@
-/driverless/driverless_ws/build/perceptions/ament_cmake_environment_hooks/local_setup.zsh

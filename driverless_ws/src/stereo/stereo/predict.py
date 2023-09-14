@@ -1,4 +1,4 @@
-import driverless_ws.src.stereo.stereo.cfg_perceptions as cfg_perceptions
+import stereo.cfg_perceptions as cfg_perceptions
 import torch
 import statistics
 import cv2
@@ -183,7 +183,7 @@ def predict(model, zed, sim=False):
         elif color == cfg_perceptions.COLORS.ORANGE:
             orange_cones.append(prediction)
 
-    # visualizePredictions(left_img, boxes_with_depth, predictions)
+    visualizePredictions(left_img, boxes_with_depth, predictions)
     # visualizePredictions(left_img[:, :, [2, 1, 0]], boxes_with_depth, predictions, window_name="our BGR image")
     return blue_cones, yellow_cones, orange_cones
 
