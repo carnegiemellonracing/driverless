@@ -291,19 +291,19 @@ gsl_matrix *transform_points(gsl_matrix *points, gsl_matrix *Q, gsl_vector *get_
     gsl_matrix *ret = gsl_matrix_alloc(points->size1,points->size2);
     gsl_linalg_matmult(temp,Q,ret);
     gsl_matrix_free(temp);
-    gsl_matrix *temp = gsl_matrix_alloc(Q->size1,Q->size2);
+
+    //TODO: temp2 and ret2 is very bad naming
+    gsl_matrix *temp2 = gsl_matrix_alloc(Q->size1,Q->size2);
     for(int i=0;i<Q->size2;++i){
-        gsl_matrix_set(temp,0,i,gsl_matrix_get(Q,0,i)+gsl_vector_get(get_translation_vector,0));
-        gsl_matrix_set(temp,1,i,gsl_matrix_get(Q,1,i)+gsl_vector_get(get_translation_vector,1));
+        gsl_matrix_set(temp2,0,i,gsl_matrix_get(Q,0,i)+gsl_vector_get(get_translation_vector,0));
+        gsl_matrix_set(temp2,1,i,gsl_matrix_get(Q,1,i)+gsl_vector_get(get_translation_vector,1));
     }
 
-
-    gsl_matrix *ret = gsl_matrix_alloc(points->size1,points->size2);
-    gsl_linalg_matmult(points,temp,ret);
-    gsl_matrix_free(temp);
+    gsl_matrix *ret2 = gsl_matrix_alloc(points->size1,points->size2);
+    gsl_linalg_matmult(points,temp2,ret2);
+    gsl_matrix_free(temp2);
     
-
-    return ret;
+    return ret2;
 }
 
 polynomial lagrange_gen(gsl_matrix* points){
@@ -373,7 +373,7 @@ double arclength(polynomial poly, double x0,double x1){
 
 }
 
-std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(gsl_matrix *res,int path_id = rand(),int points_per_spline,bool loop){
+std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(gsl_matrix *res,int path_id,int points_per_spline,bool loop){
 
     int n = res->size2;
 

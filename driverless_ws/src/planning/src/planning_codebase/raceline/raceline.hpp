@@ -58,6 +58,9 @@ public:
         second_der = polyder(first_der);
     }
 
+
+    double length();
+
     polynomial get_first_der();
     polynomial get_second_der();
 
