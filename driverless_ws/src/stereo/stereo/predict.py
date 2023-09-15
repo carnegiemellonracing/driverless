@@ -100,13 +100,13 @@ def visualizePredictions(image, boxes, predictions, window_name="left w/ predict
     return
 
 
-def predict(model, zed, sim=False):
+def predict(model, left_image_np, point_cloud_np, sim=False):
     # why don't we use the predictions from the model for the color of the cone?
     # instead of re-calculating the color from the image
 
-    left_image_np, _, _, point_cloud_np = zed.grab_data()
     left_img = left_image_np
     zed_pts = point_cloud_np
+    # import pdb; pdb.set_trace()
     print(np.mean(left_img), np.std(left_img))
 
     pad = 5
@@ -138,10 +138,10 @@ def predict(model, zed, sim=False):
         #world_x, world_y, world_z = coord['x'], coord['y'], coord['z']
 
         coords = zed_pts[xl:xr, zt:zb]
-        if zed is None:
-            world_xs, world_ys, world_zs = coords['x'], coords['y'], coords['z']
-        else:
-            world_xs, world_ys, world_zs = coords[:,:,0].reshape(-1), coords[:,:,1].reshape(-1), coords[:,:,2].reshape(-1)
+        # if zed is None:
+        #     world_xs, world_ys, world_zs = coords['x'], coords['y'], coords['z']
+        # else:
+        world_xs, world_ys, world_zs = coords[:,:,0].reshape(-1), coords[:,:,1].reshape(-1), coords[:,:,2].reshape(-1)
 
         idxs = np.logical_and(~np.isnan(world_xs), ~np.isinf(world_xs))
         world_xs = world_xs[idxs]
