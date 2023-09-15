@@ -31,11 +31,11 @@ add_library(frenet_test src/planning_codebase/raceline/frenet.cpp src/planning_c
 ament_target_dependencies(frenet_test rclcpp)
 ament_export_include_directories(src)
 
-add_library(midline src/midpoint.cpp src/planning_codebase/midpoint/generator.cpp)
+add_library(midline src/midpoint.cpp src/planning_codebase/raceline/generator.cpp)
 ament_target_dependencies(midline rclcpp)
 ament_export_include_directories(src)
 
-
+target_link_libraries(midline GSL::gsl GSL::gslcblas)
 target_link_libraries(frenet_test GSL::gsl GSL::gslcblas)
 
 #install(TARGETS
