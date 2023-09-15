@@ -10,7 +10,9 @@ from stereo.ZED import ZEDSDK
 
 from eufs_msgs.msg import ConeArray
 from geometry_msgs.msg import Point
+from sensor_msgs.msg import Image
 
+from cv_bridge import CvBridge
 
 def np2points(cones):
     '''convert list of cones into a Point[] object'''
@@ -29,6 +31,10 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
 STEREO_OUT = '/stereo_cones'
+IMAGE_LEFT_OUT = '/zedsdk_left_color_image'
+IMAGE_RIGHT_OUT = '/zedsdk_right_color_image'
+DEPTH_OUT = '/zedsdk_depth_image'
+POINT_OUT = '/zedsdk_point_cloud_image'
 
 class StereoCamera(Node):
 
@@ -42,11 +48,28 @@ class StereoCamera(Node):
         self.prediction_publisher = self.create_publisher(msg_type=ConeArray,
                                                           topic=STEREO_OUT,
                                                           qos_profile=BEST_EFFORT_QOS_PROFILE)
+        
+        self.left_publisher = self.create_publisher(msg_type=Image,
+                                                     topic=IMAGE_LEFT_OUT,
+                                                     qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.right_publisher = self.create_publisher(msg_type=Image,
+                                                     topic=IMAGE_RIGHT_OUT,
+                                                     qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.depth_publisher = self.create_publisher(msg_type=Image,
+                                                     topic=DEPTH_OUT,
+                                                     qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.point_publisher = self.create_publisher(msg_type=Image,
+                                                     topic=POINT_OUT,
+                                                     qos_profile=BEST_EFFORT_QOS_PROFILE)
+
+        
 
         self.data_syncer = self.create_timer(1/frame_rate, self.inference)
 
         self.zed = ZEDSDK()
         self.zed.open()
+
+        self.bridge = CvBridge()
 
 
         print(f"model-device: {self.device}")
@@ -57,7 +80,26 @@ class StereoCamera(Node):
 
         s = time.time()
 
-        blue_cones, yellow_cones, orange_cones = predict(self.model, self.zed)
+        left, right, depth, point = self.zed.grab_data()
+        blue_cones, yellow_cones, orange_cones = predict(self.model, left, point)
+
+        # convert the data and check that it is the same going and backwards
+        # have to extract out nan values that don't count to compare image values
+        left_enc = self.bridge.cv2_to_imgmsg(left, encoding="passthrough")
+        right_enc = self.bridge.cv2_to_imgmsg(right, encoding="passthrough")
+        depth_enc = self.bridge.cv2_to_imgmsg(depth, encoding="passthrough")
+        point_enc = self.bridge.cv2_to_imgmsg(point,encoding="32FC4")
+
+        # publish the data
+        self.left_publisher.publish(left_enc)
+        self.right_publisher.publish(right_enc)
+        self.depth_publisher.publish(depth_enc)
+        self.point_publisher.publish(point_enc)
+
+
+        # left_unenc = self.bridge.imgmsg_to_cv2(left_enc, desired_encoding="passthrough")
+        # point_unenc = self.bridge.imgmsg_to_cv2(point_enc, desired_encoding="32FC4")
+        # depth_unenc = self.bridge.imgmsg_to_cv2(depth_enc, desired_encoding="passthrough")
 
         result = []
         for i in range(len(blue_cones)):
