@@ -22,6 +22,7 @@
 #include <pcl/sample_consensus/model_types.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/filters/extract_indices.h>
+#include <pcl/filters/filter.h>
 #include <pcl/search/kdtree.h>
 #include <pcl/segmentation/extract_clusters.h>
 
@@ -75,6 +76,11 @@ class LidarSubscriber : public rclcpp::Node {
 			pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
 			pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
 
+			pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_dense(new pcl::PointCloud<pcl::PointXYZ>);
+			std::vector<int> ind;
+			pcl::removeNaNFromPointCloud(*pcl, *pcl_dense, ind);
+			pcl = pcl_dense;
+
 			// create segmentation object
 			pcl::SACSegmentation<pcl::PointXYZ> seg;
 			seg.setOptimizeCoefficients(true);
@@ -91,7 +97,7 @@ class LidarSubscriber : public rclcpp::Node {
 
 			// given indices that split point cloud, separate the points
 			pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_plane (new pcl::PointCloud<pcl::PointXYZ>);
-			pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_not_plane (new pcl::PointCloud<pcl::PointXYZ>);
+			pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_not_plane (new pcl::PointCloud<pcl::PointXYZ>);\
 
 			pcl::ExtractIndices<pcl::PointXYZ> filter;
 			filter.setInputCloud(pcl);
@@ -99,6 +105,8 @@ class LidarSubscriber : public rclcpp::Node {
 			filter.filter(*cloud_plane);
 			filter.setNegative(true);
 			filter.filter(*cloud_not_plane);
+
+			RCLCPP_INFO(this->get_logger(), "extracted indices");
 
 			// extract cluster from the point cloud with the ground filtered out
 			pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
@@ -111,7 +119,12 @@ class LidarSubscriber : public rclcpp::Node {
 			ec.setMaxClusterSize(999999999);
 			ec.setSearchMethod(tree);
 			ec.setInputCloud(cloud_not_plane);
+
+			RCLCPP_INFO(this->get_logger(), "set parameters");
+			std::cout << cloud_not_plane->is_dense << std::endl;
 			ec.extract(cluster_indices);
+
+			RCLCPP_INFO(this->get_logger(), "extracted cluster");
 
 			// extract clusters and cluster centers
 			int j = 0;
