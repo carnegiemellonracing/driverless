@@ -108,7 +108,7 @@ gsl_matrix* MidpointGenerator::generate_points(perceptionsData perceptions_data)
 }
 
 
-gsl_matrix MidpointGenerator::interpolate_cones(perceptionsData perceptions_data,int interpolation_number){
+gsl_matrix* MidpointGenerator::interpolate_cones(perceptionsData perceptions_data,int interpolation_number){
     return spline_from_cones(perceptions_data).interpolate(interpolation_number,std::make_pair(-1,-1));
 }
 
