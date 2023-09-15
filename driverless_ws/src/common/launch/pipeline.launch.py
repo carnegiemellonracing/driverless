@@ -12,15 +12,15 @@ from ament_index_python import get_package_share_directory
 def generate_launch_description():
     ld = LaunchDescription()
     
-    stereo_mode = Node(
-        package='stereo',
-        executable='stereo_cones'
-    )
+    # stereo_mode = Node(
+    #     package='stereo',
+    #     executable='stereo_cones'
+    # )
 
-    lidar_node = Node(
-        package='lidar',
-        executable='lidar_sub'
-    )
+    # lidar_node = Node(
+    #     package='perceptions',
+    #     executable='lidar_sub'
+    # )
 
     velodyne = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -29,16 +29,22 @@ def generate_launch_description():
         )
     )
 
-    zed = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('zed_wrapper'),
-                         'zed2.launch.py')
-        )
-    )
+    # sbg = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(get_package_share_directory('sbg_driver'),
+    #                      'sbg_driver_launch.py')
+    #     )
+    # )
+    # zed = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(get_package_share_directory('zed_wrapper'),
+    #                      'zed2.launch.py')
+    #     )
+    # )
 
-    ld.add_action(stereo_mode)
-    ld.add_action(lidar_node)
+    # ld.add_action(stereo_mode)
+    # ld.add_action(lidar_node)
     ld.add_action(velodyne)
-    ld.add_action(zed)
+    # ld.add_action(sbg)
 
     return ld
