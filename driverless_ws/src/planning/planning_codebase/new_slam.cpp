@@ -312,10 +312,10 @@ gsl_matrix* get_landmark_position_from_state(gsl_matrix* x, int ind) {
 //helper function that finds the min value in a matrix and returns
 // a double pointer containing the min value and its row and col
 //location
-double* findMinLocation(gsl_matrix* mat)
+int findMinLocation(gsl_matrix* mat, auto logger)
 {
-    double row = 0;
-    double col = 0;
+    
+    int min_index = 0;
     double min = gsl_matrix_get(mat,0,0);
 
     for(int r = 0; r < mat->size1; r++)
@@ -326,17 +326,18 @@ double* findMinLocation(gsl_matrix* mat)
             if(min > elem)
             {
                 min = elem;
-                row = r;
-                col = c;
+                
+                min_index = c;
+                
             }
+            RCLCPP_INFO(logger,"row: %i, col: %i, min_val: %f",r,c,elem);
         }
     }
 
-    double* res = new double[3];
-    res[0] = min;
-    res[1] = row;
-    res[2] = col;
-    return res;
+
+   
+    RCLCPP_INFO(logger,"index of min: %i, min_valFinal: %f",min_index,min);
+    return min_index;
 }
 
 int search_correspond_landmark_id(gsl_matrix* xAug, gsl_matrix* PAug, gsl_matrix* zi, auto logger)
@@ -427,11 +428,13 @@ int search_correspond_landmark_id(gsl_matrix* xAug, gsl_matrix* PAug, gsl_matrix
         gsl_matrix_set(min_dist,0,j,gsl_matrix_get(new_min_dist,0,j));
     }
     gsl_matrix_free(new_min_dist);
+    
 
-    double* minimum = findMinLocation(min_dist);
+    int min_id = findMinLocation(min_dist,logger);
 
-    int min_id = minimum[2]; //getting the col location of the min value
-    delete minimum;
+    //int min_id = minimum[2]; //getting the col location of the min value
+    RCLCPP_INFO(logger,"min_index: %i",min_id);
+   
     gsl_matrix_free(min_dist);
 
 
@@ -584,11 +587,12 @@ ekfPackage ekf_slam(gsl_matrix* xEst, gsl_matrix* PEst, gsl_matrix* u, gsl_matri
         ////RCLCPP_INFO(logger, "yo mama\n");
         gsl_matrix* landPos = calc_landmark_position(xEst,zRow);
         gsl_matrix_free(zRow);
+        RCLCPP_INFO(logger,"xPos: %f, yPos: %f, iz: %d",gsl_matrix_get(landPos,0,0),gsl_matrix_get(landPos,1,0),iz);
         cones.push_back(landPos);
         int nLM = calc_n_lm(xEst);
-
+        RCLCPP_INFO(logger,"min_id: %i, nLM: %i",min_id,nLM);
         if(min_id==nLM) {
-            RCLCPP_INFO(logger, "New LM\n\n");
+            RCLCPP_INFO(logger, "HEYYYYYEYEYEYEYYEYE\n\n:   New LM\n\n\n\n");
             ////RCLCPP_INFO(logger, "xEST SIZE: (%i, %i)", xEst->size1, xEst->size2);
             gsl_matrix* xaug = gsl_matrix_calloc(xEst->size1+2,1);
             for(int i = 0; i < xEst->size1; i++)
