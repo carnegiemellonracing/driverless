@@ -1,5 +1,5 @@
 #include "raceline.hpp"
-#include "random.h"
+#include "sys/random.h"
 #include <math.h>
 #include <algorithm>
 
@@ -39,6 +39,7 @@ public:
     gsl_matrix* interpolate_cones(perceptionsData perceptions_data, int interpolation_number = -1);
     Spline spline_from_cones(perceptionsData perceptions_data);
     Spline spline_from_cone_side(std::vector<std::pair<double,double>> side);
+    Spline spline_from_curve(std::vector<std::pair<double,double>> side);
 
 };
 
