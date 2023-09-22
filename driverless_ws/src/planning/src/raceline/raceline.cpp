@@ -281,7 +281,7 @@ gsl_vector *get_translation_vector(gsl_matrix *group){
 
 gsl_matrix *transform_points(gsl_matrix *points, gsl_matrix *Q, gsl_vector *get_translation_vector){
     gsl_matrix *temp = gsl_matrix_alloc(points->size1,points->size2);
-    for(int i=0;i<temp->size2;++i){
+    for(u_int32_t i=0;i<temp->size2;++i){
         gsl_matrix_set(temp,0,i,gsl_matrix_get(points,0,i)-gsl_vector_get(get_translation_vector,0));
         gsl_matrix_set(temp,1,i,gsl_matrix_get(points,1,i)-gsl_vector_get(get_translation_vector,1));
     }
@@ -298,7 +298,7 @@ gsl_matrix *transform_points(gsl_matrix *points, gsl_matrix *Q, gsl_vector *get_
 
 gsl_matrix *reverse_transform(gsl_matrix *points, gsl_matrix *Q, gsl_vector *get_translation_vector){
     gsl_matrix *temp = gsl_matrix_alloc(points->size1,points->size2);
-    for(int i=0;i<temp->size2;++i){
+    for(uint32_t i=0;i<temp->size2;++i){
         gsl_matrix_set(temp,0,i,gsl_matrix_get(points,0,i));
         gsl_matrix_set(temp,1,i,gsl_matrix_get(points,1,i));
     }
@@ -307,7 +307,7 @@ gsl_matrix *reverse_transform(gsl_matrix *points, gsl_matrix *Q, gsl_vector *get
     gsl_linalg_matmult(temp,Q,ret);
     gsl_matrix_free(temp);    
 
-    for(int i=0;i<temp->size2;++i){
+    for(uint32_t i=0;i<temp->size2;++i){
         gsl_matrix_set(temp,0,i,gsl_matrix_get(points,0,i)+gsl_vector_get(get_translation_vector,0));
         gsl_matrix_set(temp,1,i,gsl_matrix_get(points,1,i)+gsl_vector_get(get_translation_vector,1));
     }
@@ -318,21 +318,21 @@ gsl_matrix *reverse_transform(gsl_matrix *points, gsl_matrix *Q, gsl_vector *get
 polynomial lagrange_gen(gsl_matrix* points){
     polynomial lagrange_poly = poly(3);
 
-    for(int col = 0;col <points->size2;col++){
+    for(uint32_t col = 0;col <points->size2;col++){
 
 
     }
     double x[points->size2];
     double y[points->size2];
-    for(int i=0;i<points->size2;i++){
+    for(uint32_t i=0;i<points->size2;i++){
         x[i] = gsl_matrix_get(points,i,0);
         y[i] = gsl_matrix_get(points,i,1);
     }
 
 
-    for(int i=0;i<points->size2;i++){
+    for(uint32_t i=0;i<points->size2;i++){
         polynomial p = poly_one();
-        for(int j=0;j<points->size2;j++){
+        for(uint32_t j=0;j<points->size2;j++){
             if(j!=i){
                 polynomial pr =poly_root(x[j]);
                 polynomial q =poly_mult(p,pr);

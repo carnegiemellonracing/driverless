@@ -17,11 +17,11 @@ find_package(geometry_msgs REQUIRED)
 find_package(eufs_msgs REQUIRED)
 find_package(GSL REQUIRED)
 
-add_executable(midpoint_test src/midpoint.cpp src/generator.cpp src/raceline/raceline.cpp)
-ament_target_dependencies(midpoint_test rclcpp std_msgs eufs_msgs geometry_msgs GSL)
+add_executable(midline src/midpoint.cpp src/generator.cpp src/raceline/raceline.cpp)
+ament_target_dependencies(midline rclcpp std_msgs eufs_msgs geometry_msgs GSL)
 
 install(TARGETS
-  midpoint_test
+  midline
   DESTINATION lib/${PROJECT_NAME})
 
-ament_package()
+# ament_package()
