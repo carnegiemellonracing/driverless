@@ -1,0 +1,2 @@
+xhost +
+sudo docker run -it --rm --privileged --net=host -v $PWD/../..:/driverless -e DISPLAY=$DISPLAY eufs:latest
