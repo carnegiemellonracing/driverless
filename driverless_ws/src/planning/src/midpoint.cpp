@@ -20,13 +20,39 @@ struct raceline_pt{
 
 class MidpointNode : public rclcpp::Node
 {
-  private:
+     
+  public:
+    MidpointNode()
+    : Node("midpoint")
+    {
+
+      RCLCPP_INFO(this->get_logger(), "Started Node");
+
+      subscription_ = this->create_subscription<std_msgs::msg::String>(
+      "topic", 10, std::bind(&MidpointNode::topic_callback, this, _1));
+
+      subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArray>(
+        "/stereo_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
+      // subscription_cones.subscribe(this,"/stereo_cones"); //= this->create_subscription<eufs_msgs::msg::ConeArray>("/stereo_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
+
+      // subscription_lap_num = this->create_subscription<std_msgs::msg::String>("/lap_num", 10, std::bind(&MidpointNode::lap_callback, this, _1));
+      publisher_rcl_pt = this->create_publisher<eufs_msgs::msg::PointArray>("/midpoint_points",10);
+      //     rclcpp::TimerBase::SharedPtr  timer_ = this->create_wall_timer(
+      // 500ms, std::bind(&MinimalPublisher::timer_callback, this));
+      generator_mid = MidpointGenerator(10);
+      // generator_left = MidpointGenerator(10);
+      // generator_right = MidpointGenerator(10);
+      // VIS LOOKAHEADS 
+      RCLCPP_INFO(this->get_logger(), "Created Node");
+
+    }
+    
+    private:
     perceptionsData perception_data;
 
-    // Normal cone array for pipeline
-    // rclcpp::Subscription<eufs_msgs::msg::ConeArray>::SharedPtr subscription_cones;
-    rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr subscription_cones;
-    
+
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
+    rclcpp::Subscription<eufs_msgs::msg::ConeArray>::SharedPtr subscription_cones;
     // rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_lap_num;
     rclcpp::Publisher<eufs_msgs::msg::PointArray>::SharedPtr publisher_rcl_pt;
 
@@ -36,22 +62,32 @@ class MidpointNode : public rclcpp::Node
     int lap = 1;
     bool vis_spline = true;
     MidpointGenerator generator_mid;
-    MidpointGenerator generator_left;
-    MidpointGenerator generator_right;
+    // MidpointGenerator generator_left;
+    // MidpointGenerator generator_right;
 
-    void lap_callback(const std_msgs::msg::Int8::SharedPtr msg) 
+    // void lap_callback(const std_msgs::msg::Int8::SharedPtr msg) 
+    // {
+    //   lap=msg->data;
+    // }
+
+    void topic_callback(const std_msgs::msg::String::SharedPtr msg) const
     {
-      lap=msg->data;
+      RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg->data.c_str());
     }
 
-    void cones_callback (const eufs_msgs::msg::ConeArray::SharedPtr msg)
+    void cones_callback(const eufs_msgs::msg::ConeArray::SharedPtr msg) const
     { 
+      RCLCPP_INFO(this->get_logger(), "Recieved cones from perceptions");
+    }
+
+    void cones_callback2(const eufs_msgs::msg::ConeArray::SharedPtr msg) 
+    { 
+      RCLCPP_INFO(this->get_logger(), "Recieved cones from perceptions");
       if (lap>1) return;
 
       if((msg->blue_cones.size()==0 || msg->yellow_cones.size()==0) && (msg->orange_cones.size()<2)){
         return;
       }
-
 
       for (auto e : msg->blue_cones)
       {
