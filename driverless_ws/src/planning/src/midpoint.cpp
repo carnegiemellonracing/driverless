@@ -23,7 +23,10 @@ class MidpointNode : public rclcpp::Node
   private:
     perceptionsData perception_data;
 
-    rclcpp::Subscription<eufs_msgs::msg::ConeArray>::SharedPtr subscription_cones;
+    // Normal cone array for pipeline
+    // rclcpp::Subscription<eufs_msgs::msg::ConeArray>::SharedPtr subscription_cones;
+    rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr subscription_cones;
+    
     // rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_lap_num;
     rclcpp::Publisher<eufs_msgs::msg::PointArray>::SharedPtr publisher_rcl_pt;
 
@@ -70,7 +73,6 @@ class MidpointNode : public rclcpp::Node
       // Spline spline_left = generator_left.spline_from_curve(perception_data.bluecones);
       // Spline spline_right = generator_right.spline_from_curve(perception_data.yellowcones);
 
-
       // WILL BE USED WHEN OPTIMIZER STARTS
       std::vector<double> rcl_pt_x,rcl_pt_y;//,rcl_pt_wr, rcl_pt_wl;
       double x,y;//,wl,wr,rptr,lptr;
@@ -82,7 +84,7 @@ class MidpointNode : public rclcpp::Node
         auto spline = generator_mid.cumulated_splines[i];
         //TODO:create a typedef, but size2 is the num of rows
         for(unsigned int j=0;j<spline.get_points()->size2-1;j++){
-          x=gsl_matrix_get(spline.get_points(),0,j);
+          x=gsl_matrix_get(spline.get_points(),0,j); //get x and y points from a row
           y=gsl_matrix_get(spline.get_points(),1,j);
           // double len=0; 
           // if (i>0) len = generator_mid.cumulated_lengths[i-1];
@@ -104,10 +106,16 @@ class MidpointNode : public rclcpp::Node
     MidpointNode()
     : Node("midpoint")
     {
-      subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArray>("/stereo_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
+      //Should be cone array for normal pipeline
+      // subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArray>(
+      //     "/stereo_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
+      subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArrayWithCovariance>(
+          "/cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
+
+
       // subscription_lap_num = this->create_subscription<std_msgs::msg::String>("/lap_num", 10, std::bind(&MidpointNode::lap_callback, this, _1));
-      publisher_rcl_pt = this->create_publisher<eufs_msgs::msg::PointArray>("/midpoint_points",10);
-      // publisher_rcl_pt = this->create_publisher<std_msgs::msg::String>("/midpoint_points",10);
+      publisher_rcl_pt = this->create_publisher<eufs_msgs::msg::PointArray>(
+          "/midpoint_points",10);
       //     rclcpp::TimerBase::SharedPtr  timer_ = this->create_wall_timer(
       // 500ms, std::bind(&MinimalPublisher::timer_callback, this));
       generator_mid = MidpointGenerator(10);
