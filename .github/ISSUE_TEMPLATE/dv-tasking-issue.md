@@ -17,6 +17,6 @@ assignees: ''
 - [ ] Open Pull Request
 
 ## Task Timeline:
-- [ ] Update [Smartsheet](https://app.smartsheet.com/sheets/phJjhWq5VvpqHHw8WW5rCRh8Xgccpv8Q96WCMr41?view=grid) with Task Timeline
+- [ ] Update [Jira](cmr.red/jira) with Task Timeline
 
 Comment any questions and tag reviewers.
