@@ -19,8 +19,8 @@ std::vector<std::pair<double,double>>  MidpointGenerator::sorted_by_norm(std::ve
 
 gsl_matrix* midpoint(gsl_matrix *inner,gsl_matrix *outer){
     gsl_matrix *midpt = gsl_matrix_alloc(inner->size1,inner->size2);
-    for(unsigned int i=0;i<midpt->size1;i++)
-        for(unsigned int j=0;j<midpt->size1;j++)
+    for(int i=0;i<midpt->size1;i++)
+        for(int j=0;j<midpt->size1;j++)
         gsl_matrix_set(midpt,i,j,(gsl_matrix_get(inner,i,j)+gsl_matrix_get(outer,i,j))/2);
 
     return midpt;
@@ -48,7 +48,7 @@ gsl_matrix* MidpointGenerator::generate_points(perceptionsData perceptions_data)
     if (perceptions_data.bluecones.size()>0 && perceptions_data.yellowcones.size()==0){
         gsl_matrix *left = gsl_matrix_alloc(2,perceptions_data.bluecones.size());
         gsl_matrix *right = gsl_matrix_alloc(2,perceptions_data.bluecones.size());
-        for(unsigned int i=0;i<perceptions_data.bluecones.size();i++){
+        for(int i=0;i<perceptions_data.bluecones.size();i++){
             gsl_matrix_set(left,0,i,perceptions_data.bluecones[i].first);
             gsl_matrix_set(left,1,i,perceptions_data.bluecones[i].second);
             if(i==0){
@@ -70,7 +70,7 @@ gsl_matrix* MidpointGenerator::generate_points(perceptionsData perceptions_data)
     if (perceptions_data.bluecones.size()==0 && perceptions_data.yellowcones.size()>0){
         gsl_matrix *left = gsl_matrix_alloc(2,perceptions_data.yellowcones.size());
         gsl_matrix *right = gsl_matrix_alloc(2,perceptions_data.yellowcones.size());
-        for(unsigned int i=0;i<perceptions_data.yellowcones.size();i++){
+        for(int i=0;i<perceptions_data.yellowcones.size();i++){
             gsl_matrix_set(right,0,i,perceptions_data.yellowcones[i].first);
             gsl_matrix_set(right,1,i,perceptions_data.yellowcones[i].second);
             if(i==0){
@@ -92,7 +92,7 @@ gsl_matrix* MidpointGenerator::generate_points(perceptionsData perceptions_data)
     double size = std::min(perceptions_data.bluecones.size(),perceptions_data.yellowcones.size());
         gsl_matrix *left = gsl_matrix_alloc(2,size+1);
         gsl_matrix *right = gsl_matrix_alloc(2,size+1);
-        for(unsigned int i=0;i<perceptions_data.yellowcones.size();i++){
+        for(int i=0;i<perceptions_data.yellowcones.size();i++){
             gsl_matrix_set(left,0,i+1,perceptions_data.bluecones[i].first);
             gsl_matrix_set(left,1,i+1,perceptions_data.bluecones[i].second);
             gsl_matrix_set(right,0,i+1,perceptions_data.yellowcones[i].first);
@@ -121,7 +121,7 @@ Spline MidpointGenerator::spline_from_cones(perceptionsData perceptions_data){
 
 gsl_matrix* vector_to_mat(std::vector<std::pair<double,double>> side){
     gsl_matrix *mat = gsl_matrix_alloc(2,side.size());
-    for(unsigned int i=0;i<side.size();i++){
+    for(int i=0;i<side.size();i++){
         gsl_matrix_set(mat,0,i,side[i].first);
         gsl_matrix_set(mat,1,i,side[i].second);
     }
