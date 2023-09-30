@@ -9,5 +9,6 @@
 **/install/
 **/log/
 **/cmake-build-*/
+log.log
 
 **/__pycache__/
