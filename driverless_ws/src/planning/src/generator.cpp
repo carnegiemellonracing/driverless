@@ -19,9 +19,40 @@ std::vector<std::pair<double,double>>  MidpointGenerator::sorted_by_norm(std::ve
 
 gsl_matrix* midpoint(gsl_matrix *inner,gsl_matrix *outer){
     gsl_matrix *midpt = gsl_matrix_alloc(inner->size1,inner->size2);
-    for(int i=0;i<midpt->size1;i++)
-        for(int j=0;j<midpt->size1;j++)
-        gsl_matrix_set(midpt,i,j,(gsl_matrix_get(inner,i,j)+gsl_matrix_get(outer,i,j))/2);
+
+    double ix = gsl_matrix_get(inner, 0 , 0);
+    double iy = gsl_matrix_get(inner, 1 , 0);
+    double ox = gsl_matrix_get(outer, 0 , 0);
+    double oy = gsl_matrix_get(outer, 1 , 0);
+    int i = 0; //index of inner
+    int o = 0; //index of outer
+    int m = 0; //index of midpt
+    while(i<midpt->size2 && y<midpt->size2){
+        double ixp1 = gsl_matrix_get(inner, 0 , i+1);
+        double iyp1 = gsl_matrix_get(inner, 1 , i+1);
+        double oxp1 = gsl_matrix_get(inner, 0 , o+1);
+        double oyp1 = gsl_matrix_get(inner, 1 , o+1);
+        double dist_i_op1 = sqrt(pow((oxp1-ix),2) + pow((oyp1-iy),2));
+        double dist_ip1_o = sqrt(pow((ox-ixp1),2) + pow((oy-iyp1),2));
+        if(dist_i_op1 <= dist_ip1_o){
+            o++;
+            ox = oxp1;
+            oy = oyp1;
+            gsl_matrix_set(midpt,0,m,(ix+ox)/2);
+            gsl_matrix_set(midpt,1,m,(iy+oy)/2);
+        }else{
+            i++;
+            ix = ixp1;
+            iy = iyp1;
+            gsl_matrix_set(midpt,0,m,(ix+ox)/2);
+            gsl_matrix_set(midpt,1,m,(iy+oy)/2);
+        }
+        m++;
+    }
+
+    // for(int i=0;i<midpt->size1;i++)
+    //     for(int j=0;j<midpt->size1;j++)
+    //     gsl_matrix_set(midpt,i,j,(gsl_matrix_get(inner,i,j)+gsl_matrix_get(outer,i,j))/2);
 
     return midpt;
 }
