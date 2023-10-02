@@ -16,9 +16,12 @@
   find_package(geometry_msgs REQUIRED)
   find_package(eufs_msgs REQUIRED)
   find_package(GSL REQUIRED)
+  find_package(matplotplusplus REQUIRED)
 
   add_executable(midpoint_test src/midpoint.cpp src/generator.cpp src/raceline/raceline.cpp)
+  add_executable(midline_test src/generator.cpp src/raceline/raceline.cpp)
   ament_target_dependencies(midpoint_test rclcpp std_msgs geometry_msgs eufs_msgs GSL)
+  ament_target_dependencies(midline_test rclcpp std_msgs geometry_msgs eufs_msgs GSL matplotplusplus)
 
   install(TARGETS
   midpoint_test
