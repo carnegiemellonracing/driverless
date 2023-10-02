@@ -30,7 +30,7 @@ gsl_matrix* midpoint(gsl_matrix *left,gsl_matrix *right){
     gsl_matrix_set(midpt,0,0,(lx+rx)/2);
     gsl_matrix_set(midpt,1,0,(ly+ry)/2);
     int m = 1; //index of midpt
-    while(l<left->size2 && r<right->size2){
+    while(l<left->size2-1 && r<right->size2-1){
         double lxp1 = gsl_matrix_get(left, 0 , l+1); //x-coordinater of inner[i+1]
         double lyp1 = gsl_matrix_get(left, 1 , l+1); //y-coordinater of inner[i+1]
         double rxp1 = gsl_matrix_get(right, 0 , r+1); //x-coordinater of outer[o+1]
@@ -53,6 +53,30 @@ gsl_matrix* midpoint(gsl_matrix *left,gsl_matrix *right){
         m++;
     }
 
+    if(r == right->size2-1)
+    {
+        while(l<left->size2-1)
+        {
+            lx = gsl_matrix_get(left, 0 , l); //x-coordinater of inner[i+1]
+            ly = gsl_matrix_get(left, 1 , l);
+            gsl_matrix_set(midpt,0,m,(lx+rx)/2);
+            gsl_matrix_set(midpt,1,m,(ly+ry)/2);
+            l++;
+            m++;
+        }
+    }
+    else{
+        //l == left->size2-1
+        while(r<right->size2-1)
+        {
+            rx = gsl_matrix_get(left, 0 , r); //x-coordinater of inner[i+1]
+            ry = gsl_matrix_get(left, 1 , r);
+            gsl_matrix_set(midpt,0,m,(lx+rx)/2);
+            gsl_matrix_set(midpt,1,m,(ly+ry)/2);
+            r++;
+            m++;
+        }
+    }
 
     // for(int i=0;i<midpt->size1;i++)
     //     for(int j=0;j<midpt->size1;j++)
