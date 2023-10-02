@@ -20,20 +20,20 @@ std::vector<std::pair<double,double>>  MidpointGenerator::sorted_by_norm(std::ve
 gsl_matrix* midpoint(gsl_matrix *inner,gsl_matrix *outer){
     gsl_matrix *midpt = gsl_matrix_alloc(inner->size1,inner->size2);
 
-    double ix = gsl_matrix_get(inner, 0 , 0);
-    double iy = gsl_matrix_get(inner, 1 , 0);
-    double ox = gsl_matrix_get(outer, 0 , 0);
-    double oy = gsl_matrix_get(outer, 1 , 0);
+    double ix = gsl_matrix_get(inner, 0 , 0); //x-coordinate of first inner point
+    double iy = gsl_matrix_get(inner, 1 , 0); //y-coordinate
+    double ox = gsl_matrix_get(outer, 0 , 0); //x-coordinate of first outer point
+    double oy = gsl_matrix_get(outer, 1 , 0); //y-coordinate
     int i = 0; //index of inner
     int o = 0; //index of outer
     int m = 0; //index of midpt
     while(i<midpt->size2 && y<midpt->size2){
-        double ixp1 = gsl_matrix_get(inner, 0 , i+1);
-        double iyp1 = gsl_matrix_get(inner, 1 , i+1);
-        double oxp1 = gsl_matrix_get(inner, 0 , o+1);
-        double oyp1 = gsl_matrix_get(inner, 1 , o+1);
-        double dist_i_op1 = sqrt(pow((oxp1-ix),2) + pow((oyp1-iy),2));
-        double dist_ip1_o = sqrt(pow((ox-ixp1),2) + pow((oy-iyp1),2));
+        double ixp1 = gsl_matrix_get(inner, 0 , i+1); //x-coordinater of inner[i+1]
+        double iyp1 = gsl_matrix_get(inner, 1 , i+1); //y-coordinater of inner[i+1]
+        double oxp1 = gsl_matrix_get(inner, 0 , o+1); //x-coordinater of outer[o+1]
+        double oyp1 = gsl_matrix_get(inner, 1 , o+1); //y-coordinater of inner[o+1]
+        double dist_i_op1 = sqrt(pow((oxp1-ix),2) + pow((oyp1-iy),2)); //distance between inner[i] and outer[o+1]
+        double dist_ip1_o = sqrt(pow((ox-ixp1),2) + pow((oy-iyp1),2)); //distance between inner[i+1] and outer[o]
         if(dist_i_op1 <= dist_ip1_o){
             o++;
             ox = oxp1;
