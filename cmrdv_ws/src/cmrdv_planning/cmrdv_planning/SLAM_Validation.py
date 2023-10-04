@@ -12,7 +12,7 @@ from cmrdv_common.config.collection_config import BEST_EFFORT_QOS_PROFILE
 from cmrdv_common.config.planning_config import *
 # from cmrdv_ws.src.cmrdv_planning.planning_codebase.ekf.map import *
 from cmrdv_ws.src.cmrdv_planning.planning_codebase.ekf.new_slam import *
-from cmrdv_ws.src.cmrdv_planning.planning_codebase.graph_slam import *
+# from cmrdv_ws.src.cmrdv_planning.planning_codebase.graph_slam import *
 from cmrdv_interfaces.msg import *
 import numpy as np
 import math
@@ -63,7 +63,7 @@ class SLAMSubscriber(Node):
         self.cone_positions = None
 
         # self.EKF = Map()
-        self.GraphSlam = GraphSlam(lc_limit=5)
+        # self.GraphSlam = GraphSlam(lc_limit=5)
 
 
         self.cones = None
@@ -218,7 +218,7 @@ class SLAMSubscriber(Node):
             z = np.vstack((z, zi))
         self.xEst, self.pEst, cones = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger())
         self.all_cones.extend(cones)
-        # self.get_logger().info(f'Num Landmarks = {(self.xEst.shape[0]-3)/2}')
+        self.get_logger().info(f'Num Landmarks = {(self.xEst.shape[0]-3)/2}')
         # self.print_xEst()
         self.plot_state_matrix()
         #TODO: Add dt
@@ -274,10 +274,10 @@ class SLAMSubscriber(Node):
         # cv2.imshow('current_map', img)
         # cv2.waitKey(10)
 
-    def runGraph(self, ekf_output):
-        self.get_logger().info('EKF output recieved:')
-        self.get_logger().info('Running GraphSlam')
-        return self.GraphSlam.run_graph_slam(ekf_output)
+    # def runGraph(self, ekf_output):
+    #     self.get_logger().info('EKF output recieved:')
+    #     self.get_logger().info('Running GraphSlam')
+    #     return self.GraphSlam.run_graph_slam(ekf_output)
 
 def main(args=None):
     rclpy.init(args=args)
