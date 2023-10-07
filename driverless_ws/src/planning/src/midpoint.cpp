@@ -4,7 +4,7 @@
 #include "std_msgs/msg/int8.hpp"
 #include "geometry_msgs/msg/point.hpp"
 // #include "msg/optimizer_points.hpp"
-#include "eufs_msgs/msg/cone_array.hpp"
+#include "eufs_msgs/msg/cone_array_with_covariance.hpp"
 #include "eufs_msgs/msg/point_array.hpp"
 // #include "interfaces/msg/cone_list.hpp"
 // #include "interfaces/msg/points.hpp"
@@ -31,8 +31,8 @@ class MidpointNode : public rclcpp::Node
       subscription_ = this->create_subscription<std_msgs::msg::String>(
       "topic", 10, std::bind(&MidpointNode::topic_callback, this, _1));
 
-      subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArray>(
-        "/stereo_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
+      subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArrayWithCovariance>(
+        "/ground_truth/cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
       // subscription_cones.subscribe(this,"/stereo_cones"); //= this->create_subscription<eufs_msgs::msg::ConeArray>("/stereo_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
 
       // subscription_lap_num = this->create_subscription<std_msgs::msg::String>("/lap_num", 10, std::bind(&MidpointNode::lap_callback, this, _1));
@@ -52,7 +52,7 @@ class MidpointNode : public rclcpp::Node
 
 
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
-    rclcpp::Subscription<eufs_msgs::msg::ConeArray>::SharedPtr subscription_cones;
+    rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr subscription_cones;
     // rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_lap_num;
     rclcpp::Publisher<eufs_msgs::msg::PointArray>::SharedPtr publisher_rcl_pt;
 
@@ -75,12 +75,12 @@ class MidpointNode : public rclcpp::Node
       RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg->data.c_str());
     }
 
-    void cones_callback(const eufs_msgs::msg::ConeArray::SharedPtr msg) const
+    void cones_callback(const eufs_msgs::msg::ConeArrayWithCovariance::SharedPtr msg) const
     { 
       RCLCPP_INFO(this->get_logger(), "Recieved cones from perceptions");
     }
 
-    void cones_callback2(const eufs_msgs::msg::ConeArray::SharedPtr msg) 
+    void cones_callback2(const eufs_msgs::msg::ConeArrayWithCovariance::SharedPtr msg) 
     { 
       RCLCPP_INFO(this->get_logger(), "Recieved cones from perceptions");
       if (lap>1) return;
@@ -91,15 +91,15 @@ class MidpointNode : public rclcpp::Node
 
       for (auto e : msg->blue_cones)
       {
-        perception_data.bluecones.emplace_back(e.x, e.y);
+        perception_data.bluecones.emplace_back(e.point.x, e.point.y);
       }      
       for (auto e : msg->orange_cones)
       {
-        perception_data.orangecones.emplace_back(e.x, e.y);
+        perception_data.orangecones.emplace_back(e.point.x, e.point.y);
       }      
       for (auto e : msg->yellow_cones)
       {
-        perception_data.yellowcones.emplace_back(e.x, e.y);
+        perception_data.yellowcones.emplace_back(e.point.x, e.point.y);
       }
 
       //TODO: shouldn't return a spline
