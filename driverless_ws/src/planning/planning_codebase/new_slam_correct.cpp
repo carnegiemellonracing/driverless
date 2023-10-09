@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Eigen/Dense>
+#include <cmath>
 
 // # DT = 0.1  # time tick [s]
 // simulation time [s]
@@ -139,6 +140,81 @@ Eigen::MatrixXd get_landmark_position_from_state(const Eigen::MatrixXd& x, int i
     Eigen::MatrixXd lm = x.block(start_row, 0, LM_SIZE, 1);
 
     return lm;
+}
+
+// Function Calculates Jacobian Matrix H
+Eigen::MatrixXd jacob_h(double q, const Eigen::MatrixXd& delta, const Eigen::MatrixXd& x, int i) {
+    double sq = std::sqrt(q);
+
+    Eigen::MatrixXd G(2, 5);
+    G << -sq * delta(0, 0), -sq * delta(1, 0), 0.0, sq * delta(0, 0), sq * delta(1, 0),
+         delta(1, 0), -1 * delta(0,0), -q, -1 * delta(1, 0), delta(0, 0);
+    g /= q;
+
+    // Calculate the number of landmarks
+    int nLM = calc_n_lm(x);
+
+    // Construct the F1 matrix
+    Eigen::MatrixXd F1(3, 3 + 2 * nLM);
+    F1 << Eigen::MatrixXd::Identity(3, 3), Eigen::MatrixXd::Zero(3, 2 * nLM);
+
+    // Construct the F2 matrix
+    Eigen::MatrixXd F2(2, 3 + 2 * nLM);
+    F2 << Eigen::MatrixXd::Zero(2, 3), Eigen::MatrixXd::Zero(2, 2 * (i - 1)), Eigen::MatrixXd::Identity(2, 2), Eigen::MatrixXd::Zero(2, 2 * nLM - 2 * i);
+
+    // Concatenate F1 and F2 to create F matrix
+    Eigen::MatrixXd F(F1.rows() + F2.rows(), F1.cols());
+    F << F1, F2;
+
+    // Calculate the Jacobian H by multiplying G and F
+    Eigen::MatrixXd H = G * F;
+
+    return H;
+
+}
+
+double pi_2_pi(double angle) {
+    return fmod(angle + M_PI, 2.0 * M_PI) - M_PI;
+}
+
+struct innovation_package {
+    Eigen::MatrixXd y;
+    Eigen::MatrixXd S;
+    Eigen::MatrixXd H;
+}
+
+innovation_package calc_innovation(const Eigen::MatrixXd& lm, const Eigen::MatrixXd& xEst, 
+                                   const Eigen::MatrixXd& PEst, const Eigen::MatrixXd& z, int LMid) {
+    
+    Eigen::MatrixXd delta = lm - xEst.topRows(2);
+
+    // Calculate q
+    double q = delta.squaredNorm();
+
+    // Calculate z_angle
+    double z_angle = std::atan2(delta(1, 0), delta(0, 0)) - xEst(2, 0);
+
+    // Calculate zp
+    Eigen::MatrixXd zp(1, 2);
+    zp(0, 0) = std::sqrt(q);
+    zp(0, 1) = pi_2_pi(z_angle);
+
+    // Calculate y
+    Eigen::MatrixXd y = (z - zp).transpose();
+    y(1, 0) = pi_2_pi(y(1, 0));
+
+    // Calculate H and S
+    Eigen::MatrixXd H = jacob_h(q, delta, xEst, LMid + 1)
+    Eigen::MatrixXd S = H * PEst * H.transpose() + Cx.block(0, 0, 2, 2);
+
+    // Constructing Innovation Package Result
+    innovation_package result;
+    result.y = y
+    result.S = S
+    result.H = H
+
+    return result
+
 }
 
 
