@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <cmath>
+#include <algorithm>
 
 // # DT = 0.1  # time tick [s]
 // simulation time [s]
@@ -214,6 +215,42 @@ innovation_package calc_innovation(const Eigen::MatrixXd& lm, const Eigen::Matri
     result.H = H
 
     return result
+
+}
+
+int search_correspond_landmark_id(const Eigen::MatrixXd& xAug, const Eigen::MatrixXd& PAug, const Eigen::MatrixXd& zi) {
+
+    // Calculate the number of landmarks
+    int nLM = calc_n_lm(xAug);
+
+    // Vector that will store mahalanobis distances
+    std::vector<double> min_dist;
+
+    double r = zi(0, 0);
+    double theta = zi(1, 0);
+
+    for (int i = 0; i < nLM; ++i) {
+        Eigen::MatrixXd lm = get_landmark_position_from_state(xAug, i);
+
+        // Calculating y, S, and H matrices from innovation package
+        innovation_package i_p = calc_innovation(lm, PAug, zi, i);
+        Eigen::MatrixXd y = i_p.y;
+        Eigen::MatrixXd S = i_p.S;
+        Eigen::MatrixXd H = i_p.H;
+
+        // Calculating mahalanobis distance
+        double mahalanobis = y.transpose() * S.ldlt().solve(y);
+        
+        // Adding mahalanobis distance to minimum distance vector
+        min_dist.push_back(mahalanobis);
+    }
+
+    min_dist.push_back(M_DIST_TH); // Add M_DIST_TH for new landmark
+
+    // Find the index of the minimum element in 'min_dist'
+    int min_id = std::distance(min_dist.begin(), std::min_element(min_dist.begin(), min_dist.end()));
+
+    return min_id;
 
 }
 
