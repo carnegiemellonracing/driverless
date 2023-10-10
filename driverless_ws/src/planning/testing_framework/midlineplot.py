@@ -14,6 +14,7 @@ def plot_lin_input(blue_cone_pos, yellow_cone_pos, midline):
     my = []
     
     for i in range(len(blue_cone_pos)):
+        
         bx.append(blue_cone_pos[i.x])
         by.append(blue_cone_pos[i.y])
     
