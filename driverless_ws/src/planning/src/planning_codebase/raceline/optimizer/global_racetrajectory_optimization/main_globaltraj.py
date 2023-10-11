@@ -44,9 +44,9 @@ plot_opts = {"mincurv_curv_lin": False,         # plot curv. linearization (orig
              "mintime_plots": False}            # plot states, controls, friction coeffs etc. (mintime only)
 
 # select track file (including centerline coordinates + track widths) --------------------------------------------------
-# file_paths["track_name"] = "rounded_rectangle"                              # artificial track
+file_paths["track_name"] = "rounded_rectangle"                              # artificial track
 # file_paths["track_name"] = "handling_track"                                 # artificial track
-file_paths["track_name"] = "berlin_2018"                                    # Berlin Formula E 2018
+# file_paths["track_name"] = "berlin_2018"                                    # Berlin Formula E 2018
 # file_paths["track_name"] = "modena_2019"                                    # Modena 2019
 # file_paths["track_name"] = "berlin_condensed"
 
@@ -326,7 +326,7 @@ else:
 # ----------------------------------------------------------------------------------------------------------------------
 
 if opt_type == 'mintime' and mintime_opts["reopt_mintime_solution"]:
-    print("REOPT")
+
     # get raceline solution of the time-optimal trajectory
     raceline_mintime = reftrack_interp[:, :2] + np.expand_dims(alpha_opt, 1) * normvec_normalized_interp
 
@@ -403,7 +403,7 @@ if opt_type == 'mintime' and not mintime_opts["recalc_vel_profile_by_tph"]:
     # interpolation
     s_splines = np.cumsum(spline_lengths_opt)
     s_splines = np.insert(s_splines, 0, 0.0)
-    vx_profile_opt = np.interp(s_points_opt_interp, s_splines[:-1], v_opt)
+    vx_profile_opt = np.interp(s_points_opt_interp, s_splines, v_opt)
 
 else:
     vx_profile_opt = tph.calc_vel_profile.\
@@ -412,7 +412,7 @@ else:
                          v_max=pars["veh_params"]["v_max"],
                          kappa=kappa_opt,
                          el_lengths=el_lengths_opt_interp,
-                         closed=True,
+                         closed=False,
                          filt_window=pars["vel_calc_opts"]["vel_profile_conv_filt_window"],
                          dyn_model_exp=pars["vel_calc_opts"]["dyn_model_exp"],
                          drag_coeff=pars["veh_params"]["dragcoeff"],

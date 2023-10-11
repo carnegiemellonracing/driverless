@@ -126,12 +126,13 @@ def spline_approximation(track: np.ndarray,
     w_tr_right_smoothed_cl = np.interp(np.linspace(0.0, 1.0, no_points_reg_cl), closest_t_glob_cl, w_tr_right_new_cl)
     w_tr_left_smoothed_cl = np.interp(np.linspace(0.0, 1.0, no_points_reg_cl), closest_t_glob_cl, w_tr_left_new_cl)
 
-    track_reg = np.column_stack((path_smoothed, w_tr_right_smoothed_cl[:-1], w_tr_left_smoothed_cl[:-1]))
-
+    track_reg = np.column_stack((path_smoothed[:len(path_smoothed)], w_tr_right_smoothed_cl[:-1][:len(path_smoothed)], w_tr_left_smoothed_cl[:-1][:len(path_smoothed)]))
     # interpolate banking if given (linear)
     if track_cl.shape[1] == 5:
         banking_smoothed_cl = np.interp(np.linspace(0.0, 1.0, no_points_reg_cl), closest_t_glob_cl, track_cl[:, 4])
         track_reg = np.column_stack((track_reg, banking_smoothed_cl[:-1]))
+
+    print(track_reg)
 
     return track_reg
 

@@ -42,7 +42,7 @@ def interp_splines(coeffs_x: np.ndarray,
     :return dists_interp:   total distance up to every interpolation point.
     :rtype dists_interp:    np.ndarray
 
-    .. notes::
+.. notes::
     len(coeffs_x) = len(coeffs_y) = len(spline_lengths)
 
     len(path_interp = len(spline_inds) = len(t_values) = len(dists_interp)

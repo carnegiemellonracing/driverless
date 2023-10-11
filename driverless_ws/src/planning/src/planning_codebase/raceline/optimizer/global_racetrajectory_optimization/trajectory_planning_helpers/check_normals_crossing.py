@@ -4,6 +4,7 @@ import numpy as np
 def check_normals_crossing(track: np.ndarray,
                            normvec_normalized: np.ndarray,
                            horizon: int = 10) -> bool:
+    # return False
     """
     author:
     Alexander Heilmeier

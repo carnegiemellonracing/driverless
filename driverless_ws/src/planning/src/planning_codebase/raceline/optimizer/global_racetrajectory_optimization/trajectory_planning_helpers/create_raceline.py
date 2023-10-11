@@ -1,5 +1,6 @@
 import numpy as np
 import trajectory_planning_helpers as tph
+import math
 
 
 def create_raceline(refline: np.ndarray,
@@ -47,19 +48,35 @@ def create_raceline(refline: np.ndarray,
     """
 
     # calculate raceline on the basis of the optimized alpha values
-    raceline = refline + np.expand_dims(alpha, 1) * normvectors
+    print(np.expand_dims(alpha, 1).shape[0],normvectors.shape,normvectors[:56,:].shape)
+    raceline = refline[:np.expand_dims(alpha, 1).shape[0],:] + np.expand_dims(alpha, 1)[:np.expand_dims(alpha, 1).shape[0],:] * normvectors[:np.expand_dims(alpha, 1).shape[0],:]
+    print(raceline)
+    # [:np.expand_dims(alpha, 1).shape[0],:]
 
     # calculate new splines on the basis of the raceline
-    raceline_cl = np.vstack((raceline, raceline[0]))
+    raceline_cl = raceline
+
+    #calc start/end headings
+    init_change = raceline[1]-raceline[0]
+    psi_s = math.atan2(init_change[1],init_change[0])
+
+    end_change = raceline[-1]-raceline[-2]
+    psi_e = math.atan2(end_change[1],end_change[0])
+
+
 
     coeffs_x_raceline, coeffs_y_raceline, A_raceline, normvectors_raceline = tph.calc_splines.\
         calc_splines(path=raceline_cl,
-                     use_dist_scaling=False)
+                     use_dist_scaling=False,
+                            psi_s=psi_s,
+                            psi_e=psi_e)
+
 
     # calculate new spline lengths
     spline_lengths_raceline = tph.calc_spline_lengths. \
         calc_spline_lengths(coeffs_x=coeffs_x_raceline,
-                            coeffs_y=coeffs_y_raceline)
+                            coeffs_y=coeffs_y_raceline
+                            )
 
     # interpolate splines for evenly spaced raceline points
     raceline_interp, spline_inds_raceline_interp, t_values_raceline_interp, s_raceline_interp = tph.\
@@ -73,6 +90,8 @@ def create_raceline(refline: np.ndarray,
     s_tot_raceline = float(np.sum(spline_lengths_raceline))
     el_lengths_raceline_interp = np.diff(s_raceline_interp)
     el_lengths_raceline_interp_cl = np.append(el_lengths_raceline_interp, s_tot_raceline - s_raceline_interp[-1])
+
+    print(raceline_interp,"RCLINTP")
 
     return raceline_interp, A_raceline, coeffs_x_raceline, coeffs_y_raceline, spline_inds_raceline_interp, \
            t_values_raceline_interp, s_raceline_interp, spline_lengths_raceline, el_lengths_raceline_interp_cl

@@ -32,6 +32,7 @@ def interp_track(track: np.ndarray,
 
     # create closed track
     track_cl = np.vstack((track, track[0]))
+    print(track_cl)
 
     # calculate element lengths (euclidian distance)
     el_lengths_cl = np.sqrt(np.sum(np.power(np.diff(track_cl[:, :2], axis=0), 2), axis=1))

@@ -96,11 +96,16 @@ def opt_mintime(reftrack: np.ndarray,
                            stepsize_psi_preview=pars["curv_calc_opts"]["d_preview_head"],
                            stepsize_psi_review=pars["curv_calc_opts"]["d_review_head"])[1]
 
-    # close track
-    kappa_refline_cl = np.append(kappa_refline, kappa_refline[0])
-    discr_points_cl = np.append(discr_points, no_points_orig)  # add virtual index of last/first point for closed track
-    w_tr_left_cl = np.append(reftrack[:, 3], reftrack[0, 3])
-    w_tr_right_cl = np.append(reftrack[:, 2], reftrack[0, 2])
+    # # close track
+    # kappa_refline_cl = np.append(kappa_refline, kappa_refline[0])
+    # discr_points_cl = np.append(discr_points, no_points_orig)  # add virtual index of last/first point for closed track
+    # w_tr_left_cl = np.append(reftrack[:, 3], reftrack[0, 3])
+    # w_tr_right_cl = np.append(reftrack[:, 2], reftrack[0, 2])
+
+    kappa_refline_cl = kappa_refline
+    discr_points_cl = discr_points  # add virtual index of last/first point for closed track
+    w_tr_left_cl = reftrack[:, 3]
+    w_tr_right_cl = reftrack[:, 2]
 
     # step size along the reference line
     h = pars["stepsize_opts"]["stepsize_reg"]
@@ -244,7 +249,7 @@ def opt_mintime(reftrack: np.ndarray,
         # put all states together
         x = ca.vertcat(v_n, beta_n, omega_z_n, n_n, xi_n)
 
-# ------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     # CONTROL VARIABLES ------------------------------------------------------------------------------------------------
     # ------------------------------------------------------------------------------------------------------------------
 
@@ -817,7 +822,7 @@ def opt_mintime(reftrack: np.ndarray,
     # solver options
     opts = {"expand": True,
             "verbose": print_debug,
-            "ipopt.max_iter": 1000,
+            "ipopt.max_iter": 200,
             "ipopt.tol": 1e-7}
 
     # solver options for warm start
