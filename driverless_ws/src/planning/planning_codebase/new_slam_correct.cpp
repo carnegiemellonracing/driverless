@@ -254,6 +254,107 @@ int search_correspond_landmark_id(const Eigen::MatrixXd& xAug, const Eigen::Matr
 
 }
 
+struct ekfPackage {
+    Eigen::MatrixXd x;
+    Eigen::MatrixXd p;
+    std::vector<Eigen::MatrixXd> cone;
+}
+
+ekf_slam_package ekf_slam(Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::MatrixXd& u, Eigen::MatrixXd& z, double dt) {
+    
+    // Ensuring that z is a 2 x n matrix where every landmark is 2 x 1 matrix
+    z = z.transpose()
+
+    std::vector<Eigen::MatrixXd> cones;
+    int S = STATE_SIZE
+
+    jacob_motion_package j_m_p = jacob_motion(xEst.topRows(S), u, dt);
+
+    G = j_m_p.G
+    Fx = j_m_p.Fx
+
+    Eigen::MatrixXd M_t(2, 2);
+
+    // Calculate the elements of M_t
+    double element_1 = std::pow(alphas(0, 0) * std::abs(u(0, 0)) + alphas(1, 0) * std::abs(u(1, 0)), 2);
+    double element_2 = std::pow(alphas(2, 0) * std::abs(u(0, 0)) + alphas(3, 0) * std::abs(u(1, 0)), 2);
+
+    // Assign the elements to M_t
+    M_t << element_1, 0,
+           0, element_2;
+    
+    Eigen::MatrixXd& x = xEst.topRows(S);
+
+    Eigen::MatrixXd V_t(3, 2);
+
+    double cos_x2 = std::cos(x(2, 0));
+    double sin_x2 = std::sin(x(2, 0));
+
+    // Calculate the elements of V_t
+    V_t << cos_x2, -0.5 * sin_x2,
+           sin_x2, 0.5 * cos_x2,
+           0, 1;
+
+    xEst.topRows(S) = motion_model(xEst.topRows(S), u, dt);
+    PEst.block(0, 0, S, S) = G.transpose() * PEst.block(0, 0, S, S) * G + Fx.transpose() * Cx * Fx;
+
+    Eigen::MatrixXd initP = Eigen::MatrixXd::Identity(2, 2);
+
+    // Initializing landmark position
+    Eigen::MatrixXd lm;
+
+    for (int iz = 0; iz < z.rows(); ++iz) {
+        int min_id = search_correspond_landmark_id(xEst, PEst, z.block(iz, 0, 2, 1));
+        cones.push_back(calc_landmark_position(xEst, z.col(iz)));
+        int nLM = calc_n_lm(xEst);
+
+        if (min_id == nLM) {
+
+            // Extend state and covariance matrix
+            Eigen::MatrixXd xAug(xEst.rows() + LM_SIZE, xEst.cols());
+            xAug << xEst, calc_landmark_position(xEst, z.col(iz));
+
+            Eigen::MatrixXd m1(PEst.rows(), PEst.cols() + LM_SIZE);
+            Eigen::MatrixXd m1_zerosMatrix(xEst.rows(), LM_SIZE);
+            m1_zerosMatrix.setZero();
+
+            m1 << PEst, m1_zeroesMatrix
+
+            Eigen::MatrixXd m2(LM_SIZE, xEST.rows() + initP.rows());
+            Eigen::MatrixXd m2_zerosMatrix(LM_SIZE, xEst.rows());
+            m2_zerosMatrix.setZero();
+
+            m2 << m2_zeroesMatrix, initP;
+
+            Eigen::MatrixXd PAug(m1.rows() + m2.rows(), m1.cols());
+            PAug << m1, m2
+
+            xEst = xAug
+            PEst = PAug
+        }
+
+        
+        lm = get_landmark_position_from_state(xEst, min_id);
+        innovation_package i_p = calc_innovation(lm, xEst, PEst, z.col(iz), min_id);
+        Eigen::MatrixXd y = i_p.y;
+        Eigen::MatrixXd S = i_p.S;
+        Eigen::MatrixXd H = i_p.H;
+
+        Eigen::MatrixXd K = PEst * H.transpose() * S.inverse();
+        xEst.block(3, 0, xEst.rows() - 3, xEst.cols()) = xEst.block(3, 0, xEst.rows() - 3, xEst.cols()) + (K.block(3, 0, K.rows() - 3, K.cols()) * y);
+        PEst = (Eigen::MatrixXd::Identity(PEst.rows(), PEst.cols()) - K * H) * PEst;
+    }
+
+    xEst.row(2) = pi_2_pi(xEst.row(2));
+
+    // Constructing EKF SLAM Package Result
+    ekfPackage result;
+    result.x = xEst
+    result.p = PEst
+    result.cone = cones
+
+    return result
+}
 
 
 
