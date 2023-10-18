@@ -6,19 +6,19 @@
 
 // # DT = 0.1  # time tick [s]
 // simulation time [s]
-double SIM_TIME = 50.0
+double SIM_TIME = 50.0;
 
 // maximum observation range
-double MAX_RANGE = 20.0  
-double M_DIFF_TH = 1.6
-double M_DIST_TH = 2
+double MAX_RANGE = 20.0;  
+double M_DIFF_TH = 1.6;
+double M_DIST_TH = 2;
 
 // M_DIST_TH_FIRST = 0.25  # Threshold of Mahalanobis distance for data association.
-double M_DIST_TH_ALL = 1
+double M_DIST_TH_ALL = 1;
 // State size [x,y,yaw]
-double STATE_SIZE = 3  
+double STATE_SIZE = 3;  
 // LM state size [x,y]
-double LM_SIZE = 2
+double LM_SIZE = 2;
 
 // Create Q_sim matrix
 Eigen::MatrixXd Q_sim(2, 2);
