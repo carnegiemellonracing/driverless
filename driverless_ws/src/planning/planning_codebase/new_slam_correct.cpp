@@ -21,9 +21,12 @@ double STATE_SIZE = 3;
 double LM_SIZE = 2;
 
 // Create Q_sim matrix
-Eigen::MatrixXd Q_sim(2, 2);
-Q_sim << 0.2 * 0.2, 0.0, 
-         0.0, (Eigen::deg2rad(1.0) * Eigen::deg2rad(1.0));
+// Eigen::MatrixXd Q_sim(2, 2);
+// Q_sim << 0.2 * 0.2, 0.0, 
+//          0.0, (Eigen::deg2rad(1.0) * Eigen::deg2rad(1.0));
+
+Eigen::MatrixX Q_sim << 0.2 * 0.2, 0.0, 
+                        0.0, (Eigen::deg2rad(1.0) * Eigen::deg2rad(1.0));
 
 // Create R_sim matrix
 Eigen::MatrixXd R_sim(2,2);
