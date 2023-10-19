@@ -81,14 +81,14 @@ jacob_motion_package jacob_motion(Eigen::MatrixXd* x, const Eigen::MatrixXd& u, 
 
     // Creating Zeroes Matrix
     int n_lm = calc_n_lm(x);
-    Eigen::MatrixXd zerosMatrix(STATE_SIZE, LM_SIZE * n_lm);
-    zerosMatrix.setZero();
+    Eigen::MatrixXd zeroesMatrix(STATE_SIZE, LM_SIZE * n_lm);
+    zeroesMatrix.setZero();
 
     // Stacking Identity and Zeroes Matrix
     Eigen::MatrixXd Fx(STATE_SIZE, STATE_SIZE + (LM_SIZE * n_lm));
     Fx << identityMatrix, zeroesMatrix;
 
-    Eigen::MatrixXd jF;
+    Eigen::MatrixXd jF(3, 3);
 
     // Creating jF matrix
     jF << 0.0, 0.0, -dt * u(0, 0) * std::sin(x(2, 0)),
@@ -106,7 +106,7 @@ jacob_motion_package jacob_motion(Eigen::MatrixXd* x, const Eigen::MatrixXd& u, 
     result.Fx = Fx;
     result.G = G;
 
-    return result
+    return result;
 }
 
 
@@ -141,7 +141,7 @@ Eigen::MatrixXd jacob_h(double q, const Eigen::MatrixXd& delta, const Eigen::Mat
     Eigen::MatrixXd G(2, 5);
     G << -sq * delta(0, 0), -sq * delta(1, 0), 0.0, sq * delta(0, 0), sq * delta(1, 0),
          delta(1, 0), -1 * delta(0,0), -q, -1 * delta(1, 0), delta(0, 0);
-    g /= q;
+    G /= q;
 
     // Calculate the number of landmarks
     int nLM = calc_n_lm(x);
@@ -175,8 +175,7 @@ struct innovation_package {
     Eigen::MatrixXd H;
 }
 
-innovation_package calc_innovation(const Eigen::MatrixXd& lm, const Eigen::MatrixXd& xEst, 
-                                   const Eigen::MatrixXd& PEst, const Eigen::MatrixXd& z, int LMid) {
+innovation_package calc_innovation(const Eigen::MatrixXd& lm, const Eigen::MatrixXd& xEst, const Eigen::MatrixXd& PEst, const Eigen::MatrixXd& z, int LMid) {
     
     Eigen::MatrixXd delta = lm - xEst.topRows(2);
 
@@ -378,7 +377,7 @@ int main() {
     Eigen::MatrixXd alphas(6, 1);
     alphas << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0;
 
-    return 0
+    return 0;
 }
 
 
