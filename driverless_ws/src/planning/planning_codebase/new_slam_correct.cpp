@@ -22,15 +22,15 @@ double LM_SIZE = 2;
 
 // Create Q_sim matrix
 Eigen::MatrixXd Q_sim(2, 2);
-Q_sim << 0.2 * 0.2, 0.0, 0.0, (Eigen::deg2rad(1.0) * Eigen::deg2rad(1.0));
+Q_sim << 0.2 * 0.2, 0.0, 0.0, (std::pow(M_PI / 180.0 * 1.0, 2.0));
 
 // Eigen::MatrixXd Q_sim << 0.2 * 0.2, 0.0, 
 //                         0.0, (Eigen::deg2rad(1.0) * Eigen::deg2rad(1.0));
 
 // Create R_sim matrix
-Eigen::MatrixXd R_sim(2,2);
-R_sim << 1.0 * 1.0, 0.0, 
-         0.0, (Eigen::deg2rad(10.0) * Eigen::deg2rad(10.0));
+// Eigen::MatrixXd R_sim(2,2);
+// R_sim << 1.0 * 1.0, 0.0, 
+//          0.0, (Eigen::deg2rad(10.0) * Eigen::deg2rad(10.0));
 
 // Create Cx matrix
 Eigen::MatrixXd Cx(3, 3);
@@ -357,6 +357,14 @@ ekf_slam_package ekf_slam(Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::M
     result.cone = cones
 
     return result
+}
+
+int main() {
+
+    Eigen::MatrixXd R_sim(2,2);
+    R_sim << 1.0 * 1.0, 0.0, 0.0, (Eigen::deg2rad(10.0) * Eigen::deg2rad(10.0));
+
+    return 0
 }
 
 
