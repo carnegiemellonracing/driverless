@@ -60,7 +60,7 @@ Eigen::MatrixXd motion_model(const Eigen::MatrixXd& x, const Eigen::MatrixXd& u,
 }
 
 // Function to calculate the number of landmarks
-int calc_n_lm(const Eigen::MatrixXd& x) {
+int calc_n_lm(Eigen::MatrixXd& x) {
     int n = static_cast<int>((x.rows() - STATE_SIZE) / LM_SIZE);
     return n;
 }
@@ -72,7 +72,7 @@ struct jacob_motion_package {
 };
 
 // Function to calculate jacobian motion
-jacob_motion_package jacob_motion(const Eigen::MatrixXd* x, const Eigen::MatrixXd& u, double dt) {
+jacob_motion_package jacob_motion(Eigen::MatrixXd* x, const Eigen::MatrixXd& u, double dt) {
 
 
     // Creating Identity Matrix of Size 3 x 3
@@ -86,7 +86,7 @@ jacob_motion_package jacob_motion(const Eigen::MatrixXd* x, const Eigen::MatrixX
 
     // Stacking Identity and Zeroes Matrix
     Eigen::MatrixXd Fx(STATE_SIZE, STATE_SIZE + (LM_SIZE * n_lm));
-    Eigen::MatrixXd Fx << identityMatrix, zeroesMatrix;
+    Fx << identityMatrix, zeroesMatrix;
 
     Eigen::MatrixXd jF;
 
@@ -103,8 +103,8 @@ jacob_motion_package jacob_motion(const Eigen::MatrixXd* x, const Eigen::MatrixX
 
     // Constructing jacob motion package result
     jacob_motion_package result;
-    result.Fx = Fx
-    result.G = G
+    result.Fx = Fx;
+    result.G = G;
 
     return result
 }
@@ -353,15 +353,26 @@ int main() {
     Eigen::MatrixXd Q_sim(2, 2);
     Q_sim << 0.2 * 0.2, 0.0, 0.0, (std::pow(M_PI / 180.0 * 1.0, 2.0));
 
+    // // Create R_sim matrix
+    // Eigen::MatrixXd R_sim(2,2);
+    // R_sim << 1.0 * 1.0, 0.0, 0.0, (Eigen::deg2rad(10.0) * Eigen::deg2rad(10.0));
+
+    // // Create Cx matrix
+    // Eigen::MatrixXd Cx(3, 3);
+    // Cx << 0.5 * 0.5, 0.0, 0.0, 
+    //     0.0, 0.5 * 0.5, 0.0, 
+    //     0.0, 0.0, (Eigen::deg2rad(30.0) * Eigen::deg2rad(30.0));
+
     // Create R_sim matrix
-    Eigen::MatrixXd R_sim(2,2);
-    R_sim << 1.0 * 1.0, 0.0, 0.0, (Eigen::deg2rad(10.0) * Eigen::deg2rad(10.0));
+    Eigen::Matrix2d R_sim;
+    R_sim << 1.0 * 1.0, 0.0, 
+            0.0, (std::cos(10.0) * std::cos(10.0)); // Convert 10.0 degrees to radians
 
     // Create Cx matrix
-    Eigen::MatrixXd Cx(3, 3);
+    Eigen::Matrix3d Cx;
     Cx << 0.5 * 0.5, 0.0, 0.0, 
         0.0, 0.5 * 0.5, 0.0, 
-        0.0, 0.0, (Eigen::deg2rad(30.0) * Eigen::deg2rad(30.0));
+        0.0, 0.0, (std::cos(30.0) * std::cos(30.0)); // Convert 30.0 degrees to radians
 
     // Create alphas
     Eigen::MatrixXd alphas(6, 1);
