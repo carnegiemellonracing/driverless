@@ -60,7 +60,7 @@ Eigen::MatrixXd motion_model(const Eigen::MatrixXd& x, const Eigen::MatrixXd& u,
 }
 
 // Function to calculate the number of landmarks
-int calc_n_lm(Eigen::MatrixXd& x) {
+int calc_n_lm(const Eigen::MatrixXd& x) {
     int n = static_cast<int>((x.rows() - STATE_SIZE) / LM_SIZE);
     return n;
 }
@@ -72,7 +72,7 @@ struct jacob_motion_package {
 };
 
 // Function to calculate jacobian motion
-jacob_motion_package jacob_motion(Eigen::MatrixXd* x, const Eigen::MatrixXd& u, double dt) {
+jacob_motion_package jacob_motion(const Eigen::MatrixXd* x, const Eigen::MatrixXd& u, double dt) {
 
 
     // Creating Identity Matrix of Size 3 x 3
@@ -195,16 +195,16 @@ innovation_package calc_innovation(const Eigen::MatrixXd& lm, const Eigen::Matri
     y(1, 0) = pi_2_pi(y(1, 0));
 
     // Calculate H and S
-    Eigen::MatrixXd H = jacob_h(q, delta, xEst, LMid + 1)
+    Eigen::MatrixXd H = jacob_h(q, delta, xEst, LMid + 1);
     Eigen::MatrixXd S = H * PEst * H.transpose() + Cx.block(0, 0, 2, 2);
 
     // Constructing Innovation Package Result
     innovation_package result;
-    result.y = y
-    result.S = S
-    result.H = H
+    result.y = y;
+    result.S = S;
+    result.H = H;
 
-    return result
+    return result;
 
 }
 
@@ -229,7 +229,8 @@ int search_correspond_landmark_id(const Eigen::MatrixXd& xAug, const Eigen::Matr
         Eigen::MatrixXd H = i_p.H;
 
         // Calculating mahalanobis distance
-        double mahalanobis = y.transpose() * S.ldlt().solve(y);
+        // double mahalanobis = y.transpose() * S.ldlt().solve(y);
+        double mahalanobis = y.transpose() * S.inverse();
         
         // Adding mahalanobis distance to minimum distance vector
         min_dist.push_back(mahalanobis);
