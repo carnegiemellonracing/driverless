@@ -20,7 +20,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'data_node = perceptions.utils.DataNode:main'
+            'data_node = perceptions.utils.DataNode:main',
+            'stereo_node = perceptions.predict.StereoNode:main',
+            'lidar_node = perceptions.predict.LidarNode:main'
         ],
     },
 )
