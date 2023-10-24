@@ -10,7 +10,7 @@ import numpy as np
 
 def img_to_npy(img_msg: Image):
     bridge = CvBridge()
-    return bridge.compressed_imgmsg_to_cv2(img_msg)
+    return bridge.imgmsg_to_cv2(img_msg)
 
 def pointcloud2_to_npy(pc2_msg: PointCloud2):
     points_raw = rnp.numpify(pc2_msg)
