@@ -4,8 +4,14 @@ import rclpy
 # for subscribing to sensor data
 from perceptions.utils.DataNode import DataNode
 
+# for convetring predictor output to cone message type
+from eufs_msgs.msg import ConeArrayWithCovariance
+import perceptions.utils.conversions as conversions
+
 # for doing prediction on sensor data
 from perc22a.predictors import StereoPredictor
+
+NODE_NAME = "stereo_node"
 
 class StereoNode(DataNode):
 
@@ -13,8 +19,14 @@ class StereoNode(DataNode):
         super().__init__(name="stereo_node")
 
         # do prediction on a timer
-        self.interval = 1
+        # TODO: figure out what the best way is to deal with this?
+        self.interval = 0.5
         self.predict_timer = self.create_timer(self.interval, self.predict_callback)
+
+        # create publisher
+        self.cone_topic = f"/{NODE_NAME}_cones"
+        self.qos_profile = 10
+        self.cone_publisher = self.create_publisher(ConeArrayWithCovariance, self.cone_topic, self.qos_profile)
 
         # create predictor
         self.model_name = 'ultralytics/yolov5'
@@ -32,8 +44,12 @@ class StereoNode(DataNode):
             "xyz_image": self.xyz_image,
         }
         cones = self.predictor.predict(data)
-
         self.predictor.display()
+
+        # publish message
+        msg = conversions.cones_to_msg(cones)
+        self.cone_publisher.publish(msg)
+
         print("cones", cones)
 
 
