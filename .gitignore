@@ -3,6 +3,7 @@
 **/.idea/
 ./CMakeLists.txt  # top level cmake files can help with autocompletion, but should not be in repo
 ./driverless_ws/CMakeLists.txt
+**/*.swp
 
 # ROS Stuff
 **/build/
