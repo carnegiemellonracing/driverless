@@ -4,7 +4,7 @@ import rclpy
 # for subscribing to sensor data
 from perceptions.utils.DataNode import DataNode
 
-# for convetring predictor output to cone message type
+# for converting predictor output to cone message type
 from eufs_msgs.msg import ConeArrayWithCovariance
 import perceptions.utils.conversions as conversions
 
@@ -16,7 +16,7 @@ NODE_NAME = "stereo_node"
 class StereoNode(DataNode):
 
     def __init__(self):
-        super().__init__(name="stereo_node")
+        super().__init__(name=NODE_NAME)
 
         # do prediction on a timer
         # TODO: figure out what the best way is to deal with this?
@@ -38,7 +38,7 @@ class StereoNode(DataNode):
             self.get_logger().warn("Not got all data")
             return
     
-        # otherwise, do prediction on data
+        # otherwise, do prediction on data and display
         data = {
             "left_color": self.left_color,
             "xyz_image": self.xyz_image,
@@ -50,7 +50,7 @@ class StereoNode(DataNode):
         msg = conversions.cones_to_msg(cones)
         self.cone_publisher.publish(msg)
 
-        print("cones", cones)
+        print(cones)
 
 
 def main(args=None):
