@@ -11,8 +11,11 @@
 #include <gtsam/inference/Symbol.h>
 
 // We want to use iSAM2 to solve the structure-from-motion problem
-// incrementally, so include iSAM2 here
+// incrementally, so include iSAM2 herel
 #include <gtsam/nonlinear/ISAM2.h>
+
+#include <gtsam/nonlinear/NonlinearISAM.h>
+
 
 // iSAM2 requires as input a set of new factors to be added stored in a factor
 // graph, and initial guesses for any new variables used in the added factors
