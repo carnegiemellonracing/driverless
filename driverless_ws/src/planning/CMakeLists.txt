@@ -8,7 +8,7 @@ endif()
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -20,9 +20,12 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(eufs_msgs REQUIRED)
+find_package(Eigen3 3.3.7 REQUIRED)
+link_directories(${Eigen_INCLUDE_DIRS})
+find_package(GTSAM REQUIRED)
 
-add_executable(slam_test src/planning_codebase/EKF_SLAM.cpp)
-ament_target_dependencies(slam_test rclcpp message_filters eufs_msgs)
+add_executable(slam_test planning_codebase/isamNode.cpp)
+ament_target_dependencies(slam_test rclcpp GTSAM Eigen3 eufs_msgs)
 ament_export_include_directories(source)
 
 install(TARGETS

@@ -113,14 +113,14 @@ public:
         Pose2 prev_robot_est;
 
         if (x==0) {
-            noiseModel::Diagonal::shared_ptr prior_model = noiseModel::Diagonal::Sigmas(Vector(0, 0, 0));
+            noiseModel::Diagonal::shared_ptr prior_model = noiseModel::Diagonal::Sigmas(Eigen::Vector3d(0, 0, 0));
             gtsam::PriorFactor<Pose2> prior_factor = gtsam::PriorFactor<Pose2>(X(0), global_odom, prior_model);
             graph.add(prior_factor);
             values.insert(X(0), global_odom);
             prev_robot_est = Pose2(0, 0, 0);
         }
         else {
-            noiseModel::Diagonal::shared_ptr odom_model = noiseModel::Diagonal::Sigmas(Eigen::VectorXd(0, 0, 0));
+            noiseModel::Diagonal::shared_ptr odom_model = noiseModel::Diagonal::Sigmas(Eigen::Vector3d(0, 0, 0));
             Pose2 prev_pos = isam2.calculateEstimate(X(x - 1)).cast<Pose2>();
             gtsam::BetweenFactor<Pose2> odom_factor = gtsam::BetweenFactor<Pose2>(X(x - 1), X(x), Pose2(global_odom.x() - prev_pos.x(), global_odom.y() - prev_pos.y(), global_odom.theta() - prev_pos.theta()), odom_model);
             graph.add(odom_factor);
@@ -142,14 +142,14 @@ public:
                 
                 double range = std::sqrt(cone.x() * cone.x() + cone.y() * cone.y());
                 double bearing = std::atan2(cone.y(), cone.x()) - global_odom.theta();
-                graph.add(BearingRangeFactor<Pose2, Pose2, double, double>(X(x), L(n_landmarks), bearing, range, noiseModel::Diagonal::Sigmas(Eigen::VectorXd(0, 0, 0))));
+                graph.add(BearingRangeFactor<Pose2, Pose2, double, double>(X(x), L(n_landmarks), bearing, range, noiseModel::Diagonal::Sigmas(Eigen::Vector3d(0, 0, 0))));
                 values.insert(L(n_landmarks), global_cone);
                 n_landmarks++;
             } else {
                 int associated_id = (*(observed.find(enum_cone))).lm_id;
                 double range = std::sqrt(cone.x() * cone.x() + cone.y() * cone.y());
                 double bearing = std::atan2(cone.y(), cone.x()) - global_odom.theta();
-                graph.add(BearingRangeFactor<Pose2, Pose2, double, double>(X(x), L(associated_id), bearing, range, noiseModel::Diagonal::Sigmas(Eigen::VectorXd(0, 0, 0))));
+                graph.add(BearingRangeFactor<Pose2, Pose2, double, double>(X(x), L(associated_id), bearing, range, noiseModel::Diagonal::Sigmas(Eigen::Vector3d(0, 0, 0))));
             }
         }
         // DATA ASSOCIATION END

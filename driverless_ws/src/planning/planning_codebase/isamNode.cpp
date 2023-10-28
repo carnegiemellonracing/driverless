@@ -1,14 +1,10 @@
 #include <memory>
-
 #include "rclcpp/rclcpp.hpp"
-
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
-
 #include "eufs_msgs/msg/cone_array_with_covariance.hpp"
 #include "eufs_msgs/msg/car_state.hpp"
-
 #include <gtsam/nonlinear/ISAM2Params.h>
 
 // #include <gsl/gsl_block.h>
@@ -18,7 +14,6 @@
 // #include <gsl/gsl_permutation.h>
 
 #include "isam2.cpp"
-
 #include <boost/shared_ptr.hpp>
 #include <vector>
 #include <cmath>
