@@ -1,0 +1,43 @@
+Metadata-Version: 2.1
+Name: flake8-useless-assert
+Version: 0.4.4
+Summary: flake8 plugin to catch useless `assert` statements
+Home-page: https://github.com/decorator-factory/flake8-useless-assert
+License: MIT
+Author: decorator-factory
+Author-email: decorator-factory@yandex.ru
+Requires-Python: >=3.7,<4.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Dist: flake8 (>=3.9)
+Project-URL: Repository, https://github.com/decorator-factory/flake8-useless-assert
+Description-Content-Type: text/markdown
+
+# flake8-useless-assert
+flake8 plugin to catch useless `assert` statements
+
+Download or install on the [PyPI page](https://pypi.org/project/flake8-useless-assert/)
+
+# Violations
+
+| Code    | Description                                          |   Example                        |
+|---------|------------------------------------------------------|----------------------------------|
+| ULA001  | `assert` with a truthy literal                       | `assert "foo"`                   |
+|         |                                                      | `assert ...`                     |
+|         |                                                      | `assert True`                    |
+| ULA002  | `assert` with `0`                                    | `assert 0`                       |
+| ULA003  | `assert` with `None`                                 | `assert None`                    |
+| ULA004  | `assert` with "literal".format(...)                  | `assert "foo {0}".format(bar)`   |
+| ULA005  | `assert` with f-string                               | `assert f"foo {bar}"`            |
+| ULA006  | `assert` with constant computation                   | `assert "foo" == "bar" * 3`      |
+|         |                                                      | `assert repr("fizz") == "'buzz'"`|
+
+
+# Testing
+I haven't set up proper testing yet, but you can run `poetry install` and then:
+```
+flake8 examples/
+```

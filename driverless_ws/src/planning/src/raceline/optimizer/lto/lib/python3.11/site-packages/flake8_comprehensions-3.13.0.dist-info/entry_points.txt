@@ -1,0 +1,2 @@
+[flake8.extension]
+C4 = flake8_comprehensions:ComprehensionChecker

@@ -1,0 +1,2 @@
+[flake8.extension]
+AAA = flake8_aaa:Checker
