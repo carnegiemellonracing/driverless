@@ -9,11 +9,11 @@
 #include "eufs_msgs/msg/cone_array_with_covariance.hpp"
 #include "eufs_msgs/msg/car_state.hpp"
 
-// #include <gsl/gsl_block.h>
-// #include <gsl/gsl_math.h>
-// #include <gsl/gsl_linalg.h>
-// #include <gsl/gsl_matrix.h>
-// #include <gsl/gsl_permutation.h>
+#include <gsl/gsl_block.h>
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_linalg.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_permutation.h>
 
 
 // #include "new_slam.cpp"
@@ -45,11 +45,19 @@ struct VehiclePosition{
   double dy;
   double dyaw;
 };
+
+const int STATE_SIZE = 3;
+// Initialize xEst matrix with zeros
+Eigen::MatrixXd xEst_ = Eigen::MatrixXd::Zero(STATE_SIZE, 1);
+// Initialize PEst matrix as an identity matrix
+Eigen::MatrixXd pEst_ = Eigen::MatrixXd::Identity(STATE_SIZE, STATE_SIZE);
+
 class SLAMValidation : public rclcpp::Node
 {
   public:
     SLAMValidation(): Node("slam_validation"){
-      gsl_matrix_set_identity(pEst);
+      // gsl_matrix_set_identity(pEst);
+
       cone_sub = this->create_subscription<eufs_msgs::msg::ConeArrayWithCovariance>(
       "/cones", 10, std::bind(&SLAMValidation::cone_callback, this, _1));
       vehicle_state_sub = this->create_subscription<eufs_msgs::msg::CarState>(
@@ -142,7 +150,7 @@ class SLAMValidation : public rclcpp::Node
         idx++;
       }
       // slam_output = ekf_slam(xEst, pEst, u, z, 0.1, this->get_logger());
-      slam_output = ekf_slam(xEst, pEst, u, z, 0.1);
+      slam_output = ekf_slam(xEst_, pEst_, u, z, 0.1);
       RCLCPP_INFO(this->get_logger(), "got output\n");
       RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", (xEst->size1-3)/2);
       xEst = slam_output.x;

@@ -21,6 +21,21 @@ double STATE_SIZE = 3;
 double LM_SIZE = 2;
 
 
+// Create Cx matrix
+Eigen::Matrix3d Cx = (Eigen::Matrix3d() << 0.5 * 0.5, 0.0, 0.0, 
+        0.0, 0.5 * 0.5, 0.0, 
+        0.0, 0.0, (std::cos(30.0) * std::cos(30.0))).finished(); // Convert 30.0 degrees to radians
+
+
+// Create alphas
+// Eigen::MatrixXd alphas(6, 1);
+// alphas << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0;
+Eigen::MatrixXd alphas = (Eigen::Matrix3d() << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0).finished();
+
+
+// Create R_sim matrix
+Eigen::Matrix2d R_sim = (Eigen::Matrix3d() << 1.0 * 1.0, 0.0, 
+        0.0, (std::cos(10.0) * std::cos(10.0))).finished(); // Convert 10.0 degrees to radians
 
 // Eigen::MatrixXd Q_sim << 0.2 * 0.2, 0.0, 
 //                         0.0, (Eigen::deg2rad(1.0) * Eigen::deg2rad(1.0));
@@ -72,7 +87,7 @@ struct jacob_motion_package {
 };
 
 // Function to calculate jacobian motion
-jacob_motion_package jacob_motion(const Eigen::MatrixXd* x, const Eigen::MatrixXd& u, double dt) {
+jacob_motion_package jacob_motion(const Eigen::MatrixXd& x, const Eigen::MatrixXd& u, double dt) {
 
 
     // Creating Identity Matrix of Size 3 x 3
@@ -173,9 +188,9 @@ struct innovation_package {
     Eigen::MatrixXd y;
     Eigen::MatrixXd S;
     Eigen::MatrixXd H;
-}
+};
 
-innovation_package calc_innovation(const Eigen::MatrixXd& lm, const Eigen::MatrixXd& xEst, const Eigen::MatrixXd& PEst, const Eigen::MatrixXd& z, int LMid) {
+struct innovation_package calc_innovation(const Eigen::MatrixXd& lm, const Eigen::MatrixXd& xEst, const Eigen::MatrixXd& PEst, const Eigen::MatrixXd& z, int LMid) {
     
     Eigen::MatrixXd delta = lm - xEst.topRows(2);
 
@@ -223,14 +238,16 @@ int search_correspond_landmark_id(const Eigen::MatrixXd& xAug, const Eigen::Matr
         Eigen::MatrixXd lm = get_landmark_position_from_state(xAug, i);
 
         // Calculating y, S, and H matrices from innovation package
-        innovation_package i_p = calc_innovation(lm, PAug, zi, i);
+        struct innovation_package i_p = calc_innovation(lm, xAug, PAug, zi, i);
         Eigen::MatrixXd y = i_p.y;
         Eigen::MatrixXd S = i_p.S;
         Eigen::MatrixXd H = i_p.H;
 
         // Calculating mahalanobis distance
         // double mahalanobis = y.transpose() * S.ldlt().solve(y);
-        double mahalanobis = y.transpose() * S.inverse();
+        Eigen::MatrixXd temp = (y.transpose() * S.inverse() * y);
+        printf("rows:%d, cols: %d",temp.rows(),temp.cols()); 
+        double mahalanobis = (y.transpose() * S.inverse() * y)(0, 0);
         
         // Adding mahalanobis distance to minimum distance vector
         min_dist.push_back(mahalanobis);
@@ -249,20 +266,20 @@ struct ekfPackage {
     Eigen::MatrixXd x;
     Eigen::MatrixXd p;
     std::vector<Eigen::MatrixXd> cone;
-}
+};
 
-ekf_slam_package ekf_slam(Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::MatrixXd& u, Eigen::MatrixXd& z, double dt) {
+struct ekfPackage ekf_slam(Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::MatrixXd& u, Eigen::MatrixXd& z, double dt) {
     
     // Ensuring that z is a 2 x n matrix where every landmark is 2 x 1 matrix
-    z = z.transpose()
+    z = z.transpose();
 
     std::vector<Eigen::MatrixXd> cones;
-    int S = STATE_SIZE
+    int S = STATE_SIZE;
 
-    jacob_motion_package j_m_p = jacob_motion(xEst.topRows(S), u, dt);
+    struct jacob_motion_package j_m_p = jacob_motion(xEst.topRows(S), u, dt);
 
-    G = j_m_p.G
-    Fx = j_m_p.Fx
+    Eigen::MatrixXd G = j_m_p.G;
+    Eigen::MatrixXd Fx = j_m_p.Fx;
 
     Eigen::MatrixXd M_t(2, 2);
 
@@ -274,7 +291,7 @@ ekf_slam_package ekf_slam(Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::M
     M_t << element_1, 0,
            0, element_2;
     
-    Eigen::MatrixXd& x = xEst.topRows(S);
+    Eigen::MatrixXd x = xEst.topRows(S);
 
     Eigen::MatrixXd V_t(3, 2);
 
@@ -309,19 +326,19 @@ ekf_slam_package ekf_slam(Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::M
             Eigen::MatrixXd m1_zerosMatrix(xEst.rows(), LM_SIZE);
             m1_zerosMatrix.setZero();
 
-            m1 << PEst, m1_zeroesMatrix
+            m1 << PEst, m1_zerosMatrix;
 
-            Eigen::MatrixXd m2(LM_SIZE, xEST.rows() + initP.rows());
+            Eigen::MatrixXd m2(LM_SIZE, xEst.rows() + initP.rows());
             Eigen::MatrixXd m2_zerosMatrix(LM_SIZE, xEst.rows());
             m2_zerosMatrix.setZero();
 
-            m2 << m2_zeroesMatrix, initP;
+            m2 << m2_zerosMatrix, initP;
 
             Eigen::MatrixXd PAug(m1.rows() + m2.rows(), m1.cols());
-            PAug << m1, m2
+            PAug << m1, m2;
 
-            xEst = xAug
-            PEst = PAug
+            xEst = xAug;
+            PEst = PAug;
         }
 
         
@@ -336,15 +353,16 @@ ekf_slam_package ekf_slam(Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::M
         PEst = (Eigen::MatrixXd::Identity(PEst.rows(), PEst.cols()) - K * H) * PEst;
     }
 
-    xEst.row(2) = pi_2_pi(xEst.row(2));
+    // xEst.row(2) = pi_2_pi(xEst.row(2));
+    xEst(2, 0) = pi_2_pi(xEst(2, 0));
 
     // Constructing EKF SLAM Package Result
     ekfPackage result;
-    result.x = xEst
-    result.p = PEst
-    result.cone = cones
+    result.x = xEst;
+    result.p = PEst;
+    result.cone = cones;
 
-    return result
+    return result;
 }
 
 int main() {
@@ -363,20 +381,10 @@ int main() {
     //     0.0, 0.5 * 0.5, 0.0, 
     //     0.0, 0.0, (Eigen::deg2rad(30.0) * Eigen::deg2rad(30.0));
 
-    // Create R_sim matrix
-    Eigen::Matrix2d R_sim;
-    R_sim << 1.0 * 1.0, 0.0, 
-            0.0, (std::cos(10.0) * std::cos(10.0)); // Convert 10.0 degrees to radians
 
-    // Create Cx matrix
-    Eigen::Matrix3d Cx;
-    Cx << 0.5 * 0.5, 0.0, 0.0, 
-        0.0, 0.5 * 0.5, 0.0, 
-        0.0, 0.0, (std::cos(30.0) * std::cos(30.0)); // Convert 30.0 degrees to radians
+ 
 
-    // Create alphas
-    Eigen::MatrixXd alphas(6, 1);
-    alphas << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0;
+   
 
     return 0;
 }
