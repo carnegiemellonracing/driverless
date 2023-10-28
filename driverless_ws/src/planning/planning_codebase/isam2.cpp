@@ -65,10 +65,11 @@ public:
 
 class slamISAM {
 private:
-    ISAM2Params parameters;
+    // ISAM2Params parameters;
     // parameters.relinearizeThreshold = 0.01;
     // parameters.relinearizeSkip = 1;
-    ISAM2 isam2;
+    // ISAM2 isam2;
+    NonlinearISAM isam;
     //Create a factor graph and values for new data
     NonlinearFactorGraph graph;
     Values values;
@@ -101,7 +102,8 @@ public:
 
     slamISAM() {
 
-        isam2 = gtsam::ISAM2();
+        // isam2 = gtsam::ISAM2();
+        isam = gtsam::NonlinearISAM();
         graph = gtsam::NonlinearFactorGraph();
         values = gtsam::Values();
         x = 0;
@@ -124,17 +126,17 @@ public:
         }
         else {
             noiseModel::Diagonal::shared_ptr odom_model = noiseModel::Diagonal::Sigmas(Eigen::Vector3d(0, 0, 0));
-            Pose2 prev_pos = isam2.calculateEstimate(X(x - 1)).cast<Pose2>();
+            Pose2 prev_pos = isam.estimate().at(X(x-1)).cast<Pose2>();
             gtsam::BetweenFactor<Pose2> odom_factor = gtsam::BetweenFactor<Pose2>(X(x - 1), X(x), Pose2(global_odom.x() - prev_pos.x(), global_odom.y() - prev_pos.y(), global_odom.theta() - prev_pos.theta()), odom_model);
             graph.add(odom_factor);
             values.insert(X(x), global_odom);
             prev_robot_est = prev_pos;
         }
 
-        isam2.update(graph, values);
+        isam.update(graph, values);
         graph.resize(0);
         values.clear();
-        Pose2 robot_est = isam2.calculateEstimate(X(x)).cast<Pose2>();
+        Pose2 robot_est = isam.estimate().at(X(x)).cast<Pose2>();
 
         // DATA ASSOCIATION BEGIN
         for (Point2 cone : cone_obs) {
@@ -157,16 +159,16 @@ public:
         }
         // DATA ASSOCIATION END
 
-        isam2.update(graph, values);
+        isam.update(graph, values);
         graph.resize(0);
         values.clear();
 
-        robot_est = isam2.calculateEstimate(X(x)).cast<gtsam::Pose2>();
+        robot_est =  isam.estimate().at(X(x)).cast<Pose2>(); 
         x++;
 
         landmark_est.clear();
         for (int i = 0; i < n_landmarks; i++) {
-            landmark_est.push_back(isam2.calculateEstimate(L(i)).cast<gtsam::Point2>());
+            landmark_est.push_back(isam.estimate().at(L(i)).cast<gtsam::Point2>());
         }
 
     }
