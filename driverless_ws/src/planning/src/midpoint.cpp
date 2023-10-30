@@ -49,7 +49,7 @@ class MidpointNode : public rclcpp::Node
     void cones_callback (const eufs_msgs::msg::ConeArray::SharedPtr msg)
     { 
       RCLCPP_INFO(this->get_logger(), "Hello");
-      return;
+      // return;
       if (lap>1) return;
 
       if((msg->blue_cones.size()==0 || msg->yellow_cones.size()==0) && (msg->orange_cones.size()<2)){
@@ -103,6 +103,8 @@ class MidpointNode : public rclcpp::Node
       }
       message.set__points(Points);
       publisher_rcl_pt->publish(message);
+      RCLCPP_INFO(this->get_logger(), "published midpoint cones");
+
     }
 
 
@@ -126,6 +128,7 @@ class MidpointNode : public rclcpp::Node
 
 int main(int argc, char * argv[])
 {
+  // RCLCPP_INFO(this->get_logger(), "Started Midpoint Node");
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<MidpointNode>());
   rclcpp::shutdown();
