@@ -196,27 +196,27 @@ Spline MidpointGenerator::spline_from_curve(std::vector<std::pair<double,double>
     return splines[0];
 }
 
-int main(){
-    gsl_matrix *left = gsl_matrix_alloc(2, 5);
-    gsl_matrix *right = gsl_matrix_alloc(2, 3);
-    std::vector<double> left_xcord = {-4.475, -4.45, -4.37, -4.16, -3.78};
-    std::vector<double> left_ycord = {0, 0.424, 0.95, 1.64, 2.39};
-    std::vector<double> right_xcord = {-3, -2.875, -2.68};
-    std::vector<double> right_ycord = {0, 0.857, 1.348};
-    for(int i = 0; i < 5; i++)
-    {
-        gsl_matrix_set(left, 0, i, left_xcord[i]);
-        gsl_matrix_set(left, 1, i, left_ycord[i]);
-    }
-    for(int i = 0; i < 3; i++)
-    {
-        gsl_matrix_set(right, 0, i, right_xcord[i]);
-        gsl_matrix_set(right, 1, i, right_ycord[i]);
-    }
+// int main(){
+//     gsl_matrix *left = gsl_matrix_alloc(2, 5);
+//     gsl_matrix *right = gsl_matrix_alloc(2, 3);
+//     std::vector<double> left_xcord = {-4.475, -4.45, -4.37, -4.16, -3.78};
+//     std::vector<double> left_ycord = {0, 0.424, 0.95, 1.64, 2.39};
+//     std::vector<double> right_xcord = {-3, -2.875, -2.68};
+//     std::vector<double> right_ycord = {0, 0.857, 1.348};
+//     for(int i = 0; i < 5; i++)
+//     {
+//         gsl_matrix_set(left, 0, i, left_xcord[i]);
+//         gsl_matrix_set(left, 1, i, left_ycord[i]);
+//     }
+//     for(int i = 0; i < 3; i++)
+//     {
+//         gsl_matrix_set(right, 0, i, right_xcord[i]);
+//         gsl_matrix_set(right, 1, i, right_ycord[i]);
+//     }
 
-    gsl_matrix *mid = midpoint(left, right);
-    for(int i = 0; i < mid->size2; i++)
-    {
-        std::cout<<gsl_matrix_get(mid, 0, i) << " " << gsl_matrix_get(mid, 1, i) << "\n";
-    }
-}
+//     gsl_matrix *mid = midpoint(left, right);
+//     for(int i = 0; i < mid->size2; i++)
+//     {
+//         std::cout<<gsl_matrix_get(mid, 0, i) << " " << gsl_matrix_get(mid, 1, i) << "\n";
+//     }
+// }
