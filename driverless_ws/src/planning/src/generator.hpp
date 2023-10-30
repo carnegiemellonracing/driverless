@@ -2,7 +2,7 @@
 // #include "random.h"
 #include <math.h>
 #include <algorithm>
-
+#include <iostream>
 #ifndef MIDPOINTGENERATOR
 #define MIDPOINTGENERATOR
 
