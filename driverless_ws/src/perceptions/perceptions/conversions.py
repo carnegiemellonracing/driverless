@@ -1,7 +1,7 @@
 
 # ROS2 message types
 from sensor_msgs.msg import Image, PointCloud2
-from eufs_msgs.msg import ConeArrayWithCovariance, ConeWithCovariance
+from eufs_msgs.msg import ConeArray
 from geometry_msgs.msg import Point
 
 # perc22a Cone class
@@ -19,13 +19,11 @@ def _cone_msg_arr(cone_arr):
     arr_msg = []
     for i in range(cone_arr.shape[0]):
         x, y, z = cone_arr[i, :]
-        
-        msg = ConeWithCovariance()
-        msg.covariance = [1.0, 0.0, 0.0, 1.0]
-        msg.point = Point()
-        msg.point.x = float(x)
-        msg.point.y = float(y)
-        msg.point.z = float(z)
+ 
+        msg = Point()
+        msg.x = float(x)
+        msg.y = float(y)
+        msg.z = float(z)
 
         arr_msg.append(msg)
         
@@ -50,10 +48,10 @@ def pointcloud2_to_npy(pc2_msg: PointCloud2):
 
     return points_arr
 
-def cones_to_msg(cones: Cones) -> ConeArrayWithCovariance:
-    '''convert perc22a Cones datatype to ConeArrayWithCovariance ROS2 msg type'''
+def cones_to_msg(cones: Cones) -> ConeArray:
+    '''convert perc22a Cones datatype to ConeArray ROS2 msg type'''
     
-    cones_msg = ConeArrayWithCovariance()
+    cones_msg = ConeArray()
     blue_cones, yellow_cones, orange_cones = cones.get_cones()
 
     cones_msg.blue_cones = _cone_msg_arr(blue_cones)
