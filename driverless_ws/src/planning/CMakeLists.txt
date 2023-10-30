@@ -44,4 +44,4 @@
   # talker
   # listener
   # DESTINATION lib/${PROJECT_NAME})
-  # ament_package()
+  ament_package()
