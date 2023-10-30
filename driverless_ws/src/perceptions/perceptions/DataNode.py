@@ -7,7 +7,7 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 from sensor_msgs.msg import Image, PointCloud2
 
 # ROS2 msg to python datatype conversions
-import perceptions.utils.conversions as conv
+import perceptions.conversions as conv
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
@@ -46,7 +46,7 @@ class DataNode(Node):
         self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depthImage_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.point_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         # define varaibles to store the data
@@ -92,7 +92,7 @@ class DataNode(Node):
 
             vis.update_visualizer_window(self.xyz_image_window, points)
 
-    def depthImage_callback(self, msg):
+    def depth_image_callback(self, msg):
         self.depth_image = conv.img_to_npy(msg)
         
         if DEBUG:
@@ -102,7 +102,10 @@ class DataNode(Node):
         self.points = conv.pointcloud2_to_npy(msg)
 
         if DEBUG:
-            vis.update_visualizer_window(self.window, self.points[:,:3])
+            points = self.points[:, :3]
+            points = points[:, [1, 0, 2]]
+            points[:, 0] *= -1
+            vis.update_visualizer_window(self.window, points[:,:3])
 
 
 def main(args=None):
