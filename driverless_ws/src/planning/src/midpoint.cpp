@@ -4,7 +4,7 @@
 #include "std_msgs/msg/int8.hpp"
 #include "geometry_msgs/msg/point.hpp"
 // #include "msg/optimizer_points.hpp"
-#include "eufs_msgs/msg/cone_array_with_covariance.hpp"
+#include "eufs_msgs/msg/cone_array.hpp"
 #include "eufs_msgs/msg/point_array.hpp"
 // #include "interfaces/msg/cone_list.hpp"
 // #include "interfaces/msg/points.hpp"
@@ -59,15 +59,15 @@ class MidpointNode : public rclcpp::Node
 
       for (auto e : msg->blue_cones)
       {
-        perception_data.bluecones.emplace_back(e.point.x, e.point.y);
+        perception_data.bluecones.emplace_back(e.x, e.y);
       }      
       for (auto e : msg->orange_cones)
       {
-        perception_data.orangecones.emplace_back(e.point.x, e.point.y);
+        perception_data.orangecones.emplace_back(e.x, e.y);
       }      
       for (auto e : msg->yellow_cones)
       {
-        perception_data.yellowcones.emplace_back(e.point.x, e.point.y);
+        perception_data.yellowcones.emplace_back(e.x, e.y);
       }
 
       //TODO: shouldn't return a spline
@@ -76,6 +76,7 @@ class MidpointNode : public rclcpp::Node
     
       // Spline spline_left = generator_left.spline_from_curve(perception_data.bluecones);
       // Spline spline_right = generator_right.spline_from_curve(perception_data.yellowcones);
+
 
       // WILL BE USED WHEN OPTIMIZER STARTS
       std::vector<double> rcl_pt_x,rcl_pt_y;//,rcl_pt_wr, rcl_pt_wl;
@@ -88,7 +89,7 @@ class MidpointNode : public rclcpp::Node
         auto spline = generator_mid.cumulated_splines[i];
         //TODO:create a typedef, but size2 is the num of rows
         for(unsigned int j=0;j<spline.get_points()->size2-1;j++){
-          x=gsl_matrix_get(spline.get_points(),0,j); //get x and y points from a row
+          x=gsl_matrix_get(spline.get_points(),0,j);
           y=gsl_matrix_get(spline.get_points(),1,j);
           // double len=0; 
           // if (i>0) len = generator_mid.cumulated_lengths[i-1];
@@ -112,23 +113,10 @@ class MidpointNode : public rclcpp::Node
     MidpointNode()
     : Node("midpoint")
     {
-<<<<<<< HEAD
       subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArray>("/stereo_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
       // subscription_lap_num = this->create_subscription<std_msgs::msg::String>("/lap_num", 10, std::bind(&MidpointNode::lap_callback, this, _1));
       publisher_rcl_pt = this->create_publisher<eufs_msgs::msg::PointArray>("/midpoint_points",10);
       // publisher_rcl_pt = this->create_publisher<std_msgs::msg::String>("/midpoint_points",10);
-=======
-      //Should be cone array for normal pipeline
-      // subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArray>(
-      //     "/stereo_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
-      subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArrayWithCovariance>(
-          "/cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
-
-
-      // subscription_lap_num = this->create_subscription<std_msgs::msg::String>("/lap_num", 10, std::bind(&MidpointNode::lap_callback, this, _1));
-      publisher_rcl_pt = this->create_publisher<eufs_msgs::msg::PointArray>(
-          "/midpoint_points",10);
->>>>>>> main
       //     rclcpp::TimerBase::SharedPtr  timer_ = this->create_wall_timer(
       // 500ms, std::bind(&MinimalPublisher::timer_callback, this));
       generator_mid = MidpointGenerator(10);
