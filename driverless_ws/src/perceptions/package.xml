@@ -4,20 +4,20 @@
   <name>perceptions</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="akhandelwal2025@gmail.com">ankit</maintainer>
+  <maintainer email="geoffthejetson@gmail.com">dale</maintainer>
   <license>TODO: License declaration</license>
 
-  <depend>rclcpp</depend>
-  <depend>std_msgs</depend>
-  <depend>sensor_msgs</depend>
-  <depend>eufs_msgs</depend>
+  <build_depend>eufs_msgs</build_depend>
+  <exec_depend>eufs_msgs</exec_depend>
+  <build_depend>ros2_numpy</build_depend>
+  <exec_depend>ros2_numpy</exec_depend>
 
-  <buildtool_depend>ament_cmake</buildtool_depend>
-
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
 
   <export>
-    <build_type>ament_cmake</build_type>
+    <build_type>ament_python</build_type>
   </export>
 </package>
