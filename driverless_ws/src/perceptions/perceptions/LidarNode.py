@@ -19,7 +19,7 @@ class LidarNode(DataNode):
         super().__init__(name=NODE_NAME)
 
         # do prediction on a timer
-        self.interval = 0.5
+        self.interval = 0.1
         self.predict_timer = self.create_timer(self.interval, self.predict_callback)
 
         # create publisher
@@ -35,11 +35,8 @@ class LidarNode(DataNode):
             self.get_logger().warn("Not got all data")
             return
     
-        # otherwise, do prediction on data and display
-        data = {
-            "points": self.points
-        }
-        cones = self.predictor.predict(data)
+        # otherwise, do prediction on data and display (self.data updated by DataNode)
+        cones = self.predictor.predict(self.data)
         self.predictor.display()
 
         # publish messages

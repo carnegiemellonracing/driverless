@@ -20,7 +20,7 @@ class StereoNode(DataNode):
 
         # do prediction on a timer
         # TODO: figure out what the best way is to deal with this?
-        self.interval = 0.5
+        self.interval = 0.1
         self.predict_timer = self.create_timer(self.interval, self.predict_callback)
 
         # create publisher
@@ -38,12 +38,8 @@ class StereoNode(DataNode):
             self.get_logger().warn("Not got all data")
             return
     
-        # otherwise, do prediction on data and display
-        data = {
-            "left_color": self.left_color,
-            "xyz_image": self.xyz_image,
-        }
-        cones = self.predictor.predict(data)
+        # otherwise, do prediction on data and display (self.data updated by DataNode)
+        cones = self.predictor.predict(self.data)
         self.predictor.display()
 
         # publish message

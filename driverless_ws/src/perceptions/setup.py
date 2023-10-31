@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'data_node = perceptions.DataNode:main',
+            'file_node = perceptions.FileNode:main',
             'stereo_node = perceptions.StereoNode:main',
             'lidar_node = perceptions.LidarNode:main'
         ],

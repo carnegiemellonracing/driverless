@@ -45,46 +45,49 @@ class DataNode(Node):
         # subscribe to each piece of data that we want to collect on
         self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.point_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
-        # define varaibles to store the data
-        self.left_color = None
-        self.right_color = None
-        self.xyz_image = None
-        self.depth_image = None
-        self.points = None
+        # define dictionary to store the data
+        self.data = {}
+
+        # create key strings associated with data (eventually make same as topic names)
+        self.left_color_str = "left_color"
+        self.right_color_str = "right_color"
+        self.xyz_image_str = "xyz_image"
+        self.depth_image_str = "depth_image"
+        self.points_str = "points"
         
 
     def got_all_data(self):
         # returns whether data node has all pieces of data
-        return self.left_color is not None and \
-               self.right_color is not None and \
-               self.xyz_image is not None and \
-               self.depth_image is not None and \
-               self.points is not None
+        return self.left_color_str in self.data and \
+               self.right_color_str in self.data and \
+               self.xyz_image_str in self.data and \
+               self.depth_image_str in self.data and \
+               self.points_str in self.data
     
     def left_color_callback(self, msg):
-        self.left_color = conv.img_to_npy(msg)
+        self.data[self.left_color_str] = conv.img_to_npy(msg)
 
         if DEBUG:
-            cv2.imshow("left", self.left_color)
+            cv2.imshow("left", self.data[self.left_color_str])
             cv2.waitKey(1)
 
     def right_color_callback(self, msg):
-        self.right_color = conv.img_to_npy(msg)
+        self.data[self.right_color_str] = conv.img_to_npy(msg)
 
         if DEBUG:
-            cv2.imshow("right", self.right_color)
+            cv2.imshow("right", self.data[self.right_color_str])
             cv2.waitKey(1)
 
-    def xyz_callback(self, msg):
-        self.xyz_image =conv.img_to_npy(msg)
+    def xyz_image_callback(self, msg):
+        self.data[self.xyz_image_str] =conv.img_to_npy(msg)
 
         if DEBUG:
             # display xyz_image as unstructured point cloud
-            points = self.xyz_image[:, :, :3]
+            points = self.data[self.xyz_image_str][:, :, :3]
             points = points.reshape((-1, 3))
             points = points[:,[1,0,2]]
             points = points[~np.isnan(points)].reshape((-1, 3))
@@ -93,16 +96,16 @@ class DataNode(Node):
             vis.update_visualizer_window(self.xyz_image_window, points)
 
     def depth_image_callback(self, msg):
-        self.depth_image = conv.img_to_npy(msg)
+        self.data[self.depth_image_str] = conv.img_to_npy(msg)
         
         if DEBUG:
-            cv2.imshow("depth", self.depth_image)
+            cv2.imshow("depth", self.data[self.depth_image_str])
 
-    def point_callback(self, msg):
-        self.points = conv.pointcloud2_to_npy(msg)
+    def points_callback(self, msg):
+        self.data[self.points_str] = conv.pointcloud2_to_npy(msg)
 
         if DEBUG:
-            points = self.points[:, :3]
+            points = self.data[self.points_str][:, :3]
             points = points[:, [1, 0, 2]]
             points[:, 0] *= -1
             vis.update_visualizer_window(self.window, points[:,:3])
@@ -111,7 +114,7 @@ class DataNode(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    # enable the debug flag for visualizations
+    # enable the debug flag for sexy visualizations
     global DEBUG
     DEBUG = True
 
@@ -122,7 +125,7 @@ def main(args=None):
     data_node.destroy_node()
     rclpy.shutdown()
 
-    pass
+    return
 
 if __name__ == "__main__":
     main()
