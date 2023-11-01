@@ -11,6 +11,7 @@
 #include "generator.hpp"
 // #include "frenet.hpp"
 // #include "runpy.hpp"
+#include <Eigen/Dense>
 
 
 //publish topic example
@@ -88,9 +89,14 @@ class MidpointNode : public rclcpp::Node
       for(unsigned int i =0;i<generator_mid.cumulated_splines.size();i++){
         auto spline = generator_mid.cumulated_splines[i];
         //TODO:create a typedef, but size2 is the num of rows
-        for(unsigned int j=0;j<spline.get_points()->size2-1;j++){
-          x=gsl_matrix_get(spline.get_points(),0,j);
-          y=gsl_matrix_get(spline.get_points(),1,j);
+        for(unsigned int j=0;j<spline.get_points().cols()-1;j++){
+          // x=gsl_matrix_get(spline.get_points(),0,j);
+          // y=gsl_matrix_get(spline.get_points(),1,j);
+          // eigen
+          Eigen::MatrixXd splineMatrix = spline.get_points();
+          x= splineMatrix(0,j);
+          y= splineMatrix(1,j);
+
           // double len=0; 
           // if (i>0) len = generator_mid.cumulated_lengths[i-1];
           geometry_msgs::msg::Point tmpPoint;
