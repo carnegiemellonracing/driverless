@@ -24,6 +24,7 @@
 #include <vector>
 #include <cmath>
 #include <chrono>
+// #include <eigen3/Eigen/Dense>
 
 #define CONE_DATA_TOPIC "/cones"
 #define VEHICLE_DATA_TOPIC "/ground_truth/state"
@@ -99,74 +100,74 @@ class SLAMValidation : public rclcpp::Node
       vpos_is_jacob.dyaw = vehicle_state_data->twist.twist.angular.z;
     }
     void timer_callback(){
-      run_slam();
+      // run_slam();
     }
 
-    void run_slam(){
-      // dt = std::chrono::duration_cast<std::chrono::microseconds>(curr_time - prev_time).count() / 1000000.0;
-      // prev_time = curr_time;
-      // RCLCPP_INFO(this->get_logger(), "curr_time: %d | prev_time: %d | dt: %d\n", curr_time.count(), prev_time.count(), dt);
-      // Time difference from one callback to another is so close to 0.1 seconds, gonna assume 0.1 everywhere
-      // Cuz elapsed time stuff not working rn
+    // void run_slam(){
+    //   // dt = std::chrono::duration_cast<std::chrono::microseconds>(curr_time - prev_time).count() / 1000000.0;
+    //   // prev_time = curr_time;
+    //   // RCLCPP_INFO(this->get_logger(), "curr_time: %d | prev_time: %d | dt: %d\n", curr_time.count(), prev_time.count(), dt);
+    //   // Time difference from one callback to another is so close to 0.1 seconds, gonna assume 0.1 everywhere
+    //   // Cuz elapsed time stuff not working rn
 
 
-      // gsl_matrix* u = gsl_matrix_calloc(2, 1);
-      // gsl_matrix_set(u, 0, 0, hypot(vpos_is_jacob.dx, vpos_is_jacob.dy));
-      // gsl_matrix_set(u, 1, 0, vpos_is_jacob.dyaw);
+    //   // gsl_matrix* u = gsl_matrix_calloc(2, 1);
+    //   // gsl_matrix_set(u, 0, 0, hypot(vpos_is_jacob.dx, vpos_is_jacob.dy));
+    //   // gsl_matrix_set(u, 1, 0, vpos_is_jacob.dyaw);
 
-      Eigen::MatrixXd u = calcInput();
+    //   Eigen::MatrixXd u = calcInput();
 
-      int n = blue_cones.size() + yellow_cones.size() + orange_cones.size();
-      int idx = 0;
+    //   int n = blue_cones.size() + yellow_cones.size() + orange_cones.size();
+    //   int idx = 0;
 
-      // Declaring z matrix dimensions
-      Eigen::MatrixXd z(n, 3);
+    //   // Declaring z matrix dimensions
+    //   Eigen::MatrixXd z(n, 3);
 
-      // gsl_matrix* z = gsl_matrix_calloc(n, 3);
-      RCLCPP_INFO(this->get_logger(), "RUNSLAM: B: %i | Y: %i | O: %i\n", blue_cones.size(), yellow_cones.size(), orange_cones.size());
-      for(int i = 0; i < blue_cones.size(); i++){
-        Cone c = blue_cones[i];
-        double dist = hypot(c.x, c.y);
-        double angle = atan2(c.y, c.x);
-        double corrected_angle = std::fmod(angle + M_PI, 2 * M_PI) - M_PI;
-        // gsl_matrix_set(z, idx, 0, dist);
-        // gsl_matrix_set(z, idx, 1, angle);
-        z(idx, 0) = dist;
-        z(idx, 1) = angle;
-        idx++;
-      }
+    //   // gsl_matrix* z = gsl_matrix_calloc(n, 3);
+    //   RCLCPP_INFO(this->get_logger(), "RUNSLAM: B: %i | Y: %i | O: %i\n", blue_cones.size(), yellow_cones.size(), orange_cones.size());
+    //   for(int i = 0; i < blue_cones.size(); i++){
+    //     Cone c = blue_cones[i];
+    //     double dist = hypot(c.x, c.y);
+    //     double angle = atan2(c.y, c.x);
+    //     double corrected_angle = std::fmod(angle + M_PI, 2 * M_PI) - M_PI;
+    //     // gsl_matrix_set(z, idx, 0, dist);
+    //     // gsl_matrix_set(z, idx, 1, angle);
+    //     z(idx, 0) = dist;
+    //     z(idx, 1) = angle;
+    //     idx++;
+    //   }
 
-      for(int i = 0; i < yellow_cones.size(); i++){
-        Cone c = yellow_cones[i];
-        double dist = hypot(c.x, c.y);
-        double angle = atan2(c.y, c.x);
-        double corrected_angle = std::fmod(angle + M_PI, 2 * M_PI) - M_PI;
-        // gsl_matrix_set(z, idx, 0, dist);
-        // gsl_matrix_set(z, idx, 1, angle);
-        z(idx, 0) = dist;
-        z(idx, 1) = angle;
-        idx++;
-      }
+    //   for(int i = 0; i < yellow_cones.size(); i++){
+    //     Cone c = yellow_cones[i];
+    //     double dist = hypot(c.x, c.y);
+    //     double angle = atan2(c.y, c.x);
+    //     double corrected_angle = std::fmod(angle + M_PI, 2 * M_PI) - M_PI;
+    //     // gsl_matrix_set(z, idx, 0, dist);
+    //     // gsl_matrix_set(z, idx, 1, angle);
+    //     z(idx, 0) = dist;
+    //     z(idx, 1) = angle;
+    //     idx++;
+    //   }
 
-      for(int i = 0; i < orange_cones.size(); i++){
-        Cone c = orange_cones[i];
-        double dist = hypot(c.x, c.y);
-        double angle = atan2(c.y, c.x);
-        double corrected_angle = std::fmod(angle + M_PI, 2 * M_PI) - M_PI;
-        // gsl_matrix_set(z, idx, 0, dist);
-        // gsl_matrix_set(z, idx, 1, angle);
-        z(idx, 0) = dist;
-        z(idx, 1) = angle;
-        idx++;
-      }
-      // slam_output = ekf_slam(xEst, pEst, u, z, 0.1, this->get_logger());
-      slam_output = ekf_slam(xEst, pEst, u, z, 0.1);
-      RCLCPP_INFO(this->get_logger(), "got output\n");
-      // RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", (xEst->size1-3)/2);
-      xEst = slam_output.x;
-      pEst = slam_output.p;
+    //   for(int i = 0; i < orange_cones.size(); i++){
+    //     Cone c = orange_cones[i];
+    //     double dist = hypot(c.x, c.y);
+    //     double angle = atan2(c.y, c.x);
+    //     double corrected_angle = std::fmod(angle + M_PI, 2 * M_PI) - M_PI;
+    //     // gsl_matrix_set(z, idx, 0, dist);
+    //     // gsl_matrix_set(z, idx, 1, angle);
+    //     z(idx, 0) = dist;
+    //     z(idx, 1) = angle;
+    //     idx++;
+    //   }
+    //   // slam_output = ekf_slam(xEst, pEst, u, z, 0.1, this->get_logger());
+    //   slam_output = ekf_slam(xEst, pEst, u, z, 0.1);
+    //   RCLCPP_INFO(this->get_logger(), "got output\n");
+    //   // RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", (xEst->size1-3)/2);
+    //   xEst = slam_output.x;
+    //   pEst = slam_output.p;
 
-    }
+    // }
     rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr cone_sub;
     rclcpp::Subscription<eufs_msgs::msg::CarState>::SharedPtr vehicle_state_sub;
     vector<Cone> blue_cones;
@@ -186,7 +187,7 @@ class SLAMValidation : public rclcpp::Node
 
     double dt;
 
-    ekfPackage slam_output;
+    // ekfPackage slam_output;
 };
 
 // class SLAMValidation : public rclcpp::Node {
@@ -249,6 +250,7 @@ class SLAMValidation : public rclcpp::Node
 // };
 
 int main(int argc, char * argv[]){
+  std::cout << ";sldakjfsd";
   rclcpp::init(argc, argv);
   auto node = std::make_shared<SLAMValidation>();
   RCLCPP_INFO(node->get_logger(), "got output\n");

@@ -31,7 +31,8 @@ Eigen::Matrix3d Cx = (Eigen::Matrix3d() << 0.5 * 0.5, 0.0, 0.0,
 // Create alphas
 // Eigen::MatrixXd alphas(6, 1);
 // alphas << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0;
-Eigen::MatrixXd alphas = (Eigen::MatrixXd() << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0).finished();
+// printf("manan sucks balls");
+
 
 
 // Create R_sim matrix
@@ -270,7 +271,8 @@ struct ekfPackage {
 };
 
 struct ekfPackage ekf_slam(Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::MatrixXd& u, Eigen::MatrixXd& z, double dt) {
-    
+    Eigen::MatrixXd alphas = (Eigen::MatrixXd() << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0).finished();
+
     // Ensuring that z is a 2 x n matrix where every landmark is 2 x 1 matrix
     z = z.transpose();
 
