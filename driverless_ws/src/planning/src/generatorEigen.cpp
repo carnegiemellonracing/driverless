@@ -114,7 +114,7 @@ Eigen::MatrixXd& MidpointGenerator::generate_points(perceptionsData perceptions_
             if(i==0){
                 right(0,i)=-1*perceptions_data.bluecones[i].first;
                 right(1,i)=perceptions_data.bluecones[i].second;
-`            }
+           }
             else{
                 double xdiff = perceptions_data.bluecones[i].first-perceptions_data.bluecones[i-1].first;
                 double ydiff = perceptions_data.bluecones[i].second-perceptions_data.bluecones[i-1].second;
