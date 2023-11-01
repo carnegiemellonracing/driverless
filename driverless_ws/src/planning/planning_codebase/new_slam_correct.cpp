@@ -3,6 +3,7 @@
 #include <eigen3/Eigen/Dense>
 #include <cmath>
 #include <algorithm>
+#include <vector>
 
 // # DT = 0.1  # time tick [s]
 // simulation time [s]
@@ -16,9 +17,9 @@ double M_DIST_TH = 2;
 // M_DIST_TH_FIRST = 0.25  # Threshold of Mahalanobis distance for data association.
 double M_DIST_TH_ALL = 1;
 // State size [x,y,yaw]
-double STATE_SIZE = 3;  
+int STATE_SIZE = 3;  
 // LM state size [x,y]
-double LM_SIZE = 2;
+int LM_SIZE = 2;
 
 
 // Create Cx matrix
@@ -30,11 +31,11 @@ Eigen::Matrix3d Cx = (Eigen::Matrix3d() << 0.5 * 0.5, 0.0, 0.0,
 // Create alphas
 // Eigen::MatrixXd alphas(6, 1);
 // alphas << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0;
-Eigen::MatrixXd alphas = (Eigen::Matrix3d() << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0).finished();
+Eigen::MatrixXd alphas = (Eigen::MatrixXd() << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0).finished();
 
 
 // Create R_sim matrix
-Eigen::Matrix2d R_sim = (Eigen::Matrix3d() << 1.0 * 1.0, 0.0, 
+Eigen::Matrix2d R_sim = (Eigen::Matrix2d() << 1.0 * 1.0, 0.0, 
         0.0, (std::cos(10.0) * std::cos(10.0))).finished(); // Convert 10.0 degrees to radians
 
 // Eigen::MatrixXd Q_sim << 0.2 * 0.2, 0.0, 
@@ -365,29 +366,29 @@ struct ekfPackage ekf_slam(Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::
     return result;
 }
 
-int main() {
+// int main() {
 
-    // Create Q_sim matrix
-    Eigen::MatrixXd Q_sim(2, 2);
-    Q_sim << 0.2 * 0.2, 0.0, 0.0, (std::pow(M_PI / 180.0 * 1.0, 2.0));
+//     // Create Q_sim matrix
+//     Eigen::MatrixXd Q_sim(2, 2);
+//     Q_sim << 0.2 * 0.2, 0.0, 0.0, (std::pow(M_PI / 180.0 * 1.0, 2.0));
 
-    // // Create R_sim matrix
-    // Eigen::MatrixXd R_sim(2,2);
-    // R_sim << 1.0 * 1.0, 0.0, 0.0, (Eigen::deg2rad(10.0) * Eigen::deg2rad(10.0));
+//     // // Create R_sim matrix
+//     // Eigen::MatrixXd R_sim(2,2);
+//     // R_sim << 1.0 * 1.0, 0.0, 0.0, (Eigen::deg2rad(10.0) * Eigen::deg2rad(10.0));
 
-    // // Create Cx matrix
-    // Eigen::MatrixXd Cx(3, 3);
-    // Cx << 0.5 * 0.5, 0.0, 0.0, 
-    //     0.0, 0.5 * 0.5, 0.0, 
-    //     0.0, 0.0, (Eigen::deg2rad(30.0) * Eigen::deg2rad(30.0));
+//     // // Create Cx matrix
+//     // Eigen::MatrixXd Cx(3, 3);
+//     // Cx << 0.5 * 0.5, 0.0, 0.0, 
+//     //     0.0, 0.5 * 0.5, 0.0, 
+//     //     0.0, 0.0, (Eigen::deg2rad(30.0) * Eigen::deg2rad(30.0));
 
 
  
 
    
 
-    return 0;
-}
+//     return 0;
+// }
 
 
 

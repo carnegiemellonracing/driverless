@@ -17,6 +17,7 @@
   <depend>eufs_msgs</depend>
   <depend>GSL</depend>
   <depend>OpenCV</depend>
+  <depend>Eigen3</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

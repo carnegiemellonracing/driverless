@@ -22,14 +22,16 @@ find_package(message_filters REQUIRED)
 find_package(eufs_msgs REQUIRED)
 find_package(GSL REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(Eigen3 REQUIRED)
 # find_package(matplotplusplus)
 
-add_executable(slam_test planning_codebase/EKF_SLAM.cpp)
+# add_executable(slam planning_codebase/EKF_SLAM.cpp planning_codebase/new_slam_correct.cpp)
+add_executable(slam planning_codebase/EKF_SLAM.cpp)
 # target_link_libraries(slam_test rclcpp message_filters eufs_msgs GSL OpenCV)
-ament_target_dependencies(slam_test rclcpp message_filters eufs_msgs GSL OpenCV)
+ament_target_dependencies(slam rclcpp message_filters eufs_msgs GSL Eigen3 OpenCV)
 
 install(TARGETS
-  slam_test
+  slam
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
