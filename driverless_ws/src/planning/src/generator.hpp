@@ -34,15 +34,15 @@ public:
     // gsl_matrix *sorted_by_norm(gsl_matrix *list);
     
 
-    std::vector<Spline> generate_splines(gsl_matrix *midpoints);    
-    gsl_matrix* generate_points(perceptionsData perceptions_data);  
-    gsl_matrix* interpolate_cones(perceptionsData perceptions_data, int interpolation_number = -1);
+    std::vector<Spline> generate_splines(Eigen::MatrixXd& midpoints);    
+    Eigen::MatrixXd& generate_points(perceptionsData perceptions_data);  
+    Eigen::MatrixXd& interpolate_cones(perceptionsData perceptions_data, int interpolation_number = -1);
     Spline spline_from_cones(perceptionsData perceptions_data);
     Spline spline_from_curve(std::vector<std::pair<double,double>> side);
 
 };
 
-gsl_matrix *midpoint(gsl_matrix *inner,gsl_matrix *outer);
+Eigen::MatrixXd& midpoint(Eigen::MatrixXd& inner,Eigen::MatrixXd& outer);
 
 #endif
 
