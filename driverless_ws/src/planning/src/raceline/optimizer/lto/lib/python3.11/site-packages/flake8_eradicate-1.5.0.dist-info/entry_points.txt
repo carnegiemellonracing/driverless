@@ -1,0 +1,3 @@
+[flake8.extension]
+E8=flake8_eradicate:Checker
+

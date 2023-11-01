@@ -1,0 +1,2 @@
+[flake8.extension]
+EXE00 = flake8_executable:ExecutableChecker

@@ -1,0 +1,2 @@
+[flake8.extension]
+RST = flake8_rst_docstrings:reStructuredTextChecker

@@ -1,0 +1,3 @@
+[flake8.extension]
+ANN=flake8_annotations.checker:TypeHintChecker
+

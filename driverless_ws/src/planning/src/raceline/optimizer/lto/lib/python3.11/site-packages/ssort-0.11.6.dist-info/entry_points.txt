@@ -1,0 +1,2 @@
+[console_scripts]
+ssort = ssort._main:main

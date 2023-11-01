@@ -1,0 +1,3 @@
+[flake8.extension]
+WS0=flake8_warnings:Flake8Checker
+

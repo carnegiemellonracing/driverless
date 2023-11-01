@@ -1,0 +1,3 @@
+[flake8.extension]
+B60=flake8_breakpoint.plugin:BreakpointPlugin
+

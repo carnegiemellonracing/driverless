@@ -1,0 +1,3 @@
+[console_scripts]
+pycln=pycln.cli:app
+

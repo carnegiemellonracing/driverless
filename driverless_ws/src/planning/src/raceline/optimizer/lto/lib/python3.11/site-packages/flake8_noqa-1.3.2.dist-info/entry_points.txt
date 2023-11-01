@@ -1,0 +1,3 @@
+[flake8.extension]
+NQA0 = flake8_noqa.noqa_checker:NoqaChecker
+NQA1 = flake8_noqa.noqa_filter:NoqaFilter
