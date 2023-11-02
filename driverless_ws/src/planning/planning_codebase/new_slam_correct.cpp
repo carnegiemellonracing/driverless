@@ -270,25 +270,27 @@ struct ekfPackage {
     std::vector<Eigen::MatrixXd> cone;
 };
 
-struct ekfPackage ekf_slam(Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::MatrixXd& u, Eigen::MatrixXd& z, double dt) {
-    Eigen::MatrixXd alphas = (Eigen::MatrixXd() << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0).finished();
-
+struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::MatrixXd& u, Eigen::MatrixXd& z, double dt) {
+    RCLCPP_INFO(logger, "at start of ekf slam");
+    std::cout << "lolasdl;jkfa\n";
+    // Eigen::MatrixXd alphas = (Eigen::MatrixXd() << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0).finished();
+    RCLCPP_INFO(logger, "after alphas");
     // Ensuring that z is a 2 x n matrix where every landmark is 2 x 1 matrix
     z = z.transpose();
 
     std::vector<Eigen::MatrixXd> cones;
     int S = STATE_SIZE;
-
+    RCLCPP_INFO(logger, "before jacob motion");
     struct jacob_motion_package j_m_p = jacob_motion(xEst.topRows(S), u, dt);
-
+    RCLCPP_INFO(logger, "after jacob motion");
     Eigen::MatrixXd G = j_m_p.G;
     Eigen::MatrixXd Fx = j_m_p.Fx;
 
     Eigen::MatrixXd M_t(2, 2);
 
     // Calculate the elements of M_t
-    double element_1 = std::pow(alphas(0, 0) * std::abs(u(0, 0)) + alphas(1, 0) * std::abs(u(1, 0)), 2);
-    double element_2 = std::pow(alphas(2, 0) * std::abs(u(0, 0)) + alphas(3, 0) * std::abs(u(1, 0)), 2);
+    double element_1 = std::pow(0.11 * std::abs(u(0, 0)) + 0.01 * std::abs(u(1, 0)), 2);
+    double element_2 = std::pow(0.18 * std::abs(u(0, 0)) + 0.08 * std::abs(u(1, 0)), 2);
 
     // Assign the elements to M_t
     M_t << element_1, 0,
