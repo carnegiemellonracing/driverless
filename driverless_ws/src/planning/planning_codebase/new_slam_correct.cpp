@@ -11,8 +11,8 @@ double SIM_TIME = 50.0;
 
 // maximum observation range
 double MAX_RANGE = 20.0;  
-double M_DIFF_TH = 1.6;
-double M_DIST_TH = 2;
+// double M_DIFF_TH = 50;
+double M_DIST_TH = 7;
 
 // M_DIST_TH_FIRST = 0.25  # Threshold of Mahalanobis distance for data association.
 double M_DIST_TH_ALL = 1;
@@ -128,14 +128,15 @@ jacob_motion_package jacob_motion(const Eigen::MatrixXd& x, const Eigen::MatrixX
 
 
 // Function to return (x, y) position of landmark stored as 2 x 1 matrix
-Eigen::MatrixXd calc_landmark_position(const Eigen::MatrixXd& x, const Eigen::MatrixXd& z) {
+Eigen::MatrixXd calc_landmark_position(auto logger, const Eigen::MatrixXd& x, const Eigen::MatrixXd& z) {
 
-    Eigen::MatrixXd zp(2, 1);
+    Eigen::MatrixXd zp(1, 2);
     zp.setZero();
-
-    zp(0,0) = x(0, 0) + (z(0, 0) * std::cos(x(2, 0) + z(1, 0)));
-    zp(1,0) = x(1, 0) + (z(0, 0) * std::sin(x(2, 0) + z(1, 0)));
-
+    RCLCPP_INFO(logger, "x size: (%d, %d)", x.rows(), x.cols());
+    RCLCPP_INFO(logger, "z size: (%d, %d)", z.rows(), z.cols());
+    zp(0,0) = x(0, 0) + (z(0, 0) * std::cos(x(2, 0) + z(0, 1)));
+    zp(0,1) = x(1, 0) + (z(0, 0) * std::sin(x(2, 0) + z(0, 1)));
+    RCLCPP_INFO(logger, "got here");
     return zp;
 }
 
@@ -204,14 +205,14 @@ struct innovation_package calc_innovation(auto logger, const Eigen::MatrixXd& lm
     double z_angle = std::atan2(delta(1, 0), delta(0, 0)) - xEst(2, 0);
     RCLCPP_INFO(logger, "after bs");
     // Calculate zp
-    Eigen::MatrixXd zp(2, 1);
+    Eigen::MatrixXd zp(1, 2);
     zp(0, 0) = std::sqrt(q);
-    zp(1, 0) = pi_2_pi(z_angle);
+    zp(0, 1) = pi_2_pi(z_angle);
 RCLCPP_INFO(logger, "after lmfao");
     // Calculate y
     RCLCPP_INFO(logger, "z_size: (%d , %d)  | zp_size: (%d , %d) ", z.rows(), z.cols(), zp.rows(), zp.cols());
     // Eigen::MatrixXd y = (z - zp).transpose().eval();
-    Eigen::MatrixXd y = (z - zp);
+    Eigen::MatrixXd y = (z - zp).transpose().eval();
     RCLCPP_INFO(logger, "before calc y");
     RCLCPP_INFO(logger, "y_size: (%d , %d)", y.rows(), y.cols());
     // y(0, 1) = pi_2_pi(y(0, 1));
@@ -242,13 +243,14 @@ int search_correspond_landmark_id(auto logger, const Eigen::MatrixXd& xAug, cons
     std::vector<double> min_dist;
     RCLCPP_INFO(logger, "z size: (%d, %d)", zi.rows(), zi.cols());
     double r = zi(0, 0);
-    double theta = zi(1, 0);
-
+    double theta = zi(0, 1);
+    RCLCPP_INFO(logger, "xAUG size: (%d, %d)", xAug.rows(), xAug.cols());
+    Eigen::MatrixXd meas_in_world_frame = calc_landmark_position(logger, xAug, zi);
+    RCLCPP_INFO(logger, "Measurement in Car Frame: (%f, %f)\nMeasurement in World Frame: (%f, %f)", r*std::cos(theta), r*std::sin(theta),meas_in_world_frame(0,0), meas_in_world_frame(0,1));
     for (int i = 0; i < nLM; ++i) {
         Eigen::MatrixXd lm = get_landmark_position_from_state(xAug, i);
-
         // Calculating y, S, and H matrices from innovation package
-        struct innovation_package i_p = calc_innovation(logger, lm, xAug, PAug, zi, i);
+        struct innovation_package i_p = calc_innovation(logger, lm, xAug, PAug, meas_in_world_frame, i);
         Eigen::MatrixXd y = i_p.y;
         Eigen::MatrixXd S = i_p.S;
         Eigen::MatrixXd H = i_p.H;
@@ -256,11 +258,12 @@ int search_correspond_landmark_id(auto logger, const Eigen::MatrixXd& xAug, cons
         // Calculating mahalanobis distance
         // double mahalanobis = y.transpose().eval() * S.ldlt().solve(y);
         Eigen::MatrixXd temp = (y.transpose().eval() * S.inverse() * y);
-        printf("rows:%d, cols: %d",temp.rows(),temp.cols()); 
+        // printf("rows:%d, cols: %d",temp.rows(),temp.cols()); 
         double mahalanobis = (y.transpose().eval() * S.inverse() * y)(0, 0);
         
         // Adding mahalanobis distance to minimum distance vector
         min_dist.push_back(mahalanobis);
+        RCLCPP_INFO(logger, "   Landmark %d: (%f, %f)      | Mahalanobis: %f", i, lm(0, 0), lm(1, 0), mahalanobis);
     }
 
     RCLCPP_INFO(logger, "exited for loop for search correspond landmark id");
@@ -282,11 +285,10 @@ struct ekfPackage {
 
 struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::MatrixXd& u, Eigen::MatrixXd& z, double dt) {
     RCLCPP_INFO(logger, "at start of ekf slam");
-    std::cout << "lolasdl;jkfa\n";
+    // std::cout << "lolasdl;jkfa\n";
     // Eigen::MatrixXd alphas = (Eigen::MatrixXd() << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0).finished();
     RCLCPP_INFO(logger, "after alphas");
     // Ensuring that z is a 2 x n matrix where every landmark is 2 x 1 matrix
-    z = z.transpose().eval();
     RCLCPP_INFO(logger, "zL (%d, %d)", z.rows(), z.cols());
     std::vector<Eigen::MatrixXd> cones;
     int S = STATE_SIZE;
@@ -330,9 +332,10 @@ struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& 
     for (int iz = 0; iz < z.rows(); ++iz) {
         RCLCPP_INFO(logger, "%d, %d", z.rows(), z.cols());
         RCLCPP_INFO(logger, "Requesting block from (%d, %d) to (2, 1)", iz, 0);
-        int min_id = search_correspond_landmark_id(logger, xEst, PEst, z.block(iz, 0, 1, 2).transpose().eval());
+        RCLCPP_INFO(logger, "z size: (%d, %d)", z.rows(), z.cols());
+        int min_id = search_correspond_landmark_id(logger, xEst, PEst, z.row(iz));
         RCLCPP_INFO(logger, "after search");
-        cones.push_back(calc_landmark_position(xEst, z.col(iz)));
+        // cones.push_back(calc_landmark_position(xEst, z.col(iz)));
         RCLCPP_INFO(logger, "after calc_landmark");
         int nLM = calc_n_lm(xEst);
         RCLCPP_INFO(logger, "after calc n lm");
@@ -340,7 +343,9 @@ struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& 
 
             // Extend state and covariance matrix
             Eigen::MatrixXd xAug(xEst.rows() + LM_SIZE, xEst.cols());
-            xAug << xEst, calc_landmark_position(xEst, z.col(iz));
+            Eigen::MatrixXd output = calc_landmark_position(logger, xEst, z.row(iz));
+            RCLCPP_INFO(logger, "ADDING (%f, %f)", output(0, 0), output(0, 1));
+            xAug << xEst, calc_landmark_position(logger, xEst, z.row(iz)).transpose().eval();
 
             Eigen::MatrixXd m1(PEst.rows(), PEst.cols() + LM_SIZE);
             Eigen::MatrixXd m1_zerosMatrix(xEst.rows(), LM_SIZE);
@@ -364,7 +369,7 @@ struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& 
         
         lm = get_landmark_position_from_state(xEst, min_id);
         RCLCPP_INFO(logger, "after landmark pos from state");
-        innovation_package i_p = calc_innovation(logger, lm, xEst, PEst, z.block(iz, 0, 1, 2).transpose().eval(), min_id);
+        innovation_package i_p = calc_innovation(logger, lm, xEst, PEst, z.row(iz), min_id);
         RCLCPP_INFO(logger, "after calc innovation");
         Eigen::MatrixXd y = i_p.y;
         Eigen::MatrixXd S = i_p.S;

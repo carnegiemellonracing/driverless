@@ -123,7 +123,7 @@ class SLAMValidation : public rclcpp::Node
       int idx = 0;
 
       // Declaring z matrix dimensions
-      Eigen::MatrixXd z(n, 3);
+      Eigen::MatrixXd z(n, 2);
 
       // gsl_matrix* z = gsl_matrix_calloc(n, 3);
       RCLCPP_INFO(this->get_logger(), "RUNSLAM: B: %i | Y: %i | O: %i\n", blue_cones.size(), yellow_cones.size(), orange_cones.size());
@@ -162,7 +162,7 @@ class SLAMValidation : public rclcpp::Node
         z(idx, 1) = angle;
         idx++;
       }
-      RCLCPP_INFO(this->get_logger(), "before ekf slam");
+      // RCLCPP_INFO(this->get_logger(), "before ekf slam");
       // slam_output = ekf_slam(xEst, pEst, u, z, 0.1, this->get_logger());
       if (z.rows() != 0){
         slam_output = ekf_slam(this->get_logger(), xEst, pEst, u, z, 0.1);
@@ -171,7 +171,7 @@ class SLAMValidation : public rclcpp::Node
       // RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", (xEst->size1-3)/2);
       xEst = slam_output.x;
       pEst = slam_output.p;
-
+      RCLCPP_INFO(this->get_logger(), "Num Landmarks: %ld", (xEst.rows()-3)/2);
     }
     rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr cone_sub;
     rclcpp::Subscription<eufs_msgs::msg::CarState>::SharedPtr vehicle_state_sub;
