@@ -23,6 +23,8 @@ polynomial poly_root(double root);
 
 polynomial polyder(polynomial p);
 
+polynomial polyint(polynomial p);
+
 polynomial poly_mult(polynomial a,polynomial b);
 
 
