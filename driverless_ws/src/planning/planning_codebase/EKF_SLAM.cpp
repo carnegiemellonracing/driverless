@@ -172,6 +172,8 @@ class SLAMValidation : public rclcpp::Node
       xEst = slam_output.x;
       pEst = slam_output.p;
       RCLCPP_INFO(this->get_logger(), "Num Landmarks: %ld", (xEst.rows()-3)/2);
+      RCLCPP_INFO(this->get_logger(), "CAR POSITION: %f, %f, %f", xEst(0, 0), xEst(1, 0), xEst(2, 0));
+      // std::cout << pEst << std::endl;
     }
     rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr cone_sub;
     rclcpp::Subscription<eufs_msgs::msg::CarState>::SharedPtr vehicle_state_sub;
