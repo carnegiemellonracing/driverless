@@ -9,7 +9,6 @@
 #include <vector>
 
 #include "frenet.hpp"
-#include "raceline.hpp"
 
 gsl_matrix *mat_mul(gsl_matrix *A, gsl_matrix *B) {
   assert(A->size2 == B->size1);

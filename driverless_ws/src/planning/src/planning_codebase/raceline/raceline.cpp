@@ -83,9 +83,9 @@ double Spline::length(){
     return arclength(this->spl_poly,gsl_matrix_get(this->rotated_points,0,0),gsl_matrix_get(this->rotated_points,0,this->rotated_points->size2-1));
 }
 
-gsl_matrix* Spline::interpolate(int number, std::pair<float, float> bounds){
-    return interpolate(*this,number,bounds);
-}
+// gsl_matrix* Spline::interpolate(int number, std::pair<float, float> bounds){
+//     return interpolate(*this,number,bounds);
+// }
 
 bool Spline::operator==(Spline const & other) const{
     return this->sort_index==other.sort_index;
@@ -225,12 +225,12 @@ double Spline::getderiv(double x){
 
 }
 
-gsl_matrix *interpolate(Spline spline,int number, std::pair<float,float> bounds){
+gsl_matrix* Spline::interpolate(int number, std::pair<float,float> bounds){
 
     if(bounds.first == -1 && bounds.second == -1){
-        double bound1 = gsl_matrix_get(spline.get_rotated_points(),0,0);
+        double bound1 = gsl_matrix_get(get_rotated_points(),0,0);
         // MAKE PROPER BOUND 2
-        double bound2 = gsl_matrix_get(spline.get_rotated_points(),0,spline.get_rotated_points()->size2);
+        double bound2 = gsl_matrix_get(get_rotated_points(),0,get_rotated_points()->size2);
         bounds = std::make_pair(bound1,bound2);
     }
 
@@ -238,7 +238,7 @@ gsl_matrix *interpolate(Spline spline,int number, std::pair<float,float> bounds)
     
     for(int i=0;i<number;i++){
         double x = bounds.first+ (bounds.second-bounds.first)*(i/(number-1));
-        double y = gsl_poly_eval(spline.get_SplPoly().nums->data,spline.get_SplPoly().deg,x);
+        double y = gsl_poly_eval(get_SplPoly().nums->data,get_SplPoly().deg,x);
         gsl_matrix_set(points,i,0,x);
         gsl_matrix_set(points,i,1,y);
     }
@@ -246,7 +246,7 @@ gsl_matrix *interpolate(Spline spline,int number, std::pair<float,float> bounds)
     
 
 
-	gsl_matrix *ret= reverse_transform(points,spline.get_Q(),spline.get_translation());
+	gsl_matrix *ret= reverse_transform(points,get_Q(),get_translation());
 
     return ret;
 }
@@ -290,20 +290,29 @@ gsl_matrix *transform_points(gsl_matrix *points, gsl_matrix *Q, gsl_vector *get_
 
     gsl_matrix *ret = gsl_matrix_alloc(points->size1,points->size2);
     gsl_linalg_matmult(temp,Q,ret);
-    gsl_matrix_free(temp);
+    gsl_matrix_free(temp);    
+    gsl_matrix_transpose(Q);
 
-    //TODO: temp2 and ret2 is very bad naming
-    gsl_matrix *temp2 = gsl_matrix_alloc(Q->size1,Q->size2);
-    for(int i=0;i<Q->size2;++i){
-        gsl_matrix_set(temp2,0,i,gsl_matrix_get(Q,0,i)+gsl_vector_get(get_translation_vector,0));
-        gsl_matrix_set(temp2,1,i,gsl_matrix_get(Q,1,i)+gsl_vector_get(get_translation_vector,1));
+    return ret;
+}
+
+gsl_matrix *reverse_transform(gsl_matrix *points, gsl_matrix *Q, gsl_vector *get_translation_vector){
+    gsl_matrix *temp = gsl_matrix_alloc(points->size1,points->size2);
+    for(int i=0;i<temp->size2;++i){
+        gsl_matrix_set(temp,0,i,gsl_matrix_get(points,0,i));
+        gsl_matrix_set(temp,1,i,gsl_matrix_get(points,1,i));
     }
 
-    gsl_matrix *ret2 = gsl_matrix_alloc(points->size1,points->size2);
-    gsl_linalg_matmult(points,temp2,ret2);
-    gsl_matrix_free(temp2);
-    
-    return ret2;
+    gsl_matrix *ret = gsl_matrix_alloc(points->size1,points->size2);
+    gsl_linalg_matmult(temp,Q,ret);
+    gsl_matrix_free(temp);    
+
+    for(int i=0;i<temp->size2;++i){
+        gsl_matrix_set(temp,0,i,gsl_matrix_get(points,0,i)+gsl_vector_get(get_translation_vector,0));
+        gsl_matrix_set(temp,1,i,gsl_matrix_get(points,1,i)+gsl_vector_get(get_translation_vector,1));
+    }
+
+    return ret;
 }
 
 polynomial lagrange_gen(gsl_matrix* points){
@@ -373,21 +382,23 @@ double arclength(polynomial poly, double x0,double x1){
 
 }
 
-std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(gsl_matrix *res,int path_id,int points_per_spline,bool loop){
-
+std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(gsl_matrix *res,int path_id ,int points_per_spline,bool loop){
+    std::vector<Spline> splines;
     int n = res->size2;
 
-    std::vector<Spline> splines;
 
-    gsl_matrix *points=res;
+    // gsl_matrix *points=res;
 
     int shift = points_per_spline-1;
 
-    int group_numbers = n/shift;
+    int group_numbers=n;
+    if (shift>0){
+        group_numbers = n/shift;
 
 
-    if (loop)
-        group_numbers += (int)(n % shift != 0);
+        if (loop)
+            group_numbers += (int)(n % shift != 0);
+    }
 
     std::vector<std::vector<int>> groups;
     

@@ -17,31 +17,11 @@
   find_package(eufs_msgs REQUIRED)
   find_package(GSL REQUIRED)
 
-  add_executable(midpoint_test src/midpoint.cpp src/generator.cpp src/raceline/raceline.cpp)
-  # add_executable(midline_test src/generator.cpp src/raceline/raceline.cpp)
-  ament_target_dependencies(midpoint_test rclcpp std_msgs geometry_msgs eufs_msgs GSL)
-  # ament_target_dependencies(midline_test rclcpp std_msgs geometry_msgs eufs_msgs GSL)
+  add_executable(midline src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
+  ament_target_dependencies(midline rclcpp std_msgs geometry_msgs eufs_msgs GSL)
 
   install(TARGETS
-  midpoint_test
+  midline
   DESTINATION lib/${PROJECT_NAME})
 
-
-
-
-  # add_executable(talker src/talker.cpp)
-  # ament_target_dependencies(talker rclcpp std_msgs geometry_msgs eufs_msgs)
-
-  # install(TARGETS
-  # talker
-  # DESTINATION lib/${PROJECT_NAME})
-
-
-  # add_executable(listener src/listener.cpp)
-  # ament_target_dependencies(listener rclcpp std_msgs geometry_msgs eufs_msgs)
-
-  # install(TARGETS
-  # talker
-  # listener
-  # DESTINATION lib/${PROJECT_NAME})
   ament_package()
