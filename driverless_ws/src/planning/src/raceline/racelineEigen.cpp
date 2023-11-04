@@ -1,10 +1,3 @@
-#include <gsl/gsl_poly.h>
-#include <gsl/gsl_block.h>
-#include <gsl/gsl_linalg.h>
-#include <gsl/gsl_interp.h>
-#include <gsl/gsl_spline.h>
-#include <gsl/gsl_poly.h>
-#include <gsl/gsl_math.h>
 #include <gsl/gsl_integration.h>
 #include <vector>
 #include <Eigen/Dense>
@@ -366,9 +359,9 @@ polynomial lagrange_gen(Eigen::MatrixXd points){
 double arclength_f(double, void* params){
     
     polynomial p = *(polynomial*)params;
-
-    double x = gsl_poly_eval(p.nums->data,p.deg+1,x);
-    return x*x+1;
+    Eigen::PolynomialSolver solver(p);
+    double x = p(x);
+    return math.sqrt(x*x+1);
 }
 
 double arclength(polynomial poly, double x0,double x1){
