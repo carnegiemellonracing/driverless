@@ -7,10 +7,13 @@
 #include <limits>
 #include <numeric>
 #include <vector>
+#include <Eigen/Dense>
+#include <Eigen/Polynomial>
+#include "frenetEigen.hpp"
+#include "racelineEigen.hpp"
 
-#include "frenet.hpp"
-#include "raceline.hpp"
 
+//irrelevent function now, but still keeping it
 gsl_matrix *mat_mul(gsl_matrix *A, gsl_matrix *B) {
   assert(A->size2 == B->size1);
   gsl_matrix_view A_view = gsl_matrix_submatrix(A, 0, 0, A->size1, A->size2);
@@ -22,7 +25,8 @@ gsl_matrix *mat_mul(gsl_matrix *A, gsl_matrix *B) {
 }
 
 double poly_eval(polynomial poly, double x) {
-  return gsl_poly_eval(poly.nums->data, poly.deg + 1, x);
+  Eigen::PolynomialSolver solver(poly.nums.data())
+  return solver(x);
 }
 // Curvature at point(s) `min_x` based on 2d curvature equation
 // https://mathworld.wolfram.com/Curvature.html
@@ -34,27 +38,29 @@ double get_curvature(polynomial poly_der_1, polynomial poly_der_2,
 
 // Rotates points based on the rotation and transformation matrices
 // Why aren't the matrices converted into vectors?
-std::vector<gsl_matrix *> rotate_points(
-    std::vector<gsl_matrix *> points, std::vector<gsl_matrix *> poly_Qs,
-    std::vector<gsl_matrix *> poly_transMats) {
+std::vector<Eigen::MatrixXd&> rotate_points(
+    std::vector<Eigen::MatrixXd&> points, std::vector<Eigen::MatrixXd&> poly_Qs,
+    std::vector<Eigen::MatrixXd&> poly_transMats) {
   size_t n = points.size();
   assert(n == poly_Qs.size());
   assert(n == poly_transMats.size());
-  std::vector<gsl_matrix *> rotated_points;
+  std::vector<Eigen::MatrixXd&> rotated_points;
   for (size_t i = 0; i < n; ++i) {
-    gsl_matrix *point = points[i];
-    gsl_matrix_sub(point, poly_transMats[i]);
-    point = mat_mul(point, poly_transMats[i]);
+    Eigen::MatrixXd point = points[i];
+    //The line below is wrong as it doesnt take in 3 arguments, I dont know what its trying to do
+    //im assuming it wants point -= poly_transMats[i]
+    // gsl_matrix_sub(point, poly_transMats[i]);
+    point = point - poly_transMats[i];
     rotated_points.push_back(point);
   }
   return rotated_points;
 }
 
-gsl_matrix *matrix_nonzero(gsl_matrix *m, double nonzero = 0.0001) {
+Eigen::MatrixXd& matrix_nonzero(Eigen::MatrixXd& m, double nonzero = 0.0001) {
   for (size_t i = 0; i < m->size1; i++) {
     for (size_t j = 0; j < m->size2; j++) {
-      if (gsl_matrix_get(m, i, j) == 0) {
-        gsl_matrix_set(m, i, j, nonzero);
+      if (m(i, j) == 0) {
+        m(i, j) =  nonzero;
       }
     }
   }
@@ -75,8 +81,8 @@ double minimization_f(double x, void *p) {
 static const size_t n_coeffs = 7;
 // x and y are a set of points
 std::pair<std::vector<double>, std::vector<double>> get_closest_distance(
-    double x, double y, std::vector<polynomial> polys, gsl_matrix *poly_coeffs,
-    gsl_matrix *poly_roots, double epsabs = 0.001, double epsrel = 0,
+    double x, double y, std::vector<polynomial> polys, Eigen::MatrixXd& poly_coeffs,
+    Eigen::MatrixXd& poly_roots, double epsabs = 0.001, double epsrel = 0,
     size_t max_iter = 5) {
   size_t n = poly_coeffs->size1;
   assert(n == poly_roots->size1);
@@ -115,13 +121,13 @@ std::pair<std::vector<double>, std::vector<double>> get_closest_distance(
 }
 
 // Argmin in row,col form assuming 2d matrix
-std::pair<int, int> argmin(gsl_matrix *m) {
+std::pair<int, int> argmin(Eigen::MatrixXd& m) {
   double min = 9999999;
   std::pair<int, int> minIndex = {-1, -1};
   for (size_t i = 0; i < m->size1; i++) {
     for (size_t j = 0; j < m->size2; j++) {
-      if (gsl_matrix_get(m, i, j) < min) {
-        min = gsl_matrix_get(m, i, j);
+      if (m(i, j) < min) {
+        min = m(i, j);
         minIndex = {i, j};
       }
     }
@@ -158,43 +164,42 @@ projection frenet(float x, float y, std::vector<Spline> path,
     explore_space.push_back(path[element]);
   }
   size_t explore_space_n = explore_space.size();
-  gsl_matrix *poly_coeffs = gsl_matrix_alloc(explore_space_n, num_points);
-  gsl_matrix *poly_roots = gsl_matrix_alloc(explore_space_n, num_points);
+  Eigen::MatrixXd poly_coeffs(explore_space_n, num_points);
+  Eigen::MatrixXd  poly_roots(explore_space_n, num_points);
   std::vector<polynomial> polys;
-  std::vector<gsl_matrix *> poly_Qs;
-  std::vector<gsl_matrix *> poly_transMats;
+  std::vector<Eigen::MatrixXd& > poly_Qs;
+  std::vector<Eigen::MatrixXd& > poly_transMats;
   for (size_t i = 0; i < explore_space_n;
        ++i) {  // used to be size: check if this is right
     Spline spline = path[i];
     polynomial poly = spline.get_SplPoly();
     polys.push_back(poly);
-    gsl_vector *nums = spline.get_SplPoly().nums;
-    gsl_matrix *rotated_points = spline.get_rotated_points();
+    Eigen::VectorXd nums = spline.get_SplPoly().nums;
+    Eigen::MatrixXd rotated_points = spline.get_rotated_points();
     poly_Qs.push_back(spline.get_Q());
-    gsl_vector *transMatVec = spline.get_translation();
-    gsl_matrix *transMat = gsl_matrix_alloc(2, 1);
-    gsl_matrix_set(transMat, 0, 0, gsl_vector_get(transMatVec, 0));
-    gsl_matrix_set(transMat, 1, 0, gsl_vector_get(transMatVec, 1));
+    Eigen::VectorXd transMatVec = spline.get_translation();
+    Eigen::MatrixXd transMat = gsl_matrix_alloc(2, 1);
+    transMat(0, 0) =  transMatVec(0);
+    transMat(1, 0) =  transMatVec(1);
     poly_transMats.push_back(transMat);
     for (size_t j = 0; j < num_points; ++j) {
-      gsl_matrix_set(poly_coeffs, i, j,
-                     gsl_vector_get(nums, (num_points - 1 - j)));
-      gsl_matrix_set(poly_roots, i, j, gsl_matrix_get(rotated_points, 0, i));
+      poly_coeffs(i, j)= nums(num_points - 1 - j);
+      poly_roots(i, j)  = rotated_points(0, i);
     }
   }
-  gsl_matrix *point = gsl_matrix_alloc(2, 1);
-  gsl_matrix_set(point, 0, 0, x);
-  gsl_matrix_set(point, 0, 1, y);
-  std::vector<gsl_matrix *> points = {point};
+  Eigen::MatrixXd point(2, 1);
+  point(0, 0) = x;
+  point(0, 1) = y;
+  std::vector<Eigen::MatrixXd&> points = {point};
   // returns a single rotated point
-  std::vector<gsl_matrix *> rotated_points =
+  std::vector<Eigen::MatrixXd&> rotated_points =
       rotate_points(points, poly_Qs, poly_transMats);
 
   // gsl_matrix *x_point = gsl_matrix_alloc(explore_space_n,1);
   // gsl_matrix *y_point = gsl_matrix_alloc(explore_space_n,1);
   // Just x and y from the one row in the matrix
-  double x_point = gsl_matrix_get(rotated_points[0], 0, 0);
-  double y_point = gsl_matrix_get(rotated_points[0], 0, 1);
+  double x_point = rotated_points[0](0, 0);
+  double y_point = rotated_points[0](0, 1);
 
   // find how to get the columns from the vector of matrices
   // std::pair< gsl_matrix *,gsl_matrix *> dist = get_closest_distance(x_point,
