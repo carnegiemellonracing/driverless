@@ -9,7 +9,7 @@ from eufs_msgs.msg import ConeArray
 import perceptions.conversions as conversions
 
 # for doing prediction on sensor data
-from perc22a.predictors import StereoPredictor
+from perc22a.predictors.stereo.StereoPredictor import StereoPredictor
 
 NODE_NAME = "stereo_node"
 

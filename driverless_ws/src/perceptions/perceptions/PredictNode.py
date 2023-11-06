@@ -18,7 +18,8 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
 
-DEBUG = True
+DEBUG = False
+TIME = True
 
 class PredictNode(DataNode):
 
@@ -28,7 +29,7 @@ class PredictNode(DataNode):
         self.name = name
 
         # TODO: figure out best way to time prediction appropriately
-        self.interval = 0.5
+        self.interval = 0.1
         self.predict_timer = self.create_timer(self.interval, self.predict_callback)
 
         # initialize published cone topic based on name
@@ -37,13 +38,16 @@ class PredictNode(DataNode):
         self.cone_publisher = self.create_publisher(ConeArrayWithCovariance, self.cone_topic, self.qos_profile)
         
         # create predictor, any subclass of PredictNode needs to fill this component
-        self.predictor = None
+        self.predictor = self.init_predictor()
 
         return
+    
+    def init_predictor(self):
+        raise RuntimeError("[PredictNode] init_predictor() function not overwritten. Must return Predictor.")
 
     def predict_callback(self):
         if not self.got_all_data():
-            self.get_logger().warn("Not got all data")
+            self.get_logger().warn(f"[Node={self.name}] Not got all data")
             return
 
         # predict cones from data
@@ -54,14 +58,13 @@ class PredictNode(DataNode):
         # display if necessary
         if DEBUG:
             self.predictor.display()
+            print(cones)
 
         # publish message
         msg = conversions.cones_to_msg(cones)
         self.cone_publisher.publish(msg)
 
-        if DEBUG:
-            print(cones)
-
+        if TIME:
             # display time taken to perform prediction
             t = (e - s)
             time_str = f"[Node={self.name}] Predict Time: {t * 1000:.3f}ms"

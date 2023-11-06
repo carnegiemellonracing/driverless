@@ -9,7 +9,7 @@ from eufs_msgs.msg import ConeArray
 import perceptions.conversions as conversions
 
 # for doing prediction on sensor data
-from perc22a.predictors import LidarPredictor
+from perc22a.predictors.lidar.LidarPredictor import LidarPredictor
 
 NODE_NAME = "lidar_node"
 
