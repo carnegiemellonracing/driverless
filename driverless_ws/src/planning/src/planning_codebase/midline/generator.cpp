@@ -10,7 +10,7 @@ bool ptnrm_cmp(std::pair<double,double> a,std::pair<double,double> b){
     return hypot(a.first,a.second) < hypot(b.first,b.second);
 }
 
-std::vector<std::pair<double,double>>  MidpointGenerator::sorted_by_norm(std::vector<std::pair<double,double>> inp){
+std::vector<std::pair<double,double>>  sorted_by_norm(std::vector<std::pair<double,double>> inp){
 
     std::sort(inp.begin(),inp.end(),ptnrm_cmp);
     
@@ -100,7 +100,7 @@ std::vector<Spline> MidpointGenerator::generate_splines(gsl_matrix *midpoints){
 
 
 
-gsl_matrix* MidpointGenerator::generate_points(perceptionsData perceptions_data){ 
+gsl_matrix* generate_points(perceptionsData perceptions_data){ 
     // LEFT ==BLUE
     perceptions_data.bluecones  = sorted_by_norm(perceptions_data.bluecones);
     perceptions_data.yellowcones  = sorted_by_norm(perceptions_data.yellowcones);
@@ -173,6 +173,9 @@ gsl_matrix* MidpointGenerator::interpolate_cones(perceptionsData perceptions_dat
 
 Spline MidpointGenerator::spline_from_cones(perceptionsData perceptions_data){
     gsl_matrix *midpoints= generate_points(perceptions_data);
+
+
+
     std::vector<Spline> splines = generate_splines(midpoints);
     gsl_matrix_free(midpoints);
     return splines[0];

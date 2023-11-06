@@ -10,7 +10,9 @@
 
 
 //publish topic example
-//ros2 topic pub -1 /stereo_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 1.0, y: 2.0, z: 3.0}]}"                                                       
+//ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 1.0, y: 1.0, z: 0.0},{x: 1.0, y: 2.0, z: 0.0},{x: 1.0, y: 3.0, z: 0.0}],yellow_cones: [{x: -1.0, y: 1.0, z: 0.0},{x: -1.0, y: 2.0, z: 0.0},{x: -1.0, y: 3.0, z: 0.0}]}"                                                       
+
+
 
 
 using std::placeholders::_1;
@@ -68,7 +70,7 @@ class MidpointNode : public rclcpp::Node
 
       //TODO: shouldn't return a spline
       RCLCPP_INFO(this->get_logger(), "Hello74");
-      generator_mid.spline_from_cones(perception_data);
+      gsl_matrix *midpoints= spline_from_cones(perception_data);
       RCLCPP_INFO(this->get_logger(), "Hello76");
       
     

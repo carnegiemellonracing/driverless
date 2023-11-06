@@ -400,14 +400,37 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(gsl_matrix *res,
             group_numbers += (int)(n % shift != 0);
     }
 
-    std::vector<std::vector<int>> groups;
+
+
+
+
+
+    std::vector<std::vector<int>> group_indices;
+    
+    for(int i=0;i<n; i+=(points_per_spline-1)){
+        std::vector<int> curr_group;
+        for (int j=0;j<= points_per_spline;j++){
+            curr_group.push_back((i+j)%n);
+        }
+        group_indices.push_back(curr_group);
+    }
+
+    std::vector<gsl_matrix*> groups;
+
+    for(auto e:group_indices){
+        gsl_matrix *m = gsl_matrix_alloc_from_matrix(res,0,e.front(),2,e.back());
+        groups.push_back(m);
+    }
+
+
     
     std::vector<double> lengths;
     std::vector<double> cumsum;
     lengths.resize(group_numbers);
+    cumsum.resize(group_numbers);
 
     for(int i=0;i<group_numbers;i++){
-        gsl_matrix *group = gsl_matrix_alloc_from_matrix(res,0,group_numbers*shift,2,3);
+        gsl_matrix *group = groups[i];
 
         gsl_matrix *Q  = rotation_matrix_gen(group);
         gsl_vector *translation_vector = get_translation_vector(group);
