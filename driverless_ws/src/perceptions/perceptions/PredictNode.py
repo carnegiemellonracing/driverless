@@ -4,7 +4,7 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 
 # for converting predictor output to cone message type
-from eufs_msgs.msg import ConeArrayWithCovariance
+from eufs_msgs.msg import ConeArray
 import perceptions.conversions as conversions
 
 # for collecting data from sensors
@@ -35,7 +35,7 @@ class PredictNode(DataNode):
         # initialize published cone topic based on name
         self.cone_topic = f"/{name}_cones"
         self.qos_profile = BEST_EFFORT_QOS_PROFILE
-        self.cone_publisher = self.create_publisher(ConeArrayWithCovariance, self.cone_topic, self.qos_profile)
+        self.cone_publisher = self.create_publisher(ConeArray, self.cone_topic, self.qos_profile)
         
         # create predictor, any subclass of PredictNode needs to fill this component
         self.predictor = self.init_predictor()
