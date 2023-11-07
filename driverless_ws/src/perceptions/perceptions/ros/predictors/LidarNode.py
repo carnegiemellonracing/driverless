@@ -12,7 +12,7 @@ NODE_NAME = "lidar_node"
 class LidarNode(PredictNode):
 
     def __init__(self):
-        super().__init__(name=NODE_NAME)
+        super().__init__(name=NODE_NAME,  debug_flag=False, time_flag=True)
         
         return
     

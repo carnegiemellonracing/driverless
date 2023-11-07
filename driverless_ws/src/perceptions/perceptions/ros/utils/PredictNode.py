@@ -18,13 +18,14 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
 
-DEBUG = False
-TIME = True
-
 class PredictNode(DataNode):
 
-    def __init__(self, name):
+    def __init__(self, name, debug_flag=False, time_flag=True):
         super().__init__(name=name)
+
+        # debugging flags
+        self.debug = debug_flag
+        self.time = time_flag
 
         self.name = name
 
@@ -56,7 +57,7 @@ class PredictNode(DataNode):
         e = time.time()
 
         # display if necessary
-        if DEBUG:
+        if self.debug:
             self.predictor.display()
             print(cones)
 
@@ -64,7 +65,7 @@ class PredictNode(DataNode):
         msg = conversions.cones_to_msg(cones)
         self.cone_publisher.publish(msg)
 
-        if TIME:
+        if self.time:
             # display time taken to perform prediction
             t = (e - s)
             time_str = f"[Node={self.name}] Predict Time: {t * 1000:.3f}ms"

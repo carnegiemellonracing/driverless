@@ -12,7 +12,7 @@ NODE_NAME = "stereo_node"
 class StereoNode(PredictNode):
 
     def __init__(self):
-        super().__init__(name=NODE_NAME)
+        super().__init__(name=NODE_NAME, debug_flag=False, time_flag=True)
         return
 
     def init_predictor(self):
