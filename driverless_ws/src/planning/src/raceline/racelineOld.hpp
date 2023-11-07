@@ -8,6 +8,7 @@
 #include <gsl/gsl_integration.h>
 #include <vector>
 #include <tuple>
+#include<cmath>
 
 
 #ifndef RACELINE
@@ -29,6 +30,8 @@ polynomial poly_root(double root);
 polynomial polyder(polynomial p);
 
 polynomial poly_mult(polynomial a,polynomial b);
+
+
 
 
 class Spline

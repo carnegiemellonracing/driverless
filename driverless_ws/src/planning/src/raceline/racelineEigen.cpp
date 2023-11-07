@@ -1,8 +1,5 @@
-#include <gsl/gsl_integration.h>
-#include <vector>
-#include <Eigen/Dense>
-#include <Eigen/Polynomial>
 #include "racelineEigen.hpp"
+#include <Eigen/Dense>
 // #include "random.h"
 
 polynomial poly(int deg = 3){
@@ -38,14 +35,7 @@ polynomial polyder(polynomial p){
 	return der;
 }
 
-polynomial polyint(polynomial p){
-    polynomial antider = poly(p.deg+1);
-    for(int i=0;i<p.deg;i++){
-        antider.nums(i+1)=p.nums(i)/(i+1);
-    }
 
-	return antider;
-}
 
 polynomial poly_mult(polynomial a,polynomial b){
     polynomial mult = poly(a.deg+b.deg);
@@ -59,7 +49,18 @@ polynomial poly_mult(polynomial a,polynomial b){
 	return mult;
 }
 
-Spline::Spline(polynomial interpolation_poly,Eigen::MatrixXd& points_mat,Eigen::MatrixXd& rotated,Eigen::MatrixXd& Q_mat, Eigen::MatrixXd& translation,polynomial first, polynomial second, int path, int sort_ind)
+double poly_eval(polynomial a,double x){
+    double result =0;
+    double xval=1;
+    for(int i=0;i<=a.deg;i++){
+        result += a.nums(i)*xval;
+        xval*=x;
+    }
+    return result;
+}
+
+
+Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd& points_mat,Eigen::MatrixXd& rotated,Eigen::MatrixXd& Q_mat, Eigen::VectorXd& translation,polynomial first, polynomial second, int path, int sort_ind)
 {
     spl_poly=interpolation_poly;
     points = points_mat;
@@ -129,8 +130,8 @@ int Spline::get_sort_index(){
 
 
 
-std::tuple<Eigen::VectorXd&,double, Eigen::VectorXd&,double> Spline::along(double progress, double point_index, int precision){
-    std::tuple<Eigen::VectorXd&,double, Eigen::VectorXd&,double> ret;
+std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double progress, double point_index, int precision){
+    std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> ret;
 
 
     double len = this->length();
@@ -195,8 +196,8 @@ std::tuple<Eigen::VectorXd&,double, Eigen::VectorXd&,double> Spline::along(doubl
         }
         Eigen::VectorXd rotated_point(2);
         rotated_point(0)=best_guess;
-        Eigen::PolynomialSolver solver(this->spl_poly.nums.data())
-        rotated_point(1)=solver(best_guess);
+        
+        rotated_point(1)=poly_eval(this->spl_poly,best_guess);
         
         Eigen::MatrixXd rotated_points(2,1);
         rotated_points(0,0)=rotated_point(0);
@@ -219,8 +220,7 @@ double Spline::getderiv(double x){
     point_x(0,1)=0;
 
     Eigen::MatrixXd gm= reverse_transform(point_x,this->Q,this->translation_vector);
-    Eigen::Polynomial solver(this->first_der.nums.data())
-    return solver(gm.data()[0]);
+    return poly_eval(this->first_der,gm.data()[0]);
 
 
 
@@ -239,10 +239,8 @@ Eigen::MatrixXd& Spline::interpolate(int number, std::pair<float,float> bounds){
     
     for(int i=0;i<number;i++){
         double x = bounds.first+ (bounds.second-bounds.first)*(i/(number-1));
-        Eigen::PolynomialSolver solver(get_SplPoly().nums.data())
-        double y = solver(x);
         points(i,0)=x;
-        points(i,1)=y;
+        points(i,1)=poly_eval(get_SplPoly(),x);
     }
 
     
@@ -253,7 +251,7 @@ Eigen::MatrixXd& Spline::interpolate(int number, std::pair<float,float> bounds){
     return ret;
 }
 
-Eigen::MatrixXd rotation_matrix_gen(Eigen::MatrixXd pnts){
+Eigen::MatrixXd& rotation_matrix_gen(Eigen::MatrixXd pnts){
     Eigen::Vector2d beg; beg << pnts.col(0);
     Eigen::Vector2d end; end << pnts.col(pnts.cols()-1);
 
@@ -298,15 +296,15 @@ Eigen::MatrixXd& transform_points(Eigen::MatrixXd points, Eigen::MatrixXd Q, Eig
 }
 
 Eigen::MatrixXd& reverse_transform(Eigen::MatrixXd points, Eigen::MatrixXd Q, Eigen::VectorXd get_translation_vector){
-    Eigen::MatrixXd temp(points->size1,points->size2);
-    for(int i=0;i<temp->size2;++i){
+    Eigen::MatrixXd temp(points.rows(),points.cols());
+    for(int i=0;i<temp.cols();++i){
         temp(0,i)=points(0,i);
         temp(1,i)=points(1,i);
     }
 
     Eigen::MatrixXd ret = temp*Q;
 
-    for(int i=0;i<temp->size2;++i){
+    for(int i=0;i<temp.cols();++i){
         temp(0,i)= points(0,i)+ get_translation_vector(0);
         temp(1,i)= points(1,i)+ get_translation_vector(1);
     }
@@ -329,7 +327,7 @@ polynomial lagrange_gen(Eigen::MatrixXd points){
     }
 
 
-    for(int i=0;i<points->size2;i++){
+    for(int i=0;i<points.cols();i++){
         polynomial p = poly_one();
         for(int j=0;j<points.cols();j++){
             if(j!=i){
@@ -341,8 +339,7 @@ polynomial lagrange_gen(Eigen::MatrixXd points){
             }
         }
         polynomial p1 = poly_one();
-        Eigen::PolynomialSolver solver(p.nums.data());
-        p1.nums(0)=1/solver(x[i]);
+        p1.nums(0)=1/ poly_eval(p,x[i]);
         polynomial q = poly_mult(p1,p);
         // gsl_vector_free(p.nums);
         // gsl_vector_free(p1.nums);
@@ -356,14 +353,15 @@ polynomial lagrange_gen(Eigen::MatrixXd points){
 
 }
 
-double arclength_f(double, void* params){
+double arclength_f(double x, void* params){
     
     polynomial p = *(polynomial*)params;
-    Eigen::PolynomialSolver solver(p);
-    double x = p(x);
-    return math.sqrt(x*x+1);
+    double y = poly_eval(p,x);
+    return sqrt(y*y+1);
 }
 
+
+// CHECK CORRECTNESS
 double arclength(polynomial poly, double x0,double x1){
 
     gsl_function F;
@@ -384,7 +382,7 @@ double arclength(polynomial poly, double x0,double x1){
 
 std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(Eigen::MatrixXd& res,int path_id ,int points_per_spline,bool loop){
 
-    int n = res->size2;
+    int n = res.cols();
 
     std::vector<Spline> splines;
 
@@ -409,7 +407,16 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(Eigen::MatrixXd&
     lengths.resize(group_numbers);
 
     for(int i=0;i<group_numbers;i++){
-        Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
+        // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
+
+        Eigen::MatrixXd group(2,4);
+        for (int j =0;j<=3;j++){
+            for(int k=0;k<=1;k++){
+                group(j,k) = res(j,i*shift+k);
+            }
+        }
+
+
 
         Eigen::MatrixXd Q  = rotation_matrix_gen(group);
         Eigen::VectorXd translation_vector = get_translation_vector(group);
