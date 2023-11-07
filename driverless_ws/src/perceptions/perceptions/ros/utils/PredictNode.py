@@ -5,10 +5,10 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 
 # for converting predictor output to cone message type
 from eufs_msgs.msg import ConeArray
-import perceptions.conversions as conversions
+import perceptions.ros.utils.conversions as conversions
 
 # for collecting data from sensors
-from perceptions.DataNode import DataNode
+from perceptions.ros.utils.DataNode import DataNode
 
 import time
 

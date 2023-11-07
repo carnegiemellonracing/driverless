@@ -2,11 +2,7 @@
 import rclpy
 
 # for subscribing to sensor data
-from perceptions.PredictNode import PredictNode
-
-# for converting predictor output to cone message type
-from eufs_msgs.msg import ConeArray
-import perceptions.conversions as conversions
+from perceptions.ros.utils.PredictNode import PredictNode
 
 # for doing prediction on sensor data
 from perc22a.predictors.lidar.LidarPredictor import LidarPredictor

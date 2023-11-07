@@ -7,7 +7,7 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 from sensor_msgs.msg import Image, PointCloud2
 
 # ROS2 msg to python datatype conversions
-import perceptions.conversions as conv
+import perceptions.ros.utils.conversions as conv
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis

@@ -2,7 +2,7 @@ import rclpy
 from rclpy.node import Node
 
 # include DataNode for subscribing to data
-from perceptions.DataNode import DataNode
+from perceptions.ros.utils.DataNode import DataNode
 
 # file path manipulation and creating directories
 from pathlib import Path
