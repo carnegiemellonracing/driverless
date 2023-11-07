@@ -1,0 +1,7 @@
+[console_scripts]
+lidar = cmrdv_perceptions.LidarNode:main
+numpy_test_pub = cmrdv_perceptions.numpy_test_pub:main
+numpy_test_sub = cmrdv_perceptions.numpy_test_sub:main
+stereo_vision = cmrdv_perceptions.StereoCamNode:main
+visualization = cmrdv_perceptions.CVVisNode:main
+

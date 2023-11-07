@@ -1,0 +1,5 @@
+[console_scripts]
+brake = cmrdv_actuators.brakes_node:main
+fsm = cmrdv_actuators.fsm_node:main
+steering = cmrdv_actuators.steering_node:main
+

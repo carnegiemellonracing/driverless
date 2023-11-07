@@ -28,6 +28,9 @@ VEHICLE_STATE_MSG = CarState
 CONE_TOPIC = "/cones"
 CONE_MSG = ConeArrayWithCovariance
 
+AVG_COMPUTATION_TIME = 0 
+WORST_COMPUTATION = () #first elem: computation time; second elem: idx to ground_truth cone
+
 #import odometry and gps position from sbg sensor driver
 class SLAMSubscriber(Node):
 
@@ -35,7 +38,7 @@ class SLAMSubscriber(Node):
         super().__init__('slam_subscriber')
         #Subscribe to Perceptions Data #this is wrong - maybe need ,self.parsePerceptionCones
         # self.subscription_cone_data = message_filters.Subscriber(CONE_DATA_TOPIC, ConeList)
-        self.subscription_cone_data = message_filters.Subscriber(self, ConeArrayWithCovariance, '/cones')
+        self.subscription_cone_data = message_filters.Subscriber(self, ConeArrayWithCovariance, '/ground_truth/cones')
         # self.subscription_cone_data.registerCallback(self.parse_cones)
 
         #Subscribe to Vehichle State
@@ -82,8 +85,11 @@ class SLAMSubscriber(Node):
     def parse_cones(self,msg):
         cones = msg.blue_cones
         parsed_cones = []
+
         for cone in cones:
             tmp = [cone.point.x,cone.point.y,0]
+            self.get_logger().info("Testing cone subs; x: {cone.point.x}, y: {cone.point.y}");
+            self.get_logger().info("Printing stuff to test stuff out!");
             parsed_cones.append(tmp)
         
         cones = msg.yellow_cones
@@ -135,7 +141,15 @@ class SLAMSubscriber(Node):
 
 
     def runSLAM(self, cones_msg, state_msg):
-        self.parse_cones(cones_msg)
+        self.get_logger().info("SLAM Callback!")
+        self.parse_cones(cones_msg) # is this parsing the ground truth cones??
+        # subscription_cone_data is a message filter (gets data from topic)
+        # what happens to the ground truth data???
+        # how can I access it
+
+        # subscription_cone_data is a message filter (gets data from topic)
+        # what happens to the ground truth data???
+        # how can I access it
         self.parse_state(state_msg)
         self.runEKF(self.get_clock().now().to_msg())
         # self.get_logger().info(f'{self.ekf_output}')
@@ -184,7 +198,8 @@ class SLAMSubscriber(Node):
     
     def updateTime(self,time): #Time data structure from header
         # self.get_logger().info(f'{type(self.prevTime)} {type(time)}')
-        curr_time_ns = time.sec*1e9 + time.nanosec
+        curr_time_ns = time.sec*1e9 + time.nanosec #this is getting the time in nanoseconds
+        # time.sec only gets the time in seconds which is not precise enough
         prev_time_ns = self.prevTime.sec*1e9 + self.prevTime.nanosec
         self.dTime = (curr_time_ns-prev_time_ns)/1e9
         self.get_logger().info(f'Current Time: {time.nanosec}')
@@ -200,10 +215,13 @@ class SLAMSubscriber(Node):
     #     # self.get_logger().info(f'{(self.xEst.shape[0]-3)/2}')
     #     for i in range(int((self.xEst.shape[0]-3)/2)):
     #         # self.get_logger().info(f'   Landmark {i}: {self.xEst[2*i+3, 0]}, {self.xEst[2*i+4, 0]}')
-    #     # self.get_logger().info(f'------------------------------------------')
+    #     # self.get_logger().info(f'------------------------------------------')get_logger().info(logger.
 
     def runEKF(self, time_stamp): #TODO:verify message of this
-        self.updateTime(time_stamp)
+        #self.updateTime(time_stamp)
+        start_time = time_stamp.sec * 1e9 + time_stamp.nanosec
+         
+        
         car_x, car_y, car_heading = self.state[0], self.state[1], self.state[2]
         u = np.array([[math.hypot(self.state[3], self.state[4]), self.state[5]]]).T
         self.get_logger().info(f"linear: {u[0, 0]} | angular: {u[1, 0]}")
@@ -217,8 +235,17 @@ class SLAMSubscriber(Node):
             zi = np.array([dist, angle, i])
             z = np.vstack((z, zi))
         self.xEst, self.pEst, cones = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger())
+        # cones is type list 
+        # cones_idx = 0
+        # for thing in cones:
+        #     print("Printing out item", cones_idx, " in cones", thing)
+        #     cones_idx += 1
+
         self.all_cones.extend(cones)
         self.get_logger().info(f'Num Landmarks = {(self.xEst.shape[0]-3)/2}')
+        print("Type of subscription cone data: ", type(self.subscription_cone_data))
+        # for thing in self.subscription_cone_data:
+        #     print("Ground truth data: ", thing)
         # self.print_xEst()
         self.plot_state_matrix()
         #TODO: Add dt
@@ -226,6 +253,28 @@ class SLAMSubscriber(Node):
         # self.get_logger().info(f'map = {map}')
         
         # self.plot_state_matrix(map, n_landmarks)
+        next_time = self.get_clock().now().to_msg()
+        next_time = next_time.sec*1e9 + next_time.nanosec
+        diff_time = next_time - start_time
+
+        global WORST_COMPUTATION
+        if len(WORST_COMPUTATION) == 0:
+            WORST_COMPUTATION = (diff_time, (self.xEst.shape[0]-3)/2)
+        else:
+            worst_time, n_landmark = WORST_COMPUTATION
+            if diff_time > worst_time:
+                WORST_COMPUTATION = (diff_time, (self.xEst.shape[0]-3)/2)
+            worst_time = max(worst_time, diff_time)
+            self.get_logger().info(f'Worst Time: {worst_time}')
+
+        self.get_logger().info(f'Start Time: {start_time}')
+        self.get_logger().info(f'Next Time: {next_time}')
+        self.get_logger().info(f'Difference: {diff_time}')
+        
+
+
+
+
 
     def plot_state_matrix(self):
         plt.cla()
@@ -279,9 +328,10 @@ class SLAMSubscriber(Node):
     #     self.get_logger().info('Running GraphSlam')
     #     return self.GraphSlam.run_graph_slam(ekf_output)
 
+
 def main(args=None):
     rclpy.init(args=args)
-
+    print("Initialize ")
     slam_subscriber = SLAMSubscriber()
 
     rclpy.spin(slam_subscriber)

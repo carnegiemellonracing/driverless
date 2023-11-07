@@ -1,0 +1,96 @@
+[1.934s] Invoking command in '/driverless/cmrdv_ws/src/cmrdv_common': AMENT_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_common/prefix_override:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_common build --build-base /driverless/build/cmrdv_common/build install --record /driverless/build/cmrdv_common/install.log --single-version-externally-managed
+[2.353s] running egg_info
+[2.355s] creating ../../../build/cmrdv_common/cmrdv_common.egg-info
+[2.356s] writing ../../../build/cmrdv_common/cmrdv_common.egg-info/PKG-INFO
+[2.356s] writing dependency_links to ../../../build/cmrdv_common/cmrdv_common.egg-info/dependency_links.txt
+[2.356s] writing entry points to ../../../build/cmrdv_common/cmrdv_common.egg-info/entry_points.txt
+[2.356s] writing requirements to ../../../build/cmrdv_common/cmrdv_common.egg-info/requires.txt
+[2.356s] writing top-level names to ../../../build/cmrdv_common/cmrdv_common.egg-info/top_level.txt
+[2.357s] writing manifest file '../../../build/cmrdv_common/cmrdv_common.egg-info/SOURCES.txt'
+[2.431s] reading manifest file '../../../build/cmrdv_common/cmrdv_common.egg-info/SOURCES.txt'
+[2.432s] writing manifest file '../../../build/cmrdv_common/cmrdv_common.egg-info/SOURCES.txt'
+[2.432s] running build
+[2.433s] running build_py
+[2.433s] creating /driverless/build/cmrdv_common/build
+[2.434s] creating /driverless/build/cmrdv_common/build/lib
+[2.434s] creating /driverless/build/cmrdv_common/build/lib/cmrdv_common
+[2.435s] copying cmrdv_common/conversions.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common
+[2.436s] copying cmrdv_common/__init__.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common
+[2.436s] creating /driverless/build/cmrdv_common/build/lib/cmrdv_common/heartbeat
+[2.437s] copying cmrdv_common/heartbeat/global.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/heartbeat
+[2.437s] copying cmrdv_common/heartbeat/__init__.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/heartbeat
+[2.438s] copying cmrdv_common/heartbeat/heart.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/heartbeat
+[2.438s] creating /driverless/build/cmrdv_common/build/lib/cmrdv_common/simulator
+[2.438s] copying cmrdv_common/simulator/__init__.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/simulator
+[2.439s] copying cmrdv_common/simulator/SimVisNode.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/simulator
+[2.439s] creating /driverless/build/cmrdv_common/build/lib/cmrdv_common/DIM
+[2.439s] copying cmrdv_common/DIM/__init__.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/DIM
+[2.439s] copying cmrdv_common/DIM/dim_heartbeat.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/DIM
+[2.440s] copying cmrdv_common/DIM/dim_request.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/DIM
+[2.440s] creating /driverless/build/cmrdv_common/build/lib/cmrdv_common/config
+[2.441s] copying cmrdv_common/config/__init__.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/config
+[2.441s] copying cmrdv_common/config/planning_config.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/config
+[2.441s] copying cmrdv_common/config/perceptions_config.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/config
+[2.441s] copying cmrdv_common/config/collection_config.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/config
+[2.441s] copying cmrdv_common/config/common_config.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/config
+[2.441s] copying cmrdv_common/config/actuators_config.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/config
+[2.441s] copying cmrdv_common/config/controls_config.py -> /driverless/build/cmrdv_common/build/lib/cmrdv_common/config
+[2.442s] running install
+[2.442s] running install_lib
+[2.442s] creating /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common
+[2.442s] creating /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/heartbeat
+[2.443s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/heartbeat/global.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/heartbeat
+[2.443s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/heartbeat/__init__.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/heartbeat
+[2.448s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/heartbeat/heart.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/heartbeat
+[2.456s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/conversions.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common
+[2.457s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/__init__.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common
+[2.457s] creating /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/simulator
+[2.457s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/simulator/__init__.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/simulator
+[2.457s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/simulator/SimVisNode.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/simulator
+[2.457s] creating /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/DIM
+[2.458s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/DIM/__init__.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/DIM
+[2.458s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/DIM/dim_heartbeat.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/DIM
+[2.458s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/DIM/dim_request.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/DIM
+[2.458s] creating /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config
+[2.458s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/config/__init__.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config
+[2.458s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/config/planning_config.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config
+[2.458s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/config/perceptions_config.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config
+[2.458s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/config/collection_config.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config
+[2.459s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/config/common_config.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config
+[2.459s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/config/actuators_config.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config
+[2.459s] copying /driverless/build/cmrdv_common/build/lib/cmrdv_common/config/controls_config.py -> /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config
+[2.459s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/heartbeat/global.py to global.cpython-38.pyc
+[2.459s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/heartbeat/__init__.py to __init__.cpython-38.pyc
+[2.459s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/heartbeat/heart.py to heart.cpython-38.pyc
+[2.461s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/conversions.py to conversions.cpython-38.pyc
+[2.462s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/__init__.py to __init__.cpython-38.pyc
+[2.462s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/simulator/__init__.py to __init__.cpython-38.pyc
+[2.462s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/simulator/SimVisNode.py to SimVisNode.cpython-38.pyc
+[2.463s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/DIM/__init__.py to __init__.cpython-38.pyc
+[2.475s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/DIM/dim_heartbeat.py to dim_heartbeat.cpython-38.pyc
+[2.475s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/DIM/dim_request.py to dim_request.cpython-38.pyc
+[2.475s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config/__init__.py to __init__.cpython-38.pyc
+[2.475s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config/planning_config.py to planning_config.cpython-38.pyc
+[2.476s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config/perceptions_config.py to perceptions_config.cpython-38.pyc
+[2.476s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config/collection_config.py to collection_config.cpython-38.pyc
+[2.477s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config/common_config.py to common_config.cpython-38.pyc
+[2.477s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config/actuators_config.py to actuators_config.cpython-38.pyc
+[2.477s] byte-compiling /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common/config/controls_config.py to controls_config.cpython-38.pyc
+[2.477s] running install_data
+[2.477s] creating /driverless/install/cmrdv_common/share/ament_index
+[2.477s] creating /driverless/install/cmrdv_common/share/ament_index/resource_index
+[2.478s] creating /driverless/install/cmrdv_common/share/ament_index/resource_index/packages
+[2.478s] copying resource/cmrdv_common -> /driverless/install/cmrdv_common/share/ament_index/resource_index/packages
+[2.478s] copying package.xml -> /driverless/install/cmrdv_common/share/cmrdv_common
+[2.478s] running install_egg_info
+[2.479s] Copying ../../../build/cmrdv_common/cmrdv_common.egg-info to /driverless/install/cmrdv_common/lib/python3.8/site-packages/cmrdv_common-0.0.0-py3.8.egg-info
+[2.488s] running install_scripts
+[2.488s] Installing dim script to /driverless/install/cmrdv_common/lib/cmrdv_common
+[2.489s] Installing dim_heartbeat script to /driverless/install/cmrdv_common/lib/cmrdv_common
+[2.489s] Installing dim_request script to /driverless/install/cmrdv_common/lib/cmrdv_common
+[2.490s] Installing heartbeat script to /driverless/install/cmrdv_common/lib/cmrdv_common
+[2.490s] Installing perceptions script to /driverless/install/cmrdv_common/lib/cmrdv_common
+[2.490s] Installing planning script to /driverless/install/cmrdv_common/lib/cmrdv_common
+[2.490s] Installing sim_vis script to /driverless/install/cmrdv_common/lib/cmrdv_common
+[2.491s] writing list of installed files to '/driverless/build/cmrdv_common/install.log'
+[2.539s] Invoked command in '/driverless/cmrdv_ws/src/cmrdv_common' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_common/prefix_override:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_common build --build-base /driverless/build/cmrdv_common/build install --record /driverless/build/cmrdv_common/install.log --single-version-externally-managed

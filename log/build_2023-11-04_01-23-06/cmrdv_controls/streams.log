@@ -1,0 +1,48 @@
+[2.058s] Invoking command in '/driverless/cmrdv_ws/src/cmrdv_controls': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_controls/prefix_override:/driverless/install/cmrdv_controls/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_controls build --build-base /driverless/build/cmrdv_controls/build install --record /driverless/build/cmrdv_controls/install.log --single-version-externally-managed
+[2.399s] running egg_info
+[2.400s] creating ../../../build/cmrdv_controls/cmrdv_controls.egg-info
+[2.400s] writing ../../../build/cmrdv_controls/cmrdv_controls.egg-info/PKG-INFO
+[2.401s] writing dependency_links to ../../../build/cmrdv_controls/cmrdv_controls.egg-info/dependency_links.txt
+[2.401s] writing entry points to ../../../build/cmrdv_controls/cmrdv_controls.egg-info/entry_points.txt
+[2.401s] writing requirements to ../../../build/cmrdv_controls/cmrdv_controls.egg-info/requires.txt
+[2.401s] writing top-level names to ../../../build/cmrdv_controls/cmrdv_controls.egg-info/top_level.txt
+[2.403s] writing manifest file '../../../build/cmrdv_controls/cmrdv_controls.egg-info/SOURCES.txt'
+[2.475s] reading manifest file '../../../build/cmrdv_controls/cmrdv_controls.egg-info/SOURCES.txt'
+[2.476s] writing manifest file '../../../build/cmrdv_controls/cmrdv_controls.egg-info/SOURCES.txt'
+[2.477s] running build
+[2.477s] running build_py
+[2.477s] creating /driverless/build/cmrdv_controls/build
+[2.477s] creating /driverless/build/cmrdv_controls/build/lib
+[2.477s] creating /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+[2.478s] copying cmrdv_controls/__init__.py -> /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+[2.478s] copying cmrdv_controls/state_spoofer.py -> /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+[2.478s] copying cmrdv_controls/controller_tasks.py -> /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+[2.478s] copying cmrdv_controls/controller_node.py -> /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+[2.478s] copying cmrdv_controls/controller_autotest.py -> /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+[2.479s] running install
+[2.483s] running install_lib
+[2.483s] creating /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+[2.483s] copying /driverless/build/cmrdv_controls/build/lib/cmrdv_controls/__init__.py -> /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+[2.484s] copying /driverless/build/cmrdv_controls/build/lib/cmrdv_controls/state_spoofer.py -> /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+[2.484s] copying /driverless/build/cmrdv_controls/build/lib/cmrdv_controls/controller_tasks.py -> /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+[2.484s] copying /driverless/build/cmrdv_controls/build/lib/cmrdv_controls/controller_node.py -> /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+[2.484s] copying /driverless/build/cmrdv_controls/build/lib/cmrdv_controls/controller_autotest.py -> /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+[2.485s] byte-compiling /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls/__init__.py to __init__.cpython-38.pyc
+[2.486s] byte-compiling /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls/state_spoofer.py to state_spoofer.cpython-38.pyc
+[2.487s] byte-compiling /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls/controller_tasks.py to controller_tasks.cpython-38.pyc
+[2.487s] byte-compiling /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls/controller_node.py to controller_node.cpython-38.pyc
+[2.489s] byte-compiling /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls/controller_autotest.py to controller_autotest.cpython-38.pyc
+[2.490s] running install_data
+[2.492s] creating /driverless/install/cmrdv_controls/share/ament_index
+[2.492s] creating /driverless/install/cmrdv_controls/share/ament_index/resource_index
+[2.493s] creating /driverless/install/cmrdv_controls/share/ament_index/resource_index/packages
+[2.493s] copying resource/cmrdv_controls -> /driverless/install/cmrdv_controls/share/ament_index/resource_index/packages
+[2.493s] copying package.xml -> /driverless/install/cmrdv_controls/share/cmrdv_controls
+[2.493s] running install_egg_info
+[2.494s] Copying ../../../build/cmrdv_controls/cmrdv_controls.egg-info to /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls-0.0.0-py3.8.egg-info
+[2.496s] running install_scripts
+[2.524s] Installing autotest_controller script to /driverless/install/cmrdv_controls/lib/cmrdv_controls
+[2.526s] Installing controller script to /driverless/install/cmrdv_controls/lib/cmrdv_controls
+[2.527s] Installing state_spoofer script to /driverless/install/cmrdv_controls/lib/cmrdv_controls
+[2.527s] writing list of installed files to '/driverless/build/cmrdv_controls/install.log'
+[2.577s] Invoked command in '/driverless/cmrdv_ws/src/cmrdv_controls' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_controls/prefix_override:/driverless/install/cmrdv_controls/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_controls build --build-base /driverless/build/cmrdv_controls/build install --record /driverless/build/cmrdv_controls/install.log --single-version-externally-managed

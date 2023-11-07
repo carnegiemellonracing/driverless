@@ -1,0 +1,5 @@
+[console_scripts]
+autotest_controller = cmrdv_controls.controller_autotest:main
+controller = cmrdv_controls.controller_node:main
+state_spoofer = cmrdv_controls.state_spoofer:main
+

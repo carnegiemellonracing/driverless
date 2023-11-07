@@ -1,0 +1,5 @@
+[console_scripts]
+data_collection = cmrdv_collection.collection_node:main
+sim_pub = cmrdv_collection.sim_collection_node:main
+test_pts = cmrdv_collection.test_sub:main
+

@@ -1,0 +1,47 @@
+running egg_info
+creating ../../../build/cmrdv_planning/cmrdv_planning.egg-info
+writing ../../../build/cmrdv_planning/cmrdv_planning.egg-info/PKG-INFO
+writing dependency_links to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/dependency_links.txt
+writing entry points to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/entry_points.txt
+writing requirements to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/requires.txt
+writing top-level names to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/top_level.txt
+writing manifest file '../../../build/cmrdv_planning/cmrdv_planning.egg-info/SOURCES.txt'
+reading manifest file '../../../build/cmrdv_planning/cmrdv_planning.egg-info/SOURCES.txt'
+writing manifest file '../../../build/cmrdv_planning/cmrdv_planning.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /driverless/build/cmrdv_planning/build
+creating /driverless/build/cmrdv_planning/build/lib
+creating /driverless/build/cmrdv_planning/build/lib/cmrdv_planning
+copying cmrdv_planning/path_out.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning
+copying cmrdv_planning/SLAM_Validation.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning
+copying cmrdv_planning/__init__.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning
+copying cmrdv_planning/midpoint.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning
+copying cmrdv_planning/optimizer.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning
+copying cmrdv_planning/SLAM.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning
+running install
+running install_lib
+creating /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/path_out.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/SLAM_Validation.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/__init__.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/midpoint.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/optimizer.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/SLAM.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/path_out.py to path_out.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/SLAM_Validation.py to SLAM_Validation.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/__init__.py to __init__.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/midpoint.py to midpoint.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/optimizer.py to optimizer.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/SLAM.py to SLAM.cpython-38.pyc
+running install_data
+creating /driverless/install/cmrdv_planning/share/ament_index
+creating /driverless/install/cmrdv_planning/share/ament_index/resource_index
+creating /driverless/install/cmrdv_planning/share/ament_index/resource_index/packages
+copying resource/cmrdv_planning -> /driverless/install/cmrdv_planning/share/ament_index/resource_index/packages
+copying package.xml -> /driverless/install/cmrdv_planning/share/cmrdv_planning
+running install_egg_info
+Copying ../../../build/cmrdv_planning/cmrdv_planning.egg-info to /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning-0.0.0-py3.8.egg-info
+running install_scripts
+Installing SLAM_test script to /driverless/install/cmrdv_planning/lib/cmrdv_planning
+writing list of installed files to '/driverless/build/cmrdv_planning/install.log'

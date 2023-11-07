@@ -1,0 +1,46 @@
+running egg_info
+creating ../../../build/cmrdv_collection/cmrdv_collection.egg-info
+writing ../../../build/cmrdv_collection/cmrdv_collection.egg-info/PKG-INFO
+writing dependency_links to ../../../build/cmrdv_collection/cmrdv_collection.egg-info/dependency_links.txt
+writing entry points to ../../../build/cmrdv_collection/cmrdv_collection.egg-info/entry_points.txt
+writing requirements to ../../../build/cmrdv_collection/cmrdv_collection.egg-info/requires.txt
+writing top-level names to ../../../build/cmrdv_collection/cmrdv_collection.egg-info/top_level.txt
+writing manifest file '../../../build/cmrdv_collection/cmrdv_collection.egg-info/SOURCES.txt'
+reading manifest file '../../../build/cmrdv_collection/cmrdv_collection.egg-info/SOURCES.txt'
+writing manifest file '../../../build/cmrdv_collection/cmrdv_collection.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /driverless/build/cmrdv_collection/build
+creating /driverless/build/cmrdv_collection/build/lib
+creating /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+copying cmrdv_collection/collection_node.py -> /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+copying cmrdv_collection/test_sub.py -> /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+copying cmrdv_collection/sim_collection_node.py -> /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+copying cmrdv_collection/__init__.py -> /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+copying cmrdv_collection/file_collection_node.py -> /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+running install
+running install_lib
+creating /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+copying /driverless/build/cmrdv_collection/build/lib/cmrdv_collection/collection_node.py -> /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+copying /driverless/build/cmrdv_collection/build/lib/cmrdv_collection/test_sub.py -> /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+copying /driverless/build/cmrdv_collection/build/lib/cmrdv_collection/sim_collection_node.py -> /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+copying /driverless/build/cmrdv_collection/build/lib/cmrdv_collection/__init__.py -> /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+copying /driverless/build/cmrdv_collection/build/lib/cmrdv_collection/file_collection_node.py -> /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+byte-compiling /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection/collection_node.py to collection_node.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection/test_sub.py to test_sub.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection/sim_collection_node.py to sim_collection_node.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection/__init__.py to __init__.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection/file_collection_node.py to file_collection_node.cpython-38.pyc
+running install_data
+creating /driverless/install/cmrdv_collection/share/ament_index
+creating /driverless/install/cmrdv_collection/share/ament_index/resource_index
+creating /driverless/install/cmrdv_collection/share/ament_index/resource_index/packages
+copying resource/cmrdv_collection -> /driverless/install/cmrdv_collection/share/ament_index/resource_index/packages
+copying package.xml -> /driverless/install/cmrdv_collection/share/cmrdv_collection
+running install_egg_info
+Copying ../../../build/cmrdv_collection/cmrdv_collection.egg-info to /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection-0.0.0-py3.8.egg-info
+running install_scripts
+Installing data_collection script to /driverless/install/cmrdv_collection/lib/cmrdv_collection
+Installing sim_pub script to /driverless/install/cmrdv_collection/lib/cmrdv_collection
+Installing test_pts script to /driverless/install/cmrdv_collection/lib/cmrdv_collection
+writing list of installed files to '/driverless/build/cmrdv_collection/install.log'

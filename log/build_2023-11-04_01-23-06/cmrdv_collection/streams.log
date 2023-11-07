@@ -1,0 +1,48 @@
+[1.921s] Invoking command in '/driverless/cmrdv_ws/src/cmrdv_collection': AMENT_PREFIX_PATH=/driverless/install/cmrdv_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_collection/prefix_override:/driverless/install/cmrdv_collection/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_collection build --build-base /driverless/build/cmrdv_collection/build install --record /driverless/build/cmrdv_collection/install.log --single-version-externally-managed
+[2.254s] running egg_info
+[2.255s] creating ../../../build/cmrdv_collection/cmrdv_collection.egg-info
+[2.255s] writing ../../../build/cmrdv_collection/cmrdv_collection.egg-info/PKG-INFO
+[2.255s] writing dependency_links to ../../../build/cmrdv_collection/cmrdv_collection.egg-info/dependency_links.txt
+[2.256s] writing entry points to ../../../build/cmrdv_collection/cmrdv_collection.egg-info/entry_points.txt
+[2.256s] writing requirements to ../../../build/cmrdv_collection/cmrdv_collection.egg-info/requires.txt
+[2.256s] writing top-level names to ../../../build/cmrdv_collection/cmrdv_collection.egg-info/top_level.txt
+[2.260s] writing manifest file '../../../build/cmrdv_collection/cmrdv_collection.egg-info/SOURCES.txt'
+[2.318s] reading manifest file '../../../build/cmrdv_collection/cmrdv_collection.egg-info/SOURCES.txt'
+[2.320s] writing manifest file '../../../build/cmrdv_collection/cmrdv_collection.egg-info/SOURCES.txt'
+[2.321s] running build
+[2.321s] running build_py
+[2.321s] creating /driverless/build/cmrdv_collection/build
+[2.322s] creating /driverless/build/cmrdv_collection/build/lib
+[2.322s] creating /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+[2.323s] copying cmrdv_collection/collection_node.py -> /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+[2.323s] copying cmrdv_collection/test_sub.py -> /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+[2.324s] copying cmrdv_collection/sim_collection_node.py -> /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+[2.324s] copying cmrdv_collection/__init__.py -> /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+[2.324s] copying cmrdv_collection/file_collection_node.py -> /driverless/build/cmrdv_collection/build/lib/cmrdv_collection
+[2.325s] running install
+[2.325s] running install_lib
+[2.326s] creating /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+[2.326s] copying /driverless/build/cmrdv_collection/build/lib/cmrdv_collection/collection_node.py -> /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+[2.326s] copying /driverless/build/cmrdv_collection/build/lib/cmrdv_collection/test_sub.py -> /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+[2.326s] copying /driverless/build/cmrdv_collection/build/lib/cmrdv_collection/sim_collection_node.py -> /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+[2.327s] copying /driverless/build/cmrdv_collection/build/lib/cmrdv_collection/__init__.py -> /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+[2.327s] copying /driverless/build/cmrdv_collection/build/lib/cmrdv_collection/file_collection_node.py -> /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection
+[2.327s] byte-compiling /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection/collection_node.py to collection_node.cpython-38.pyc
+[2.331s] byte-compiling /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection/test_sub.py to test_sub.cpython-38.pyc
+[2.331s] byte-compiling /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection/sim_collection_node.py to sim_collection_node.cpython-38.pyc
+[2.332s] byte-compiling /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection/__init__.py to __init__.cpython-38.pyc
+[2.332s] byte-compiling /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection/file_collection_node.py to file_collection_node.cpython-38.pyc
+[2.334s] running install_data
+[2.334s] creating /driverless/install/cmrdv_collection/share/ament_index
+[2.334s] creating /driverless/install/cmrdv_collection/share/ament_index/resource_index
+[2.334s] creating /driverless/install/cmrdv_collection/share/ament_index/resource_index/packages
+[2.335s] copying resource/cmrdv_collection -> /driverless/install/cmrdv_collection/share/ament_index/resource_index/packages
+[2.335s] copying package.xml -> /driverless/install/cmrdv_collection/share/cmrdv_collection
+[2.335s] running install_egg_info
+[2.337s] Copying ../../../build/cmrdv_collection/cmrdv_collection.egg-info to /driverless/install/cmrdv_collection/lib/python3.8/site-packages/cmrdv_collection-0.0.0-py3.8.egg-info
+[2.339s] running install_scripts
+[2.369s] Installing data_collection script to /driverless/install/cmrdv_collection/lib/cmrdv_collection
+[2.369s] Installing sim_pub script to /driverless/install/cmrdv_collection/lib/cmrdv_collection
+[2.370s] Installing test_pts script to /driverless/install/cmrdv_collection/lib/cmrdv_collection
+[2.370s] writing list of installed files to '/driverless/build/cmrdv_collection/install.log'
+[2.429s] Invoked command in '/driverless/cmrdv_ws/src/cmrdv_collection' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_collection/prefix_override:/driverless/install/cmrdv_collection/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_collection build --build-base /driverless/build/cmrdv_collection/build install --record /driverless/build/cmrdv_collection/install.log --single-version-externally-managed

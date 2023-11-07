@@ -1,0 +1,4 @@
+source;share/cmrdv_interfaces/environment/ament_prefix_path.sh
+source;share/cmrdv_interfaces/environment/library_path.sh
+source;share/cmrdv_interfaces/environment/path.sh
+source;share/cmrdv_interfaces/environment/pythonpath.sh

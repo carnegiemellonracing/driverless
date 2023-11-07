@@ -1,0 +1,34 @@
+running egg_info
+creating ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info
+writing ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/PKG-INFO
+writing dependency_links to ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/dependency_links.txt
+writing entry points to ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/entry_points.txt
+writing requirements to ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/requires.txt
+writing top-level names to ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/top_level.txt
+writing manifest file '../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/SOURCES.txt'
+reading manifest file '../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/SOURCES.txt'
+writing manifest file '../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/SOURCES.txt'
+running build
+running install
+running install_data
+creating /driverless/install/cmrdv_bringup/share/ament_index
+creating /driverless/install/cmrdv_bringup/share/ament_index/resource_index
+creating /driverless/install/cmrdv_bringup/share/ament_index/resource_index/packages
+copying resource/cmrdv_bringup -> /driverless/install/cmrdv_bringup/share/ament_index/resource_index/packages
+copying package.xml -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/dim.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/data.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/driver.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/pipeline.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/test_dim.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/path_planning.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/perceptions.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/controls.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/controls_auto.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/full_stack.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/test_pipeline.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+copying launch/actuators.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+running install_egg_info
+Copying ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info to /driverless/install/cmrdv_bringup/lib/python3.8/site-packages/cmrdv_bringup-0.0.0-py3.8.egg-info
+running install_scripts
+writing list of installed files to '/driverless/build/cmrdv_bringup/install.log'

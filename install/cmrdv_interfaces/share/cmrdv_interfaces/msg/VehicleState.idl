@@ -1,0 +1,24 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from cmrdv_interfaces/msg/VehicleState.msg
+// generated code does not contain a copyright notice
+
+#include "geometry_msgs/msg/Accel.idl"
+#include "geometry_msgs/msg/Pose.idl"
+#include "geometry_msgs/msg/Twist.idl"
+#include "std_msgs/msg/Header.idl"
+
+module cmrdv_interfaces {
+  module msg {
+    struct VehicleState {
+      std_msgs::msg::Header header;
+
+      @verbatim (language="comment", text=
+        " all relative to the car")
+      geometry_msgs::msg::Pose position;
+
+      geometry_msgs::msg::Twist velocity;
+
+      geometry_msgs::msg::Accel acceleration;
+    };
+  };
+};

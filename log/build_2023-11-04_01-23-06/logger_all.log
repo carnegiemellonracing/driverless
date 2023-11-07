@@ -1,0 +1,769 @@
+[0.686s] DEBUG:colcon:Command line arguments: ['/usr/local/bin/colcon', 'build']
+[0.686s] DEBUG:colcon:Parsed command line arguments: Namespace(ament_cmake_args=None, base_paths=['.'], build_base='build', catkin_cmake_args=None, catkin_skip_building_tests=False, cmake_args=None, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, cmake_target=None, cmake_target_skip_unavailable=False, continue_on_error=False, event_handlers=None, executor='parallel', ignore_user_meta=False, install_base='install', log_base=None, log_level=None, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7fc70933b370>>, merge_install=False, metas=['./colcon.meta'], packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_end=None, packages_ignore=None, packages_ignore_regex=None, packages_select=None, packages_select_build_failed=False, packages_select_by_dep=None, packages_select_regex=None, packages_select_test_failures=False, packages_skip=None, packages_skip_build_finished=False, packages_skip_by_dep=None, packages_skip_regex=None, packages_skip_test_passed=False, packages_skip_up_to=None, packages_start=None, packages_up_to=None, packages_up_to_regex=None, parallel_workers=8, paths=None, symlink_install=False, test_result_base=None, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7fc70933b370>, verb_name='build', verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7fc70933b8b0>)
+[0.731s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.731s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.731s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.731s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.731s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.731s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.731s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/driverless'
+[0.731s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.761s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.761s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.761s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.761s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.761s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.762s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extensions ['ignore', 'ignore_ament_install']
+[0.762s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extension 'ignore'
+[0.762s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extension 'ignore_ament_install'
+[0.762s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extensions ['colcon_pkg']
+[0.762s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extension 'colcon_pkg'
+[0.762s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extensions ['colcon_meta']
+[0.762s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extension 'colcon_meta'
+[0.762s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extensions ['ros']
+[0.762s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extension 'ros'
+[0.763s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extensions ['cmake', 'python']
+[0.763s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extension 'cmake'
+[0.763s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extension 'python'
+[0.763s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extensions ['python_setup_py']
+[0.763s] Level 1:colcon.colcon_core.package_identification:_identify(__pycache__) by extension 'python_setup_py'
+[0.763s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.763s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.763s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.763s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extensions ['ignore', 'ignore_ament_install']
+[0.763s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extension 'ignore'
+[0.763s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extension 'ignore_ament_install'
+[0.764s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extensions ['colcon_pkg']
+[0.764s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extension 'colcon_pkg'
+[0.764s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extensions ['colcon_meta']
+[0.764s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extension 'colcon_meta'
+[0.764s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extensions ['ros']
+[0.764s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extension 'ros'
+[0.764s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extensions ['cmake', 'python']
+[0.764s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extension 'cmake'
+[0.764s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extension 'python'
+[0.764s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extensions ['python_setup_py']
+[0.764s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws) by extension 'python_setup_py'
+[0.765s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extensions ['ignore', 'ignore_ament_install']
+[0.765s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extension 'ignore'
+[0.765s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extension 'ignore_ament_install'
+[0.765s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extensions ['colcon_pkg']
+[0.765s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extension 'colcon_pkg'
+[0.765s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extensions ['colcon_meta']
+[0.765s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extension 'colcon_meta'
+[0.765s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extensions ['ros']
+[0.765s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extension 'ros'
+[0.765s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extensions ['cmake', 'python']
+[0.765s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extension 'cmake'
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extension 'python'
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extensions ['python_setup_py']
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/__pycache__) by extension 'python_setup_py'
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/build) by extensions ['ignore', 'ignore_ament_install']
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/build) by extension 'ignore'
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/build) ignored
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extensions ['ignore', 'ignore_ament_install']
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extension 'ignore'
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extension 'ignore_ament_install'
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extensions ['colcon_pkg']
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extension 'colcon_pkg'
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extensions ['colcon_meta']
+[0.766s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extension 'colcon_meta'
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extensions ['ros']
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extension 'ros'
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extensions ['cmake', 'python']
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extension 'cmake'
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extension 'python'
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extensions ['python_setup_py']
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/firstLineTurn) by extension 'python_setup_py'
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/install) by extensions ['ignore', 'ignore_ament_install']
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/install) by extension 'ignore'
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/install) ignored
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/log) by extensions ['ignore', 'ignore_ament_install']
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/log) by extension 'ignore'
+[0.767s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/log) ignored
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extensions ['ignore', 'ignore_ament_install']
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extension 'ignore'
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extension 'ignore_ament_install'
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extensions ['colcon_pkg']
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extension 'colcon_pkg'
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extensions ['colcon_meta']
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extension 'colcon_meta'
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extensions ['ros']
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extension 'ros'
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extensions ['cmake', 'python']
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extension 'cmake'
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extension 'python'
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extensions ['python_setup_py']
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_01-19_05_16) by extension 'python_setup_py'
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extensions ['ignore', 'ignore_ament_install']
+[0.768s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extension 'ignore'
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extension 'ignore_ament_install'
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extensions ['colcon_pkg']
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extension 'colcon_pkg'
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extensions ['colcon_meta']
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extension 'colcon_meta'
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extensions ['ros']
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extension 'ros'
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extensions ['cmake', 'python']
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extension 'cmake'
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extension 'python'
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extensions ['python_setup_py']
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_23) by extension 'python_setup_py'
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extensions ['ignore', 'ignore_ament_install']
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extension 'ignore'
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extension 'ignore_ament_install'
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extensions ['colcon_pkg']
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extension 'colcon_pkg'
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extensions ['colcon_meta']
+[0.769s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extension 'colcon_meta'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extensions ['ros']
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extension 'ros'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extensions ['cmake', 'python']
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extension 'cmake'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extension 'python'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extensions ['python_setup_py']
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_20_40) by extension 'python_setup_py'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extensions ['ignore', 'ignore_ament_install']
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extension 'ignore'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extension 'ignore_ament_install'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extensions ['colcon_pkg']
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extension 'colcon_pkg'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extensions ['colcon_meta']
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extension 'colcon_meta'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extensions ['ros']
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extension 'ros'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extensions ['cmake', 'python']
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extension 'cmake'
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extension 'python'
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extensions ['python_setup_py']
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/rosbag2_2023_05_04-15_24_02) by extension 'python_setup_py'
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extensions ['ignore', 'ignore_ament_install']
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extension 'ignore'
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extension 'ignore_ament_install'
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extensions ['colcon_pkg']
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extension 'colcon_pkg'
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extensions ['colcon_meta']
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extension 'colcon_meta'
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extensions ['ros']
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extension 'ros'
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extensions ['cmake', 'python']
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extension 'cmake'
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extension 'python'
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extensions ['python_setup_py']
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src) by extension 'python_setup_py'
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extensions ['ignore', 'ignore_ament_install']
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extension 'ignore'
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extension 'ignore_ament_install'
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extensions ['colcon_pkg']
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extension 'colcon_pkg'
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extensions ['colcon_meta']
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extension 'colcon_meta'
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extensions ['ros']
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extension 'ros'
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extensions ['cmake', 'python']
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extension 'cmake'
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extension 'python'
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extensions ['python_setup_py']
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/__pycache__) by extension 'python_setup_py'
+[0.772s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/build) by extensions ['ignore', 'ignore_ament_install']
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/build) by extension 'ignore'
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/build) ignored
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_actuators) by extensions ['ignore', 'ignore_ament_install']
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_actuators) by extension 'ignore'
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_actuators) by extension 'ignore_ament_install'
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_actuators) by extensions ['colcon_pkg']
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_actuators) by extension 'colcon_pkg'
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_actuators) by extensions ['colcon_meta']
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_actuators) by extension 'colcon_meta'
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_actuators) by extensions ['ros']
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_actuators) by extension 'ros'
+[0.777s] DEBUG:colcon.colcon_core.package_identification:Package 'cmrdv_ws/src/cmrdv_actuators' with type 'ros.ament_python' and name 'cmrdv_actuators'
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_bringup) by extensions ['ignore', 'ignore_ament_install']
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_bringup) by extension 'ignore'
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_bringup) by extension 'ignore_ament_install'
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_bringup) by extensions ['colcon_pkg']
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_bringup) by extension 'colcon_pkg'
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_bringup) by extensions ['colcon_meta']
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_bringup) by extension 'colcon_meta'
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_bringup) by extensions ['ros']
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_bringup) by extension 'ros'
+[0.778s] DEBUG:colcon.colcon_core.package_identification:Package 'cmrdv_ws/src/cmrdv_bringup' with type 'ros.ament_python' and name 'cmrdv_bringup'
+[0.778s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_collection) by extensions ['ignore', 'ignore_ament_install']
+[0.778s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_collection) by extension 'ignore'
+[0.778s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_collection) by extension 'ignore_ament_install'
+[0.779s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_collection) by extensions ['colcon_pkg']
+[0.779s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_collection) by extension 'colcon_pkg'
+[0.779s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_collection) by extensions ['colcon_meta']
+[0.779s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_collection) by extension 'colcon_meta'
+[0.779s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_collection) by extensions ['ros']
+[0.779s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_collection) by extension 'ros'
+[0.779s] DEBUG:colcon.colcon_core.package_identification:Package 'cmrdv_ws/src/cmrdv_collection' with type 'ros.ament_python' and name 'cmrdv_collection'
+[0.780s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_common) by extensions ['ignore', 'ignore_ament_install']
+[0.780s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_common) by extension 'ignore'
+[0.780s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_common) by extension 'ignore_ament_install'
+[0.780s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_common) by extensions ['colcon_pkg']
+[0.780s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_common) by extension 'colcon_pkg'
+[0.780s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_common) by extensions ['colcon_meta']
+[0.780s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_common) by extension 'colcon_meta'
+[0.780s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_common) by extensions ['ros']
+[0.780s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_common) by extension 'ros'
+[0.782s] DEBUG:colcon.colcon_core.package_identification:Package 'cmrdv_ws/src/cmrdv_common' with type 'ros.ament_python' and name 'cmrdv_common'
+[0.782s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_controls) by extensions ['ignore', 'ignore_ament_install']
+[0.783s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_controls) by extension 'ignore'
+[0.783s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_controls) by extension 'ignore_ament_install'
+[0.783s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_controls) by extensions ['colcon_pkg']
+[0.783s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_controls) by extension 'colcon_pkg'
+[0.783s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_controls) by extensions ['colcon_meta']
+[0.783s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_controls) by extension 'colcon_meta'
+[0.783s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_controls) by extensions ['ros']
+[0.783s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_controls) by extension 'ros'
+[0.785s] DEBUG:colcon.colcon_core.package_identification:Package 'cmrdv_ws/src/cmrdv_controls' with type 'ros.ament_python' and name 'cmrdv_controls'
+[0.785s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_interfaces) by extensions ['ignore', 'ignore_ament_install']
+[0.785s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_interfaces) by extension 'ignore'
+[0.785s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_interfaces) by extension 'ignore_ament_install'
+[0.785s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_interfaces) by extensions ['colcon_pkg']
+[0.785s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_interfaces) by extension 'colcon_pkg'
+[0.785s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_interfaces) by extensions ['colcon_meta']
+[0.786s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_interfaces) by extension 'colcon_meta'
+[0.786s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_interfaces) by extensions ['ros']
+[0.786s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_interfaces) by extension 'ros'
+[0.787s] DEBUG:colcon.colcon_core.package_identification:Package 'cmrdv_ws/src/cmrdv_interfaces' with type 'ros.ament_cmake' and name 'cmrdv_interfaces'
+[0.788s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_perceptions) by extensions ['ignore', 'ignore_ament_install']
+[0.788s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_perceptions) by extension 'ignore'
+[0.788s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_perceptions) by extension 'ignore_ament_install'
+[0.788s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_perceptions) by extensions ['colcon_pkg']
+[0.788s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_perceptions) by extension 'colcon_pkg'
+[0.788s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_perceptions) by extensions ['colcon_meta']
+[0.788s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_perceptions) by extension 'colcon_meta'
+[0.788s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_perceptions) by extensions ['ros']
+[0.788s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_perceptions) by extension 'ros'
+[0.789s] DEBUG:colcon.colcon_core.package_identification:Package 'cmrdv_ws/src/cmrdv_perceptions' with type 'ros.ament_python' and name 'cmrdv_perceptions'
+[0.789s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_planning) by extensions ['ignore', 'ignore_ament_install']
+[0.789s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_planning) by extension 'ignore'
+[0.789s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_planning) by extension 'ignore_ament_install'
+[0.789s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_planning) by extensions ['colcon_pkg']
+[0.789s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_planning) by extension 'colcon_pkg'
+[0.790s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_planning) by extensions ['colcon_meta']
+[0.790s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_planning) by extension 'colcon_meta'
+[0.790s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_planning) by extensions ['ros']
+[0.790s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/cmrdv_planning) by extension 'ros'
+[0.790s] DEBUG:colcon.colcon_core.package_identification:Package 'cmrdv_ws/src/cmrdv_planning' with type 'ros.ament_python' and name 'cmrdv_planning'
+[0.790s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/eufs_msgs) by extensions ['ignore', 'ignore_ament_install']
+[0.791s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/eufs_msgs) by extension 'ignore'
+[0.791s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/eufs_msgs) by extension 'ignore_ament_install'
+[0.791s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/eufs_msgs) by extensions ['colcon_pkg']
+[0.791s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/eufs_msgs) by extension 'colcon_pkg'
+[0.791s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/eufs_msgs) by extensions ['colcon_meta']
+[0.791s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/eufs_msgs) by extension 'colcon_meta'
+[0.791s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/eufs_msgs) by extensions ['ros']
+[0.791s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/eufs_msgs) by extension 'ros'
+[0.792s] DEBUG:colcon.colcon_core.package_identification:Package 'cmrdv_ws/src/eufs_msgs' with type 'ros.ament_cmake' and name 'eufs_msgs'
+[0.792s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/install) by extensions ['ignore', 'ignore_ament_install']
+[0.793s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/install) by extension 'ignore'
+[0.793s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/install) ignored
+[0.793s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/log) by extensions ['ignore', 'ignore_ament_install']
+[0.793s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/log) by extension 'ignore'
+[0.793s] Level 1:colcon.colcon_core.package_identification:_identify(cmrdv_ws/src/log) ignored
+[0.794s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extensions ['ignore', 'ignore_ament_install']
+[0.794s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extension 'ignore'
+[0.794s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extension 'ignore_ament_install'
+[0.794s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extensions ['colcon_pkg']
+[0.794s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extension 'colcon_pkg'
+[0.794s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extensions ['colcon_meta']
+[0.795s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extension 'colcon_meta'
+[0.795s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extensions ['ros']
+[0.795s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extension 'ros'
+[0.795s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extensions ['cmake', 'python']
+[0.795s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extension 'cmake'
+[0.795s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extension 'python'
+[0.795s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extensions ['python_setup_py']
+[0.796s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extension 'python_setup_py'
+[0.796s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extensions ['ignore', 'ignore_ament_install']
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extension 'ignore'
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extension 'ignore_ament_install'
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extensions ['colcon_pkg']
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extension 'colcon_pkg'
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extensions ['colcon_meta']
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extension 'colcon_meta'
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extensions ['ros']
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extension 'ros'
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extensions ['cmake', 'python']
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extension 'cmake'
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extension 'python'
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extensions ['python_setup_py']
+[0.797s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator) by extension 'python_setup_py'
+[0.798s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator/build) by extensions ['ignore', 'ignore_ament_install']
+[0.798s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator/build) by extension 'ignore'
+[0.798s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator/build) ignored
+[0.798s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator/install) by extensions ['ignore', 'ignore_ament_install']
+[0.798s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator/install) by extension 'ignore'
+[0.798s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator/install) ignored
+[0.799s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator/log) by extensions ['ignore', 'ignore_ament_install']
+[0.799s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator/log) by extension 'ignore'
+[0.799s] Level 1:colcon.colcon_core.package_identification:_identify(docker/simulator/log) ignored
+[0.799s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.799s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.799s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.799s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.799s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.799s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.799s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.799s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.799s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.799s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.799s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'eufs_msgs' build argument 'cmake_args' from command line to 'None'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'eufs_msgs' build argument 'cmake_target' from command line to 'None'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'eufs_msgs' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'eufs_msgs' build argument 'cmake_clean_cache' from command line to 'False'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'eufs_msgs' build argument 'cmake_clean_first' from command line to 'False'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'eufs_msgs' build argument 'cmake_force_configure' from command line to 'False'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'eufs_msgs' build argument 'ament_cmake_args' from command line to 'None'
+[0.851s] Level 5:colcon.colcon_core.verb:set package 'eufs_msgs' build argument 'catkin_cmake_args' from command line to 'None'
+[0.852s] Level 5:colcon.colcon_core.verb:set package 'eufs_msgs' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.852s] DEBUG:colcon.colcon_core.verb:Building package 'eufs_msgs' with the following arguments: {'ament_cmake_args': None, 'build_base': '/driverless/build/eufs_msgs', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/driverless/install/eufs_msgs', 'merge_install': False, 'path': '/driverless/cmrdv_ws/src/eufs_msgs', 'symlink_install': False, 'test_result_base': None}
+[0.860s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_interfaces' build argument 'cmake_args' from command line to 'None'
+[0.860s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_interfaces' build argument 'cmake_target' from command line to 'None'
+[0.861s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_interfaces' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.861s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_interfaces' build argument 'cmake_clean_cache' from command line to 'False'
+[0.861s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_interfaces' build argument 'cmake_clean_first' from command line to 'False'
+[0.861s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_interfaces' build argument 'cmake_force_configure' from command line to 'False'
+[0.861s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_interfaces' build argument 'ament_cmake_args' from command line to 'None'
+[0.861s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_interfaces' build argument 'catkin_cmake_args' from command line to 'None'
+[0.861s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_interfaces' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.861s] DEBUG:colcon.colcon_core.verb:Building package 'cmrdv_interfaces' with the following arguments: {'ament_cmake_args': None, 'build_base': '/driverless/build/cmrdv_interfaces', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/driverless/install/cmrdv_interfaces', 'merge_install': False, 'path': '/driverless/cmrdv_ws/src/cmrdv_interfaces', 'symlink_install': False, 'test_result_base': None}
+[0.869s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_collection' build argument 'cmake_args' from command line to 'None'
+[0.869s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_collection' build argument 'cmake_target' from command line to 'None'
+[0.869s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_collection' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.869s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_collection' build argument 'cmake_clean_cache' from command line to 'False'
+[0.869s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_collection' build argument 'cmake_clean_first' from command line to 'False'
+[0.869s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_collection' build argument 'cmake_force_configure' from command line to 'False'
+[0.869s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_collection' build argument 'ament_cmake_args' from command line to 'None'
+[0.869s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_collection' build argument 'catkin_cmake_args' from command line to 'None'
+[0.869s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_collection' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.869s] DEBUG:colcon.colcon_core.verb:Building package 'cmrdv_collection' with the following arguments: {'ament_cmake_args': None, 'build_base': '/driverless/build/cmrdv_collection', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/driverless/install/cmrdv_collection', 'merge_install': False, 'path': '/driverless/cmrdv_ws/src/cmrdv_collection', 'symlink_install': False, 'test_result_base': None}
+[0.879s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_common' build argument 'cmake_args' from command line to 'None'
+[0.879s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_common' build argument 'cmake_target' from command line to 'None'
+[0.879s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_common' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.879s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_common' build argument 'cmake_clean_cache' from command line to 'False'
+[0.879s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_common' build argument 'cmake_clean_first' from command line to 'False'
+[0.879s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_common' build argument 'cmake_force_configure' from command line to 'False'
+[0.879s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_common' build argument 'ament_cmake_args' from command line to 'None'
+[0.879s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_common' build argument 'catkin_cmake_args' from command line to 'None'
+[0.879s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_common' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.879s] DEBUG:colcon.colcon_core.verb:Building package 'cmrdv_common' with the following arguments: {'ament_cmake_args': None, 'build_base': '/driverless/build/cmrdv_common', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/driverless/install/cmrdv_common', 'merge_install': False, 'path': '/driverless/cmrdv_ws/src/cmrdv_common', 'symlink_install': False, 'test_result_base': None}
+[0.887s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_perceptions' build argument 'cmake_args' from command line to 'None'
+[0.887s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_perceptions' build argument 'cmake_target' from command line to 'None'
+[0.887s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_perceptions' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.887s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_perceptions' build argument 'cmake_clean_cache' from command line to 'False'
+[0.888s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_perceptions' build argument 'cmake_clean_first' from command line to 'False'
+[0.888s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_perceptions' build argument 'cmake_force_configure' from command line to 'False'
+[0.888s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_perceptions' build argument 'ament_cmake_args' from command line to 'None'
+[0.888s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_perceptions' build argument 'catkin_cmake_args' from command line to 'None'
+[0.888s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_perceptions' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.888s] DEBUG:colcon.colcon_core.verb:Building package 'cmrdv_perceptions' with the following arguments: {'ament_cmake_args': None, 'build_base': '/driverless/build/cmrdv_perceptions', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/driverless/install/cmrdv_perceptions', 'merge_install': False, 'path': '/driverless/cmrdv_ws/src/cmrdv_perceptions', 'symlink_install': False, 'test_result_base': None}
+[0.897s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_actuators' build argument 'cmake_args' from command line to 'None'
+[0.897s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_actuators' build argument 'cmake_target' from command line to 'None'
+[0.897s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_actuators' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.897s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_actuators' build argument 'cmake_clean_cache' from command line to 'False'
+[0.897s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_actuators' build argument 'cmake_clean_first' from command line to 'False'
+[0.897s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_actuators' build argument 'cmake_force_configure' from command line to 'False'
+[0.897s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_actuators' build argument 'ament_cmake_args' from command line to 'None'
+[0.897s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_actuators' build argument 'catkin_cmake_args' from command line to 'None'
+[0.897s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_actuators' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.897s] DEBUG:colcon.colcon_core.verb:Building package 'cmrdv_actuators' with the following arguments: {'ament_cmake_args': None, 'build_base': '/driverless/build/cmrdv_actuators', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/driverless/install/cmrdv_actuators', 'merge_install': False, 'path': '/driverless/cmrdv_ws/src/cmrdv_actuators', 'symlink_install': False, 'test_result_base': None}
+[0.910s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_controls' build argument 'cmake_args' from command line to 'None'
+[0.910s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_controls' build argument 'cmake_target' from command line to 'None'
+[0.910s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_controls' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.911s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_controls' build argument 'cmake_clean_cache' from command line to 'False'
+[0.911s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_controls' build argument 'cmake_clean_first' from command line to 'False'
+[0.911s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_controls' build argument 'cmake_force_configure' from command line to 'False'
+[0.911s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_controls' build argument 'ament_cmake_args' from command line to 'None'
+[0.911s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_controls' build argument 'catkin_cmake_args' from command line to 'None'
+[0.911s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_controls' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.911s] DEBUG:colcon.colcon_core.verb:Building package 'cmrdv_controls' with the following arguments: {'ament_cmake_args': None, 'build_base': '/driverless/build/cmrdv_controls', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/driverless/install/cmrdv_controls', 'merge_install': False, 'path': '/driverless/cmrdv_ws/src/cmrdv_controls', 'symlink_install': False, 'test_result_base': None}
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_planning' build argument 'cmake_args' from command line to 'None'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_planning' build argument 'cmake_target' from command line to 'None'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_planning' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_planning' build argument 'cmake_clean_cache' from command line to 'False'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_planning' build argument 'cmake_clean_first' from command line to 'False'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_planning' build argument 'cmake_force_configure' from command line to 'False'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_planning' build argument 'ament_cmake_args' from command line to 'None'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_planning' build argument 'catkin_cmake_args' from command line to 'None'
+[0.924s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_planning' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.924s] DEBUG:colcon.colcon_core.verb:Building package 'cmrdv_planning' with the following arguments: {'ament_cmake_args': None, 'build_base': '/driverless/build/cmrdv_planning', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/driverless/install/cmrdv_planning', 'merge_install': False, 'path': '/driverless/cmrdv_ws/src/cmrdv_planning', 'symlink_install': False, 'test_result_base': None}
+[0.932s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_bringup' build argument 'cmake_args' from command line to 'None'
+[0.932s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_bringup' build argument 'cmake_target' from command line to 'None'
+[0.932s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_bringup' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.932s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_bringup' build argument 'cmake_clean_cache' from command line to 'False'
+[0.932s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_bringup' build argument 'cmake_clean_first' from command line to 'False'
+[0.932s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_bringup' build argument 'cmake_force_configure' from command line to 'False'
+[0.932s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_bringup' build argument 'ament_cmake_args' from command line to 'None'
+[0.932s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_bringup' build argument 'catkin_cmake_args' from command line to 'None'
+[0.932s] Level 5:colcon.colcon_core.verb:set package 'cmrdv_bringup' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.932s] DEBUG:colcon.colcon_core.verb:Building package 'cmrdv_bringup' with the following arguments: {'ament_cmake_args': None, 'build_base': '/driverless/build/cmrdv_bringup', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/driverless/install/cmrdv_bringup', 'merge_install': False, 'path': '/driverless/cmrdv_ws/src/cmrdv_bringup', 'symlink_install': False, 'test_result_base': None}
+[0.934s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.949s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.949s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/driverless/cmrdv_ws/src/eufs_msgs' with build type 'ament_cmake'
+[0.949s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/driverless/cmrdv_ws/src/eufs_msgs'
+[0.962s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.962s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.962s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.983s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/build/eufs_msgs': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /driverless/cmrdv_ws/src/eufs_msgs -DCMAKE_INSTALL_PREFIX=/driverless/install/eufs_msgs
+[4.734s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/build/eufs_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /driverless/cmrdv_ws/src/eufs_msgs -DCMAKE_INSTALL_PREFIX=/driverless/install/eufs_msgs
+[4.738s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/build/eufs_msgs': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/build/eufs_msgs -- -j8 -l8
+[53.386s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/build/eufs_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/build/eufs_msgs -- -j8 -l8
+[54.348s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/build/eufs_msgs': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/build/eufs_msgs
+[54.604s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(eufs_msgs)
+[54.607s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/build/eufs_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/build/eufs_msgs
+[54.621s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs' for CMake module files
+[54.622s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs' for CMake config files
+[54.623s] Level 1:colcon.colcon_core.shell:create_environment_hook('eufs_msgs', 'cmake_prefix_path')
+[54.632s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/cmake_prefix_path.ps1'
+[54.634s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/eufs_msgs/share/eufs_msgs/hook/cmake_prefix_path.dsv'
+[54.634s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/cmake_prefix_path.sh'
+[54.636s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs/lib'
+[54.637s] Level 1:colcon.colcon_core.shell:create_environment_hook('eufs_msgs', 'ld_library_path_lib')
+[54.647s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/ld_library_path_lib.ps1'
+[54.648s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/eufs_msgs/share/eufs_msgs/hook/ld_library_path_lib.dsv'
+[54.649s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/ld_library_path_lib.sh'
+[54.649s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs/bin'
+[54.649s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs/lib/pkgconfig/eufs_msgs.pc'
+[54.651s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs/lib/python3.8/site-packages'
+[54.651s] Level 1:colcon.colcon_core.shell:create_environment_hook('eufs_msgs', 'pythonpath')
+[54.662s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/pythonpath.ps1'
+[54.663s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/eufs_msgs/share/eufs_msgs/hook/pythonpath.dsv'
+[54.663s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/pythonpath.sh'
+[54.664s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs/bin'
+[54.675s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/eufs_msgs/share/eufs_msgs/package.ps1'
+[54.677s] INFO:colcon.colcon_core.shell:Creating package descriptor '/driverless/install/eufs_msgs/share/eufs_msgs/package.dsv'
+[54.678s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/eufs_msgs/share/eufs_msgs/package.sh'
+[54.679s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/eufs_msgs/share/eufs_msgs/package.bash'
+[54.680s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/eufs_msgs/share/eufs_msgs/package.zsh'
+[54.681s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/driverless/install/eufs_msgs/share/colcon-core/packages/eufs_msgs)
+[55.617s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(eufs_msgs)
+[55.627s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs' for CMake module files
+[55.628s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs' for CMake config files
+[55.629s] Level 1:colcon.colcon_core.shell:create_environment_hook('eufs_msgs', 'cmake_prefix_path')
+[55.638s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/cmake_prefix_path.ps1'
+[55.639s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/eufs_msgs/share/eufs_msgs/hook/cmake_prefix_path.dsv'
+[55.640s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/cmake_prefix_path.sh'
+[55.640s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs/lib'
+[55.641s] Level 1:colcon.colcon_core.shell:create_environment_hook('eufs_msgs', 'ld_library_path_lib')
+[55.647s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/ld_library_path_lib.ps1'
+[55.648s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/eufs_msgs/share/eufs_msgs/hook/ld_library_path_lib.dsv'
+[55.648s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/ld_library_path_lib.sh'
+[55.649s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs/bin'
+[55.649s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs/lib/pkgconfig/eufs_msgs.pc'
+[55.649s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs/lib/python3.8/site-packages'
+[55.649s] Level 1:colcon.colcon_core.shell:create_environment_hook('eufs_msgs', 'pythonpath')
+[55.656s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/pythonpath.ps1'
+[55.657s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/eufs_msgs/share/eufs_msgs/hook/pythonpath.dsv'
+[55.657s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/eufs_msgs/share/eufs_msgs/hook/pythonpath.sh'
+[55.658s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/eufs_msgs/bin'
+[55.666s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/eufs_msgs/share/eufs_msgs/package.ps1'
+[55.667s] INFO:colcon.colcon_core.shell:Creating package descriptor '/driverless/install/eufs_msgs/share/eufs_msgs/package.dsv'
+[55.668s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/eufs_msgs/share/eufs_msgs/package.sh'
+[55.668s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/eufs_msgs/share/eufs_msgs/package.bash'
+[55.669s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/eufs_msgs/share/eufs_msgs/package.zsh'
+[55.669s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/driverless/install/eufs_msgs/share/colcon-core/packages/eufs_msgs)
+[55.670s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/driverless/cmrdv_ws/src/cmrdv_interfaces' with build type 'ament_cmake'
+[55.670s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/driverless/cmrdv_ws/src/cmrdv_interfaces'
+[55.679s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[55.679s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[55.707s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/build/cmrdv_interfaces': AMENT_PREFIX_PATH=/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake /driverless/cmrdv_ws/src/cmrdv_interfaces -DCMAKE_INSTALL_PREFIX=/driverless/install/cmrdv_interfaces
+[59.872s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/build/cmrdv_interfaces' returned '0': AMENT_PREFIX_PATH=/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake /driverless/cmrdv_ws/src/cmrdv_interfaces -DCMAKE_INSTALL_PREFIX=/driverless/install/cmrdv_interfaces
+[59.874s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/build/cmrdv_interfaces': AMENT_PREFIX_PATH=/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --build /driverless/build/cmrdv_interfaces -- -j8 -l8
+[73.924s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/build/cmrdv_interfaces' returned '0': AMENT_PREFIX_PATH=/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --build /driverless/build/cmrdv_interfaces -- -j8 -l8
+[74.198s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/build/cmrdv_interfaces': AMENT_PREFIX_PATH=/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --install /driverless/build/cmrdv_interfaces
+[74.323s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(cmrdv_interfaces)
+[74.333s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces' for CMake module files
+[74.333s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/build/cmrdv_interfaces' returned '0': AMENT_PREFIX_PATH=/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/eufs_msgs:/opt/ros/foxy LD_LIBRARY_PATH=/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --install /driverless/build/cmrdv_interfaces
+[74.334s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces' for CMake config files
+[74.334s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_interfaces', 'cmake_prefix_path')
+[74.342s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/cmake_prefix_path.ps1'
+[74.343s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/cmake_prefix_path.dsv'
+[74.344s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/cmake_prefix_path.sh'
+[74.345s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces/lib'
+[74.345s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_interfaces', 'ld_library_path_lib')
+[74.356s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/ld_library_path_lib.ps1'
+[74.357s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/ld_library_path_lib.dsv'
+[74.358s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/ld_library_path_lib.sh'
+[74.359s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces/bin'
+[74.359s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces/lib/pkgconfig/cmrdv_interfaces.pc'
+[74.359s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages'
+[74.359s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_interfaces', 'pythonpath')
+[74.366s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/pythonpath.ps1'
+[74.366s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/pythonpath.dsv'
+[74.367s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/pythonpath.sh'
+[74.367s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces/bin'
+[74.376s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/package.ps1'
+[74.377s] INFO:colcon.colcon_core.shell:Creating package descriptor '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/package.dsv'
+[74.378s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/package.sh'
+[74.379s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/package.bash'
+[74.380s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/package.zsh'
+[74.380s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/driverless/install/cmrdv_interfaces/share/colcon-core/packages/cmrdv_interfaces)
+[74.664s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(cmrdv_interfaces)
+[74.678s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces' for CMake module files
+[74.679s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces' for CMake config files
+[74.680s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_interfaces', 'cmake_prefix_path')
+[74.687s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/cmake_prefix_path.ps1'
+[74.688s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/cmake_prefix_path.dsv'
+[74.689s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/cmake_prefix_path.sh'
+[74.689s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces/lib'
+[74.689s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_interfaces', 'ld_library_path_lib')
+[74.697s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/ld_library_path_lib.ps1'
+[74.699s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/ld_library_path_lib.dsv'
+[74.699s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/ld_library_path_lib.sh'
+[74.700s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces/bin'
+[74.700s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces/lib/pkgconfig/cmrdv_interfaces.pc'
+[74.700s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages'
+[74.701s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_interfaces', 'pythonpath')
+[74.708s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/pythonpath.ps1'
+[74.708s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/pythonpath.dsv'
+[74.709s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/hook/pythonpath.sh'
+[74.710s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_interfaces/bin'
+[74.717s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/package.ps1'
+[74.718s] INFO:colcon.colcon_core.shell:Creating package descriptor '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/package.dsv'
+[74.719s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/package.sh'
+[74.720s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/package.bash'
+[74.720s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_interfaces/share/cmrdv_interfaces/package.zsh'
+[74.721s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/driverless/install/cmrdv_interfaces/share/colcon-core/packages/cmrdv_interfaces)
+[74.721s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/driverless/cmrdv_ws/src/cmrdv_common' with build type 'ament_python'
+[74.722s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_common', 'ament_prefix_path')
+[74.729s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_common/share/cmrdv_common/hook/ament_prefix_path.ps1'
+[74.731s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_common/share/cmrdv_common/hook/ament_prefix_path.dsv'
+[74.732s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_common/share/cmrdv_common/hook/ament_prefix_path.sh'
+[74.742s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[74.742s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[74.756s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/driverless/cmrdv_ws/src/cmrdv_collection' with build type 'ament_python'
+[74.757s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_collection', 'ament_prefix_path')
+[74.769s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_collection/share/cmrdv_collection/hook/ament_prefix_path.ps1'
+[74.770s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_collection/share/cmrdv_collection/hook/ament_prefix_path.dsv'
+[74.770s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_collection/share/cmrdv_collection/hook/ament_prefix_path.sh'
+[74.782s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[74.782s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[74.816s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/driverless/cmrdv_ws/src/cmrdv_perceptions' with build type 'ament_python'
+[74.817s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_perceptions', 'ament_prefix_path')
+[74.829s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_perceptions/share/cmrdv_perceptions/hook/ament_prefix_path.ps1'
+[74.830s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_perceptions/share/cmrdv_perceptions/hook/ament_prefix_path.dsv'
+[74.831s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_perceptions/share/cmrdv_perceptions/hook/ament_prefix_path.sh'
+[74.843s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[74.843s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[75.217s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/driverless/cmrdv_ws/src/cmrdv_common'
+[75.226s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[75.226s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[75.569s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/driverless/cmrdv_ws/src/cmrdv_collection'
+[75.577s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[75.578s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[75.936s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/driverless/cmrdv_ws/src/cmrdv_perceptions'
+[75.946s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[75.947s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[76.602s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/cmrdv_ws/src/cmrdv_perceptions': AMENT_PREFIX_PATH=/driverless/install/cmrdv_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_perceptions/prefix_override:/driverless/install/cmrdv_perceptions/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_perceptions build --build-base /driverless/build/cmrdv_perceptions/build install --record /driverless/build/cmrdv_perceptions/install.log --single-version-externally-managed
+[76.665s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/cmrdv_ws/src/cmrdv_common': AMENT_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_common/prefix_override:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_common build --build-base /driverless/build/cmrdv_common/build install --record /driverless/build/cmrdv_common/install.log --single-version-externally-managed
+[76.684s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/cmrdv_ws/src/cmrdv_collection': AMENT_PREFIX_PATH=/driverless/install/cmrdv_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_collection/prefix_override:/driverless/install/cmrdv_collection/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_collection build --build-base /driverless/build/cmrdv_collection/build install --record /driverless/build/cmrdv_collection/install.log --single-version-externally-managed
+[77.129s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_perceptions' for CMake module files
+[77.130s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/cmrdv_ws/src/cmrdv_perceptions' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_perceptions/prefix_override:/driverless/install/cmrdv_perceptions/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_perceptions build --build-base /driverless/build/cmrdv_perceptions/build install --record /driverless/build/cmrdv_perceptions/install.log --single-version-externally-managed
+[77.131s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_perceptions' for CMake config files
+[77.133s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_perceptions/lib'
+[77.133s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_perceptions/bin'
+[77.133s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_perceptions/lib/pkgconfig/cmrdv_perceptions.pc'
+[77.134s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_perceptions/lib/python3.8/site-packages'
+[77.134s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_perceptions', 'pythonpath')
+[77.147s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_perceptions/share/cmrdv_perceptions/hook/pythonpath.ps1'
+[77.148s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_perceptions/share/cmrdv_perceptions/hook/pythonpath.dsv'
+[77.148s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_perceptions/share/cmrdv_perceptions/hook/pythonpath.sh'
+[77.149s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_perceptions/bin'
+[77.149s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(cmrdv_perceptions)
+[77.161s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_perceptions/share/cmrdv_perceptions/package.ps1'
+[77.164s] INFO:colcon.colcon_core.shell:Creating package descriptor '/driverless/install/cmrdv_perceptions/share/cmrdv_perceptions/package.dsv'
+[77.167s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_perceptions/share/cmrdv_perceptions/package.sh'
+[77.169s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_perceptions/share/cmrdv_perceptions/package.bash'
+[77.170s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_perceptions/share/cmrdv_perceptions/package.zsh'
+[77.171s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/driverless/install/cmrdv_perceptions/share/colcon-core/packages/cmrdv_perceptions)
+[77.186s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_collection' for CMake module files
+[77.189s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_collection' for CMake config files
+[77.191s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/cmrdv_ws/src/cmrdv_collection' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_collection/prefix_override:/driverless/install/cmrdv_collection/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_collection build --build-base /driverless/build/cmrdv_collection/build install --record /driverless/build/cmrdv_collection/install.log --single-version-externally-managed
+[77.192s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_collection/lib'
+[77.192s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_collection/bin'
+[77.192s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_collection/lib/pkgconfig/cmrdv_collection.pc'
+[77.193s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_collection/lib/python3.8/site-packages'
+[77.193s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_collection', 'pythonpath')
+[77.205s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_collection/share/cmrdv_collection/hook/pythonpath.ps1'
+[77.207s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_collection/share/cmrdv_collection/hook/pythonpath.dsv'
+[77.208s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_collection/share/cmrdv_collection/hook/pythonpath.sh'
+[77.209s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_collection/bin'
+[77.209s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(cmrdv_collection)
+[77.218s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_collection/share/cmrdv_collection/package.ps1'
+[77.220s] INFO:colcon.colcon_core.shell:Creating package descriptor '/driverless/install/cmrdv_collection/share/cmrdv_collection/package.dsv'
+[77.221s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_collection/share/cmrdv_collection/package.sh'
+[77.222s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_collection/share/cmrdv_collection/package.bash'
+[77.223s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_collection/share/cmrdv_collection/package.zsh'
+[77.223s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/driverless/install/cmrdv_collection/share/colcon-core/packages/cmrdv_collection)
+[77.269s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_common' for CMake module files
+[77.270s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/cmrdv_ws/src/cmrdv_common' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_common/prefix_override:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_common build --build-base /driverless/build/cmrdv_common/build install --record /driverless/build/cmrdv_common/install.log --single-version-externally-managed
+[77.270s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_common' for CMake config files
+[77.272s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_common/lib'
+[77.272s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_common/bin'
+[77.272s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_common/lib/pkgconfig/cmrdv_common.pc'
+[77.272s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_common/lib/python3.8/site-packages'
+[77.272s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_common', 'pythonpath')
+[77.283s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_common/share/cmrdv_common/hook/pythonpath.ps1'
+[77.284s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_common/share/cmrdv_common/hook/pythonpath.dsv'
+[77.284s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_common/share/cmrdv_common/hook/pythonpath.sh'
+[77.285s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_common/bin'
+[77.285s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(cmrdv_common)
+[77.293s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_common/share/cmrdv_common/package.ps1'
+[77.294s] INFO:colcon.colcon_core.shell:Creating package descriptor '/driverless/install/cmrdv_common/share/cmrdv_common/package.dsv'
+[77.294s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_common/share/cmrdv_common/package.sh'
+[77.296s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_common/share/cmrdv_common/package.bash'
+[77.297s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_common/share/cmrdv_common/package.zsh'
+[77.297s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/driverless/install/cmrdv_common/share/colcon-core/packages/cmrdv_common)
+[77.298s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/driverless/cmrdv_ws/src/cmrdv_actuators' with build type 'ament_python'
+[77.298s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_actuators', 'ament_prefix_path')
+[77.308s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_actuators/share/cmrdv_actuators/hook/ament_prefix_path.ps1'
+[77.309s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_actuators/share/cmrdv_actuators/hook/ament_prefix_path.dsv'
+[77.309s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_actuators/share/cmrdv_actuators/hook/ament_prefix_path.sh'
+[77.318s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[77.319s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[77.339s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/driverless/cmrdv_ws/src/cmrdv_controls' with build type 'ament_python'
+[77.339s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_controls', 'ament_prefix_path')
+[77.353s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_controls/share/cmrdv_controls/hook/ament_prefix_path.ps1'
+[77.354s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_controls/share/cmrdv_controls/hook/ament_prefix_path.dsv'
+[77.354s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_controls/share/cmrdv_controls/hook/ament_prefix_path.sh'
+[77.368s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[77.368s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[77.391s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/driverless/cmrdv_ws/src/cmrdv_planning' with build type 'ament_python'
+[77.391s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_planning', 'ament_prefix_path')
+[77.402s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_planning/share/cmrdv_planning/hook/ament_prefix_path.ps1'
+[77.403s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_planning/share/cmrdv_planning/hook/ament_prefix_path.dsv'
+[77.403s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_planning/share/cmrdv_planning/hook/ament_prefix_path.sh'
+[77.414s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[77.414s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[77.792s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/driverless/cmrdv_ws/src/cmrdv_actuators'
+[77.800s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[77.800s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[78.153s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/driverless/cmrdv_ws/src/cmrdv_controls'
+[78.162s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[78.163s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[78.556s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/driverless/cmrdv_ws/src/cmrdv_planning'
+[78.565s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[78.565s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[79.365s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/cmrdv_ws/src/cmrdv_planning': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_planning/prefix_override:/driverless/install/cmrdv_planning/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_planning build --build-base /driverless/build/cmrdv_planning/build install --record /driverless/build/cmrdv_planning/install.log --single-version-externally-managed
+[79.398s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/cmrdv_ws/src/cmrdv_controls': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_controls/prefix_override:/driverless/install/cmrdv_controls/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_controls build --build-base /driverless/build/cmrdv_controls/build install --record /driverless/build/cmrdv_controls/install.log --single-version-externally-managed
+[79.406s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/cmrdv_ws/src/cmrdv_actuators': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_actuators/prefix_override:/driverless/install/cmrdv_actuators/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_actuators build --build-base /driverless/build/cmrdv_actuators/build install --record /driverless/build/cmrdv_actuators/install.log --single-version-externally-managed
+[79.917s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_controls' for CMake module files
+[79.917s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/cmrdv_ws/src/cmrdv_controls' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_controls/prefix_override:/driverless/install/cmrdv_controls/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_controls build --build-base /driverless/build/cmrdv_controls/build install --record /driverless/build/cmrdv_controls/install.log --single-version-externally-managed
+[79.918s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_controls' for CMake config files
+[79.919s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_controls/lib'
+[79.919s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_controls/bin'
+[79.920s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_controls/lib/pkgconfig/cmrdv_controls.pc'
+[79.920s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_controls/lib/python3.8/site-packages'
+[79.920s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_controls', 'pythonpath')
+[79.929s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_controls/share/cmrdv_controls/hook/pythonpath.ps1'
+[79.931s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_controls/share/cmrdv_controls/hook/pythonpath.dsv'
+[79.932s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_controls/share/cmrdv_controls/hook/pythonpath.sh'
+[79.933s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_controls/bin'
+[79.933s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(cmrdv_controls)
+[79.943s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_controls/share/cmrdv_controls/package.ps1'
+[79.944s] INFO:colcon.colcon_core.shell:Creating package descriptor '/driverless/install/cmrdv_controls/share/cmrdv_controls/package.dsv'
+[79.945s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_controls/share/cmrdv_controls/package.sh'
+[79.946s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_controls/share/cmrdv_controls/package.bash'
+[79.947s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_controls/share/cmrdv_controls/package.zsh'
+[79.948s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/driverless/install/cmrdv_controls/share/colcon-core/packages/cmrdv_controls)
+[79.978s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/cmrdv_ws/src/cmrdv_actuators' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_actuators/prefix_override:/driverless/install/cmrdv_actuators/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_actuators build --build-base /driverless/build/cmrdv_actuators/build install --record /driverless/build/cmrdv_actuators/install.log --single-version-externally-managed
+[79.979s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_actuators' for CMake module files
+[79.980s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_actuators' for CMake config files
+[79.980s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_actuators/lib'
+[79.980s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_actuators/bin'
+[79.981s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_actuators/lib/pkgconfig/cmrdv_actuators.pc'
+[79.981s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_actuators/lib/python3.8/site-packages'
+[79.981s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_actuators', 'pythonpath')
+[79.989s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_actuators/share/cmrdv_actuators/hook/pythonpath.ps1'
+[79.990s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_actuators/share/cmrdv_actuators/hook/pythonpath.dsv'
+[79.991s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_actuators/share/cmrdv_actuators/hook/pythonpath.sh'
+[79.991s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_actuators/bin'
+[79.991s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(cmrdv_actuators)
+[79.999s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_actuators/share/cmrdv_actuators/package.ps1'
+[80.000s] INFO:colcon.colcon_core.shell:Creating package descriptor '/driverless/install/cmrdv_actuators/share/cmrdv_actuators/package.dsv'
+[80.000s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_actuators/share/cmrdv_actuators/package.sh'
+[80.001s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_actuators/share/cmrdv_actuators/package.bash'
+[80.001s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_actuators/share/cmrdv_actuators/package.zsh'
+[80.001s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/driverless/install/cmrdv_actuators/share/colcon-core/packages/cmrdv_actuators)
+[80.015s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_planning' for CMake module files
+[80.017s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/cmrdv_ws/src/cmrdv_planning' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_planning/prefix_override:/driverless/install/cmrdv_planning/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_planning build --build-base /driverless/build/cmrdv_planning/build install --record /driverless/build/cmrdv_planning/install.log --single-version-externally-managed
+[80.017s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_planning' for CMake config files
+[80.018s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_planning/lib'
+[80.018s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_planning/bin'
+[80.018s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_planning/lib/pkgconfig/cmrdv_planning.pc'
+[80.018s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_planning/lib/python3.8/site-packages'
+[80.018s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_planning', 'pythonpath')
+[80.024s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_planning/share/cmrdv_planning/hook/pythonpath.ps1'
+[80.025s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_planning/share/cmrdv_planning/hook/pythonpath.dsv'
+[80.025s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_planning/share/cmrdv_planning/hook/pythonpath.sh'
+[80.026s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_planning/bin'
+[80.026s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(cmrdv_planning)
+[80.033s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_planning/share/cmrdv_planning/package.ps1'
+[80.034s] INFO:colcon.colcon_core.shell:Creating package descriptor '/driverless/install/cmrdv_planning/share/cmrdv_planning/package.dsv'
+[80.034s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_planning/share/cmrdv_planning/package.sh'
+[80.035s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_planning/share/cmrdv_planning/package.bash'
+[80.036s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_planning/share/cmrdv_planning/package.zsh'
+[80.037s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/driverless/install/cmrdv_planning/share/colcon-core/packages/cmrdv_planning)
+[80.037s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/driverless/cmrdv_ws/src/cmrdv_bringup' with build type 'ament_python'
+[80.038s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_bringup', 'ament_prefix_path')
+[80.048s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_bringup/share/cmrdv_bringup/hook/ament_prefix_path.ps1'
+[80.049s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_bringup/share/cmrdv_bringup/hook/ament_prefix_path.dsv'
+[80.050s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_bringup/share/cmrdv_bringup/hook/ament_prefix_path.sh'
+[80.063s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[80.064s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[80.446s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/driverless/cmrdv_ws/src/cmrdv_bringup'
+[80.456s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[80.456s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[81.078s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/driverless/cmrdv_ws/src/cmrdv_bringup': AMENT_PREFIX_PATH=/driverless/install/cmrdv_planning:/driverless/install/cmrdv_controls:/driverless/install/cmrdv_actuators:/driverless/install/cmrdv_perceptions:/driverless/install/cmrdv_common:/driverless/install/cmrdv_collection:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_bringup/prefix_override:/driverless/install/cmrdv_bringup/lib/python3.8/site-packages:/driverless/install/cmrdv_planning/lib/python3.8/site-packages:/driverless/install/cmrdv_controls/lib/python3.8/site-packages:/driverless/install/cmrdv_actuators/lib/python3.8/site-packages:/driverless/install/cmrdv_perceptions/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_collection/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_bringup build --build-base /driverless/build/cmrdv_bringup/build install --record /driverless/build/cmrdv_bringup/install.log --install-scripts $base/lib/cmrdv_bringup --single-version-externally-managed
+[81.474s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_bringup' for CMake module files
+[81.474s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/driverless/cmrdv_ws/src/cmrdv_bringup' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_planning:/driverless/install/cmrdv_controls:/driverless/install/cmrdv_actuators:/driverless/install/cmrdv_perceptions:/driverless/install/cmrdv_common:/driverless/install/cmrdv_collection:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_bringup/prefix_override:/driverless/install/cmrdv_bringup/lib/python3.8/site-packages:/driverless/install/cmrdv_planning/lib/python3.8/site-packages:/driverless/install/cmrdv_controls/lib/python3.8/site-packages:/driverless/install/cmrdv_actuators/lib/python3.8/site-packages:/driverless/install/cmrdv_perceptions/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_collection/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_bringup build --build-base /driverless/build/cmrdv_bringup/build install --record /driverless/build/cmrdv_bringup/install.log --install-scripts $base/lib/cmrdv_bringup --single-version-externally-managed
+[81.475s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_bringup' for CMake config files
+[81.475s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_bringup/lib'
+[81.475s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_bringup/bin'
+[81.476s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_bringup/lib/pkgconfig/cmrdv_bringup.pc'
+[81.476s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_bringup/lib/python3.8/site-packages'
+[81.476s] Level 1:colcon.colcon_core.shell:create_environment_hook('cmrdv_bringup', 'pythonpath')
+[81.486s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_bringup/share/cmrdv_bringup/hook/pythonpath.ps1'
+[81.487s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/driverless/install/cmrdv_bringup/share/cmrdv_bringup/hook/pythonpath.dsv'
+[81.488s] INFO:colcon.colcon_core.shell:Creating environment hook '/driverless/install/cmrdv_bringup/share/cmrdv_bringup/hook/pythonpath.sh'
+[81.489s] Level 1:colcon.colcon_core.environment:checking '/driverless/install/cmrdv_bringup/bin'
+[81.489s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(cmrdv_bringup)
+[81.498s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_bringup/share/cmrdv_bringup/package.ps1'
+[81.499s] INFO:colcon.colcon_core.shell:Creating package descriptor '/driverless/install/cmrdv_bringup/share/cmrdv_bringup/package.dsv'
+[81.499s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_bringup/share/cmrdv_bringup/package.sh'
+[81.500s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_bringup/share/cmrdv_bringup/package.bash'
+[81.500s] INFO:colcon.colcon_core.shell:Creating package script '/driverless/install/cmrdv_bringup/share/cmrdv_bringup/package.zsh'
+[81.501s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/driverless/install/cmrdv_bringup/share/colcon-core/packages/cmrdv_bringup)
+[81.501s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[81.502s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[81.502s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[81.502s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[81.521s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.notify_send': Could not find 'notify-send'
+[81.521s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[81.521s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[81.522s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[81.529s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.Notifications was not provided by any .service files
+[81.530s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[81.540s] INFO:colcon.colcon_core.shell:Creating prefix script '/driverless/install/local_setup.ps1'
+[81.542s] INFO:colcon.colcon_core.shell:Creating prefix util module '/driverless/install/_local_setup_util_ps1.py'
+[81.543s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/driverless/install/setup.ps1'
+[81.550s] INFO:colcon.colcon_core.shell:Creating prefix script '/driverless/install/local_setup.sh'
+[81.551s] INFO:colcon.colcon_core.shell:Creating prefix util module '/driverless/install/_local_setup_util_sh.py'
+[81.552s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/driverless/install/setup.sh'
+[81.560s] INFO:colcon.colcon_core.shell:Creating prefix script '/driverless/install/local_setup.bash'
+[81.561s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/driverless/install/setup.bash'
+[81.570s] INFO:colcon.colcon_core.shell:Creating prefix script '/driverless/install/local_setup.zsh'
+[81.571s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/driverless/install/setup.zsh'

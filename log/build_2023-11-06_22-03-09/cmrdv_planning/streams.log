@@ -1,0 +1,24 @@
+[1.250s] Invoking command in '/driverless/cmrdv_ws/src/cmrdv_planning': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${CMAKE_PREFIX_PATH} LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_planning/prefix_override:/driverless/install/cmrdv_planning/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_planning build --build-base /driverless/build/cmrdv_planning/build install --record /driverless/build/cmrdv_planning/install.log --single-version-externally-managed
+[1.608s] running egg_info
+[1.609s] writing ../../../build/cmrdv_planning/cmrdv_planning.egg-info/PKG-INFO
+[1.611s] writing dependency_links to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/dependency_links.txt
+[1.611s] writing entry points to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/entry_points.txt
+[1.611s] writing requirements to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/requires.txt
+[1.611s] writing top-level names to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/top_level.txt
+[1.681s] reading manifest file '../../../build/cmrdv_planning/cmrdv_planning.egg-info/SOURCES.txt'
+[1.683s] writing manifest file '../../../build/cmrdv_planning/cmrdv_planning.egg-info/SOURCES.txt'
+[1.683s] running build
+[1.683s] running build_py
+[1.684s] copying cmrdv_planning/SLAM_Validation.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning
+[1.685s] running install
+[1.687s] running install_lib
+[1.690s] copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/SLAM_Validation.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning
+[1.692s] byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/SLAM_Validation.py to SLAM_Validation.cpython-38.pyc
+[1.697s] running install_data
+[1.698s] running install_egg_info
+[1.701s] removing '/driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning-0.0.0-py3.8.egg-info' (and everything under it)
+[1.701s] Copying ../../../build/cmrdv_planning/cmrdv_planning.egg-info to /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning-0.0.0-py3.8.egg-info
+[1.703s] running install_scripts
+[1.732s] Installing SLAM_test script to /driverless/install/cmrdv_planning/lib/cmrdv_planning
+[1.733s] writing list of installed files to '/driverless/build/cmrdv_planning/install.log'
+[1.776s] Invoked command in '/driverless/cmrdv_ws/src/cmrdv_planning' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${CMAKE_PREFIX_PATH} LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_planning/prefix_override:/driverless/install/cmrdv_planning/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_planning build --build-base /driverless/build/cmrdv_planning/build install --record /driverless/build/cmrdv_planning/install.log --single-version-externally-managed

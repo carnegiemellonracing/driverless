@@ -1,0 +1,6 @@
+Invoking command in '/driverless/build/eufs_msgs': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /driverless/cmrdv_ws/src/eufs_msgs -DCMAKE_INSTALL_PREFIX=/driverless/install/eufs_msgs
+Invoked command in '/driverless/build/eufs_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /driverless/cmrdv_ws/src/eufs_msgs -DCMAKE_INSTALL_PREFIX=/driverless/install/eufs_msgs
+Invoking command in '/driverless/build/eufs_msgs': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/build/eufs_msgs -- -j8 -l8
+Invoked command in '/driverless/build/eufs_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /driverless/build/eufs_msgs -- -j8 -l8
+Invoking command in '/driverless/build/eufs_msgs': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/build/eufs_msgs
+Invoked command in '/driverless/build/eufs_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /driverless/build/eufs_msgs

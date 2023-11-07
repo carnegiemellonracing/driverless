@@ -1,0 +1,23 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from cmrdv_interfaces/msg/CarROT.msg
+// generated code does not contain a copyright notice
+
+#include "std_msgs/msg/Header.idl"
+
+module cmrdv_interfaces {
+  module msg {
+    struct CarROT {
+      std_msgs::msg::Header header;
+
+      @verbatim (language="comment", text=
+        " relative to car")
+      double x;
+
+      double y;
+
+      double yaw;
+
+      double curvature;
+    };
+  };
+};

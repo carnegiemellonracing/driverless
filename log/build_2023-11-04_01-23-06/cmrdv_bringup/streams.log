@@ -1,0 +1,36 @@
+[1.028s] Invoking command in '/driverless/cmrdv_ws/src/cmrdv_bringup': AMENT_PREFIX_PATH=/driverless/install/cmrdv_planning:/driverless/install/cmrdv_controls:/driverless/install/cmrdv_actuators:/driverless/install/cmrdv_perceptions:/driverless/install/cmrdv_common:/driverless/install/cmrdv_collection:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_bringup/prefix_override:/driverless/install/cmrdv_bringup/lib/python3.8/site-packages:/driverless/install/cmrdv_planning/lib/python3.8/site-packages:/driverless/install/cmrdv_controls/lib/python3.8/site-packages:/driverless/install/cmrdv_actuators/lib/python3.8/site-packages:/driverless/install/cmrdv_perceptions/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_collection/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_bringup build --build-base /driverless/build/cmrdv_bringup/build install --record /driverless/build/cmrdv_bringup/install.log --install-scripts $base/lib/cmrdv_bringup --single-version-externally-managed
+[1.345s] running egg_info
+[1.345s] creating ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info
+[1.346s] writing ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/PKG-INFO
+[1.346s] writing dependency_links to ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/dependency_links.txt
+[1.347s] writing entry points to ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/entry_points.txt
+[1.347s] writing requirements to ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/requires.txt
+[1.347s] writing top-level names to ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/top_level.txt
+[1.351s] writing manifest file '../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/SOURCES.txt'
+[1.352s] reading manifest file '../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/SOURCES.txt'
+[1.353s] writing manifest file '../../../build/cmrdv_bringup/cmrdv_bringup.egg-info/SOURCES.txt'
+[1.353s] running build
+[1.353s] running install
+[1.354s] running install_data
+[1.354s] creating /driverless/install/cmrdv_bringup/share/ament_index
+[1.354s] creating /driverless/install/cmrdv_bringup/share/ament_index/resource_index
+[1.355s] creating /driverless/install/cmrdv_bringup/share/ament_index/resource_index/packages
+[1.355s] copying resource/cmrdv_bringup -> /driverless/install/cmrdv_bringup/share/ament_index/resource_index/packages
+[1.355s] copying package.xml -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.355s] copying launch/dim.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.355s] copying launch/data.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.355s] copying launch/driver.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.355s] copying launch/pipeline.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.356s] copying launch/test_dim.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.356s] copying launch/path_planning.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.356s] copying launch/perceptions.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.356s] copying launch/controls.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.357s] copying launch/controls_auto.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.357s] copying launch/full_stack.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.357s] copying launch/test_pipeline.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.357s] copying launch/actuators.launch.py -> /driverless/install/cmrdv_bringup/share/cmrdv_bringup
+[1.357s] running install_egg_info
+[1.362s] Copying ../../../build/cmrdv_bringup/cmrdv_bringup.egg-info to /driverless/install/cmrdv_bringup/lib/python3.8/site-packages/cmrdv_bringup-0.0.0-py3.8.egg-info
+[1.363s] running install_scripts
+[1.388s] writing list of installed files to '/driverless/build/cmrdv_bringup/install.log'
+[1.424s] Invoked command in '/driverless/cmrdv_ws/src/cmrdv_bringup' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_planning:/driverless/install/cmrdv_controls:/driverless/install/cmrdv_actuators:/driverless/install/cmrdv_perceptions:/driverless/install/cmrdv_common:/driverless/install/cmrdv_collection:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_bringup/prefix_override:/driverless/install/cmrdv_bringup/lib/python3.8/site-packages:/driverless/install/cmrdv_planning/lib/python3.8/site-packages:/driverless/install/cmrdv_controls/lib/python3.8/site-packages:/driverless/install/cmrdv_actuators/lib/python3.8/site-packages:/driverless/install/cmrdv_perceptions/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_collection/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_bringup build --build-base /driverless/build/cmrdv_bringup/build install --record /driverless/build/cmrdv_bringup/install.log --install-scripts $base/lib/cmrdv_bringup --single-version-externally-managed

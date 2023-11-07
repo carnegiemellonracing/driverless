@@ -1,0 +1,48 @@
+// generated from rosidl_generator_c/resource/idl__struct.h.em
+// with input from cmrdv_interfaces:msg/ConeList.idl
+// generated code does not contain a copyright notice
+
+#ifndef CMRDV_INTERFACES__MSG__DETAIL__CONE_LIST__STRUCT_H_
+#define CMRDV_INTERFACES__MSG__DETAIL__CONE_LIST__STRUCT_H_
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
+
+// Constants defined in the message
+
+// Include directives for member types
+// Member 'blue_cones'
+// Member 'yellow_cones'
+// Member 'orange_cones'
+#include "geometry_msgs/msg/detail/point__struct.h"
+
+// Struct defined in msg/ConeList in the package cmrdv_interfaces.
+typedef struct cmrdv_interfaces__msg__ConeList
+{
+  geometry_msgs__msg__Point__Sequence blue_cones;
+  geometry_msgs__msg__Point__Sequence yellow_cones;
+  geometry_msgs__msg__Point__Sequence orange_cones;
+} cmrdv_interfaces__msg__ConeList;
+
+// Struct for a sequence of cmrdv_interfaces__msg__ConeList.
+typedef struct cmrdv_interfaces__msg__ConeList__Sequence
+{
+  cmrdv_interfaces__msg__ConeList * data;
+  /// The number of valid items in data
+  size_t size;
+  /// The number of allocated items in data
+  size_t capacity;
+} cmrdv_interfaces__msg__ConeList__Sequence;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  // CMRDV_INTERFACES__MSG__DETAIL__CONE_LIST__STRUCT_H_

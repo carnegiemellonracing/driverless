@@ -1,0 +1,46 @@
+running egg_info
+creating ../../../build/cmrdv_controls/cmrdv_controls.egg-info
+writing ../../../build/cmrdv_controls/cmrdv_controls.egg-info/PKG-INFO
+writing dependency_links to ../../../build/cmrdv_controls/cmrdv_controls.egg-info/dependency_links.txt
+writing entry points to ../../../build/cmrdv_controls/cmrdv_controls.egg-info/entry_points.txt
+writing requirements to ../../../build/cmrdv_controls/cmrdv_controls.egg-info/requires.txt
+writing top-level names to ../../../build/cmrdv_controls/cmrdv_controls.egg-info/top_level.txt
+writing manifest file '../../../build/cmrdv_controls/cmrdv_controls.egg-info/SOURCES.txt'
+reading manifest file '../../../build/cmrdv_controls/cmrdv_controls.egg-info/SOURCES.txt'
+writing manifest file '../../../build/cmrdv_controls/cmrdv_controls.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /driverless/build/cmrdv_controls/build
+creating /driverless/build/cmrdv_controls/build/lib
+creating /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+copying cmrdv_controls/__init__.py -> /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+copying cmrdv_controls/state_spoofer.py -> /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+copying cmrdv_controls/controller_tasks.py -> /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+copying cmrdv_controls/controller_node.py -> /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+copying cmrdv_controls/controller_autotest.py -> /driverless/build/cmrdv_controls/build/lib/cmrdv_controls
+running install
+running install_lib
+creating /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+copying /driverless/build/cmrdv_controls/build/lib/cmrdv_controls/__init__.py -> /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+copying /driverless/build/cmrdv_controls/build/lib/cmrdv_controls/state_spoofer.py -> /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+copying /driverless/build/cmrdv_controls/build/lib/cmrdv_controls/controller_tasks.py -> /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+copying /driverless/build/cmrdv_controls/build/lib/cmrdv_controls/controller_node.py -> /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+copying /driverless/build/cmrdv_controls/build/lib/cmrdv_controls/controller_autotest.py -> /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls
+byte-compiling /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls/__init__.py to __init__.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls/state_spoofer.py to state_spoofer.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls/controller_tasks.py to controller_tasks.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls/controller_node.py to controller_node.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls/controller_autotest.py to controller_autotest.cpython-38.pyc
+running install_data
+creating /driverless/install/cmrdv_controls/share/ament_index
+creating /driverless/install/cmrdv_controls/share/ament_index/resource_index
+creating /driverless/install/cmrdv_controls/share/ament_index/resource_index/packages
+copying resource/cmrdv_controls -> /driverless/install/cmrdv_controls/share/ament_index/resource_index/packages
+copying package.xml -> /driverless/install/cmrdv_controls/share/cmrdv_controls
+running install_egg_info
+Copying ../../../build/cmrdv_controls/cmrdv_controls.egg-info to /driverless/install/cmrdv_controls/lib/python3.8/site-packages/cmrdv_controls-0.0.0-py3.8.egg-info
+running install_scripts
+Installing autotest_controller script to /driverless/install/cmrdv_controls/lib/cmrdv_controls
+Installing controller script to /driverless/install/cmrdv_controls/lib/cmrdv_controls
+Installing state_spoofer script to /driverless/install/cmrdv_controls/lib/cmrdv_controls
+writing list of installed files to '/driverless/build/cmrdv_controls/install.log'

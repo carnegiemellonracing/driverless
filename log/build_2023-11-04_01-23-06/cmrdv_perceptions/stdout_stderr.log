@@ -1,0 +1,54 @@
+running egg_info
+creating ../../../build/cmrdv_perceptions/cmrdv_perceptions.egg-info
+writing ../../../build/cmrdv_perceptions/cmrdv_perceptions.egg-info/PKG-INFO
+writing dependency_links to ../../../build/cmrdv_perceptions/cmrdv_perceptions.egg-info/dependency_links.txt
+writing entry points to ../../../build/cmrdv_perceptions/cmrdv_perceptions.egg-info/entry_points.txt
+writing requirements to ../../../build/cmrdv_perceptions/cmrdv_perceptions.egg-info/requires.txt
+writing top-level names to ../../../build/cmrdv_perceptions/cmrdv_perceptions.egg-info/top_level.txt
+writing manifest file '../../../build/cmrdv_perceptions/cmrdv_perceptions.egg-info/SOURCES.txt'
+reading manifest file '../../../build/cmrdv_perceptions/cmrdv_perceptions.egg-info/SOURCES.txt'
+writing manifest file '../../../build/cmrdv_perceptions/cmrdv_perceptions.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /driverless/build/cmrdv_perceptions/build
+creating /driverless/build/cmrdv_perceptions/build/lib
+creating /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions
+copying cmrdv_perceptions/numpy_test_sub.py -> /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions
+copying cmrdv_perceptions/map.py -> /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions
+copying cmrdv_perceptions/StereoCamNode.py -> /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions
+copying cmrdv_perceptions/__init__.py -> /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions
+copying cmrdv_perceptions/numpy_test_pub.py -> /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions
+copying cmrdv_perceptions/CVVisNode.py -> /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions
+copying cmrdv_perceptions/LidarNode.py -> /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions
+running install
+running install_lib
+creating /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions
+copying /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions/numpy_test_sub.py -> /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions
+copying /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions/map.py -> /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions
+copying /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions/StereoCamNode.py -> /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions
+copying /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions/__init__.py -> /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions
+copying /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions/numpy_test_pub.py -> /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions
+copying /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions/CVVisNode.py -> /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions
+copying /driverless/build/cmrdv_perceptions/build/lib/cmrdv_perceptions/LidarNode.py -> /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions
+byte-compiling /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions/numpy_test_sub.py to numpy_test_sub.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions/map.py to map.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions/StereoCamNode.py to StereoCamNode.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions/__init__.py to __init__.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions/numpy_test_pub.py to numpy_test_pub.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions/CVVisNode.py to CVVisNode.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions/LidarNode.py to LidarNode.cpython-38.pyc
+running install_data
+creating /driverless/install/cmrdv_perceptions/share/ament_index
+creating /driverless/install/cmrdv_perceptions/share/ament_index/resource_index
+creating /driverless/install/cmrdv_perceptions/share/ament_index/resource_index/packages
+copying resource/cmrdv_perceptions -> /driverless/install/cmrdv_perceptions/share/ament_index/resource_index/packages
+copying package.xml -> /driverless/install/cmrdv_perceptions/share/cmrdv_perceptions
+running install_egg_info
+Copying ../../../build/cmrdv_perceptions/cmrdv_perceptions.egg-info to /driverless/install/cmrdv_perceptions/lib/python3.8/site-packages/cmrdv_perceptions-0.0.0-py3.8.egg-info
+running install_scripts
+Installing lidar script to /driverless/install/cmrdv_perceptions/lib/cmrdv_perceptions
+Installing numpy_test_pub script to /driverless/install/cmrdv_perceptions/lib/cmrdv_perceptions
+Installing numpy_test_sub script to /driverless/install/cmrdv_perceptions/lib/cmrdv_perceptions
+Installing stereo_vision script to /driverless/install/cmrdv_perceptions/lib/cmrdv_perceptions
+Installing visualization script to /driverless/install/cmrdv_perceptions/lib/cmrdv_perceptions
+writing list of installed files to '/driverless/build/cmrdv_perceptions/install.log'

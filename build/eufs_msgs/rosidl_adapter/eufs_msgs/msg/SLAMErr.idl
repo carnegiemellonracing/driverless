@@ -1,0 +1,32 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from eufs_msgs/msg/SLAMErr.msg
+// generated code does not contain a copyright notice
+
+#include "std_msgs/msg/Header.idl"
+
+module eufs_msgs {
+  module msg {
+    @verbatim (language="comment", text=
+      " Message for the error of our SLAM algorithm. All of them are based on euclidean distances, besides the map similarity," "\n"
+      " which can be interpreted as a percentage of how well our algorithm describes the map.")
+    struct SLAMErr {
+      std_msgs::msg::Header header;
+
+      double x_err;
+
+      double y_err;
+
+      double z_err;
+
+      double x_orient_err;
+
+      double y_orient_err;
+
+      double z_orient_err;
+
+      double w_orient_err;
+
+      double map_similarity;
+    };
+  };
+};

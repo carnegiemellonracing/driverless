@@ -1,0 +1,51 @@
+[2.097s] Invoking command in '/driverless/cmrdv_ws/src/cmrdv_actuators': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_actuators/prefix_override:/driverless/install/cmrdv_actuators/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_actuators build --build-base /driverless/build/cmrdv_actuators/build install --record /driverless/build/cmrdv_actuators/install.log --single-version-externally-managed
+[2.519s] running egg_info
+[2.520s] creating ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info
+[2.521s] writing ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/PKG-INFO
+[2.521s] writing dependency_links to ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/dependency_links.txt
+[2.521s] writing entry points to ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/entry_points.txt
+[2.522s] writing requirements to ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/requires.txt
+[2.523s] writing top-level names to ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/top_level.txt
+[2.524s] writing manifest file '../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/SOURCES.txt'
+[2.574s] reading manifest file '../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/SOURCES.txt'
+[2.575s] writing manifest file '../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/SOURCES.txt'
+[2.575s] running build
+[2.575s] running build_py
+[2.575s] creating /driverless/build/cmrdv_actuators/build
+[2.575s] creating /driverless/build/cmrdv_actuators/build/lib
+[2.575s] creating /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+[2.576s] copying cmrdv_actuators/brakes_node.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+[2.576s] copying cmrdv_actuators/__init__.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+[2.576s] copying cmrdv_actuators/fsm_node.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+[2.576s] copying cmrdv_actuators/steering_node.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+[2.576s] copying cmrdv_actuators/testFSM.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+[2.576s] copying cmrdv_actuators/driver_board.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+[2.576s] running install
+[2.577s] running install_lib
+[2.578s] creating /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+[2.578s] copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/brakes_node.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+[2.579s] copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/__init__.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+[2.579s] copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/fsm_node.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+[2.579s] copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/steering_node.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+[2.579s] copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/testFSM.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+[2.579s] copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/driver_board.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+[2.580s] byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/brakes_node.py to brakes_node.cpython-38.pyc
+[2.583s] byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/__init__.py to __init__.cpython-38.pyc
+[2.583s] byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/fsm_node.py to fsm_node.cpython-38.pyc
+[2.585s] byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/steering_node.py to steering_node.cpython-38.pyc
+[2.586s] byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/testFSM.py to testFSM.cpython-38.pyc
+[2.587s] byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/driver_board.py to driver_board.cpython-38.pyc
+[2.588s] running install_data
+[2.588s] creating /driverless/install/cmrdv_actuators/share/ament_index
+[2.589s] creating /driverless/install/cmrdv_actuators/share/ament_index/resource_index
+[2.589s] creating /driverless/install/cmrdv_actuators/share/ament_index/resource_index/packages
+[2.589s] copying resource/cmrdv_actuators -> /driverless/install/cmrdv_actuators/share/ament_index/resource_index/packages
+[2.589s] copying package.xml -> /driverless/install/cmrdv_actuators/share/cmrdv_actuators
+[2.589s] running install_egg_info
+[2.592s] Copying ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info to /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators-0.0.0-py3.8.egg-info
+[2.609s] running install_scripts
+[2.621s] Installing brake script to /driverless/install/cmrdv_actuators/lib/cmrdv_actuators
+[2.622s] Installing fsm script to /driverless/install/cmrdv_actuators/lib/cmrdv_actuators
+[2.622s] Installing steering script to /driverless/install/cmrdv_actuators/lib/cmrdv_actuators
+[2.623s] writing list of installed files to '/driverless/build/cmrdv_actuators/install.log'
+[2.669s] Invoked command in '/driverless/cmrdv_ws/src/cmrdv_actuators' returned '0': AMENT_PREFIX_PATH=/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs LD_LIBRARY_PATH=/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/driverless/build/cmrdv_actuators/prefix_override:/driverless/install/cmrdv_actuators/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/cmrdv_actuators build --build-base /driverless/build/cmrdv_actuators/build install --record /driverless/build/cmrdv_actuators/install.log --single-version-externally-managed

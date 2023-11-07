@@ -1,0 +1,21 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from cmrdv_interfaces/msg/SimDataFrame.msg
+// generated code does not contain a copyright notice
+
+#include "eufs_msgs/msg/ConeArrayWithCovariance.idl"
+#include "sensor_msgs/msg/Image.idl"
+#include "sensor_msgs/msg/PointCloud2.idl"
+
+module cmrdv_interfaces {
+  module msg {
+    struct SimDataFrame {
+      eufs_msgs::msg::ConeArrayWithCovariance gt_cones;
+
+      sensor_msgs::msg::Image zed_left_img;
+
+      sensor_msgs::msg::PointCloud2 vlp16_pts;
+
+      sensor_msgs::msg::PointCloud2 zed_pts;
+    };
+  };
+};

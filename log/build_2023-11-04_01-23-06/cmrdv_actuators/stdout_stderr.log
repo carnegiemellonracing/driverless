@@ -1,0 +1,49 @@
+running egg_info
+creating ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info
+writing ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/PKG-INFO
+writing dependency_links to ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/dependency_links.txt
+writing entry points to ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/entry_points.txt
+writing requirements to ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/requires.txt
+writing top-level names to ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/top_level.txt
+writing manifest file '../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/SOURCES.txt'
+reading manifest file '../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/SOURCES.txt'
+writing manifest file '../../../build/cmrdv_actuators/cmrdv_actuators.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /driverless/build/cmrdv_actuators/build
+creating /driverless/build/cmrdv_actuators/build/lib
+creating /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+copying cmrdv_actuators/brakes_node.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+copying cmrdv_actuators/__init__.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+copying cmrdv_actuators/fsm_node.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+copying cmrdv_actuators/steering_node.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+copying cmrdv_actuators/testFSM.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+copying cmrdv_actuators/driver_board.py -> /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators
+running install
+running install_lib
+creating /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/brakes_node.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/__init__.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/fsm_node.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/steering_node.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/testFSM.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+copying /driverless/build/cmrdv_actuators/build/lib/cmrdv_actuators/driver_board.py -> /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators
+byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/brakes_node.py to brakes_node.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/__init__.py to __init__.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/fsm_node.py to fsm_node.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/steering_node.py to steering_node.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/testFSM.py to testFSM.cpython-38.pyc
+byte-compiling /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators/driver_board.py to driver_board.cpython-38.pyc
+running install_data
+creating /driverless/install/cmrdv_actuators/share/ament_index
+creating /driverless/install/cmrdv_actuators/share/ament_index/resource_index
+creating /driverless/install/cmrdv_actuators/share/ament_index/resource_index/packages
+copying resource/cmrdv_actuators -> /driverless/install/cmrdv_actuators/share/ament_index/resource_index/packages
+copying package.xml -> /driverless/install/cmrdv_actuators/share/cmrdv_actuators
+running install_egg_info
+Copying ../../../build/cmrdv_actuators/cmrdv_actuators.egg-info to /driverless/install/cmrdv_actuators/lib/python3.8/site-packages/cmrdv_actuators-0.0.0-py3.8.egg-info
+running install_scripts
+Installing brake script to /driverless/install/cmrdv_actuators/lib/cmrdv_actuators
+Installing fsm script to /driverless/install/cmrdv_actuators/lib/cmrdv_actuators
+Installing steering script to /driverless/install/cmrdv_actuators/lib/cmrdv_actuators
+writing list of installed files to '/driverless/build/cmrdv_actuators/install.log'

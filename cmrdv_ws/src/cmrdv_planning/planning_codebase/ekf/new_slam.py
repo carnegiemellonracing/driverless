@@ -81,7 +81,11 @@ def ekf_slam(xEst, PEst, u, z, dt, logger):
     # logger.info(f'Landmark Update: {xEst[0, 0]}, {xEst[1, 0]}')
     # logger.info(f'\n\n')
     xEst[2] = pi_2_pi(xEst[2])
-
+    #PEst = pose estimate
+    #xEst = x estimate
+    print("printing out what's in xEst")
+    for thing in xEst:
+        print(thing)
     return xEst, PEst, cones
 
 

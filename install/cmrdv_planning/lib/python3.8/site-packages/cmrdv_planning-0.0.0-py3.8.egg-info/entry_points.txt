@@ -1,0 +1,3 @@
+[console_scripts]
+SLAM_test = cmrdv_planning.SLAM_Validation:main
+

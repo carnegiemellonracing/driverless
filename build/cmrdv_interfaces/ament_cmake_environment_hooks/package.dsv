@@ -1,0 +1,4 @@
+source;share/cmrdv_interfaces/local_setup.bash
+source;share/cmrdv_interfaces/local_setup.dsv
+source;share/cmrdv_interfaces/local_setup.sh
+source;share/cmrdv_interfaces/local_setup.zsh

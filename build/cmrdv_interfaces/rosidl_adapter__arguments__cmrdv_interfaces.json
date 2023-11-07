@@ -1,0 +1,16 @@
+{
+  "package_name": "cmrdv_interfaces",
+  "non_idl_tuples": [
+    "/driverless/cmrdv_ws/src/cmrdv_interfaces:msg/DataFrame.msg",
+    "/driverless/cmrdv_ws/src/cmrdv_interfaces:msg/SimDataFrame.msg",
+    "/driverless/cmrdv_ws/src/cmrdv_interfaces:msg/ConeList.msg",
+    "/driverless/cmrdv_ws/src/cmrdv_interfaces:msg/VehicleState.msg",
+    "/driverless/cmrdv_ws/src/cmrdv_interfaces:msg/CarROT.msg",
+    "/driverless/cmrdv_ws/src/cmrdv_interfaces:msg/ControlAction.msg",
+    "/driverless/cmrdv_ws/src/cmrdv_interfaces:msg/ConePositions.msg",
+    "/driverless/cmrdv_ws/src/cmrdv_interfaces:msg/Heartbeat.msg",
+    "/driverless/cmrdv_ws/src/cmrdv_interfaces:msg/Points.msg",
+    "/driverless/cmrdv_ws/src/cmrdv_interfaces:msg/Brakes.msg",
+    "/driverless/cmrdv_ws/src/cmrdv_interfaces:msg/PairROT.msg"
+  ]
+}
