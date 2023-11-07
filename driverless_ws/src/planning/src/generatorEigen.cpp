@@ -149,7 +149,7 @@ Eigen::MatrixXd& MidpointGenerator::generate_points(perceptionsData perceptions_
         // gsl_matrix_free(right);
         return midpoint_mat;
     }
-    double size = std::min(perceptions_data.bluecones.size(),perceptions_data.yellowcones.size());
+    int size = std::min(perceptions_data.bluecones.size(),perceptions_data.yellowcones.size());
         Eigen::MatrixXd left(2,size+1);
         Eigen::MatrixXd right(2,size+1);
         for(int i=0;i<perceptions_data.yellowcones.size();i++){
