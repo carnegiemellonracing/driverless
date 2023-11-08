@@ -1,0 +1,2 @@
+Invoking command in '/driverless/driverless_ws/src/build/planning': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /driverless/driverless_ws/src/planning -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/driverless/driverless_ws/src/install/planning
+Invoked command in '/driverless/driverless_ws/src/build/planning' returned '1': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /driverless/driverless_ws/src/planning -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/driverless/driverless_ws/src/install/planning
