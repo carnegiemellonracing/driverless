@@ -408,7 +408,7 @@ class SLAMSubscriber(Node):
         else:
             self.missed_states += 1
         
-    #Finds the euclidian distance between (x1, y1) and (x2, y2)
+    #Finds the euclidean distance between (x1, y1) and (x2, y2)
     def euclid_dist(self, x1, y1, x2, y2):
         return math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
     
