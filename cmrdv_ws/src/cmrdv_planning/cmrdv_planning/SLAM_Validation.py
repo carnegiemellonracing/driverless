@@ -367,9 +367,10 @@ class SLAMSubscriber(Node):
             if pos is not None:   
                 if abs(pos[2] - self.mean_error) > 2 * self.stdev_error:
                     self.bad_states += 1
+        self.print_model_acc()
         
     #Checks if the closest_data entry at ind is empty of it the current error is less
-    def better_or_empty(closest_data, error, ind):
+    def better_or_empty(self, closest_data, error, ind):
         if closest_data[ind] is not None:
             return error < closest_data[ind][2]
         return True
@@ -408,7 +409,7 @@ class SLAMSubscriber(Node):
             self.missed_states += 1
         
     #Finds the euclidian distance between (x1, y1) and (x2, y2)
-    def euclid_dist(x1, y1, x2, y2):
+    def euclid_dist(self, x1, y1, x2, y2):
         return math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
     
 
