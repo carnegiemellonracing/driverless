@@ -7,7 +7,7 @@
   endif()
 
   if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -O0)
   endif()
 
   find_package(ament_cmake REQUIRED)
@@ -18,7 +18,7 @@
   find_package(Eigen3 3.3 REQUIRED)
   find_package(GSL REQUIRED)
 
-  add_executable(midpoint_test src/midpoint.cpp src/generatorEigen.cpp src/raceline/racelineEigen.cpp)
+  add_executable(midpoint_test src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
   # add_executable(midline_test src/generator.cpp src/raceline/raceline.cpp)
   ament_target_dependencies(midpoint_test rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
   # ament_target_dependencies(midline_test rclcpp std_msgs geometry_msgs eufs_msgs GSL)
@@ -27,22 +27,4 @@
   midpoint_test
   DESTINATION lib/${PROJECT_NAME})
 
-
-
-
-  # add_executable(talker src/talker.cpp)
-  # ament_target_dependencies(talker rclcpp std_msgs geometry_msgs eufs_msgs)
-
-  # install(TARGETS
-  # talker
-  # DESTINATION lib/${PROJECT_NAME})
-
-
-  # add_executable(listener src/listener.cpp)
-  # ament_target_dependencies(listener rclcpp std_msgs geometry_msgs eufs_msgs)
-
-  # install(TARGETS
-  # talker
-  # listener
-  # DESTINATION lib/${PROJECT_NAME})
   ament_package()

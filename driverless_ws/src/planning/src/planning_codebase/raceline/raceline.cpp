@@ -1,32 +1,26 @@
-#include <gsl/gsl_poly.h>
-#include <gsl/gsl_block.h>
-#include <gsl/gsl_linalg.h>
-#include <gsl/gsl_interp.h>
-#include <gsl/gsl_spline.h>
-#include <gsl/gsl_poly.h>
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_integration.h>
-#include <vector>
 #include "raceline.hpp"
+#include <Eigen/Dense>
 // #include "random.h"
 
 polynomial poly(int deg = 3){
     polynomial inst;
     inst.deg=deg;
-    inst.nums = gsl_vector_alloc(deg+1);
+    Eigen::VectorXd nums(deg+1);
+    inst.nums = nums;
+    
 	return inst;
 }
 
 polynomial poly_one(){
     polynomial p = poly(1);
-    gsl_vector_set(p.nums,0,1);
+    p.nums(0)=1;
     return p;
 }
 
 polynomial poly_root(double root){
     polynomial p = poly(1);
-    gsl_vector_set(p.nums,0,-root);
-    gsl_vector_set(p.nums,1,1);
+    p.nums(0)= -root;
+    p.nums(1)=1;
     return p;
 }
 
@@ -34,26 +28,39 @@ polynomial polyder(polynomial p){
     if (p.deg ==0) return poly(0);
     polynomial der = poly(p.deg-1);
     for(int i=0;i<p.deg;i++){
-        double coef = gsl_vector_get(p.nums,i+1)*(i+1);
-        gsl_vector_set(der.nums,i,coef);
+        double coef = p.nums(i+1)*(i+1);
+        der.nums(i)=coef;
     }
 
 	return der;
 }
+
+
 
 polynomial poly_mult(polynomial a,polynomial b){
     polynomial mult = poly(a.deg+b.deg);
 
     for(int x=0;x<=a.deg;x++){
         for(int y=0;y<=b.deg;y++){
-            gsl_vector_set(mult.nums,x+y,gsl_vector_get(mult.nums,x+y)+gsl_vector_get(a.nums,x)*gsl_vector_get(b.nums,y));
+            mult.nums(x+y)=mult.nums(x+y)+a.nums(x)*b.nums(y);
 
         }
     }
 	return mult;
 }
 
-Spline::Spline(polynomial interpolation_poly,gsl_matrix *points_mat,gsl_matrix *rotated,gsl_matrix *Q_mat, gsl_vector *translation,polynomial first, polynomial second, int path, int sort_ind)
+double poly_eval(polynomial a,double x){
+    double result =0;
+    double xval=1;
+    for(int i=0;i<=a.deg;i++){
+        result += a.nums(i)*xval;
+        xval*=x;
+    }
+    return result;
+}
+
+
+Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd& points_mat,Eigen::MatrixXd& rotated,Eigen::MatrixXd& Q_mat, Eigen::VectorXd& translation,polynomial first, polynomial second, int path, int sort_ind)
 {
     spl_poly=interpolation_poly;
     points = points_mat;
@@ -69,23 +76,17 @@ Spline::Spline(polynomial interpolation_poly,gsl_matrix *points_mat,gsl_matrix *
 
 Spline::~Spline()
 {
-    gsl_vector_free(spl_poly.nums);
-    gsl_vector_free(first_der.nums);
-    gsl_vector_free(second_der.nums);
-    gsl_vector_free(translation_vector);
-    gsl_matrix_free(Q);
-    gsl_matrix_free(points);
-    gsl_matrix_free(rotated_points);
+    //No need for this function in Eigen as it frees memory itself
 
 }
 
 double Spline::length(){
-    return arclength(this->spl_poly,gsl_matrix_get(this->rotated_points,0,0),gsl_matrix_get(this->rotated_points,0,this->rotated_points->size2-1));
+    return arclength(this->spl_poly,this->rotated_points(0,0),this->rotated_points(0,this->rotated_points.cols()-1));
 }
 
-gsl_matrix* Spline::interpolate(int number, std::pair<float, float> bounds){
-    return interpolate(*this,number,bounds);
-}
+// Eigen::MatrixXd Spline::interpolate(int number, std::pair<float, float> bounds){
+//     return interpolate(*this,number,bounds);
+// }
 
 bool Spline::operator==(Spline const & other) const{
     return this->sort_index==other.sort_index;
@@ -103,18 +104,18 @@ polynomial Spline::get_second_der(){
     return this->second_der;
 }
 
-gsl_matrix* Spline::get_points(){
+Eigen::MatrixXd&  Spline::get_points(){
     return points;}
 
-gsl_matrix* Spline::get_rotated_points(){
+Eigen::MatrixXd&  Spline::get_rotated_points(){
     return rotated_points;
 }
 
-gsl_matrix* Spline::get_Q(){
+Eigen::MatrixXd&  Spline::get_Q(){
     return Q;
 }
 
-gsl_vector* Spline::get_translation(){
+Eigen::VectorXd&  Spline::get_translation(){
     return translation_vector;
 }
 
@@ -129,15 +130,15 @@ int Spline::get_sort_index(){
 
 
 
-std::tuple<gsl_vector*,double, gsl_vector*,double> Spline::along(double progress, double point_index, int precision){
-    std::tuple<gsl_vector*,double, gsl_vector*,double> ret;
+std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double progress, double point_index, int precision){
+    std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> ret;
 
 
     double len = this->length();
 
 
-    double first_x = gsl_matrix_get(this->get_rotated_points(),0,0);
-    double last_x = gsl_matrix_get(this->get_rotated_points(),0,this->get_rotated_points()->size2);
+    double first_x = this->get_rotated_points()(0,0);
+    double last_x = this->get_rotated_points()(0,this->get_rotated_points().cols());
 
     double delta = last_x - first_x;
 
@@ -193,19 +194,20 @@ std::tuple<gsl_vector*,double, gsl_vector*,double> Spline::along(double progress
             best_length = guess_length;
             past = guess_length;
         }
-        gsl_vector *rotated_point = gsl_vector_alloc(2);
-        gsl_vector_set(rotated_point,0,best_guess);
-        gsl_vector_set(rotated_point,1,gsl_poly_eval(this->spl_poly.nums->data,this->spl_poly.deg,best_guess));
+        Eigen::VectorXd rotated_point(2);
+        rotated_point(0)=best_guess;
         
-        gsl_matrix *rotated_points = gsl_matrix_alloc(2,1);
-        gsl_matrix_set(rotated_points,0,0,rotated_point->data[0]);
-        gsl_matrix_set(rotated_points,0,1,rotated_point->data[1]);
+        rotated_point(1)=poly_eval(this->spl_poly,best_guess);
         
-        gsl_matrix *point_mat =reverse_transform(rotated_points,this->Q,this->translation_vector);
+        Eigen::MatrixXd rotated_points(2,1);
+        rotated_points(0,0)=rotated_point(0);
+        rotated_points(0,1)=rotated_point(1);
+    
+        Eigen::MatrixXd point_mat =reverse_transform(rotated_points,this->Q,this->translation_vector);
         
-        gsl_vector *point = gsl_vector_alloc(2);
-        gsl_vector_set(point,0,point_mat->data[0]);
-        gsl_vector_set(point,0,point_mat->data[1]);
+        Eigen::VectorXd point (2);
+        point(0)=point_mat(0);
+        point(1)=point_mat(1);
 
         ret = std::make_tuple(point,best_length,rotated_point,best_guess);
 
@@ -213,133 +215,137 @@ std::tuple<gsl_vector*,double, gsl_vector*,double> Spline::along(double progress
 }
 
 double Spline::getderiv(double x){
-    gsl_matrix *point_x = gsl_matrix_alloc(1,2);
-    gsl_matrix_set(point_x,0,0,x);
-    gsl_matrix_set(point_x,0,1,0);
+    Eigen::MatrixXd point_x(1,2);
+    point_x(0,0)=x;
+    point_x(0,1)=0;
 
-    gsl_matrix *gm= reverse_transform(point_x,this->Q,this->translation_vector);
-
-    return gsl_poly_eval(this->first_der.nums->data,this->first_der.deg,gm->data[0]);
+    Eigen::MatrixXd gm= reverse_transform(point_x,this->Q,this->translation_vector);
+    return poly_eval(this->first_der,gm.data()[0]);
 
 
 
 }
 
-gsl_matrix *interpolate(Spline spline,int number, std::pair<float,float> bounds){
+Eigen::MatrixXd& Spline::interpolate(int number, std::pair<float,float> bounds){
 
     if(bounds.first == -1 && bounds.second == -1){
-        double bound1 = gsl_matrix_get(spline.get_rotated_points(),0,0);
+        double bound1 = get_rotated_points()(0,0);
         // MAKE PROPER BOUND 2
-        double bound2 = gsl_matrix_get(spline.get_rotated_points(),0,spline.get_rotated_points()->size2);
+        double bound2 = get_rotated_points()(0,get_rotated_points().cols());
         bounds = std::make_pair(bound1,bound2);
     }
 
-    gsl_matrix *points = gsl_matrix_alloc(number,2);
+    Eigen::MatrixXd points(number,2);
     
     for(int i=0;i<number;i++){
         double x = bounds.first+ (bounds.second-bounds.first)*(i/(number-1));
-        double y = gsl_poly_eval(spline.get_SplPoly().nums->data,spline.get_SplPoly().deg,x);
-        gsl_matrix_set(points,i,0,x);
-        gsl_matrix_set(points,i,1,y);
+        points(i,0)=x;
+        points(i,1)=poly_eval(get_SplPoly(),x);
     }
 
     
 
 
-	gsl_matrix *ret= reverse_transform(points,spline.get_Q(),spline.get_translation());
+	Eigen::MatrixXd ret= reverse_transform(points,get_Q(),get_translation());
 
     return ret;
 }
 
-gsl_matrix* rotation_matrix_gen(gsl_matrix *pnts){
-    gsl_vector *beg= gsl_vector_alloc_col_from_matrix(pnts,0);
-    gsl_vector *end = gsl_vector_alloc_col_from_matrix(pnts,pnts->size2-1);
+Eigen::MatrixXd& rotation_matrix_gen(Eigen::MatrixXd pnts){
+    Eigen::Vector2d beg; beg << pnts.col(0);
+    Eigen::Vector2d end; end << pnts.col(pnts.cols()-1);
 
-    gsl_vector_sub(end,beg);
-    gsl_vector_free(beg);
+    end = end-beg;
 
-    double norm = gsl_blas_dnrm2(end);
+    double norm = end.norm();
 
-    double cos = gsl_vector_get(end,0)/norm;
-    double sin = gsl_vector_get(end,1)/norm;
+    double cos = end(0)/norm;
+    double sin = end(1)/norm;
 
-    gsl_vector_free(end);
-
-    gsl_matrix *ret = gsl_matrix_alloc(2,2);
-    gsl_matrix_set(ret,0,0,cos);
-    gsl_matrix_set(ret,1,0,-sin);
-    gsl_matrix_set(ret,0,1,sin);
-    gsl_matrix_set(ret,1,1,cos);
+    Eigen::MatrixXd ret(2,2);
+    ret(0,0)=cos;
+    ret(1,0)=-sin;
+    ret(0,1)=sin;
+    ret(1,1)=cos;
 
 
     return ret;
 }
 
-gsl_vector *get_translation_vector(gsl_matrix *group){
-    return gsl_vector_alloc_col_from_matrix(group,0);
+Eigen::VectorXd& get_translation_vector(Eigen::MatrixXd group){
+    Eigen::VectorXd ret; ret << group.col(0);
+    return ret;
 }
 
-gsl_matrix *transform_points(gsl_matrix *points, gsl_matrix *Q, gsl_vector *get_translation_vector){
-    gsl_matrix *temp = gsl_matrix_alloc(points->size1,points->size2);
-    for(int i=0;i<temp->size2;++i){
-        gsl_matrix_set(temp,0,i,gsl_matrix_get(points,0,i)-gsl_vector_get(get_translation_vector,0));
-        gsl_matrix_set(temp,1,i,gsl_matrix_get(points,1,i)-gsl_vector_get(get_translation_vector,1));
+Eigen::MatrixXd& transform_points(Eigen::MatrixXd points, Eigen::MatrixXd Q, Eigen::VectorXd get_translation_vector){
+    Eigen::MatrixXd temp(points.rows(),points.cols());
+    for(int i=0;i<temp.cols();++i){
+        temp(0,i)=points(0,i)-get_translation_vector(0);
+        temp(1,i)=points(1,i)-get_translation_vector(1);
     }
 
-    gsl_matrix_transpose(Q);
+    Q = Q.transpose();
 
-    gsl_matrix *ret = gsl_matrix_alloc(points->size1,points->size2);
-    gsl_linalg_matmult(temp,Q,ret);
-    gsl_matrix_free(temp);
+    Eigen::MatrixXd ret (points.rows(),points.cols());
+    ret = temp*Q;
+    // gsl_linalg_matmult(temp,Q,ret);
+    // gsl_matrix_free(temp);    
+    Q =Q.transpose();
 
-    //TODO: temp2 and ret2 is very bad naming
-    gsl_matrix *temp2 = gsl_matrix_alloc(Q->size1,Q->size2);
-    for(int i=0;i<Q->size2;++i){
-        gsl_matrix_set(temp2,0,i,gsl_matrix_get(Q,0,i)+gsl_vector_get(get_translation_vector,0));
-        gsl_matrix_set(temp2,1,i,gsl_matrix_get(Q,1,i)+gsl_vector_get(get_translation_vector,1));
-    }
-
-    gsl_matrix *ret2 = gsl_matrix_alloc(points->size1,points->size2);
-    gsl_linalg_matmult(points,temp2,ret2);
-    gsl_matrix_free(temp2);
-    
-    return ret2;
+    return ret;
 }
 
-polynomial lagrange_gen(gsl_matrix* points){
+Eigen::MatrixXd& reverse_transform(Eigen::MatrixXd points, Eigen::MatrixXd Q, Eigen::VectorXd get_translation_vector){
+    Eigen::MatrixXd temp(points.rows(),points.cols());
+    for(int i=0;i<temp.cols();++i){
+        temp(0,i)=points(0,i);
+        temp(1,i)=points(1,i);
+    }
+
+    Eigen::MatrixXd ret = temp*Q;
+
+    for(int i=0;i<temp.cols();++i){
+        temp(0,i)= points(0,i)+ get_translation_vector(0);
+        temp(1,i)= points(1,i)+ get_translation_vector(1);
+    }
+
+    return ret;
+}
+
+polynomial lagrange_gen(Eigen::MatrixXd points){
     polynomial lagrange_poly = poly(3);
 
-    for(int col = 0;col <points->size2;col++){
+    for(int col = 0;col <points.cols();col++){
 
 
     }
-    double x[points->size2];
-    double y[points->size2];
-    for(int i=0;i<points->size2;i++){
-        x[i] = gsl_matrix_get(points,i,0);
-        y[i] = gsl_matrix_get(points,i,1);
+    double x[points.cols()];
+    double y[points.cols()];
+    for(int i=0;i<points.cols();i++){
+        x[i] = points(i,0);
+        y[i] = points(i,1);
     }
 
 
-    for(int i=0;i<points->size2;i++){
+    for(int i=0;i<points.cols();i++){
         polynomial p = poly_one();
-        for(int j=0;j<points->size2;j++){
+        for(int j=0;j<points.cols();j++){
             if(j!=i){
                 polynomial pr =poly_root(x[j]);
                 polynomial q =poly_mult(p,pr);
-                gsl_vector_free(p.nums);
-                gsl_vector_free(pr.nums);
+                // gsl_vector_free(p.nums);
+                // gsl_vector_free(pr.nums);
                 p=q;
             }
         }
         polynomial p1 = poly_one();
-        gsl_vector_set(p1.nums,0,1/gsl_poly_eval(p.nums->data,p.deg+1,x[i]));
+        p1.nums(0)=1/ poly_eval(p,x[i]);
         polynomial q = poly_mult(p1,p);
-        gsl_vector_free(p.nums);
-        gsl_vector_free(p1.nums);
+        // gsl_vector_free(p.nums);
+        // gsl_vector_free(p1.nums);
 
-        gsl_vector_add(lagrange_poly.nums,q.nums);
-        gsl_vector_free(q.nums);
+        lagrange_poly.nums+=q.nums;
+        // gsl_vector_free(q.nums);
         
     }
     
@@ -347,14 +353,15 @@ polynomial lagrange_gen(gsl_matrix* points){
 
 }
 
-double arclength_f(double, void* params){
+double arclength_f(double x, void* params){
     
     polynomial p = *(polynomial*)params;
-
-    double x = gsl_poly_eval(p.nums->data,p.deg+1,x);
-    return x*x+1;
+    double y = poly_eval(p,x);
+    return sqrt(y*y+1);
 }
 
+
+// CHECK CORRECTNESS
 double arclength(polynomial poly, double x0,double x1){
 
     gsl_function F;
@@ -373,22 +380,26 @@ double arclength(polynomial poly, double x0,double x1){
 
 }
 
-std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(gsl_matrix *res,int path_id,int points_per_spline,bool loop){
+std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(Eigen::MatrixXd& res,int path_id ,int points_per_spline,bool loop){
 
-    int n = res->size2;
+    int n = res.cols();
 
     std::vector<Spline> splines;
 
-    gsl_matrix *points=res;
+    // Eigen::MatrixXd points=res;
 
     int shift = points_per_spline-1;
+    int group_numbers;
 
-    int group_numbers = n/shift;
+    if (shift == 1){
+        group_numbers = n/shift;
 
-
-    if (loop)
-        group_numbers += (int)(n % shift != 0);
-
+        if (loop)
+            group_numbers += (int)(n % shift != 0);
+    }
+    else{
+        group_numbers = n;
+    }
     std::vector<std::vector<int>> groups;
     
     std::vector<double> lengths;
@@ -396,11 +407,20 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(gsl_matrix *res,
     lengths.resize(group_numbers);
 
     for(int i=0;i<group_numbers;i++){
-        gsl_matrix *group = gsl_matrix_alloc_from_matrix(res,0,group_numbers*shift,2,3);
+        // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
 
-        gsl_matrix *Q  = rotation_matrix_gen(group);
-        gsl_vector *translation_vector = get_translation_vector(group);
-        gsl_matrix *rotated_points = transform_points(group,Q,translation_vector);
+        Eigen::MatrixXd group(2,4);
+        for (int j =0;j<=3;j++){
+            for(int k=0;k<=1;k++){
+                group(j,k) = res(j,i*shift+k);
+            }
+        }
+
+
+
+        Eigen::MatrixXd Q  = rotation_matrix_gen(group);
+        Eigen::VectorXd translation_vector = get_translation_vector(group);
+        Eigen::MatrixXd rotated_points = transform_points(group,Q,translation_vector);
 
         polynomial interpolation_poly = lagrange_gen(rotated_points);
         polynomial first_der = polyder(interpolation_poly);
