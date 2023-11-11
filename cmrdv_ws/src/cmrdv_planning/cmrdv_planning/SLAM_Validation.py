@@ -88,7 +88,7 @@ class SLAMSubscriber(Node):
         self.mean_error = 0
         self.stdev_error = 0
         self.bad_states = 0 # heuristic variables
-        self.closest_data = np.empty(0, dtype = object)
+        self.closest_data = []
 
     def parse_cones(self,msg):
         cones = msg.blue_cones
@@ -344,17 +344,13 @@ class SLAMSubscriber(Node):
         self.get_logger().info("This is the mean error: ", self.mean_error, "\t Num missed cones: ", self.missed_cones)
    
     def model_accuracy(self):
-        # closest_data = np.empty(len(self.cones), dtype = object);
-        self.print_model_acc() 
         #Fill Up closest_data
-        # Issue self.state is an array
-        # TODO: Figure out how to get the x and y of the calculated cones
-        for cone_coord in self.all_cones: # each element is a numpy column vector
+        for cone_coord in self.all_cones:   
             self.replace(self.closest_data, cone_coord[0, 0], cone_coord[1, 0])
             
         #Find mean error
         for pos in self.closest_data:
-            if pos.size == 0:
+            if pos is None:
                 self.missed_cones += 1
             else:
                 self.mean_error += pos[2]
@@ -362,82 +358,59 @@ class SLAMSubscriber(Node):
         
         #Find standard deviation of error
         for pos in self.closest_data:
-            if pos.size != 0:   
+            if pos is not None:   
                 self.stdev_error += (pos[2] - self.mean_error) * (pos[2] - self.mean_error)
         self.stdev_error = math.sqrt(self.stdev_error / (len(self.closest_data) - self.missed_cones))
         
         #Find statistically significant errors
         for pos in self.closest_data:
-            if pos.size != 0:   
+            if pos is not None:   
                 if abs(pos[2] - self.mean_error) > 2 * self.stdev_error:
                     self.bad_states += 1
         
-        
-        
     #Checks if the closest_data entry at ind is empty of it the current error is less
-    def better_or_empty(self, closest_data, error, ind):
+    def better_or_empty(closest_data, error, ind):
         if closest_data[ind] is not None:
-            print(closest_data[ind])
-            return error < closest_data[ind][ 2]
+            return error < closest_data[ind][2]
         return True
             
-    
-    
     #Places the ekf state at x, y into closest_data
-    #closest_data will is the master data structure
-    
-    #Precondition: Called for every calculated cone, needs x y coord of cone
-    #Postcondition: stores the cone data at the idx of the groudn truth cone
     #If there's already a cone at the index:
     # 1) compare the current error with the error of the cone already ther
     # 2a.) if the error is less, then replace and recursive call on the next cone
     # 2b.) if the error is greater, then go to the next lowest
     def replace(self, closest_data, x, y):
-        min_error = -1 
+        min_error = -1
         min_ind = -1
         
         #Find the closest ground state that the ekf state can be placed in
         for ind in range(0, len(self.cones)):
-            dist = self.gauss_dist(x, y, self.cones[ind, 0], self.cones[ind, 1]) #calculating the error
-            if (min_ind == -1 or dist < min_error) and self.better_or_empty(closest_data, dist, ind): #updating min error cone
-                #Here if the spot is empty or better
+            dist = self.euclid_dist(x, y, self.cones[ind, 0], self.cones[ind, 1])
+            if (min_ind == -1 or dist < min_error) and self.better_or_empty(closest_data, dist, ind):
+                #Update min
                 min_error = dist
                 min_ind = ind 
         
         #Check that the current ekf state can be put into closest_data         
         if min_ind != -1:
-            # get the coordinates of the cone already in place
-            
-            if closest_data[min_ind] is not  None:
-                temp_x = closest_data[min_ind][ 0]
-                temp_y = closest_data[min_ind][ 1]
-            # each tuple in closest_data contains: x_coord calc cone, y_coord calc_cone, x g_truth_cone, y g_truth_cone
-                closest_data[min_ind] = np.array([x,y, min_error, self.cones[min_ind, 0], self.cones[min_ind, 1]])
+            if closest_data[min_ind] is None:
+                #Replace contents of closest data
+                closest_data[min_ind] = np.array([x, y, min_error, self.cones[min_ind, 0], self.cones[min_ind, 1]])
+            else:
+                #Store old contents
+                temp_x = closest_data[min_ind][0]
+                temp_y = closest_data[min_ind][1]
+                #Replace contents of closest data
+                closest_data[min_ind] = np.array([x, y, min_error, self.cones[min_ind, 0], self.cones[min_ind, 1]])
+                #Run same algorithm on replaced contents
                 self.replace(closest_data, temp_x, temp_y)
-            elif closest_data[min_ind] is  None:
-                closest_data[min_ind] = np.array([x,y, min_error, self.cones[min_ind, 0], self.cones[min_ind, 1]])
-
         else:
             self.missed_states += 1
+        
+    #Finds the euclidian distance between (x1, y1) and (x2, y2)
+    def euclid_dist(x1, y1, x2, y2):
+        return math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
     
-    def gauss_dist(self, x1, y1, x2, y2):
-        return math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y1) * (y1 - y2))
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def main(args=None):
