@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(interfaces)
+project(heartbeat)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -21,6 +21,28 @@ find_package(ament_cmake REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(interfaces REQUIRED)
+
+add_executable(heart src/heart.cpp)
+add_executable(globalHeart src/global.cpp)
+
+ament_target_dependencies(heart 
+  interfaces
+  rclcpp 
+  std_msgs)
+
+ament_target_dependencies(globalHeart 
+  interfaces
+  rclcpp 
+  std_msgs)
+
+install(TARGETS
+  heart
+  globalHeart
+  DESTINATION lib/${PROJECT_NAME})
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -32,24 +54,4 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-
-
-find_package(geometry_msgs REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
-find_package(sensor_msgs REQUIRED)
-
-rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/CarROT.msg"
-  "msg/ConeList.msg"
-  "msg/ConePositions.msg"
-  "msg/Heartbeat.msg"
-  "msg/PairROT.msg"
-  "msg/Points.msg"
-  "msg/Spline.msg"
-  "msg/SplineList.msg"
-  DEPENDENCIES geometry_msgs sensor_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
-)
-ament_export_dependencies(rosidl_default_runtime)
 ament_package()
-
-
