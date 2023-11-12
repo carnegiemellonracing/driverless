@@ -60,27 +60,39 @@ double poly_eval(polynomial a,double x){
 }
 
 
-Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd& points_mat,Eigen::MatrixXd& rotated,Eigen::MatrixXd& Q_mat, Eigen::VectorXd& translation,polynomial first, polynomial second, int path, int sort_ind)
+Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::MatrixXd Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind)
 {
-    spl_poly=interpolation_poly;
-    points = points_mat;
-    rotated_points=rotated;
-    Q = Q_mat;
-    translation_vector = translation;
-    first_der = first;
-    second_der = second;
-    path = path_id;
-    sort_index = sort_ind;
+    this->spl_poly=interpolation_poly;
+    // Eigen::Matrix<double, 2, 4> points;
+    
+    // for (int i = 0; i < 2; i++) {
+    //     for (int j = 0; j < 4; j++) {
+    //         points(i, j) = points_mat(i, j);
+    //     }
+    // }
+    this->points = points_mat;
+    this->rotated_points=rotated;
+    this->Q = Q_mat;
+    this->translation_vector = translation;
+    this->first_der = first;
+    this->second_der = second;
+    this->path_id = path_id;
+    this->sort_index = sort_ind;
 
 }
 
 Spline::~Spline()
 {
+    // ~spl_poly();
+    // polynomial first_der;
+    // polynomial second_der;
+    
     //No need for this function in Eigen as it frees memory itself
 
 }
 
 double Spline::length(){
+    // return 1.0;
     return arclength(this->spl_poly,this->rotated_points(0,0),this->rotated_points(0,this->rotated_points.cols()-1));
 }
 
@@ -104,18 +116,18 @@ polynomial Spline::get_second_der(){
     return this->second_der;
 }
 
-Eigen::MatrixXd&  Spline::get_points(){
+Eigen::MatrixXd  Spline::get_points(){
     return points;}
 
-Eigen::MatrixXd&  Spline::get_rotated_points(){
+Eigen::MatrixXd  Spline::get_rotated_points(){
     return rotated_points;
 }
 
-Eigen::MatrixXd&  Spline::get_Q(){
+Eigen::MatrixXd Spline::get_Q(){
     return Q;
 }
 
-Eigen::VectorXd&  Spline::get_translation(){
+Eigen::VectorXd Spline::get_translation(){
     return translation_vector;
 }
 
@@ -131,6 +143,7 @@ int Spline::get_sort_index(){
 
 
 std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double progress, double point_index, int precision){
+    
     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> ret;
 
 
@@ -226,7 +239,7 @@ double Spline::getderiv(double x){
 
 }
 
-Eigen::MatrixXd& Spline::interpolate(int number, std::pair<float,float> bounds){
+Eigen::MatrixXd Spline::interpolate(int number, std::pair<float,float> bounds){
 
     if(bounds.first == -1 && bounds.second == -1){
         double bound1 = get_rotated_points()(0,0);
@@ -245,13 +258,14 @@ Eigen::MatrixXd& Spline::interpolate(int number, std::pair<float,float> bounds){
 
     
 
-
-	Eigen::MatrixXd ret= reverse_transform(points,get_Q(),get_translation());
+    Eigen::MatrixXd q = Spline::get_Q();
+    Eigen::VectorXd trans = Spline::get_translation();
+	Eigen::MatrixXd ret= reverse_transform(points, q, trans);
 
     return ret;
 }
 
-Eigen::MatrixXd& rotation_matrix_gen(Eigen::MatrixXd pnts){
+Eigen::MatrixXd rotation_matrix_gen(Eigen::MatrixXd& pnts){
     Eigen::Vector2d beg; beg << pnts.col(0);
     Eigen::Vector2d end; end << pnts.col(pnts.cols()-1);
 
@@ -272,12 +286,14 @@ Eigen::MatrixXd& rotation_matrix_gen(Eigen::MatrixXd pnts){
     return ret;
 }
 
-Eigen::VectorXd& get_translation_vector(Eigen::MatrixXd group){
-    Eigen::VectorXd ret; ret << group.col(0);
+Eigen::VectorXd get_translation_vector(Eigen::MatrixXd& group){
+    Eigen::Vector2d ret;
+    ret(0) = group(0, 0);
+    ret(1) = group(1, 0);
     return ret;
 }
 
-Eigen::MatrixXd& transform_points(Eigen::MatrixXd points, Eigen::MatrixXd Q, Eigen::VectorXd get_translation_vector){
+Eigen::MatrixXd transform_points(Eigen::MatrixXd& points, Eigen::MatrixXd& Q, Eigen::VectorXd& get_translation_vector){
     Eigen::MatrixXd temp(points.rows(),points.cols());
     for(int i=0;i<temp.cols();++i){
         temp(0,i)=points(0,i)-get_translation_vector(0);
@@ -295,7 +311,7 @@ Eigen::MatrixXd& transform_points(Eigen::MatrixXd points, Eigen::MatrixXd Q, Eig
     return ret;
 }
 
-Eigen::MatrixXd& reverse_transform(Eigen::MatrixXd points, Eigen::MatrixXd Q, Eigen::VectorXd get_translation_vector){
+Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::MatrixXd& Q, Eigen::VectorXd& get_translation_vector){
     Eigen::MatrixXd temp(points.rows(),points.cols());
     for(int i=0;i<temp.cols();++i){
         temp(0,i)=points(0,i);
@@ -312,7 +328,7 @@ Eigen::MatrixXd& reverse_transform(Eigen::MatrixXd points, Eigen::MatrixXd Q, Ei
     return ret;
 }
 
-polynomial lagrange_gen(Eigen::MatrixXd points){
+polynomial lagrange_gen(Eigen::MatrixXd& points){
     polynomial lagrange_poly = poly(3);
 
     for(int col = 0;col <points.cols();col++){
@@ -404,15 +420,15 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(Eigen::MatrixXd&
     
     std::vector<double> lengths;
     std::vector<double> cumsum;
-    lengths.resize(group_numbers);
+    // lengths.resize(group_numbers);
 
     for(int i=0;i<group_numbers;i++){
         // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
 
         Eigen::MatrixXd group(2,4);
-        for (int j =0;j<=3;j++){
-            for(int k=0;k<=1;k++){
-                group(j,k) = res(j,i*shift+k);
+        for (int j = 0; j < 2; j++) {
+            for(int k = 0; k < 4; k++) {
+                group(j, k) = res(j, i*shift + k);
             }
         }
 
@@ -427,13 +443,16 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(Eigen::MatrixXd&
         polynomial second_der = polyder(first_der);
         
         
-        Spline spline = Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
-        
-        
-        splines.push_back(spline);
-        lengths.push_back(spline.length());
+        // Spline* spline = new Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
 
-        cumsum.push_back(cumsum.back()+spline.length());
+        lengths.emplace_back(0);
+        Spline spline = Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
+        splines.emplace_back(spline);
+        // Spline spline = Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
+
+        // lengths.push_back(spline.length());
+
+        cumsum.push_back(cumsum.back()+splines[0].length());
 
     }
 
