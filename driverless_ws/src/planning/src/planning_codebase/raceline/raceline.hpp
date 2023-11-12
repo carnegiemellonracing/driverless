@@ -39,7 +39,7 @@ private:
     polynomial first_der;
     polynomial second_der;
     
-    Eigen::Matrix<double, 2, 4> points;
+    Eigen::MatrixXd points;
     Eigen::MatrixXd rotated_points;
 
     Eigen::MatrixXd Q;
@@ -91,6 +91,7 @@ public:
 
     // std::pair<double, double> along(double progress) const;
 
+    Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path, int sort_ind);
     Spline(polynomial interpolation_poly,Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::MatrixXd Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind);
 
     Spline();
