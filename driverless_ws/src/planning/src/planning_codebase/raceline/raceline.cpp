@@ -60,6 +60,15 @@ double poly_eval(polynomial a,double x){
 }
 
 
+Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path, int sort_ind) {
+    this->spl_poly=interpolation_poly;
+    this->first_der = first;
+    this->second_der = second;
+    this->path_id = path_id;
+    this->sort_index = sort_ind;
+}
+
+
 Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::MatrixXd Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind)
 {
     this->spl_poly=interpolation_poly;
@@ -425,9 +434,9 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(Eigen::MatrixXd&
     for(int i=0;i<group_numbers;i++){
         // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
 
-        Eigen::MatrixXd group(2,4);
+        Eigen::MatrixXd group(2, points_per_spline);
         for (int j = 0; j < 2; j++) {
-            for(int k = 0; k < 4; k++) {
+            for(int k = 0; k < points_per_spline; k++) {
                 group(j, k) = res(j, i*shift + k);
             }
         }
@@ -446,7 +455,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(Eigen::MatrixXd&
         // Spline* spline = new Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
 
         lengths.emplace_back(0);
-        Spline spline = Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
+        Spline spline = Spline(interpolation_poly, first_der, second_der, path_id,i);
         splines.emplace_back(spline);
         // Spline spline = Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
 

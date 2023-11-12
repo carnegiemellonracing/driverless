@@ -150,13 +150,13 @@ Eigen::MatrixXd MidpointGenerator::generate_points(perceptionsData perceptions_d
         return midpoint_mat;
     }
     int size = std::min(perceptions_data.bluecones.size(),perceptions_data.yellowcones.size());
-    Eigen::MatrixXd left(2,size+1);
-    Eigen::MatrixXd right(2,size+1);
-    for(int i=0;i<perceptions_data.yellowcones.size();i++){
-        left(0,i+1)=perceptions_data.bluecones[i].first;
-        left(1,i+1)=perceptions_data.bluecones[i].second;
-        right(0,i+1)=perceptions_data.yellowcones[i].first;
-        right(1,i+1)=perceptions_data.yellowcones[i].second;
+    Eigen::MatrixXd left(2,size);
+    Eigen::MatrixXd right(2,size);
+    for(int i = 0; i < perceptions_data.yellowcones.size(); i++){
+        left(0, i) = perceptions_data.bluecones[i].first;
+        left(1, i) = perceptions_data.bluecones[i].second;
+        right(0, i) = perceptions_data.yellowcones[i].first;
+        right(1, i) = perceptions_data.yellowcones[i].second;
     }
 
     Eigen::MatrixXd midpoint_mat = midpoint(left,right);
