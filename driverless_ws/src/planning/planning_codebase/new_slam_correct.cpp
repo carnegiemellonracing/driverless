@@ -12,7 +12,7 @@ double SIM_TIME = 50.0;
 // maximum observation range
 double MAX_RANGE = 20.0;  
 double M_DIFF_TH = 1.6;
-double M_DIST_TH = 1.2;
+double M_DIST_TH = 0.001;
 
 // M_DIST_TH_FIRST = 0.25  # Threshold of Mahalanobis distance for data association.
 double M_DIST_TH_ALL = 1;
@@ -220,7 +220,7 @@ int search_correspond_landmark_id(auto logger, const Eigen::MatrixXd& xAug, cons
     int nLM = calc_n_lm(xAug);
 
     // Vector that will store mahalanobis distances
-    std::vector<double> min_dist;
+    std::vector<double> min_dist[100];
     double r = zi(0, 0);
     double theta = zi(1, 0);
 
@@ -228,26 +228,35 @@ int search_correspond_landmark_id(auto logger, const Eigen::MatrixXd& xAug, cons
     double meas_y = r*std::sin(theta);
 
     RCLCPP_INFO(logger, "Measurement: (%f, %f)", meas_x, meas_y);
+    RCLCPP_INFO(logger, "LM: %d", nLM);
+
     // print_matrix(logger, xAug);
     for (int i = 0; i < nLM; ++i) {
+        RCLCPP_INFO(logger, "start of for loop %d",i);
         Eigen::MatrixXd lm = get_landmark_position_from_state(xAug, i);
+        RCLCPP_INFO(logger, "after get landmark");
         // Calculating y, S, and H matrices from innovation package
         struct innovation_package i_p = calc_innovation(logger, lm, xAug, PAug, zi, i);
+        RCLCPP_INFO(logger, "after calc innovation");
         Eigen::MatrixXd y = i_p.y;
         Eigen::MatrixXd S = i_p.S;
         Eigen::MatrixXd H = i_p.H;
 
         // Calculating mahalanobis distance
         double mahalanobis = (y.transpose().eval() * S.inverse() * y)(0, 0);
-
+        RCLCPP_INFO(logger, "after mahalanobis calc");
         Eigen::MatrixXd lm_car_frame = lm - xAug.topRows(2);
+        RCLCPP_INFO(logger, "lm car frame: ");
         double euclidean = std::sqrt(pow(lm_car_frame(0, 0)-meas_x, 2) + pow(lm_car_frame(1, 0)-meas_y, 2));
         RCLCPP_INFO(logger, "   Landmark %i (Car Frame): (%f, %f) | Mahalanobis: %f | Euclidean: %f", i, lm_car_frame(0,0), lm_car_frame(1,0), mahalanobis, euclidean);
 
         // Adding mahalanobis distance to minimum distance vector
         min_dist.push_back(euclidean);
+        RCLCPP_INFO(logger, "after pushback in for loop %d",i);
+
     }
     min_dist.push_back(M_DIST_TH); // Add M_DIST_TH for new landmark
+    RCLCPP_INFO(logger, "after pushback outside for loop");
 
     // Find the index of the minimum element in 'min_dist'
     int min_id = std::distance(min_dist.begin(), std::min_element(min_dist.begin(), min_dist.end()));
@@ -264,6 +273,7 @@ struct ekfPackage {
 
 struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::MatrixXd& u, Eigen::MatrixXd& z, double dt) {
     // Ensuring that z is a 2 x n matrix where every landmark is 2 x 1 matrix
+    RCLCPP_INFO(logger, "hello to ekf_slam");
     z = z.transpose().eval();
     std::vector<Eigen::MatrixXd> cones;
     int S = STATE_SIZE;
@@ -309,7 +319,7 @@ struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& 
             RCLCPP_INFO(logger, "ADDING: (%f, %f)", zi_in_world(0, 0), zi_in_world(0, 1));
 
             xAug << xEst, calc_landmark_position(logger, xEst, z.row(iz)).transpose().eval();
-
+            RCLCPP_INFO(logger, "ADDED");
             Eigen::MatrixXd m1(PEst.rows(), PEst.cols() + LM_SIZE);
             Eigen::MatrixXd m1_zerosMatrix(xEst.rows(), LM_SIZE);
             m1_zerosMatrix.setZero();
@@ -328,28 +338,33 @@ struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& 
             xEst = xAug;
             PEst = PAug;
         }
-
+        RCLCPP_INFO(logger, "1");
         lm = get_landmark_position_from_state(xEst, min_id);
+        RCLCPP_INFO(logger, "2");
         innovation_package i_p = calc_innovation(logger, lm, xEst, PEst, z.row(iz), min_id);
+        RCLCPP_INFO(logger, "3");
         Eigen::MatrixXd y = i_p.y;
         Eigen::MatrixXd S = i_p.S;
         Eigen::MatrixXd H = i_p.H;
-
+        RCLCPP_INFO(logger, "4");
         Eigen::MatrixXd K = PEst * H.transpose() * S.inverse();
+        RCLCPP_INFO(logger, "5");
         xEst.block(3, 0, xEst.rows() - 3, xEst.cols()) = xEst.block(3, 0, xEst.rows() - 3, xEst.cols()) + (K.block(3, 0, K.rows() - 3, K.cols()) * y);
+        RCLCPP_INFO(logger, "6");
         PEst = (Eigen::MatrixXd::Identity(PEst.rows(), PEst.cols()) - K * H) * PEst;
+        RCLCPP_INFO(logger, "7");
     }
 
-
+    RCLCPP_INFO(logger, "8");
     // xEst.row(2) = pi_2_pi(xEst.row(2));
     xEst(2, 0) = pi_2_pi(xEst(2, 0));
-
+    RCLCPP_INFO(logger, "9");
     // Constructing EKF SLAM Package Result
     ekfPackage result;
     result.x = xEst;
     result.p = PEst;
     result.cone = cones;
-
+    RCLCPP_INFO(logger, "10");
     return result;
 }
 

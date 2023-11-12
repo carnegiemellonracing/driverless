@@ -166,11 +166,14 @@ class SLAMValidation : public rclcpp::Node
       // slam_output = ekf_slam(xEst, pEst, u, z, 0.1, this->get_logger());
       if (z.rows() != 0){
         slam_output = ekf_slam(this->get_logger(), xEst, pEst, u, z, 0.1);
+        RCLCPP_INFO(this->get_logger(), "here?");
       }
       RCLCPP_INFO(this->get_logger(), "got output\n");
       // RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", (xEst->size1-3)/2);
       xEst = slam_output.x;
+      RCLCPP_INFO(this->get_logger(), "11");
       pEst = slam_output.p;
+      RCLCPP_INFO(this->get_logger(), "12");
       RCLCPP_INFO(this->get_logger(), "Num Landmarks: %ld", (xEst.rows()-3)/2);
       RCLCPP_INFO(this->get_logger(), "CAR POSITION: %f, %f, %f", xEst(0, 0), xEst(1, 0), xEst(2, 0));
       // std::cout << pEst << std::endl;
