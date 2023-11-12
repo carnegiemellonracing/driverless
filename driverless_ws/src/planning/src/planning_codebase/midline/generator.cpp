@@ -18,7 +18,7 @@ std::vector<std::pair<double,double>>  MidpointGenerator::sorted_by_norm(std::ve
 }
 
 
-Eigen::MatrixXd& midpoint(Eigen::MatrixXd& left,Eigen::MatrixXd& right){
+Eigen::MatrixXd midpoint(Eigen::MatrixXd& left,Eigen::MatrixXd& right){
     int cols = left.cols() +right.cols() -1;
     Eigen::MatrixXd midpt(2,cols);
 
@@ -101,7 +101,7 @@ std::vector<Spline> MidpointGenerator::generate_splines(Eigen::MatrixXd& midpoin
 
 
 
-Eigen::MatrixXd& MidpointGenerator::generate_points(perceptionsData perceptions_data){ 
+Eigen::MatrixXd MidpointGenerator::generate_points(perceptionsData perceptions_data){ 
     // LEFT ==BLUE
     perceptions_data.bluecones  = sorted_by_norm(perceptions_data.bluecones);
     perceptions_data.yellowcones  = sorted_by_norm(perceptions_data.yellowcones);
@@ -122,7 +122,7 @@ Eigen::MatrixXd& MidpointGenerator::generate_points(perceptionsData perceptions_
                 right(1,i)=right(1,i-1)+ydiff;
             }
         }
-        Eigen::MatrixXd& midpoint_mat = midpoint(left,right);
+        Eigen::MatrixXd midpoint_mat = midpoint(left,right);
         // gsl_matrix_free(left);
         // gsl_matrix_free(right);
         return midpoint_mat;
@@ -144,7 +144,7 @@ Eigen::MatrixXd& MidpointGenerator::generate_points(perceptionsData perceptions_
                 left(1,i)= left(1,i-1)+ydiff;
             }
         }
-        Eigen::MatrixXd& midpoint_mat = midpoint(left,right);
+        Eigen::MatrixXd midpoint_mat = midpoint(left,right);
         // gsl_matrix_free(left);
         // gsl_matrix_free(right);
         return midpoint_mat;
@@ -159,7 +159,7 @@ Eigen::MatrixXd& MidpointGenerator::generate_points(perceptionsData perceptions_
         right(1,i+1)=perceptions_data.yellowcones[i].second;
     }
 
-    Eigen::MatrixXd& midpoint_mat = midpoint(left,right);
+    Eigen::MatrixXd midpoint_mat = midpoint(left,right);
     // gsl_matrix_free(left);
     // gsl_matrix_free(right);
     return midpoint_mat;
@@ -167,7 +167,7 @@ Eigen::MatrixXd& MidpointGenerator::generate_points(perceptionsData perceptions_
 }
 
 
-Eigen::MatrixXd& MidpointGenerator::interpolate_cones(perceptionsData perceptions_data,int interpolation_number){
+Eigen::MatrixXd MidpointGenerator::interpolate_cones(perceptionsData perceptions_data,int interpolation_number){
     return spline_from_cones(perceptions_data).interpolate(interpolation_number,std::make_pair(-1,-1));
 }
 
@@ -175,10 +175,10 @@ Spline MidpointGenerator::spline_from_cones(perceptionsData perceptions_data){
     Eigen::MatrixXd midpoints= generate_points(perceptions_data);
     std::vector<Spline> splines = generate_splines(midpoints);
     // gsl_matrix_free(midpoints);
-    return splines[0];
+    return (splines[0]);
 }
 
-Eigen::MatrixXd& vector_to_mat(std::vector<std::pair<double,double>> side){
+Eigen::MatrixXd vector_to_mat(std::vector<std::pair<double,double>> side){
     Eigen::MatrixXd mat(2,side.size());
     for(int i=0;i<side.size();i++){
         mat(0,i)=side[i].first;
@@ -190,10 +190,10 @@ Eigen::MatrixXd& vector_to_mat(std::vector<std::pair<double,double>> side){
 
 Spline MidpointGenerator::spline_from_curve(std::vector<std::pair<double,double>> side){
 
-    Eigen::MatrixXd& side_mat= vector_to_mat(side);
+    Eigen::MatrixXd side_mat= vector_to_mat(side);
     std::vector<Spline> splines = generate_splines(side_mat);
     // gsl_matrix_free(side_mat);
-    return splines[0];
+    return (splines[0]);
 }
 
 // int main(){
