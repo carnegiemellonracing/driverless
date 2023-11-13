@@ -8,7 +8,6 @@
 
 #include "eufs_msgs/msg/cone_array_with_covariance.hpp"
 #include "eufs_msgs/msg/car_state.hpp"
-
 #include <gsl/gsl_block.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_linalg.h>
@@ -117,7 +116,10 @@ class SLAMValidation : public rclcpp::Node
       // gsl_matrix_set(u, 0, 0, hypot(vpos_is_jacob.dx, vpos_is_jacob.dy));
       // gsl_matrix_set(u, 1, 0, vpos_is_jacob.dyaw);
 
-      Eigen::MatrixXd u = calcInput();
+      // Eigen::MatrixXd u = calcInput();
+      Eigen::MatrixXd u(2, 1);
+      u << hypot(vpos_is_jacob.dx, vpos_is_jacob.dy),
+           vpos_is_jacob.dyaw;
 
       int n = blue_cones.size() + yellow_cones.size() + orange_cones.size();
       int idx = 0;
