@@ -265,6 +265,12 @@ struct ekfPackage {
 struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& PEst, Eigen::MatrixXd& u, Eigen::MatrixXd& z, double dt) {
     // Ensuring that z is a 2 x n matrix where every landmark is 2 x 1 matrix
     // z = z.transpose().eval();
+    int nLM = (xEst.rows()-3)/2;
+    for(int i = 0; i < nLM; i++){
+        Eigen::MatrixXd lm = xEst.block(i*2+3, 0, LM_SIZE, 1);
+        RCLCPP_INFO(logger, "Landmark %i: (%f, %f)", i, lm(0, 0), lm(1, 0));
+    }
+
     std::vector<Eigen::MatrixXd> cones;
     int S = STATE_SIZE;
     struct jacob_motion_package j_m_p = jacob_motion(xEst.topRows(S), u, dt);
