@@ -123,7 +123,7 @@ class SLAMValidation : public rclcpp::Node
       int idx = 0;
 
       // Declaring z matrix dimensions
-      Eigen::MatrixXd z(n, 3);
+      Eigen::MatrixXd z(n, 2);
 
       // gsl_matrix* z = gsl_matrix_calloc(n, 3);
       RCLCPP_INFO(this->get_logger(), "RUNSLAM: B: %i | Y: %i | O: %i\n", blue_cones.size(), yellow_cones.size(), orange_cones.size());
@@ -168,7 +168,7 @@ class SLAMValidation : public rclcpp::Node
         slam_output = ekf_slam(this->get_logger(), xEst, pEst, u, z, 0.1);
       }
       RCLCPP_INFO(this->get_logger(), "got output\n");
-      // RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", (xEst->size1-3)/2);
+      RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", (xEst.rows()-3)/2);
       xEst = slam_output.x;
       pEst = slam_output.p;
 
