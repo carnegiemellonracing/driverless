@@ -12,7 +12,7 @@ double SIM_TIME = 50.0;
 // maximum observation range
 double MAX_RANGE = 20.0;  
 double M_DIFF_TH = 1.6;
-double M_DIST_TH = 2;
+double M_DIST_TH = 0.001;
 
 // M_DIST_TH_FIRST = 0.25  # Threshold of Mahalanobis distance for data association.
 double M_DIST_TH_ALL = 1;
@@ -27,26 +27,9 @@ Eigen::Matrix3d Cx = (Eigen::Matrix3d() << 0.5 * 0.5, 0.0, 0.0,
         0.0, 0.5 * 0.5, 0.0, 
         0.0, 0.0, (std::cos(30.0) * std::cos(30.0))).finished(); // Convert 30.0 degrees to radians
 
-
-// Create alphas
-// Eigen::MatrixXd alphas(6, 1);
-// alphas << 0.11, 0.01, 0.18, 0.08, 0.0, 0.0;
-// printf("manan sucks balls");
-
-
-
 // Create R_sim matrix
 Eigen::Matrix2d R_sim = (Eigen::Matrix2d() << 1.0 * 1.0, 0.0, 
         0.0, (std::cos(10.0) * std::cos(10.0))).finished(); // Convert 10.0 degrees to radians
-
-// Eigen::MatrixXd Q_sim << 0.2 * 0.2, 0.0, 
-//                         0.0, (Eigen::deg2rad(1.0) * Eigen::deg2rad(1.0));
-
-// Create R_sim matrix
-// Eigen::MatrixXd R_sim(2,2);
-// R_sim << 1.0 * 1.0, 0.0, 
-//          0.0, (Eigen::deg2rad(10.0) * Eigen::deg2rad(10.0));
-
 
 Eigen::MatrixXd calcInput() {
     // Define v and yaw_rate
@@ -89,7 +72,7 @@ struct jacob_motion_package {
 };
 
 // Function to calculate jacobian motion
-jacob_motion_package jacob_motion(const Eigen::MatrixXd& x, const Eigen::MatrixXd& u, double dt) {
+jacob_motion_package jacob_motion(auto logger, const Eigen::MatrixXd& x, const Eigen::MatrixXd& u, double dt) {
 
 
     // Creating Identity Matrix of Size 3 x 3
@@ -98,6 +81,7 @@ jacob_motion_package jacob_motion(const Eigen::MatrixXd& x, const Eigen::MatrixX
 
     // Creating Zeroes Matrix
     int n_lm = calc_n_lm(x);
+    RCLCPP_INFO(logger, "NUM_LANDMARKS: %i", n_lm);
     Eigen::MatrixXd zeroesMatrix(STATE_SIZE, LM_SIZE * n_lm);
     zeroesMatrix.setZero();
 
@@ -128,9 +112,9 @@ jacob_motion_package jacob_motion(const Eigen::MatrixXd& x, const Eigen::MatrixX
 
 
 // Function to return (x, y) position of landmark stored as 2 x 1 matrix
-Eigen::MatrixXd calc_landmark_position(const Eigen::MatrixXd& x, const Eigen::MatrixXd& z) {
+Eigen::MatrixXd calc_landmark_position(auto logger, const Eigen::MatrixXd& x, const Eigen::MatrixXd& z) {
 
-    Eigen::MatrixXd zp(2, 1);
+    Eigen::MatrixXd zp(1, 2);
     zp.setZero();
 
     zp(0,0) = x(0, 0) + (z(0, 0) * std::cos(x(2, 0) + z(0, 1)));
@@ -174,6 +158,7 @@ Eigen::MatrixXd jacob_h(auto logger, double q, const Eigen::MatrixXd& delta, con
     Eigen::MatrixXd H = G * F;
     return H;
 
+    return H;
 }
 
 double pi_2_pi(double angle) {
@@ -211,6 +196,11 @@ struct innovation_package calc_innovation(auto logger, const Eigen::MatrixXd& lm
 
 }
 
+void print_matrix(auto logger, const Eigen::MatrixXd& xAug){
+    for(int i = 0; i < xAug.rows(); i++){
+        RCLCPP_INFO(logger, "%f", xAug(i, 0));
+    }
+}
 int search_correspond_landmark_id(auto logger, const Eigen::MatrixXd& xAug, const Eigen::MatrixXd& PAug, const Eigen::MatrixXd& zi) {
 
     // Calculate the number of landmarks
@@ -227,10 +217,12 @@ int search_correspond_landmark_id(auto logger, const Eigen::MatrixXd& xAug, cons
 
     RCLCPP_INFO(logger, "Measurement: (%f, %f)", meas_x, meas_y);
     for (int i = 0; i < nLM; ++i) {
+        RCLCPP_INFO(logger, "start of for loop %d",i);
         Eigen::MatrixXd lm = get_landmark_position_from_state(xAug, i);
-
+        RCLCPP_INFO(logger, "after get landmark");
         // Calculating y, S, and H matrices from innovation package
         struct innovation_package i_p = calc_innovation(logger, lm, xAug, PAug, zi, i);
+        RCLCPP_INFO(logger, "after calc innovation");
         Eigen::MatrixXd y = i_p.y;
         Eigen::MatrixXd S = i_p.S;
         Eigen::MatrixXd H = i_p.H;
@@ -247,7 +239,9 @@ int search_correspond_landmark_id(auto logger, const Eigen::MatrixXd& xAug, cons
     }
 
 
+    }
     min_dist.push_back(M_DIST_TH); // Add M_DIST_TH for new landmark
+    RCLCPP_INFO(logger, "after pushback outside for loop");
 
     // Find the index of the minimum element in 'min_dist'
     int min_id = std::distance(min_dist.begin(), std::min_element(min_dist.begin(), min_dist.end()));
@@ -303,16 +297,17 @@ struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& 
 
     // Initializing landmark position
     Eigen::MatrixXd lm;
-
+    
     for (int iz = 0; iz < z.rows(); ++iz) {
         int min_id = search_correspond_landmark_id(logger, xEst, PEst, z.row(iz));
         int nLM = calc_n_lm(xEst);
         if (min_id == nLM) {
-
             // Extend state and covariance matrix
             Eigen::MatrixXd xAug(xEst.rows() + LM_SIZE, xEst.cols());
             xAug << xEst, calc_landmark_position(xEst, z.row(iz));
 
+            xAug << xEst, calc_landmark_position(logger, xEst, z.row(iz)).transpose().eval();
+            RCLCPP_INFO(logger, "ADDED");
             Eigen::MatrixXd m1(PEst.rows(), PEst.cols() + LM_SIZE);
             Eigen::MatrixXd m1_zerosMatrix(xEst.rows(), LM_SIZE);
             m1_zerosMatrix.setZero();
@@ -345,40 +340,15 @@ struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& 
 
     // xEst.row(2) = pi_2_pi(xEst.row(2));
     xEst(2, 0) = pi_2_pi(xEst(2, 0));
-
+    RCLCPP_INFO(logger, "9");
     // Constructing EKF SLAM Package Result
     ekfPackage result;
     result.x = xEst;
     result.p = PEst;
     result.cone = cones;
-
+    RCLCPP_INFO(logger, "10");
     return result;
 }
-
-// int main() {
-
-//     // Create Q_sim matrix
-//     Eigen::MatrixXd Q_sim(2, 2);
-//     Q_sim << 0.2 * 0.2, 0.0, 0.0, (std::pow(M_PI / 180.0 * 1.0, 2.0));
-
-//     // // Create R_sim matrix
-//     // Eigen::MatrixXd R_sim(2,2);
-//     // R_sim << 1.0 * 1.0, 0.0, 0.0, (Eigen::deg2rad(10.0) * Eigen::deg2rad(10.0));
-
-//     // // Create Cx matrix
-//     // Eigen::MatrixXd Cx(3, 3);
-//     // Cx << 0.5 * 0.5, 0.0, 0.0, 
-//     //     0.0, 0.5 * 0.5, 0.0, 
-//     //     0.0, 0.0, (Eigen::deg2rad(30.0) * Eigen::deg2rad(30.0));
-
-
- 
-
-   
-
-//     return 0;
-// }
-
 
 
 
