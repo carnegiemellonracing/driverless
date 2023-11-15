@@ -1,0 +1,105 @@
+[0.000000] (-) TimerEvent: {}
+[0.003537] (-) JobUnselected: {'identifier': 'cmrdv_actuators'}
+[0.003678] (-) JobUnselected: {'identifier': 'cmrdv_bringup'}
+[0.003790] (-) JobUnselected: {'identifier': 'cmrdv_collection'}
+[0.003890] (-) JobUnselected: {'identifier': 'cmrdv_common'}
+[0.003987] (-) JobUnselected: {'identifier': 'cmrdv_controls'}
+[0.004080] (-) JobUnselected: {'identifier': 'cmrdv_interfaces'}
+[0.004195] (-) JobUnselected: {'identifier': 'cmrdv_perceptions'}
+[0.004278] (-) JobUnselected: {'identifier': 'eufs_msgs'}
+[0.004352] (cmrdv_planning) JobQueued: {'identifier': 'cmrdv_planning', 'dependencies': OrderedDict([('eufs_msgs', '/driverless/install/eufs_msgs'), ('cmrdv_interfaces', '/driverless/install/cmrdv_interfaces'), ('cmrdv_common', '/driverless/install/cmrdv_common')])}
+[0.004442] (cmrdv_planning) JobStarted: {'identifier': 'cmrdv_planning'}
+[0.101150] (-) TimerEvent: {}
+[0.208859] (-) TimerEvent: {}
+[0.316804] (-) TimerEvent: {}
+[0.423421] (-) TimerEvent: {}
+[0.524914] (-) TimerEvent: {}
+[0.625813] (-) TimerEvent: {}
+[0.726869] (-) TimerEvent: {}
+[0.827398] (-) TimerEvent: {}
+[0.927828] (-) TimerEvent: {}
+[1.028606] (-) TimerEvent: {}
+[1.129100] (-) TimerEvent: {}
+[1.229787] (-) TimerEvent: {}
+[1.330234] (-) TimerEvent: {}
+[1.430666] (-) TimerEvent: {}
+[1.531072] (-) TimerEvent: {}
+[1.636627] (-) TimerEvent: {}
+[1.739941] (-) TimerEvent: {}
+[1.840845] (-) TimerEvent: {}
+[1.943543] (-) TimerEvent: {}
+[2.045738] (-) TimerEvent: {}
+[2.148491] (-) TimerEvent: {}
+[2.249003] (-) TimerEvent: {}
+[2.349570] (-) TimerEvent: {}
+[2.451136] (-) TimerEvent: {}
+[2.551592] (-) TimerEvent: {}
+[2.652602] (-) TimerEvent: {}
+[2.753028] (-) TimerEvent: {}
+[2.853507] (-) TimerEvent: {}
+[2.953992] (-) TimerEvent: {}
+[3.054452] (-) TimerEvent: {}
+[3.155385] (-) TimerEvent: {}
+[3.256003] (-) TimerEvent: {}
+[3.356563] (-) TimerEvent: {}
+[3.458426] (-) TimerEvent: {}
+[3.545487] (cmrdv_planning) Command: {'cmd': ['/usr/bin/python3', 'setup.py', 'egg_info', '--egg-base', '../../../build/cmrdv_planning', 'build', '--build-base', '/driverless/build/cmrdv_planning/build', 'install', '--record', '/driverless/build/cmrdv_planning/install.log', '--single-version-externally-managed'], 'cwd': '/driverless/cmrdv_ws/src/cmrdv_planning', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'TMUX': '/tmp//tmux-0/default,40,0', 'HOSTNAME': 'DanielXPS', 'SHLVL': '2', 'LD_LIBRARY_PATH': '/driverless/install/cmrdv_interfaces/lib:/driverless/install/eufs_msgs/lib:/driverless/cmrdv_ws/install/eufs_msgs/lib:/driverless/cmrdv_ws/install/cmrdv_interfaces/lib:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib', 'HOME': '/root', 'OLDPWD': '/driverless/cmrdv_ws', 'ROS_PYTHON_VERSION': '3', 'LC_CTYPE': 'C.UTF-8', 'COLCON_PREFIX_PATH': '/driverless/cmrdv_ws/install', 'ROS_DISTRO': 'foxy', 'EUFS_MASTER': '/eufs', '_': '/usr/local/bin/colcon', 'ROS_VERSION': '2', 'TERM': 'screen', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':0', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'AMENT_PREFIX_PATH': '/driverless/install/cmrdv_common:/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:/driverless/cmrdv_ws/install/cmrdv_bringup:/driverless/cmrdv_ws/install/cmrdv_controls:/driverless/cmrdv_ws/install/cmrdv_actuators:/driverless/cmrdv_ws/install/cmrdv_common:/driverless/cmrdv_ws/install/eufs_msgs:/driverless/cmrdv_ws/install/cmrdv_planning:/driverless/cmrdv_ws/install/cmrdv_perceptions:/driverless/cmrdv_ws/install/cmrdv_collection:/driverless/cmrdv_ws/install/cmrdv_interfaces:/opt/ros/foxy', 'DEBIAN_FRONTEND': 'noninteractive', 'SHELL': '/bin/bash', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'PWD': '/driverless/build/cmrdv_planning', 'PYTHONPATH': '/driverless/build/cmrdv_planning/prefix_override:/driverless/install/cmrdv_planning/lib/python3.8/site-packages:/driverless/install/cmrdv_common/lib/python3.8/site-packages:/driverless/install/cmrdv_interfaces/lib/python3.8/site-packages:/driverless/install/eufs_msgs/lib/python3.8/site-packages:/driverless/cmrdv_ws/install/cmrdv_bringup/lib/python3.8/site-packages:/driverless/cmrdv_ws/install/cmrdv_controls/lib/python3.8/site-packages:/driverless/cmrdv_ws/install/cmrdv_actuators/lib/python3.8/site-packages:/driverless/cmrdv_ws/install/cmrdv_common/lib/python3.8/site-packages:/driverless/cmrdv_ws/install/eufs_msgs/lib/python3.8/site-packages:/driverless/cmrdv_ws/install/cmrdv_planning/lib/python3.8/site-packages:/driverless/cmrdv_ws/install/cmrdv_perceptions/lib/python3.8/site-packages:/driverless/cmrdv_ws/install/cmrdv_collection/lib/python3.8/site-packages:/driverless/cmrdv_ws/install/cmrdv_interfaces/lib/python3.8/site-packages:/opt/ros/foxy/lib/python3.8/site-packages:/driverless', 'COLCON': '1', 'TMUX_PANE': '%2', 'CMAKE_PREFIX_PATH': '/driverless/install/cmrdv_interfaces:/driverless/install/eufs_msgs:/driverless/cmrdv_ws/install/eufs_msgs:/driverless/cmrdv_ws/install/cmrdv_interfaces'}, 'shell': False}
+[3.559578] (-) TimerEvent: {}
+[3.662704] (-) TimerEvent: {}
+[3.764241] (-) TimerEvent: {}
+[3.865387] (-) TimerEvent: {}
+[3.966059] (-) TimerEvent: {}
+[4.068090] (-) TimerEvent: {}
+[4.171835] (-) TimerEvent: {}
+[4.274322] (-) TimerEvent: {}
+[4.374797] (-) TimerEvent: {}
+[4.476349] (-) TimerEvent: {}
+[4.580709] (-) TimerEvent: {}
+[4.633898] (cmrdv_planning) StdoutLine: {'line': b'running egg_info\n'}
+[4.635991] (cmrdv_planning) StdoutLine: {'line': b'writing ../../../build/cmrdv_planning/cmrdv_planning.egg-info/PKG-INFO\n'}
+[4.639892] (cmrdv_planning) StdoutLine: {'line': b'writing dependency_links to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/dependency_links.txt\n'}
+[4.640712] (cmrdv_planning) StdoutLine: {'line': b'writing entry points to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/entry_points.txt\n'}
+[4.641076] (cmrdv_planning) StdoutLine: {'line': b'writing requirements to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/requires.txt\n'}
+[4.641363] (cmrdv_planning) StdoutLine: {'line': b'writing top-level names to ../../../build/cmrdv_planning/cmrdv_planning.egg-info/top_level.txt\n'}
+[4.680902] (-) TimerEvent: {}
+[4.781391] (-) TimerEvent: {}
+[4.816096] (cmrdv_planning) StdoutLine: {'line': b"reading manifest file '../../../build/cmrdv_planning/cmrdv_planning.egg-info/SOURCES.txt'\n"}
+[4.819676] (cmrdv_planning) StdoutLine: {'line': b"writing manifest file '../../../build/cmrdv_planning/cmrdv_planning.egg-info/SOURCES.txt'\n"}
+[4.820562] (cmrdv_planning) StdoutLine: {'line': b'running build\n'}
+[4.821207] (cmrdv_planning) StdoutLine: {'line': b'running build_py\n'}
+[4.823270] (cmrdv_planning) StdoutLine: {'line': b'copying cmrdv_planning/path_out.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning\n'}
+[4.825910] (cmrdv_planning) StdoutLine: {'line': b'copying cmrdv_planning/SLAM_Validation.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning\n'}
+[4.827226] (cmrdv_planning) StdoutLine: {'line': b'copying cmrdv_planning/__init__.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning\n'}
+[4.828293] (cmrdv_planning) StdoutLine: {'line': b'copying cmrdv_planning/midpoint.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning\n'}
+[4.828898] (cmrdv_planning) StdoutLine: {'line': b'copying cmrdv_planning/optimizer.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning\n'}
+[4.829627] (cmrdv_planning) StdoutLine: {'line': b'copying cmrdv_planning/SLAM.py -> /driverless/build/cmrdv_planning/build/lib/cmrdv_planning\n'}
+[4.831031] (cmrdv_planning) StdoutLine: {'line': b'running install\n'}
+[4.836944] (cmrdv_planning) StdoutLine: {'line': b'running install_lib\n'}
+[4.841501] (cmrdv_planning) StdoutLine: {'line': b'copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/path_out.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning\n'}
+[4.842180] (cmrdv_planning) StdoutLine: {'line': b'copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/SLAM_Validation.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning\n'}
+[4.842699] (cmrdv_planning) StdoutLine: {'line': b'copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/__init__.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning\n'}
+[4.844063] (cmrdv_planning) StdoutLine: {'line': b'copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/midpoint.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning\n'}
+[4.846986] (cmrdv_planning) StdoutLine: {'line': b'copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/optimizer.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning\n'}
+[4.848613] (cmrdv_planning) StdoutLine: {'line': b'copying /driverless/build/cmrdv_planning/build/lib/cmrdv_planning/SLAM.py -> /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning\n'}
+[4.853097] (cmrdv_planning) StdoutLine: {'line': b'byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/path_out.py to path_out.cpython-38.pyc\n'}
+[4.862997] (cmrdv_planning) StdoutLine: {'line': b'byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/SLAM_Validation.py to SLAM_Validation.cpython-38.pyc\n'}
+[4.876883] (cmrdv_planning) StdoutLine: {'line': b'byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/__init__.py to __init__.cpython-38.pyc\n'}
+[4.878138] (cmrdv_planning) StdoutLine: {'line': b'byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/midpoint.py to midpoint.cpython-38.pyc\n'}
+[4.881756] (-) TimerEvent: {}
+[4.882712] (cmrdv_planning) StdoutLine: {'line': b'byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/optimizer.py to optimizer.cpython-38.pyc\n'}
+[4.888273] (cmrdv_planning) StdoutLine: {'line': b'byte-compiling /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning/SLAM.py to SLAM.cpython-38.pyc\n'}
+[4.893618] (cmrdv_planning) StdoutLine: {'line': b'running install_data\n'}
+[4.898248] (cmrdv_planning) StdoutLine: {'line': b'copying resource/cmrdv_planning -> /driverless/install/cmrdv_planning/share/ament_index/resource_index/packages\n'}
+[4.898576] (cmrdv_planning) StdoutLine: {'line': b'copying package.xml -> /driverless/install/cmrdv_planning/share/cmrdv_planning\n'}
+[4.898829] (cmrdv_planning) StdoutLine: {'line': b'running install_egg_info\n'}
+[4.910977] (cmrdv_planning) StdoutLine: {'line': b"removing '/driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning-0.0.0-py3.8.egg-info' (and everything under it)\n"}
+[4.912874] (cmrdv_planning) StdoutLine: {'line': b'Copying ../../../build/cmrdv_planning/cmrdv_planning.egg-info to /driverless/install/cmrdv_planning/lib/python3.8/site-packages/cmrdv_planning-0.0.0-py3.8.egg-info\n'}
+[4.918166] (cmrdv_planning) StdoutLine: {'line': b'running install_scripts\n'}
+[4.983087] (-) TimerEvent: {}
+[5.019779] (cmrdv_planning) StdoutLine: {'line': b'Installing SLAM_test script to /driverless/install/cmrdv_planning/lib/cmrdv_planning\n'}
+[5.025866] (cmrdv_planning) StdoutLine: {'line': b"writing list of installed files to '/driverless/build/cmrdv_planning/install.log'\n"}
+[5.083210] (-) TimerEvent: {}
+[5.132078] (cmrdv_planning) CommandEnded: {'returncode': 0}
+[5.183817] (-) TimerEvent: {}
+[5.273116] (cmrdv_planning) JobEnded: {'identifier': 'cmrdv_planning', 'rc': 0}
+[5.274716] (-) EventReactorShutdown: {}

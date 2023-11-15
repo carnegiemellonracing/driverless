@@ -96,8 +96,7 @@ class SLAMSubscriber(Node):
 
         for cone in cones:
             tmp = [cone.point.x,cone.point.y,0]
-            self.get_logger().info("Testing cone subs; x: {cone.point.x}, y: {cone.point.y}");
-            self.get_logger().info("Printing stuff to test stuff out!");
+            # self.get_logger().info("Testing cone subs; x: {cone.point.x}, y: {cone.point.y}");
             parsed_cones.append(tmp)
         
         cones = msg.yellow_cones
@@ -255,7 +254,7 @@ class SLAMSubscriber(Node):
         # all_cones stores the calculated cones
         self.all_cones.extend(cones)
         self.get_logger().info(f'Num Landmarks = {(self.xEst.shape[0]-3)/2}')
-        print("Type of subscription cone data: ", type(self.subscription_cone_data))
+        # print("Type of subscription cone data: ", type(self.subscription_cone_data))
         # for thing in self.subscription_cone_data:
         #     print("Ground truth data: ", thing)
         # self.print_xEst()

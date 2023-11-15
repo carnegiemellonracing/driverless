@@ -28,6 +28,9 @@ VEHICLE_STATE_MSG = CarState
 CONE_TOPIC = "/cones"
 CONE_MSG = ConeArrayWithCovariance
 
+AVG_COMPUTATION_TIME = 0 
+WORST_COMPUTATION = () #first elem: computation time; second elem: idx to ground_truth cone
+
 #import odometry and gps position from sbg sensor driver
 class SLAMSubscriber(Node):
 
@@ -65,7 +68,7 @@ class SLAMSubscriber(Node):
         # self.EKF = Map()
         # self.GraphSlam = GraphSlam(lc_limit=5)
 
-
+        # the ground truth cones
         self.cones = None
         #robot state
         self.state = None
@@ -77,15 +80,23 @@ class SLAMSubscriber(Node):
         self.dTime = 0
         self.car_states = []
         self.gt_states = []
+
+        # the ekf calculated cones
         self.all_cones = []
+        self.missed_cones = 0
+        self.missed_states = 0
+        self.mean_error = 0
+        self.stdev_error = 0
+        self.bad_states = 0 # heuristic variables
+        self.closest_data = np.empty(0, dtype = object)
 
     def parse_cones(self,msg):
         cones = msg.blue_cones
         parsed_cones = []
+
         for cone in cones:
             tmp = [cone.point.x,cone.point.y,0]
-            self.get_logger().info("Testing cone subs; x: {cone.point.x}, y: {cone.point.y}");
-            self.get_logger().info("Printing stuff to test stuff out!");
+            # self.get_logger().info("Testing cone subs; x: {cone.point.x}, y: {cone.point.y}");
             parsed_cones.append(tmp)
         
         cones = msg.yellow_cones
@@ -100,6 +111,7 @@ class SLAMSubscriber(Node):
         
         parsed_cones = np.array(parsed_cones)
         self.cones = parsed_cones
+        self.closest_data = np.empty(len(self.cones), dtype = object)
         # return parsed_cones
     
     def parse_state(self,msg):
@@ -148,6 +160,7 @@ class SLAMSubscriber(Node):
         # how can I access it
         self.parse_state(state_msg)
         self.runEKF(self.get_clock().now().to_msg())
+        self.model_accuracy()
         # self.get_logger().info(f'{self.ekf_output}')
 
         # self.gs_vehicle_state, self.cone_positions, self.optimized = self.runGraph(self.ekf_output)
@@ -194,11 +207,12 @@ class SLAMSubscriber(Node):
     
     def updateTime(self,time): #Time data structure from header
         # self.get_logger().info(f'{type(self.prevTime)} {type(time)}')
-        curr_time_ns = time.sec*1e9 + time.nanosec
+        curr_time_ns = time.sec*1e9 + time.nanosec #this is getting the time in nanoseconds
+        # time.sec only gets the time in seconds which is not precise enough
         prev_time_ns = self.prevTime.sec*1e9 + self.prevTime.nanosec
         self.dTime = (curr_time_ns-prev_time_ns)/1e9
-        self.get_logger().info(f'Current Time: {time.nanosec}')
-        self.get_logger().info(f'Prev Time: {self.prevTime.nanosec}')
+        # self.get_logger().info(f'Current Time: {time.nanosec}')
+        # self.get_logger().info(f'Prev Time: {self.prevTime.nanosec}')
         # self.get_logger().info(f"time.sec: {time.sec}")
         self.prevTime = time
 
@@ -211,10 +225,12 @@ class SLAMSubscriber(Node):
     #     for i in range(int((self.xEst.shape[0]-3)/2)):
     #         # self.get_logger().info(f'   Landmark {i}: {self.xEst[2*i+3, 0]}, {self.xEst[2*i+4, 0]}')
     #     # self.get_logger().info(f'------------------------------------------')get_logger().info(logger.
-
+    
     def runEKF(self, time_stamp): #TODO:verify message of this
-        self.updateTime(time_stamp)
-        print("Printing out the time: ", time_stamp)
+        #self.updateTime(time_stamp)
+        start_time = time_stamp.sec * 1e9 + time_stamp.nanosec
+         
+        
         car_x, car_y, car_heading = self.state[0], self.state[1], self.state[2]
         u = np.array([[math.hypot(self.state[3], self.state[4]), self.state[5]]]).T
         self.get_logger().info(f"linear: {u[0, 0]} | angular: {u[1, 0]}")
@@ -233,10 +249,12 @@ class SLAMSubscriber(Node):
         # for thing in cones:
         #     print("Printing out item", cones_idx, " in cones", thing)
         #     cones_idx += 1
+        
 
+        # all_cones stores the calculated cones
         self.all_cones.extend(cones)
         self.get_logger().info(f'Num Landmarks = {(self.xEst.shape[0]-3)/2}')
-        print("Type of subscription cone data: ", type(self.subscription_cone_data))
+        # print("Type of subscription cone data: ", type(self.subscription_cone_data))
         # for thing in self.subscription_cone_data:
         #     print("Ground truth data: ", thing)
         # self.print_xEst()
@@ -246,6 +264,28 @@ class SLAMSubscriber(Node):
         # self.get_logger().info(f'map = {map}')
         
         # self.plot_state_matrix(map, n_landmarks)
+        next_time = self.get_clock().now().to_msg()
+        next_time = next_time.sec*1e9 + next_time.nanosec
+        diff_time = next_time - start_time
+
+        global WORST_COMPUTATION
+        if len(WORST_COMPUTATION) == 0:
+            WORST_COMPUTATION = (diff_time, (self.xEst.shape[0]-3)/2)
+        else:
+            worst_time, n_landmark = WORST_COMPUTATION
+            if diff_time > worst_time:
+                WORST_COMPUTATION = (diff_time, (self.xEst.shape[0]-3)/2)
+            worst_time = max(worst_time, diff_time)
+            self.get_logger().info(f'Worst Time: {worst_time}')
+
+        self.get_logger().info(f'Start Time: {start_time}')
+        self.get_logger().info(f'Next Time: {next_time}')
+        self.get_logger().info(f'Difference: {diff_time}')
+        
+        
+
+
+
 
     def plot_state_matrix(self):
         plt.cla()
@@ -298,6 +338,105 @@ class SLAMSubscriber(Node):
     #     self.get_logger().info('EKF output recieved:')
     #     self.get_logger().info('Running GraphSlam')
     #     return self.GraphSlam.run_graph_slam(ekf_output)
+
+    def print_model_acc(self):
+        self.get_logger().info("This is the mean error: ", self.mean_error, "\t Num missed cones: ", self.missed_cones)
+   
+    def model_accuracy(self):
+        # closest_data = np.empty(len(self.cones), dtype = object);
+        self.print_model_acc() 
+        #Fill Up closest_data
+        # Issue self.state is an array
+        # TODO: Figure out how to get the x and y of the calculated cones
+        for cone_coord in self.all_cones: # each element is a numpy column vector
+            self.replace(self.closest_data, cone_coord[0, 0], cone_coord[1, 0])
+            
+        #Find mean error
+        for pos in self.closest_data:
+            if pos.size == 0:
+                self.missed_cones += 1
+            else:
+                self.mean_error += pos[2]
+        self.mean_error /= len(self.closest_data) - self.missed_cones
+        
+        #Find standard deviation of error
+        for pos in self.closest_data:
+            if pos.size != 0:   
+                self.stdev_error += (pos[2] - self.mean_error) * (pos[2] - self.mean_error)
+        self.stdev_error = math.sqrt(self.stdev_error / (len(self.closest_data) - self.missed_cones))
+        
+        #Find statistically significant errors
+        for pos in self.closest_data:
+            if pos.size != 0:   
+                if abs(pos[2] - self.mean_error) > 2 * self.stdev_error:
+                    self.bad_states += 1
+        
+        
+        
+    #Checks if the closest_data entry at ind is empty of it the current error is less
+    def better_or_empty(self, closest_data, error, ind):
+        if closest_data[ind] is not None:
+            print(closest_data[ind])
+            return error < closest_data[ind][ 2]
+        return True
+            
+    
+    
+    #Places the ekf state at x, y into closest_data
+    #closest_data will is the master data structure
+    
+    #Precondition: Called for every calculated cone, needs x y coord of cone
+    #Postcondition: stores the cone data at the idx of the groudn truth cone
+    #If there's already a cone at the index:
+    # 1) compare the current error with the error of the cone already ther
+    # 2a.) if the error is less, then replace and recursive call on the next cone
+    # 2b.) if the error is greater, then go to the next lowest
+    def replace(self, closest_data, x, y):
+        min_error = -1 
+        min_ind = -1
+        
+        #Find the closest ground state that the ekf state can be placed in
+        for ind in range(0, len(self.cones)):
+            dist = self.gauss_dist(x, y, self.cones[ind, 0], self.cones[ind, 1]) #calculating the error
+            if (min_ind == -1 or dist < min_error) and self.better_or_empty(closest_data, dist, ind): #updating min error cone
+                #Here if the spot is empty or better
+                min_error = dist
+                min_ind = ind 
+        
+        #Check that the current ekf state can be put into closest_data         
+        if min_ind != -1:
+            # get the coordinates of the cone already in place
+            
+            if closest_data[min_ind] is not  None:
+                temp_x = closest_data[min_ind][ 0]
+                temp_y = closest_data[min_ind][ 1]
+            # each tuple in closest_data contains: x_coord calc cone, y_coord calc_cone, x g_truth_cone, y g_truth_cone
+                closest_data[min_ind] = np.array([x,y, min_error, self.cones[min_ind, 0], self.cones[min_ind, 1]])
+                self.replace(closest_data, temp_x, temp_y)
+            elif closest_data[min_ind] is  None:
+                closest_data[min_ind] = np.array([x,y, min_error, self.cones[min_ind, 0], self.cones[min_ind, 1]])
+
+        else:
+            self.missed_states += 1
+    
+    def gauss_dist(self, x1, y1, x2, y2):
+        return math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y1) * (y1 - y2))
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def main(args=None):
