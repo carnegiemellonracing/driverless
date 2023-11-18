@@ -73,12 +73,12 @@ int main(){
     printf("test case 4: \n");
     gsl_matrix *left = gsl_matrix_alloc(2,3);
     gsl_matrix *right = gsl_matrix_alloc(2,3);
-    gsl_matrix_set(left, 0, 0, 0);
-    gsl_matrix_set(left, 1, 0, 2);
-    gsl_matrix_set(left, 0, 1, 1.414);
-    gsl_matrix_set(left, 1, 1, 1.414);
-    gsl_matrix_set(left, 0, 1, 2);
-    gsl_matrix_set(left, 1, 1, 0);
+    gsl_matrix_set(right, 0, 0, 0);
+    gsl_matrix_set(right, 1, 0, 2);
+    gsl_matrix_set(right, 0, 1, 1.414);
+    gsl_matrix_set(right, 1, 1, 1.414);
+    gsl_matrix_set(right, 0, 1, 2);
+    gsl_matrix_set(right, 1, 1, 0);
 
     gsl_matrix_set(left, 0, 0, 0);
     gsl_matrix_set(left, 1, 0, 3);

@@ -15,7 +15,10 @@
 
 
 //publish topic example
-//ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 1.0, y: 2.0, z: 3.0}]}"                                                       
+//ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 1.0, y: 2.0, z: 3.0}]}"   
+
+
+// ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 0.0, y: 3.0, z: 0.0}, {x: 1.414, y: 2.236 , z: 0.0}, {x: 3.0, y: 0.0 , z: 0.0}], yellow_cones: [{x: 0.0, y: 2.0, z: 0.0}, {x: 1.414, y: 1.414, z: 0.0}, {x: 2.0, y: 0.0, z: 0.0}]}"   
 
 
 using std::placeholders::_1;
@@ -72,7 +75,7 @@ class MidpointNode : public rclcpp::Node
       }
 
       //TODO: shouldn't return a spline
-      generator_mid.spline_from_cones(perception_data);
+      generator_mid.spline_from_cones(this->get_logger(), perception_data);
       
     
       // Spline spline_left = generator_left.spline_from_curve(perception_data.bluecones);
@@ -109,8 +112,11 @@ class MidpointNode : public rclcpp::Node
       }
       message.set__points(Points);
       publisher_rcl_pt->publish(message);
+      perception_data.bluecones.clear();
+      perception_data.yellowcones.clear();
+      perception_data.orangecones.clear();
       RCLCPP_INFO(this->get_logger(), "published midpoint cones");
-
+      return;
     }
 
 

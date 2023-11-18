@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include <cmath>
+#include <rclcpp/rclcpp.hpp>
 
 #ifndef RACELINE
 #define RACELINE
@@ -31,7 +32,7 @@ double poly_eval(polynomial a,double x);
 
 class Spline
 {
-private:
+public:
     int path_id;
     int sort_index;
 
@@ -42,10 +43,10 @@ private:
     Eigen::MatrixXd points;
     Eigen::MatrixXd rotated_points;
 
-    Eigen::MatrixXd Q;
+    Eigen::Matrix2d Q;
     Eigen::VectorXd translation_vector;
 
-public:
+// public:
     polynomial get_SplPoly(){ return spl_poly;}
     void set_SplPoly(polynomial p){
         spl_poly.deg = p.deg;
@@ -64,8 +65,8 @@ public:
     Eigen::MatrixXd get_rotated_points();
     void set_rotated_points(Eigen::MatrixXd newpoints);
 
-    Eigen::MatrixXd get_Q();
-    void set_Q(Eigen::MatrixXd new_Q);
+    Eigen::Matrix2d get_Q();
+    void set_Q(Eigen::Matrix2d new_Q);
 
     Eigen::VectorXd get_translation();
     void set_translation(Eigen::VectorXd new_trans);
@@ -92,7 +93,7 @@ public:
     // std::pair<double, double> along(double progress) const;
 
     Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path, int sort_ind);
-    Spline(polynomial interpolation_poly,Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::MatrixXd Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind);
+    Spline(polynomial interpolation_poly,Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind);
 
     Spline();
     ~Spline();
@@ -101,12 +102,12 @@ public:
 
 
 
-Eigen::MatrixXd rotation_matrix_gen(Eigen::MatrixXd& pnts);
+Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts);
 Eigen::VectorXd get_translation_vector(Eigen::MatrixXd& group);
 
-Eigen::MatrixXd transform_points(Eigen::MatrixXd& points, Eigen::MatrixXd& Q, Eigen::VectorXd& get_translation_vector);
+Eigen::MatrixXd transform_points(rclcpp::Logger logger,Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector);
 
-Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::MatrixXd& Q, Eigen::VectorXd& get_translation_vector);
+Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector);
 
 polynomial lagrange_gen(Eigen::MatrixXd& points);
 
@@ -114,6 +115,6 @@ double arclength_f(double, void* params);
 
 double arclength(polynomial poly, double x0,double x1);
 
-std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(Eigen::MatrixXd& res,int path_id =std::rand(), int points_per_spline = prefered_degree+1,bool loop = true);
+std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id =std::rand(), int points_per_spline = prefered_degree+1,bool loop = true);
 
 #endif
