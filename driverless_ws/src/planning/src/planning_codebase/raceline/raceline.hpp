@@ -46,7 +46,7 @@ public:
     Eigen::Matrix2d Q;
     Eigen::VectorXd translation_vector;
 
-// public:
+
     polynomial get_SplPoly(){ return spl_poly;}
     void set_SplPoly(polynomial p){
         spl_poly.deg = p.deg;
@@ -92,6 +92,7 @@ public:
 
     // std::pair<double, double> along(double progress) const;
 
+    Spline(polynomial interpolation_poly);
     Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path, int sort_ind);
     Spline(polynomial interpolation_poly,Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind);
 
