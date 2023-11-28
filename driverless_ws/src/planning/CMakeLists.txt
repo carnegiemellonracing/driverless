@@ -17,10 +17,11 @@
   find_package(eufs_msgs REQUIRED)
   find_package(Eigen3 3.3 REQUIRED)
   find_package(GSL REQUIRED)
+  find_package(interfaces REQUIRED)
 
   add_executable(midpoint_test src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
   # add_executable(midline_test src/generator.cpp src/raceline/raceline.cpp)
-  ament_target_dependencies(midpoint_test rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
+  ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
   # ament_target_dependencies(midline_test rclcpp std_msgs geometry_msgs eufs_msgs GSL)
 
   install(TARGETS

@@ -231,6 +231,7 @@ Spline MidpointGenerator::spline_from_cones(rclcpp::Logger logger, perceptionsDa
 
 
     std::vector<Spline> splines = generate_splines(logger, midpoints);
+    if (splines.size() == 0) return Spline(poly_one());
     return (splines[0]);
     
     // Spline newSpline = *(new(Spline));

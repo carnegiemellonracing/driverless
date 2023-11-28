@@ -9,6 +9,7 @@
 // #include "interfaces/msg/cone_list.hpp"
 // #include "interfaces/msg/points.hpp"
 #include "../planning_codebase/midline/generator.hpp"
+#include "interfaces/msg/spline.hpp"
 // #include "frenet.hpp"
 // #include "runpy.hpp"
 #include <Eigen/Dense>
@@ -34,7 +35,8 @@ class MidpointNode : public rclcpp::Node
 
     rclcpp::Subscription<eufs_msgs::msg::ConeArray>::SharedPtr subscription_cones;
     // rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_lap_num;
-    rclcpp::Publisher<eufs_msgs::msg::PointArray>::SharedPtr publisher_rcl_pt;
+    // rclcpp::Publisher<eufs_msgs::msg::PointArray>::SharedPtr publisher_rcl_pt;
+    rclcpp::Publisher<interfaces::msg::Spline>::SharedPtr publisher_rcl_pt;
 
     static const int LOOKAHEAD_NEAR = 2;
     static const int LOOKAHEAD_FAR = 3;
@@ -75,7 +77,61 @@ class MidpointNode : public rclcpp::Node
       }
 
       //TODO: shouldn't return a spline
-      generator_mid.spline_from_cones(this->get_logger(), perception_data);
+      Spline midline = generator_mid.spline_from_cones(this->get_logger(), perception_data);
+      
+      interfaces::msg::Spline message; // = interfaces::message::Spline();
+      
+      // message.spl_poly_coefs.clear();
+      std::fill(std::begin(message.spl_poly_coefs), std::end(message.spl_poly_coefs), 0.0);
+      for (int i = 0; i < 4; i ++) {
+        message.spl_poly_coefs[i] = (midline.spl_poly.nums[i]);
+      }
+
+      // message.first_der_coefs.clear();
+      std::fill(std::begin(message.first_der_coefs), std::end(message.first_der_coefs), 0.0);
+      for (int i = 0; i < 4; i ++) {
+        message.first_der_coefs[i] = (midline.first_der.nums[i]);
+      }
+
+      // message.second_der_coefs.clear();
+      std::fill(std::begin(message.second_der_coefs), std::end(message.second_der_coefs), 0.0);
+      for (int i = 0; i < 4; i ++) {
+        message.second_der_coefs[i] = (midline.second_der.nums[i]);
+      }
+
+      message.points.clear();
+      for (int i = 0; i < midline.points.cols(); i++) {
+        geometry_msgs::msg::Point point; // z field is unused
+        point.x = midline.points(0, i);
+        point.y = midline.points(1, i);
+        message.points.push_back(point);
+      }
+      message.rotated_points.clear();
+      for (int i = 0; i < midline.rotated_points.cols(); i++) {
+        geometry_msgs::msg::Point point; // z field is unused
+        point.x = midline.rotated_points(0, i);
+        point.y = midline.rotated_points(1, i);
+        message.rotated_points.push_back(point);
+      }
+
+      // message.q.clear();
+      std::fill(std::begin(message.q), std::end(message.q), 0.0);
+      message.q[0] = (midline.Q(0, 0));
+      message.q[1] = (midline.Q(0, 1));
+      message.q[2] = (midline.Q(1, 0));
+      message.q[3] = (midline.Q(1, 1));
+
+      // message.translation_vector.clear();
+      std::fill(std::begin(message.translation_vector), std::end(message.translation_vector), 0.0);
+      message.translation_vector[0] = (midline.translation_vector(0));
+      message.translation_vector[1] = (midline.translation_vector(1));
+
+      message.path_id = midline.path_id;
+      message.sort_index = midline.sort_index;
+      message.length = midline.length();
+
+
+
       
     
       // Spline spline_left = generator_left.spline_from_curve(perception_data.bluecones);
@@ -83,39 +139,41 @@ class MidpointNode : public rclcpp::Node
 
 
       // WILL BE USED WHEN OPTIMIZER STARTS
-      std::vector<double> rcl_pt_x,rcl_pt_y;//,rcl_pt_wr, rcl_pt_wl;
-      double x,y;//,wl,wr,rptr,lptr;
-      eufs_msgs::msg::PointArray message  = eufs_msgs::msg::PointArray();
-      std::vector<geometry_msgs::msg::Point> Points;
+      // std::vector<double> rcl_pt_x,rcl_pt_y;//,rcl_pt_wr, rcl_pt_wl;
+      // double x,y;//,wl,wr,rptr,lptr;
+      // eufs_msgs::msg::PointArray message  = eufs_msgs::msg::PointArray();
+      // std::vector<geometry_msgs::msg::Point> Points;
 
-      //
-      for(unsigned int i =0;i<generator_mid.cumulated_splines.size();i++){
-        auto spline = generator_mid.cumulated_splines[i];
-        //TODO:create a typedef, but size2 is the num of rows
-        for(unsigned int j=0;j<spline.get_points().cols()-1;j++){
-          // x=gsl_matrix_get(spline.get_points(),0,j);
-          // y=gsl_matrix_get(spline.get_points(),1,j);
-          // eigen
-          Eigen::MatrixXd splineMatrix = spline.get_points();
-          x= splineMatrix(0,j);
-          y= splineMatrix(1,j);
+      // //
+      // for(unsigned int i =0;i<generator_mid.cumulated_splines.size();i++){
+      //   auto spline = generator_mid.cumulated_splines[i];
+      //   //TODO:create a typedef, but size2 is the num of rows
+      //   for(unsigned int j=0;j<spline.get_points().cols()-1;j++){
+      //     // x=gsl_matrix_get(spline.get_points(),0,j);
+      //     // y=gsl_matrix_get(spline.get_points(),1,j);
+      //     // eigen
+      //     Eigen::MatrixXd splineMatrix = spline.get_points();
+      //     x= splineMatrix(0,j);
+      //     y= splineMatrix(1,j);
 
-          // double len=0; 
-          // if (i>0) len = generator_mid.cumulated_lengths[i-1];
-          geometry_msgs::msg::Point tmpPoint;
-          tmpPoint.x=x;
-          tmpPoint.y=y;
-          Points.push_back(tmpPoint);
-          // wl = frenet(x,y,generator_left.cumulated_splines,generator_left.cumulated_lengths,generator_mid.cumulated_lengths[i-1]).min_distance;
-          // wr = frenet(x,y,generator_right.cumulated_splines,generator_right.cumulated_lengths,generator_mid.cumulated_lengths[i-1]).min_distance;
-        }
-      }
-      message.set__points(Points);
+      //     // double len=0; 
+      //     // if (i>0) len = generator_mid.cumulated_lengths[i-1];
+      //     geometry_msgs::msg::Point tmpPoint;
+      //     tmpPoint.x=x;
+      //     tmpPoint.y=y;
+      //     Points.push_back(tmpPoint);
+      //     // wl = frenet(x,y,generator_left.cumulated_splines,generator_left.cumulated_lengths,generator_mid.cumulated_lengths[i-1]).min_distance;
+      //     // wr = frenet(x,y,generator_right.cumulated_splines,generator_right.cumulated_lengths,generator_mid.cumulated_lengths[i-1]).min_distance;
+      //   }
+      // }
+      // message.set__points(Points);
+
+
       publisher_rcl_pt->publish(message);
       perception_data.bluecones.clear();
       perception_data.yellowcones.clear();
       perception_data.orangecones.clear();
-      RCLCPP_INFO(this->get_logger(), "published midpoint cones");
+      RCLCPP_INFO(this->get_logger(), "published midpoint spline");
       return;
     }
 
@@ -127,7 +185,7 @@ class MidpointNode : public rclcpp::Node
     {
       subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArray>("/stereo_node_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
       // subscription_lap_num = this->create_subscription<std_msgs::msg::String>("/lap_num", 10, std::bind(&MidpointNode::lap_callback, this, _1));
-      publisher_rcl_pt = this->create_publisher<eufs_msgs::msg::PointArray>("/midpoint_points",10);
+      publisher_rcl_pt = this->create_publisher<interfaces::msg::Spline>("/midpoint_spline",10);
       // publisher_rcl_pt = this->create_publisher<std_msgs::msg::String>("/midpoint_points",10);
       //     rclcpp::TimerBase::SharedPtr  timer_ = this->create_wall_timer(
       // 500ms, std::bind(&MinimalPublisher::timer_callback, this));
