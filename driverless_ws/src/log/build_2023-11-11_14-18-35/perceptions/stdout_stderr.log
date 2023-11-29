@@ -1,0 +1,102 @@
+/home/dale/.local/lib/python3.8/site-packages/setuptools/dist.py:498: SetuptoolsDeprecationWarning: Invalid dash-separated options
+!!
+
+        ********************************************************************************
+        Usage of dash-separated 'script-dir' will not be supported in future
+        versions. Please use the underscore name 'script_dir' instead.
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://setuptools.pypa.io/en/latest/userguide/declarative_config.html for details.
+        ********************************************************************************
+
+!!
+  opt = self.warn_dash_deprecation(opt, section)
+running egg_info
+creating ../build/perceptions/perceptions.egg-info
+writing ../build/perceptions/perceptions.egg-info/PKG-INFO
+writing dependency_links to ../build/perceptions/perceptions.egg-info/dependency_links.txt
+writing entry points to ../build/perceptions/perceptions.egg-info/entry_points.txt
+writing requirements to ../build/perceptions/perceptions.egg-info/requires.txt
+writing top-level names to ../build/perceptions/perceptions.egg-info/top_level.txt
+writing manifest file '../build/perceptions/perceptions.egg-info/SOURCES.txt'
+reading manifest file '../build/perceptions/perceptions.egg-info/SOURCES.txt'
+writing manifest file '../build/perceptions/perceptions.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/dale/driverless/driverless_ws/src/build/perceptions/build
+creating /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib
+creating /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions
+copying perceptions/PredictNode.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions
+copying perceptions/StereoNode.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions
+copying perceptions/conversions.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions
+copying perceptions/LidarNode.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions
+copying perceptions/__init__.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions
+copying perceptions/DataNode.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions
+creating /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros
+creating /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/predictors
+copying perceptions/ros/predictors/StereoNode.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/predictors
+copying perceptions/ros/predictors/LidarNode.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/predictors
+creating /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/utils
+copying perceptions/ros/utils/PredictNode.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/utils
+copying perceptions/ros/utils/FileNode.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/utils
+copying perceptions/ros/utils/conversions.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/utils
+copying perceptions/ros/utils/DataNode.py -> /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/utils
+running install
+/home/dale/.local/lib/python3.8/site-packages/setuptools/_distutils/cmd.py:66: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+!!
+
+        ********************************************************************************
+        Please avoid running ``setup.py`` directly.
+        Instead, use pypa/build, pypa/installer or other
+        standards-based tools.
+
+        See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+        ********************************************************************************
+
+!!
+  self.initialize_options()
+running install_lib
+creating /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/PredictNode.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/StereoNode.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/conversions.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/LidarNode.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/__init__.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions
+creating /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros
+creating /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/predictors
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/predictors/StereoNode.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/predictors
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/predictors/LidarNode.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/predictors
+creating /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/utils
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/utils/PredictNode.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/utils
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/utils/FileNode.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/utils
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/utils/conversions.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/utils
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/ros/utils/DataNode.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/utils
+copying /home/dale/driverless/driverless_ws/src/build/perceptions/build/lib/perceptions/DataNode.py -> /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/PredictNode.py to PredictNode.cpython-38.pyc
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/StereoNode.py to StereoNode.cpython-38.pyc
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/conversions.py to conversions.cpython-38.pyc
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/LidarNode.py to LidarNode.cpython-38.pyc
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/__init__.py to __init__.cpython-38.pyc
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/predictors/StereoNode.py to StereoNode.cpython-38.pyc
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/predictors/LidarNode.py to LidarNode.cpython-38.pyc
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/utils/PredictNode.py to PredictNode.cpython-38.pyc
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/utils/FileNode.py to FileNode.cpython-38.pyc
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/utils/conversions.py to conversions.cpython-38.pyc
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/ros/utils/DataNode.py to DataNode.cpython-38.pyc
+byte-compiling /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions/DataNode.py to DataNode.cpython-38.pyc
+running install_data
+creating /home/dale/driverless/driverless_ws/src/install/perceptions/share/ament_index
+creating /home/dale/driverless/driverless_ws/src/install/perceptions/share/ament_index/resource_index
+creating /home/dale/driverless/driverless_ws/src/install/perceptions/share/ament_index/resource_index/packages
+copying resource/perceptions -> /home/dale/driverless/driverless_ws/src/install/perceptions/share/ament_index/resource_index/packages
+copying package.xml -> /home/dale/driverless/driverless_ws/src/install/perceptions/share/perceptions
+running install_egg_info
+Copying ../build/perceptions/perceptions.egg-info to /home/dale/driverless/driverless_ws/src/install/perceptions/lib/python3.8/site-packages/perceptions-0.0.0-py3.8.egg-info
+running install_scripts
+Installing data_node script to /home/dale/driverless/driverless_ws/src/install/perceptions/lib/perceptions
+Installing file_node script to /home/dale/driverless/driverless_ws/src/install/perceptions/lib/perceptions
+Installing lidar_node script to /home/dale/driverless/driverless_ws/src/install/perceptions/lib/perceptions
+Installing stereo_node script to /home/dale/driverless/driverless_ws/src/install/perceptions/lib/perceptions
+writing list of installed files to '/home/dale/driverless/driverless_ws/src/build/perceptions/install.log'

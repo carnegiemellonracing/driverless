@@ -1,0 +1,11 @@
+source;share/ros2_numpy_dv/hook/cmake_prefix_path.ps1
+source;share/ros2_numpy_dv/hook/cmake_prefix_path.dsv
+source;share/ros2_numpy_dv/hook/cmake_prefix_path.sh
+source;share/ros2_numpy_dv/hook/pythonpath.ps1
+source;share/ros2_numpy_dv/hook/pythonpath.dsv
+source;share/ros2_numpy_dv/hook/pythonpath.sh
+source;share/ros2_numpy_dv/local_setup.bash
+source;share/ros2_numpy_dv/local_setup.dsv
+source;share/ros2_numpy_dv/local_setup.ps1
+source;share/ros2_numpy_dv/local_setup.sh
+source;share/ros2_numpy_dv/local_setup.zsh

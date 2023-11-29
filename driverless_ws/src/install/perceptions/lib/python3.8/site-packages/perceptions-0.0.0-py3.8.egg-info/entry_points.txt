@@ -1,0 +1,5 @@
+[console_scripts]
+data_node = perceptions.ros.utils.DataNode:main
+file_node = perceptions.ros.utils.FileNode:main
+lidar_node = perceptions.ros.predictors.LidarNode:main
+stereo_node = perceptions.ros.predictors.StereoNode:main

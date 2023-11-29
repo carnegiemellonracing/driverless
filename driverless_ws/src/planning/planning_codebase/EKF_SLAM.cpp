@@ -7,6 +7,7 @@
 #include <message_filters/sync_policies/approximate_time.h>
 
 #include "eufs_msgs/msg/cone_array_with_covariance.hpp"
+#include "eufs_msgs/msg/cone_array.hpp"
 #include "eufs_msgs/msg/car_state.hpp"
 #include <gsl/gsl_block.h>
 #include <gsl/gsl_math.h>
@@ -54,32 +55,32 @@ class SLAMValidation : public rclcpp::Node
     SLAMValidation(): Node("slam_validation"){
       // gsl_matrix_set_identity(pEst);
 
-      cone_sub = this->create_subscription<eufs_msgs::msg::ConeArrayWithCovariance>(
-      "/cones", 10, std::bind(&SLAMValidation::cone_callback, this, _1));
+      cone_sub = this->create_subscription<eufs_msgs::msg::ConeArray>(
+      "/stereo_nodes_cones", 10, std::bind(&SLAMValidation::cone_callback, this, _1));
       vehicle_state_sub = this->create_subscription<eufs_msgs::msg::CarState>(
       "/ground_truth/state", 10, std::bind(&SLAMValidation::vehicle_state_callback, this, _1));
       timer = this->create_wall_timer(100ms, std::bind(&SLAMValidation::timer_callback, this));
     }
   private:
-    void cone_callback(const eufs_msgs::msg::ConeArrayWithCovariance::SharedPtr cone_data){
+    void cone_callback(const eufs_msgs::msg::ConeArray::SharedPtr cone_data){
       RCLCPP_INFO(this->get_logger(), "CONECALLBACK: B: %i| Y: %i| O: %i", cone_data->blue_cones.size(), cone_data->yellow_cones.size(), cone_data->orange_cones.size());
       blue_cones.clear();
       yellow_cones.clear();
       orange_cones.clear();
       for(int i = 0; i < cone_data->blue_cones.size(); i++){
         Cone to_add;
-        to_add.x = cone_data->blue_cones[i].point.x;
-        to_add.y = cone_data->blue_cones[i].point.y;
+        to_add.x = cone_data->blue_cones[i].x;
+        to_add.y = cone_data->blue_cones[i].y;
         blue_cones.push_back(to_add);
       }
       for(int i = 0; i < cone_data->yellow_cones.size(); i++){
         Cone to_add;
-        to_add.x = cone_data->yellow_cones[i].point.x;
-        to_add.y = cone_data->yellow_cones[i].point.y;
+        to_add.x = cone_data->yellow_cones[i].x;
+        to_add.y = cone_data->yellow_cones[i].y;
         yellow_cones.push_back(to_add);
       }
       for(int i = 0; i < cone_data->orange_cones.size(); i++){
-        Cone to_add = {cone_data->orange_cones[i].point.x, cone_data->orange_cones[i].point.y};
+        Cone to_add = {cone_data->orange_cones[i].x, cone_data->orange_cones[i].y};
         orange_cones.push_back(to_add);
       }
     }
@@ -175,7 +176,7 @@ class SLAMValidation : public rclcpp::Node
       pEst = slam_output.p;
 
     }
-    rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr cone_sub;
+    rclcpp::Subscription<eufs_msgs::msg::ConeArray>::SharedPtr cone_sub;
     rclcpp::Subscription<eufs_msgs::msg::CarState>::SharedPtr vehicle_state_sub;
     vector<Cone> blue_cones;
     vector<Cone> yellow_cones;
