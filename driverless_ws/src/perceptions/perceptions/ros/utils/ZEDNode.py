@@ -86,7 +86,7 @@ class ZEDNode(Node):
         self.xyz_publisher.publish(xyz_enc)
 
         t = time.time()
-        print(f"Publishing data: {1000 * (t - s):.3f}ms")
+        print(f"Publishing data: {1000 * (t - s):.3f}ms (frame_id: {header.frame_id}, stamp: {header.stamp})")
 
         
 
