@@ -8,6 +8,7 @@ from sensor_msgs.msg import Image, PointCloud2
 
 # ROS2 msg to python datatype conversions
 import perceptions.ros.utils.conversions as conv
+from perceptions.ros.utils.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
@@ -21,14 +22,6 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
                          history = QoSHistoryPolicy.KEEP_LAST,
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
-
-# setup the topic names that we are reading from
-LEFT_IMAGE_TOPIC = "/zedsdk_left_color_image"
-RIGHT_IMAGE_TOPIC = "/zedsdk_right_color_image"
-XYZ_IMAGE_TOPIC = "/zedsdk_point_cloud_image"
-DEPTH_IMAGE_TOPIC = "/zedsdk_depth_image"
-POINT_TOPIC = "/lidar_points"
-
 
 DEBUG = False
 
