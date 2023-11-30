@@ -49,6 +49,7 @@ class ZEDNode(Node):
                                                    qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         # initialize timer interval for publishing the data
+        # TODO: frame rate higher than actual update rate
         frame_rate = 50
         self.data_syncer = self.create_timer(1/frame_rate, self.inference)
 
