@@ -503,7 +503,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
     }
 
-    return std::make_pair(splines,cumsum);
+    return std::make_pair(splines, cumsum);
 
 
 

@@ -58,7 +58,8 @@ class MidpointNode : public rclcpp::Node
       // return;
       if (lap>1) return;
 
-      if((msg->blue_cones.size()==0 || msg->yellow_cones.size()==0) && (msg->orange_cones.size()<2)){
+      // if((msg->blue_cones.size() < 3 || msg->yellow_cones.size() < 3) && (msg->orange_cones.size()<2)){
+      if((msg->blue_cones.size() < 3 || msg->yellow_cones.size() < 3)){
         return;
       }
 
@@ -84,35 +85,44 @@ class MidpointNode : public rclcpp::Node
       // message.spl_poly_coefs.clear();
       std::fill(std::begin(message.spl_poly_coefs), std::end(message.spl_poly_coefs), 0.0);
       for (int i = 0; i < 4; i ++) {
-        message.spl_poly_coefs[i] = (midline.spl_poly.nums[i]);
+        message.spl_poly_coefs[i] = midline.spl_poly.nums[i];
       }
 
       // message.first_der_coefs.clear();
       std::fill(std::begin(message.first_der_coefs), std::end(message.first_der_coefs), 0.0);
-      for (int i = 0; i < 4; i ++) {
-        message.first_der_coefs[i] = (midline.first_der.nums[i]);
+      for (int i = 0; i < 3; i ++) {
+        message.first_der_coefs[i] = midline.first_der.nums[i];
       }
 
       // message.second_der_coefs.clear();
       std::fill(std::begin(message.second_der_coefs), std::end(message.second_der_coefs), 0.0);
-      for (int i = 0; i < 4; i ++) {
-        message.second_der_coefs[i] = (midline.second_der.nums[i]);
+      for (int i = 0; i < 2; i ++) {
+        message.second_der_coefs[i] = midline.second_der.nums[i];
       }
 
       message.points.clear();
+      message.rotated_points.clear();
+
       for (int i = 0; i < midline.points.cols(); i++) {
         geometry_msgs::msg::Point point; // z field is unused
         point.x = midline.points(0, i);
         point.y = midline.points(1, i);
         message.points.push_back(point);
-      }
-      message.rotated_points.clear();
-      for (int i = 0; i < midline.rotated_points.cols(); i++) {
-        geometry_msgs::msg::Point point; // z field is unused
+
+        // geometry_msgs::msg::Point point; // z field is unused
         point.x = midline.rotated_points(0, i);
         point.y = midline.rotated_points(1, i);
         message.rotated_points.push_back(point);
       }
+
+
+      // message.rotated_points.clear();
+      // for (int i = 0; i < midline.rotated_points.cols(); i++) {
+      //   geometry_msgs::msg::Point point; // z field is unused
+      //   point.x = midline.rotated_points(0, i);
+      //   point.y = midline.rotated_points(1, i);
+      //   message.rotated_points.push_back(point);
+      // }
 
       // message.q.clear();
       std::fill(std::begin(message.q), std::end(message.q), 0.0);
@@ -123,9 +133,8 @@ class MidpointNode : public rclcpp::Node
 
       // message.translation_vector.clear();
       std::fill(std::begin(message.translation_vector), std::end(message.translation_vector), 0.0);
-      message.translation_vector[0] = (midline.translation_vector(0));
-      message.translation_vector[1] = (midline.translation_vector(1));
-
+      message.translation_vector[0] = midline.translation_vector[0];
+      message.translation_vector[1] = midline.translation_vector[1];
       message.path_id = midline.path_id;
       message.sort_index = midline.sort_index;
       message.length = midline.length();
@@ -173,7 +182,7 @@ class MidpointNode : public rclcpp::Node
       perception_data.bluecones.clear();
       perception_data.yellowcones.clear();
       perception_data.orangecones.clear();
-      RCLCPP_INFO(this->get_logger(), "published midpoint spline");
+      RCLCPP_INFO(this->get_logger(), "published midpoint spline\n");
       return;
     }
 
@@ -198,9 +207,14 @@ class MidpointNode : public rclcpp::Node
 
 int main(int argc, char * argv[])
 {
-  // RCLCPP_INFO(this->get_logger(), "Started Midpoint Node");
+  // // RCLCPP_INFO(this->get_logger(), "Started Midpoint Node");
+  // rclcpp::init(argc, argv);
+  // rclcpp::spin(std::make_shared<MidpointNode>());
+  // rclcpp::shutdown();
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<MidpointNode>());
+  auto node = std::make_shared<MidpointNode>();
+  RCLCPP_INFO(node->get_logger(), "got output\n");
+  rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;
 }

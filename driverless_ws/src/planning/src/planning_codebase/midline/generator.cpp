@@ -20,7 +20,7 @@ std::vector<std::pair<double,double>>  MidpointGenerator::sorted_by_norm(std::ve
 
 Eigen::MatrixXd midpoint(rclcpp::Logger logger, Eigen::MatrixXd& left,Eigen::MatrixXd& right){
     int cols = left.cols() +right.cols() -1;
-    Eigen::MatrixXd midpt(2,cols);\
+    Eigen::MatrixXd midpt(2,cols);
 
     // RCLCPP_INFO(logger, "left matrix size: %d\n", left.cols());
     // RCLCPP_INFO(logger, "right matrix size: %d\n", right.cols());
