@@ -21,7 +21,14 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
 class PredictNode(DataNode):
 
     def __init__(self, name, debug_flag=False, time_flag=True):
-        super().__init__(name=name)
+        # create predictor, any subclass of PredictNode needs to fill this component
+        self.predictor = self.init_predictor()
+
+        # pass required Predictor's pieces of data to DataNode
+        super().__init__(
+            required_data=self.predictor.required_data(), 
+            name=name
+        )
 
         # debugging flags
         self.debug = debug_flag
@@ -30,16 +37,13 @@ class PredictNode(DataNode):
         self.name = name
 
         # TODO: figure out best way to time prediction appropriately
-        self.interval = 0.1
+        self.interval = 0.05
         self.predict_timer = self.create_timer(self.interval, self.predict_callback)
 
         # initialize published cone topic based on name
         self.cone_topic = f"/{name}_cones"
         self.qos_profile = BEST_EFFORT_QOS_PROFILE
-        self.cone_publisher = self.create_publisher(ConeArray, self.cone_topic, self.qos_profile)
-        
-        # create predictor, any subclass of PredictNode needs to fill this component
-        self.predictor = self.init_predictor()
+        self.cone_publisher = self.create_publisher(ConeArray, self.cone_topic, self.qos_profile) 
 
         return
     

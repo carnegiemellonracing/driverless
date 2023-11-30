@@ -12,6 +12,7 @@ from perceptions.ros.utils.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XY
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
+from perc22a.data.utils.DataType import DataType
 
 # general imports
 import cv2
@@ -27,7 +28,7 @@ DEBUG = False
 
 class DataNode(Node):
 
-    def __init__(self, name="data_node"):
+    def __init__(self, required_data=list(DataType), name="data_node"):
         super().__init__(name)
 
         if DEBUG:
@@ -36,16 +37,26 @@ class DataNode(Node):
             self.xyz_image_window = vis.init_visualizer_window()
 
         # subscribe to each piece of data that we want to collect on
-        self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.required_data = required_data
+
+        if DataType.ZED_LEFT_COLOR in self.required_data:
+            self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        
+        if DataType.ZED_RIGHT_COLOR in self.required_data:
+            self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+
+        if DataType.ZED_XYZ_IMG in self.required_data:
+            self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+
+        if DataType.ZED_DEPTH_IMG in self.required_data:
+            self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+
+        if DataType.HESAI_POINTCLOUD in self.required_data:
+            self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         # define dictionary to store the data
+        # TODO: convert data representation to DataInstance type
         self.data = {}
-
-        # create key strings associated with data (eventually make same as topic names)
         self.left_color_str = "left_color"
         self.right_color_str = "right_color"
         self.xyz_image_str = "xyz_image"
@@ -55,11 +66,7 @@ class DataNode(Node):
 
     def got_all_data(self):
         # returns whether data node has all pieces of data
-        return self.left_color_str in self.data and \
-               self.right_color_str in self.data and \
-               self.xyz_image_str in self.data and \
-               self.depth_image_str in self.data and \
-               self.points_str in self.data
+        return all([(data_type in self.required_data) for data_type in self.data.keys()])
     
     def left_color_callback(self, msg):
         self.data[self.left_color_str] = conv.img_to_npy(msg)

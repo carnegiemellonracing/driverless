@@ -38,12 +38,12 @@ class ZEDNode(Node):
         self.left_publisher = self.create_publisher(msg_type=Image,
                                                      topic=LEFT_IMAGE_TOPIC,
                                                      qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.right_publisher = self.create_publisher(msg_type=Image,
-                                                     topic=RIGHT_IMAGE_TOPIC,
-                                                     qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.depth_publisher = self.create_publisher(msg_type=Image,
-                                                     topic=DEPTH_IMAGE_TOPIC,
-                                                     qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.right_publisher = self.create_publisher(msg_type=Image,
+        #                                              topic=RIGHT_IMAGE_TOPIC,
+        #                                              qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.depth_publisher = self.create_publisher(msg_type=Image,
+        #                                              topic=DEPTH_IMAGE_TOPIC,
+        #                                              qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.xyz_publisher = self.create_publisher(msg_type=Image,
                                                    topic=XYZ_IMAGE_TOPIC,
                                                    qos_profile=BEST_EFFORT_QOS_PROFILE)
@@ -74,13 +74,13 @@ class ZEDNode(Node):
         self.frame_id += 1
 
         left_enc = self.bridge.cv2_to_imgmsg(left, encoding="passthrough", header=header)
-        right_enc = self.bridge.cv2_to_imgmsg(right, encoding="passthrough", header=header)
-        depth_enc = self.bridge.cv2_to_imgmsg(depth, encoding="passthrough", header=header)
+        # right_enc = self.bridge.cv2_to_imgmsg(right, encoding="passthrough", header=header)
+        # depth_enc = self.bridge.cv2_to_imgmsg(depth, encoding="passthrough", header=header)
         xyz_enc = self.bridge.cv2_to_imgmsg(xyz,encoding="32FC4", header=header)
 
         # publish the data
         self.left_publisher.publish(left_enc)
-        self.right_publisher.publish(right_enc)
+        # self.right_publisher.publish(right_enc)
         self.depth_publisher.publish(depth_enc)
         self.xyz_publisher.publish(xyz_enc)
 
