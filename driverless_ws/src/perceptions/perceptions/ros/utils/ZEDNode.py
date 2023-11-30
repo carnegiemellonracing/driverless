@@ -81,7 +81,7 @@ class ZEDNode(Node):
         # publish the data
         self.left_publisher.publish(left_enc)
         # self.right_publisher.publish(right_enc)
-        self.depth_publisher.publish(depth_enc)
+        # self.depth_publisher.publis(depth_enc)
         self.xyz_publisher.publish(xyz_enc)
 
         t = time.time()
