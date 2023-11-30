@@ -24,14 +24,13 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
 
-DEBUG = False
-
 class DataNode(Node):
 
-    def __init__(self, required_data=list(DataType), name="data_node"):
+    def __init__(self, required_data=list(DataType), name="data_node", visualize=False):
         super().__init__(name)
 
-        if DEBUG:
+        self.visualize = visualize 
+        if self.visualize:
             # setup point cloud visualization window
             self.window = vis.init_visualizer_window()
             self.xyz_image_window = vis.init_visualizer_window()
@@ -71,21 +70,21 @@ class DataNode(Node):
     def left_color_callback(self, msg):
         self.data[self.left_color_str] = conv.img_to_npy(msg)
 
-        if DEBUG:
+        if self.visualize:
             cv2.imshow("left", self.data[self.left_color_str])
             cv2.waitKey(1)
 
     def right_color_callback(self, msg):
         self.data[self.right_color_str] = conv.img_to_npy(msg)
 
-        if DEBUG:
+        if self.visualize:
             cv2.imshow("right", self.data[self.right_color_str])
             cv2.waitKey(1)
 
     def xyz_image_callback(self, msg):
         self.data[self.xyz_image_str] =conv.img_to_npy(msg)
 
-        if DEBUG:
+        if self.visualize:
             # display xyz_image as unstructured point cloud
             points = self.data[self.xyz_image_str][:, :, :3]
             points = points.reshape((-1, 3))
@@ -98,13 +97,13 @@ class DataNode(Node):
     def depth_image_callback(self, msg):
         self.data[self.depth_image_str] = conv.img_to_npy(msg)
         
-        if DEBUG:
+        if self.visualize:
             cv2.imshow("depth", self.data[self.depth_image_str])
 
     def points_callback(self, msg):
         self.data[self.points_str] = conv.pointcloud2_to_npy(msg)
 
-        if DEBUG:
+        if self.visualize:
             points = self.data[self.points_str][:, :3]
             points = points[:, [1, 0, 2]]
             points[:, 0] *= -1
@@ -114,11 +113,8 @@ class DataNode(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    # enable the debug flag for sexy visualizations
-    global DEBUG
-    DEBUG = True
-
-    data_node = DataNode()
+    # enable absolutely ludicrous visualizations    
+    data_node = DataNode(visualize=True)
 
     rclpy.spin(data_node)
 
