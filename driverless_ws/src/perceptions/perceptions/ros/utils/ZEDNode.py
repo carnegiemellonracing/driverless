@@ -20,6 +20,7 @@ from perceptions.ros.utils.zed import ZEDSDK
 from eufs_msgs.msg import ConeArray
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
+from std_msgs.msg import Header
 
 from cv_bridge import CvBridge
 
@@ -48,7 +49,7 @@ class ZEDNode(Node):
                                                    qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         # initialize timer interval for publishing the data
-        frame_rate = 20
+        frame_rate = 50
         self.data_syncer = self.create_timer(1/frame_rate, self.inference)
 
         # initialize the ZEDSDK API for receiving raw data
@@ -56,6 +57,7 @@ class ZEDNode(Node):
         self.zed.open()
 
         self.bridge = CvBridge()
+        self.frame_id = 0
 
     def inference(self):
         # try displaying the image
@@ -66,10 +68,15 @@ class ZEDNode(Node):
         
         # convert the data and check that it is the same going and backwards
         # have to extract out nan values that don't count to compare image values
-        left_enc = self.bridge.cv2_to_imgmsg(left, encoding="passthrough")
-        right_enc = self.bridge.cv2_to_imgmsg(right, encoding="passthrough")
-        depth_enc = self.bridge.cv2_to_imgmsg(depth, encoding="passthrough")
-        xyz_enc = self.bridge.cv2_to_imgmsg(xyz,encoding="32FC4")
+        header = Header()
+        header.stamp = self.get_clock().now().to_msg()
+        header.frame_id = str(self.frame_id)
+        self.frame_id += 1
+
+        left_enc = self.bridge.cv2_to_imgmsg(left, encoding="passthrough", header=header)
+        right_enc = self.bridge.cv2_to_imgmsg(right, encoding="passthrough", header=header)
+        depth_enc = self.bridge.cv2_to_imgmsg(depth, encoding="passthrough", header=header)
+        xyz_enc = self.bridge.cv2_to_imgmsg(xyz,encoding="32FC4", header=header)
 
         # publish the data
         self.left_publisher.publish(left_enc)
