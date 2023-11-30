@@ -67,25 +67,25 @@ class DataNode(Node):
         return all([(data_type in self.required_data) for data_type in self.data.keys()])
     
     def left_color_callback(self, msg):
-        self.data[self.left_color_str] = conv.img_to_npy(msg)
+        self.data[DataType.ZED_LEFT_COLOR] = conv.img_to_npy(msg)
 
         if self.visualize:
-            cv2.imshow("left", self.data[self.left_color_str])
+            cv2.imshow("left", self.data[DataType.ZED_LEFT_COLOR])
             cv2.waitKey(1)
 
     def right_color_callback(self, msg):
-        self.data[self.right_color_str] = conv.img_to_npy(msg)
+        self.data[DataType.ZED_RIGHT_COLOR] = conv.img_to_npy(msg)
 
         if self.visualize:
-            cv2.imshow("right", self.data[self.right_color_str])
+            cv2.imshow("right", self.data[DataType.ZED_RIGHT_COLOR])
             cv2.waitKey(1)
 
     def xyz_image_callback(self, msg):
-        self.data[self.xyz_image_str] =conv.img_to_npy(msg)
+        self.data[DataType.ZED_XYZ_IMG] =conv.img_to_npy(msg)
 
         if self.visualize:
             # display xyz_image as unstructured point cloud
-            points = self.data[self.xyz_image_str][:, :, :3]
+            points = self.data[DataType.ZED_XYZ_IMG][:, :, :3]
             points = points.reshape((-1, 3))
             points = points[:,[1,0,2]]
             points = points[~np.isnan(points)].reshape((-1, 3))
@@ -94,16 +94,16 @@ class DataNode(Node):
             vis.update_visualizer_window(self.xyz_image_window, points)
 
     def depth_image_callback(self, msg):
-        self.data[self.depth_image_str] = conv.img_to_npy(msg)
+        self.data[DataType.ZED_DEPTH_IMG] = conv.img_to_npy(msg)
         
         if self.visualize:
-            cv2.imshow("depth", self.data[self.depth_image_str])
+            cv2.imshow("depth", self.data[DataType.ZED_DEPTH_IMG])
 
     def points_callback(self, msg):
-        self.data[self.points_str] = conv.pointcloud2_to_npy(msg)
+        self.data[DataType.HESAI_POINTCLOUD] = conv.pointcloud2_to_npy(msg)
 
         if self.visualize:
-            points = self.data[self.points_str][:, :3]
+            points = self.data[DataType.HESAI_POINTCLOUD][:, :3]
             points = points[:, [1, 0, 2]]
             points[:, 0] *= -1
             vis.update_visualizer_window(self.window, points[:,:3])
