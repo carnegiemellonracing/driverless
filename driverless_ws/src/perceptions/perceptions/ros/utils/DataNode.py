@@ -34,20 +34,25 @@ class DataNode(Node):
         self.visualize = visualize 
 
         if DataType.ZED_LEFT_COLOR in self.required_data:
+            print("need zed left")
             self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         
         if DataType.ZED_RIGHT_COLOR in self.required_data:
+            print("need zed right")
             self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         if DataType.ZED_XYZ_IMG in self.required_data:
+            print("need zed xyz")
             self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
             if self.visualize:
                 self.xyz_image_window = vis.init_visualizer_window()
 
         if DataType.ZED_DEPTH_IMG in self.required_data:
+            print("need zed depth")
             self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         if DataType.HESAI_POINTCLOUD in self.required_data:
+            print("need hesai")
             self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
             if self.visualize:
                 self.window = vis.init_visualizer_window()
