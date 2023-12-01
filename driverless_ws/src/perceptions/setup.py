@@ -22,7 +22,8 @@ setup(
         'console_scripts': [
             'data_node = perceptions.DataNode:main',
             'stereo_node = perceptions.StereoNode:main',
-            'lidar_node = perceptions.LidarNode:main'
+            'lidar_node = perceptions.LidarNode:main',
+            'sync_node = perceptions.SyncNode:main'
         ],
     },
 )
