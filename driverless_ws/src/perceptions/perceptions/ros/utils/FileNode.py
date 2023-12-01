@@ -14,10 +14,11 @@ import numpy as np
 
 # set to determine what folder to create (find in ~/driverless/driverless_ws/<FOLDER_NAME>)
 # DO NOT MAKE "src", "build", "install", or "log"
-FOLDER_NAME = "tt-09-29-1"
+FOLDER_NAME = "11-30-breezeway-sync"
 
 # define path to data directory
-WS_DIR = Path(__file__).parents[3]
+# WS_DIR = Path(__file__).parents[3]
+WS_DIR = "/home/chip/Desktop/Documents/driverless/driverless_ws"
 DATA_DIR = os.path.join(WS_DIR, FOLDER_NAME)
 
 class FileNode(DataNode):
@@ -26,8 +27,8 @@ class FileNode(DataNode):
         super().__init__(name="file_node")
 
         # create timer for saving on interval
-        self.interval = 1
-        self.save_timer = self.create_timer(self.interval, self.save_callback)
+        self.hz = 25
+        self.save_timer = self.create_timer(1 / self.hz, self.save_callback)
         self.save_instance = 0
 
         # setup empty
@@ -49,7 +50,12 @@ class FileNode(DataNode):
 
         # self.data updated by DataNode subscribers
         filepath = os.path.join(DATA_DIR, datafile_name)
-        np.savez(filepath, **self.data)
+
+        # convert enumerated data types to strings
+        data = {}
+        for k, v in self.data.items():
+            data[k.value] = v
+        np.savez(filepath, **data)
 
         # update instance value
         self.save_instance += 1

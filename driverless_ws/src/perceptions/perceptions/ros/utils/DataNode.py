@@ -24,9 +24,11 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
 
+ALL_DATA_TYPES = [DataType.HESAI_POINTCLOUD, DataType.ZED_LEFT_COLOR, DataType.ZED_XYZ_IMG]
+
 class DataNode(Node):
 
-    def __init__(self, required_data=list(DataType), name="data_node", visualize=False):
+    def __init__(self, required_data=ALL_DATA_TYPES, name="data_node", visualize=False):
         super().__init__(name)
 
         # subscribe to each piece of data that we want to collect on
