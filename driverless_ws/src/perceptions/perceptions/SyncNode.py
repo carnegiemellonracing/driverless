@@ -4,7 +4,7 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image, PointCloud2
 from message_filters import ApproximateTimeSynchronizer, Subscriber
-from eufs_msgs import DataFrame
+from eufs_msgs.msg import DataFrame
 
 class SyncNode(Node):
     def __init__(self):
@@ -22,7 +22,7 @@ class SyncNode(Node):
         queue_size = 100
 
         # Use ApproximateTimeSynchronizer to synchronize messages
-        sync = ApproximateTimeSynchronizer([zed_sub, lidar_sub], queue_size=queue_size, slop=0.1)
+        sync = ApproximateTimeSynchronizer([zed_sub, lidar_sub], queue_size=queue_size, slop=0.05)
         sync.registerCallback(self.callback)
 
         # Create a publisher for your DataFrame message
