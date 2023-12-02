@@ -64,7 +64,7 @@ class SLAMSubscriber(Node):
         self.gs_vehicle_state = None
         self.ekf_vehicle_state = None
         self.cone_positions = None
-
+        
         # self.EKF = Map()
         # self.GraphSlam = GraphSlam(lc_limit=5)
 
@@ -74,9 +74,11 @@ class SLAMSubscriber(Node):
         self.state = None
 
         self.xEst = np.zeros((STATE_SIZE, 1))
-        self.prev_length_xEst = len(self.xEst)
         self.xTruth = np.zeros((STATE_SIZE, 1))
         self.pEst = np.eye(STATE_SIZE)
+
+        self.xErr = np.zeros(((xEst.shape[0] - 3)/2, 1))
+
         #Time  Variables
         self.prevTime = self.get_clock().now().to_msg()
         self.dTime = 0
@@ -276,7 +278,7 @@ class SLAMSubscriber(Node):
             angle = self.pi_2_pi(math.atan2(dy, dx))
             zi = np.array([dist, angle, i])
             z = np.vstack((z, zi))
-        self.xEst, self.pEst, cones = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger())
+        self.xEst, self.pEst, cones, self.xErr = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger(), self.xTruth, self.xErr)
         
 
         # all_cones stores the calculated cones
