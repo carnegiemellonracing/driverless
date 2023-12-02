@@ -197,8 +197,6 @@ def search_correspond_landmark_id(xAug, PAug, zi, logger):
     min_dist.append(M_DIST_TH)  # new landmark; minimum distance threshold??
     min_id = min_dist.index(min(min_dist))
 
-<<<<<<< HEAD
-=======
     # min_dist_truth = []
     # for i in range(nLM):
     #     lm = get_landmark_position_from_state(xTruth, i)
@@ -218,7 +216,6 @@ def search_correspond_landmark_id(xAug, PAug, zi, logger):
             return min_id_truth
 
 
->>>>>>> faa60b20d2e0508bec6187e8e4797df6ed75da54
     # logger.info(f'   {second_min_dist[0]}/{min_dist[0]} == {second_min_dist[0]/min_dist[0]} ')
     # if nLM == 0:
     #     return 0
