@@ -166,13 +166,14 @@ def get_landmark_position_from_state(x, ind):
     return lm
 
 
+error = 0
+
 def search_correspond_landmark_id(xAug, PAug, zi, logger):
     """
     Landmark association with Mahalanobis distance
     """
 
     nLM = calc_n_lm(xAug)
-
     min_dist = []
     # min_dist, second_min_dist = [1000, -1], [1000, -1] #[mahalanobis, id]
 
@@ -196,6 +197,28 @@ def search_correspond_landmark_id(xAug, PAug, zi, logger):
     min_dist.append(M_DIST_TH)  # new landmark; minimum distance threshold??
     min_id = min_dist.index(min(min_dist))
 
+<<<<<<< HEAD
+=======
+    # min_dist_truth = []
+    # for i in range(nLM):
+    #     lm = get_landmark_position_from_state(xTruth, i)
+    #     y, S, H = calc_innovation(lm, xTruth, PAug, zi, i)
+    #     min_dist_truth.append(y.T @ np.linalg.inv(S) @ y)
+
+    # min_dist_truth.append(M_DIST_TH)  # new landmark
+    # min_id_truth = min_dist_truth.index(min(min_dist_truth))
+
+    if min_id != nLM:      #  found existing landmark
+        if ________: # mindist calc is really bad
+            error += 1
+            return nLM
+    else: # didnt find existing landmark
+        if ________: # should have found landmark
+            error += 1
+            return min_id_truth
+
+
+>>>>>>> faa60b20d2e0508bec6187e8e4797df6ed75da54
     # logger.info(f'   {second_min_dist[0]}/{min_dist[0]} == {second_min_dist[0]/min_dist[0]} ')
     # if nLM == 0:
     #     return 0
