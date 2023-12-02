@@ -255,7 +255,7 @@ class SLAMSubscriber(Node):
         # all_cones stores the calculated cones
         self.all_cones.extend(cones)
         self.get_logger().info(f'Num Landmarks = {(self.xEst.shape[0]-3)/2}')
-        print("Type of subscription cone data: ", type(self.subscription_cone_data))
+        # print("Type of subscription cone data: ", type(self.subscription_cone_data))
         # for thing in self.subscription_cone_data:
         #     print("Ground truth data: ", thing)
         # self.print_xEst()
@@ -348,7 +348,7 @@ class SLAMSubscriber(Node):
         for cone_coord in self.all_cones:   
             self.replace(self.closest_data, cone_coord[0, 0], cone_coord[1, 0])
             
-        #Find mean error
+        #Find temp mean error
         for pos in self.closest_data:
             if pos is None:
                 self.missed_cones += 1
@@ -356,17 +356,36 @@ class SLAMSubscriber(Node):
                 self.mean_error += pos[2]
         self.mean_error /= len(self.closest_data) - self.missed_cones
         
-        #Find standard deviation of error
+        #Find temp standard deviation of error
         for pos in self.closest_data:
             if pos is not None:   
                 self.stdev_error += (pos[2] - self.mean_error) * (pos[2] - self.mean_error)
         self.stdev_error = math.sqrt(self.stdev_error / (len(self.closest_data) - self.missed_cones))
         
         #Find statistically significant errors
+        for ind in range(0, len(self.closest_data)):
+            if self.closest_data[ind] is not None:   
+                if abs(self.closest_data[ind][2] - self.mean_error) > 2 * self.stdev_error:
+                    self.bad_states += 1
+                    self.closest_data[ind] = None
+                    
+        #Reset mean and standard deviation
+        self.mean_error = 0
+        self.stdev_error = 0
+        #Find mean error w/o statistically significant errors
+        for pos in self.closest_data:
+            if pos is not None:
+                self.mean_error += pos[2]
+        if len(self.closest_data) - self.missed_cones - self.bad_states != 0:
+            self.mean_error /= len(self.closest_data) - self.missed_cones - self.bad_states
+        
+        #Find standard deviation of error w/o statistically significant errors
         for pos in self.closest_data:
             if pos is not None:   
-                if abs(pos[2] - self.mean_error) > 2 * self.stdev_error:
-                    self.bad_states += 1
+                self.stdev_error += (pos[2] - self.mean_error) * (pos[2] - self.mean_error)
+        if len(self.closest_data) - self.missed_cones - self.bad_states != 0:
+            self.stdev_error = math.sqrt(self.stdev_error / (len(self.closest_data) - self.missed_cones - self.bad_states))
+         
         self.print_model_acc()
         
     #Checks if the closest_data entry at ind is empty of it the current error is less
