@@ -82,10 +82,7 @@ def ekf_slam(xEst, PEst, u, z, dt, logger):
     # logger.info(f'\n\n')
     xEst[2] = pi_2_pi(xEst[2])
     #PEst = pose estimate
-    #xEst = x estimate
-    print("printing out what's in xEst")
-    for thing in xEst:
-        print(thing)
+    #xEst = Robot pose estimate 
     return xEst, PEst, cones
 
 
@@ -178,9 +175,11 @@ def search_correspond_landmark_id(xAug, PAug, zi, logger):
 
     min_dist = []
     # min_dist, second_min_dist = [1000, -1], [1000, -1] #[mahalanobis, id]
+
+    # This is the range and bearing of the observed landmark 
     r, theta = zi[0], zi[1]
     # logger.info(f'Measurement: {r*math.cos(theta)}, {r*math.sin(theta)}')
-    for i in range(nLM):
+    for i in range(nLM): #iterate through all of the previously seen landmarks
         lm = get_landmark_position_from_state(xAug, i)
         y, S, H = calc_innovation(lm, xAug, PAug, zi, i)
         # mahalanobis = y.T @ np.linalg.inv(S) @ y
@@ -194,8 +193,9 @@ def search_correspond_landmark_id(xAug, PAug, zi, logger):
         min_dist.append(y.T @ np.linalg.inv(S) @ y)
         # logger.info(f'  Landmark {i}: {lm[0]}, {lm[1]} | Mahalanobis: {y.T @ np.linalg.inv(S) @ y}')
 
-    min_dist.append(M_DIST_TH)  # new landmark
+    min_dist.append(M_DIST_TH)  # new landmark; minimum distance threshold??
     min_id = min_dist.index(min(min_dist))
+
     # logger.info(f'   {second_min_dist[0]}/{min_dist[0]} == {second_min_dist[0]/min_dist[0]} ')
     # if nLM == 0:
     #     return 0

@@ -74,6 +74,8 @@ class SLAMSubscriber(Node):
         self.state = None
 
         self.xEst = np.zeros((STATE_SIZE, 1))
+        self.prev_length_xEst = len(self.xEst)
+        self.xTruth = np.zeros((STATE_SIZE, 1))
         self.pEst = np.eye(STATE_SIZE)
         #Time  Variables
         self.prevTime = self.get_clock().now().to_msg()
@@ -91,22 +93,28 @@ class SLAMSubscriber(Node):
         self.closest_data = []
 
     def parse_cones(self,msg):
+        if self.cones is not None:
+            self.get_logger().info("Num cones: " + (str)(len(self.cones)))
         cones = msg.blue_cones
         parsed_cones = []
 
         for cone in cones:
             tmp = [cone.point.x,cone.point.y,0]
             # self.get_logger().info("Testing cone subs; x: {cone.point.x}, y: {cone.point.y}");
+            self.get_logger().info(f"Blue cone: x: {cone.point.x}, \t y: {cone.point.y}");
             parsed_cones.append(tmp)
         
         cones = msg.yellow_cones
         for cone in cones:
             tmp = [cone.point.x,cone.point.y,1]
+            self.get_logger().info(f"Yellow cone: x: {cone.point.x}, \t y: {cone.point.y}");
             parsed_cones.append(tmp)
         
         cones = msg.orange_cones
         for cone in cones:
             tmp = [cone.point.x,cone.point.y,2]
+            self.get_logger().info(f"Orange cone: x: {cone.point.x}, \t y: {cone.point.y}");
+
             parsed_cones.append(tmp)
         
         parsed_cones = np.array(parsed_cones)
@@ -147,6 +155,29 @@ class SLAMSubscriber(Node):
         self.state = np.array([x,y,yaw_heading,dx,dy,dyaw,ddx,ddy,ddyaw])
         return self.state
 
+    def almostEqual(self, n1, n2):
+        return (abs(n1 - n2) <= 0.1)
+
+
+    def append_xTruth(self):
+        assert(len(self.xTruth) >= 3)
+        assert(len(self.state) > 0)
+        assert(len(self.cones) > 0)
+        self.xTruth[0][0] = self.state[0]
+        self.xTruth[1][0] = self.state[1]
+        self.xTruth[2][0] = self.state[2]
+        for cone in self.cones:
+            obs_cone_global = np.zeros((2, 1))
+            obs_cone_global[0][0] = self.state[0] + cone[0] #global x pos of cone
+            obs_cone_global[1][0] = self.state[1] + cone[1] #global y pos of cone
+            new_cone = True
+            for i in range(3, len(self.xTruth), 2):
+                if (self.almostEqual(self.xTruth[i][0], obs_cone_global[0][0]) and
+                    self.almostEqual(self.xTruth[i+1][0], obs_cone_global[1][0])):
+                    new_cone = False
+                    break
+            if new_cone:
+                self.xTruth = np.vstack((self.xTruth, obs_cone_global))
 
     def runSLAM(self, cones_msg, state_msg):
         self.get_logger().info("SLAM Callback!")
@@ -159,8 +190,9 @@ class SLAMSubscriber(Node):
         # what happens to the ground truth data???
         # how can I access it
         self.parse_state(state_msg)
+        self.append_xTruth()
         self.runEKF(self.get_clock().now().to_msg())
-        self.model_accuracy()
+        # self.model_accuracy()
         # self.get_logger().info(f'{self.ekf_output}')
 
         # self.gs_vehicle_state, self.cone_positions, self.optimized = self.runGraph(self.ekf_output)
@@ -233,10 +265,11 @@ class SLAMSubscriber(Node):
         
         car_x, car_y, car_heading = self.state[0], self.state[1], self.state[2]
         u = np.array([[math.hypot(self.state[3], self.state[4]), self.state[5]]]).T
-        self.get_logger().info(f"linear: {u[0, 0]} | angular: {u[1, 0]}")
+        self.get_logger().info(f"linear: {u[0, 0]} | angular: {u[1, 0]}") # u describes the motion
         z = np.zeros((0, 3))
         i = 0
-        for x, y, _ in self.cones:
+        for x, y, _ in self.cones: # self.cones comes from perceptions
+            # These dx and dy are the relative positions of the cones
             dx = x
             dy = y
             dist = math.hypot(dx, dy)
@@ -244,20 +277,18 @@ class SLAMSubscriber(Node):
             zi = np.array([dist, angle, i])
             z = np.vstack((z, zi))
         self.xEst, self.pEst, cones = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger())
-        # cones is type list 
-        # cones_idx = 0
-        # for thing in cones:
-        #     print("Printing out item", cones_idx, " in cones", thing)
-        #     cones_idx += 1
         
 
         # all_cones stores the calculated cones
-        self.all_cones.extend(cones)
+        # self.all_cones.extend(cones)
         self.get_logger().info(f'Num Landmarks = {(self.xEst.shape[0]-3)/2}')
+
         # print("Type of subscription cone data: ", type(self.subscription_cone_data))
         # for thing in self.subscription_cone_data:
         #     print("Ground truth data: ", thing)
         # self.print_xEst()
+        for i in range(3, len(self.xTruth), 2):
+            self.get_logger().info(f"Cone no. {1 + ((i - 3) / 2)}: \t xPos: {self.xTruth[i][0]},  yPos: {self.xTruth[i+1][0]}")
         self.plot_state_matrix()
         #TODO: Add dt
         # somelist = self.EKF.robot_cone_state()
@@ -340,7 +371,10 @@ class SLAMSubscriber(Node):
     #     return self.GraphSlam.run_graph_slam(ekf_output)
 
     def print_model_acc(self):
-        self.get_logger().info("This is the mean error: ", self.mean_error, "\t Num missed cones: ", self.missed_cones)
+        self.get_logger().info("This is the mean error: ")
+        #self.get_logger().info(self.mean_error)
+        self.get_logger().info("Num missed cones: ")
+        #self.get_logger().info(self.missed_cones)
    
     def model_accuracy(self):
         #Fill Up closest_data
