@@ -5,6 +5,7 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 
 # ROS2 message types
 from sensor_msgs.msg import Image, PointCloud2
+from eufs_msgs.msg import DataFrame
 
 # ROS2 msg to python datatype conversions
 import perceptions.conversions as conv
@@ -28,9 +29,16 @@ RIGHT_IMAGE_TOPIC = "/zedsdk_right_color_image"
 XYZ_IMAGE_TOPIC = "/zedsdk_point_cloud_image"
 DEPTH_IMAGE_TOPIC = "/zedsdk_depth_image"
 POINT_TOPIC = "/lidar_points"
-
+DATAFRAME_TOPIC = "/DataFrame"
 
 DEBUG = False
+
+RELIABLE_QOS_PROFILE = QoSProfile(
+            depth=10,
+            reliability=QoSReliabilityPolicy.RELIABLE,
+            durability=QoSDurabilityPolicy.VOLATILE,
+            history=QoSHistoryPolicy.KEEP_LAST,
+        )
 
 class DataNode(Node):
 
@@ -43,12 +51,12 @@ class DataNode(Node):
             self.xyz_image_window = vis.init_visualizer_window()
 
         # subscribe to each piece of data that we want to collect on
-        self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.point_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-
+        # self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.point_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+          self.dataframe_subscriber = self.create_subscription(DataFrame, DATAFRAME_TOPIC, self.dataframe_callback, qos_profile=RELIABLE_QOS_PROFILE)
         # define varaibles to store the data
         self.left_color = None
         self.right_color = None

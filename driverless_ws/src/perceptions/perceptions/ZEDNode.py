@@ -20,6 +20,7 @@ from eufs_msgs.msg import ConeArray
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
 from std_msgs.msg import Header
+from eufs_msgs import DataFrame
 
 from cv_bridge import CvBridge
 
@@ -42,18 +43,21 @@ class ZEDNode(Node):
 
         
         # initialize all publishers
-        self.left_publisher = self.create_publisher(msg_type=Image,
-                                                     topic=LEFT_IMAGE_TOPIC,
-                                                     qos_profile=RELIABLE_QOS_PROFILE)
+        self.dataframe_publisher = self.create_publisher(msg_type=DataFrame,
+                                                         topic='/DataFrame',
+                                                         qos_profile=RELIABLE_QOS_PROFILE)
+        # self.left_publisher = self.create_publisher(msg_type=Image,
+        #                                              topic=LEFT_IMAGE_TOPIC,
+        #                                              qos_profile=RELIABLE_QOS_PROFILE)
         # self.right_publisher = self.create_publisher(msg_type=Image,
         #                                              topic=RIGHT_IMAGE_TOPIC,
         #                                              qos_profile=RELIABLE_QOS_PROFILE)
         # self.depth_publisher = self.create_publisher(msg_type=Image,
         #                                              topic=DEPTH_IMAGE_TOPIC,
         #                                              qos_profile=RELIABLE_QOS_PROFILE)
-        self.xyz_publisher = self.create_publisher(msg_type=Image,
-                                                   topic=XYZ_IMAGE_TOPIC,
-                                                   qos_profile=RELIABLE_QOS_PROFILE)
+        # self.xyz_publisher = self.create_publisher(msg_type=Image,
+        #                                            topic=XYZ_IMAGE_TOPIC,
+        #                                            qos_profile=RELIABLE_QOS_PROFILE)
 
         # initialize timer interval for publishing the data
         # TODO: frame rate higher than actual update rate
