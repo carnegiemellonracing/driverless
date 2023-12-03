@@ -13,6 +13,7 @@
   <build_depend>numpy</build_depend>
   <build_depend>pandas</build_depend>
   <build_depend>sensor_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
   <exec_depend>ros2_numpy</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
