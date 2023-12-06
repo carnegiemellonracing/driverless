@@ -14,7 +14,7 @@ import numpy as np
 
 # set to determine what folder to create (find in ~/driverless/driverless_ws/<FOLDER_NAME>)
 # DO NOT MAKE "src", "build", "install", or "log"
-FOLDER_NAME = "11-30-breezeway-sync"
+FOLDER_NAME = "12-02-ecg-track-test"
 
 # define path to data directory
 # WS_DIR = Path(__file__).parents[3]
@@ -27,7 +27,7 @@ class FileNode(DataNode):
         super().__init__(name="file_node")
 
         # create timer for saving on interval
-        self.hz = 25
+        self.hz = 10
         self.save_timer = self.create_timer(1 / self.hz, self.save_callback)
         self.save_instance = 0
 

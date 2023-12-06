@@ -8,3 +8,4 @@ DEPTH_IMAGE_TOPIC = "/zedsdk_depth_image"
 
 # topic names for lidar data reading from Hesai lidar
 POINT_TOPIC = "/lidar_points"
+DATAFRAME_TOPIC = "/DataFrame"

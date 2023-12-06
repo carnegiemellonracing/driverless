@@ -5,10 +5,11 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 
 # ROS2 message types
 from sensor_msgs.msg import Image, PointCloud2
+from eufs_msgs.msg import DataFrame
 
 # ROS2 msg to python datatype conversions
 import perceptions.ros.utils.conversions as conv
-from perceptions.ros.utils.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC
+from perceptions.ros.utils.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC, DATAFRAME_TOPIC
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
@@ -23,8 +24,12 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
                          history = QoSHistoryPolicy.KEEP_LAST,
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
+RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
+                         history = QoSHistoryPolicy.KEEP_LAST,
+                         durability = QoSDurabilityPolicy.VOLATILE,
+                         depth = 5)
 
-ALL_DATA_TYPES = [DataType.HESAI_POINTCLOUD, DataType.ZED_LEFT_COLOR, DataType.ZED_XYZ_IMG]
+ALL_DATA_TYPES = [DataType.DATAFRAME]
 
 class DataNode(Node):
 
@@ -54,6 +59,11 @@ class DataNode(Node):
             if self.visualize:
                 self.window = vis.init_visualizer_window()
 
+        if DataType.DATAFRAME in self.required_data:
+            self.dataframe_subscriber = self.create_subscription(DataFrame, DATAFRAME_TOPIC, self.dataframe_callback, qos_profile=RELIABLE_QOS_PROFILE)
+            if self.visualize:
+                self.window = vis.init_visualizer_window()
+
         # define dictionary to store the data
         # TODO: convert data representation to DataInstance type
         self.data = {}
@@ -62,11 +72,14 @@ class DataNode(Node):
         self.xyz_image_str = "xyz_image"
         self.depth_image_str = "depth_image"
         self.points_str = "points"
-        
+        self.dataframe_str = "dataframe"
 
     def got_all_data(self):
         # returns whether data node has all pieces of data
-        return all([(data_type in self.data.keys()) for data_type in self.required_data])
+        if DataType.DATAFRAME in self.required_data:
+            return DataType.HESAI_POINTCLOUD in self.data and DataType.ZED_LEFT_COLOR in self.data
+        else:
+            return all([(data_type in self.data.keys()) for data_type in self.required_data])
     
     def left_color_callback(self, msg):
         self.data[DataType.ZED_LEFT_COLOR] = conv.img_to_npy(msg)
@@ -109,7 +122,19 @@ class DataNode(Node):
             points = points[:, [1, 0, 2]]
             points[:, 0] *= -1
             vis.update_visualizer_window(self.window, points[:,:3])
+    
+    def dataframe_callback(self, msg):
+        self.data[DataType.HESAI_POINTCLOUD] = conv.pointcloud2_to_npy(msg.pointcloud_msg)
+        self.data[DataType.ZED_LEFT_COLOR] = conv.img_to_npy(msg.image_msg)
 
+        if self.visualize:
+            points = self.data[DataType.HESAI_POINTCLOUD][:, :3]
+            points = points[:, [1, 0, 2]]
+            points[:, 0] *= -1
+            elapsed_time = vis.update_visualizer_window(None, points[:,:3])
+            print(f"Vis Elaped Time: {elapsed_time}ms")
+            cv2.imshow("left", self.data[DataType.ZED_LEFT_COLOR])
+            cv2.waitKey(int(elapsed_time))
 
 def main(args=None):
     rclpy.init(args=args)
