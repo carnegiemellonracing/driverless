@@ -140,44 +140,6 @@ class MidpointNode : public rclcpp::Node
       message.length = midline.length();
 
 
-
-      
-    
-      // Spline spline_left = generator_left.spline_from_curve(perception_data.bluecones);
-      // Spline spline_right = generator_right.spline_from_curve(perception_data.yellowcones);
-
-
-      // WILL BE USED WHEN OPTIMIZER STARTS
-      // std::vector<double> rcl_pt_x,rcl_pt_y;//,rcl_pt_wr, rcl_pt_wl;
-      // double x,y;//,wl,wr,rptr,lptr;
-      // eufs_msgs::msg::PointArray message  = eufs_msgs::msg::PointArray();
-      // std::vector<geometry_msgs::msg::Point> Points;
-
-      // //
-      // for(unsigned int i =0;i<generator_mid.cumulated_splines.size();i++){
-      //   auto spline = generator_mid.cumulated_splines[i];
-      //   //TODO:create a typedef, but size2 is the num of rows
-      //   for(unsigned int j=0;j<spline.get_points().cols()-1;j++){
-      //     // x=gsl_matrix_get(spline.get_points(),0,j);
-      //     // y=gsl_matrix_get(spline.get_points(),1,j);
-      //     // eigen
-      //     Eigen::MatrixXd splineMatrix = spline.get_points();
-      //     x= splineMatrix(0,j);
-      //     y= splineMatrix(1,j);
-
-      //     // double len=0; 
-      //     // if (i>0) len = generator_mid.cumulated_lengths[i-1];
-      //     geometry_msgs::msg::Point tmpPoint;
-      //     tmpPoint.x=x;
-      //     tmpPoint.y=y;
-      //     Points.push_back(tmpPoint);
-      //     // wl = frenet(x,y,generator_left.cumulated_splines,generator_left.cumulated_lengths,generator_mid.cumulated_lengths[i-1]).min_distance;
-      //     // wr = frenet(x,y,generator_right.cumulated_splines,generator_right.cumulated_lengths,generator_mid.cumulated_lengths[i-1]).min_distance;
-      //   }
-      // }
-      // message.set__points(Points);
-
-
       publisher_rcl_pt->publish(message);
       perception_data.bluecones.clear();
       perception_data.yellowcones.clear();

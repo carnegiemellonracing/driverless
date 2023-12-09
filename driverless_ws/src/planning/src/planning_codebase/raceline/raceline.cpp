@@ -74,16 +74,10 @@ Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial secon
 }
 
 
-Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind)
+Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind, bool calcLength = false)
+    : spl_poly(interpolation_poly),points(points_mat), rotated_points(rotated),Q(Q_mat),translation_vector(translation),first_der(first),second_der(second),path_id(path_id),(sort_index,sort_ind)
 {
     this->spl_poly=interpolation_poly;
-    // Eigen::Matrix<double, 2, 4> points;
-    
-    // for (int i = 0; i < 2; i++) {
-    //     for (int j = 0; j < 4; j++) {
-    //         points(i, j) = points_mat(i, j);
-    //     }
-    // }
     this->points = points_mat;
     this->rotated_points=rotated;
     this->Q = Q_mat;
@@ -92,8 +86,10 @@ Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,Eigen::
     this->second_der = second;
     this->path_id = path_id;
     this->sort_index = sort_ind;
+    if(calcLength){
+        this->length = this->length();
+    }
 
-}
 
 Spline::~Spline()
 {
@@ -105,6 +101,7 @@ Spline::~Spline()
 
 }
 
+//change to calculate length
 double Spline::length(){
     // return 1.0;
     return arclength(first_der, rotated_points(0,0), rotated_points(0, rotated_points.cols()-1));
