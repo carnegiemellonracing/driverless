@@ -77,33 +77,40 @@ class MidpointNode : public rclcpp::Node
         perception_data.yellowcones.emplace_back(e.x, e.y);
       }
 
-      //TODO: shouldn't return a spline
       Spline midline = generator_mid.spline_from_cones(this->get_logger(), perception_data);
-      
-      interfaces::msg::Spline message; // = interfaces::message::Spline();
-      
-      // message.spl_poly_coefs.clear();
-      std::fill(std::begin(message.spl_poly_coefs), std::end(message.spl_poly_coefs), 0.0);
-      for (int i = 0; i < 4; i ++) {
+      interfaces::msg::Spline message  = splineToMessage(midline);
+      publisher_rcl_pt->publish(message);
+      perception_data.bluecones.clear();
+      perception_data.yellowcones.clear();
+      perception_data.orangecones.clear();
+      RCLCPP_INFO(this->get_logger(), "published midpoint spline\n");
+      return;
+    }
+
+
+    interfaces::msg::Spline splineToMessage(Spline spline){
+        interfaces::msg::Spline message;
+
+        std::fill(std::begin(message.spl_poly_coefs), std::end(message.spl_poly_coefs), 0.0);
+        for (int i = 0; i < 4; i ++) {
         message.spl_poly_coefs[i] = midline.spl_poly.nums[i];
-      }
+        }
 
-      // message.first_der_coefs.clear();
-      std::fill(std::begin(message.first_der_coefs), std::end(message.first_der_coefs), 0.0);
-      for (int i = 0; i < 3; i ++) {
+        std::fill(std::begin(message.first_der_coefs), std::end(message.first_der_coefs), 0.0);
+        for (int i = 0; i < 3; i ++) {
         message.first_der_coefs[i] = midline.first_der.nums[i];
-      }
+        }
 
-      // message.second_der_coefs.clear();
-      std::fill(std::begin(message.second_der_coefs), std::end(message.second_der_coefs), 0.0);
-      for (int i = 0; i < 2; i ++) {
+        // message.second_der_coefs.clear();
+        std::fill(std::begin(message.second_der_coefs), std::end(message.second_der_coefs), 0.0);
+        for (int i = 0; i < 2; i ++) {
         message.second_der_coefs[i] = midline.second_der.nums[i];
-      }
+        }
 
-      message.points.clear();
-      message.rotated_points.clear();
+        message.points.clear();
+        message.rotated_points.clear();
 
-      for (int i = 0; i < midline.points.cols(); i++) {
+        for (int i = 0; i < midline.points.cols(); i++) {
         geometry_msgs::msg::Point point; // z field is unused
         point.x = midline.points(0, i);
         point.y = midline.points(1, i);
@@ -113,40 +120,25 @@ class MidpointNode : public rclcpp::Node
         point.x = midline.rotated_points(0, i);
         point.y = midline.rotated_points(1, i);
         message.rotated_points.push_back(point);
-      }
+        }
 
+        std::fill(std::begin(message.q), std::end(message.q), 0.0);
+        message.q[0] = (midline.Q(0, 0));
+        message.q[1] = (midline.Q(0, 1));
+        message.q[2] = (midline.Q(1, 0));
+        message.q[3] = (midline.Q(1, 1));
 
-      // message.rotated_points.clear();
-      // for (int i = 0; i < midline.rotated_points.cols(); i++) {
-      //   geometry_msgs::msg::Point point; // z field is unused
-      //   point.x = midline.rotated_points(0, i);
-      //   point.y = midline.rotated_points(1, i);
-      //   message.rotated_points.push_back(point);
-      // }
+        // message.translation_vector.clear();
+        std::fill(std::begin(message.translation_vector), std::end(message.translation_vector), 0.0);
+        message.translation_vector[0] = midline.translation_vector[0];
+        message.translation_vector[1] = midline.translation_vector[1];
+        message.path_id = midline.path_id;
+        message.sort_index = midline.sort_index;
+        message.length = midline.length();
 
-      // message.q.clear();
-      std::fill(std::begin(message.q), std::end(message.q), 0.0);
-      message.q[0] = (midline.Q(0, 0));
-      message.q[1] = (midline.Q(0, 1));
-      message.q[2] = (midline.Q(1, 0));
-      message.q[3] = (midline.Q(1, 1));
-
-      // message.translation_vector.clear();
-      std::fill(std::begin(message.translation_vector), std::end(message.translation_vector), 0.0);
-      message.translation_vector[0] = midline.translation_vector[0];
-      message.translation_vector[1] = midline.translation_vector[1];
-      message.path_id = midline.path_id;
-      message.sort_index = midline.sort_index;
-      message.length = midline.length();
-
-
-      publisher_rcl_pt->publish(message);
-      perception_data.bluecones.clear();
-      perception_data.yellowcones.clear();
-      perception_data.orangecones.clear();
-      RCLCPP_INFO(this->get_logger(), "published midpoint spline\n");
-      return;
+        return message
     }
+
 
 
     
