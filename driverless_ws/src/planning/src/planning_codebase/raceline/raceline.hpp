@@ -45,6 +45,7 @@ public:
 
     Eigen::Matrix2d Q;
     Eigen::VectorXd translation_vector;
+    double length;
 
 
     polynomial get_SplPoly(){ return spl_poly;}
@@ -76,7 +77,7 @@ public:
 
     int get_sort_index();
     void set_sort_index(int new_sort);
-    double length();
+    double calculateLength();
     
     // Eigen::MatrixXd interpolate(Spline spline,int number, std::pair<float,float> bounds = std::make_pair(-1,-1));
     
@@ -94,7 +95,8 @@ public:
 
     Spline(polynomial interpolation_poly);
     Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path, int sort_ind);
-    Spline(polynomial interpolation_poly,Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind);
+    // Spline(polynomial interpolation_poly,Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind);
+    Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind, bool calcLength = false);
 
     Spline();
     ~Spline();

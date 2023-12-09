@@ -74,22 +74,14 @@ Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial secon
 }
 
 
-Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind, bool calcLength = false)
-    : spl_poly(interpolation_poly),points(points_mat), rotated_points(rotated),Q(Q_mat),translation_vector(translation),first_der(first),second_der(second),path_id(path_id),(sort_index,sort_ind)
+Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind, bool calcLength)
+    : spl_poly(interpolation_poly),points(points_mat), rotated_points(rotated),Q(Q_mat),translation_vector(translation),first_der(first),second_der(second),path_id(path_id),sort_index(sort_ind)
 {
-    this->spl_poly=interpolation_poly;
-    this->points = points_mat;
-    this->rotated_points=rotated;
-    this->Q = Q_mat;
-    this->translation_vector = translation;
-    this->first_der = first;
-    this->second_der = second;
-    this->path_id = path_id;
-    this->sort_index = sort_ind;
     if(calcLength){
-        this->length = this->length();
+        this->length = this->calculateLength();
     }
 
+}
 
 Spline::~Spline()
 {
@@ -102,7 +94,7 @@ Spline::~Spline()
 }
 
 //change to calculate length
-double Spline::length(){
+double Spline::calculateLength(){
     // return 1.0;
     return arclength(first_der, rotated_points(0,0), rotated_points(0, rotated_points.cols()-1));
 }
@@ -158,7 +150,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> ret;
 
 
-    double len = this->length();
+    double len = this->calculateLength();
 
 
     double first_x = this->get_rotated_points()(0,0);
@@ -488,14 +480,14 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         Spline spline = Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
         splines.emplace_back(spline);
 
-        // lengths.push_back(spline.length());
+        // lengths.push_back(spline.calculateLength());
         if (i == 0) {
             RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
             // RCLCPP_INFO(logger, "spline derivative is %f + %fx + %fx^2 + %fx^3\n", spline.first_der.nums(0), spline.first_der.nums(1), spline.first_der.nums(2), spline.first_der.nums(3));
-            cumsum.push_back(splines[0].length());
+            cumsum.push_back(splines[0].calculateLength());
         } else {
             RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
-            cumsum.push_back(cumsum.back()+splines[0].length());
+            cumsum.push_back(cumsum.back()+splines[0].calculateLength());
         }
 
     }
