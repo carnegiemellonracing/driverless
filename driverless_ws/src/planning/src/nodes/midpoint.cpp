@@ -93,50 +93,50 @@ class MidpointNode : public rclcpp::Node
 
         std::fill(std::begin(message.spl_poly_coefs), std::end(message.spl_poly_coefs), 0.0);
         for (int i = 0; i < 4; i ++) {
-        message.spl_poly_coefs[i] = midline.spl_poly.nums[i];
+        message.spl_poly_coefs[i] = spline.spl_poly.nums[i];
         }
 
         std::fill(std::begin(message.first_der_coefs), std::end(message.first_der_coefs), 0.0);
         for (int i = 0; i < 3; i ++) {
-        message.first_der_coefs[i] = midline.first_der.nums[i];
+        message.first_der_coefs[i] = spline.first_der.nums[i];
         }
 
         // message.second_der_coefs.clear();
         std::fill(std::begin(message.second_der_coefs), std::end(message.second_der_coefs), 0.0);
         for (int i = 0; i < 2; i ++) {
-        message.second_der_coefs[i] = midline.second_der.nums[i];
+        message.second_der_coefs[i] = spline.second_der.nums[i];
         }
 
         message.points.clear();
         message.rotated_points.clear();
 
-        for (int i = 0; i < midline.points.cols(); i++) {
+        for (int i = 0; i < spline.points.cols(); i++) {
         geometry_msgs::msg::Point point; // z field is unused
-        point.x = midline.points(0, i);
-        point.y = midline.points(1, i);
+        point.x = spline.points(0, i);
+        point.y = spline.points(1, i);
         message.points.push_back(point);
 
         // geometry_msgs::msg::Point point; // z field is unused
-        point.x = midline.rotated_points(0, i);
-        point.y = midline.rotated_points(1, i);
+        point.x = spline.rotated_points(0, i);
+        point.y = spline.rotated_points(1, i);
         message.rotated_points.push_back(point);
         }
 
         std::fill(std::begin(message.q), std::end(message.q), 0.0);
-        message.q[0] = (midline.Q(0, 0));
-        message.q[1] = (midline.Q(0, 1));
-        message.q[2] = (midline.Q(1, 0));
-        message.q[3] = (midline.Q(1, 1));
+        message.q[0] = (spline.Q(0, 0));
+        message.q[1] = (spline.Q(0, 1));
+        message.q[2] = (spline.Q(1, 0));
+        message.q[3] = (spline.Q(1, 1));
 
         // message.translation_vector.clear();
         std::fill(std::begin(message.translation_vector), std::end(message.translation_vector), 0.0);
-        message.translation_vector[0] = midline.translation_vector[0];
-        message.translation_vector[1] = midline.translation_vector[1];
-        message.path_id = midline.path_id;
-        message.sort_index = midline.sort_index;
-        message.length = midline.length();
+        message.translation_vector[0] = spline.translation_vector[0];
+        message.translation_vector[1] = spline.translation_vector[1];
+        message.path_id = spline.path_id;
+        message.sort_index = spline.sort_index;
+        message.length = spline.calculateLength();
 
-        return message
+        return message;
     }
 
 
