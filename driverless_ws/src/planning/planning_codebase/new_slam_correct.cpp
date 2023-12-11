@@ -89,9 +89,9 @@ struct jacob_motion_package {
 };
 
 // Function to calculate jacobian motion
-jacob_motion_package jacob_motion(const Eigen::MatrixXd& x, const Eigen::MatrixXd& u, double dt) {
+jacob_motion_package jacob_motion(auto logger, const Eigen::MatrixXd& x, const Eigen::MatrixXd& u, double dt) {
 
-
+    RCLCPP_INFO(logger, "in jacob motion\n");
     // Creating Identity Matrix of Size 3 x 3
     Eigen::MatrixXd identityMatrix = Eigen::MatrixXd::Identity(STATE_SIZE, STATE_SIZE);
 
@@ -225,7 +225,7 @@ int search_correspond_landmark_id(auto logger, const Eigen::MatrixXd& xAug, cons
     double meas_x = r*std::cos(theta);
     double meas_y = r*std::sin(theta);
 
-    RCLCPP_INFO(logger, "Measurement: (%f, %f)", meas_x, meas_y);
+    // RCLCPP_INFO(logger, "Measurement: (%f, %f)", meas_x, meas_y);
     for (int i = 0; i < nLM; ++i) {
         Eigen::MatrixXd lm = get_landmark_position_from_state(xAug, i);
 
@@ -241,7 +241,7 @@ int search_correspond_landmark_id(auto logger, const Eigen::MatrixXd& xAug, cons
         double mahalanobis = (y.transpose().eval() * S.inverse() * y)(0, 0);
         Eigen::MatrixXd lm_car_frame = lm - xAug.topRows(2);
         double euclidean = std::sqrt(pow(lm_car_frame(0, 0)-meas_x, 2) + pow(lm_car_frame(1, 0)-meas_y, 2));
-        RCLCPP_INFO(logger, "   Landmark %i (Car Frame): (%f, %f) | Mahalanobis: %f | Euclidean: %f", i, lm_car_frame(0,0), lm_car_frame(1,0), mahalanobis, euclidean);
+        // RCLCPP_INFO(logger, "   Landmark %i (Car Frame): (%f, %f) | Mahalanobis: %f | Euclidean: %f", i, lm_car_frame(0,0), lm_car_frame(1,0), mahalanobis, euclidean);
         // Adding mahalanobis distance to minimum distance vector
         min_dist.push_back(mahalanobis);
     }
@@ -273,7 +273,8 @@ struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& 
 
     std::vector<Eigen::MatrixXd> cones;
     int S = STATE_SIZE;
-    struct jacob_motion_package j_m_p = jacob_motion(xEst.topRows(S), u, dt);
+    RCLCPP_INFO(logger, "here\n");
+    struct jacob_motion_package j_m_p = jacob_motion(logger, xEst.topRows(S), u, dt);
     Eigen::MatrixXd G = j_m_p.G;
     Eigen::MatrixXd Fx = j_m_p.Fx;
 
@@ -297,6 +298,7 @@ struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& 
     V_t << cos_x2, -0.5 * sin_x2,
            sin_x2, 0.5 * cos_x2,
            0, 1;
+    RCLCPP_INFO(logger, "here\n");
     xEst.topRows(S) = motion_model(xEst.topRows(S), u, dt);
     PEst.block(0, 0, S, S) = G.transpose().eval() * PEst.block(0, 0, S, S) * G + Fx.transpose().eval() * Cx * Fx;
     Eigen::MatrixXd initP = Eigen::MatrixXd::Identity(2, 2);

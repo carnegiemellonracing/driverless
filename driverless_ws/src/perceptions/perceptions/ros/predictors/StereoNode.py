@@ -18,7 +18,7 @@ class StereoNode(PredictNode):
     def init_predictor(self):
         # create predictor
         self.model_name = 'ultralytics/yolov5'
-        self.param_path = '/home/dale/driverless-packages/PerceptionsLibrary22a/perc22a/predictors/stereo/model_params.pt'
+        self.param_path = '/home/chip/Desktop/Documents/driverless-packages/PerceptionsLibrary22a/perc22a/predictors/stereo/model_params.pt'
         predictor = StereoPredictor(self.model_name, self.param_path)
         return predictor
 
