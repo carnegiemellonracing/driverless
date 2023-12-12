@@ -21,14 +21,32 @@ find_package(planning REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 
-add_executable(controls_test linkTest.cpp)
-target_include_directories(controls_test PRIVATE ${PROJECT_SOURCE_DIR}/../)
+include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/../)
 
+add_library(controls_lib SHARED
+        src/interface/environment.cpp
+        src/mppi/mppi.cpp
+)
+
+add_executable(controller
+        src/nodes/controller.cpp
+)
+target_link_libraries(controller
+        controls_lib
+)
+
+add_executable(controls_test
+        tests/linkTest.cpp
+)
+
+ament_target_dependencies(controls_lib planning rclcpp std_msgs)
+ament_target_dependencies(controller rclcpp)
 ament_target_dependencies(controls_test planning rclcpp std_msgs)
-# message(WARNING ${PROJECT_SOURCE_DIR})
 
-install(TARGETS
-controls_test
-DESTINATION lib/${PROJECT_NAME})
+install(
+    TARGETS controls_test controls_lib controller
+    DESTINATION lib/${PROJECT_NAME}
+)
 
 ament_package()
