@@ -1,3 +1,1 @@
-[submodule "driverless_ws/src/eufs_msgs"]
-	path = driverless_ws/src/eufs_msgs
-	url = https://gitlab.com/eufs/eufs_msgs.git
+
