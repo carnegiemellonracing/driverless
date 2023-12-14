@@ -20,8 +20,8 @@ from eufs_msgs.msg import ConeArray
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
 from std_msgs.msg import Header
-from eufs_msgs import DataFrame
-
+from eufs_msgs.msg import DataFrame
+import cv2
 from cv_bridge import CvBridge
 
 BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
@@ -43,21 +43,21 @@ class ZEDNode(Node):
 
         
         # initialize all publishers
-        self.dataframe_publisher = self.create_publisher(msg_type=DataFrame,
-                                                         topic='/DataFrame',
-                                                         qos_profile=RELIABLE_QOS_PROFILE)
-        # self.left_publisher = self.create_publisher(msg_type=Image,
-        #                                              topic=LEFT_IMAGE_TOPIC,
-        #                                              qos_profile=RELIABLE_QOS_PROFILE)
+        # self.dataframe_publisher = self.create_publisher(msg_type=DataFrame,
+        #                                                  topic='/DataFrame',
+        #                                                  qos_profile=RELIABLE_QOS_PROFILE)
+        self.left_publisher = self.create_publisher(msg_type=Image,
+                                                     topic=LEFT_IMAGE_TOPIC,
+                                                     qos_profile=RELIABLE_QOS_PROFILE)
         # self.right_publisher = self.create_publisher(msg_type=Image,
         #                                              topic=RIGHT_IMAGE_TOPIC,
         #                                              qos_profile=RELIABLE_QOS_PROFILE)
         # self.depth_publisher = self.create_publisher(msg_type=Image,
         #                                              topic=DEPTH_IMAGE_TOPIC,
         #                                              qos_profile=RELIABLE_QOS_PROFILE)
-        # self.xyz_publisher = self.create_publisher(msg_type=Image,
-        #                                            topic=XYZ_IMAGE_TOPIC,
-        #                                            qos_profile=RELIABLE_QOS_PROFILE)
+        self.xyz_publisher = self.create_publisher(msg_type=Image,
+                                                   topic=XYZ_IMAGE_TOPIC,
+                                                   qos_profile=RELIABLE_QOS_PROFILE)
 
         # initialize timer interval for publishing the data
         # TODO: frame rate higher than actual update rate
@@ -77,7 +77,8 @@ class ZEDNode(Node):
         s = time.time()
 
         left, right, depth, xyz = self.zed.grab_data()
-        
+        # cv2.imshow("left", left)
+        # cv2.waitKey(30)
         # convert the data and check that it is the same going and backwards
         # have to extract out nan values that don't count to compare image values
         header = Header()
