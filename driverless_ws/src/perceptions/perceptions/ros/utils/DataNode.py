@@ -50,12 +50,12 @@ class DataNode(Node):
             self.xyz_image_window = vis.init_visualizer_window()
 
         # subscribe to each piece of data that we want to collect on
-        self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        # self.dataframe_subscriber = self.create_subscription(DataFrame, DATAFRAME_TOPIC, self.dataframe_callback, qos_profile=RELIABLE_QOS_PROFILE)
+        # self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.dataframe_subscriber = self.create_subscription(DataFrame, DATAFRAME_TOPIC, self.dataframe_callback, qos_profile=RELIABLE_QOS_PROFILE)
 
         # define dictionary to store the data
         self.data = {}
@@ -79,8 +79,7 @@ class DataNode(Node):
         return self.left_color_str in self.data and \
                self.imu_data in self.data and \
                self.lin_vel_str in self.data and \
-               self.xyz_image_str in self.data and \
-               self.points_str in self.data
+               self.xyz_image_str in self.data
     
     def left_color_callback(self, msg):
         self.data[self.left_color_str] = conv.img_to_npy(msg)
@@ -129,7 +128,6 @@ class DataNode(Node):
     def dataframe_callback(self, msg):
         self.data[self.left_color_str] = conv.img_to_npy(msg.image_msg)
         self.data[self.xyz_image_str] = conv.img_to_npy(msg.xyz_msg)
-        self.data[self.points_str] = conv.pointcloud2_to_npy(msg.pointcloud_msg)
         self.data[self.imu_data] = msg.imu_data
         self.data[self.lin_vel_str] = msg.imu_linear_velocity
 

@@ -41,7 +41,7 @@ struct Cone{
 
 struct VehiclePosition{
   double dx;
-  double dy;
+  double dz;
   double dyaw;
 };
 
@@ -82,8 +82,32 @@ class SLAMValidation : public rclcpp::Node
         orange_cones.push_back(to_add);
       }
 
-      vpos_is_jacob.dx = imu_linear_velocity.vector.x;
-      vpos_is_jacob.dy = -imu_linear_velocity.vector.z;
+      // Generate rotation matrix from GPS world to sensor frame
+      float q0 = imu_data.orientation.w;
+      float q0_2 = std::pow(q0, 2); 
+
+      float q1 = imu_data.orientation.x;
+      float q1_2 = std::pow(q1, 2);
+
+      float q2 = imu_data.orientation.y;
+      float q2_2 = std::pow(q2, 2);
+
+      float q3 = imu_data.orientation.z;
+      float q3_2 = std::pow(q3, 2);
+
+      Eigen::MatrixXd world_to_sensor(3, 3);
+      world_to_sensor << (q0_2 + q1_2 - q2_2 - q3_2), 2*(q1*q2 + q0*q3), 2*(q1*q3 - q0*q2), 
+          2*(q1*q2 - q0*q3), (q0_2 - q1_2 + q2_2 - q3_2), 2*(q2*q3 + q0*q1), 
+          2*(q1*q3 + q0*q2), 2*(q2*q3 - q0*q1), (q0_2 - q1_2 - q2_2 + q3_2);
+      
+      Eigen::MatrixXd lin_vel_world(3, 1);
+      lin_vel_world(0, 0) = imu_linear_velocity.vector.x;
+      lin_vel_world(1, 0) = imu_linear_velocity.vector.y;
+      lin_vel_world(2, 0) = imu_linear_velocity.vector.z;
+
+      Eigen::MatrixXd lin_vel_sensor = world_to_sensor * lin_vel_world;
+      vpos_is_jacob.dx = lin_vel_sensor(0, 0);
+      vpos_is_jacob.dz = lin_vel_sensor(2, 0);;
       vpos_is_jacob.dyaw = imu_data.angular_velocity.y;
 
     }
@@ -103,11 +127,11 @@ class SLAMValidation : public rclcpp::Node
 
       // gsl_matrix* u = gsl_matrix_calloc(2, 1);
       // gsl_matrix_set(u, 0, 0, hypot(vpos_is_jacob.dx, vpos_is_jacob.dy));
-      // gsl_matrix_set(u, 1, 0, vpos_is_jacob.dyaw);
+      // gsl_matrix_set(u, 1, 0, `aw);
 
       // Eigen::MatrixXd u = calcInput();
       Eigen::MatrixXd u(2, 1);
-      u << hypot(vpos_is_jacob.dx, vpos_is_jacob.dy),
+      u << hypot(vpos_is_jacob.dx, vpos_is_jacob.dz),
            vpos_is_jacob.dyaw;
 
       int n = blue_cones.size() + yellow_cones.size() + orange_cones.size();

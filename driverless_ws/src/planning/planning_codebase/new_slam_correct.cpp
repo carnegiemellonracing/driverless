@@ -62,7 +62,7 @@ Eigen::MatrixXd calcInput() {
 }
 
 // Function to calculate the motion model
-Eigen::MatrixXd motion_model(const Eigen::MatrixXd& x, const Eigen::MatrixXd& u, double dt) {
+Eigen::MatrixXd motion_model(auto logger, const Eigen::MatrixXd& x, const Eigen::MatrixXd& u, double dt) {
     Eigen::MatrixXd F(3, 3);
     F << 1.0, 0.0, 0.0,
          0.0, 1.0, 0.0,
@@ -72,7 +72,7 @@ Eigen::MatrixXd motion_model(const Eigen::MatrixXd& x, const Eigen::MatrixXd& u,
     B << dt * std::cos(x(2, 0)), 0.0,
          dt * std::sin(x(2, 0)), 0.0,
          0.0, dt;
-
+    RCLCPP_INFO(logger, "u shape: %d, %d\n", u.rows(), u.cols());
     return (F * x) + (B * u);
 }
 
@@ -299,14 +299,19 @@ struct ekfPackage ekf_slam(auto logger, Eigen::MatrixXd& xEst, Eigen::MatrixXd& 
            sin_x2, 0.5 * cos_x2,
            0, 1;
     RCLCPP_INFO(logger, "here\n");
-    xEst.topRows(S) = motion_model(xEst.topRows(S), u, dt);
+    RCLCPP_INFO(logger, "ur mom\n");
+    RCLCPP_INFO(logger, "xEst shape: (%d, %d)\n", xEst.rows(), xEst.cols());
+    xEst.topRows(S) = motion_model(logger, xEst.topRows(S), u, dt);
+    RCLCPP_INFO(logger, "after motion model\n");
     PEst.block(0, 0, S, S) = G.transpose().eval() * PEst.block(0, 0, S, S) * G + Fx.transpose().eval() * Cx * Fx;
+    RCLCPP_INFO(logger, "after htis hit\n");
     Eigen::MatrixXd initP = Eigen::MatrixXd::Identity(2, 2);
 
     // Initializing landmark position
     Eigen::MatrixXd lm;
 
     for (int iz = 0; iz < z.rows(); ++iz) {
+        RCLCPP_INFO(logger, "in this for loop\n");
         int min_id = search_correspond_landmark_id(logger, xEst, PEst, z.row(iz));
         int nLM = calc_n_lm(xEst);
         if (min_id == nLM) {
