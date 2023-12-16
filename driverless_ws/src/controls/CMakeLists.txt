@@ -25,7 +25,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/../)
 
 add_library(controls_lib SHARED
-        src/interface/environment.cpp
+        src/interface/interface.cpp
         src/mppi/mppi.cpp
 )
 
