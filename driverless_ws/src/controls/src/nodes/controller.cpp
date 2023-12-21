@@ -2,87 +2,73 @@
 #include <mppi/mppi.hpp>
 #include <mutex>
 #include <rclcpp/rclcpp.hpp>
-#include <common/types.hpp>
-#include <atomic>
+#include <types.hpp>
+#include <constants.hpp>
 #include <condition_variable>
+#include <interfaces/msg/control_action.hpp>
+
 
 namespace controls {
+    namespace nodes {
+        class ControllerNode : public rclcpp::Node {
+        public:
+            ControllerNode (std::unique_ptr<interface::Environment> environment, std::unique_ptr<Controller> controller)
+                : Node {controller_node_name},
+                  m_environment(std::move(environment)),
+                  m_controller(std::move(controller)),
+                  m_controller_timer(
+                      create_wall_timer(
+                          controller_period,
+                          [this] { controller_callback(); })),
+                  m_action_publisher(
+                      create_publisher<interfaces::msg::ControlAction>(
+                          control_action_topic_name,
+                          control_action_qos)) { }
 
-    /**
-     * @note It is undefined for the destructor to be called while the node is spun up
-     *       (most likely, mppi will exit uncleanly)
-     */
-    class controller_node : public rclcpp::Node {
-    public:
-        constexpr static const char *node_name = "controller";
+        private:
+            void publish_action(const Action &action) const;
 
-        controller_node ()
-            : Node {node_name} { }
-
-        void start_mppi() {
-            assert (!m_mppi_loop_thread.joinable());
-
-            m_mppi_loop_should_exit = false;
-            m_mppi_loop_thread = std::thread {mppi_loop};
-        }
-
-        void stop_mppi() {
-            assert (m_mppi_loop_thread.joinable());
-
-            m_mppi_loop_should_exit = true;
-            m_mppi_loop_thread.join();
-        }
-
-    private:
-        void publish_action(const action &action) const;
-
-        void mppi_loop() {
-            while (!m_mppi_loop_should_exit) {
+            void controller_callback() {
+                Action action;
                 {
-                    // wait for the environment to be updated, then copy it
+                    std::lock_guard<std::mutex> lock {m_environment->mutex};
 
-                    std::unique_lock<std::mutex> lock {m_environment_updated_mutex};
-
-                    while (!m_environment_dirty) {
-                        m_environment_updated_notifier.wait(lock);
-                    }
-
-                    m_environment_frozen = std::make_unique<interface::environment>(*m_environment_updated);  // copy
+                    const State curv_state = m_environment->get_curv_state();
+                    action = m_controller->generate_action(curv_state);
                 }
 
-                const state current_state = m_environment_frozen->get_state();
-                const action mppi_action = m_mppi_controller->generate_action(current_state);
-
-                publish_action(mppi_action);
+                publish_action(action);
             }
-        }
 
-        void on_shutdown() {
-            if (m_mppi_loop_thread.joinable()) {
-                stop_mppi();
-            }
-        }
-
-        std::unique_ptr<interface::environment> m_environment_frozen;
-
-        std::unique_ptr<interface::environment> m_environment_updated;
-        std::mutex m_environment_updated_mutex;
-        std::condition_variable m_environment_updated_notifier;
-        std::atomic<bool> m_environment_dirty {false};
-
-        mppi::mppi_controller m_mppi_controller;
-        std::thread m_mppi_loop_thread;
-        std::atomic<bool> m_mppi_loop_should_exit {true};
-    };
+            std::unique_ptr<interface::Environment> m_environment;
+            std::unique_ptr<Controller> m_controller;
+            rclcpp::TimerBase::SharedPtr m_controller_timer;
+            rclcpp::Publisher<interfaces::msg::ControlAction>::SharedPtr m_action_publisher;
+        };
+    }
 }
 
 
 int main(int argc, char *argv[]) {
+    using namespace controls;
+
+    std::unique_ptr<interface::Environment> environment;
+    std::unique_ptr<Controller> controller;
+    if (default_device == Device::Cpu) {
+        environment = std::make_unique<interface::CpuEnvironment>();
+        controller = std::make_unique<mppi::CpuMppiController>();
+    } else {
+#ifdef CONTROLS_NO_CUDA
+        throw std::runtime_error("Cuda enabled without cuda compilation");
+#else
+        // TODO: implement cuda
+#endif
+    }
+
     rclcpp::init(argc, argv);
 
-    const auto node = std::make_shared<controls::controller_node>();
+    const auto node = std::make_shared<nodes::ControllerNode>(environment, controller);
     rclcpp::spin(node);
-    node->start_mppi();
 
     rclcpp::shutdown();
     return 0;
