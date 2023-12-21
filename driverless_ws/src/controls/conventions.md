@@ -4,12 +4,14 @@ Conventions for the controls subteam code.
 
 ### Naming
 
-Use ``boost``/``STL`` naming.
+Use python naming:
 
-  - ``lower_snake_case`` for everything except mentioned below
-  - ``Upper_Snake_Case`` for type parameters
-
-Reasoning: consistent with standard library. incredibly simple.
+  - ``lower_snake_case`` for values (including functions/methods, 150 moment)
+    - Reason: ``lowerCamelCase`` is just ugly
+  - ``PascalCase`` for types
+    - Reason: prevents declaration issues like ``car car;``
+  - Namespace-level declarations should have namespae corresponding to their directory
+    - e.g. a declaration in ``src/mppi`` should belong to namespace ``controls::mppi``
 
 
 ### Code Style

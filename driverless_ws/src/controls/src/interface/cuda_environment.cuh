@@ -1,16 +1,12 @@
-#pragma once
-
-#include <planning/src/planning_codebase/raceline/raceline.hpp>
+#include <types.hpp>
 
 #include "interface.hpp"
 
 
 namespace controls {
     namespace interface {
-        class CpuEnvironment : public Environment {
+        class CudaEnvironment : public Environment {
         public:
-            CpuEnvironment() = default;
-
             void update_spline(const SplineMsg& msg) override;
             void update_slam(const SlamMsg& msg) override;
             void update_gps(const GpsMsg& msg) override;
@@ -19,10 +15,11 @@ namespace controls {
             State get_world_state() const override;
             double get_curvature(double progress_from_current) const override;
 
-        private:
+            std::mutex* get_mutex() override;
+            std::condition_variable* get_notifier() override;
+            std::atomic<bool>* get_dirty_flag() override;
 
-            State m_curv_state;
-            Spline m_spline;
+            void save() override;
         };
     }
 }

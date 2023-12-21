@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 3.5)
 project(controls)
 
+# disable cuda compilation
+#set(NO_CUDA TRUE)
+set(NO_CUDA FALSE)
+
+if(NO_CUDA)
+  add_compile_definitions(CONTROLS_NO_CUDA)
+else()
+  enable_language(CUDA)
+endif()
+
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)
@@ -11,9 +21,9 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
+#if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+#  add_compile_options(-Wall -Wextra -Wpedantic)
+#endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -24,28 +34,36 @@ find_package(std_msgs REQUIRED)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/../)
 
-add_library(controls_lib SHARED
+
+set(LIB_SOURCES
         src/interface/interface.cpp
-        src/mppi/mppi.cpp
-)
+        src/interface/cpu_environment.cpp
+        src/mppi/cpu_mppi.cpp)
+if(NOT NO_CUDA)
+  set(LIB_SOURCES ${LIB_SOURCES}
+          src/interface/cuda_environment.cu
+          src/mppi/cuda_mppi.cu)
+endif()
 
-add_executable(controller
-        src/nodes/controller.cpp
-)
-target_link_libraries(controller
-        controls_lib
-)
-
-add_executable(controls_test
-        tests/linkTest.cpp
-)
-
+add_library(controls_lib SHARED ${LIB_SOURCES})
 ament_target_dependencies(controls_lib planning rclcpp std_msgs)
+
+add_executable(controller src/nodes/controller.cpp)
+target_link_libraries(controller controls_lib)
+
 ament_target_dependencies(controller rclcpp)
-ament_target_dependencies(controls_test planning rclcpp std_msgs)
+
+ament_export_targets(controls_libExport HAS_LIBRARY_TARGET)
+ament_export_dependencies(planning rclcpp std_msgs)
 
 install(
-    TARGETS controls_test controls_lib controller
+    TARGETS controls_lib
+    EXPORT controls_libExport
+    DESTINATION lib/${PROJECT_NAME}
+)
+
+install(
+    TARGETS controller
     DESTINATION lib/${PROJECT_NAME}
 )
 
