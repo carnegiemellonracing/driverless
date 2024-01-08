@@ -11,4 +11,5 @@ PyObject *double_list_Py(std::vector<double> x);
 
 std::vector<double> PyList_DoubleVec(PyObject* );
 
-std::vector<std::pair<double,double>> runlto(std::vector<double> x,std::vector<double> y,std::vector<double> wl,std::vector<double> wr);
+void runlto(std::vector<double> x,std::vector<double> y,std::vector<double> wl,std::vector<double> wr);
+// std::vector<std::pair<double,double>> runlto(std::vector<double> x,std::vector<double> y,std::vector<double> wl,std::vector<double> wr);
