@@ -1,6 +1,7 @@
 #pragma once
 
 #include <planning/src/planning_codebase/raceline/raceline.hpp>
+#include <interfaces/msg/spline_list.hpp>
 
 #include "interface.hpp"
 
@@ -18,11 +19,6 @@ namespace controls {
             State get_curv_state() const override;
             State get_world_state() const override;
             double get_curvature(double progress_from_current) const override;
-
-        private:
-
-            State m_curv_state;
-            Spline m_spline;
         };
     }
 }

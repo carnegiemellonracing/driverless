@@ -1,10 +1,20 @@
 #include <types.hpp>
+#include <cuda_types.cuh>
+#include <cuda_constants.cuh>
+#include <cuda_types.cuh>
+#include <planning/src/planning_codebase/raceline/raceline.hpp>
 
 #include "interface.hpp"
 
 
 namespace controls {
+    namespace cuda {
+        cfloat* d_spline_curvatures;  // allocated on first CudaEnvironment construction
+    }
+
     namespace interface {
+        // should be able to be constructed/destructed multiple times without an issue
+        // but there can only be one at once
         class CudaEnvironment : public Environment {
         public:
             void update_spline(const SplineMsg& msg) override;
@@ -14,12 +24,6 @@ namespace controls {
             State get_curv_state() const override;
             State get_world_state() const override;
             double get_curvature(double progress_from_current) const override;
-
-            std::mutex* get_mutex() override;
-            std::condition_variable* get_notifier() override;
-            std::atomic<bool>* get_dirty_flag() override;
-
-            void save() override;
         };
     }
 }

@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 project(controls)
 
+set(NO_CUDA FALSE)
+
 # disable cuda compilation
 #set(NO_CUDA TRUE)
-set(NO_CUDA FALSE)
 
 if(NO_CUDA)
   add_compile_definitions(CONTROLS_NO_CUDA)
