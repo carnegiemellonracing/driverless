@@ -1,9 +1,0 @@
-[35m[1mScanning dependencies of target slam_test[0m
-[ 50%] [32mBuilding CXX object CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o[0m
-[01m[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:[m[K In constructor ‘[01m[KSLAMValidation::SLAMValidation()[m[K’:
-[01m[K/home/andrewwhong/workspace/driverless/driverless_ws/src/planning/src/EKF_SLAM.cpp:35:58:[m[K [01;31m[Kerror: [m[K‘[01m[Ktopic_callback[m[K’ is not a member of ‘[01m[KSLAMValidation[m[K’
-   35 |       sync_->registerCallback(std::bind(&SLAMValidation::[01;31m[Ktopic_callback[m[K, this, _1, _2));
-      |                                                          [01;31m[K^~~~~~~~~~~~~~[m[K
-make[2]: *** [CMakeFiles/slam_test.dir/build.make:63: CMakeFiles/slam_test.dir/src/EKF_SLAM.cpp.o] Error 1
-make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/slam_test.dir/all] Error 2
-make: *** [Makefile:141: all] Error 2

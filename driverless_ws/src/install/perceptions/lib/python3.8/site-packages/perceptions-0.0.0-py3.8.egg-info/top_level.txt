@@ -1,3 +1,0 @@
-perceptions
-resource
-test

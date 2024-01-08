@@ -1,9 +1,0 @@
-/home/dale/driverless/driverless_ws/src/build/ros2_numpy_dv/CMakeFiles/uninstall.dir
-/home/dale/driverless/driverless_ws/src/build/ros2_numpy_dv/CMakeFiles/ros2_numpy_dv_uninstall.dir
-/home/dale/driverless/driverless_ws/src/build/ros2_numpy_dv/CMakeFiles/test.dir
-/home/dale/driverless/driverless_ws/src/build/ros2_numpy_dv/CMakeFiles/edit_cache.dir
-/home/dale/driverless/driverless_ws/src/build/ros2_numpy_dv/CMakeFiles/rebuild_cache.dir
-/home/dale/driverless/driverless_ws/src/build/ros2_numpy_dv/CMakeFiles/list_install_components.dir
-/home/dale/driverless/driverless_ws/src/build/ros2_numpy_dv/CMakeFiles/install.dir
-/home/dale/driverless/driverless_ws/src/build/ros2_numpy_dv/CMakeFiles/install/local.dir
-/home/dale/driverless/driverless_ws/src/build/ros2_numpy_dv/CMakeFiles/install/strip.dir

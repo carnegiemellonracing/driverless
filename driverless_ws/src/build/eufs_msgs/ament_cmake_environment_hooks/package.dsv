@@ -1,4 +1,0 @@
-source;share/eufs_msgs/local_setup.bash
-source;share/eufs_msgs/local_setup.dsv
-source;share/eufs_msgs/local_setup.sh
-source;share/eufs_msgs/local_setup.zsh

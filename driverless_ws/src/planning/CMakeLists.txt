@@ -25,13 +25,18 @@ find_package(OpenCV REQUIRED)
 find_package(Eigen3 REQUIRED)
 # find_package(matplotplusplus)
 
-# add_executable(slam planning_codebase/EKF_SLAM.cpp planning_codebase/new_slam_correct.cpp)
-add_executable(slam planning_codebase/EKF_SLAM.cpp)
-# target_link_libraries(slam_test rclcpp message_filters eufs_msgs GSL OpenCV)
-ament_target_dependencies(slam rclcpp message_filters eufs_msgs GSL Eigen3 OpenCV)
+add_executable(ekf_sim_validation src/SimValidationNode.cpp)
+add_executable(ekf_slam src/SLAMNode.cpp)
+
+ament_target_dependencies(ekf_sim_validation rclcpp message_filters eufs_msgs GSL Eigen3 OpenCV)
+ament_target_dependencies(ekf_slam rclcpp message_filters eufs_msgs GSL Eigen3 OpenCV)
 
 install(TARGETS
-  slam
+  ekf_sim_validation
+  DESTINATION lib/${PROJECT_NAME})
+
+install(TARGETS
+  ekf_slam
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
