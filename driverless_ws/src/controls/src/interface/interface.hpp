@@ -1,15 +1,15 @@
-#pragma once
+#ifndef CONTROLS_INTERFACE_HPP
+#define CONTROLS_INTERFACE_HPP
 
 #include <mutex>
 #include <condition_variable>
 #include <types.hpp>
-#include <planning/src/planning_codebase/raceline/raceline.hpp>
 
 namespace controls {
     namespace interface {
         class Environment {
         public:
-            virtual ~Environment() =0;
+            virtual ~Environment () =0;
 
             virtual void update_spline(const SplineMsg& msg) =0;
             virtual void update_slam(const SlamMsg& msg) =0;
@@ -27,8 +27,6 @@ namespace controls {
         protected:
             bool m_valid {false};
         };
-
-        void deserialize_spline(const SplineMsg& msg, Spline& out);
     }
 }
 
@@ -40,4 +38,6 @@ namespace controls {
 
 #ifndef CONTROLS_NO_CUDA
 #include "cuda_environment.cuh"
+#endif
+
 #endif
