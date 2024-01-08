@@ -10,4 +10,9 @@
 **/log/
 **/cmake-build-*/
 
+# ignore all data files
+**/*.gz
+**/*.npz
+**/*.npy
+
 **/__pycache__/
