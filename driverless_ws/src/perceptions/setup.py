@@ -25,7 +25,9 @@ setup(
             'data_node = perceptions.ros.utils.DataNode:main',
             'file_node = perceptions.ros.utils.FileNode:main',
             'stereo_node = perceptions.ros.predictors.StereoNode:main',
-            'lidar_node = perceptions.ros.predictors.LidarNode:main'
+            'lidar_node = perceptions.ros.predictors.LidarNode:main',
+            'aggregate_node = perceptions.ros.utils.AggregateNode:main',
+            'lidar_speed_test_node = perceptions.ros.utils.LidarTestNode:main'
         ],
     },
 )

@@ -27,6 +27,11 @@ from cv_bridge import CvBridge
 BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
                          history = QoSHistoryPolicy.KEEP_LAST,
                          durability = QoSDurabilityPolicy.VOLATILE,
+                         depth = 1)
+
+RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
+                         history = QoSHistoryPolicy.KEEP_LAST,
+                         durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
 
 class ZEDNode(Node):
@@ -50,7 +55,7 @@ class ZEDNode(Node):
 
         # initialize timer interval for publishing the data
         # TODO: frame rate higher than actual update rate
-        frame_rate = 50
+        frame_rate = 30
         self.data_syncer = self.create_timer(1/frame_rate, self.inference)
 
         # initialize the ZEDSDK API for receiving raw data
@@ -86,6 +91,17 @@ class ZEDNode(Node):
         self.xyz_publisher.publish(xyz_enc)
 
         t = time.time()
+        calibration_params = self.zed.get_calibration_params()
+        fx = calibration_params.left_cam.fx
+        fy = calibration_params.left_cam.fy
+        cx = calibration_params.left_cam.cx
+        cy = calibration_params.left_cam.cy
+        intrinsic = np.asarray([
+            [fx, 0, cx],
+            [0, fy, cy],
+            [0, 0, 1]
+        ])
+        print(intrinsic)
         print(f"Publishing data: {1000 * (t - s):.3f}ms (frame_id: {header.frame_id}, stamp: {header.stamp})")
 
         
@@ -94,7 +110,6 @@ def main(args=None):
     rclpy.init(args=args)
 
     minimal_subscriber = ZEDNode()
-
     rclpy.spin(minimal_subscriber)
 
     # Destroy the node explicitly

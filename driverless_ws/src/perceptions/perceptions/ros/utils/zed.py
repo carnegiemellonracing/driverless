@@ -30,7 +30,7 @@ class ZEDSDK():
                  camera_resolution=sl.RESOLUTION.HD720,
                  depth_mode=sl.DEPTH_MODE.ULTRA,
                  coordinate_units=sl.UNIT.METER,
-                 coordinate_system=sl.COORDINATE_SYSTEM.RIGHT_HANDED_Z_UP,
+                 coordinate_system=sl.COORDINATE_SYSTEM.IMAGE,
                  camera_fps=0,
                  **kwargs
                  ) -> None:
@@ -292,7 +292,7 @@ class ZEDSDK():
         return self.zed
 
     def get_calibration_params(self):
-        return self.calibration_parameters
+        return self.zed.get_camera_information().camera_configuration.calibration_parameters
 
     def world_to_image(self, points):
         '''
