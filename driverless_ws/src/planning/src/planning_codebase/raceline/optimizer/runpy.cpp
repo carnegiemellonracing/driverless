@@ -23,13 +23,33 @@ std::vector<double> PyList_DoubleVec(PyObject *DL,int i){
 
 };
 
+
+/*
+
 std::vector<std::pair<double,double>> runlto(std::vector<double> x,std::vector<double> y,std::vector<double> wl,std::vector<double> wr){
+
+        Py_Initialize();
+        PyRun_SimpleString("import os\n");
+        
+    PyObject *obj = Py_BuildValue("s", "/optimizer/lto/global_racetrajectory_optimization/main_globaltraj.py");
+    FILE *file = _Py_fopen_obj(obj, "r+");
+    // PyRun_SimpleString("import os\n");
+    // PyRun_SimpleString("import moduler\n");
+    // PyRun_SimpleString("print (os.getcwd())");
+
+
+
+    // PyRun_SimpleFile(file,"pyshit.py");
+    // PyRun_StringFlags(myString,0,NULL,NULL,NULL);
+    
+
+
+
     PyObject *py_x,*py_y,*py_wl,*py_wr;
     py_x=double_list_Py(x);
     py_y=double_list_Py(y);
     py_wl=double_list_Py(wl);
     py_wr=double_list_Py(wr);
-    pythonfile = fopen("/optimizer/lto/global_racetrajectory_optimization/main_globaltraj.py","r+");
 
     PyObject *globals =PyDict_New();
     PyDict_SetItemString(globals,"x",py_x);
@@ -37,7 +57,7 @@ std::vector<std::pair<double,double>> runlto(std::vector<double> x,std::vector<d
     PyDict_SetItemString(globals,"wl",py_wl);
     PyDict_SetItemString(globals,"wr",py_wr);
 
-    PyObject *ret= PyRun_File(pythonfile,"/optimizer/lto/global_racetrajectory_optimization/main_globaltraj.py",0,globals,NULL);
+    PyObject *ret=  PyRun_SimpleFile(file,"pyshit.py");
 
     std::vector<double> xpts =PyList_DoubleVec(ret,0);
     std::vector<double> ypts =PyList_DoubleVec(ret,1);
@@ -50,6 +70,52 @@ std::vector<std::pair<double,double>> runlto(std::vector<double> x,std::vector<d
         values.push_back(std::make_pair(xpts[i],ypts[i]));
     }
     return values;
+    
+    
+    Py_Finalize();
+
+    // PyList_DoubleVec(y_pts);
+
+}
+*/
+
+
+void runlto(std::vector<double> x,std::vector<double> y,std::vector<double> wl,std::vector<double> wr){
+
+        Py_Initialize();
+        PyRun_SimpleString("import os\n");
+        
+    PyObject *obj = Py_BuildValue("s", "/optimizer/lto/global_racetrajectory_optimization/main_globaltraj.py");
+    FILE *file = _Py_fopen_obj(obj, "r+");
+    // PyRun_SimpleString("import os\n");
+    // PyRun_SimpleString("import moduler\n");
+    // PyRun_SimpleString("print (os.getcwd())");
+
+
+
+    // PyRun_SimpleFile(file,"pyshit.py");
+    // PyRun_StringFlags(myString,0,NULL,NULL,NULL);
+    
+
+
+
+    PyObject *py_x,*py_y,*py_wl,*py_wr;
+    py_x=double_list_Py(x);
+    py_y=double_list_Py(y);
+    py_wl=double_list_Py(wl);
+    py_wr=double_list_Py(wr);
+
+    PyObject *globals =PyDict_New();
+    PyObject *local =PyDict_New();
+    PyDict_SetItemString(globals,"x",py_x);
+    PyDict_SetItemString(globals,"y",py_y);
+    PyDict_SetItemString(globals,"wl",py_wl);
+    PyDict_SetItemString(globals,"wr",py_wr);
+
+    PyRun_File(file,"stuff",0,globals,local);
+    
+    
+    Py_Finalize();
 
     // PyList_DoubleVec(y_pts);
 
