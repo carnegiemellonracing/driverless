@@ -9,6 +9,7 @@
 **/install/
 **/log/
 **/cmake-build-*/
+log.log
 
 # ignore all data files
 **/*.gz

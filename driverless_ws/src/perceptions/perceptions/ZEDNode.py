@@ -16,11 +16,10 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC
 from perceptions.zed import ZEDSDK
 
-from eufs_msgs.msg import ConeArray
+from eufs_msgs.msg import ConeArray, DataFrame
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
 from std_msgs.msg import Header
-from eufs_msgs.msg import DataFrame
 import cv2
 from cv_bridge import CvBridge
 
