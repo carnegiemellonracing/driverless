@@ -167,7 +167,7 @@ def predict(model, left_image_np, point_cloud_np, sim=False):
             print("stereo-vision YOLO: Found unknown cone -- ignoring")
             color = cfg_perceptions.COLORS.UNKNOWN
 
-        color = get_cone_color(left_img, box, padding=2)
+        # color = get_cone_color(left_img, box, padding=2)
 
         prediction = [world_x,
                       world_y,
