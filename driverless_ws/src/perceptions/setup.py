@@ -1,11 +1,12 @@
 from setuptools import setup
+from setuptools import find_namespace_packages
 
 package_name = 'perceptions'
 
 setup(
     name=package_name,
     version='0.0.0',
-    packages=[package_name],
+    packages=[package_name] + find_namespace_packages(),
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
