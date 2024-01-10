@@ -11,11 +11,3 @@
 [submodule "driverless_ws/src/eufs_msgs"]
   path = driverless_ws/src/eufs_msgs
   url = https://gitlab.com/eufs/eufs_msgs.git
-
-[submodule "driverless_ws/src/HesaiLidar_ROS_2.0"]
-  path = driverless_ws/src/HesaiLidar_ROS_2.0
-  url = https://github.com/HesaiTechnology/HesaiLidar_ROS_2.0.git
-
-[submodule "driverless_ws/src/zed-ros2-wrapper"]
-  path = driverless_ws/src/zed-ros2-wrapper
-  url = https://github.com/stereolabs/zed-ros2-wrapper.git
