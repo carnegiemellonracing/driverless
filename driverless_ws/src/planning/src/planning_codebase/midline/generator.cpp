@@ -1,5 +1,5 @@
 #include "generator.hpp"
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 MidpointGenerator::MidpointGenerator(int interpolation_num){
     interpolation_number=interpolation_num;
@@ -16,7 +16,6 @@ std::vector<std::pair<double,double>>  MidpointGenerator::sorted_by_norm(std::ve
     
     return inp;
 }
-
 
 Eigen::MatrixXd midpoint(rclcpp::Logger logger, Eigen::MatrixXd& left,Eigen::MatrixXd& right){
     int cols = left.cols() +right.cols() -1;
@@ -104,7 +103,6 @@ Eigen::MatrixXd midpoint(rclcpp::Logger logger, Eigen::MatrixXd& left,Eigen::Mat
     return midpt;
 }
 
-
 std::vector<Spline> MidpointGenerator::generate_splines(rclcpp::Logger logger, Eigen::MatrixXd& midpoints){
     std::pair<std::vector<Spline>,std::vector<double>> a= raceline_gen(logger, midpoints,std::rand(), 4, false);
     // auto result =  raceline_gen(midpoints,std::rand(),midpoints->size2,false);
@@ -116,8 +114,6 @@ std::vector<Spline> MidpointGenerator::generate_splines(rclcpp::Logger logger, E
     }
     return a.first;
 }
-
-
 
 Eigen::MatrixXd MidpointGenerator::generate_points(rclcpp::Logger logger, perceptionsData perceptions_data){ 
     // LEFT ==BLUE

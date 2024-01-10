@@ -15,7 +15,7 @@
   find_package(std_msgs REQUIRED)
   find_package(geometry_msgs REQUIRED)
   find_package(eufs_msgs REQUIRED)
-  find_package(Eigen3 3.3 REQUIRED)
+  find_package(Eigen3 REQUIRED)
   find_package(GSL REQUIRED)
   find_package(interfaces REQUIRED)
 

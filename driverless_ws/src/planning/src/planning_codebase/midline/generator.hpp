@@ -3,7 +3,7 @@
 #include <math.h>
 #include <algorithm>
 #include <iostream>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include <rclcpp/rclcpp.hpp>
 #ifndef MIDPOINTGENERATOR
 #define MIDPOINTGENERATOR
