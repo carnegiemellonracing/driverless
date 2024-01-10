@@ -21,11 +21,11 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'zed_node = perceptions.ZEDNode:main',
-            'data_node = perceptions.DataNode:main',
-            'stereo_node = perceptions.StereoNode:main',
-            'lidar_node = perceptions.LidarNode:main',
-            'sync_node = perceptions.SyncNode:main'
+            'zed_node = perceptions.ros.utils.ZEDNode:main',
+            'data_node = perceptions.ros.utils.DataNode:main',
+            'stereo_node = perceptions.ros.predictors.StereoNode:main',
+            'lidar_node = perceptions.ros.predictors.LidarNode:main',
+            'sync_node = perceptions.ros.utils.SyncNode:main'
         ],
     },
 )

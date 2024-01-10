@@ -1,5 +1,5 @@
-sensor_msgs/Image zed_left_img
-#sensor_msgs/PointCloud2 vlp16_pts
-sensor_msgs/PointCloud2 zed_pts
-sbg_driver/SbgGpsPos sbg
-sbg_driver/SbgImuData imu
+sensor_msgs/Image img_msg
+sensor_msgs/Image xyz_msg
+sensor_msgs/PointCloud2 pointcloud_msg
+sensor_msgs/Imu imu_data
+sensor_msgs/Vector3 imu_linear_velocity
