@@ -5,7 +5,7 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 
 # ROS2 message types
 from sensor_msgs.msg import Image, PointCloud2
-from interfaces.msg import DataFrame
+from eufs_msgs.msg import DataFrame
 
 # ROS2 msg to python datatype conversions
 import perceptions.ros.utils.conversions as conv
@@ -38,7 +38,7 @@ DEPTH_IMAGE_TOPIC = "/zedsdk_depth_image"
 POINT_TOPIC = "/lidar_points"
 DATAFRAME_TOPIC = "/DataFrame"
 
-DEBUG = True
+DEBUG = False
 
 # USE THESE TO CHOOSE WHICH TOPICS TO SUBSCRIBE TO
 left_color = False
@@ -46,7 +46,7 @@ right_color = False
 xyz_img = False
 depth_img = False
 lidar_points = False
-dataframe = False
+dataframe = True
 
 class DataNode(Node):
 
@@ -75,7 +75,7 @@ class DataNode(Node):
             self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         if dataframe:
-            self.point_subscriber = self.create_subscription(PointCloud2, DATAFRAME_TOPIC, self.dataframe_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+            self.point_subscriber = self.create_subscription(DataFrame, DATAFRAME_TOPIC, self.dataframe_callback, qos_profile=RELIABLE_QOS_PROFILE)
 
         # define dictionary to store the data
         self.data = {}
@@ -145,7 +145,7 @@ class DataNode(Node):
             vis.update_visualizer_window(self.window, points[:,:3])
 
     def dataframe_callback(self, msg):
-        self.data[self.left_color_str] = conv.img_to_npy(msg.image_msg)
+        self.data[self.left_color_str] = conv.img_to_npy(msg.img_msg)
         self.data[self.xyz_image_str] = conv.img_to_npy(msg.xyz_msg)
         self.data[self.points_str] = conv.pointcloud2_to_npy(msg.pointcloud_msg)
 

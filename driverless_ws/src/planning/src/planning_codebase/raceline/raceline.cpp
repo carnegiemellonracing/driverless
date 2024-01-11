@@ -1,5 +1,5 @@
 #include "raceline.hpp"
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 // #include "random.h"
 
 polynomial poly(int deg = 3){
@@ -443,7 +443,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
                 group(j, k) = res(j, i*shift + k);
-                // if (j==1) RCLCPP_INFO(logger, "point %d is (%f, %f)\n", k, group(0, k), group(1,k));
+                if (j==1) RCLCPP_INFO(logger, "point %d is (%f, %f)\n", k, group(0, k), group(1,k));
             }
         }
 
