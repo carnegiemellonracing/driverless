@@ -8,6 +8,7 @@
 
 #include "eufs_msgs/msg/cone_array_with_covariance.hpp"
 #include "eufs_msgs/msg/car_state.hpp"
+#include "interfaces/msg/slam_output.hpp"
 
 // #include "new_slam.cpp"
 // Adding new_slam_correct.cpp
@@ -42,22 +43,23 @@ struct VehiclePosition{
 
 
 
-class SimValidationNode : public rclcpp::Node
+class SLAMSimNode : public rclcpp::Node
 {
   public:
-    SimValidationNode(): Node("sim_validation_node"){
+    SLAMSimNode(): Node("sim_validation_node"){
 
       // Sim Cone Subscriber
       cone_sub = this->create_subscription<eufs_msgs::msg::ConeArrayWithCovariance>(
-      "/cones", 10, std::bind(&SimValidationNode::cone_callback, this, _1));
+      "/cones", 10, std::bind(&SLAMSimNode::cone_callback, this, _1));
 
       // Sim Vehicle State Subscriber
       vehicle_state_sub = this->create_subscription<eufs_msgs::msg::CarState>(
-      "/ground_truth/state", 10, std::bind(&SimValidationNode::vehicle_state_callback, this, _1));
+      "/ground_truth/state", 10, std::bind(&SLAMSimNode::vehicle_state_callback, this, _1));
 
+      slam_output_pub = this->create_publisher<interfaces::msg::SLAMOutput>("slam_output",10);
       
       // Timer to execute slam callback
-      timer = this->create_wall_timer(100ms, std::bind(&SimValidationNode::run_slam, this));
+      timer = this->create_wall_timer(100ms, std::bind(&SLAMSimNode::run_slam, this));
     }
   private:
     // Callback to store most recent cones output by sim
@@ -156,15 +158,33 @@ class SimValidationNode : public rclcpp::Node
         slam_output = ekf_slam(this->get_logger(), xEst, pEst, u, z, 0.1);
       }
 
-      RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", (xEst.rows()-3)/2);
       xEst = slam_output.x;
       pEst = slam_output.p;
+      int num_landmarks = (xEst.rows()-3)/2;
+      RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", num_landmarks);
+      
+      // Construct SLAMOutput message
+      interfaces::msg::SLAMOutput slam_output_msg = interfaces::msg::SLAMOutput();
+      slam_output_msg.car_x = xEst(0, 0);
+      slam_output_msg.car_y = xEst(1, 0);
+      slam_output_msg.car_heading = xEst(2, 0);
+
+      geometry_msgs::msg::Point landmarks[num_landmarks];
+      for(int i = 0; i < num_landmarks; i++){
+        geometry_msgs::msg::Point curr_landmark = geometry_msgs::msg::Point();
+        curr_landmark.x = xEst(2*i+3, 0);
+        curr_landmark.y = xEst(2*i+4, 0);
+        landmarks[i] = curr_landmark;
+      }
+      slam_output_msg.points = landmarks;
+      slam_output_pub->publish(slam_output_msg);
     }
 
 
-    // ------ TOPIC SUBSCRIBERS ------
+    // ------ TOPIC SUBSCRIBERS + PUBLISHERS ------
     rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr cone_sub;
     rclcpp::Subscription<eufs_msgs::msg::CarState>::SharedPtr vehicle_state_sub;
+    rclcpp::Publisher<interfaces::msg::SLAMOutput>::SharedPtr slam_output_pub;
 
     // ------ CONE ARRAYS ------
     vector<Cone> blue_cones;
@@ -186,7 +206,7 @@ class SimValidationNode : public rclcpp::Node
 
 int main(int argc, char * argv[]){
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<SimValidationNode>();
+  auto node = std::make_shared<SLAMSimNode>();
   rclcpp::spin(node);
   rclcpp::shutdown();
 
