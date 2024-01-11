@@ -56,7 +56,7 @@ class SLAMSimNode : public rclcpp::Node
       vehicle_state_sub = this->create_subscription<eufs_msgs::msg::CarState>(
       "/ground_truth/state", 10, std::bind(&SLAMSimNode::vehicle_state_callback, this, _1));
 
-      slam_output_pub = this->create_publisher<interfaces::msg::SLAMOutput>("slam_output",10);
+      slam_output_pub = this->create_publisher<interfaces::msg::SLAMOutput>("/slam_output",10);
       
       // Timer to execute slam callback
       timer = this->create_wall_timer(100ms, std::bind(&SLAMSimNode::run_slam, this));
