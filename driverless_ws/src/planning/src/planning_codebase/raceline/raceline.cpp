@@ -413,7 +413,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
     // Eigen::MatrixXd points=res;
 
-    int shift = points_per_spline-1;
+    int shift = points_per_spline-1; //3
     int group_numbers;
 
     if (shift == 1){
