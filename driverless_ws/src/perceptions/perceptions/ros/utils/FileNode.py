@@ -14,7 +14,11 @@ import numpy as np
 
 # set to determine what folder to create (find in ~/driverless/driverless_ws/<FOLDER_NAME>)
 # DO NOT MAKE "src", "build", "install", or "log"
+<<<<<<< HEAD
 FOLDER_NAME = "ecg-12-02-full"
+=======
+FOLDER_NAME = "tt-09-29-1"
+>>>>>>> main
 
 # define path to data directory
 WS_DIR = Path(__file__).parents[3]

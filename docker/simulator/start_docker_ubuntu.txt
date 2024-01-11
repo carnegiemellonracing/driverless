@@ -1,2 +1,6 @@
 xhost +
+<<<<<<< HEAD
 sudo docker run -it --rm --privileged --net=host -v $PWD/../..:/driverless -e DISPLAY=$DISPLAY akhandelwal2025/eufs:latest
+=======
+sudo docker run -it --rm --privileged --net=host -v $PWD/../..:/driverless -e DISPLAY=$DISPLAY eufs:latest
+>>>>>>> main

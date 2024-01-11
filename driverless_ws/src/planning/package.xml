@@ -8,7 +8,10 @@
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-
+  <depend>interfaces</depend>
+   
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
@@ -16,10 +19,11 @@
   <depend>message_filters</depend>
   <depend>eufs_msgs</depend>
   <depend>GSL</depend>
-  <depend>OpenCV</depend>
   <depend>Eigen3</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
   </export>
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <member_of_group>rosidl_interface_packages</member_of_group>
 </package>

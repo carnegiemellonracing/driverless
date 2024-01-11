@@ -1,0 +1,10 @@
+circle track: inner rad 2, outer rad 3, one to one
+left: (0, 2), (2, 0), (0, -2), (-2, 0)
+right: (0, 3), (3, 0), (0, -3), (-3, 0)
+
+circle track: inner rad 2, outer rad 3, extra pts on outer
+left: (0, 2), (2, 0), (0, -2)
+right: (0, 5), (5, 0), (0, -5), (-5, 0) (-2.66, 1.387) (-2.52, 1.628)
+
+
+

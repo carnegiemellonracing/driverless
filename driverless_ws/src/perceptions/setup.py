@@ -21,10 +21,18 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+<<<<<<< HEAD
             'data_node = perceptions.ros.utils.DataNode:main',
             'file_node = perceptions.ros.utils.FileNode:main',
             'stereo_node = perceptions.ros.predictors.StereoNode:main',
             'lidar_node = perceptions.ros.predictors.LidarNode:main'
+=======
+            'zed_node = perceptions.ZEDNode:main',
+            'data_node = perceptions.DataNode:main',
+            'stereo_node = perceptions.StereoNode:main',
+            'lidar_node = perceptions.LidarNode:main',
+            'sync_node = perceptions.SyncNode:main'
+>>>>>>> main
         ],
     },
 )
