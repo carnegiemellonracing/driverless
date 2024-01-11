@@ -42,8 +42,8 @@
   )
 
   # -------- EKF SLAM SETUP --------
-  add_executable(ekf_sim_validation src/SimValidationNode.cpp)
-  add_executable(ekf_slam src/SLAMNode.cpp)
+  add_executable(ekf_sim_validation src/nodes/SimValidationNode.cpp)
+  add_executable(ekf_slam src/nodes/SLAMNode.cpp)
 
   ament_target_dependencies(ekf_sim_validation rclcpp message_filters eufs_msgs GSL Eigen3 OpenCV)
   ament_target_dependencies(ekf_slam rclcpp message_filters eufs_msgs GSL Eigen3 OpenCV)
