@@ -37,17 +37,24 @@ endif()
 find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(eufs_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/Brakes.msg"
   "msg/CarROT.msg"
   "msg/ConeList.msg"
   "msg/ConePositions.msg"
+  "msg/ControlAction.msg"
+  "msg/DataFrame.msg"
+  "msg/Heartbeat.msg"
   "msg/PairROT.msg"
   "msg/Points.msg"
+  "msg/SlamOutput.msg"
+  "msg/SlamFrame.msg"
   "msg/Spline.msg"
   "msg/SplineList.msg"
-  "msg/ControlAction.msg"
-  DEPENDENCIES geometry_msgs sensor_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
+  "msg/VehicleState.msg"
+  DEPENDENCIES geometry_msgs sensor_msgs eufs_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 ament_package()
 

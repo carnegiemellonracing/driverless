@@ -4,7 +4,7 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 
 # for converting predictor output to cone message type
-from eufs_msgs.msg import ConeArray
+from eufs_msgs.msg import ConeArray, SlamFrame
 import perceptions.ros.utils.conversions as conversions
 
 # for collecting data from sensors
@@ -13,7 +13,12 @@ from perceptions.ros.utils.DataNode import DataNode
 import time
 
 # configure QOS profile
-BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
+BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
+                         history = QoSHistoryPolicy.KEEP_LAST,
+                         durability = QoSDurabilityPolicy.VOLATILE,
+                         depth = 5)
+
+RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
                          history = QoSHistoryPolicy.KEEP_LAST,
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
@@ -35,8 +40,9 @@ class PredictNode(DataNode):
 
         # initialize published cone topic based on name
         self.cone_topic = f"/{name}_cones"
-        self.qos_profile = BEST_EFFORT_QOS_PROFILE
-        self.cone_publisher = self.create_publisher(ConeArray, self.cone_topic, self.qos_profile)
+        self.slam_frame_topic = f"/SLAMFrame"
+        self.qos_profile = RELIABLE_QOS_PROFILE
+        self.cone_publisher = self.create_publisher(SlamFrame, self.slam_frame_topic, self.qos_profile)
         
         # create predictor, any subclass of PredictNode needs to fill this component
         self.predictor = self.init_predictor()
@@ -62,7 +68,11 @@ class PredictNode(DataNode):
             print(cones)
 
         # publish message
-        msg = conversions.cones_to_msg(cones)
+        msg = SlamFrame()
+        msg.stereo_cones = conversions.cones_to_msg(cones)
+        msg.imu_linear_velocity = self.data[self.lin_vel_str]
+        msg.imu_data = self.data[self.imu_data]
+        
         self.cone_publisher.publish(msg)
 
         if self.time:

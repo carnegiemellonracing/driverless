@@ -14,33 +14,47 @@
   find_package(rclcpp REQUIRED)
   find_package(std_msgs REQUIRED)
   find_package(geometry_msgs REQUIRED)
+  find_package(message_filters REQUIRED)
   find_package(eufs_msgs REQUIRED)
   find_package(Eigen3 3.3 REQUIRED)
   find_package(GSL REQUIRED)
   find_package(interfaces REQUIRED)
 
+  # -------- PLANNING LIBRARY EXPORT --------
   add_library(planning_export src/planning_codebase/raceline/raceline.cpp)
   ament_target_dependencies(planning_export interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
-
-
-  add_executable(midpoint_test src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
-  # add_executable(midline_test src/generator.cpp src/raceline/raceline.cpp)
-  ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
 
   ament_export_targets(planning_exportTargets HAS_LIBRARY_TARGET)
   ament_export_dependencies(interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
   
-  # ament_target_dependencies(midline_test rclcpp std_msgs geometry_msgs eufs_msgs GSL)
-
-  install(
-    TARGETS midpoint_test
-    DESTINATION lib/${PROJECT_NAME}
-  )
-
   install(
     TARGETS planning_export
     EXPORT planning_exportTargets
     DESTINATION lib/${PROJECT_NAME}
   )
 
+  # -------- MIDLINE SETUP --------
+  add_executable(midpoint_test src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
+  ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
+
+  install(
+    TARGETS midpoint_test
+    DESTINATION lib/${PROJECT_NAME}
+  )
+
+  # -------- EKF SLAM SETUP --------
+  add_executable(ekf_sim_validation src/nodes/SLAMSimNode.cpp)
+  add_executable(ekf_slam src/nodes/SLAMNode.cpp)
+
+  ament_target_dependencies(ekf_sim_validation rclcpp message_filters eufs_msgs GSL Eigen3 interfaces)
+  ament_target_dependencies(ekf_slam rclcpp message_filters eufs_msgs GSL Eigen3 interfaces)
+
+  install(TARGETS
+    ekf_sim_validation
+    DESTINATION lib/${PROJECT_NAME})
+
+  install(TARGETS
+    ekf_slam
+    DESTINATION lib/${PROJECT_NAME})
+  
   ament_package()

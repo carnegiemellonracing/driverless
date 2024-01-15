@@ -12,7 +12,7 @@
 #include "interfaces/msg/spline.hpp"
 // #include "frenet.hpp"
 // #include "runpy.hpp"
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 
 //publish topic example

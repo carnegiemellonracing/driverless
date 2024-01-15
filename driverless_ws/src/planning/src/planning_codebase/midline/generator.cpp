@@ -1,5 +1,5 @@
 #include "generator.hpp"
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 MidpointGenerator::MidpointGenerator(int interpolation_num){
     interpolation_number=interpolation_num;
