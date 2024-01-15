@@ -12,7 +12,7 @@
 
 // #include "new_slam.cpp"
 // Adding new_slam_correct.cpp
-#include "ekf_slam.cpp"
+#include "../planning_codebase/ekf_slam/ekf_slam.cpp"
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
@@ -56,7 +56,7 @@ class SLAMSimNode : public rclcpp::Node
       vehicle_state_sub = this->create_subscription<eufs_msgs::msg::CarState>(
       "/ground_truth/state", 10, std::bind(&SLAMSimNode::vehicle_state_callback, this, _1));
 
-      slam_output_pub = this->create_publisher<interfaces::msg::SLAMOutput>("/slam_output",10);
+      slam_output_pub = this->create_publisher<interfaces::msg::SlamOutput>("/slam_output",10);
       
       // Timer to execute slam callback
       timer = this->create_wall_timer(100ms, std::bind(&SLAMSimNode::run_slam, this));
@@ -121,7 +121,7 @@ class SLAMSimNode : public rclcpp::Node
       // Create single matrix called z to store all blue, yellow, orange cones
       int n = blue_cones.size() + yellow_cones.size() + orange_cones.size();
       Eigen::MatrixXd z(n, 2);
-      int z_idx = 0;
+      int idx = 0;
 
       // Iterate through all blue cones and store in z
       for(int i = 0; i < blue_cones.size(); i++){
@@ -164,19 +164,19 @@ class SLAMSimNode : public rclcpp::Node
       RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", num_landmarks);
       
       // Construct SLAMOutput message
-      interfaces::msg::SLAMOutput slam_output_msg = interfaces::msg::SLAMOutput();
+      interfaces::msg::SlamOutput slam_output_msg = interfaces::msg::SlamOutput();
       slam_output_msg.car_x = xEst(0, 0);
       slam_output_msg.car_y = xEst(1, 0);
       slam_output_msg.car_heading = xEst(2, 0);
 
-      geometry_msgs::msg::Point landmarks[num_landmarks];
+      std::vector<geometry_msgs::msg::Point> landmarks(num_landmarks);
       for(int i = 0; i < num_landmarks; i++){
         geometry_msgs::msg::Point curr_landmark = geometry_msgs::msg::Point();
         curr_landmark.x = xEst(2*i+3, 0);
         curr_landmark.y = xEst(2*i+4, 0);
         landmarks[i] = curr_landmark;
       }
-      slam_output_msg.points = landmarks;
+      slam_output_msg.landmarks = landmarks;
       slam_output_pub->publish(slam_output_msg);
     }
 
@@ -184,7 +184,7 @@ class SLAMSimNode : public rclcpp::Node
     // ------ TOPIC SUBSCRIBERS + PUBLISHERS ------
     rclcpp::Subscription<eufs_msgs::msg::ConeArrayWithCovariance>::SharedPtr cone_sub;
     rclcpp::Subscription<eufs_msgs::msg::CarState>::SharedPtr vehicle_state_sub;
-    rclcpp::Publisher<interfaces::msg::SLAMOutput>::SharedPtr slam_output_pub;
+    rclcpp::Publisher<interfaces::msg::SlamOutput>::SharedPtr slam_output_pub;
 
     // ------ CONE ARRAYS ------
     vector<Cone> blue_cones;

@@ -7,8 +7,8 @@
 #include <limits>
 #include <numeric>
 #include <vector>
-#include <Eigen/Dense>
-#include <Eigen/Polynomial>
+#include <eigen3/Eigen/Dense>
+#include <eigen3/Eigen/Polynomial>
 #include "frenetEigen.hpp"
 #include "racelineEigen.hpp"
 

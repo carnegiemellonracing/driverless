@@ -12,21 +12,13 @@ NODE_NAME = "stereo_node"
 class StereoNode(PredictNode):
 
     def __init__(self):
-<<<<<<< HEAD
-        super().__init__(name=NODE_NAME, debug_flag=False, time_flag=True)
-=======
         super().__init__(name=NODE_NAME, debug_flag=True, time_flag=True)
->>>>>>> main
         return
 
     def init_predictor(self):
         # create predictor
         self.model_name = 'ultralytics/yolov5'
-<<<<<<< HEAD
-        self.param_path = '/home/chip/Desktop/Documents/driverless-packages/PerceptionsLibrary22a/perc22a/predictors/stereo/model_params.pt'
-=======
         self.param_path = '/home/dale/driverless-packages/PerceptionsLibrary22a/perc22a/predictors/stereo/model_params.pt'
->>>>>>> main
         predictor = StereoPredictor(self.model_name, self.param_path)
         return predictor
 

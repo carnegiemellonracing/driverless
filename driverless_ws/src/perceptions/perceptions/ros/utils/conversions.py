@@ -9,11 +9,7 @@ from perc22a.predictors.utils.cones import Cones
 
 # message to numpy conversion packages stolen from internet
 from cv_bridge import CvBridge
-<<<<<<< HEAD
-import ros2_numpy as rnp
-=======
 import ros2_numpy_dv as rnp
->>>>>>> main
 
 import numpy as np
 

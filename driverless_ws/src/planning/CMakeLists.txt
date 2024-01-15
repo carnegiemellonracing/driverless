@@ -14,6 +14,7 @@
   find_package(rclcpp REQUIRED)
   find_package(std_msgs REQUIRED)
   find_package(geometry_msgs REQUIRED)
+  find_package(message_filters REQUIRED)
   find_package(eufs_msgs REQUIRED)
   find_package(Eigen3 3.3 REQUIRED)
   find_package(GSL REQUIRED)
@@ -42,11 +43,11 @@
   )
 
   # -------- EKF SLAM SETUP --------
-  add_executable(ekf_sim_validation src/nodes/SimValidationNode.cpp)
+  add_executable(ekf_sim_validation src/nodes/SLAMSimNode.cpp)
   add_executable(ekf_slam src/nodes/SLAMNode.cpp)
 
-  ament_target_dependencies(ekf_sim_validation rclcpp message_filters eufs_msgs GSL Eigen3 OpenCV)
-  ament_target_dependencies(ekf_slam rclcpp message_filters eufs_msgs GSL Eigen3 OpenCV)
+  ament_target_dependencies(ekf_sim_validation rclcpp message_filters eufs_msgs GSL Eigen3 interfaces)
+  ament_target_dependencies(ekf_slam rclcpp message_filters eufs_msgs GSL Eigen3 interfaces)
 
   install(TARGETS
     ekf_sim_validation

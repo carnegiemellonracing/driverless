@@ -9,9 +9,9 @@
 #include "eufs_msgs/msg/cone_array_with_covariance.hpp"
 #include "eufs_msgs/msg/cone_array.hpp"
 #include "eufs_msgs/msg/car_state.hpp"
-#include "eufs_msgs/msg/slam_frame.hpp"
+#include "interfaces/msg/slam_frame.hpp"
 
-#include "ekf_slam.cpp"
+#include "../planning_codebase/ekf_slam/ekf_slam.cpp"
 
 #include <boost/shared_ptr.hpp>
 #include <vector>
@@ -42,13 +42,13 @@ class SLAMValidation : public rclcpp::Node
     SLAMValidation(): Node("slam_validation"){
       // gsl_matrix_set_identity(pEst);
 
-      slamframe_sub = this->create_subscription<eufs_msgs::msg::SlamFrame>(
+      slamframe_sub = this->create_subscription<interfaces::msg::SlamFrame>(
       "/SLAMFrame", 10, std::bind(&SLAMValidation::slamframe_callback, this, _1));
       
       timer = this->create_wall_timer(100ms, std::bind(&SLAMValidation::timer_callback, this));
     }
   private:
-    void slamframe_callback(const eufs_msgs::msg::SlamFrame::SharedPtr slamframe){
+    void slamframe_callback(const interfaces::msg::SlamFrame::SharedPtr slamframe){
       eufs_msgs::msg::ConeArray cone_data = slamframe->stereo_cones;
       geometry_msgs::msg::Vector3Stamped imu_linear_velocity = slamframe->imu_linear_velocity;
       sensor_msgs::msg::Imu imu_data = slamframe->imu_data;
@@ -182,7 +182,7 @@ class SLAMValidation : public rclcpp::Node
       pEst = slam_output.p;
 
     }
-    rclcpp::Subscription<eufs_msgs::msg::SlamFrame>::SharedPtr slamframe_sub;
+    rclcpp::Subscription<interfaces::msg::SlamFrame>::SharedPtr slamframe_sub;
     vector<Cone> blue_cones;
     vector<Cone> yellow_cones;
     vector<Cone> orange_cones;
