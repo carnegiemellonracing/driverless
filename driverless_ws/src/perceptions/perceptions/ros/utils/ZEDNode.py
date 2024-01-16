@@ -49,13 +49,13 @@ class ZEDNode(Node):
         # self.depth_publisher = self.create_publisher(msg_type=Image,
         #                                              topic=DEPTH_IMAGE_TOPIC,
         #                                              qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.xyz_publisher = self.create_publisher(msg_type=Image,
-                                                   topic=XYZ_IMAGE_TOPIC,
-                                                   qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.xyz_publisher = self.create_publisher(msg_type=Image,
+                                                #    topic=XYZ_IMAGE_TOPIC,
+                                                #    qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         # initialize timer interval for publishing the data
         # TODO: frame rate higher than actual update rate
-        frame_rate = 30
+        frame_rate = 10
         self.data_syncer = self.create_timer(1/frame_rate, self.inference)
 
         # initialize the ZEDSDK API for receiving raw data
@@ -82,13 +82,13 @@ class ZEDNode(Node):
         left_enc = self.bridge.cv2_to_imgmsg(left, encoding="passthrough", header=header)
         # right_enc = self.bridge.cv2_to_imgmsg(right, encoding="passthrough", header=header)
         # depth_enc = self.bridge.cv2_to_imgmsg(depth, encoding="passthrough", header=header)
-        xyz_enc = self.bridge.cv2_to_imgmsg(xyz,encoding="32FC4", header=header)
+        # xyz_enc = self.bridge.cv2_to_imgmsg(xyz,encoding="32FC4", header=header)
 
         # publish the data
         self.left_publisher.publish(left_enc)
         # self.right_publisher.publish(right_enc)
         # self.depth_publisher.publis(depth_enc)
-        self.xyz_publisher.publish(xyz_enc)
+        # self.xyz_publisher.publish(xyz_enc)
 
         t = time.time()
         calibration_params = self.zed.get_calibration_params()

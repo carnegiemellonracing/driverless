@@ -29,7 +29,7 @@ RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
 
-ALL_DATA_TYPES = [DataType.DATAFRAME]
+ALL_DATA_TYPES = [DataType.ZED_LEFT_COLOR]
 
 class DataNode(Node):
 

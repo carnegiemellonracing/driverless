@@ -39,13 +39,13 @@ class AggregateNode(Node):
 
     def __init__(self):
         super().__init__('aggregate_node')
-        self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=RELIABLE_QOS_PROFILE)
-        self.pointcloud_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.pointcloud_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.lidar_cones_subscriber = self.create_subscription(PointCloud2, "/lidar_node_cones", self.lidar_cones_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.img_publisher = self.create_publisher(Image, "/projection_img", RELIABLE_QOS_PROFILE)
 
         self.bridge = CvBridge()
 
-        self.hz = 2
+        self.hz = 10
         self.timer = self.create_timer(1 / self.hz, self.timer_callback)
         self.count = 0
 
@@ -54,13 +54,13 @@ class AggregateNode(Node):
         # self.zed.open()
         
         self.latest_img = None
-        self.latest_points = None
+        self.latest_lidar_cones = None
     
     def left_color_callback(self, img_msg):
         self.latest_img = img_msg
     
-    def pointcloud_callback(self, points_msg):
-        self.latest_points = points_msg
+    def lidar_cones_callback(self, lidar_cones_msg):
+        self.latest_lidar_cones = lidar_cones_msg
         self.count += 1
     
     def timer_callback(self):
