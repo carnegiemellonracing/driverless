@@ -9,6 +9,8 @@
 
   <build_depend>eufs_msgs</build_depend>
   <exec_depend>eufs_msgs</exec_depend>
+  <build_depend>interfaces</build_depend>
+  <exec_depend>interfaces</exec_depend>
   <build_depend>ros2_numpy</build_depend>
   <exec_depend>ros2_numpy</exec_depend>
   <build_depend>interfaces</build_depend>

@@ -42,6 +42,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/CarROT.msg"
   "msg/ConeList.msg"
   "msg/ConePositions.msg"
+  "msg/DataFrame.msg"
   "msg/PairROT.msg"
   "msg/Points.msg"
   "msg/Spline.msg"

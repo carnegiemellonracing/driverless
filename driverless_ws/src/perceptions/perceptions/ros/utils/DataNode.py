@@ -5,9 +5,6 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 
 # ROS2 message types
 from sensor_msgs.msg import Image, PointCloud2
-import interfaces
-
-import pdb; pdb.set_trace()
 from interfaces.msg import DataFrame
 
 # ROS2 msg to python datatype conversions
