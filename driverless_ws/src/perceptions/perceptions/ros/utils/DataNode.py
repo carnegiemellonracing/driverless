@@ -52,19 +52,6 @@ class DataNode(Node):
 
         # subscribe to each piece of data that we want to collect on
         self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-<<<<<<< HEAD:driverless_ws/src/perceptions/perceptions/DataNode.py
-        # self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        # self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        # self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        # self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.point_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        # self.dataframe_subscriber = self.create_subscription(DataFrame, DATAFRAME_TOPIC, self.dataframe_callback, qos_profile=RELIABLE_QOS_PROFILE)
-        # define varaibles to store the data
-        self.left_color = None
-        self.right_color = None
-        self.xyz_image = None
-        self.depth_image = None
-        self.points = None
-=======
         self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
@@ -79,7 +66,6 @@ class DataNode(Node):
         self.xyz_image_str = "xyz_image"
         self.depth_image_str = "depth_image"
         self.points_str = "points"
->>>>>>> main:driverless_ws/src/perceptions/perceptions/ros/utils/DataNode.py
         
 
     def got_all_data(self):
