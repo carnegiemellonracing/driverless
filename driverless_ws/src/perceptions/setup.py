@@ -23,7 +23,7 @@ setup(
         'console_scripts': [
             'zed_node = perceptions.ZEDNode:main',
             'data_node = perceptions.DataNode:main',
-            'stereo_node = perceptions.StereoNode:main',
+            'yolov5_node = perceptions.YOLOv5Node:main',
             'lidar_node = perceptions.LidarNode:main',
             'sync_node = perceptions.SyncNode:main'
         ],
