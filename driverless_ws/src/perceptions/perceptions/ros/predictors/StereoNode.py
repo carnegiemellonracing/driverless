@@ -5,9 +5,9 @@ import rclpy
 from perceptions.ros.utils.PredictNode import PredictNode
 
 # for doing prediction on sensor data
-from perc22a.predictors.stereo.StereoPredictor import StereoPredictor
+from perc22a.predictors.stereo.YOLOv5Predictor import YOLOv5Predictor
 
-NODE_NAME = "stereo_node"
+NODE_NAME = "yolov5_node"
 
 class StereoNode(PredictNode):
 
@@ -17,9 +17,7 @@ class StereoNode(PredictNode):
 
     def init_predictor(self):
         # create predictor
-        self.model_name = 'ultralytics/yolov5'
-        self.param_path = '/home/dale/driverless-packages/PerceptionsLibrary22a/perc22a/predictors/stereo/model_params.pt'
-        predictor = StereoPredictor(self.model_name, self.param_path)
+        predictor = YOLOv5Predictor()
         return predictor
 
 def main(args=None):
