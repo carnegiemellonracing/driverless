@@ -11,3 +11,6 @@
 [submodule "driverless_ws/src/eufs_msgs"]
 	path = driverless_ws/src/eufs_msgs
 	url = https://gitlab.com/eufs/eufs_msgs.git
+[submodule "driverless_ws/src/vision_opencv"]
+	path = driverless_ws/src/vision_opencv
+	url = https://github.com/carnegiemellonracing/vision_opencv.git
