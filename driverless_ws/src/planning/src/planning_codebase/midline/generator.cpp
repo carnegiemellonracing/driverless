@@ -6,14 +6,23 @@ MidpointGenerator::MidpointGenerator(int interpolation_num){
 
 }
 
-bool ptnrm_cmp(std::pair<double,double> a,std::pair<double,double> b){
-    return hypot(a.first,a.second) < hypot(b.first,b.second);
+double hypot_x2(std::pair<double,double> a){
+    return powf64(a.first,4) + powf64(a.second,2); 
 }
 
-std::vector<std::pair<double,double>>  MidpointGenerator::sorted_by_norm(std::vector<std::pair<double,double>> inp){
+//fix sort by norm
+bool ptnrm_cmp(std::pair<double,double> a,std::pair<double,double> b){
+    //square the x term
+    return hypot_x2(a)< hypot_x2(b);
+}
+
+std::vector<std::pair<double,double>>  MidpointGenerator::sorted_by_norm(rclcpp::Logger logger,std::vector<std::pair<double,double>> inp){
 
     std::sort(inp.begin(),inp.end(),ptnrm_cmp);
     
+    for(int i = 0; i < inp.size(); i++){
+        RCLCPP_INFO(logger, "sorted point %d is (%f, %f)\n", i, inp[i].first, inp[i].second);
+    }
     return inp;
 }
 
@@ -117,9 +126,14 @@ std::vector<Spline> MidpointGenerator::generate_splines(rclcpp::Logger logger, E
 
 Eigen::MatrixXd MidpointGenerator::generate_points(rclcpp::Logger logger, perceptionsData perceptions_data){ 
     // LEFT ==BLUE
-    perceptions_data.bluecones  = sorted_by_norm(perceptions_data.bluecones);
-    perceptions_data.yellowcones  = sorted_by_norm(perceptions_data.yellowcones);
+    //Sort cones by dist
+    perceptions_data.bluecones  = sorted_by_norm(logger,perceptions_data.bluecones);
+    perceptions_data.yellowcones  = sorted_by_norm(logger,perceptions_data.yellowcones);
+    
+    //Interpolate for blue cones
     if (perceptions_data.bluecones.size()>0 && perceptions_data.yellowcones.size()==0){
+        RCLCPP_INFO(logger, "interpolate from blue");
+
         Eigen::MatrixXd left(2,perceptions_data.bluecones.size());
         Eigen::MatrixXd right(2,perceptions_data.bluecones.size());
         for(int i=0;i<perceptions_data.bluecones.size();i++){
@@ -137,11 +151,12 @@ Eigen::MatrixXd MidpointGenerator::generate_points(rclcpp::Logger logger, percep
             }
         }
         Eigen::MatrixXd midpoint_mat = midpoint(logger, left, right);
-        // gsl_matrix_free(left);
-        // gsl_matrix_free(right);
         return midpoint_mat;
     }
+    //Interpolate for yellow cones
     if (perceptions_data.bluecones.size()==0 && perceptions_data.yellowcones.size()>0){
+        RCLCPP_INFO(logger, "interpolate from yellow");
+
         Eigen::MatrixXd left(2,perceptions_data.yellowcones.size());
         Eigen::MatrixXd right(2,perceptions_data.yellowcones.size());
         for(int i=0;i<perceptions_data.yellowcones.size();i++){
@@ -160,17 +175,11 @@ Eigen::MatrixXd MidpointGenerator::generate_points(rclcpp::Logger logger, percep
         }
 
         Eigen::MatrixXd midpoint_mat = midpoint(logger, left,right);
-        // gsl_matrix_free(left);
-        // gsl_matrix_free(right);
         return midpoint_mat;
     }
     // int size = std::min(perceptions_data.bluecones.size(),perceptions_data.yellowcones.size());
     Eigen::MatrixXd left(2,perceptions_data.bluecones.size());
     Eigen::MatrixXd right(2,perceptions_data.yellowcones.size());
-    // left(0, 0) = 0;
-    // left(1, 0) = 0;
-    // right(0, 0) = 0;
-    // right(1, 0) = 0;
     for(int i = 0; i < perceptions_data.bluecones.size(); i++){
         assert(i < left.cols());
 
@@ -191,6 +200,15 @@ Eigen::MatrixXd MidpointGenerator::generate_points(rclcpp::Logger logger, percep
     // RCLCPP_INFO(logger, "right matrix size is %d\n", right.cols());
 
     
+    RCLCPP_INFO(logger, "no interpolation");
+
+    for(int i = 0 ; i<left.cols(); i ++){
+        RCLCPP_INFO(logger, "left point %d is (%f, %f)\n", i, left(0, i), left(1, i));
+    }
+    
+    for(int i = 0 ; i<right.cols(); i ++){
+        RCLCPP_INFO(logger, "right point %d is (%f, %f)\n", i, right(0, i), right(1, i));
+    }
 
     Eigen::MatrixXd midpoint_mat = midpoint(logger, left, right);
     Eigen::MatrixXd ret(2, midpoint_mat.cols() + 1);
@@ -200,16 +218,9 @@ Eigen::MatrixXd MidpointGenerator::generate_points(rclcpp::Logger logger, percep
 
 }
 
-
-
-
-
 Eigen::MatrixXd MidpointGenerator::interpolate_cones(rclcpp::Logger logger, perceptionsData perceptions_data,int interpolation_number){
     return spline_from_cones(logger, perceptions_data).interpolate(interpolation_number,std::make_pair(-1,-1));
 }
-
-
-
 
 Spline MidpointGenerator::spline_from_cones(rclcpp::Logger logger, perceptionsData perceptions_data){
     Eigen::MatrixXd midpoints= generate_points(logger, perceptions_data);
