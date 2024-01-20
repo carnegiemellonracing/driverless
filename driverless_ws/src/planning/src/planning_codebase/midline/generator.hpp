@@ -32,7 +32,7 @@ public:
 
     MidpointGenerator(int interpolation_number=30);
 
-    std::vector<std::pair<double,double>> sorted_by_norm(std::vector<std::pair<double,double>> inp);
+    std::vector<std::pair<double,double>> sorted_by_norm(rclcpp::Logger logger,std::vector<std::pair<double,double>> inp);
     // gsl_matrix *sorted_by_norm(gsl_matrix *list);
     
 
@@ -44,7 +44,7 @@ public:
 
 };
 
-Eigen::MatrixXd midpoint(rclcpp::Logger logger, Eigen::MatrixXd& inner,Eigen::MatrixXd& outer);
+Eigen::MatrixXd midpoint(rclcpp::Logger logger, Eigen::MatrixXd& left,Eigen::MatrixXd& right);
 
 #endif
 

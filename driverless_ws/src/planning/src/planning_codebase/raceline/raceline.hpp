@@ -1,7 +1,11 @@
 #include <gsl/gsl_integration.h>
 #include <vector>
 #include <eigen3/Eigen/Dense>
+<<<<<<< HEAD
 #include<eigen3/Eigen/Core>
+=======
+#include <eigen3/Eigen/Core>
+>>>>>>> 797165cdb3d92fd10f19182e3f70d0308dc967f0
 #include <vector>
 #include <tuple>
 #include <cmath>
