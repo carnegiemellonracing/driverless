@@ -56,9 +56,11 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, obs_cones_w_idx):
     initP = np.eye(2)
     logger.info(f'Motion Model: {xEst[0, 0]}, {xEst[1, 0]}')
 
-    data_association_errors = 0
+    
     min_id_errors = 0
     # Update
+    print("Num observations: ", len(z))
+    print("Ground truth num obs: ", len(obs_cones_w_idx))
     for iz in range(len(z[:, 0])):  # for each observed cone 
         #iz is the index of a particular cone 
         min_id = search_correspond_landmark_id(xEst, PEst, z[iz, 0:2], logger, xTruth)
@@ -95,20 +97,14 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, obs_cones_w_idx):
         #Case 1: not found
         if not found_in_xTruth:
             # correcting min_id
-            min_id = obs_cones_w_idx[iz, 0]
+            min_id = obs_cones_w_idx[iz][0]
             min_id_errors += 1
         
 
-        #Case 2: min_id calculated with wrong value 
-        #what if min_id really != nLM
-        fix_min_id = False
-        if min_id != obs_cones_w_idx[iz, 0]:
-            fix_min_id = True
-
         if is_new:
             if min_id != nLM:
-                min_id_error += 1
-                min_id = obs_cones_w_idx[iz, 0]
+                min_id_errors += 1
+                min_id = obs_cones_w_idx[iz][0]
             print("New LM")
             # Extend state and covariance matrix
             xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
@@ -117,10 +113,10 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, obs_cones_w_idx):
             xEst = xAug
             PEst = PAug
         else:
-            if min_id != obs_cones_w_idx[iz, 0]:
-                min_id_error += 1
-                min_id = obs_cones_w_idx[iz, 0]
-
+            if min_id != obs_cones_w_idx[iz][0]:
+                min_id_errors += 1
+                min_id = obs_cones_w_idx[iz][0]
+        min_id = int(min_id)
 
         # if min_id == nLM: #supposedly new landmark
 
@@ -156,21 +152,21 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, obs_cones_w_idx):
         # 
 
 
-        # # print("type of min_id: ", type(min_id))    
-        # # min_id starts at 0
-        # lm = get_landmark_position_from_state(xEst, min_id)
-        # y, S, H = calc_innovation(lm, xEst, PEst, z[iz, 0:2], min_id)
+        # print("type of min_id: ", type(min_id))    
+        # min_id starts at 0
+        lm = get_landmark_position_from_state(xEst, min_id)
+        y, S, H = calc_innovation(lm, xEst, PEst, z[iz, 0:2], min_id)
 
-        # K = (PEst @ H.T) @ np.linalg.inv(S)
-        # # logger.info(f'Kalman: {K}')
-        # # logger.info(f'xEST: {xEst.shape}')
-        # # logger.info(f'K: {K.shape}')
-        # # logger.info(f'y: {y.shape}')
+        K = (PEst @ H.T) @ np.linalg.inv(S)
+        # logger.info(f'Kalman: {K}')
+        # logger.info(f'xEST: {xEst.shape}')
+        # logger.info(f'K: {K.shape}')
+        # logger.info(f'y: {y.shape}')
 
-        # #updating the position of the landmarks?
-        # xEst[3:, :] = xEst[3:, :] + (K[3:, :] @ y)
-        # # xEst = xEst + (K @ y)
-        # PEst = (np.eye(len(xEst)) - (K @ H)) @ PEst
+        #updating the position of the landmarks?
+        xEst[3:, :] = xEst[3:, :] + (K[3:, :] @ y)
+        # xEst = xEst + (K @ y)
+        PEst = (np.eye(len(xEst)) - (K @ H)) @ PEst
     # logger.info(f'Landmark Update: {xEst[0, 0]}, {xEst[1, 0]}')
     # logger.info(f'\n\n')
     xEst[2] = pi_2_pi(xEst[2])
@@ -188,7 +184,7 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, obs_cones_w_idx):
 
 
 
-    return xEst, PEst, cones, data_association_errors, min_id_errors
+    return xEst, PEst, cones,  min_id_errors
 
 
 def calc_input():

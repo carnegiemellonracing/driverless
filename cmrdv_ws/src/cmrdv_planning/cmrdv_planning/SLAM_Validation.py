@@ -169,6 +169,8 @@ class SLAMSubscriber(Node):
         self.xTruth[0][0] = self.state[0]
         self.xTruth[1][0] = self.state[1]
         self.xTruth[2][0] = self.state[2]
+
+        obs_cones_w_idx = []
         for idx, cone in enumerate(self.cones):
             obs_cone_global = np.zeros((2, 1))
             # obs_cone_global[0][0] = self.state[0] + cone[0] #global x pos of cone
@@ -188,7 +190,6 @@ class SLAMSubscriber(Node):
 
             #data association performed by looking at whether a cone alrdy exists at position
             # these series of steps represent what xEst should do
-            obs_cones_w_idx = []
             l = len(self.xTruth)
             for i in range(3, l, 2):
                 if (self.almostEqual(self.xTruth[i][0], obs_cone_global[0][0]) and
@@ -197,11 +198,10 @@ class SLAMSubscriber(Node):
                     obs_cones_w_idx.append([(i-3)/2, False])
                     break
             if new_cone:
-                new_cones_idx.append(idx)
                 obs_cones_w_idx.append([(l - 3) / 2, True])
                 self.xTruth = np.vstack((self.xTruth, obs_cone_global))
-
-            return obs_cones_w_idx 
+            print("Length of self.cones: ", len(self.cones))
+        return obs_cones_w_idx 
 
     def runSLAM(self, cones_msg, state_msg):
         self.get_logger().info("SLAM Callback!")
@@ -301,9 +301,8 @@ class SLAMSubscriber(Node):
             angle = self.pi_2_pi(math.atan2(dy, dx))
             zi = np.array([dist, angle, i])
             z = np.vstack((z, zi))
-        self.xEst, self.pEst, cones, new_da_errors, new_mi_errors = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger(), self.xTruth, obs_cones_w_idx)
+        self.xEst, self.pEst, cones, new_mi_errors = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger(), self.xTruth, obs_cones_w_idx)
         
-        data_association_errors += new_da_errors
         min_id_errors += new_mi_errors
 
         # all_cones stores the calculated cones
