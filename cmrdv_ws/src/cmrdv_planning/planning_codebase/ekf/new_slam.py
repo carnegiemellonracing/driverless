@@ -284,6 +284,7 @@ def search_correspond_landmark_id(xAug, PAug, zi, logger, xTruth):
     # logger.info(f'Measurement: {r*math.cos(theta)}, {r*math.sin(theta)}')
     for i in range(nLM): #iterate through all of the previously seen landmarks
         lm = get_landmark_position_from_state(xAug, i)
+        print("Length of truth table: ", len(xTruth))
         y, S, H = calc_innovation(lm, xAug, PAug, zi, i)
         # mahalanobis = y.T @ np.linalg.inv(S) @ y
         # if mahalanobis < min_dist[0]:

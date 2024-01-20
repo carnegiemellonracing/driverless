@@ -31,7 +31,6 @@ CONE_MSG = ConeArrayWithCovariance
 AVG_COMPUTATION_TIME = 0 
 WORST_COMPUTATION = () #first elem: computation time; second elem: idx to ground_truth cone
 data_association_errors = 0
-min_id_errors = 0
 #import odometry and gps position from sbg sensor driver
 class SLAMSubscriber(Node):
 
@@ -52,6 +51,7 @@ class SLAMSubscriber(Node):
 
         self.subscription_cone_data  # prevent unused variable warning
         self.subscription_vehicle_data  # prevent unused variable warning
+        self.min_id_errors = 0
 
         # #Publishing Vehicle state and map of track
         # self.publisher_vehicle_state = self.create_publisher(VehicleState, VEHICLE_STATE_TOPIC, qos_profile=BEST_EFFORT_QOS_PROFILE)
@@ -303,7 +303,7 @@ class SLAMSubscriber(Node):
             z = np.vstack((z, zi))
         self.xEst, self.pEst, cones, new_mi_errors = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger(), self.xTruth, obs_cones_w_idx)
         
-        min_id_errors += new_mi_errors
+        self.min_id_errors += new_mi_errors
 
         # all_cones stores the calculated cones
         # self.all_cones.extend(cones)
