@@ -30,7 +30,7 @@ LM_SIZE = 2  # LM state size [x,y]
 
 show_animation = True
     
-def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, new_cones_idx):
+def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, obs_cones_w_idx):
     cones = []
     # Predict
     S = STATE_SIZE
@@ -57,6 +57,7 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, new_cones_idx):
     logger.info(f'Motion Model: {xEst[0, 0]}, {xEst[1, 0]}')
 
     data_association_errors = 0
+    min_id_errors = 0
     # Update
     for iz in range(len(z[:, 0])):  # for each observed cone 
         #iz is the index of a particular cone 
@@ -79,9 +80,36 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, new_cones_idx):
 #Issue: need to set min_id to the correct one
 #Need to also track the idx of old cones in xEst
 # Possible solution: make a tuple, each tuple has xTruth_cone_idx, true/false
-        if min_id == nLM: #supposedly new landmark
 
-            if iz in new_cones_idx:
+#obs_cones_w_idx is a 2d list
+# first column represents the cone_idx in xTruth
+# second column tells whether new cone or not
+        found_in_xTruth = False
+        is_new = False
+        for obs in obs_cones_w_idx:
+            if obs[0] == min_id:
+                found_in_xTruth = True
+                is_new = obs[1]
+                break
+        # min_id calculated wrong 
+        #Case 1: not found
+        if !found_in_xTruth:
+            # correcting min_id
+            min_id = obs_cones_w_idx[iz, 0]
+            min_id_errors += 1
+        
+
+                
+        if min_id == nLM: #supposedly new landmark
+            #Case 2: min_id calculated with wrong value 
+            #what if min_id really != nLM
+            # needs to come after the if statement so that we can get 
+            fix_min_id = False
+            if min_id != obs_cones_w_idx[iz, 0]:
+                fix_min_id = True
+
+
+            if is_new:
                 print("New LM")
                 # Extend state and covariance matrix
                 xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
@@ -89,12 +117,13 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, new_cones_idx):
                                   np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
                 xEst = xAug
                 PEst = PAug
-            else: #if idx not in new_cones_idx, then not a new landmark (decision incorrect) 
+            else: #if is_new false, then min_id shouldn't be nLM(decision incorrect) 
+                #min_id calculated wrong
                 data_association_errors += 1
                 
                 
         elif min_id != nLM: #supposedly not new landmark
-            if iz in new_cones_idx: #if iz in new_cones_idx, then new landmark (decision incorrect)
+            if is_new: #if iz in new_cones_idx, then new landmark (decision incorrect)
                 data_association_errors += 1
                 print("New LM")
                 # Extend state and covariance matrix
@@ -103,6 +132,13 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, new_cones_idx):
                                   np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
                 xEst = xAug
                 PEst = PAug
+
+                # correcting min_id
+                min_id = nLM
+                min_id_errors += 1
+            # if !is_new, then make sure min_id is correct
+
+        
 
 
         # print("type of min_id: ", type(min_id))    
@@ -137,7 +173,7 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, new_cones_idx):
 
 
 
-    return xEst, PEst, cones, data_association_errors
+    return xEst, PEst, cones, data_association_errors, min_id_errors
 
 
 def calc_input():
