@@ -16,5 +16,6 @@ Packages Required
 - `ros2_numpy`
 - `vision_opencv`
 - `zed-ros2-wrapper` (follow [this](https://github.com/carnegiemellonracing/zed-ros2-wrapper) for build instructions)
-    - Before above, install ZED SDK from [here](https://www.stereolabs.com/developers/release).
-    - If fails, use `sudo apt install zstd`
+    - Before installing `zed-ros2-wrapper`, install ZED SDK as listed below
+        1. Run `sudo apt install zstd`
+        2. Install ZED SDK from [here](https://www.stereolabs.com/developers/release).
