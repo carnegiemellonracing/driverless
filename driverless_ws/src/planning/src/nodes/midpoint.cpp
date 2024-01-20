@@ -17,8 +17,6 @@
 
 //publish topic example
 //ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 1.0, y: 2.0, z: 3.0}]}"   
-
-
 // ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 0.0, y: 3.0, z: 0.0}, {x: 1.414, y: 2.236 , z: 0.0}, {x: 3.0, y: 0.0 , z: 0.0}], yellow_cones: [{x: 0.0, y: 2.0, z: 0.0}, {x: 1.414, y: 1.414, z: 0.0}, {x: 2.0, y: 0.0, z: 0.0}]}"   
 
 
@@ -161,10 +159,6 @@ class MidpointNode : public rclcpp::Node
 
 int main(int argc, char * argv[])
 {
-  // // RCLCPP_INFO(this->get_logger(), "Started Midpoint Node");
-  // rclcpp::init(argc, argv);
-  // rclcpp::spin(std::make_shared<MidpointNode>());
-  // rclcpp::shutdown();
   rclcpp::init(argc, argv);
   auto node = std::make_shared<MidpointNode>();
   RCLCPP_INFO(node->get_logger(), "got output\n");
