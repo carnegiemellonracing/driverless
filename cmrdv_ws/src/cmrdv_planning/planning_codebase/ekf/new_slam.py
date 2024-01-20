@@ -82,7 +82,7 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, obs_cones_w_idx):
 # Possible solution: make a tuple, each tuple has xTruth_cone_idx, true/false
 
 #obs_cones_w_idx is a 2d list
-# first column represents the cone_idx in xTruth
+# first column represents the cone_idx
 # second column tells whether new cone or not
         found_in_xTruth = False
         is_new = False
@@ -93,69 +93,84 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, obs_cones_w_idx):
                 break
         # min_id calculated wrong 
         #Case 1: not found
-        if !found_in_xTruth:
+        if not found_in_xTruth:
             # correcting min_id
             min_id = obs_cones_w_idx[iz, 0]
             min_id_errors += 1
         
 
-                
-        if min_id == nLM: #supposedly new landmark
-            #Case 2: min_id calculated with wrong value 
-            #what if min_id really != nLM
-            # needs to come after the if statement so that we can get 
-            fix_min_id = False
+        #Case 2: min_id calculated with wrong value 
+        #what if min_id really != nLM
+        fix_min_id = False
+        if min_id != obs_cones_w_idx[iz, 0]:
+            fix_min_id = True
+
+        if is_new:
+            if min_id != nLM:
+                min_id_error += 1
+                min_id = obs_cones_w_idx[iz, 0]
+            print("New LM")
+            # Extend state and covariance matrix
+            xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
+            PAug = np.vstack((np.hstack((PEst, np.zeros((len(xEst), LM_SIZE)))),
+                              np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
+            xEst = xAug
+            PEst = PAug
+        else:
             if min_id != obs_cones_w_idx[iz, 0]:
-                fix_min_id = True
+                min_id_error += 1
+                min_id = obs_cones_w_idx[iz, 0]
 
 
-            if is_new:
-                print("New LM")
-                # Extend state and covariance matrix
-                xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
-                PAug = np.vstack((np.hstack((PEst, np.zeros((len(xEst), LM_SIZE)))),
-                                  np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
-                xEst = xAug
-                PEst = PAug
-            else: #if is_new false, then min_id shouldn't be nLM(decision incorrect) 
-                #min_id calculated wrong
-                data_association_errors += 1
-                
-                
-        elif min_id != nLM: #supposedly not new landmark
-            if is_new: #if iz in new_cones_idx, then new landmark (decision incorrect)
-                data_association_errors += 1
-                print("New LM")
-                # Extend state and covariance matrix
-                xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
-                PAug = np.vstack((np.hstack((PEst, np.zeros((len(xEst), LM_SIZE)))),
-                                  np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
-                xEst = xAug
-                PEst = PAug
+        # if min_id == nLM: #supposedly new landmark
 
-                # correcting min_id
-                min_id = nLM
-                min_id_errors += 1
-            # if !is_new, then make sure min_id is correct
+        #     if is_new:
+        #         print("New LM")
+        #         # Extend state and covariance matrix
+        #         xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
+        #         PAug = np.vstack((np.hstack((PEst, np.zeros((len(xEst), LM_SIZE)))),
+        #                           np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
+        #         xEst = xAug
+        #         PEst = PAug
+        #     else: #if is_new false, then min_id shouldn't be nLM(decision incorrect) 
+        #         #min_id calculated wrong
+        #         data_association_errors += 1
+        #         
+        #         
+        # elif min_id != nLM: #supposedly not new landmark
+        #     if is_new: #if iz in new_cones_idx, then new landmark (decision incorrect)
+        #         data_association_errors += 1
+        #         print("New LM")
+        #         # Extend state and covariance matrix
+        #         xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
+        #         PAug = np.vstack((np.hstack((PEst, np.zeros((len(xEst), LM_SIZE)))),
+        #                           np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
+        #         xEst = xAug
+        #         PEst = PAug
 
-        
+        #         # correcting min_id
+        #         min_id = nLM
+        #         min_id_errors += 1
+        #     # if !is_new, then make sure min_id is correct
+
+        # 
 
 
-        # print("type of min_id: ", type(min_id))    
-        # min_id starts at 0
-        lm = get_landmark_position_from_state(xEst, min_id)
-        y, S, H = calc_innovation(lm, xEst, PEst, z[iz, 0:2], min_id)
+        # # print("type of min_id: ", type(min_id))    
+        # # min_id starts at 0
+        # lm = get_landmark_position_from_state(xEst, min_id)
+        # y, S, H = calc_innovation(lm, xEst, PEst, z[iz, 0:2], min_id)
 
-        K = (PEst @ H.T) @ np.linalg.inv(S)
-        # logger.info(f'Kalman: {K}')
-        # logger.info(f'xEST: {xEst.shape}')
-        # logger.info(f'K: {K.shape}')
-        # logger.info(f'y: {y.shape}')
+        # K = (PEst @ H.T) @ np.linalg.inv(S)
+        # # logger.info(f'Kalman: {K}')
+        # # logger.info(f'xEST: {xEst.shape}')
+        # # logger.info(f'K: {K.shape}')
+        # # logger.info(f'y: {y.shape}')
 
-        #updating the position of the landmarks?
-        xEst[3:, :] = xEst[3:, :] + (K[3:, :] @ y)
-        # xEst = xEst + (K @ y)
-        PEst = (np.eye(len(xEst)) - (K @ H)) @ PEst
+        # #updating the position of the landmarks?
+        # xEst[3:, :] = xEst[3:, :] + (K[3:, :] @ y)
+        # # xEst = xEst + (K @ y)
+        # PEst = (np.eye(len(xEst)) - (K @ H)) @ PEst
     # logger.info(f'Landmark Update: {xEst[0, 0]}, {xEst[1, 0]}')
     # logger.info(f'\n\n')
     xEst[2] = pi_2_pi(xEst[2])
