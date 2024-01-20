@@ -9,7 +9,7 @@ public:
         std::pair<double,double> endCone; // end cone index
         double length = 0; // length
         
-    }
+    };
 
     /** look some distance ahead starting from start index and return end 
     * index of cones in that distance
@@ -31,18 +31,19 @@ public:
     bool checkStartNewBucket(double runningAvg, double newCurvature);
 
     // how many times to split a bucket based on curvature
-    int 
+    int numBucketSplits(double curvature, bucket b);
 
     // generates output: progress of start of section and end of section
-
     /** big wrapper function that calls each of the helpers
     * @arg perceptions data
     * @return tuple of floats (start and end of the section)
     */
    // if checkStartNewBucket true, then reset running avg to 0 and start new bucket
    // else, update running avg
+   std::tuple<float, float> getSectionStartEnd(perceptionsData perceptions_data);
 
-    std::tuple<float, float> getSectionStartEnd(perceptionsData perceptions_data);
+
+    
 
 
 
