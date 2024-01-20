@@ -52,7 +52,17 @@ __device__ float dot(const float* v1, const float* v2, size_t n) {
 
 // ***** KERNELS *****
 
+/**
+ * @brief Generate perturbation increments from standard normals, in-place.
+ *        Multilies each action (last axis) in `inout` by `perturbations_incr_std` to generate
+ *        Normal increments with `perturbations_incr_std` as the standard deviation matrix
+ *
+ * @param[in,out] inout Unpitched num_samples x num_timesteps x action_dims tensor. Input standard normals, output
+ *                      perturbation increments
+ */
 __global__ void gen_perturb_incrs(float* inout) {
+
+    //
     __shared__ float shared_perturbs_incr_std[action_dims * action_dims];
     __shared__ float shared_std_normals_block[gen_perturbs_block_size];
 
