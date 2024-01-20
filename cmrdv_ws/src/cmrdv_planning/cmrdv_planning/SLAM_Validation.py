@@ -30,7 +30,8 @@ CONE_MSG = ConeArrayWithCovariance
 
 AVG_COMPUTATION_TIME = 0 
 WORST_COMPUTATION = () #first elem: computation time; second elem: idx to ground_truth cone
-
+data_association_errors = 0
+min_id_errors = 0
 #import odometry and gps position from sbg sensor driver
 class SLAMSubscriber(Node):
 
@@ -77,7 +78,7 @@ class SLAMSubscriber(Node):
         self.xTruth = np.zeros((STATE_SIZE, 1))
         self.pEst = np.eye(STATE_SIZE)
 
-        self.xErr = np.zeros(((xEst.shape[0] - 3)/2, 1))
+        self.xErr = np.zeros(( int (((int(self.xEst.shape[0]) - 3))/2), 1))
 
         #Time  Variables
         self.prevTime = self.get_clock().now().to_msg()
@@ -158,7 +159,7 @@ class SLAMSubscriber(Node):
         return self.state
 
     def almostEqual(self, n1, n2):
-        return (abs(n1 - n2) <= 0.1)
+        return (abs(n1 - n2) <= 0.0001)
 
 
     def append_xTruth(self):
@@ -168,18 +169,39 @@ class SLAMSubscriber(Node):
         self.xTruth[0][0] = self.state[0]
         self.xTruth[1][0] = self.state[1]
         self.xTruth[2][0] = self.state[2]
-        for cone in self.cones:
+        for idx, cone in enumerate(self.cones):
             obs_cone_global = np.zeros((2, 1))
-            obs_cone_global[0][0] = self.state[0] + cone[0] #global x pos of cone
-            obs_cone_global[1][0] = self.state[1] + cone[1] #global y pos of cone
+            # obs_cone_global[0][0] = self.state[0] + cone[0] #global x pos of cone
+            # obs_cone_global[1][0] = self.state[1] + cone[1] #global y pos of cone
+            # dist = math.hypot(dx, dy)
+            relative_distance = self.euclid_dist(self.state[0], self.state[1], self.state[0] + cone[0], self.state[1] + cone[1])
+            #remember that cone[0] and cone[1] represents the change in x and y distance from the car to the cone
+            # relative_distance = math.hypot(cone[0], cone[1])
+            # angle = self.pi_2_pi(math.atan2(dy, dx))
+            # phi = math.atan2(cone[0], cone[1])
+            # phi = self.pi_2_pi(math.atan2(cone[1], cone[0]))
+            phi = math.atan(cone[1]/ cone[0])
+            obs_cone_global[0][0] = self.state[0] + relative_distance * math.cos(self.state[2] + phi) #global x pos of cone
+            obs_cone_global[1][0] = self.state[1] + relative_distance * math.sin(self.state[2] + phi) #global y pos of cone
+
             new_cone = True
-            for i in range(3, len(self.xTruth), 2):
+
+            #data association performed by looking at whether a cone alrdy exists at position
+            # these series of steps represent what xEst should do
+            obs_cones_w_idx = []
+            l = len(self.xTruth)
+            for i in range(3, l, 2):
                 if (self.almostEqual(self.xTruth[i][0], obs_cone_global[0][0]) and
                     self.almostEqual(self.xTruth[i+1][0], obs_cone_global[1][0])):
                     new_cone = False
+                    obs_cones_w_idx.append([(i-3)/2, False])
                     break
             if new_cone:
+                new_cones_idx.append(idx)
+                obs_cones_w_idx.append([(l - 3) / 2, True])
                 self.xTruth = np.vstack((self.xTruth, obs_cone_global))
+
+            return obs_cones_w_idx 
 
     def runSLAM(self, cones_msg, state_msg):
         self.get_logger().info("SLAM Callback!")
@@ -192,8 +214,8 @@ class SLAMSubscriber(Node):
         # what happens to the ground truth data???
         # how can I access it
         self.parse_state(state_msg)
-        self.append_xTruth()
-        self.runEKF(self.get_clock().now().to_msg())
+        obs_cones_w_idx = self.append_xTruth()
+        self.runEKF(self.get_clock().now().to_msg(), obs_cones_w_idx)
         # self.model_accuracy()
         # self.get_logger().info(f'{self.ekf_output}')
 
@@ -250,6 +272,7 @@ class SLAMSubscriber(Node):
         # self.get_logger().info(f"time.sec: {time.sec}")
         self.prevTime = time
 
+    # keep the absolute value of the angle < math.pi/2
     def pi_2_pi(self, angle):
         return (angle + math.pi) % (2 * math.pi) - math.pi
 
@@ -260,7 +283,7 @@ class SLAMSubscriber(Node):
     #         # self.get_logger().info(f'   Landmark {i}: {self.xEst[2*i+3, 0]}, {self.xEst[2*i+4, 0]}')
     #     # self.get_logger().info(f'------------------------------------------')get_logger().info(logger.
     
-    def runEKF(self, time_stamp): #TODO:verify message of this
+    def runEKF(self, time_stamp, obs_cones_w_idx): #TODO:verify message of this
         #self.updateTime(time_stamp)
         start_time = time_stamp.sec * 1e9 + time_stamp.nanosec
          
@@ -278,8 +301,10 @@ class SLAMSubscriber(Node):
             angle = self.pi_2_pi(math.atan2(dy, dx))
             zi = np.array([dist, angle, i])
             z = np.vstack((z, zi))
-        self.xEst, self.pEst, cones, self.xErr = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger(), self.xTruth, self.xErr)
+        self.xEst, self.pEst, cones, new_da_errors, new_mi_errors = ekf_slam(self.xEst, self.pEst, u, z, self.dTime, self.get_logger(), self.xTruth, obs_cones_w_idx)
         
+        data_association_errors += new_da_errors
+        min_id_errors += new_mi_errors
 
         # all_cones stores the calculated cones
         # self.all_cones.extend(cones)
@@ -289,6 +314,8 @@ class SLAMSubscriber(Node):
         # for thing in self.subscription_cone_data:
         #     print("Ground truth data: ", thing)
         # self.print_xEst()
+        self.get_logger().info(f"CarxPos: {self.xTruth[0][0]},  yPos: {self.xTruth[1][0]}")
+
         for i in range(3, len(self.xTruth), 2):
             self.get_logger().info(f"Cone no. {1 + ((i - 3) / 2)}: \t xPos: {self.xTruth[i][0]},  yPos: {self.xTruth[i+1][0]}")
         self.plot_state_matrix()

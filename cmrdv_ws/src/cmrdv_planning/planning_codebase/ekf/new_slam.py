@@ -27,9 +27,10 @@ M_DIST_TH_ALL = 1
 STATE_SIZE = 3  # State size [x,y,yaw]
 LM_SIZE = 2  # LM state size [x,y]
 
+
 show_animation = True
     
-def ekf_slam(xEst, PEst, u, z, dt, logger):
+def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, new_cones_idx):
     cones = []
     # Predict
     S = STATE_SIZE
@@ -54,19 +55,58 @@ def ekf_slam(xEst, PEst, u, z, dt, logger):
     PEst[0:S, 0:S] = G.T @ PEst[0:S, 0:S] @ G + Fx.T @ Cx @ Fx
     initP = np.eye(2)
     logger.info(f'Motion Model: {xEst[0, 0]}, {xEst[1, 0]}')
+
+    data_association_errors = 0
     # Update
-    for iz in range(len(z[:, 0])):  # for each observation
-        min_id = search_correspond_landmark_id(xEst, PEst, z[iz, 0:2], logger)
+    for iz in range(len(z[:, 0])):  # for each observed cone 
+        #iz is the index of a particular cone 
+        min_id = search_correspond_landmark_id(xEst, PEst, z[iz, 0:2], logger, xTruth)
         cones.append(calc_landmark_position(xEst, z[iz, :]))
         nLM = calc_n_lm(xEst)
-        if min_id == nLM:
-            print("New LM")
-            # Extend state and covariance matrix
-            xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
-            PAug = np.vstack((np.hstack((PEst, np.zeros((len(xEst), LM_SIZE)))),
-                              np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
-            xEst = xAug
-            PEst = PAug
+        
+        # Cases for min_id
+        # 1.) min_id = nLM (the last element)
+        # This happens because the last element appended is the threshold distance
+        # this means no small distance found smaller than threshold
+        # 
+        # 2.) min_id = some other index
+
+# HEURISTICS STARTS HERE
+# preconditions: 
+# cones in z must be in the same order as self.cones
+# for loop must be iterating through each observation 
+
+#Issue: need to set min_id to the correct one
+#Need to also track the idx of old cones in xEst
+# Possible solution: make a tuple, each tuple has xTruth_cone_idx, true/false
+        if min_id == nLM: #supposedly new landmark
+
+            if iz in new_cones_idx:
+                print("New LM")
+                # Extend state and covariance matrix
+                xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
+                PAug = np.vstack((np.hstack((PEst, np.zeros((len(xEst), LM_SIZE)))),
+                                  np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
+                xEst = xAug
+                PEst = PAug
+            else: #if idx not in new_cones_idx, then not a new landmark (decision incorrect) 
+                data_association_errors += 1
+                
+                
+        elif min_id != nLM: #supposedly not new landmark
+            if iz in new_cones_idx: #if iz in new_cones_idx, then new landmark (decision incorrect)
+                data_association_errors += 1
+                print("New LM")
+                # Extend state and covariance matrix
+                xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
+                PAug = np.vstack((np.hstack((PEst, np.zeros((len(xEst), LM_SIZE)))),
+                                  np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
+                xEst = xAug
+                PEst = PAug
+
+
+        # print("type of min_id: ", type(min_id))    
+        # min_id starts at 0
         lm = get_landmark_position_from_state(xEst, min_id)
         y, S, H = calc_innovation(lm, xEst, PEst, z[iz, 0:2], min_id)
 
@@ -75,6 +115,8 @@ def ekf_slam(xEst, PEst, u, z, dt, logger):
         # logger.info(f'xEST: {xEst.shape}')
         # logger.info(f'K: {K.shape}')
         # logger.info(f'y: {y.shape}')
+
+        #updating the position of the landmarks?
         xEst[3:, :] = xEst[3:, :] + (K[3:, :] @ y)
         # xEst = xEst + (K @ y)
         PEst = (np.eye(len(xEst)) - (K @ H)) @ PEst
@@ -83,7 +125,19 @@ def ekf_slam(xEst, PEst, u, z, dt, logger):
     xEst[2] = pi_2_pi(xEst[2])
     #PEst = pose estimate
     #xEst = Robot pose estimate 
-    return xEst, PEst, cones
+
+    #xEst is done
+    #Compare xEst with xTruth
+
+    #Calculate the error in the 
+    # for i in range(3, len(xTruth), 2):
+    #     err = math.sqrt((xTruth[i][0] - xEst[i][0])**2 + (xTruth[i+1][0] - xEst[i+1][0])**2 ) 
+    #     xErr[(i - 3)/2] = err
+
+
+
+
+    return xEst, PEst, cones, data_association_errors
 
 
 def calc_input():
@@ -161,14 +215,15 @@ def calc_landmark_position(x, z):
 
 
 def get_landmark_position_from_state(x, ind):
+    print("Length of xEst: ", len(x))
+    print("Index: ", ind)
     lm = x[STATE_SIZE + LM_SIZE * ind: STATE_SIZE + LM_SIZE * (ind + 1), :]
 
     return lm
 
 
-error = 0
 
-def search_correspond_landmark_id(xAug, PAug, zi, logger):
+def search_correspond_landmark_id(xAug, PAug, zi, logger, xTruth):
     """
     Landmark association with Mahalanobis distance
     """
@@ -197,24 +252,29 @@ def search_correspond_landmark_id(xAug, PAug, zi, logger):
     min_dist.append(M_DIST_TH)  # new landmark; minimum distance threshold??
     min_id = min_dist.index(min(min_dist))
 
-    min_dist_truth = []
-    for i in range(nLM):
-        lm = get_landmark_position_from_state(xTruth, i)
-        y, S, H = calc_innovation(lm, xTruth, PAug, zi, i)
-        min_dist_truth.append(y.T @ np.linalg.inv(S) @ y)
+#issue: why are we checking mahalanobis distance for new cones with xTruth?
+# we have already appended the new cones to xTruth
+# 
 
-    min_dist_truth.append(M_DIST_TH)  # new landmark
-    min_id_truth = min_dist_truth.index(min(min_dist_truth))
+#HEURISTIC STARTS HERE
+    # min_dist_truth = []
+    # for i in range(nLM):
+    #     lm = get_landmark_position_from_state(xTruth, i)
+    #     y, S, H = calc_innovation(lm, xTruth, PAug, zi, i)
+    #     min_dist_truth.append(y.T @ np.linalg.inv(S) @ y)
 
-    if min_id != nLM:      #  found existing landmark
-        if min_id_truth == nLM: # mindist calc is really bad
-            error += 1
-            return nLM
-    else: # didnt find existing landmark
-        if min_id_truth != nLM: # should have found landmark
-            error += 1
-            return min_id_truth
+    # min_dist_truth.append(M_DIST_TH)  # new landmark
+    # min_id_truth = min_dist_truth.index(min(min_dist_truth))
 
+    # if min_id != nLM:      #  found existing landmark
+    #     if min_id_truth == nLM: # mindist calc is really bad
+    #         error += 1
+    #         return nLM
+    # else: # didnt find existing landmark
+    #     if min_id_truth != nLM: # should have found landmark
+    #         error += 1
+    #         return min_id_truth
+    # 
 
     # logger.info(f'   {second_min_dist[0]}/{min_dist[0]} == {second_min_dist[0]/min_dist[0]} ')
     # if nLM == 0:
@@ -224,6 +284,8 @@ def search_correspond_landmark_id(xAug, PAug, zi, logger):
     # else:
     #     return min_dist[1] if second_min_dist[0]/min_dist[0] > M_DIFF_TH else nLM
     return min_id
+
+    
 
 def calc_innovation(lm, xEst, PEst, z, LMid):
     delta = lm - xEst[0:2]
