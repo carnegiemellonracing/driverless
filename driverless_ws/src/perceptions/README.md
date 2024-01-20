@@ -10,7 +10,7 @@ Software Versions Required
 
 Packages Required
 - `eufs_msgs`
+- `HesaiLidar_ROS_2.0` (must be built with `--symlink-install` option)
 - `ros2_numpy`
 - `vision_opencv`
 - `zed-ros2-wrapper`
-- ``
