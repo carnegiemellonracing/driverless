@@ -11,3 +11,6 @@
 [submodule "driverless_ws/src/vision_opencv"]
 	path = driverless_ws/src/vision_opencv
 	url = https://github.com/carnegiemellonracing/vision_opencv.git
+[submodule "driverless_ws/src/HesaiLidar_ROS_2.0"]
+	path = driverless_ws/src/HesaiLidar_ROS_2.0
+	url = https://github.com/carnegiemellonracing/HesaiLidar_ROS_2.0.git
