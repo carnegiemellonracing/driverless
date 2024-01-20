@@ -8,6 +8,8 @@ public:
         std::pair<double,double> startCone; // start cone index
         std::pair<double,double> endCone; // end cone index
         double length = 0; // length
+        double runningAvgCurvature;
+        double numPointsInAvg;
         
     };
 
@@ -20,10 +22,10 @@ public:
     int getConesWithinDist(std::vector<std::pair<double,double>> cones, int startIndex, int dist);
 
     /** running average of current bucket 
-     * @arg spline: current spline we are looking at 
-     * @arg point: curvature at point is added to the current average
+     * @arg curvature: curvature is added to the current average
+     * @arg numPoints: number of points used to calculate current running avg
     */
-    double updateRunningAverageCurve(Spline spline, Eigen::VectorXd point);
+    double updateRunningAvgCurve(double curvature, int numPoints);
     // spline_along to get single point (p) on spline (s)
     // get_curvature, taking
 
