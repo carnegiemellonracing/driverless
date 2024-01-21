@@ -1,7 +1,5 @@
 # Perceptions ROS Package
 
-Dale requires restart!
-
 Software Versions Required
 - `gcc` (Version 9.4.0+)
 - `g++` (Version 9.4.0+)
@@ -9,6 +7,7 @@ Software Versions Required
     - Install from [here](https://developer.nvidia.com/cuda-downloads)
 - NVIDIA Driver (Version 545+)
     - Install drivers from [here](https://www.nvidia.com/download/index.aspx)
+    - Requires computer restart at times
 
 Packages Required
 - `eufs_msgs`
@@ -19,3 +18,6 @@ Packages Required
     - Before installing `zed-ros2-wrapper`, install ZED SDK as listed below
         1. Run `sudo apt install zstd`
         2. Install ZED SDK from [here](https://www.stereolabs.com/developers/release).
+
+Currently, for ZED data, the `ZEDNode` which publishes raw sensor data does not publish a right image or a depth image
+because they aren't used in the pipeline.
