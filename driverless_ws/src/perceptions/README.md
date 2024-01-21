@@ -24,3 +24,6 @@ Packages Required
 
 Currently, for ZED data, the `ZEDNode` which publishes raw sensor data does not publish a right image or a depth image
 because they aren't used in the pipeline.
+
+Additionally, because we aren't currently running the `zed-ros2-wrapper` code, avoid attempts to build
+`zed_components` due to lack of dependencies (which `rosdep` doesn't install for some reason).
