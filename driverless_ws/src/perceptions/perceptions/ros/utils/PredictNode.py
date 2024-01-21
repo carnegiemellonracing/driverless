@@ -55,7 +55,7 @@ class PredictNode(DataNode):
 
     def predict_callback(self):
         if not self.got_all_data():
-            self.get_logger().warn(f"[Node={self.name}] Not got all data")
+            self.get_logger().warn(f"Not got all data")
             return
 
         # predict cones from data
