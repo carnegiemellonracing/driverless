@@ -14,6 +14,7 @@ from perceptions.ros.utils.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XY
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
 from perc22a.data.utils.DataType import DataType
+from perc22a.data.utils.DataInstance import DataInstance
 
 # general imports
 import cv2
@@ -67,14 +68,11 @@ class DataNode(Node):
 
         # define dictionary to store the data
         # TODO: convert data representation to DataInstance type
-        self.data = {}
+        self.data = DataInstance(required_data)
 
     def got_all_data(self):
         # returns whether data node has all pieces of data
-        if DataType.DATAFRAME in self.required_data:
-            return DataType.HESAI_POINTCLOUD in self.data and DataType.ZED_LEFT_COLOR in self.data
-        else:
-            return all([(data_type in self.data.keys()) for data_type in self.required_data])
+        return self.data.have_all_data()
     
     def left_color_callback(self, msg):
         self.data[DataType.ZED_LEFT_COLOR] = conv.img_to_npy(msg)
