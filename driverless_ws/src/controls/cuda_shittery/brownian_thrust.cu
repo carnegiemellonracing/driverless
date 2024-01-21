@@ -12,8 +12,8 @@
 // ***** CONFIG *****
 
 constexpr size_t action_dims = 5;
-constexpr size_t num_timesteps = 3;
-constexpr size_t num_samples = 3;
+constexpr size_t num_timesteps = 128;
+constexpr size_t num_samples = 1024;
 constexpr size_t num_brownians = action_dims*num_timesteps*num_samples;
 constexpr dim3 brownian_dims {num_samples, num_timesteps, action_dims};
 
@@ -101,13 +101,8 @@ curandGenerator_t alloc_rng() {
     return rng;
 }
 
-thrust::device_ptr<float> gen_normals(curandGenerator_t rng) {
-    float* normal_raw_ptr;
-    cudaMalloc(&normal_raw_ptr, num_brownians * sizeof(float));
-
-    CURAND_CALL(curandGenerateNormal(rng, normal_raw_ptr, num_brownians, 0, 1));
-
-    return thrust::device_pointer_cast(normal_raw_ptr);
+void gen_normals(thrust::device_ptr<float> normal, curandGenerator_t rng) {
+    CURAND_CALL(curandGenerateNormal(rng, normal.get(), num_brownians, 0, 1));
 }
 
 void prefix_scan(thrust::device_ptr<float> normals) {
@@ -136,18 +131,29 @@ void print_tensor_3D(T tensor, dim3 dims) {
 
 int main() {
     curandGenerator_t rng = alloc_rng();
-    thrust::device_ptr<float> normal = gen_normals(rng);
+    float* normal_raw;
+    CUDA_CALL(cudaMalloc(&normal_raw, sizeof(float) * num_brownians));
 
-    print_tensor_3D(normal, brownian_dims);
+    thrust::device_ptr<float> normal = thrust::device_pointer_cast(normal_raw);
 
-    thrust::counting_iterator<size_t> indices {0};
-    thrust::for_each(indices, indices + num_brownians, TransformStdNormal {normal});
+    for (int i = 0; i < 1000000; i++) {
+        gen_normals(normal, rng);
 
-    print_tensor_3D(normal, brownian_dims);
+        // print_tensor_3D(normal, brownian_dims);
 
-    prefix_scan(normal);
+        thrust::counting_iterator<size_t> indices {0};
+        thrust::for_each(indices, indices + num_brownians, TransformStdNormal {normal});
 
-    print_tensor_3D(normal, brownian_dims);
+        // print_tensor_3D(normal, brownian_dims);
+
+        prefix_scan(normal);
+
+        // print_tensor_3D(normal, brownian_dims);
+
+        if (i % 1000 == 0) {
+            std::cout << i << std::endl;
+        }
+    }
 
     CURAND_CALL(curandDestroyGenerator(rng));
     CUDA_CALL(cudaFree(normal.get()));
