@@ -13,7 +13,7 @@ from perceptions.ros.utils.DataNode import DataNode
 import time
 
 # configure QOS profile
-BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
+BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
                          history = QoSHistoryPolicy.KEEP_LAST,
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
@@ -21,7 +21,14 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE
 class PredictNode(DataNode):
 
     def __init__(self, name, debug_flag=False, time_flag=True):
-        super().__init__(name=name)
+        # create predictor, any subclass of PredictNode is required to implement this
+        self.predictor = self.init_predictor()
+
+        # pass required pieces of data to predictor
+        super().__init__(
+            required_data=self.predictor.required_data()
+            name=name,
+        )
 
         # debugging flags
         self.debug = debug_flag
@@ -30,7 +37,7 @@ class PredictNode(DataNode):
         self.name = name
 
         # TODO: figure out best way to time prediction appropriately
-        self.interval = 0.1
+        self.interval = 0.05
         self.predict_timer = self.create_timer(self.interval, self.predict_callback)
 
         # initialize published cone topic based on name
