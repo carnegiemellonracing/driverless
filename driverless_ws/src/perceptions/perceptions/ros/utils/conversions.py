@@ -52,7 +52,7 @@ def cones_to_msg(cones: Cones) -> ConeArray:
     '''convert perc22a Cones datatype to ConeArray ROS2 msg type'''
     
     cones_msg = ConeArray()
-    blue_cones, yellow_cones, orange_cones = cones.get_cones()
+    blue_cones, yellow_cones, orange_cones = cones.to_numpy()
 
     cones_msg.blue_cones = _cone_msg_arr(blue_cones)
     cones_msg.yellow_cones = _cone_msg_arr(yellow_cones)
