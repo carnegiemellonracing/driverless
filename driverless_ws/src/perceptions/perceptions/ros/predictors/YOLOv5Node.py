@@ -16,9 +16,7 @@ class StereoNode(PredictNode):
         return
 
     def init_predictor(self):
-        # create predictor
-        predictor = YOLOv5Predictor()
-        return predictor
+        return YOLOv5Predictor()
 
 def main(args=None):
     rclpy.init(args=args)
