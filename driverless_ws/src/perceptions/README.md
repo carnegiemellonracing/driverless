@@ -4,8 +4,11 @@ Software Versions Required
 - `gcc` (Version 9.4.0+)
 - `g++` (Version 9.4.0+)
 - `nvcc` (Version 12.3.107+)
+    - Check by running `nvcc --version`
     - Install from [here](https://developer.nvidia.com/cuda-downloads)
+    - Ensure environment variables `$PATH` and `$LD_LIBRARY_PATH` contain appropriate binary and library paths
 - NVIDIA Driver (Version 545+)
+    - Check by running `nvidia-smi`
     - Install drivers from [here](https://www.nvidia.com/download/index.aspx)
     - Requires computer restart at times
 
