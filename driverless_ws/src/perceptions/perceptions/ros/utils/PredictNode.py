@@ -26,8 +26,8 @@ class PredictNode(DataNode):
 
         # pass required pieces of data to predictor
         super().__init__(
-            required_data=self.predictor.required_data()
-            name=name,
+            required_data=self.predictor.required_data(),
+            name=name
         )
 
         # debugging flags
