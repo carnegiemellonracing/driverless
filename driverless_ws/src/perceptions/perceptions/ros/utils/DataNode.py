@@ -5,11 +5,11 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 
 # ROS2 message types
 from sensor_msgs.msg import Image, PointCloud2
-from eufs_msgs.msg import DataFrame
+# from eufs_msgs.msg import DataFrame
 
 # ROS2 msg to python datatype conversions
 import perceptions.ros.utils.conversions as conv
-from perceptions.ros.utils.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC, DATAFRAME_TOPIC
+from perceptions.ros.utils.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC #, DATAFRAME_TOPIC
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
@@ -45,26 +45,26 @@ class DataNode(Node):
         if DataType.ZED_LEFT_COLOR in self.required_data:
             self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         
-        if DataType.ZED_RIGHT_COLOR in self.required_data:
-            self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # if DataType.ZED_RIGHT_COLOR in self.required_data:
+        #     self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         if DataType.ZED_XYZ_IMG in self.required_data:
             self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
             if self.visualize:
                 self.xyz_image_window = vis.init_visualizer_window()
 
-        if DataType.ZED_DEPTH_IMG in self.required_data:
-            self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # if DataType.ZED_DEPTH_IMG in self.required_data:
+        #     self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         if DataType.HESAI_POINTCLOUD in self.required_data:
             self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
             if self.visualize:
                 self.window = vis.init_visualizer_window()
 
-        if DataType.DATAFRAME in self.required_data:
-            self.dataframe_subscriber = self.create_subscription(DataFrame, DATAFRAME_TOPIC, self.dataframe_callback, qos_profile=RELIABLE_QOS_PROFILE)
-            if self.visualize:
-                self.window = vis.init_visualizer_window()
+        # if DataType.DATAFRAME in self.required_data:
+        #     self.dataframe_subscriber = self.create_subscription(DataFrame, DATAFRAME_TOPIC, self.dataframe_callback, qos_profile=RELIABLE_QOS_PROFILE)
+        #     if self.visualize:
+        #         self.window = vis.init_visualizer_window()
 
         # define dictionary to store the data
         # TODO: convert data representation to DataInstance type
@@ -89,7 +89,7 @@ class DataNode(Node):
             cv2.waitKey(1)
 
     def xyz_image_callback(self, msg):
-        self.data[DataType.ZED_XYZ_IMG] =conv.img_to_npy(msg)
+        self.data[DataType.ZED_XYZ_IMG] = conv.img_to_npy(msg)
 
         if self.visualize:
             # display xyz_image as unstructured point cloud
