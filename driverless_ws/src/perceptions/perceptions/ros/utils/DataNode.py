@@ -9,7 +9,7 @@ from sensor_msgs.msg import Image, PointCloud2
 
 # ROS2 msg to python datatype conversions
 import perceptions.ros.utils.conversions as conv
-from perceptions.ros.utils.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC #, DATAFRAME_TOPIC
+from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC #, DATAFRAME_TOPIC
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
