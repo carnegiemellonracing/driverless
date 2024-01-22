@@ -6,6 +6,17 @@
 
 #include "dynamicSpline.hpp";
 
+/** @brief updates running average of bucket by incorprating curvature into
+ * current avg
+ * @param curavture curvature of current point, to be added to running avg
+ * @param b bucket struct
+*/
+double updateRunningAvgCurve(double curvature, bucket b){
+    b.numPointsInAvg++;
+    return (b.runningAvgCurvature * (b.numPointsInAvg-1) + curvature) / b.numPointsInAvg;
+
+}
+
 /** @brief checks if running average of current bucket is significantly different 
  * from next cones return true, otherwise return false
  * @arg b: bucket struct
