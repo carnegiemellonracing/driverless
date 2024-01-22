@@ -23,9 +23,9 @@ public:
 
     /** running average of current bucket 
      * @arg curvature: curvature is added to the current average
-     * @arg numPoints: number of points used to calculate current running avg
+     * @arg bucket: use numPointsInAvg in struct
     */
-    double updateRunningAvgCurve(double curvature, int numPoints);
+    double updateRunningAvgCurve(double curvature, bucket b);
     // spline_along to get single point (p) on spline (s)
     // get_curvature, taking
 

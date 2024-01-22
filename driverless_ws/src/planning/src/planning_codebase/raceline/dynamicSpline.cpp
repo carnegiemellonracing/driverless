@@ -14,7 +14,7 @@
 */
 bool checkStartNewBucket(bucket_t b, double newCurvature) {
     double sigDiff = 1; // TODO: update the sigDiff after unit testing
-    if (abs(b.runningAvgCurvature - newCurvature) > 0.5) {
+    if (abs(b.runningAvgCurvature - newCurvature) >= sigDiff) {
         return true;
     }
     return false;
