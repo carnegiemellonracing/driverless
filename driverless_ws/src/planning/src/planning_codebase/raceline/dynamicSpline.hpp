@@ -7,11 +7,11 @@ public:
         std::vector<Spline> splines; // all of the splines in the bucket
         std::pair<double,double> startCone; // start cone index
         std::pair<double,double> endCone; // end cone index
-        double length = 0; // length
-        double runningAvgCurvature;
-        double numPointsInAvg;
+        double length = 0; // number of splines in the bucket (?)
+        double runningAvgCurvature; // running average of curvature in the bucket
+        double numPointsInAvg; // number of points used to calculate running avg
         
-    };
+    } bucket_t;
 
     /** look some distance ahead starting from start index and return end 
     * index of cones in that distance
@@ -30,7 +30,8 @@ public:
     // get_curvature, taking
 
     // if running average of current bucket is significantly different from next cones
-    bool checkStartNewBucket(double runningAvg, double newCurvature);
+    //bool checkStartNewBucket(double runningAvg, double newCurvature);
+    bool checkStartNewBucket(bucket b, double newCurvature);
 
     // how many times to split a bucket based on curvature
     int numBucketSplits(double curvature, bucket b);
