@@ -3,6 +3,12 @@
 
 public:
 
+    // segment is initialized in optimizer
+    struct segment {
+        perceptionsData perceptions_data;
+        std::vector<double> progress;
+    } segment_t;
+
     struct bucket {
         std::vector<Spline> splines; // all of the splines in the bucket
         std::pair<double,double> startCone; // start cone index
@@ -12,6 +18,7 @@ public:
         double numPointsInAvg; // number of points used to calculate running avg
         
     } bucket_t;
+    
 
     /** look some distance ahead starting from start index and return end 
     * index of cones in that distance
@@ -21,7 +28,7 @@ public:
     */
     int getConesWithinDist(std::vector<std::pair<double,double>> cones, int startIndex, int dist);
 
-    /** running average of current bucket 
+    /** update running average of current bucket, update splines vector
      * @arg curvature: curvature is added to the current average
      * @arg bucket: use numPointsInAvg in struct
     */
@@ -35,15 +42,16 @@ public:
 
     // how many times to split a bucket based on curvature
     int numBucketSplits(double curvature, bucket b);
+    
+    // finds the progress points to split given bucket 
+    std::vector<double> generateSegmentsForBucket(bucket b);
 
-    // generates output: progress of start of section and end of section
     /** big wrapper function that calls each of the helpers
     * @arg perceptions data
-    * @return tuple of floats (start and end of the section)
     */
    // if checkStartNewBucket true, then reset running avg to 0 and start new bucket
    // else, update running avg
-   std::tuple<float, float> getSectionStartEnd(perceptionsData perceptions_data);
+   void generateAllSegments(segment_t segment);
 
 
     
