@@ -2,7 +2,7 @@
 
 #include <curand.h>
 
-#define IDX_2D_PITCHED(tensor, idx, pitch) ((decltype(tensor))((char*)tensor + idx.y * pitch + idx.x * sizeof(std::remove_pointer<decltype(tensor)>::type))
+#define IDX_2D_PITCHED(tensor, idx, pitch) ((decltype(tensor))((char*)tensor + idx.y * pitch + idx.x * sizeof(std::remove_pointer<decltype(tensor)>::type)))
 #define IDX_3D_PITCHED(tensor, dims, idx, pitch) ((decltype(tensor))((char*)tensor + idx.x * dims.y * pitch + idx.y * pitch + idx.z * sizeof(std::remove_pointer<decltype(tensor)>::type)))
 #define IDX_3D(tensor, dims, idx) (&tensor[idx.x * dims.y * dims.z + idx.y * dims.z + idx.z])
 
@@ -112,4 +112,19 @@ __device__ static void thread_parallel_memcpy(T* dst, T* src, size_t elems, dim3
     for (size_t i = offset; i < elems; i += blockDim.x * blockDim.y * blockDim.z) {
         dst[i] = src[i];
     }
+}
+
+template<typename T>
+void print_tensor_3D(T tensor, dim3 dims) {
+    for (int i = 0; i < dims.x; i++) {
+        for (int j = 0; j < dims.y; j++) {
+            std::cout << "{ ";
+            for (int k = 0; k < dims.z; k++) {
+                std::cout << *IDX_3D(tensor, dims, dim3(i, j, k)) << " ";
+            }
+            std::cout << "} ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
 }
