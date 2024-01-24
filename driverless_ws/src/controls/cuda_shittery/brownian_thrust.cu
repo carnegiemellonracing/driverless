@@ -8,26 +8,8 @@
 #include <iostream>
 #include <cmath>
 
-
-// ***** CONFIG *****
-
-constexpr size_t action_dims = 5;
-constexpr size_t num_timesteps = 128;
-constexpr size_t num_samples = 1024;
-constexpr size_t num_brownians = action_dims*num_timesteps*num_samples;
-constexpr dim3 brownian_dims {num_samples, num_timesteps, action_dims};
-
-constexpr curandRngType_t rng_type = CURAND_RNG_PSEUDO_MTGP32;
-constexpr unsigned long long seed = 0;
-constexpr float sqrt_timestep = 1.0f;
-
-__constant__ const float perturbs_incr_std[] = {
-    1, 0, 0, 0, 0,
-    0, 2, 0, 0, 0,
-    0, 0, 1, 0, 0,
-    0, 0, 0, 1, 0,
-    0, 0, 0, 0, 10
-};
+#include "config.cuh"
+#include "cuda_utils.cuh"
 
 
 // ***** DEVICE FUNCS *****
@@ -102,7 +84,7 @@ curandGenerator_t alloc_rng() {
 }
 
 void gen_normals(thrust::device_ptr<float> normal, curandGenerator_t rng) {
-    CURAND_CALL(curandGenerateNormal(rng, normal.get(), num_brownians, 0, 1));
+    CURAND_CALL(curandGenerateNormal(rng, normal.get(), num_perturbs, 0, 1));
 }
 
 void prefix_scan(thrust::device_ptr<float> normals) {
@@ -132,7 +114,7 @@ void print_tensor_3D(T tensor, dim3 dims) {
 int main() {
     curandGenerator_t rng = alloc_rng();
     float* normal_raw;
-    CUDA_CALL(cudaMalloc(&normal_raw, sizeof(float) * num_brownians));
+    CUDA_CALL(cudaMalloc(&normal_raw, sizeof(float) * num_perturbs));
 
     thrust::device_ptr<float> normal = thrust::device_pointer_cast(normal_raw);
 
@@ -142,7 +124,7 @@ int main() {
         // print_tensor_3D(normal, brownian_dims);
 
         thrust::counting_iterator<size_t> indices {0};
-        thrust::for_each(indices, indices + num_brownians, TransformStdNormal {normal});
+        thrust::for_each(indices, indices + num_perturbs, TransformStdNormal {normal});
 
         // print_tensor_3D(normal, brownian_dims);
 
