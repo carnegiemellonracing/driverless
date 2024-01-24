@@ -156,28 +156,28 @@ class SLAMSimNode : public rclcpp::Node
       // Only run ekf_slam if the number of cones is greater than 0
       if (z.rows() != 0){
         slam_output = ekf_slam(this->get_logger(), xEst, pEst, u, z, 0.1);
-      }
 
-      xEst = slam_output.x;
-      pEst = slam_output.p;
-      int num_landmarks = (xEst.rows()-3)/2;
-      RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", num_landmarks);
-      
-      // Construct SLAMOutput message
-      interfaces::msg::SlamOutput slam_output_msg = interfaces::msg::SlamOutput();
-      slam_output_msg.car_x = xEst(0, 0);
-      slam_output_msg.car_y = xEst(1, 0);
-      slam_output_msg.car_heading = xEst(2, 0);
+        xEst = slam_output.x;
+        pEst = slam_output.p;
+        int num_landmarks = (xEst.rows()-3)/2;
+        RCLCPP_INFO(this->get_logger(), "NUM_LANDMARKS: %i\n", num_landmarks);
+        
+        // Construct SLAMOutput message
+        interfaces::msg::SlamOutput slam_output_msg = interfaces::msg::SlamOutput();
+        slam_output_msg.car_x = xEst(0, 0);
+        slam_output_msg.car_y = xEst(1, 0);
+        slam_output_msg.car_heading = xEst(2, 0);
 
-      std::vector<geometry_msgs::msg::Point> landmarks(num_landmarks);
-      for(int i = 0; i < num_landmarks; i++){
-        geometry_msgs::msg::Point curr_landmark = geometry_msgs::msg::Point();
-        curr_landmark.x = xEst(2*i+3, 0);
-        curr_landmark.y = xEst(2*i+4, 0);
-        landmarks[i] = curr_landmark;
+        std::vector<geometry_msgs::msg::Point> landmarks(num_landmarks);
+        for(int i = 0; i < num_landmarks; i++){
+          geometry_msgs::msg::Point curr_landmark = geometry_msgs::msg::Point();
+          curr_landmark.x = xEst(2*i+3, 0);
+          curr_landmark.y = xEst(2*i+4, 0);
+          landmarks[i] = curr_landmark;
+        }
+        slam_output_msg.landmarks = landmarks;
+        slam_output_pub->publish(slam_output_msg);
       }
-      slam_output_msg.landmarks = landmarks;
-      slam_output_pub->publish(slam_output_msg);
     }
 
 
