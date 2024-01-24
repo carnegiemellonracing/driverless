@@ -96,21 +96,6 @@ void prefix_scan(thrust::device_ptr<float> normals) {
                                   Equal<size_t> {}, AddActions {});
 }
 
-template<typename T>
-void print_tensor_3D(T tensor, dim3 dims) {
-    for (int i = 0; i < dims.x; i++) {
-        for (int j = 0; j < dims.y; j++) {
-            std::cout << "{ ";
-            for (int k = 0; k < dims.z; k++) {
-                std::cout << *IDX_3D(tensor, dims, dim3(i, j, k)) << " ";
-            }
-            std::cout << "} ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
-}
-
 int main() {
     curandGenerator_t rng = alloc_rng();
     float* normal_raw;
