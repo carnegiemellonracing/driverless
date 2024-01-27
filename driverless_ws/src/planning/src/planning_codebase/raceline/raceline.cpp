@@ -413,6 +413,8 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
     // Eigen::MatrixXd points=res;
 
+    //TODO: make sure that the group numbers are being calculated properly
+
     int shift = points_per_spline-1; //3
     int group_numbers;
 
@@ -434,24 +436,24 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
     std::vector<double> cumsum;
     // lengths.resize(group_numbers);
 
+    RCLCPP_INFO(logger, "points:%d, group numbers: %d\n",n,group_numbers);
+
     for(int i=0; i<group_numbers; i++){
+
         // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
-
-        // RCLCPP_INFO(logger, "\nnew group beginning\n");
-
         Eigen::MatrixXd group(2, points_per_spline);
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
                 group(j, k) = res(j, i*shift + k);
-                if (j==1) RCLCPP_INFO(logger, "point %d is (%f, %f)\n", k, group(0, k), group(1,k));
+                if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
             }
         }
-
 
 
         Eigen::Matrix2d Q  = rotation_matrix_gen(logger,group);
         Eigen::VectorXd translation_vector = get_translation_vector(group);
         Eigen::MatrixXd rotated_points = transform_points(logger,group,Q,translation_vector);
+
 
         // RCLCPP_INFO(logger, "rotation matrix\n");
         // RCLCPP_INFO(logger, "first point is (%f, %f)\n", Q(0, 0), Q(0, 1));
@@ -472,7 +474,6 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         polynomial first_der = polyder(interpolation_poly);
         polynomial second_der = polyder(first_der);
         
-        
         // Spline* spline = new Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
 
         lengths.emplace_back(0);
@@ -491,10 +492,6 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         }
 
     }
-
     return std::make_pair(splines, cumsum);
-
-
-
 }
 

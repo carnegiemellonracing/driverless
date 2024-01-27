@@ -27,76 +27,9 @@ std::vector<std::pair<double,double>>  MidpointGenerator::sorted_by_norm(rclcpp:
 }
 
 
-Eigen::MatrixXd midpoint(rclcpp::Logger logger, Eigen::MatrixXd &left,Eigen::MatrixXd &right){
-    int cols = left.cols() +right.cols() -1;
-    Eigen::MatrixXd midpt(2,cols);
-    
-    double lx = left(0,0);
-    double rx = right(1,0);
-    double ly = left(0,0);
-    double ry = right(1,0);
-
-    int l = 0; //index of inner
-    int r = 0; //index of outer
-
-    midpt(0,0) = (lx+rx)/2;
-    midpt(1,0) = (ly+ry)/2;
-
-    int m = 1; //index of midpoint
-    while(l<left.cols()-1 && r < right.cols()-1){
-        double lxp1 = left(0,l+1); //x-coordinater of inner[i+1]
-        double lyp1 = left(1,l+1); //y-coordinater of inner[i+1]
-        double rxp1 = right(0,r+1); //x-coordinater of outer[o+1]
-        double ryp1 = right(1,r+1); //y-coordinater of inner[o+1]
-
-        double dist_l_rp1 = pow((rxp1-lx),2) + pow((ryp1-ly),2); //distance between inner[i] and outer[o+1]
-        double dist_lp1_r = pow((rx-lxp1),2) + pow((ry-lyp1),2); //distance between inner[i+1] and outer[o]
-        if(dist_l_rp1 <= dist_lp1_r){
-            r++;
-            rx = rxp1;
-            ry = ryp1;
-            midpt(0,m) = (lx+rx)/2;
-            midpt(1,m) = (ly+ry)/2;
-        }else{
-            l++;
-            lx = lxp1;
-            ly = lyp1;
-            midpt(0,m) = (lx+rx)/2;
-            midpt(1,m) = (ly+ry)/2;
-        }
-        m++;
-    }
-
-    if(r == right.cols()-1)
-    {
-        while(l<left.cols()-1)
-        {
-            lx = left(0,l); //x-coordinater of inner[i+1]
-            ly = left(1,l);
-            midpt(0,m) = (lx+rx)/2;
-            midpt(1,m) = (ly+ry)/2;
-            l++;
-            m++;
-        }
-    }
-    else{
-        while(r<right.cols()-1)
-        {
-            rx = left(0,r); //x-coordinater of inner[i+1]
-            ry = left(1,r);
-            midpt(0,m) = (lx+rx)/2;
-            midpt(1,m) = (ly+ry)/2;
-            r++;
-            m++;
-        }
-    }
-    return midpt;
-}
-
-
 
 //delaunay triangulation
-Eigen::MatrixXd midpoint_new(rclcpp::Logger logger, Eigen::MatrixXd& left,Eigen::MatrixXd& right){
+Eigen::MatrixXd midpoint(rclcpp::Logger logger, Eigen::MatrixXd& left,Eigen::MatrixXd& right){
     int cols = left.cols() +right.cols() -1;
     Eigen::MatrixXd midpt(2,cols);
 
@@ -160,10 +93,10 @@ Eigen::MatrixXd midpoint_new(rclcpp::Logger logger, Eigen::MatrixXd& left,Eigen:
             m++;
         }
     }
-    else if (l == left.cols()-1){
+    else if (l == left.cols() - 1){
         //l == left->size2-1
         r++;
-        while(r<right.cols())
+        while(r < right.cols())
         {
             // RCLCPP_INFO(logger, "left point: (%f, %f)\n", left_x, left_y);
             right_x = right(0 , r); 
@@ -175,14 +108,26 @@ Eigen::MatrixXd midpoint_new(rclcpp::Logger logger, Eigen::MatrixXd& left,Eigen:
         }
     }
 
-    // for(int i=0;i<midpt->size1;i++)
-    //     for(int j=0;j<midpt->size1;j++)
-    //     gsl_matrix_set(midpt,i,j,(gsl_matrix_get(inner,i,j)+gsl_matrix_get(outer,i,j))/2);
-
+    for(int i = 0; i < midpt.cols(); i++){
+        RCLCPP_INFO(logger, "midpoint %d is (%f, %f)\n", i, midpt(0, i), midpt(1, i));
+    }
     return midpt;
 }
 
 std::vector<Spline> MidpointGenerator::generate_splines(rclcpp::Logger logger, Eigen::MatrixXd& midpoints){
+
+    RCLCPP_INFO(logger, "rows: %d, cols: %d\n", midpoints.rows(),midpoints.cols());
+
+    if(midpoints.cols() > 4){
+        Eigen::MatrixXd midpoint4(2, 4);
+        midpoint4 = midpoints.block(0, 0, 2, 4); // equiv to ret.rightCols(midpoint_mat.cols()) = midpoint_mat;
+        midpoints = midpoint4;
+    }
+
+    for(int i = 0; i < midpoints.cols(); i++){
+        RCLCPP_INFO(logger, "new midpoints %d is (%f, %f)\n", i, midpoints(0, i), midpoints(1, i));
+    }
+
     std::pair<std::vector<Spline>,std::vector<double>> a= raceline_gen(logger, midpoints,std::rand(), 4, false);
     // auto result =  raceline_gen(midpoints,std::rand(),midpoints->size2,false);
     for (auto &e:a.first){
@@ -302,6 +247,7 @@ Spline MidpointGenerator::spline_from_cones(rclcpp::Logger logger, perceptionsDa
 
     std::vector<Spline> splines = generate_splines(logger, midpoints);
     if (splines.size() == 0) return Spline(poly_one());
+
     return (splines[0]);
     
     // Spline newSpline = *(new(Spline));
@@ -320,5 +266,7 @@ Eigen::MatrixXd vector_to_mat(std::vector<std::pair<double,double>> side){
 Spline MidpointGenerator::spline_from_curve(rclcpp::Logger logger, std::vector<std::pair<double,double>> side){
     Eigen::MatrixXd side_mat= vector_to_mat(side);
     std::vector<Spline> splines = generate_splines(logger, side_mat);
+    RCLCPP_INFO(logger, "oof 2\n");
+
     return (splines[0]);
 }
