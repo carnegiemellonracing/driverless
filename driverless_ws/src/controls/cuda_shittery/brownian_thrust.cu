@@ -38,41 +38,6 @@ struct TransformStdNormal {
     }
 };
 
-template<size_t k>
-struct MultiplyBy {
-    __host__ __device__ size_t operator() (size_t i) const {
-        return i * k;
-    }
-};
-
-struct Action {
-    float data[action_dims];
-};
-
-struct AddActions {
-    __host__ __device__ Action operator() (Action a1, Action a2) {
-        Action res;
-        for (size_t i = 0; i < action_dims; i++) {
-            res.data[i] = a1.data[i] + a2.data[i];
-        }
-        return res;
-    }
-};
-
-template<size_t k>
-struct DivBy {
-    __host__ __device__ size_t operator() (size_t i) const {
-        return i / k;
-    }
-};
-
-template<typename T>
-struct Equal {
-    __host__ __device__ bool operator() (T a, T b) {
-        return a == b;
-    }
-};
-
 
 // **** HOST FUNCS ****
 

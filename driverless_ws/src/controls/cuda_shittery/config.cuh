@@ -14,6 +14,8 @@ constexpr unsigned long long seed = 0;
 constexpr float sqrt_timestep = 1.0f;
 constexpr float timestep = 1.0f;
 
+constexpr float temperature = 1.0f;
+
 __constant__ const float perturbs_incr_std[] = {
     1, 0, 0, 0, 0,
     0, 2, 0, 0, 0,
