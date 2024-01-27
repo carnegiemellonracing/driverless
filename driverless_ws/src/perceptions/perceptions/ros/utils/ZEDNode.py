@@ -60,8 +60,8 @@ class ZEDNode(Node):
 
         # initialize timer interval for publishing the data
         # TODO: frame rate higher than actual update rate
-        frame_rate = 50
-        self.data_syncer = self.create_timer(1/frame_rate, self.inference)
+        frame_rate = 25
+        self.data_syncer = self.create_timer(1/frame_rate, self.publish)
 
         # initialize the ZEDSDK API for receiving raw data
         self.zed = ZEDSDK()
@@ -70,16 +70,14 @@ class ZEDNode(Node):
         self.bridge = CvBridge()
         self.frame_id = 0
 
-    def inference(self):
+    def publish(self):
         # try displaying the image
 
         s = time.time()
 
+        # grab zed node data
         left, right, depth, xyz = self.zed.grab_data()
-        # cv2.imshow("left", left)
-        # cv2.waitKey(30)
-        # convert the data and check that it is the same going and backwards
-        # have to extract out nan values that don't count to compare image values
+
         header = Header()
         header.stamp = self.get_clock().now().to_msg()
         header.frame_id = str(self.frame_id)
