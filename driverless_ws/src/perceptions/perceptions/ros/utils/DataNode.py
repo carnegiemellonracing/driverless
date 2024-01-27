@@ -10,6 +10,7 @@ from sensor_msgs.msg import Image, PointCloud2
 # ROS2 msg to python datatype conversions
 import perceptions.ros.utils.conversions as conv
 from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC #, DATAFRAME_TOPIC
+from perceptions.topics import LEFT2_IMAGE_TOPIC, RIGHT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC, DEPTH2_IMAGE_TOPIC
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
@@ -45,6 +46,9 @@ class DataNode(Node):
         if DataType.ZED_LEFT_COLOR in self.required_data:
             self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         
+        if DataType.ZED2_LEFT_COLOR in self.required_data:
+            self.left2_color_subscriber = self.create_subscription(Image, LEFT2_IMAGE_TOPIC, self.left2_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        
         # if DataType.ZED_RIGHT_COLOR in self.required_data:
         #     self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
@@ -52,6 +56,11 @@ class DataNode(Node):
             self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
             if self.visualize:
                 self.xyz_image_window = vis.init_visualizer_window()
+                
+        if DataType.ZED2_XYZ_IMG in self.required_data:
+            self.xyz2_image_subscriber = self.create_subscription(Image, XYZ2_IMAGE_TOPIC, self.xyz2_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+            if self.visualize:
+                self.xyz2_image_window = vis.init_visualizer_window()
 
         # if DataType.ZED_DEPTH_IMG in self.required_data:
         #     self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
@@ -80,6 +89,13 @@ class DataNode(Node):
         if self.visualize:
             cv2.imshow("left", self.data[DataType.ZED_LEFT_COLOR])
             cv2.waitKey(1)
+            
+    def left2_color_callback(self, msg):
+        self.data[DataType.ZED2_LEFT_COLOR] = conv.img_to_npy(msg)
+
+        if self.visualize:
+            cv2.imshow("left2", self.data[DataType.ZED2_LEFT_COLOR])
+            cv2.waitKey(1)
 
     def right_color_callback(self, msg):
         self.data[DataType.ZED_RIGHT_COLOR] = conv.img_to_npy(msg)
@@ -100,6 +116,19 @@ class DataNode(Node):
             points = points[points[:,2] > -1]
 
             vis.update_visualizer_window(self.xyz_image_window, points)
+            
+    def xyz2_image_callback(self, msg):
+        self.data[DataType.ZED2_XYZ_IMG] = conv.img_to_npy(msg)
+
+        if self.visualize:
+            # display xyz2_image as unstructured point cloud
+            points = self.data[DataType.ZED2_XYZ_IMG][:, :, :3]
+            points = points.reshape((-1, 3))
+            points = points[:,[1,0,2]]
+            points = points[~np.isnan(points)].reshape((-1, 3))
+            points = points[points[:,2] > -1]
+
+            vis.update_visualizer_window(self.xyz2_image_window, points)
 
     def depth_image_callback(self, msg):
         self.data[DataType.ZED_DEPTH_IMG] = conv.img_to_npy(msg)
