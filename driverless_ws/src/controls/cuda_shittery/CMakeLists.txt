@@ -5,7 +5,7 @@ set(CMAKE_CUDA_STANDARD 14)
 
 find_package(CUDAToolkit)
 
-add_executable(cuda_shittery stategen_thrust.cu)
+add_executable(cuda_shittery action_reduction.cu)
 
 set_target_properties(cuda_shittery PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON

@@ -128,3 +128,65 @@ void print_tensor_3D(T tensor, dim3 dims) {
     }
     std::cout << std::endl;
 }
+
+template<size_t k>
+struct MultiplyBy {
+    __host__ __device__ size_t operator() (size_t i) const {
+        return i * k;
+    }
+};
+
+struct Action {
+    float data[action_dims];
+};
+
+__host__ __device__ static Action operator+ (const Action& a1, const Action& a2) {
+    Action res;
+    for (size_t i = 0; i < action_dims; i++) {
+        res.data[i] = a1.data[i] + a2.data[i];
+    }
+    return res;
+}
+
+template<typename T>
+__host__ __device__ static Action operator* (T scalar, const Action& action) {
+    Action res;
+    for (size_t i = 0; i < action_dims; i++) {
+        res.data[i] = scalar * action.data[i];
+    }
+    return res;
+}
+
+template<typename T>
+__host__ __device__ static Action operator* (const Action& action, T scalar) {
+    return scalar * action;
+}
+
+template<typename T>
+__host__ __device__ static Action operator/ (const Action& action, T scalar) {
+    Action res;
+    for (size_t i = 0; i < action_dims; i++) {
+        res.data[i] = action.data[i] / scalar;
+    }
+    return res;
+}
+
+struct AddActions {
+    __host__ __device__ Action operator() (const Action& a1, const Action& a2) const {
+        return a1 + a2;
+    }
+};
+
+template<size_t k>
+struct DivBy {
+    __host__ __device__ size_t operator() (size_t i) const {
+        return i / k;
+    }
+};
+
+template<typename T>
+struct Equal {
+    __host__ __device__ bool operator() (T a, T b) {
+        return a == b;
+    }
+};
