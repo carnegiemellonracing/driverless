@@ -46,6 +46,7 @@ Use python naming:
   - use uniform initialization (`{...}` constructor syntax) wherever possible. 
     - Reason: far more
       readable than `(...)` in many cases (looks like a function call/declaration)
+    - Excpetion: in macros. Breaks it (lmao)
   - `m_` prefix should be used for all private fields
     - Reason: disambiguates fields from parameters before it becomes an issue. If you wait until 
       you notice ambiguity, you're already too late!
