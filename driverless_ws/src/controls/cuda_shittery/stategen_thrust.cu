@@ -54,7 +54,6 @@ struct PopulateCost {
                        + *IDX_3D(brownians, dim3 {i, j, k}, dim3 {num_perturbs, num_timesteps, action_dims});
             }
             x_curr = model(x_curr, u_ij) * timestep; // Euler's method, TODO make better;
-            const float state[state_dims] = x_curr;
             j_curr -= cost(x_curr);
             cost_to_gos[i * num_timesteps + j] = j_curr;
         } 
