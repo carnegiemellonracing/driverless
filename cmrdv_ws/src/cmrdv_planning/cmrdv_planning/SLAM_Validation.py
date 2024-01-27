@@ -159,7 +159,7 @@ class SLAMSubscriber(Node):
         return self.state
 
     def almostEqual(self, n1, n2):
-        return (abs(n1 - n2) <= 0.0001)
+        return (abs(n1 - n2) <= 0.5)
 
 
     def append_xTruth(self):
@@ -176,13 +176,15 @@ class SLAMSubscriber(Node):
             # obs_cone_global[0][0] = self.state[0] + cone[0] #global x pos of cone
             # obs_cone_global[1][0] = self.state[1] + cone[1] #global y pos of cone
             # dist = math.hypot(dx, dy)
-            relative_distance = self.euclid_dist(self.state[0], self.state[1], self.state[0] + cone[0], self.state[1] + cone[1])
+            # relative_distance = self.euclid_dist(0, 0, cone[0], cone[1])
+            relative_distance = math.hypot(cone[0], cone[1])
             #remember that cone[0] and cone[1] represents the change in x and y distance from the car to the cone
             # relative_distance = math.hypot(cone[0], cone[1])
             # angle = self.pi_2_pi(math.atan2(dy, dx))
             # phi = math.atan2(cone[0], cone[1])
             # phi = self.pi_2_pi(math.atan2(cone[1], cone[0]))
-            phi = math.atan(cone[1]/ cone[0])
+            phi = self.pi_2_pi(math.atan2(cone[1], cone[0]))
+            # phi = math.atan(cone[1]/ cone[0])
             obs_cone_global[0][0] = self.state[0] + relative_distance * math.cos(self.state[2] + phi) #global x pos of cone
             obs_cone_global[1][0] = self.state[1] + relative_distance * math.sin(self.state[2] + phi) #global y pos of cone
 
@@ -195,12 +197,12 @@ class SLAMSubscriber(Node):
                 if (self.almostEqual(self.xTruth[i][0], obs_cone_global[0][0]) and
                     self.almostEqual(self.xTruth[i+1][0], obs_cone_global[1][0])):
                     new_cone = False
-                    obs_cones_w_idx.append([(i-3)/2, False])
+                    obs_cones_w_idx.append([(int)((i-3)/2), False])
                     break
             if new_cone:
-                obs_cones_w_idx.append([(l - 3) / 2, True])
+                obs_cones_w_idx.append([(int)((l - 3) / 2), True])
                 self.xTruth = np.vstack((self.xTruth, obs_cone_global))
-            print("Length of self.cones: ", len(self.cones))
+            print("Current observation: ", obs_cones_w_idx[len(obs_cones_w_idx) - 1][0], "x: ", obs_cone_global[0][0], " y: ", obs_cone_global[1][0])
         return obs_cones_w_idx 
 
     def runSLAM(self, cones_msg, state_msg):
@@ -307,22 +309,26 @@ class SLAMSubscriber(Node):
 
         # all_cones stores the calculated cones
         # self.all_cones.extend(cones)
-        self.get_logger().info(f'Num Landmarks = {(self.xEst.shape[0]-3)/2}')
+        self.get_logger().info(f'Num Est Landmarks = {(self.xEst.shape[0]-3)/2}')
 
         # print("Type of subscription cone data: ", type(self.subscription_cone_data))
         # for thing in self.subscription_cone_data:
         #     print("Ground truth data: ", thing)
         # self.print_xEst()
-        self.get_logger().info(f"CarxPos: {self.xTruth[0][0]},  yPos: {self.xTruth[1][0]}")
+        self.get_logger().info(f"Car xPos: {self.xTruth[0][0]},  yPos: {self.xTruth[1][0]},  bearing: {self.xTruth[2][0]}")
 
         for i in range(3, len(self.xTruth), 2):
             self.get_logger().info(f"Cone no. {1 + ((i - 3) / 2)}: \t xPos: {self.xTruth[i][0]},  yPos: {self.xTruth[i+1][0]}")
         self.plot_state_matrix()
+        # if len(self.xTruth) == 3 + 32:
+        #     assert(1 == 0)
         #TODO: Add dt
         # somelist = self.EKF.robot_cone_state()
         # self.get_logger().info(f'map = {map}')
         
         # self.plot_state_matrix(map, n_landmarks)
+
+
         next_time = self.get_clock().now().to_msg()
         next_time = next_time.sec*1e9 + next_time.nanosec
         diff_time = next_time - start_time
@@ -353,8 +359,8 @@ class SLAMSubscriber(Node):
                 lambda event: [exit(0) if event.key == 'escape' else None])
         self.car_states.append(self.xEst[0:3])
         self.gt_states.append([self.state[0], self.state[1], self.state[2]])
-        self.get_logger().info(f'Ground Truth: {self.state[0]}, {self.state[1]}, {self.state[2]}')
-        self.get_logger().info(f'Final Output: {self.xEst[0, 0]}, {self.xEst[1, 0]}, {self.xEst[2, 0]}')
+        # self.get_logger().info(f'Ground Truth: {self.state[0]}, {self.state[1]}, {self.state[2]}')
+        # self.get_logger().info(f'Final Output: {self.xEst[0, 0]}, {self.xEst[1, 0]}, {self.xEst[2, 0]}')
         # plt.plot(self.xEst[0, 0], self.xEst[1, 0], "or")
         for gt_state in self.gt_states:
             x, y, theta = gt_state[0], gt_state[1], gt_state[2]

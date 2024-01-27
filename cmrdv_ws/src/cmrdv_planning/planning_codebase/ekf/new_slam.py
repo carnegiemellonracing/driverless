@@ -31,6 +31,8 @@ LM_SIZE = 2  # LM state size [x,y]
 show_animation = True
     
 def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, obs_cones_w_idx):
+
+    print("Length of truth table: ", len(xTruth))
     cones = []
     # Predict
     S = STATE_SIZE
@@ -86,37 +88,67 @@ def ekf_slam(xEst, PEst, u, z, dt, logger, xTruth, obs_cones_w_idx):
 #obs_cones_w_idx is a 2d list
 # first column represents the cone_idx
 # second column tells whether new cone or not
-        found_in_xTruth = False
-        is_new = False
-        for obs in obs_cones_w_idx:
-            if obs[0] == min_id:
-                found_in_xTruth = True
-                is_new = obs[1]
-                break
-        # min_id calculated wrong 
-        #Case 1: not found
-        if not found_in_xTruth:
-            # correcting min_id
-            min_id = obs_cones_w_idx[iz][0]
+        print("min_id: ", min_id)
+#         for obs in obs_cones_w_idx:
+# 
+#             if int(obs[0]) == min_id:
+#                 print("Float vs int error???: ", obs[0], "\t : \t", min_id)
+#                 print("HERERERERERE")
+#                 found_in_xTruth = True
+#                 is_new = obs[1] # this is xTruth's decision that there is either old or new cone
+#                 break
+# 
+#         if not found_in_xTruth:
+#             min_id_error = min_id_error + 1
+#             min_id = obs_cones_w_idx[iz][0]
+#             is_new = obs_cones_w_idx[iz][1]
+#         print("min_id after potential update: ", min_id) 
+        if min_id != obs_cones_w_idx[iz][0]:
             min_id_errors += 1
-        
+        min_id = obs_cones_w_idx[iz][0]
+        is_new = obs_cones_w_idx[iz][1]
+
+
+        # assert(1 == 0)
+        # min_id calculated wrong 
+        # uncomment: first time you run, this should not be needed
+        #Case 1: not found
+        # if not found_in_xTruth:
+        #     # correcting min_id
+        #     min_id = obs_cones_w_idx[iz][0]
+        #     is_new = obs_cones_w_idx[iz][1]
+        #     min_id_errors += 1
+         
+
 
         if is_new:
             if min_id != nLM:
                 min_id_errors += 1
                 min_id = obs_cones_w_idx[iz][0]
-            print("New LM")
+            print("New LM\n\n\n\n")
             # Extend state and covariance matrix
+            
             xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
             PAug = np.vstack((np.hstack((PEst, np.zeros((len(xEst), LM_SIZE)))),
                               np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
             xEst = xAug
             PEst = PAug
-        else:
-            if min_id != obs_cones_w_idx[iz][0]:
-                min_id_errors += 1
-                min_id = obs_cones_w_idx[iz][0]
         min_id = int(min_id)
+        print("obs_cones_w_idx: ", obs_cones_w_idx)
+        print("updated min_id 2: ", min_id)
+
+        # HEURISTIC ENDS HERE
+
+        # original
+        # if min_id == nLM:
+        #     print("New LM")
+        #     # Extend state and covariance matrix
+        #     xAug = np.vstack((xEst, calc_landmark_position(xEst, z[iz, :])))
+        #     PAug = np.vstack((np.hstack((PEst, np.zeros((len(xEst), LM_SIZE)))),
+        #                       np.hstack((np.zeros((LM_SIZE, len(xEst))), initP))))
+        #     xEst = xAug
+        #     PEst = PAug
+
 
         # if min_id == nLM: #supposedly new landmark
 
@@ -284,7 +316,6 @@ def search_correspond_landmark_id(xAug, PAug, zi, logger, xTruth):
     # logger.info(f'Measurement: {r*math.cos(theta)}, {r*math.sin(theta)}')
     for i in range(nLM): #iterate through all of the previously seen landmarks
         lm = get_landmark_position_from_state(xAug, i)
-        print("Length of truth table: ", len(xTruth))
         y, S, H = calc_innovation(lm, xAug, PAug, zi, i)
         # mahalanobis = y.T @ np.linalg.inv(S) @ y
         # if mahalanobis < min_dist[0]:
@@ -298,6 +329,7 @@ def search_correspond_landmark_id(xAug, PAug, zi, logger, xTruth):
         # logger.info(f'  Landmark {i}: {lm[0]}, {lm[1]} | Mahalanobis: {y.T @ np.linalg.inv(S) @ y}')
 
     min_dist.append(M_DIST_TH)  # new landmark; minimum distance threshold??
+    print(min_dist)
     min_id = min_dist.index(min(min_dist))
 
 #issue: why are we checking mahalanobis distance for new cones with xTruth?
