@@ -3,6 +3,7 @@
 #include <curand.h>
 
 constexpr size_t action_dims = 2;
+constexpr size_t state_dims = 2;
 constexpr size_t num_timesteps = 4;
 constexpr size_t num_samples = 4;
 constexpr size_t num_perturbs = action_dims * num_timesteps * num_samples;
