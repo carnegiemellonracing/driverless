@@ -14,6 +14,7 @@ import time
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
  
 from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC
+from perceptions.topics import LEFT2_IMAGE_TOPIC, RIGHT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC, DEPTH2_IMAGE_TOPIC
 from perceptions.zed import ZEDSDK
 
 from eufs_msgs.msg import ConeArray, DataFrame
@@ -37,16 +38,29 @@ RELIABLE_QOS_PROFILE = QoSProfile(
         
 class ZEDNode(Node):
 
-    def __init__(self):
+    def __init__(self, name):
         super().__init__('stereo_predictor')
-
+        
+        self.declare_paramaters(
+            namespace='',
+            parameters=[
+                ("camera", "zed2")
+            ]
+        )
+        
+        self.camera_name = self.get_parameter("camera").value
+        self.name_map = {
+            'zed': (1, LEFT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC), 
+            'zed2': (2, LEFT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC)
+        } # TODO: need serial numbers
+        self.serial_num, left_topic, xyz_topic = self.name_map[self.camera_name]
         
         # initialize all publishers
         # self.dataframe_publisher = self.create_publisher(msg_type=DataFrame,
         #                                                  topic='/DataFrame',
         #                                                  qos_profile=RELIABLE_QOS_PROFILE)
         self.left_publisher = self.create_publisher(msg_type=Image,
-                                                     topic=LEFT_IMAGE_TOPIC,
+                                                     topic=left_topic,
                                                      qos_profile=RELIABLE_QOS_PROFILE)
         # self.right_publisher = self.create_publisher(msg_type=Image,
         #                                              topic=RIGHT_IMAGE_TOPIC,
@@ -55,7 +69,7 @@ class ZEDNode(Node):
         #                                              topic=DEPTH_IMAGE_TOPIC,
         #                                              qos_profile=RELIABLE_QOS_PROFILE)
         self.xyz_publisher = self.create_publisher(msg_type=Image,
-                                                   topic=XYZ_IMAGE_TOPIC,
+                                                   topic=xyz_topic,
                                                    qos_profile=RELIABLE_QOS_PROFILE)
 
         # initialize timer interval for publishing the data
@@ -64,7 +78,7 @@ class ZEDNode(Node):
         self.data_syncer = self.create_timer(1/frame_rate, self.publish)
 
         # initialize the ZEDSDK API for receiving raw data
-        self.zed = ZEDSDK()
+        self.zed = ZEDSDK(serial_num=self.serial_num)
         self.zed.open()
 
         self.bridge = CvBridge()

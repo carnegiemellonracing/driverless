@@ -32,6 +32,7 @@ class ZEDSDK():
                  coordinate_units=sl.UNIT.METER,
                  coordinate_system=sl.COORDINATE_SYSTEM.RIGHT_HANDED_Z_UP,
                  camera_fps=0,
+                 serial_number=None,
                  **kwargs
                  ) -> None:
         """
@@ -73,6 +74,10 @@ class ZEDSDK():
                                              camera_fps=camera_fps,
                                              **kwargs
                                              )
+        
+        if serial_number is not None:
+            self.init_params.set_from_serial_number(serial_number)
+
         # ZED Camera object
         self.zed = sl.Camera()
 
