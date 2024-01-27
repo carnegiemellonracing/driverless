@@ -6,18 +6,17 @@ public:
     // segment is initialized in optimizer
     struct segment {
         perceptionsData perceptions_data;
-        std::vector<double> progress;
+        std::vector<double> progress; // in meters, signifies end of each segment
     } segment_t;
 
     struct bucket {
         std::vector<Spline> splines; // all of the splines in the bucket
         std::pair<double,double> startCone; // start cone index
         std::pair<double,double> endCone; // end cone index
-        double length = 0; // number of splines in the bucket (?)
-        double runningAvgCurvature; // running average of curvature in the bucket
-        double numPointsInAvg; // number of points used to calculate running avg
-        
-    } bucket_t;
+        double length = 0; // length in meters of the bucket (?) HAS TO BE < 15
+        double runningAvgCurvature = 0; // running average of curvature in the bucket
+        double numPointsInAvg = 0; // number of points used to calculate running avg
+    };
     
 
     /** look some distance ahead starting from start index and return end 
