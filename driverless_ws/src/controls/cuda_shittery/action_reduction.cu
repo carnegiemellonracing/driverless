@@ -2,6 +2,7 @@
 #include <thrust/device_vector.h>
 #include <thrust/random.h>
 #include <thrust/transform_reduce.h>
+#include <thrust/execution_policy.h>
 
 #include <iostream>
 #include <cmath>
@@ -14,7 +15,7 @@ struct ActionWeightTuple {
     float weight;
 };
 
-struct ReduceAction {
+struct ActionAverage {
     __device__ ActionWeightTuple operator()(const ActionWeightTuple& action_weight_t0,
                                             const ActionWeightTuple& action_weight_t1) const
     {
@@ -34,15 +35,15 @@ struct IndexToActionWeightTuple {
     const float* action_trajectories;
     const float* cost_to_gos;
 
-    IndexToActionWeightTuple (const float* action_trajectories, const float* cost_to_gos)
+    __device__ IndexToActionWeightTuple (const float* action_trajectories, const float* cost_to_gos)
         : action_trajectories {action_trajectories},
           cost_to_gos {cost_to_gos} {}
 
     __device__ ActionWeightTuple operator() (const size_t idx) const {
         ActionWeightTuple res {};
 
-        const size_t j = idx % num_timesteps;
-        const size_t i = idx / num_timesteps;
+        const size_t i = idx % num_samples;
+        const size_t j = idx / num_samples;
         memcpy(&res.action.data, IDX_3D(action_trajectories, perturbs_dims, dim3(i, j, 0)), sizeof(float) * action_dims);
 
         const float cost_to_go = cost_to_gos[idx];
@@ -52,22 +53,60 @@ struct IndexToActionWeightTuple {
     }
 };
 
+struct ReduceTimestep {
+    Action* averaged_actions;
+
+    const float* action_trajectories;
+    const float* cost_to_gos;
+
+    const ActionAverage reduction_functor {};
+
+    ReduceTimestep (Action* averaged_actions, const float* action_trajectories, const float* cost_to_gos)
+        : averaged_actions {averaged_actions},
+          action_trajectories {action_trajectories},
+          cost_to_gos {cost_to_gos} { }
+
+    __device__ void operator() (const size_t idx) {
+        thrust::counting_iterator<size_t> indices {idx * num_samples};
+
+        averaged_actions[idx] = thrust::transform_reduce(
+            thrust::device,
+            indices, indices + num_samples,
+            IndexToActionWeightTuple {action_trajectories, cost_to_gos},
+            ActionWeightTuple { Action {}, 0 }, reduction_functor).action;
+    }
+};
+
 int main() {
-    thrust::device_vector<float> sampled_action_trajectories (num_perturbs, 4.1);
-    thrust::device_vector<float> cost_to_gos (num_samples * num_timesteps, 1);
+    thrust::device_vector<float> sampled_action_trajectories { 1, 1, 2, 2, 3, 3, 4, 4}; // (num_perturbs, 4.1);
+    thrust::device_vector<float> cost_to_gos {1, 2, 2, 1};// (num_samples * num_timesteps, 1);
+    thrust::device_vector<Action> averaged_actions (num_timesteps);
 
     thrust::counting_iterator<size_t> indices {0};
 
-    Action action = thrust::transform_reduce(
-        indices, indices + num_samples * num_timesteps,
-        IndexToActionWeightTuple {sampled_action_trajectories.data().get(), cost_to_gos.data().get()},
-        ActionWeightTuple { Action {}, 0 }, ReduceAction {}).action;
+    for (size_t i = 0; i < 1000000; i++) {
+        thrust::for_each(indices, indices + num_timesteps, ReduceTimestep {
+            averaged_actions.data().get(),
+            sampled_action_trajectories.data().get(),
+            cost_to_gos.data().get()
+        });
+        cudaDeviceSynchronize();
 
-    std::cout << "Action: ";
-    for (size_t i = 0; i < action_dims; i++) {
-        std::cout << action.data[i] << " ";
+        if (i % 1000 == 0) {
+            std::cout << "i: " << i << std::endl;
+        }
     }
-    std::cout << std::endl;
+
+    // print averaged_action like in print_tensor_3d
+    thrust::host_vector<Action> averaged_actions_host = averaged_actions;
+
+    for (int i = 0; i < num_timesteps; i++) {
+        std::cout << "{ ";
+        for (int j = 0; j < action_dims; j++) {
+            std::cout << averaged_actions_host[i].data[j] << " ";
+        }
+        std::cout << "}\n";
+    }
 
     return 0;
 }
