@@ -21,8 +21,11 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            # raw data nodes
+            'zed_node = perceptions.ros.utils.ZEDNode:main_zed',
+            'zed2_node = perceptions.ros.utils.ZEDNode:main_zed2',
+
             # util nodes
-            'zed_node = perceptions.ros.utils.ZEDNode:main',
             'data_node = perceptions.ros.utils.DataNode:main',
             'sync_node = perceptions.ros.utils.SyncNode:main',
 

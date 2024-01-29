@@ -17,7 +17,7 @@ from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TO
 from perceptions.topics import LEFT2_IMAGE_TOPIC, RIGHT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC, DEPTH2_IMAGE_TOPIC
 from perceptions.zed import ZEDSDK
 
-from eufs_msgs.msg import ConeArray, DataFrame
+from eufs_msgs.msg import ConeArray #, DataFrame
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
 from std_msgs.msg import Header
@@ -35,25 +35,38 @@ RELIABLE_QOS_PROFILE = QoSProfile(
             durability=QoSDurabilityPolicy.VOLATILE,
             history=QoSHistoryPolicy.KEEP_LAST,
         )
+
+CAMERA_PARAM = "camera"
+ZED_STR = "zed"
+ZED2_STR = "zed2"
+
+# map cameras to their topics and serials numbers
+CAMERA_INFO = {
+    ZED_STR: (15080, LEFT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC), 
+    ZED2_STR: (27680008, LEFT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC)
+} # TODO: need serial numbers
         
 class ZEDNode(Node):
 
-    def __init__(self, name):
-        super().__init__('stereo_predictor')
+    def __init__(self, camera_name=ZED2_STR):
+        '''Initializes the ZED Node which publishes left color image and XYZ image
+
+        Because there are multiple cameras for 22a, multiple ZEDNode classes 
+        should be launched, one for each camera. Entry points for each camera are
+        found at the bottom of this file and are registered in perceptions/setup.py
+
+        Arguments:
+            camera_name (str): name of camera to initialize (ZED_STR or ZED2_STR)
+        '''
+
+        super().__init__(f"{camera_name}_node")
         
-        self.declare_paramaters(
-            namespace='',
-            parameters=[
-                ("camera", "zed2")
-            ]
-        )
-        
-        self.camera_name = self.get_parameter("camera").value
-        self.name_map = {
-            'zed': (1, LEFT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC), 
-            'zed2': (2, LEFT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC)
-        } # TODO: need serial numbers
-        self.serial_num, left_topic, xyz_topic = self.name_map[self.camera_name]
+        # ensure appropriate camera name
+        self.camera_name = camera_name
+        assert(self.camera_name in list(CAMERA_INFO.keys()))
+
+        # unpack camera information
+        self.serial_num, left_topic, xyz_topic = CAMERA_INFO[self.camera_name]
         
         # initialize all publishers
         # self.dataframe_publisher = self.create_publisher(msg_type=DataFrame,
@@ -111,21 +124,26 @@ class ZEDNode(Node):
         t = time.time()
         print(f"Publishing data: {1000 * (t - s):.3f}ms (frame_id: {header.frame_id}, stamp: {header.stamp})")
 
-        
-
-def main(args=None):
+def main_zed(args=None):
+    # defaults to ZED2
     rclpy.init(args=args)
-
-    minimal_subscriber = ZEDNode()
+    minimal_subscriber = ZEDNode(camera_name=ZED_STR)
 
     rclpy.spin(minimal_subscriber)
+    
+    minimal_subscriber.destroy_node()
+    rclpy.shutdown()
 
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
+def main_zed2(args=None):
+    # defaults to ZED2
+    rclpy.init(args=args)
+    minimal_subscriber = ZEDNode(camera_name=ZED2_STR)
+
+    rclpy.spin(minimal_subscriber)
+    
     minimal_subscriber.destroy_node()
     rclpy.shutdown()
 
 
 if __name__ == '__main__':
-    main()
+    main_zed()
