@@ -30,7 +30,8 @@ setup(
             'sync_node = perceptions.ros.utils.SyncNode:main',
 
             # predictor nodes
-            'yolov5_node = perceptions.ros.predictors.YOLOv5Node:main',
+            'yolov5_zed_node = perceptions.ros.predictors.YOLOv5Node:main_zed',
+            'yolov5_zed2_node = perceptions.ros.predictors.YOLOv5Node:main_zed2',
             'lidar_node = perceptions.ros.predictors.LidarNode:main'
         ],
     },

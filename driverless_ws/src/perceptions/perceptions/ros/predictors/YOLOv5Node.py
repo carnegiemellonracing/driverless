@@ -7,27 +7,37 @@ from perceptions.ros.utils.PredictNode import PredictNode
 # for doing prediction on sensor data
 from perc22a.predictors.stereo.YOLOv5Predictor import YOLOv5Predictor
 
-NODE_NAME = "yolov5_node"
+class YOLOv5Node(PredictNode):
 
-class StereoNode(PredictNode):
-
-    def __init__(self):
-        super().__init__(name=NODE_NAME, debug_flag=True, time_flag=True)
+    def __init__(self, camera="zed2"):
+        node_name = f"yolov5_{camera}_node"
+        self.camera = camera
+        
+        # initialize attributes, then setup prediction node
+        super().__init__(name=node_name, debug_flag=True, time_flag=True)
         return
 
     def init_predictor(self):
-        return YOLOv5Predictor()
+        return YOLOv5Predictor(camera=self.camera)
 
-def main(args=None):
+def main_zed(args=None):
     rclpy.init(args=args)
+    yolov5_node = YOLOv5Node(camera="zed")
 
-    stereo_node = StereoNode()
+    rclpy.spin(yolov5_node)
 
-    rclpy.spin(stereo_node)
+    yolov5_node.destroy_node()
+    rclpy.shutdown()
 
-    stereo_node.destroy_node()
+def main_zed2(args=None):
+    rclpy.init(args=args)
+    yolov5_node = YOLOv5Node(camera="zed2")
+
+    rclpy.spin(yolov5_node)
+
+    yolov5_node.destroy_node()
     rclpy.shutdown()
 
 
 if __name__ == "__main__":
-    main()
+    main_zed2()

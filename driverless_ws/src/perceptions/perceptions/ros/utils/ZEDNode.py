@@ -146,4 +146,4 @@ def main_zed2(args=None):
 
 
 if __name__ == '__main__':
-    main_zed()
+    main_zed2()
