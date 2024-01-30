@@ -1,11 +1,5 @@
-/**
- * @TODO: Victoria writes updateRunningAvgCurve
- * @TODO: Doris write checkStartNewBucket
- * 
-*/
-
-#include <cmath>
-#include "dynamicSpline.hpp";
+#include <math.h>
+#include <dynamicSpline.hpp>
 
 /** look some distance ahead starting from start index and return end 
 * index of cones in that distance
@@ -37,8 +31,7 @@ int getConesWithinDist(std::vector<std::pair<double,double>> cones, int startInd
  * @param spline new spline to be added into bucket's vector of splines
 */
 double calcRunningAvgCurv(bucket b, double splineCurvature){
-    b.numPointsInAvg += 4;
-    return (b.runningAvgCurvature * (b.numPointsInAvg-4) + splineCurvature) / b.numPointsInAvg;
+    return ((b.runningAvgCurvature * b.numPointsInAvg) + (splineCurvature * 4)) / (b.numPointsInAvg + 4);
 }
 
 /** @brief checks if running average of current bucket is significantly different 
@@ -61,24 +54,74 @@ bool checkStartNewBucket(bucket b, double newCurvature, double splineLength) {
  * @param c constant, find through testing
  * @param a constant, find through testing
 */
-int numBucketSplits(bucket b, int c, int a){
+int getNumBucketSplits(bucket b){
+    int c = 1; /** @TODO: find ideal params during testing */
+    int a = 1;
     return c * b.runningAvgCurvature.pow(a);
 }
 
-/** @TODO: function to get length in meters from set oftcones
+/** @brief function to get length in meters from set oftcones
+* @param spline new spline that's being added to the bucket
+* @param b bucket that the spline is going into and length is being updated
 */
+void updateLengthFromSplines (Spline spline, bucket b) {
+    // if its the first spline in the bucket
+    if (b.numPointsInAvg == 0) {
+        // use Spline get length function
+        b.length += spline.calculateLength();
+    }
+    else { // not first spline
+        // get points of spline
+        Eigen::MatrixXd points = spline.get_points();
+        // set x0 to index 1, set x1 to index 3
+        // @TODO: ask andrew about using rotated_points
+        double x0 = points(0, 1);
+        double x1 = points(0, 3);
+        b.length += arclength(spline.get_first_der(), x0, x1);
+    } 
+}
 
-/** @TODO: function to calculate curvature of a spline
+/** @brief function to calculate curvature of a spline
+
+    extract 4 xs, ys from eigen matrix -> frenet (to get progress) -> get_curvature (progress -> curvature)
 */
-double calcSplineCurv (Spline spline) {}
+double calcSplineCurv (Spline spline) {
+    Eigen:MatrixXd points = spline.get_points();
+    double curvSum = 0;
+
+    // 4 times through loop
+    for (int c = 0; c < points.cols(); c++) {
+        // @TODO: ask andrew about using rotated_points
+        double x = points(0, c);
+        double y = points(1, c);
+        
+        std::vector<Spline> path = {spline};
+        std::vector<Spline> lengths = {spline.calcLength()};
+
+        // get progress of point on spline use frenet
+        projection p = frenet(x, y, path, lengths, 0, 0, 0);
+        double progress = p.progress;
+
+        // pass progress into get curve
+        curvSum += get_curvature(spline.get_first_der(), spline.get_second_der, progress);
+    }
+    return curvSum / 4;
+}
 
 /** @TODO: calculate how many times to split current bucket, based on avg curvature of bucket
     then add progress points to segment
 */
-void addBucketToSegment(bucket b){}
+void addBucketToSegment(bucket b){
+    // divide bucket up into n sections depending on curvature
+    int numBucketSplits = getNumBucketSplits(b);
+    double sectionLengthProgress = 1 / numBucketSplits;
+    
+    for (int i = 1; i < numBucketSplits; i++){
+        double currProgress = sectionLengthProgress * i;
+        // is spline_along progress in terms of meters or 
 
-std::vector<double> generateSegmentsForBucket(bucket b){
-
+        // TODO: NEED A FUNCTION that takes in progress and a vector of splines and returns a point
+    }
 }
 
 /** big wrapper function that calls each of the helpers, updates the segments field in optimizer's _ struct
@@ -111,10 +154,11 @@ void generateAllSegments(segment_t segment) {
     currBucket->splines.push_back(prevSpline);
     currBucket->startCone = cones[currConeIdx-2];
     currBucket->endCone = cones[currConeIdx+2];
-    currBucket->length = //sum of length splines - overlap???
+    updateLengthFromSplines(prevSpline, currBucket);
 
      // calc curvature of spline
     double prevSplineCurv = calcSplineCurv(prevSplines);
+    b.numPointsInAvg += 4;
 
     currBucket->runningAvgCurvature = calcRunningAvgCurv(currBucket, prevSplineCurv);
     
@@ -127,11 +171,12 @@ void generateAllSegments(segment_t segment) {
             outer(1,i)=cones[i].second;
         }
 
-        std::vector<Spline> currSplines = generate_splines(logger, outer); // generates 1 spline
+        std::vector<Spline> currSplines = s(logger, outer); // generates 1 spline
         Spline currSpline = currSplines[0];
         currConeIdx += 2;
 
-        // calc curvature of spline
+        // calc curvature of spline: extract 4 xs, ys from eigen matrix ->
+        // frenet (to get progress) -> get_curvature (progress -> curvature)
         double currSplineCurv = calcSplineCurv(currSpline);
 
         // @TODO: compare to running avg curvature of the bucket UNIT TESTING TO FIND BEST THRESHOLD
@@ -146,14 +191,17 @@ void generateAllSegments(segment_t segment) {
             currBucket->splines.push_back(currSpline);
             currBucket->startCone = cones[currConeIdx-2];
             currBucket->endCone = cones[currConeIdx+2];
-            currBucket->length = //sum of length splines - overlap???
+            updateLengthFromSplines(currSpline, currBucket);
             currBucket->runningAvgCurvature = calcRunningAvgCurv(currBucket, currSplineCurv);
+            b.numPointsInAvg += 4;
             
         } else {
             // update bucket fields
             currBucket->splines.push_back(currSpline);
             currBucket->endCone = cones[currConeIdx+2];
-            currBucket->length = //sum of length splines - overlap???
+            updateLengthFromSplines(currSpline, currBucket);
+            currBucket->runningAvgCurvature = calcRunningAvgCurv(currBucket, currSplineCurv);
+            b.numPointsInAvg += 4;
         }
         
     }

@@ -7,12 +7,13 @@ public:
     struct segment {
         perceptionsData perceptions_data;
         std::vector<double> progress; // in meters, signifies end of each segment
+        double progress = 0;
     } segment_t;
 
     struct bucket {
         std::vector<Spline> splines; // all of the splines in the bucket
-        std::pair<double,double> startCone; // start cone index
-        std::pair<double,double> endCone; // end cone index
+        std::pair<double,double> startCone; // start cone x,y
+        std::pair<double,double> endCone; // end cone x,y
         double length = 0; // length in meters of the bucket (?) HAS TO BE < 15
         double runningAvgCurvature = 0; // running average of curvature in the bucket
         double numPointsInAvg = 0; // number of points used to calculate running avg
@@ -41,6 +42,12 @@ public:
 
     // how many times to split a bucket based on curvature
     int numBucketSplits(double curvature, bucket b);
+
+    /** @TODO: function to get length in meters from set oftcones
+    * @param spline new spline that's being added to the bucket
+    * @param b bucket that the spline is going into and length is being updated
+    */
+    void updateLengthFromSplines (Spline spline, bucket b);
     
     // finds the progress points to split given bucket 
     std::vector<double> generateSegmentsForBucket(bucket b);
