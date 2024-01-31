@@ -25,6 +25,9 @@ setup(
             'zed_node = perceptions.ros.utils.ZEDNode:main_zed',
             'zed2_node = perceptions.ros.utils.ZEDNode:main_zed2',
 
+            # debugging nodes
+            'lidar_vis_node = perceptions.ros.utils.debug.LidarVisNode:main',
+
             # util nodes
             'data_node = perceptions.ros.utils.DataNode:main',
             'sync_node = perceptions.ros.utils.SyncNode:main',
