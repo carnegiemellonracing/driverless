@@ -24,6 +24,8 @@ from std_msgs.msg import Header
 import cv2
 from cv_bridge import CvBridge
 
+PUBLISH_FPS = 10
+
 BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
                          history = QoSHistoryPolicy.KEEP_LAST,
                          durability = QoSDurabilityPolicy.VOLATILE,
@@ -86,9 +88,7 @@ class ZEDNode(Node):
                                                    qos_profile=RELIABLE_QOS_PROFILE)
 
         # initialize timer interval for publishing the data
-        # TODO: frame rate higher than actual update rate
-        frame_rate = 25
-        self.data_syncer = self.create_timer(1/frame_rate, self.publish)
+        self.data_syncer = self.create_timer(1/PUBLISH_FPS, self.publish)
 
         # initialize the ZEDSDK API for receiving raw data
         self.zed = ZEDSDK(serial_num=self.serial_num)
