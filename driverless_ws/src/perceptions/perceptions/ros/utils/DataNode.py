@@ -41,7 +41,11 @@ class DataNode(Node):
 
         # subscribe to each piece of data that we want to collect on
         self.required_data = required_data
-        self.visualize = visualize 
+        self.visualize = visualize
+
+        # define dictionary to store the data
+        self.data = DataInstance(required_data)
+
 
         if DataType.ZED_LEFT_COLOR in self.required_data:
             self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
@@ -74,10 +78,10 @@ class DataNode(Node):
         #     self.dataframe_subscriber = self.create_subscription(DataFrame, DATAFRAME_TOPIC, self.dataframe_callback, qos_profile=RELIABLE_QOS_PROFILE)
         #     if self.visualize:
         #         self.window = vis.init_visualizer_window()
-
-        # define dictionary to store the data
-        # TODO: convert data representation to DataInstance type
-        self.data = DataInstance(required_data)
+                
+    def flush(self):
+        # flushes data so that all required data must be collected again
+        self.data = DataInstance(self.required_data)
 
     def got_all_data(self):
         # returns whether data node has all pieces of data
