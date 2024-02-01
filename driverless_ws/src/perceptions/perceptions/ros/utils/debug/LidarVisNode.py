@@ -40,7 +40,7 @@ class LidarVisNode(Node):
     def points_callback(self, msg):
         pc = conv.pointcloud2_to_npy(msg)
         points = pc[:, :3]
-        points = points[np.all(points != 0, axis=1)]
+        points = points[np.any(points != 0, axis=1)]
 
         points = points[:, [1, 0, 2]]
         points[:, 0] *= -1
