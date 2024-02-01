@@ -24,7 +24,7 @@ from std_msgs.msg import Header
 import cv2
 from cv_bridge import CvBridge
 
-PUBLISH_FPS = 10
+PUBLISH_FPS = 15
 
 BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
                          history = QoSHistoryPolicy.KEEP_LAST,
