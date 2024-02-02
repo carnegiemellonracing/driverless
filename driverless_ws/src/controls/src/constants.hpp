@@ -23,4 +23,5 @@ namespace controls {
     constexpr uint32_t num_timesteps = 128;
     constexpr uint8_t action_dims = 3;
     constexpr uint8_t state_dims = 10;
+    constexpr uint32_t num_spline_frames = 128;
 }
