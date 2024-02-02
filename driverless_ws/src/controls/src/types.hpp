@@ -3,22 +3,15 @@
 #include <interfaces/msg/spline_list.hpp>
 #include <array>
 
+#include "constants.hpp"
+
 
 namespace controls {
-    constexpr size_t action_dims = 2;
-    constexpr size_t state_dims = 13;
-
     using Action = std::array<double, action_dims>;
     using State = std::array<double, state_dims>;
 
     using SplineMsg = interfaces::msg::SplineList;
     using SlamMsg = struct {};
-    using GpsMsg = struct {};
-
-    enum class Device {
-        Cpu,
-        Cuda
-    };
 
     class Controller {
     public:

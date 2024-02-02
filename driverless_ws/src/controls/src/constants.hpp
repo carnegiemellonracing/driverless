@@ -2,8 +2,6 @@
 
 #include <rclcpp/rclcpp.hpp>
 
-#include "types.hpp"
-
 
 namespace controls {
 
@@ -16,13 +14,13 @@ namespace controls {
 
     // MPPI stuff
 
-    constexpr Device default_device = Device::Cuda;
-
     /** Controller target frequency, in Hz */
     constexpr double controller_freq = 50.;
 
     /** Controller target period, in sec */
     constexpr auto controller_period = std::chrono::operator""ms(1000. / controller_freq);
-    constexpr uint num_samples = 1024;
-    constexpr uint num_timesteps = 128;
+    constexpr uint32_t num_samples = 1024;
+    constexpr uint32_t num_timesteps = 128;
+    constexpr uint8_t action_dims = 3;
+    constexpr uint8_t state_dims = 10;
 }

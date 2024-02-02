@@ -1,20 +1,19 @@
-#include <interface/interface.hpp>
 #include <mppi/mppi.hpp>
-#include <mutex>
+#include <mutex
 #include <rclcpp/rclcpp.hpp>
 #include <types.hpp>
 #include <constants.hpp>
-#include <condition_variable>
 #include <interfaces/msg/control_action.hpp>
+
+#include "controller.hpp"
 
 
 namespace controls {
     namespace nodes {
-        class ControllerNode : public rclcpp::Node {
-        public:
-            ControllerNode (std::unique_ptr<interface::Environment> environment, std::unique_ptr<Controller> controller)
+
+            ControllerNode::ControllerNode(std::unique_ptr<state::StateEstimator> state_estimator, std::unique_ptr<Controller> controller)
                 : Node {controller_node_name},
-                  m_environment(std::move(environment)),
+                  m_state_estimator(std::move(state_estimator)),
                   m_controller(std::move(controller)),
                   m_controller_timer(
                       create_wall_timer(
@@ -25,49 +24,30 @@ namespace controls {
                           control_action_topic_name,
                           control_action_qos)) { }
 
-        private:
-            void publish_action(const Action &action) const;
+            void ControllerNode::publish_action(const Action& action) const {
+                std::cout << "Action publishing not implmented. Continuing..." << std::endl;
+            }
 
-            void controller_callback() {
-                Action action;
-                {
-                    std::lock_guard<std::mutex> lock {m_environment->mutex};
-
-                    const State curv_state = m_environment->get_curv_state();
-                    action = m_controller->generate_action(curv_state);
-                }
+            void ControllerNode::controller_callback() const {
+                const State curv_state = m_state_estimator->get_curv_state();
+                const Action action = m_controller->generate_action(curv_state);
 
                 publish_action(action);
             }
 
-            std::unique_ptr<interface::Environment> m_environment;
-            std::unique_ptr<Controller> m_controller;
-            rclcpp::TimerBase::SharedPtr m_controller_timer;
-            rclcpp::Publisher<interfaces::msg::ControlAction>::SharedPtr m_action_publisher;
-        };
-    }
+    };
 }
 
 
 int main(int argc, char *argv[]) {
     using namespace controls;
 
-    std::unique_ptr<interface::Environment> environment;
-    std::unique_ptr<Controller> controller;
-    if (default_device == Device::Cpu) {
-        environment = std::make_unique<interface::CpuEnvironment>();
-        controller = std::make_unique<mppi::CpuMppiController>();
-    } else {
-#ifdef CONTROLS_NO_CUDA
-        throw std::runtime_error("Cuda enabled without cuda compilation");
-#else
-        // TODO: implement cuda
-#endif
-    }
+    std::unique_ptr<state::StateEstimator> state_estimator = std::make_unique<state::StateEstimator>();
+    std::unique_ptr<Controller> controller = std::make_unique<mppi::MppiController>();
 
     rclcpp::init(argc, argv);
 
-    const auto node = std::make_shared<nodes::ControllerNode>(environment, controller);
+    const auto node = std::make_shared<nodes::ControllerNode>(state_estimator, controller);
     rclcpp::spin(node);
 
     rclcpp::shutdown();

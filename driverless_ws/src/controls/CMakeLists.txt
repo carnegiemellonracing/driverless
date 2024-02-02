@@ -1,16 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(controls)
 
-set(NO_CUDA FALSE)
-
-# disable cuda compilation
-#set(NO_CUDA TRUE)
-
-if(NO_CUDA)
-  add_compile_definitions(CONTROLS_NO_CUDA)
-else()
-  enable_language(CUDA)
-endif()
+enable_language(CUDA)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -37,14 +28,10 @@ include_directories(${PROJECT_SOURCE_DIR}/../)
 
 
 set(LIB_SOURCES
-        src/interface/interface.cpp
-        src/interface/cpu_environment.cpp
-        src/mppi/cpu_mppi.cpp)
-if(NOT NO_CUDA)
-  set(LIB_SOURCES ${LIB_SOURCES}
-          src/interface/cuda_environment.cu
-          src/mppi/cuda_mppi.cu)
-endif()
+        src/mppi/mppi.cu
+        src/state/state_estimator.cpp
+        src/cuda_globals/cuda_globals.cu
+)
 
 add_library(controls_lib SHARED ${LIB_SOURCES})
 ament_target_dependencies(controls_lib planning rclcpp std_msgs)
