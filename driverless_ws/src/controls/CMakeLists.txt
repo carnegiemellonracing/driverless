@@ -29,7 +29,7 @@ include_directories(${PROJECT_SOURCE_DIR}/../)
 
 set(LIB_SOURCES
         src/mppi/mppi.cu
-        src/state/state_estimator.cpp
+        src/state/state_estimator.cu
         src/cuda_globals/cuda_globals.cu
 )
 

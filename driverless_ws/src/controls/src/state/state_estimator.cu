@@ -1,7 +1,10 @@
-#include "state_estimator.hpp"
+#include "state_estimator.cuh"
+
 
 namespace controls {
     namespace state {
+
+
 
     }
 }
