@@ -1,15 +1,12 @@
 #pragma once
 
+#include <types.hpp>
+
 
 namespace controls {
     namespace mppi {
-        class MppiController : public Controller { };
+
+        std::unique_ptr<Controller> make_mppi_controller();
+
     }
 }
-
-
-#include "cpu_mppi.hpp"
-
-#ifndef CONTROLS_NO_CUDA
-#include "cuda_mppi.cuh"
-#endif
