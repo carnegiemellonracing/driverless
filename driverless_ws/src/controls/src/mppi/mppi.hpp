@@ -6,7 +6,14 @@
 namespace controls {
     namespace mppi {
 
-        std::unique_ptr<Controller> make_mppi_controller();
+        class MppiController {
+        public:
+            virtual Action generate_action() =0;
+
+            virtual ~MppiController() =0;
+
+            static std::unique_ptr<MppiController> create();
+        };
 
     }
 }

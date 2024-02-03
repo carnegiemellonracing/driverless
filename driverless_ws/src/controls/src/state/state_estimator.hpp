@@ -8,14 +8,16 @@ namespace controls {
 
         class StateEstimator {
         public:
-            void on_spline(const SplineMsg& spline_msg);
-            void on_slam(const SlamMsg& slam_msg);
+            static std::unique_ptr<StateEstimator> create();
+
+            virtual void on_spline(const SplineMsg& spline_msg) =0;
+            virtual void on_slam(const SlamMsg& slam_msg) =0;
 
             /**
              * @brief Retrieves curvilinear state. This copies from device (which can be expensive).
              * @return Curvilinear state
              */
-            State get_curv_state() const;
+            virtual State get_curv_state() const =0;
         };
 
     }

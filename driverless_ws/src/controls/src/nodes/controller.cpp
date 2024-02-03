@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     using namespace controls;
 
     std::unique_ptr<state::StateEstimator> state_estimator = std::make_unique<state::StateEstimator>();
-    std::unique_ptr<Controller> controller = std::make_unique<mppi::MppiController>();
+    std::unique_ptr<Controller> controller = std::make_unique<mppi::MppiController_Impl>();
 
     rclcpp::init(argc, argv);
 

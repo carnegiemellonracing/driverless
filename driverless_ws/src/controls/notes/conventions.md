@@ -1,8 +1,4 @@
-curandGenerator_t alloc_rng() {
-    curandGenerator_t rng;
-    CURAND_CALL(curandCreateGenerator(&rng, rng_type));
-    CURAND_CALL(curandSetPseudoRandomGeneratorSeed(rng, seed));
-    return rng;
+
 ## Conventions
 
 Conventions for the controls subteam code, _in general_. Specific exceptions for `.cu`/`.cuh` can be found in _how_to_cuda.md_.
