@@ -88,4 +88,45 @@ namespace controls {
         }
     }
 
+    template<typename T>
+    __host__ __device__ T dot(const T* a, const T* b, size_t n) {
+        T res {};
+        for (size_t i = 0; i < n; i++) {
+            res += a[i] * b[i];
+        }
+        return res;
+    }
+
+    struct Action {
+        float data[action_dims];
+    };
+
+    __host__ __device__ static Action operator+ (const Action& a1, const Action& a2) {
+        Action res;
+        for (size_t i = 0; i < action_dims; i++) {
+            res.data[i] = a1.data[i] + a2.data[i];
+        }
+        return res;
+    }
+
+    struct AddActions {
+        __host__ __device__ Action operator() (const Action& a1, const Action& a2) const {
+            return a1 + a2;
+        }
+    };
+
+    template<size_t k>
+    struct DivBy {
+        __host__ __device__ size_t operator() (size_t i) const {
+            return i / k;
+        }
+    };
+
+    template<typename T>
+    struct Equal {
+        __host__ __device__ bool operator() (T a, T b) {
+            return a == b;
+        }
+    };
+
 }
