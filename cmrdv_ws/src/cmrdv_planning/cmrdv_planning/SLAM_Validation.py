@@ -18,7 +18,7 @@ import numpy as np
 import math
 import time
 from transforms3d.quaternions import axangle2quat
-
+import pandas as pd
 #import all of the sufs messages
 from eufs_msgs.msg import *
 
@@ -51,7 +51,6 @@ class SLAMSubscriber(Node):
 
         self.subscription_cone_data  # prevent unused variable warning
         self.subscription_vehicle_data  # prevent unused variable warning
-        self.min_id_errors = 0
 
         # #Publishing Vehicle state and map of track
         # self.publisher_vehicle_state = self.create_publisher(VehicleState, VEHICLE_STATE_TOPIC, qos_profile=BEST_EFFORT_QOS_PROFILE)
@@ -80,7 +79,7 @@ class SLAMSubscriber(Node):
 
         self.xErr = np.zeros(( int (((int(self.xEst.shape[0]) - 3))/2), 1))
 
-        #Time  Variables
+        #Time Variables
         self.prevTime = self.get_clock().now().to_msg()
         self.dTime = 0
         self.car_states = []
@@ -88,12 +87,25 @@ class SLAMSubscriber(Node):
 
         # the ekf calculated cones
         self.all_cones = []
-        self.missed_cones = 0
+
+        self.min_id_errors = 0
+
         self.missed_states = 0
         self.mean_error = 0
         self.stdev_error = 0
         self.bad_states = 0 # heuristic variables
         self.closest_data = []
+
+        self.all_ground_truth_cones = pd.read_csv("/eufs/eufs_sim/eufs_tracks/csv/small_track.csv")
+        self.all_ground_truth_cones = self.all_ground_truth_cones[["x", "y"]]
+        is_new = []
+        for i in range(len(self.all_ground_truth_cones.index)):
+            is_new.append(True)
+        self.all_ground_truth_cones.assign(is_new_cone=is_new)
+                   
+
+
+
 
     def parse_cones(self,msg):
         if self.cones is not None:
@@ -161,6 +173,23 @@ class SLAMSubscriber(Node):
     def almostEqual(self, n1, n2):
         return (abs(n1 - n2) <= 0.5)
 
+    def checkInCSV(self, x, y):
+        hasMatch = False
+        match_percent = 0
+        for idx, row in self.all_ground_truth_cones.iterrows():
+            
+            if self.almostEqual(row['x'], x) and self.almostEqual(row['y'], y):
+                realx = row['x']
+                realy = row['y']
+                self.get_logger().info(f"CSV Ground truth x: {realx} \t y {realy}")
+                if hasMatch:
+                    raise Exception("Cone matches with multiple ground truth")
+                hasMatch = True
+                self.all_ground_truth_cones.at[idx, "is_new_cone"] = False
+                
+                match_percent = 100 * ((x / row["x"]) + (y / row["y"])) / 2
+                
+        return hasMatch, match_percent 
 
     def append_xTruth(self):
         assert(len(self.xTruth) >= 3)
@@ -173,18 +202,8 @@ class SLAMSubscriber(Node):
         obs_cones_w_idx = []
         for idx, cone in enumerate(self.cones):
             obs_cone_global = np.zeros((2, 1))
-            # obs_cone_global[0][0] = self.state[0] + cone[0] #global x pos of cone
-            # obs_cone_global[1][0] = self.state[1] + cone[1] #global y pos of cone
-            # dist = math.hypot(dx, dy)
-            # relative_distance = self.euclid_dist(0, 0, cone[0], cone[1])
             relative_distance = math.hypot(cone[0], cone[1])
-            #remember that cone[0] and cone[1] represents the change in x and y distance from the car to the cone
-            # relative_distance = math.hypot(cone[0], cone[1])
-            # angle = self.pi_2_pi(math.atan2(dy, dx))
-            # phi = math.atan2(cone[0], cone[1])
-            # phi = self.pi_2_pi(math.atan2(cone[1], cone[0]))
             phi = self.pi_2_pi(math.atan2(cone[1], cone[0]))
-            # phi = math.atan(cone[1]/ cone[0])
             obs_cone_global[0][0] = self.state[0] + relative_distance * math.cos(self.state[2] + phi) #global x pos of cone
             obs_cone_global[1][0] = self.state[1] + relative_distance * math.sin(self.state[2] + phi) #global y pos of cone
 
@@ -193,16 +212,21 @@ class SLAMSubscriber(Node):
             #data association performed by looking at whether a cone alrdy exists at position
             # these series of steps represent what xEst should do
             l = len(self.xTruth)
+            true_is_new, match_percent = self.checkInCSV(obs_cone_global[0][0], obs_cone_global[1][0])
+            self.get_logger().info(f"Observation i matches with {match_percent}%")
             for i in range(3, l, 2):
                 if (self.almostEqual(self.xTruth[i][0], obs_cone_global[0][0]) and
                     self.almostEqual(self.xTruth[i+1][0], obs_cone_global[1][0])):
                     new_cone = False
                     obs_cones_w_idx.append([(int)((i-3)/2), False])
                     break
+                #Check the status of the cone in the csv file
+                
             if new_cone:
                 obs_cones_w_idx.append([(int)((l - 3) / 2), True])
                 self.xTruth = np.vstack((self.xTruth, obs_cone_global))
-            print("Current observation: ", obs_cones_w_idx[len(obs_cones_w_idx) - 1][0], "x: ", obs_cone_global[0][0], " y: ", obs_cone_global[1][0])
+            self.get_logger().info(f"Current observation ground truth: {obs_cones_w_idx[len(obs_cones_w_idx) - 1][0]} \t x: {obs_cone_global[0][0]} \t y: {obs_cone_global[1][0]}")
+
         return obs_cones_w_idx 
 
     def runSLAM(self, cones_msg, state_msg):
@@ -310,6 +334,8 @@ class SLAMSubscriber(Node):
         # all_cones stores the calculated cones
         # self.all_cones.extend(cones)
         self.get_logger().info(f'Num Est Landmarks = {(self.xEst.shape[0]-3)/2}')
+        self.get_logger().info(f"\n\nTotal number of landmarks {len(self.all_ground_truth_cones.index)}")
+        self.get_logger().info(f"\n\nNum errors: {self.min_id_errors} \n\n")
 
         # print("Type of subscription cone data: ", type(self.subscription_cone_data))
         # for thing in self.subscription_cone_data:
@@ -404,10 +430,10 @@ class SLAMSubscriber(Node):
     #     self.get_logger().info('Running GraphSlam')
     #     return self.GraphSlam.run_graph_slam(ekf_output)
 
-    def print_model_acc(self):
-        self.get_logger().info("This is the mean error: ")
+    #def print_model_acc(self):
+        #self.get_logger().info("This is the mean error: ")
         #self.get_logger().info(self.mean_error)
-        self.get_logger().info("Num missed cones: ")
+        #self.get_logger().info("Num missed cones: ")
         #self.get_logger().info(self.missed_cones)
    
     def model_accuracy(self):
@@ -453,7 +479,7 @@ class SLAMSubscriber(Node):
         if len(self.closest_data) - self.missed_cones - self.bad_states != 0:
             self.stdev_error = math.sqrt(self.stdev_error / (len(self.closest_data) - self.missed_cones - self.bad_states))
          
-        self.print_model_acc()
+        #self.print_model_acc()
         
     #Checks if the closest_data entry at ind is empty of it the current error is less
     def better_or_empty(self, closest_data, error, ind):
