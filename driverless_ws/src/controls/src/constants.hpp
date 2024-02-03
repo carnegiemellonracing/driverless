@@ -18,10 +18,19 @@ namespace controls {
     constexpr double controller_freq = 50.;
 
     /** Controller target period, in sec */
-    constexpr auto controller_period = std::chrono::operator""ms(1000. / controller_freq);
     constexpr uint32_t num_samples = 1024;
     constexpr uint32_t num_timesteps = 128;
     constexpr uint8_t action_dims = 3;
     constexpr uint8_t state_dims = 10;
     constexpr uint32_t num_spline_frames = 128;
+    constexpr float temperature = 1.0f;
+
+    // derived quantities
+    constexpr float controller_period_ms = 1000./ controller_freq;
+    constexpr dim3 action_trajectories_dims {num_samples, num_timesteps, action_dims};
+
+    // brownian stuff
+    constexpr curandRngType_t rng_type = CURAND_RNG_PSEUDO_MTGP32;
+    constexpr unsigned long long seed = 0;
+    constexpr uint32_t num_action_trajectories = (uint32_t) action_dims * num_timesteps * num_samples; // TODO: this casting ok?
 }

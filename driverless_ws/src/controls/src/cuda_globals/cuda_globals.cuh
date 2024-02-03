@@ -14,10 +14,16 @@ namespace controls {
         extern cudaTextureObject_t spline_texture_object;
         extern bool spline_texture_created;
 
+        extern __constant__ float curr_state_buf1[state_dims];
+        extern __constant__ float curr_state_buf2[state_dims];
+
+        extern float* curr_state_read;
+        extern float* curr_state_write;
+
 
         // device symbols
 
-        extern __constant__ const float perturbation_std[action_dims * action_dims];
+        extern __constant__ const float perturbs_incr_std[action_dims * action_dims];
 
     }
 }
