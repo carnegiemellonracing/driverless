@@ -16,9 +16,8 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC
 from perceptions.zed import ZEDSDK
 
-from eufs_msgs.msg import ConeArray, DataFrame
 from geometry_msgs.msg import Point
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import Image, CompressedImage
 from std_msgs.msg import Header
 import cv2
 from cv_bridge import CvBridge
@@ -57,6 +56,13 @@ class ZEDNode(Node):
         self.xyz_publisher = self.create_publisher(msg_type=Image,
                                                    topic=XYZ_IMAGE_TOPIC,
                                                    qos_profile=RELIABLE_QOS_PROFILE)
+        
+        # for DAQ-Live StereoViz
+        self.left_compressed_publisher = self.create_publisher(
+            msg_type=CompressedImage,
+            topic="/left_compressed",
+            qos_profile=RELIABLE_QOS_PROFILE
+        )
 
         # initialize timer interval for publishing the data
         # TODO: frame rate higher than actual update rate
@@ -93,6 +99,13 @@ class ZEDNode(Node):
         # self.right_publisher.publish(right_enc)
         # self.depth_publisher.publis(depth_enc)
         self.xyz_publisher.publish(xyz_enc)
+
+        # for DAQ Live visualizations
+        msg = CompressedImage()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.format = "jpeg"
+        msg.data = np.array(cv2.imencode('.jpg', left)[1]).tostring()
+        self.left_compressed_publisher.publish(msg)
 
         t = time.time()
         print(f"Publishing data: {1000 * (t - s):.3f}ms (frame_id: {header.frame_id}, stamp: {header.stamp})")
