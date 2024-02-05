@@ -1,25 +1,44 @@
 #include <iostream>
 #include <cmath>
 
+//SOURSE: SEE OVERLEAF MPPI DOCUMENTATION
+
+//model constants
 constexpr float ACTION_DIMS = 3;
 constexpr float STATE_DIMS = 10;
+
+//physics constants
 constexpr float GRAVITY = 9.81; //in m/s^2
-constexpr float CG_TO_FRONT = 1; //in meters TO IMPLEMENT
+constexpr float CG_TO_FRONT = 2; //in meters TO IMPLEMENT
 constexpr float CG_TO_REAR = 1; //in meters TO IMPLEMENT
 constexpr float WHEEL_RADIUS = .2; //in meters to IMPLEMENT
 constexpr float CAR_MASS = 150; //in KG to IMPLEMENT
-constexpr float AERO_CONSTANT = 150; //in Ns^2/m^2 to IMPLEMENT
+constexpr float LOGITUDNAL_AERO_CONSTANT = 150; //in Ns^2/m^2 to IMPLEMENT
+constexpr float LATERAL_AERO_CONSTANT = 150; //in Ns^2/m^2 to IMPLEMENT
 constexpr float COEF_FRICTION = .1; //unitlss to IMPLEMENT
 constexpr float WHEEL_ROTATIONAL_INTERIA = 130; //in kg*m^2 to IMPLEMENT TAKEN ALONG AXLE AXIS
 constexpr float CAR_ROTATIONAL_INTERTIA = 130; //in kg*m^2 to IMPLEMENT. TAKEN ALONG Z AXIS THROUGH CG
 constexpr float NOSE_CONE_CONSTANT = .3; //in dimensionless to IMPLEMENT. how much of drag becomes downforce
 
 
+//tire model constants
+constexpr float max_force_x = 43; //Maximum force x TO IMPLEMENT
+constexpr float slip_ratio_max_x= 1; //slip ratio that yields the max force TO IMPLEMENT
+constexpr float post_saturation_force_x= 1; // After tires start slipping what force we get
+constexpr float max_force_y = 10; //Maximum force Y TO IMPLEMENT
+constexpr float slip_ratio_max_y= 1; //slip ratio that yields the max force TO IMPLEMENT
+constexpr float post_saturation_force_y= 1; // After tires start slipping what force we get
 
-float cosd (float degrees);
-float sind(float degrees);
+//trig functions in degrees
+inline float cosd(double degrees){
+    return std::cos(degrees*M_PI/180);
+}
+
+inline float cotd(float degrees);
+inline float tand(float degrees);
+inline float sind(float degrees);
 void tireModel (float slip_ratio, float slip_angle, float load, float forces[]); //TO IMPLEMENT
-float calculate_slip_ratio(float wheel_speed, float velocity);
+inline float calculate_slip_ratio(float wheel_speed, float velocity);
 
  /*state (in order):
 [0] X_world m
@@ -63,7 +82,8 @@ void dynamics(const float state[], const float action[], float state_dot[]){
     float front_load = CAR_MASS + downforce + pitch_moment/CG_TO_FRONT;
     float rear_load = CAR_MASS + downforce - pitch_moment/CG_TO_REAR;
 
-    tireModel(front_slip_ratio,steering_angle,front_load,front_froces);
+    tireModel(front_slip_ratio,steering_angle,front_load,front_froces); // WRONG SINCE SLIP ANGLE NOT EQUAL TO STEERING ANGLE CAUSE AS 
+    //TIRE DEFOMS THE DIRECTION OF ITS TRAVEL IS NOT SAME AS STEERING ANGLE
     tireModel(rear_slip_ratio,0,rear_load,rear_froces);
 
     float front_force_x = front_froces[0];
@@ -72,44 +92,76 @@ void dynamics(const float state[], const float action[], float state_dot[]){
     float rear_force_y = rear_froces[1];
 
     //gets drag
-    float drag = AERO_CONSTANT*powf(velocity,2);
+    float drag_x = LOGITUDNAL_AERO_CONSTANT*powf(x_dot_car,2);
+    float drag_y = LATERAL_AERO_CONSTANT*powf(y_dot_car,2);
+
 
     //Upadates dot array
     state_dot[0] = x_dot_car* cosd(yaw_world) + y_dot_car*sind(yaw_world);
     state_dot[1] = -x_dot_car* sind(yaw_world) + y_dot_car*cosd(yaw_world);
     state_dot[2] = yaw_rate;
-    state_dot[3] = (front_force_x+ rear_force_x-drag)/CAR_MASS-x_dot_car*yaw_rate;    
-    state_dot[4] = (front_force_y + rear_force_y)/CAR_MASS + +x_dot_car*yaw_rate;  //assumes that no drag in this direction
+    state_dot[3] = (front_force_x+ rear_force_x-drag_x)/CAR_MASS-x_dot_car*yaw_rate;    
+    state_dot[4] = (front_force_y + rear_force_y-drag_y)/CAR_MASS + +x_dot_car*yaw_rate;  
     state_dot[5] = (CG_TO_FRONT*front_force_x - CG_TO_REAR*rear_force_x)/CAR_ROTATIONAL_INTERTIA;
     state_dot[6] = 0; //might need to change
-    state_dot[7] = drag*NOSE_CONE_CONSTANT; 
+    state_dot[7] = 2*drag_x*NOSE_CONE_CONSTANT*x_dot_car*state_dot[3]; 
     state_dot[8] = (torque_front - COEF_FRICTION*WHEEL_RADIUS*front_load)/WHEEL_ROTATIONAL_INTERIA;
     state_dot[9] = (torque_rear - COEF_FRICTION*WHEEL_RADIUS*rear_load)/WHEEL_ROTATIONAL_INTERIA;
 }
 
 //trig functions in degrees
-float sind(float degrees){
+inline float sind(float degrees){
     return std::sin(degrees*M_PI/180);
 }
 
 //trig functions in degrees
-float cosd(double degrees){
-    return std::cos(degrees*M_PI/180);
+inline float tand(float degrees){
+    return std::tan(degrees*M_PI/180);
+}
+
+//trig functions in degrees
+inline float cotd(float degrees){
+    return  1.0f / std::tan(degrees*M_PI/180);
 }
 
 
-constexpr float MODEL_SLOPE= 1;
-constexpr float MODEL_PEAK = 15;
-constexpr float MODEL_FALLOFF = 50;
 //calculates slip ratio
 //Forces array implanted with X and Y force of wheel
+//see overleaf document in MMPI documentation
 void tireModel(float slip_ratio, float slip_angle, float load, float forces[]){ 
-    forces[0] = 8; //X force
-    forces [1] = 20; // Y forces
+    
+    //gets x force
+    if(slip_ratio<slip_ratio_max_x){
+        int numerator = load * slip_ratio * max_force_y;
+        int within_sqrt = powf(tand(slip_angle),2) + powf((max_force_y/max_force_x),2);
+        int denominator = slip_ratio_max_x * std::sqrtf(within_sqrt);
+        forces[0] = numerator / denominator;
+    }
+    else{
+        int numerator = load * post_saturation_force_x * max_force_y;
+        int within_sqrt = powf(tand(slip_angle),2) + powf((max_force_y/max_force_x),2);
+        int denominator = max_force_x * std::sqrtf(within_sqrt);
+        forces[0] = numerator / denominator;
+    }
+
+    //computes y force
+    if(slip_ratio<slip_ratio_max_y){
+        int numerator = load* slip_ratio * max_force_x;
+        int within_sqrt = powf(cotd(slip_angle),2) + powf((max_force_x/max_force_y),2);
+        int denominator = slip_ratio_max_y * std::sqrtf(within_sqrt);
+        forces[1] = numerator / denominator;
+    }
+    else{
+        int numerator = load*post_saturation_force_y * max_force_x;
+        int within_sqrt = powf(cotd(slip_angle),2) + powf((max_force_x/max_force_y),2);
+        int denominator = max_force_y * std::sqrtf(within_sqrt);
+        forces[1] = numerator / denominator;
+    }
+
 }
 
 //calculates slip ratio
-float calculate_slip_ratio(float wheel_speed, float velocity){
+inline float calculate_slip_ratio(float wheel_speed, float velocity){
     float tangential_velo = wheel_speed*WHEEL_RADIUS;
     return (tangential_velo -velocity)/velocity;
 
@@ -119,8 +171,14 @@ float calculate_slip_ratio(float wheel_speed, float velocity){
 
 
 int main() {
-    std::cout << "Hello world!";
+    float state[] = {1,1,90,3,5,0,0,0,0,0}; 
+    float control[] = {0,0,0}; 
+    float statedot[] = {0,0,0,0,0,0,0,0,0,0}; 
 
+    dynamics(state,control,statedot);
+    for (const auto &element : statedot) {
+        std::cout << element << " ";
+    }
     return 0;
 }
 

@@ -17,3 +17,8 @@ log.log
 **/*.npy
 
 **/__pycache__/
+driverless_ws/src/Model/output
+driverless_ws/src/Model/model.dSYM/Contents/Resources/Relocations/x86_64/model.yml
+driverless_ws/src/Model/model.dSYM/Contents/Resources/DWARF/model
+driverless_ws/src/Model/model.dSYM/Contents/Info.plist
+driverless_ws/src/Model/model
