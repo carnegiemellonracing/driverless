@@ -190,3 +190,4 @@ struct Equal {
         return a == b;
     }
 };
+
