@@ -41,7 +41,7 @@ VIS_UPDATE_FPS = 25
 
 class ConeNode(Node):
 
-    def __init__(self, debug=False):
+    def __init__(self, debug=False, visualize_points=True):
         super().__init__(CONE_NODE_NAME)
 
         self.cones = Cones()
@@ -52,8 +52,9 @@ class ConeNode(Node):
         self.create_subscription(ConeArray, LIDAR_CONE_TOPIC, self.lidar_cone_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         # initialize point cloud subscriber for visualization (and pose transformer)
-        self.create_subscription(PointCloud2, POINT_TOPIC, self.point_cloud_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.pose_transformer = PoseTransformations()
+        if debug and visualize_points:
+            self.create_subscription(PointCloud2, POINT_TOPIC, self.point_cloud_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+            self.pose_transformer = PoseTransformations()
 
         # initialize cone publisher
         self.publish_timer = self.create_timer(1/PUBLISH_FPS, self.publish_cones)
@@ -66,6 +67,7 @@ class ConeNode(Node):
 
         # if debugging, initialize visualizer
         self.debug = debug
+        self.visualize_points = visualize_points
         self.stop = False
 
         return
@@ -90,34 +92,51 @@ class ConeNode(Node):
 
 
     def yolov5_zed_cone_callback(self, msg):
+        '''receive cones from yolov5_zed_node predictor'''
         cones = conv.msg_to_cones(msg)
         self.cones.add_cones(cones)
 
         return
     
     def yolov5_zed2_cone_callback(self, msg):
+        '''receive cones from yolov5_zed2_node predictor'''
         cones = conv.msg_to_cones(msg)
         self.cones.add_cones(cones)
 
         return
 
     def lidar_cone_callback(self, msg):
+        '''receive cones from lidar_node predictor'''
         cones = conv.msg_to_cones(msg)
         self.cones.add_cones(cones)
+
+        return
+    
+    def sufficient_cones(self):
+        return len(self.cones) > 0
+
+    def flush_cones(self):
+        self.cones = Cones()
 
         return
 
     def publish_cones(self):
 
+        if not self.sufficient_cones():
+            self.get_logger().warn(f"Not got sufficient cones")
+            return 
+
+        # update visualizer
         if self.debug:
             self.vis.set_cones(self.cones)
 
         # publish cones
+        print(f"publishing {len(self.cones)} cones")
         msg = conv.cones_to_msg(self.cones)
         self.cone_publisher.publish(msg)
             
         # flush cones
-        self.cones = Cones()
+        self.flush_cones()
         
         return
 
