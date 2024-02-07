@@ -1,11 +1,49 @@
-#include "../types.hpp"
-#include "../cuda_utils.cuh"
+#pragma once
+
+#include <types.hpp>
+#include <cuda_utils.cuh>
+
 
 namespace controls {
     namespace mppi {
+        struct DeviceAction {
+            float data[action_dims];
+        };
+
         struct ActionWeightTuple {
-            Action action;
+            DeviceAction action;
             float weight;
         };
+
+        __host__ __device__ static DeviceAction operator+ (const DeviceAction& a1, const DeviceAction& a2) {
+            DeviceAction res;
+            for (size_t i = 0; i < action_dims; i++) {
+                res.data[i] = a1.data[i] + a2.data[i];
+            }
+            return res;
+        }
+
+        template<typename T>
+        __host__ __device__ static DeviceAction operator* (T scalar, const DeviceAction& action) {
+            DeviceAction res;
+            for (size_t i = 0; i < action_dims; i++) {
+                res.data[i] = scalar * action.data[i];
+            }
+            return res;
+        }
+
+        template<typename T>
+        __host__ __device__ static DeviceAction operator* (const DeviceAction& action, T scalar) {
+            return scalar * action;
+        }
+
+        template<typename T>
+        __host__ __device__ static DeviceAction operator/ (const DeviceAction& action, T scalar) {
+            DeviceAction res;
+            for (size_t i = 0; i < action_dims; i++) {
+                res.data[i] = action.data[i] / scalar;
+            }
+            return res;
+        }
     }
 }

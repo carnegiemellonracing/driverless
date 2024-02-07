@@ -1,6 +1,7 @@
 #pragma once
 
-#include <state/state_estimator.hpp>
+#include <interfaces/msg/spline_frame_list.hpp>
+#include <geometry_msgs/msg/pose2_d.hpp>
 #include <array>
 
 #include "constants.hpp"
@@ -10,19 +11,8 @@ namespace controls {
     using Action = std::array<float, action_dims>;
     using State = std::array<float, state_dims>;
 
-    union SplineFrame {
-        float4 texel;
-
-        struct {
-            float x;
-            float y;
-            float tangent_angle;
-            float curvature;
-        };
-    };
-
-    using SplineMsg = std::vector<SplineFrame>;
-    using SlamMsg = struct {};
+    using SplineMsg = interfaces::msg::SplineFrameList;
+    using SlamMsg = geometry_msgs::msg::Pose2D;
 
     class Controller {
     public:

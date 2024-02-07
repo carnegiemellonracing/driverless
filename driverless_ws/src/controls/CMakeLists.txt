@@ -19,9 +19,9 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(planning REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(interfaces REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/../)
@@ -34,15 +34,18 @@ set(LIB_SOURCES
 )
 
 add_library(controls_lib SHARED ${LIB_SOURCES})
-ament_target_dependencies(controls_lib planning rclcpp std_msgs)
+ament_target_dependencies(controls_lib rclcpp std_msgs interfaces)
 
 add_executable(controller src/nodes/controller.cpp)
 target_link_libraries(controller controls_lib)
 
-ament_target_dependencies(controller rclcpp)
+set_property(TARGET controls_lib PROPERTY CUDA_SEPARABLE_COMPILATION ON)
+set_property(TARGET controller PROPERTY CUDA_SEPARABLE_COMPILATION ON)
+
+ament_target_dependencies(controller rclcpp interfaces)
 
 ament_export_targets(controls_libExport HAS_LIBRARY_TARGET)
-ament_export_dependencies(planning rclcpp std_msgs)
+ament_export_dependencies(rclcpp std_msgs interfaces)
 
 install(
     TARGETS controls_lib

@@ -5,7 +5,9 @@
 #include <thrust/execution_policy.h>
 #include <types.hpp>
 #include <constants.hpp>
+#include <model/model.cuh>
 
+#include "cuda_constants.cuh"
 #include "types.cuh"
 
 
@@ -16,15 +18,21 @@ namespace controls {
             thrust::device_ptr<float> std_normals;
 
             explicit TransformStdNormal(thrust::device_ptr<float> std_normals)
-                    : std_normals {std_normals} { }
+                    : std_normals {std_normals} {
+
+            }
 
             __host__ __device__ void operator() (size_t idx) const {
                 const size_t action_idx = (idx / action_dims) * action_dims;
                 const size_t row_idx = idx % action_dims * action_dims;
 
-                const float res = dot<float>(&perturbs_incr_std[row_idx], &std_normals.get()[action_idx], action_dims);
-                std_normals[idx] = res * sqrt_timestep;
+                const auto res = dot<float>(&cuda_globals::perturbs_incr_std[row_idx], &std_normals.get()[action_idx],
+                                            action_dims);
+                std_normals[idx] = res * m_sqrt_timestep;
             }
+
+            private:
+                float m_sqrt_timestep = std::sqrt(controller_period_ms);
         };
 
         // Functors for cost calculation
@@ -44,10 +52,10 @@ namespace controls {
                          const thrust::device_ptr<float>& action_trajectory_base,
                          const thrust::device_ptr<float>& curr_state)
                     : brownians {brownians.get()},
-                      sampled_action_trajectories {sampled_action_trajectories.data().get()},
-                      cost_to_gos {cost_to_gos.data().get()},
-                      action_trajectory_base {action_trajectory_base.data().get()},
-                      curr_state {curr_state.data().get()} {}
+                      sampled_action_trajectories {sampled_action_trajectories.get()},
+                      cost_to_gos {cost_to_gos.get()},
+                      action_trajectory_base {action_trajectory_base.get()},
+                      curr_state {curr_state.get()} {}
 
             __device__ void operator() (uint32_t i) const {
                 float j_curr = 0;
@@ -74,6 +82,28 @@ namespace controls {
             }
         };
 
+        // Functors to operate on Action
+
+        struct AddActions {
+            __host__ __device__ DeviceAction operator() (const DeviceAction& a1, const DeviceAction& a2) const {
+                return a1 + a2;
+            }
+        };
+
+        template<size_t k>
+        struct DivBy {
+            __host__ __device__ size_t operator() (size_t i) const {
+                return i / k;
+            }
+        };
+
+        template<typename T>
+        struct Equal {
+            __host__ __device__ bool operator() (T a, T b) {
+                return a == b;
+            }
+        };
+
 
         // Functors for action reduction
         struct ActionAverage {
@@ -82,8 +112,8 @@ namespace controls {
             {
                 const float w0 = action_weight_t0.weight;
                 const float w1 = action_weight_t1.weight;
-                const Action a0 = action_weight_t0.action;
-                const Action a1 = action_weight_t1.action;
+                const DeviceAction& a0 = action_weight_t0.action;
+                const DeviceAction& a1 = action_weight_t1.action;
 
                 return {(w0 * a0 + w1 * a1) / (w0 + w1), w0 + w1};
             }
@@ -114,26 +144,26 @@ namespace controls {
         };
 
         struct ReduceTimestep {
-            Action* averaged_actions;
+            DeviceAction* averaged_action;
 
             const float* action_trajectories;
             const float* cost_to_gos;
 
             const ActionAverage reduction_functor {};
 
-            ReduceTimestep (Action* averaged_actions, const float* action_trajectories, const float* cost_to_gos)
-                    : averaged_actions {averaged_actions},
+            ReduceTimestep (DeviceAction* averaged_action, const float* action_trajectories, const float* cost_to_gos)
+                    : averaged_action {averaged_action},
                       action_trajectories {action_trajectories},
                       cost_to_gos {cost_to_gos} { }
 
             __device__ void operator() (const uint32_t idx) {
                 thrust::counting_iterator<uint32_t> indices {idx * num_samples};
 
-                averaged_actions[idx] = thrust::transform_reduce(
+                averaged_action[idx] = thrust::transform_reduce(
                         thrust::device,
                         indices, indices + num_samples,
                         IndexToActionWeightTuple {action_trajectories, cost_to_gos},
-                        ActionWeightTuple { Action {}, 0 }, reduction_functor).action;
+                        ActionWeightTuple { DeviceAction {}, 0 }, reduction_functor).action;
             }
         };
     }

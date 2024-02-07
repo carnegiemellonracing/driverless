@@ -1,7 +1,10 @@
 #pragma once
 
 #include <thrust/device_ptr.h>
+#include <types.hpp>
 
+#include "cuda_constants.cuh"
+#include "types.cuh"
 #include "mppi.hpp"
 
 
@@ -56,7 +59,7 @@ namespace controls {
              * @brief Retrieves action based on cost to go using reduction.
              * @return Action
              */
-            Action reduce_actions();
+            DeviceAction reduce_actions();
 
             /**
              * @brief Calculates costs to go
