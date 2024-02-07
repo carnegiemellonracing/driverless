@@ -2,7 +2,6 @@
 
 #include <rclcpp/rclcpp.hpp>
 
-
 namespace controls {
 
     /* ROS moments */
@@ -24,13 +23,17 @@ namespace controls {
     constexpr uint8_t state_dims = 10;
     constexpr uint32_t num_spline_frames = 128;
     constexpr float temperature = 1.0f;
+    constexpr unsigned long long seed = 0;
+    constexpr uint32_t num_action_trajectories = action_dims * num_timesteps * num_samples;
+
+
+    // State Estimation
+
+    constexpr float spline_frame_separation = 0.5f;  // meters
+    constexpr std::vector<float> finite_difference_smoothing_filter = {0.25, 0.5, 0.25}; // odd
+
+    static_assert(spline_finite_difference_smoothing_samples % 2 == 1);
 
     // derived quantities
     constexpr float controller_period_ms = 1000./ controller_freq;
-    constexpr dim3 action_trajectories_dims {num_samples, num_timesteps, action_dims};
-
-    // brownian stuff
-    constexpr curandRngType_t rng_type = CURAND_RNG_PSEUDO_MTGP32;
-    constexpr unsigned long long seed = 0;
-    constexpr uint32_t num_action_trajectories = (uint32_t) action_dims * num_timesteps * num_samples; // TODO: this casting ok?
 }
