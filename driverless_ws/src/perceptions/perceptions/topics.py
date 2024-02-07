@@ -12,3 +12,9 @@ DEPTH2_IMAGE_TOPIC = "/zedsdk2_depth_image"
 
 # topic names for lidar data reading from Hesai lidar
 POINT_TOPIC = "/lidar_points"
+
+# topic names for publishing cones
+LIDAR_CONE_TOPIC = "/lidar_node_cones"
+YOLOV5_ZED_CONE_TOPIC = "/yolov5_zed_node_cones"
+YOLOV5_ZED2_CONE_TOPIC = "/yolov5_zed2_node_cones"
+PERC_CONE_TOPIC = "/perc_cones"
