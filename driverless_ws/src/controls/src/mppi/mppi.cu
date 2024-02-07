@@ -13,6 +13,7 @@
 #include "mppi.cuh"
 #include "functors.cuh"
 
+
 namespace controls {
     namespace mppi {
 
@@ -34,15 +35,24 @@ namespace controls {
 
         Action MppiController_Impl::generate_action() {
             // swap device states
+            cuda_globals::lock_and_swap_state_buffers();
+
             // call kernels
-            generate_brownians()
-            // copy action to host, return
-            return controls::Action();
+            generate_brownians();
+            populate_cost();
+
+            // not actually on device, just still in a device action struct
+            DeviceAction dev_action = reduce_actions();
+//            // copy action to host, return
+//            return controls::Action();
+            Action action;
+            std::copy(std::begin(dev_action.data), std::end(dev_action.data), action.begin());
+            return action;
         }
 
         // Private member functions of the controller
         void prefix_scan(thrust::device_ptr<float> normal) {
-            auto actions = thrust::device_pointer_cast((Action*)normal.get());
+            auto actions = thrust::device_pointer_cast((DeviceAction*)normal.get());
             auto keys = thrust::make_transform_iterator(thrust::make_counting_iterator(0), DivBy<num_timesteps> {});
 
             thrust::inclusive_scan_by_key(keys, keys + num_samples * num_timesteps,
@@ -70,8 +80,8 @@ namespace controls {
         }
 
 
-        Action MppiController_Impl::reduce_actions() {
-            thrust::device_vector<Action> averaged_actions (num_timesteps);
+        DeviceAction MppiController_Impl::reduce_actions() {
+            thrust::device_vector<DeviceAction> averaged_actions (num_timesteps);
             thrust::counting_iterator<uint32_t> indices {0};
 
             thrust::for_each(indices, indices + num_timesteps, ReduceTimestep {
@@ -80,12 +90,12 @@ namespace controls {
                 m_cost_to_gos.get()
             });
 
-            thrust::host_vector<Action> averaged_actions_host = averaged_actions;
-            Action res;
+            thrust::host_vector<DeviceAction> averaged_actions_host = averaged_actions;
+            DeviceAction res;
 
             // copy averaged action into result for returning
             for (int i = 0; i < action_dims; i++) {
-                res[i] = averaged_actions_host.data()[0][i];
+                res.data[i] = averaged_actions_host.data()[0].data[i];
             }
             return res;
         }
@@ -93,7 +103,7 @@ namespace controls {
         void MppiController_Impl::populate_cost() {
             thrust::counting_iterator<uint32_t> indices{0};
             PopulateCost populate_cost {m_action_trajectories, m_action_trajectories,
-                                        m_cost_to_gos, m_last_action_trajectory, curr_state_read};
+                                        m_cost_to_gos, m_last_action_trajectory, thrust::device_pointer_cast(cuda_globals::curr_state_read)};
             thrust::for_each(indices, indices + num_samples, populate_cost);
         }
     }
