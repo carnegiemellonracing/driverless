@@ -9,12 +9,12 @@ from perc22a.predictors.utils.cones import Cones
 
 # message to numpy conversion packages stolen from internet
 from cv_bridge import CvBridge
-import ros2_numpy_dv as rnp
+import ros2_numpy as rnp
 
 import numpy as np
 
 # helper functions for performing conversions
-def _cone_msg_arr(cone_arr):
+def _cone_to_msg_arr(cone_arr):
     '''convert (N, 3) array to ConeWithCovariance[]'''
     arr_msg = []
     for i in range(cone_arr.shape[0]):
@@ -28,6 +28,16 @@ def _cone_msg_arr(cone_arr):
         arr_msg.append(msg)
         
     return arr_msg
+
+def _msg_to_cone_arr(msg_arr):
+    cone_arr = np.zeros((len(msg_arr), 3))
+    
+    for i, point_msg in enumerate(msg_arr):
+        cone_arr[i, 0] = point_msg.x
+        cone_arr[i, 1] = point_msg.y
+        cone_arr[i, 2] = point_msg.z
+
+    return cone_arr
 
 # primary interface for conversions.py
 def img_to_npy(img_msg: Image):
@@ -54,8 +64,16 @@ def cones_to_msg(cones: Cones) -> ConeArray:
     cones_msg = ConeArray()
     blue_cones, yellow_cones, orange_cones = cones.to_numpy()
 
-    cones_msg.blue_cones = _cone_msg_arr(blue_cones)
-    cones_msg.yellow_cones = _cone_msg_arr(yellow_cones)
-    cones_msg.orange_cones = _cone_msg_arr(orange_cones)
+    cones_msg.blue_cones = _cone_to_msg_arr(blue_cones)
+    cones_msg.yellow_cones = _cone_to_msg_arr(yellow_cones)
+    cones_msg.orange_cones = _cone_to_msg_arr(orange_cones)
     
     return cones_msg
+
+def msg_to_cones(msg: ConeArray) -> Cones:
+
+    return Cones.from_numpy(
+        _msg_to_cone_arr(msg.blue_cones),
+        _msg_to_cone_arr(msg.yellow_cones),
+        _msg_to_cone_arr(msg.orange_cones)
+    )
