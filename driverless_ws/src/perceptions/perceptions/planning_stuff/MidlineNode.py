@@ -5,7 +5,7 @@ from eufs_msgs.msg import ConeArray
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 import perceptions.planning_stuff.svm_utils as svm_utils
 from interfaces.msg import SplineFrames
-from geometry_msgs import Point
+from geometry_msgs.msg import Point
 
 import numpy as np
 
