@@ -13,15 +13,14 @@ namespace controls {
 
             //physics constants
             constexpr float GRAVITY = 9.81; //in m/s^2
-            constexpr float CG_TO_FRONT = 2; //in meters TO IMPLEMENT
-            constexpr float CG_TO_REAR = 1; //in meters TO IMPLEMENT
-            constexpr float WHEEL_RADIUS = .2; //in meters to IMPLEMENT
-            constexpr float CAR_MASS = 150; //in KG to IMPLEMENT
+            constexpr float CG_TO_FRONT = 0.775; //in meters
+            constexpr float CG_TO_REAR = 0.775; //in meters
+            constexpr float WHEEL_RADIUS = 0.2286; //in meters
+            constexpr float CAR_MASS = 310; //in KG
             constexpr float LOGITUDNAL_AERO_CONSTANT = 150; //in Ns^2/m^2 to IMPLEMENT
             constexpr float LATERAL_AERO_CONSTANT = 150; //in Ns^2/m^2 to IMPLEMENT
-            constexpr float COEF_FRICTION = .1; //unitlss to IMPLEMENT
-            constexpr float WHEEL_ROTATIONAL_INTERIA = 130; //in kg*m^2 to IMPLEMENT TAKEN ALONG AXLE AXIS
-            constexpr float CAR_ROTATIONAL_INTERTIA = 130; //in kg*m^2 to IMPLEMENT. TAKEN ALONG Z AXIS THROUGH CG
+            constexpr float WHEEL_ROTATIONAL_INTERIA = .439; //in kg*m^2 TAKEN ALONG AXLE AXIS
+            constexpr float CAR_ROTATIONAL_INTERTIA = 105.72; //in kg*m^2. TAKEN ALONG Z AXIS THROUGH CG
             constexpr float NOSE_CONE_CONSTANT = .3; //in dimensionless to IMPLEMENT. how much of drag becomes downforce
 
 
@@ -176,10 +175,10 @@ namespace controls {
                 state_dot[7] =
                         2 * drag_x * NOSE_CONE_CONSTANT * x_dot_car * state_dot[3];
                 state_dot[8] =
-                        (torque_front - COEF_FRICTION * WHEEL_RADIUS * front_load) /
-                        WHEEL_ROTATIONAL_INTERIA;
+                        (torque_front - WHEEL_RADIUS*(front_force_x*cosd(steering_angle) 
+                        +front_force_y*sin(steering_angle))) / WHEEL_ROTATIONAL_INTERIA;
                 state_dot[9] =
-                        (torque_rear - COEF_FRICTION * WHEEL_RADIUS * rear_load) /
+                        (torque_rear - WHEEL_RADIUS*(rear_force_y)) /
                         WHEEL_ROTATIONAL_INTERIA;
             }
         }
