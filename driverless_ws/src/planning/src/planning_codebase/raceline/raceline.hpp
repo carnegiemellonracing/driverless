@@ -102,7 +102,8 @@ public:
     ~Spline();
 };
 
-
+// new functions translated from python (path_optimization.py)
+double get_curvature(double progress);
 
 
 Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts);

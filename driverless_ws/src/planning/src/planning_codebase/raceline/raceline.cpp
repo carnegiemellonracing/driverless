@@ -144,7 +144,6 @@ int Spline::get_sort_index(){
 
 
 
-
 std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double progress, double point_index, int precision){
     
     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> ret;
@@ -496,5 +495,34 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
 
 
+}
+
+// @TODO: searchSorted function
+
+
+/**
+ * returns the curvature of the raceline at a given progress
+ * @param progress: progress along the raceline
+ * @param splines: vector of splines that make up the raceline
+ * @param cumulated_lengths: vector of the cumulated lengths of the splines
+ * @return curvature at progress
+*/
+double get_curvature(double progress,std::vector<spline> splines, std::vector<double> cumulated_lengths) {
+    // spline where the progress is on
+    int index = // translate torch, use Eigen::cwiseMin
+    Eigen::cwiseMin(searchSorted(cumulated_lengths, progress))
+
+    double min_x = progress; 
+    if (index > 0){
+        min_x = progress - cumulated_lengths[index-1];
+    }
+
+    curvature = frenet.get_curvature(
+        splines[index].get_first_der(),
+        splines[index].get_second_der(),
+        min_x
+    )
+
+    return curvature;
 }
 
