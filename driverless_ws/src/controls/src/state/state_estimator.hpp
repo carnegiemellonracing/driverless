@@ -13,7 +13,7 @@ namespace controls {
             virtual void on_spline(const SplineMsg& spline_msg) =0;
             virtual void on_slam(const SlamMsg& slam_msg) =0;
 
-            virtual ~StateEstimator() =0;
+            virtual ~StateEstimator() = default;
         };
 
     }
