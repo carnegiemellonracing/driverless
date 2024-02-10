@@ -33,19 +33,21 @@ class MidlineNode(Node):
                                                  qos_profile=BEST_EFFORT_QOS_PROFILE)
         # self.midline_pub = self.create_publisher(msg_type=)
     
-    def cone_callback(cones):
-        blue = np.array()
+    def cone_callback(self, cones):
+        print("entered cone_callback")
+        blue = []
         for cone in cones.blue_cones:
-            np.append(blue, np.array([cone.x, cone.y, 0]))
+            blue.append([cone.x, cone.y, 0])
 
-        yellow = np.array()
+        yellow = []
         for cone in cones.yellow_cones:
-            np.append(yellow, np.array([cone.x, cone.y, 1]))
+            yellow.append([cone.x, cone.y, 1])
         
-        data = np.vstack([blue, yellow])
+        data = np.vstack([np.array(blue), np.array(yellow)])
         print(data)
 
         downsampled_boundary_points = svm_utils.process(data)
+        # print(downsampled_boundary_points)
 
         #TODO: convert np array to rosmsg
 

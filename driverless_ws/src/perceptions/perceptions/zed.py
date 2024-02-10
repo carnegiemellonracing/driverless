@@ -27,11 +27,12 @@ class ZEDException(Exception):
 
 class ZEDSDK():
     def __init__(self,
-                 camera_resolution=sl.RESOLUTION.HD720,
+                 camera_resolution=sl.RESOLUTION.VGA,
                  depth_mode=sl.DEPTH_MODE.ULTRA,
                  coordinate_units=sl.UNIT.METER,
                  coordinate_system=sl.COORDINATE_SYSTEM.RIGHT_HANDED_Z_UP,
                  camera_fps=0,
+                 serial_num=None,
                  **kwargs
                  ) -> None:
         """
@@ -73,6 +74,10 @@ class ZEDSDK():
                                              camera_fps=camera_fps,
                                              **kwargs
                                              )
+        
+        if serial_num is not None:
+            self.init_params.set_from_serial_number(serial_num)
+
         # ZED Camera object
         self.zed = sl.Camera()
 
