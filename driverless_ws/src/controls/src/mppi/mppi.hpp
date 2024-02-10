@@ -8,11 +8,11 @@ namespace controls {
 
         class MppiController {
         public:
+            static std::unique_ptr<MppiController> create();
+
             virtual Action generate_action() =0;
 
-            virtual ~MppiController() =0;
-
-            static std::unique_ptr<MppiController> create();
+            virtual ~MppiController() = default;
         };
 
     }
