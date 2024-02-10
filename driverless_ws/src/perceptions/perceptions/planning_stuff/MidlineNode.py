@@ -16,7 +16,7 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
 
-RELIABLE_QOS_PROFILE = QoSProfile(
+RELIABLE_QOS_PROFILE = QoControlActionSProfile(
     depth=10,
     reliability=QoSReliabilityPolicy.RELIABLE,
     durability=QoSDurabilityPolicy.VOLATILE,
@@ -51,12 +51,19 @@ class MidlineNode(Node):
 
         downsampled_boundary_points = svm_utils.process(data)
 
-        msg = []
+        points = []
+        msg = Midline()
+        
+
 
         for np_point in downsampled_boundary_points:
             new_point = Point(np_point[0], np_point[1], 0)
-            msg.append(new_point) 
+            points.append(new_point)
+
+        msg.midpoints = points
         
+        #TODO: add car pos to each midpoint to get global point
+
         self.midline_pub.publish(msg)
 
 
