@@ -11,7 +11,6 @@ def process(data):
 
     x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
     y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    print(x_min, x_max)
     xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01),
                         np.arange(y_min, y_max, 0.01))
     
@@ -26,6 +25,7 @@ def process(data):
 
     def norm_func(x): return np.sqrt(x[0]**4 + x[1]**2)
     boundary_points.sort(key=norm_func)
+    # print(boundary_points)
 
     downsampled = []
     accumulated_dist = 0
@@ -34,7 +34,7 @@ def process(data):
         p0 = boundary_points[i-1]
         curr_dist = np.sqrt((p1[0] - p0[0])**2 + (p1[1] - p0[1])**2)
         accumulated_dist += curr_dist
-        if np.abs(accumulated_dist - 0.5) < 0.05:
+        if np.abs(accumulated_dist - 0.5) < 0.1: # TODO: make this 50cm
             downsampled.append(p1)
             accumulated_dist = 0
         
@@ -42,5 +42,6 @@ def process(data):
             accumulated_dist = 0
     
     downsampled = np.array(list(downsampled))
+    print(downsampled)
 
     return downsampled

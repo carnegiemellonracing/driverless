@@ -143,7 +143,11 @@ class ConeNode(Node):
 def main(args=None):
     rclpy.init(args=args)
 
+<<<<<<< HEAD
     cone_node = ConeNode(debug=True)
+=======
+    cone_node = ConeNode(debug=False)
+>>>>>>> 4cddf2d063e4437785ebaeab26e5971ca05653cd
 
     rclpy.spin(cone_node)
 

@@ -33,7 +33,7 @@ if(BUILD_TESTING)
 endif()
 
 
-
+find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(sensor_msgs REQUIRED)
@@ -42,6 +42,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/CarROT.msg"
   "msg/ConeList.msg"
   "msg/ConePositions.msg"
+  "msg/DataFrame.msg"
   "msg/PairROT.msg"
   "msg/Points.msg"
   "msg/Spline.msg"

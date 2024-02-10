@@ -20,6 +20,13 @@
 // ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 0.0, y: 3.0, z: 0.0}, {x: 1.414, y: 2.236 , z: 0.0}, {x: 3.0, y: 0.0 , z: 0.0}], yellow_cones: [{x: 0.0, y: 2.0, z: 0.0}, {x: 1.414, y: 1.414, z: 0.0}, {x: 2.0, y: 0.0, z: 0.0}]}"   
 
 
+
+// ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: -1.0, y: 1.0, z: 0.0}, {x: -1, y: 2, z: 0.0}, {x: -1.0, y: 3.0 , z: 0.0}], yellow_cones: [{x: 1.0, y: 1.0, z: 0.0}, {x: 1, y: 2, z: 0.0}, {x: 1.0, y: 3.0, z: 0.0}]}"   
+
+
+// ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 1.0, y: -1.0, z: 0.0}, {x: 2, y: -1, z: 0.0}, {x: 3.0, y: -1.0 , z: 0.0}], yellow_cones: [{x: 1.0, y: 1.0, z: 0.0}, {x: 2, y: 1, z: 0.0}, {x: 3.0, y: 1.0, z: 0.0}]}"   
+
+
 using std::placeholders::_1;
 #define DELTA 0.5
 struct raceline_pt{

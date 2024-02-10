@@ -40,16 +40,17 @@ class MidlineNode(Node):
     def cone_callback(self, cones):
         blue = np.array()
         for cone in cones.blue_cones:
-            np.append(blue, np.array([cone.x, cone.y, 0]))
+            blue.append([cone.x, cone.y, 0])
 
-        yellow = np.array()
+        yellow = []
         for cone in cones.yellow_cones:
-            np.append(yellow, np.array([cone.x, cone.y, 1]))
+            yellow.append([cone.x, cone.y, 1])
         
-        data = np.vstack([blue, yellow])
+        data = np.vstack([np.array(blue), np.array(yellow)])
         print(data)
 
         downsampled_boundary_points = svm_utils.process(data)
+        # print(downsampled_boundary_points)
 
         points = []
         msg = SplineFrames()
