@@ -9,10 +9,11 @@ def process(data):
     model = svm.SVC(kernel='poly', degree=3, C=10, coef0=1.0)
     model.fit(X, y)
 
+    step = 0.1
     x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
     y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01),
-                        np.arange(y_min, y_max, 0.01))
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, step),
+                        np.arange(y_min, y_max, step))
     
     Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
     Z = Z.reshape(xx.shape)
@@ -42,6 +43,6 @@ def process(data):
             accumulated_dist = 0
     
     downsampled = np.array(list(downsampled))
-    print(downsampled)
+    # print(downsampled)
 
     return downsampled
