@@ -4,6 +4,8 @@ from rclpy.node import Node
 from eufs_msgs.msg import ConeArray
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 import perceptions.planning_stuff.svm_utils as svm_utils
+from interfaces.msg import Midline
+from geometry_msgs import Point
 
 import numpy as np
 
@@ -14,7 +16,7 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
                          durability = QoSDurabilityPolicy.VOLATILE,
                          depth = 5)
 
-RELIABLE_QOS_PROFILE = QoSProfile(
+RELIABLE_QOS_PROFILE = QoControlActionSProfile(
     depth=10,
     reliability=QoSReliabilityPolicy.RELIABLE,
     durability=QoSDurabilityPolicy.VOLATILE,
@@ -31,11 +33,12 @@ class MidlineNode(Node):
                                                  topic="/perc_cones",
                                                  callback=self.cone_callback,
                                                  qos_profile=BEST_EFFORT_QOS_PROFILE)
-        # self.midline_pub = self.create_publisher(msg_type=)
+        self.midline_pub = self.create_publisher(msg_type=Midline,
+                                                 topic="/midline",
+                                                 qos_profile=RELIABLE_QOS_PROFILE)
     
     def cone_callback(self, cones):
-        print("entered cone_callback")
-        blue = []
+        blue = np.array()
         for cone in cones.blue_cones:
             blue.append([cone.x, cone.y, 0])
 
@@ -49,7 +52,20 @@ class MidlineNode(Node):
         downsampled_boundary_points = svm_utils.process(data)
         # print(downsampled_boundary_points)
 
-        #TODO: convert np array to rosmsg
+        points = []
+        msg = Midline()
+        
+
+
+        for np_point in downsampled_boundary_points:
+            new_point = Point(np_point[0], np_point[1], 0)
+            points.append(new_point)
+
+        msg.midpoints = points
+        
+        #TODO: add car pos to each midpoint to get global point
+
+        self.midline_pub.publish(msg)
 
 
 def main():
