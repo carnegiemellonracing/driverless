@@ -34,17 +34,13 @@ namespace controls {
         }
 
         Action MppiController_Impl::generate_action() {
-            // swap device states
-            cuda_globals::lock_and_swap_state_buffers();
-
             // call kernels
             generate_brownians();
             populate_cost();
 
             // not actually on device, just still in a device action struct
             DeviceAction dev_action = reduce_actions();
-//            // copy action to host, return
-//            return controls::Action();
+
             Action action;
             std::copy(std::begin(dev_action.data), std::end(dev_action.data), action.begin());
             return action;
@@ -103,7 +99,7 @@ namespace controls {
         void MppiController_Impl::populate_cost() {
             thrust::counting_iterator<uint32_t> indices{0};
             PopulateCost populate_cost {m_action_trajectories, m_action_trajectories,
-                                        m_cost_to_gos, m_last_action_trajectory, thrust::device_pointer_cast(cuda_globals::curr_state_read)};
+                                        m_cost_to_gos, m_last_action_trajectory, thrust::device_pointer_cast(cuda_globals::curr_state)};
             thrust::for_each(indices, indices + num_samples, populate_cost);
         }
     }

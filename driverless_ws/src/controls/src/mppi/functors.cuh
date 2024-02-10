@@ -1,11 +1,8 @@
 #pragma once
 
-#include <thrust/device_vector.h>
 #include <thrust/transform_reduce.h>
 #include <thrust/execution_policy.h>
-#include <types.hpp>
 #include <constants.hpp>
-#include <model/model.cuh>
 
 #include "cuda_constants.cuh"
 #include "types.cuh"

@@ -30,9 +30,21 @@ namespace controls {
     // State Estimation
 
     constexpr float spline_frame_separation = 0.5f;  // meters
-    constexpr std::vector<float> finite_difference_smoothing_filter = {0.25, 0.5, 0.25}; // odd
 
-    static_assert(spline_finite_difference_smoothing_samples % 2 == 1);
+    constexpr uint8_t state_x_idx = 0;
+    constexpr uint8_t state_y_idx = 1;
+    constexpr uint8_t state_yaw_idx = 2;
+    constexpr uint8_t state_car_xdot_idx = 3;
+    constexpr uint8_t state_car_ydot_idx = 4;
+    constexpr uint8_t state_yawdot_idx = 5;
+    constexpr uint8_t state_fz_idx = 6;
+    constexpr uint8_t state_mx_idx = 7;
+    constexpr uint8_t state_whl_speed_f_idx = 8;
+    constexpr uint8_t state_whl_speed_r_idx = 9;
+
+    constexpr uint8_t action_swangle_idx = 0;
+    constexpr uint8_t action_torque_f_idx = 1;
+    constexpr uint8_t action_torque_r_idx = 2;
 
     // derived quantities
     constexpr float controller_period_ms = 1000./ controller_freq;
