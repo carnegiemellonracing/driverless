@@ -49,8 +49,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/SplineList.msg"
   "msg/SplineFrames.msg"
   "msg/ControlAction.msg"
-  "msg/Midline.msg"
-  DEPENDENCIES std_msgs geometry_msgs sensor_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
+  DEPENDENCIES geometry_msgs sensor_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 
 ament_export_dependencies(rosidl_default_runtime)

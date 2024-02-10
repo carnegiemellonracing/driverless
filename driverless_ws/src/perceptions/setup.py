@@ -44,7 +44,7 @@ setup(
             # cone node
             'cone_node = perceptions.ros.utils.ConeNode:main',
 
-            # planning node
+            # midline node
             'midline_node = perceptions.planning_stuff.MidlineNode:main'
         ],
     },
