@@ -1,6 +1,8 @@
 #include <cuda_utils.cuh>
-#include <thrust/device_free.h>
+#include <interfaces/msg/spline_frame_list.hpp>
+#include <interfaces/msg/spline_frame.hpp>
 #include <cuda_globals/cuda_globals.cuh>
+#include <glm/glm.hpp>
 
 #include "state_estimator.cuh"
 #include "state_estimator.hpp"
@@ -51,7 +53,9 @@ namespace controls {
 
         // methods
 
-        StateEstimator_Impl::StateEstimator_Impl() {
+        StateEstimator_Impl::StateEstimator_Impl()
+            : m_curv_state {}, m_world_state {} {
+
             assert(!cuda_globals::spline_texture_created);
 
             cudaChannelFormatDesc channel_desc = cudaCreateChannelDesc(
@@ -75,22 +79,6 @@ namespace controls {
             ));
 
             cuda_globals::spline_texture_created = true;
-
-
-            // initialize curr state double buffering
-            {
-                std::lock_guard<std::mutex> guard {cuda_globals::state_swapping_mutex};
-
-                CUDA_CALL(cudaGetSymbolAddress(
-                    reinterpret_cast<void**>(&cuda_globals::curr_state_read),
-                    &cuda_globals::curr_state_buf1
-                ));
-
-                CUDA_CALL(cudaGetSymbolAddress(
-                    reinterpret_cast<void**>(&cuda_globals::curr_state_write),
-                    &cuda_globals::curr_state_buf2
-                ));
-            }
         }
 
         StateEstimator_Impl::~StateEstimator_Impl() {
@@ -103,51 +91,113 @@ namespace controls {
         }
 
         void StateEstimator_Impl::on_spline(const SplineMsg& spline_msg) {
-            m_host_spline_frames.clear();
-            m_host_spline_frames.reserve(spline_msg.frames.size());
+            m_spline_frames.clear();
+            m_spline_frames.reserve(spline_msg.frames.size());
 
             for (const interfaces::msg::SplineFrame& frame : spline_msg.frames) {
-                m_host_spline_frames.push_back(SplineFrame {frame.x, frame.y, 0.0f, 0.0f});
+                m_spline_frames.push_back(SplineFrame {frame.x, frame.y, 0.0f, 0.0f});
             }
 
-            populate_tangent_angles(m_host_spline_frames);
-            populate_curvatures(m_host_spline_frames);
+            populate_tangent_angles(m_spline_frames);
+            populate_curvatures(m_spline_frames);
 
             assert(cuda_globals::spline_texture_created);
 
             send_frames_to_texture();
-            recalculate_state();
-            sync_state();
+            recalculate_curv_state();
+            sync_curv_state();
         }
 
         void StateEstimator_Impl::on_slam(const SlamMsg& slam_msg) {
-            // TODO: update state based on slam
+            m_world_state[state_x_idx] = slam_msg.x;
+            m_world_state[state_y_idx] = slam_msg.y;
+            m_world_state[state_yaw_idx] = slam_msg.theta;
 
-            sync_state();
+            recalculate_curv_state();
+            sync_curv_state();
         }
 
         void StateEstimator_Impl::send_frames_to_texture() {
             assert(cuda_globals::spline_texture_created);
 
-            size_t elems = m_host_spline_frames.size();
+            size_t elems = m_spline_frames.size();
             assert(elems <= max_spline_texture_elems);
             CUDA_CALL(cudaMemcpyToSymbolAsync(&cuda_globals::spline_texture_elems, &elems, sizeof(elems)));
 
             CUDA_CALL(cudaMemcpy2DToArrayAsync(
                 cuda_globals::spline_array, 0, 0,
-                m_host_spline_frames.data(),
+                m_spline_frames.data(),
                 elems * sizeof(SplineFrame), elems * sizeof(SplineFrame), 1,
                 cudaMemcpyHostToDevice
             ));
         }
 
-        void StateEstimator_Impl::recalculate_state() {
-            // TODO: calculate curvilinear state using ternary search
+        void StateEstimator_Impl::recalculate_curv_state() {
+            using namespace glm;
+
+            auto distance_to_segment = [this] (fvec2 pos, size_t segment) {
+                const SplineFrame frame = m_spline_frames[segment];
+                return length(pos - fvec2(frame.x, frame.y));
+            };
+
+            size_t left = 0;
+            size_t right = m_spline_frames.size();
+
+            const fvec2 world_pos {m_world_state[state_x_idx], m_world_state[state_y_idx]};
+
+            while (left != right) {
+                assert(left < right);
+
+                const size_t left_check = left + (right - left) / 3;
+                const size_t right_check = right - (right - left) / 3;
+
+                if (distance_to_segment(world_pos, left_check) < distance_to_segment(world_pos, right_check)) {
+                    right = right_check;
+                } else {
+                    left = left_check;
+                }
+            }
+
+            const size_t segment = left;
+            const SplineFrame frame = m_spline_frames[segment];
+            const fvec2 segment_start {frame.x, frame.y};
+
+            float arc_progress;
+            float offset;
+            float curv_yaw;
+
+            if (frame.curvature == 0) {
+                const fvec2 normal {sin(frame.tangent_angle), -cos(frame.tangent_angle)};
+                offset = dot(world_pos - segment_start, normal);
+                arc_progress = length(world_pos - normal * offset - segment_start);
+                curv_yaw = m_world_state[state_yaw_idx] - frame.tangent_angle;
+
+            } else {
+                const float angle_to_center = frame.tangent_angle + radians(90.);
+                const fvec2 center_to_start = -fvec2 {cos(angle_to_center), sin(angle_to_center)} / frame.curvature;
+
+                const fvec2 center = segment_start - center_to_start;
+                const fvec2 center_to_pos = world_pos - center;
+
+                const float vecs_crossed = center_to_start.x * center_to_pos.y - center_to_pos.x * center_to_start.y;
+                const float angle_along_arc = asin(frame.curvature * vecs_crossed / length(center_to_pos));
+
+                arc_progress = angle_along_arc / abs(frame.curvature);
+                offset = length(center_to_start) - length(center_to_pos);
+                curv_yaw = m_world_state[state_yaw_idx] - (frame.tangent_angle + arc_progress * frame.curvature);
+            }
+
+            assert(arc_progress >= 0);
+
+            m_curv_state[state_x_idx] = segment * spline_frame_separation + arc_progress;
+            m_curv_state[state_y_idx] = offset;
+            m_curv_state[state_yaw_idx] = curv_yaw;
+            std::copy(&m_world_state[3], m_world_state.end(), &m_curv_state[3]);
         }
 
-        void StateEstimator_Impl::sync_state() {
+        void StateEstimator_Impl::sync_curv_state() {
             CUDA_CALL(cudaMemcpyToSymbolAsync(
-                &cuda_globals::curr_state, &m_host_curv_state, state_dims * sizeof(float)
+                &cuda_globals::curr_state, &m_curv_state, state_dims * sizeof(float)
             ));
         }
 

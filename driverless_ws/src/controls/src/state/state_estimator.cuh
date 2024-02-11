@@ -20,11 +20,12 @@ namespace controls {
 
         private:
             void send_frames_to_texture();
-            void recalculate_state();
-            void sync_state();
+            void recalculate_curv_state();
+            void sync_curv_state();
 
-            std::vector<SplineFrame> m_host_spline_frames;
-            State m_host_curv_state;
+            std::vector<SplineFrame> m_spline_frames;
+            State m_curv_state;
+            State m_world_state;
         };
 
     }
