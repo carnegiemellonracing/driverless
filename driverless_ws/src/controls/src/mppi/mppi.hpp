@@ -11,6 +11,10 @@ namespace controls {
 
             virtual Action generate_action() =0;
 
+#ifdef PUBLISH_STATES
+            virtual std::vector<float> last_state_trajectories() const =0;
+#endif
+
             virtual ~MppiController() = default;
         };
 

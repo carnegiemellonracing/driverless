@@ -10,10 +10,11 @@ namespace controls {
     constexpr const char *control_action_topic_name = "control_action";
     constexpr const char *spline_topic_name = "spline";
     constexpr const char *slam_topic_name = "slam";
+    constexpr const char *state_trajectories_topic_name = "state_trajectories";
     const rclcpp::QoS control_action_qos (rclcpp::KeepLast(10));
     const rclcpp::QoS spline_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS slam_qos (rclcpp::KeepLast(1));
-
+    const rclcpp::QoS state_trajectories_qos (rclcpp::KeepLast(10));
 
     // MPPI stuff
 
@@ -21,8 +22,8 @@ namespace controls {
     constexpr double controller_freq = 50.;
 
     /** Controller target period, in sec */
-    constexpr uint32_t num_samples = 4;
-    constexpr uint32_t num_timesteps = 4;
+    constexpr uint32_t num_samples = 1024;
+    constexpr uint32_t num_timesteps = 16;
     constexpr uint8_t action_dims = 3;
     constexpr uint8_t state_dims = 10;
     constexpr float temperature = 1.0f;
@@ -30,6 +31,11 @@ namespace controls {
     constexpr uint32_t num_action_trajectories = action_dims * num_timesteps * num_samples;
 
     constexpr float init_action_trajectory[num_timesteps * action_dims] = {};
+
+    // Cost params
+    constexpr float zero_speed_cost = 0.5f;
+    constexpr float speed_cost_decay_factor = 1.0f;
+    constexpr float offset_1m_cost = 1.0f;
 
 
     // State Estimation
