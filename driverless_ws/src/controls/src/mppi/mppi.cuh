@@ -84,24 +84,22 @@ namespace controls {
 
             Action generate_action() override;
 
-            ~MppiController_Impl() override;
-
         private:
             /**
              * num_samples x num_timesteps x actions_dims device tensor. Used to store action brownians,
              * perturbations, and action trajectories at different points in the algorithm.
              */
-            thrust::device_ptr<float> m_action_trajectories;
+            thrust::device_vector<float> m_action_trajectories;
 
             /**
              * num_samples x num_timesteps array of costs to go. Used for action weighting.
              */
-            thrust::device_ptr<float> m_cost_to_gos;
+            thrust::device_vector<float> m_cost_to_gos;
 
             /**
              * num_timesteps x action_dims array. Best-guess action trajectory to which perturbations are added.
              */
-            thrust::device_ptr<float> m_last_action_trajectory;
+            thrust::device_vector<float> m_last_action_trajectory;
 
 
             void generate_brownians();

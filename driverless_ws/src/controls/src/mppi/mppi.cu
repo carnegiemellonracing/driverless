@@ -19,21 +19,15 @@ namespace controls {
             return std::make_unique<MppiController_Impl>();
         }
 
-        MppiController_Impl::MppiController_Impl() {
-            m_action_trajectories = thrust::device_malloc<float>(num_action_trajectories);
-            m_cost_to_gos = thrust::device_malloc<float>(num_timesteps * num_samples);
-            m_last_action_trajectory = thrust::device_malloc<float>(num_timesteps * action_dims);
-
+        MppiController_Impl::MppiController_Impl()
+            : m_action_trajectories(num_action_trajectories),
+              m_cost_to_gos(num_samples * num_timesteps),
+              m_last_action_trajectory(num_timesteps * action_dims - 1) {  // -1 because last element will always be
+                                                                             // inferred from second to last
             thrust::copy(
-                init_action_trajectory, init_action_trajectory + num_timesteps * action_dims,
-                m_last_action_trajectory
+                init_action_trajectory, init_action_trajectory + (num_timesteps - 1) * action_dims,
+                m_last_action_trajectory.begin()
             );
-        }
-
-        MppiController_Impl::~MppiController_Impl() {
-            thrust::device_free(m_action_trajectories);
-            thrust::device_free(m_cost_to_gos);
-            thrust::device_free(m_last_action_trajectory);
         }
 
         Action MppiController_Impl::generate_action() {
@@ -83,12 +77,12 @@ namespace controls {
             CURAND_CALL(curandSetPseudoRandomGeneratorSeed(rng, seed));
 
             // generate normals, put it in device memory pointed to by m_action_trajectories
-            CURAND_CALL(curandGenerateNormal(rng, m_action_trajectories.get(), num_action_trajectories, 0, 1));
+            CURAND_CALL(curandGenerateNormal(rng, m_action_trajectories.data().get(), num_action_trajectories, 0, 1));
 
             // make the normals brownian
             thrust::counting_iterator<size_t> indices {0};
-            thrust::for_each(indices, indices + num_action_trajectories, TransformStdNormal {m_action_trajectories});
-            prefix_scan(m_action_trajectories);
+            thrust::for_each(indices, indices + num_action_trajectories, TransformStdNormal {m_action_trajectories.data()});
+            prefix_scan(m_action_trajectories.data());
 
             // clean up memory
             CURAND_CALL(curandDestroyGenerator(rng));  // TODO: not do this every frame :(
@@ -101,8 +95,8 @@ namespace controls {
 
             thrust::for_each(indices, indices + num_timesteps, ReduceTimestep {
                 averaged_actions.data().get(),
-                m_action_trajectories.get(),
-                m_cost_to_gos.get()
+                m_action_trajectories.data().get(),
+                m_cost_to_gos.data().get()
             });
 
             thrust::host_vector<DeviceAction> averaged_actions_host = averaged_actions;
@@ -112,6 +106,16 @@ namespace controls {
             for (int i = 0; i < action_dims; i++) {
                 res.data[i] = averaged_actions_host.data()[0].data[i];
             }
+
+            auto averaged_actions_as_floats = thrust::device_pointer_cast<float>(
+                reinterpret_cast<float*>(averaged_actions.data().get())
+            );
+            thrust::copy(
+                averaged_actions_as_floats + action_dims,
+                averaged_actions_as_floats + action_dims * (num_timesteps - 1),
+                m_last_action_trajectory.begin()
+            );
+
             return res;
         }
 
@@ -124,11 +128,12 @@ namespace controls {
                 cuda_globals::curr_state
             );
 
-            PopulateCost populate_cost {m_action_trajectories, m_action_trajectories,
-                                        m_cost_to_gos, m_last_action_trajectory,
+            PopulateCost populate_cost {m_action_trajectories.data(), m_action_trajectories.data(),
+                                        m_cost_to_gos.data(), m_last_action_trajectory.data(),
                                         thrust::device_pointer_cast(curr_state_ptr)};
 
             thrust::for_each(indices, indices + num_samples, populate_cost);
         }
+
     }
 }
