@@ -1,7 +1,12 @@
 #pragma once
 
+#include <curand.h>
+#include <model/bicycle/model.cuh>
+
 #include "constants.hpp"
-#include "curand.h"
+
+#define ONLINE_DYNAMICS_FUNC controls::model::bicycle::dynamics
+
 
 namespace controls {
     constexpr curandRngType_t rng_type = CURAND_RNG_PSEUDO_MTGP32;

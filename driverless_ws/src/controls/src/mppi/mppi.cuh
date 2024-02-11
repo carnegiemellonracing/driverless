@@ -11,14 +11,15 @@
 namespace controls {
     namespace mppi {
 
-        __device__ void model(const float state[], const float action[], float state_dot[], float timestep) {
-            // return the sum of the two vectors
-            for (size_t i = 0; i < state_dims; i++) {
-                state_dot[i] = (state[i] + action[i]) * timestep;
+        __device__ static void model(const float state[], const float action[], float state_out[], float timestep) {
+            float state_dot[action_dims];
+            ONLINE_DYNAMICS_FUNC(state, action ,state_dot);
+            for (uint8_t i = 0; i < state_dims; i++) {
+                state_out[i] += state_dot[i] * timestep;
             }
         }
 
-        __device__ float cost(float state[]) {
+        __device__ static float cost(float state[]) {
             // sum the vector of state
             float sum = 0;
             for (size_t i = 0; i < state_dims; i++) {
