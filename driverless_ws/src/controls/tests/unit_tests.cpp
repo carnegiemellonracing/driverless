@@ -86,7 +86,7 @@ TEST(ModelTest, Nothing_Gives_Nothing) {
     float state[10] = [0,0,0,0,0,0,0,0,0,0];
     float state_dot_ex[10] = [0,0,0,0,0,0,0,0,0,0];
     float state_dot_res[10] = [0,0,0,0,0,0,0,0,0,0];
-    float action[10] = [0,0,0];
+    float action[3] = [0,0,0];
     dynamics(state, action, state_dot_res);
     EXPECT_EQ(equals(state_dot_ex,state_dot_res), true)
 }
@@ -97,12 +97,52 @@ TEST(ModelTest, Nothing_Gives_Nothing) {
     float state[10] = [0,0,0,0,0,0,0,0,0,0];
     float state_dot_ex[10] = [0,0,0,0,0,0,0,0,0,0];
     float state_dot_res[10] = [0,0,0,0,0,0,0,0,0,0];
-    float action[10] = [0,0,0];
+    float action[3] = [0,0,0];
     dynamics(state, action, state_dot_res);
     EXPECT_EQ(equals(state_dot_ex,state_dot_res), true)
 }
 
+TEST(ModelTest, LEFT_GIVES_LEFT) {
+    //rand stuff
+    float state[10] = [0,0,0,0,0,0,0,0,0,0];
+    float state_dot_res[10] = [0,0,0,0,0,0,0,0,0,0];
+    float action[3] = [-15,45,45];
+    dynamics(state, action, state_dot_res);
+    EXPECT_EQ(state_dot_res[0]>0,true)
+    EXPECT_EQ(state_dot_res[1]<0,true)
+    EXPECT_EQ(state_dot_res[3]>0,true)
+    EXPECT_EQ(state_dot_res[4]<0,true)
+    EXPECT_EQ(state_dot_res[5]<0,true)
+}
 
+TEST(ModelTest, RIGHT_GIVES_RIGHT) {
+    //rand stuff
+    float state[10] = [0,0,0,0,0,0,0,0,0,0];
+    float state_dot_res[10] = [0,0,0,0,0,0,0,0,0,0];
+    float action[3] = [15,45,45];
+    dynamics(state, action, state_dot_res);
+    EXPECT_EQ(state_dot_res[0]>0,true)
+    EXPECT_EQ(state_dot_res[1]>0,true)
+    EXPECT_EQ(state_dot_res[3]>0,true)
+    EXPECT_EQ(state_dot_res[4]>0,true)
+    EXPECT_EQ(state_dot_res[5]>0,true)
+
+}
+
+
+TEST(ModelTest, RIGHT_GIVES_RIGHT) {
+    //rand stuff
+    float state[10] = [0,0,0,0,0,0,0,0,0,0];
+    float state_dot_res[10] = [0,0,0,0,0,0,0,0,0,0];
+    float action[3] = [15,45,45];
+    dynamics(state, action, state_dot_res);
+    EXPECT_EQ(state_dot_res[0]>0,true)
+    EXPECT_EQ(state_dot_res[1]>0,true)
+    EXPECT_EQ(state_dot_res[3]>0,true)
+    EXPECT_EQ(state_dot_res[4]>0,true)
+    EXPECT_EQ(state_dot_res[5]>0,true)
+
+}
 
 } //model namespace
 
