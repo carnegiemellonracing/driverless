@@ -21,7 +21,7 @@ namespace controls {
 
                   m_action_timer {
                       create_wall_timer(
-                          std::chrono::duration<float, std::milli>(controller_period_ms),
+                          std::chrono::duration<float>(controller_period),
                           [this] { publish_action_callback(); })
                   },
 

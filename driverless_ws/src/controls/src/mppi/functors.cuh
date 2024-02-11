@@ -15,9 +15,7 @@ namespace controls {
             thrust::device_ptr<float> std_normals;
 
             explicit TransformStdNormal(thrust::device_ptr<float> std_normals)
-                    : std_normals {std_normals} {
-
-            }
+                    : std_normals {std_normals} { }
 
             __host__ __device__ void operator() (size_t idx) const {
                 const size_t action_idx = (idx / action_dims) * action_dims;
@@ -25,11 +23,12 @@ namespace controls {
 
                 const auto res = dot<float>(&cuda_globals::perturbs_incr_std[row_idx], &std_normals.get()[action_idx],
                                             action_dims);
-                std_normals[idx] = res * m_sqrt_timestep;
+
+                std_normals.get()[idx] = res * m_sqrt_timestep;
             }
 
             private:
-                float m_sqrt_timestep = std::sqrt(controller_period_ms);
+                float m_sqrt_timestep = std::sqrt(controller_period);  // sqrt seconds
         };
 
         // Functors for cost calculation
@@ -72,10 +71,13 @@ namespace controls {
                                   + *IDX_3D(brownians, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, k));
                     }
 
-                    model(x_curr, u_ij, x_curr, controller_period_ms); // Euler's method, TODO make better;
+                    model(x_curr, u_ij, x_curr, controller_period);
 
                     j_curr -= cost(x_curr);
                     cost_to_gos[i * num_timesteps + j] = j_curr;
+                    if (i == 0) {
+                        printf("cost to go: %f\n", j_curr);
+                    }
                 }
             }
         };

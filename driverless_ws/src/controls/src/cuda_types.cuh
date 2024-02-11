@@ -11,9 +11,6 @@ namespace controls {
             float tangent_angle;
             float curvature;
         };
-
-        SplineFrame(float x, float y, float tangent_angle, float curvature)
-            : x {x}, y {y}, tangent_angle {tangent_angle}, curvature {curvature} { }
     };
 
 }

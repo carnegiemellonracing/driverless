@@ -78,6 +78,11 @@ namespace controls {
                 &cuda_globals::spline_texture_object, &resource_desc, &texture_desc, nullptr
             ));
 
+            CUDA_CALL(cudaMemcpyToSymbol(
+                cuda_globals::d_spline_texture_object, &cuda_globals::spline_texture_object,
+                sizeof(cuda_globals::spline_texture_object)
+            ));
+
             cuda_globals::spline_texture_created = true;
         }
 
