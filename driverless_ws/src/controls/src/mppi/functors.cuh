@@ -42,9 +42,9 @@ namespace controls {
             const float* action_trajectory_base;
             const float* curr_state;
 
-            PopulateCost(thrust::device_ptr<float>& brownians,
-                         thrust::device_ptr<float>& sampled_action_trajectories,
-                         thrust::device_ptr<float>& cost_to_gos,
+            PopulateCost(thrust::device_ptr<float> brownians,
+                         thrust::device_ptr<float> sampled_action_trajectories,
+                         thrust::device_ptr<float> cost_to_gos,
                          const thrust::device_ptr<float>& action_trajectory_base,
                          const thrust::device_ptr<float>& curr_state)
                     : brownians {brownians.get()},
@@ -66,7 +66,12 @@ namespace controls {
                     float* u_ij = IDX_3D(sampled_action_trajectories, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, 0));
 
                     for (uint32_t k = 0; k < action_dims; k++) {
-                        const uint32_t idx = j * action_dims + k;
+
+                        // VERY CURSED. We want the last action in the best guess action to be the same as the second
+                        // to last one (since we have to initialize it something). Taking the min of j and m - 1 saves
+                        // us a host->device copy
+                        const uint32_t idx = min(j, num_timesteps - 1) * action_dims + k;
+
                         u_ij[k] = action_trajectory_base[idx]
                                   + *IDX_3D(brownians, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, k));
                     }
@@ -75,9 +80,6 @@ namespace controls {
 
                     j_curr -= cost(x_curr);
                     cost_to_gos[i * num_timesteps + j] = j_curr;
-                    if (i == 0) {
-                        printf("cost to go: %f\n", j_curr);
-                    }
                 }
             }
         };
