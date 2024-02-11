@@ -35,9 +35,13 @@ namespace controls {
 
         Action MppiController_Impl::generate_action() {
             // call kernels
+            std::cout << "generating brownians..." << std::endl;
             generate_brownians();
+
+            std::cout << "populating cost..." << std::endl;
             populate_cost();
 
+            std::cout << "reducing actions..." << std::endl;
             // not actually on device, just still in a device action struct
             DeviceAction dev_action = reduce_actions();
 
@@ -97,9 +101,18 @@ namespace controls {
         }
 
         void MppiController_Impl::populate_cost() {
-            thrust::counting_iterator<uint32_t> indices{0};
+            thrust::counting_iterator<uint32_t> indices {0};
+
+            float* curr_state_ptr;
+            cudaGetSymbolAddress(
+                reinterpret_cast<void**>(&curr_state_ptr),
+                cuda_globals::curr_state
+            );
+
             PopulateCost populate_cost {m_action_trajectories, m_action_trajectories,
-                                        m_cost_to_gos, m_last_action_trajectory, thrust::device_pointer_cast(cuda_globals::curr_state)};
+                                        m_cost_to_gos, m_last_action_trajectory,
+                                        thrust::device_pointer_cast(curr_state_ptr)};
+
             thrust::for_each(indices, indices + num_samples, populate_cost);
         }
     }
