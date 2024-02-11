@@ -37,6 +37,9 @@ namespace controls {
         struct PopulateCost {
             float* brownians;
             float* sampled_action_trajectories;
+#ifdef PUBLISH_STATES
+            float* sampled_state_trajectories;
+#endif
             float* cost_to_gos;
 
             const float* action_trajectory_base;
@@ -44,11 +47,17 @@ namespace controls {
 
             PopulateCost(thrust::device_ptr<float> brownians,
                          thrust::device_ptr<float> sampled_action_trajectories,
+#ifdef PUBLISH_STATES
+                         thrust::device_ptr<float> sampled_state_trajectories,
+#endif
                          thrust::device_ptr<float> cost_to_gos,
                          const thrust::device_ptr<float>& action_trajectory_base,
                          const thrust::device_ptr<float>& curr_state)
                     : brownians {brownians.get()},
                       sampled_action_trajectories {sampled_action_trajectories.get()},
+#ifdef PUBLISH_STATES
+                      sampled_state_trajectories {sampled_state_trajectories.get()},
+#endif
                       cost_to_gos {cost_to_gos.get()},
                       action_trajectory_base {action_trajectory_base.get()},
                       curr_state {curr_state.get()} {}
@@ -77,8 +86,22 @@ namespace controls {
                     }
 
                     model(x_curr, u_ij, x_curr, controller_period);
+#ifdef PUBLISH_STATES
+                    memcpy(
+                        IDX_3D(
+                            sampled_state_trajectories,
+                            dim3(num_samples, num_timesteps, state_dims),
+                            dim3(i, j, 0)
+                        ),
+                        x_curr,
+                        sizeof(float) * state_dims
+                    );
+#endif
 
-                    j_curr -= cost(x_curr);
+                    const float c = cost(x_curr);
+                    j_curr -= c;
+                    // printf("sample: %i\ntime: %f state: { x: %f, y: %f, yaw: %f, xdot: %f, ydot: %f, yawdot: %f }\ncost: %f\n\n",
+                    //     i, j * controller_period, x_curr[0],  x_curr[1], x_curr[2], x_curr[3], x_curr[4], x_curr[5], c);
                     cost_to_gos[i * num_timesteps + j] = j_curr;
                 }
             }
@@ -138,7 +161,8 @@ namespace controls {
                                                 action_trajectories_dims,
                                                 dim3(i, j, 0)), sizeof(float) * action_dims);
 
-                const float cost_to_go = cost_to_gos[idx];
+                // right now cost to gos is shifted down by the value in the last timestep, so adjust for that
+                const float cost_to_go = cost_to_gos[i * num_timesteps + j] - cost_to_gos[(i + 1) * num_timesteps - 1];
                 res.weight = __expf(-1.0f / temperature * cost_to_go);
 
                 return res;

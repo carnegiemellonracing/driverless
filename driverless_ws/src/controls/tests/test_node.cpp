@@ -54,14 +54,39 @@ namespace controls {
             return result;
         }
 
+        interfaces::msg::SplineFrameList
+        line_spline(float progress, float density) {
+            using namespace glm;
+
+            interfaces::msg::SplineFrameList result {};
+
+            fvec2 point {0.0f, 0.0f};
+            float total_dist = 0;
+
+            while (total_dist < progress) {
+                interfaces::msg::SplineFrame frame {};
+                frame.x = point.x;
+                frame.y = point.y;
+                result.frames.push_back(std::move(frame));
+
+                fvec2 delta = fvec2(1, 0) * density;
+                total_dist += length(delta);
+                point += delta;
+            }
+
+            result.header = std_msgs::msg::Header {};
+            return result;
+        }
+
         void TestNode::print_message(const interfaces::msg::ControlAction& msg) {
-            // std::cout << "Swangle: " << msg.swangle << " Torque f: " <<
-            //     msg.torque_f << " Torque r: " << msg.torque_r << std::endl;
+            std::cout << "Swangle: " << msg.swangle << " Torque f: " <<
+                msg.torque_f << " Torque r: " << msg.torque_r << std::endl << std::endl;;
         }
 
         void TestNode::publish_spline() {
-            std::cout << "Publishing spline" << std::endl;
-            const auto spline = sine_spline(10, 2.5, 100, 0.5);
+            std::cout << "Publishing spline" << std::endl << std::endl;
+            // const auto spline = sine_spline(10, 2.5, 100, 0.5);
+            const auto spline = line_spline(100, 0.5);
             m_spline_publisher->publish(spline);
         }
     }

@@ -121,7 +121,11 @@ namespace controls {
 
             std::cout << "recalculating curvilinear state..." << std::endl;
             recalculate_curv_state();
-            std::cout << "done.\n" << std::endl;
+            std::cout << "done. State: \n";
+            for (uint32_t i = 0; i < state_dims; i++) {
+                std::cout << m_curv_state[i] << " ";
+            }
+            std::cout << std::endl;
 
             std::cout << "syncing curvilinear state to device..." << std::endl;
             sync_curv_state();

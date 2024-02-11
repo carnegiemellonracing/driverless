@@ -39,6 +39,13 @@ namespace controls {
             std::unique_ptr<Action> m_action_write;
             std::mutex action_read_mut;
             std::mutex action_write_mut;
+
+#ifdef PUBLISH_STATES
+            void publish_state_trajectories(const std::vector<float>& state_trajectories);
+
+            rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr
+            m_state_trajectory_publisher;
+#endif
         };
 
     }

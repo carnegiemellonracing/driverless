@@ -5,6 +5,8 @@
 #include <constants.hpp>
 #include <interfaces/msg/control_action.hpp>
 #include <state/state_estimator.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
+#include <visualization_msgs/msg/marker.hpp>
 
 #include "controller.hpp"
 
@@ -21,7 +23,7 @@ namespace controls {
 
                   m_action_timer {
                       create_wall_timer(
-                          std::chrono::duration<float>(controller_period),
+                          std::chrono::duration<float>(1),
                           [this] { publish_action_callback(); })
                   },
 
@@ -42,6 +44,14 @@ namespace controls {
                           spline_topic_name, spline_qos,
                           [this] (const SlamMsg::SharedPtr msg) { slam_callback(*msg); })
                   },
+
+#ifdef PUBLISH_STATES
+                  m_state_trajectory_publisher {
+                      create_publisher<visualization_msgs::msg::MarkerArray>(
+                          state_trajectories_topic_name,
+                          state_trajectories_qos)
+                  },
+#endif
 
                   m_action_read {std::make_unique<Action>()},
                   m_action_write {std::make_unique<Action>()} { }
@@ -72,28 +82,67 @@ namespace controls {
                 msg.torque_f = action[action_torque_f_idx];
                 msg.torque_r = action[action_torque_r_idx];
 
-                std::cout << "Publishing message: { swangle: " << msg.swangle << ", torque_f: "
-                          << msg.torque_f << ", torque_r: " << msg.torque_r << " }" << std::endl;
+                // std::cout << "Publishing message: { swangle: " << msg.swangle << ", torque_f: "
+                //           << msg.torque_f << ", torque_r: " << msg.torque_r << " }" << std::endl;
 
                 m_action_publisher->publish(msg);
             }
 
+#ifdef PUBLISH_STATES
+            void ControllerNode::publish_state_trajectories(const std::vector<float>& state_trajectories) {
+                visualization_msgs::msg::MarkerArray paths {};
+
+                for (uint32_t i = 0; i < num_samples; i++) {
+                    visualization_msgs::msg::Marker lines {};
+                    lines.type = visualization_msgs::msg::Marker::LINE_STRIP;
+                    lines.header.stamp = get_clock()->now();
+                    lines.header.frame_id = "/world_frame";
+                    lines.id = i;
+                    lines.pose.orientation.w = 1.0f;
+                    lines.color.r = 1.0f;
+                    lines.color.a = 1.0f;
+                    lines.scale.y = lines.scale.z = 1.0f;
+                    lines.scale.x = 0.00001f;
+
+                    for (uint32_t j = 0; j < num_timesteps; j++) {
+                        geometry_msgs::msg::Point point;
+
+                        const float* state = &state_trajectories[
+                            i * num_timesteps * state_dims + j * state_dims
+                        ];
+
+                        point.x = state[state_x_idx];
+                        point.y = state[state_y_idx];
+                        point.z = 0;
+
+                        lines.points.push_back(point);
+                    }
+
+                    paths.markers.push_back(lines);
+                }
+
+                m_state_trajectory_publisher->publish(paths);
+            }
+#endif
+
             void ControllerNode::run_mppi() {
                 std::cout << "-------- RUN MPPI -------" << std::endl;
 
-                std::cout << "locking action_write..." << std::endl;
+                std::cout << "locking action_write" << std::endl;
                 {
                     std::lock_guard<std::mutex> action_write_guard {action_write_mut};
-                    std::cout << "done.\n" << std::endl;
 
-                    std::cout << "generating action..." << std::endl;
+                    std::cout << "generating action" << std::endl;
                     *m_action_write = m_mppi_controller->generate_action();
-                    std::cout << "done.\n" << std::endl;
                 }
 
-                std::cout << "swapping action buffers..." << std::endl;
+                std::cout << "swapping action buffers" << std::endl;
                 swap_action_buffers();
-                std::cout << "done.\n" << std::endl;
+
+#ifdef PUBLISH_STATES
+                RCLCPP_DEBUG(get_logger(), "publishing state trajectories");
+                publish_state_trajectories(m_mppi_controller->last_state_trajectories());
+#endif
             }
 
             void ControllerNode::swap_action_buffers() {

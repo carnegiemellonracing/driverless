@@ -67,15 +67,18 @@ namespace controls {
             }
         }
 
-        __device__ static float cost(float state[]) {
-            // TODO: make real cost function
+        __device__ static float cost(float curv_state[]) {
+            const float curv_yaw = curv_state[state_yaw_idx];
+            const float xdot = curv_state[state_car_xdot_idx];
+            const float ydot = curv_state[state_car_ydot_idx];
+            const float offset = curv_state[state_y_idx];
 
-            // placeholder: sum the vector of state
-            float sum = 0;
-            for (size_t i = 0; i < state_dims; i++) {
-                sum += state[i];
-            }
-            return sum;
+            const float progress_dot = xdot * cosf(curv_yaw) - ydot * sin(curv_yaw);
+            const float speed_cost = zero_speed_cost * expf(-speed_cost_decay_factor * progress_dot);
+
+            double distance_cost = offset_1m_cost * offset * offset;
+
+            return speed_cost + distance_cost;
         }
 
         class MppiController_Impl : public MppiController {
@@ -83,6 +86,12 @@ namespace controls {
             MppiController_Impl();
 
             Action generate_action() override;
+
+#ifdef PUBLISH_STATES
+            std::vector<float> last_state_trajectories() const override;
+#endif
+
+            ~MppiController_Impl() override;
 
         private:
             /**
@@ -101,6 +110,15 @@ namespace controls {
              */
             thrust::device_vector<float> m_last_action_trajectory;
 
+#ifdef PUBLISH_STATES
+            /**
+             * \brief State trajectories generated from curr_state and action trajectories. Sent to rviz when
+             *        debugging.
+             */
+            thrust::device_vector<float> m_state_trajectories;
+#endif
+
+            curandGenerator_t m_rng;
 
             void generate_brownians();
 

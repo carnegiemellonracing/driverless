@@ -11,15 +11,12 @@ namespace controls {
 
         __constant__ size_t spline_texture_elems = 0;
 
-        __constant__ float curr_state[state_dims] = {
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        };
+        __constant__ float curr_state[state_dims] = {};
 
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
             1, 0, 0,
-            0, 2, 0,
-            0, 0, 3
+            0, 1, 0,
+            0, 0, 0
         };
-
     }
 }
