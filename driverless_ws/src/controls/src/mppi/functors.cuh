@@ -58,6 +58,7 @@ namespace controls {
                 float j_curr = 0;
                 float x_curr[state_dims];
 
+                // printf("POPLATE COST %i: copying curr_state", i);
                 // copy current state into x_curr
                 memcpy(x_curr, curr_state, sizeof(float) * state_dims);
 

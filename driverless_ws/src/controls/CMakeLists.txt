@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 project(controls CXX CUDA)
 
 set(CUDA_ARCH 75)
+set(CMAKE_INSTALL_RPATH "$ORIGIN")
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -67,18 +68,36 @@ install(
 )
 
 if(BUILD_TESTING)
-  find_package(ament_cmake_gtest REQUIRED)
-  ament_add_gtest(controls_test tests/unit_tests.cpp)
-  target_include_directories(controls_test PUBLIC
-          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/>
-          $<INSTALL_INTERFACE:include>
+#  find_package(ament_cmake_gtest REQUIRED)
+#  ament_add_gtest(controls_unit_tests tests/unit_tests.cpp)
+#  target_include_directories(controls_unit_tests PUBLIC
+#          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/>
+#          $<INSTALL_INTERFACE:include>
+#  )
+##  ament_target_dependencies(controls dependencies ...)
+##  target_link_libraries(controls_test controls_lib)
+
+  add_executable(controls_test_node tests/test_node.cpp)
+  target_link_libraries(controls_test_node controls_lib)
+
+#  set_target_properties(controls_unit_tests controls_test_node PROPERTIES
+#          CUDA_SEPARABLE_COMPILATION ON
+#          CUDA_ARCHITECTURES ${CUDA_ARCH}
+#  )
+
+  set_target_properties(controls_test_node PROPERTIES
+        CUDA_SEPARABLE_COMPILATION ON
+        CUDA_ARCHITECTURES ${CUDA_ARCH}
   )
-#  ament_target_dependencies(controls dependencies ...)
-#  target_link_libraries(controls_test controls_lib)
-  set_target_properties(controls_test PROPERTIES
-          CUDA_SEPARABLE_COMPILATION ON
-          CUDA_ARCHITECTURES ${CUDA_ARCH}
+
+  ament_target_dependencies(controls_test_node rclcpp glm interfaces std_msgs)
+
+  install(
+          TARGETS controls_test_node
+          DESTINATION lib/${PROJECT_NAME}
   )
 endif()
+
+
 
 ament_package()
