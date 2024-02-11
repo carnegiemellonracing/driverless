@@ -3,6 +3,7 @@
 #include <interfaces/msg/spline_frame_list.hpp>
 #include <geometry_msgs/msg/pose2_d.hpp>
 #include <array>
+#include <interfaces/msg/detail/control_action__struct.hpp>
 
 #include "constants.hpp"
 
@@ -13,6 +14,7 @@ namespace controls {
 
     using SplineMsg = interfaces::msg::SplineFrameList;
     using SlamMsg = geometry_msgs::msg::Pose2D;
+    using ActionMsg = interfaces::msg::ControlAction;
 
     class Controller {
     public:
