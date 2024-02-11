@@ -97,4 +97,18 @@ namespace controls {
         return res;
     }
 
+    template<typename T>
+    static void print_tensor(T tensor, dim3 dims) {
+        for (uint i = 0; i < dims.x; i++) {
+            for (uint j = 0; j < dims.y; j++) {
+                std::cout << "{ ";
+                for (uint k = 0; k < dims.z; k++) {
+                    std::cout << *IDX_3D(tensor, dims, dim3(i, j, k)) << " ";
+                }
+                std::cout << "} ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
 }

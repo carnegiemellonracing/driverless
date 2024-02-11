@@ -1,11 +1,12 @@
 #pragma once
 
 #include <curand.h>
-#include <model/bicycle/model.cuh>
+// #include <model/bicycle/model.cuh>
+#include <model/dummy/model.cuh>
 
 #include "constants.hpp"
 
-#define ONLINE_DYNAMICS_FUNC controls::model::bicycle::dynamics
+#define ONLINE_DYNAMICS_FUNC controls::model::dummy::dynamics
 
 
 namespace controls {

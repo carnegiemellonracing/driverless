@@ -3,8 +3,6 @@
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
 #include <thrust/iterator/constant_iterator.h>
-#include <thrust/sequence.h>
-#include <thrust/random.h>
 
 #include <cuda_globals/cuda_globals.cuh>
 #include <cmath>
@@ -25,6 +23,11 @@ namespace controls {
             m_action_trajectories = thrust::device_malloc<float>(num_action_trajectories);
             m_cost_to_gos = thrust::device_malloc<float>(num_timesteps * num_samples);
             m_last_action_trajectory = thrust::device_malloc<float>(num_timesteps * action_dims);
+
+            thrust::copy(
+                init_action_trajectory, init_action_trajectory + num_timesteps * action_dims,
+                m_last_action_trajectory
+            );
         }
 
         MppiController_Impl::~MppiController_Impl() {
@@ -34,14 +37,26 @@ namespace controls {
         }
 
         Action MppiController_Impl::generate_action() {
+            assert(cuda_globals::spline_texture_created);
+
             // call kernels
             std::cout << "generating brownians..." << std::endl;
             generate_brownians();
 
+            print_tensor(m_action_trajectories, action_trajectories_dims);
+            std::cout << std::endl;
+
             std::cout << "populating cost..." << std::endl;
             populate_cost();
 
-            std::cout << "reducing actions..." << std::endl;
+            std::cout << "Action Trajectories:" << std::endl;
+            print_tensor(m_action_trajectories, action_trajectories_dims);
+
+            std::cout << "Costs to go: " << std::endl;
+            print_tensor(m_cost_to_gos, dim3(num_samples, 1, num_timesteps));
+            std::cout << std::endl;
+
+            std::cout << "\nreducing actions..." << std::endl;
             // not actually on device, just still in a device action struct
             DeviceAction dev_action = reduce_actions();
 
@@ -76,7 +91,7 @@ namespace controls {
             prefix_scan(m_action_trajectories);
 
             // clean up memory
-            CURAND_CALL(curandDestroyGenerator(rng));
+            CURAND_CALL(curandDestroyGenerator(rng));  // TODO: not do this every frame :(
         }
 
 

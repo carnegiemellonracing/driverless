@@ -5,7 +5,6 @@
 
 namespace controls {
     namespace mppi {
-
         class MppiController {
         public:
             static std::unique_ptr<MppiController> create();
