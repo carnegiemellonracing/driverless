@@ -541,20 +541,26 @@ std:vector<int> inject_clamped(std::vector<double> old_vals, std::vector<double>
  * @return curvature at progress
 */
 double get_curvature(std::vector<double> progress,std::vector<spline> splines, std::vector<double> cumulated_lengths) {
-    // spline where the progress is on
-    int indices = inject_clamped(old_vals, new_vals);
+    // indices of splines that progress should be on 
+    int indices = inject_clamped(cumulated_lengths, progress);
 
-    double min_x = progress; 
-    if (index > 0){
-        min_x = progress - cumulated_lengths[index-1];
+    curvatures = std::vector<double>;
+    for (int i = 0; i < progress.size(); i++){
+        min_x = progress[i];
+        int index = indices[i];
+        if (index > 0){
+            min_x -= cumulated_lengths[index-1];
+        }
+        
+        curvature = frenet.get_curvature(
+            splines[index].get_first_der(),
+            splines[index].get_second_der(),
+            min_x
+        );
+
+        curvatures.push_back(curvature);
     }
 
-    curvature = frenet.get_curvature(
-        splines[index].get_first_der(),
-        splines[index].get_second_der(),
-        min_x
-    )
-
-    return curvature;
+    return curvatures;
 }
 
