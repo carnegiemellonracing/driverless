@@ -498,19 +498,51 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 }
 
 // @TODO: searchSorted function
+/**
+ * @brief Finds the indices at which new_vals should be injected into old_vals to maintain sorted order,
+ * and clamps the largest possible index to old_vals.size() - 1
+ * 
+ * This function is a combination of torch.searchsorted and torch.clampmax, using old_vals.size() - 1 as 
+ * the max
+ * 
+ * @param old_vals the original array
+ * @param new_vals the new values to inject into the original array
+ * @return the indices at which new values should be injected to maintain sorted order
+*/
+std:vector<int> inject_clamped(std::vector<double> old_vals, std::vector<double> new_vals) {
+    std:vector<int> indices;
+
+    int old_idx = 0
+    int new_idx = 0
+    int old_len = old_vals.size();
+    int new_len = new_vals.size();
+
+    while (new_idx < new_len){
+        if (old_idx >= old_len){
+            indices.push_back(old_len-1); // deal with new vals that are greater than all vals in old_vals
+            new_idx++;
+        }
+        else if (new_vals[new_idx] <= old_vals[old_idx]){
+            indices.push_back(old_idx);
+            new_idx++;
+        }
+        old_idx++;
+    } 
+
+    return indices;
+}
 
 
 /**
  * returns the curvature of the raceline at a given progress
- * @param progress: progress along the raceline
+ * @param progress: a sorted vector of progresses along the raceline
  * @param splines: vector of splines that make up the raceline
  * @param cumulated_lengths: vector of the cumulated lengths of the splines
  * @return curvature at progress
 */
-double get_curvature(double progress,std::vector<spline> splines, std::vector<double> cumulated_lengths) {
+double get_curvature(std::vector<double> progress,std::vector<spline> splines, std::vector<double> cumulated_lengths) {
     // spline where the progress is on
-    int index = // translate torch, use Eigen::cwiseMin
-    Eigen::cwiseMin(searchSorted(cumulated_lengths, progress))
+    int indices = inject_clamped(old_vals, new_vals);
 
     double min_x = progress; 
     if (index > 0){
