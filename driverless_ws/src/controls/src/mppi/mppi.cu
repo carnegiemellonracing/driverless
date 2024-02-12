@@ -90,6 +90,7 @@ namespace controls {
 
         void MppiController_Impl::generate_brownians() {
             // generate normals, put it in device memory pointed to by m_action_trajectories
+            // .data().get() returns the raw pointer from a device vector
             CURAND_CALL(curandGenerateNormal(m_rng, m_action_trajectories.data().get(), num_action_trajectories, 0, 1));
 
             // make the normals brownian
@@ -100,9 +101,12 @@ namespace controls {
 
 
         DeviceAction MppiController_Impl::reduce_actions() {
+            // averaged_actions is where the weighted averages are stored
+            // initialize it to 0 
             thrust::device_vector<DeviceAction> averaged_actions (num_timesteps);
             thrust::counting_iterator<uint32_t> indices {0};
 
+            // for_each applies the ReduceTimestep functor to every idx in the range [0, num_timesteps)
             thrust::for_each(indices, indices + num_timesteps, ReduceTimestep {
                 averaged_actions.data().get(),
                 m_action_trajectories.data().get(),

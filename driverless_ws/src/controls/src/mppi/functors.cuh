@@ -144,6 +144,10 @@ namespace controls {
             }
         };
 
+        /** 
+         * @brief Captures pointers to action trajectories and cost to gos
+         * Produces a weight for a single action based on its cost to go
+        */
         struct IndexToActionWeightTuple {
             const float* action_trajectories;
             const float* cost_to_gos;
@@ -152,10 +156,16 @@ namespace controls {
                     : action_trajectories {action_trajectories},
                       cost_to_gos {cost_to_gos} {}
 
+            /**
+             * \param idx refers to the index for the timesteps x samples matrix 
+             * (transposed from normal to make the reduction work)
+             * \return a tuple of the action indexed from the trajectories 
+             * and the weight of that action (strictly positive) based on its cost to go*/            
             __device__ ActionWeightTuple operator() (const uint32_t idx) const {
                 ActionWeightTuple res {};
-
+                // as we increment idx, we iterate over the samples first
                 const uint32_t i = idx % num_samples;
+                // j should hold constant over a single reduction, it represents which timestep we are reducing over
                 const uint32_t j = idx / num_samples;
                 memcpy(&res.action.data, IDX_3D(action_trajectories,
                                                 action_trajectories_dims,
@@ -183,8 +193,11 @@ namespace controls {
                       cost_to_gos {cost_to_gos} { }
 
             __device__ void operator() (const uint32_t idx) {
+                // idx ranges from 0 to num_timesteps - 1
+                // idx represents a timestep
                 thrust::counting_iterator<uint32_t> indices {idx * num_samples};
 
+                // applies a unary operator - IndexToActionWeightTuple before reducing over the samples with reduction_functor
                 averaged_action[idx] = thrust::transform_reduce(
                         thrust::device,
                         indices, indices + num_samples,
