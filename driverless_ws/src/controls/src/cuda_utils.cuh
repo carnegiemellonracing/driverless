@@ -5,6 +5,13 @@
 
 #include "constants.hpp"
 
+/** @brief indexes into a 3-dimensional tensor that is represented in memory as a single nested array.
+ * Note: 0 <= idx.x < dim.x
+ * \param tensor the array to be indexed into
+ * \param dims (outermost, middle, innermost) dimensions
+ * \param idx (outermost, middle, innermost) index
+ * \returns address of the desired element
+*/
 #define IDX_3D(tensor, dims, idx) (&tensor[idx.x * dims.y * dims.z + idx.y * dims.z + idx.z])
 #define CUDA_CALL(x) (cuda_assert(x, __FILE__, __LINE__))
 #define CURAND_CALL(x) (curand_assert(x, __FILE__, __LINE__))
