@@ -532,7 +532,6 @@ std:vector<int> inject_clamped(std::vector<double> old_vals, std::vector<double>
     return indices;
 }
 
-
 /**
  * returns the curvature of the raceline at a given progress
  * @param progress: a sorted vector of progresses along the raceline
