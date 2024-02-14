@@ -20,7 +20,7 @@ endif()
 
 if (PUBLISH_STATES)
   # set to publish state trajectories
-  add_compile_options(-DPUBLISH_STATES)
+  add_compile_options(-DPUBLISH_STATES -g -O0)
 endif()
 
 # find dependencies
@@ -82,24 +82,14 @@ install(
 if(BUILD_TESTING)
 #  find_package(ament_cmake_gtest REQUIRED)
 #  ament_add_gtest(controls_unit_tests tests/unit_tests.cpp)
-#  target_include_directories(controls_unit_tests PUBLIC
-#          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/>
-#          $<INSTALL_INTERFACE:include>
-#  )
-##  ament_target_dependencies(controls dependencies ...)
-##  target_link_libraries(controls_test controls_lib)
+#  target_link_libraries(controls_unit_tests controls_lib)
 
   add_executable(controls_test_node tests/test_node.cpp)
   target_link_libraries(controls_test_node controls_lib)
 
-#  set_target_properties(controls_unit_tests controls_test_node PROPERTIES
-#          CUDA_SEPARABLE_COMPILATION ON
-#          CUDA_ARCHITECTURES ${CUDA_ARCH}
-#  )
-
   set_target_properties(controls_test_node PROPERTIES
-        CUDA_SEPARABLE_COMPILATION ON
-        CUDA_ARCHITECTURES ${CUDA_ARCH}
+          CUDA_SEPARABLE_COMPILATION ON
+          CUDA_ARCHITECTURES ${CUDA_ARCH}
   )
 
   ament_target_dependencies(controls_test_node rclcpp glm interfaces std_msgs visualization_msgs)
@@ -108,6 +98,11 @@ if(BUILD_TESTING)
           TARGETS controls_test_node
           DESTINATION lib/${PROJECT_NAME}
   )
+
+
+  add_executable(model_wrapper tests/model/model_wrapper.cu)
+  target_link_libraries(model_wrapper controls_lib)
+
 endif()
 
 ament_package()

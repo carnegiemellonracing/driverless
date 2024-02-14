@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <mppi/functors.cuh>
 
 namespace controls {
     namespace mppi {
@@ -41,29 +40,24 @@ protected:
 }
 
 
-namespace model {
-
-    bool arrequals(float[] arr1, float[]arr2, int length)
-    @requires sizeof(arr1) == length;
-    @requires sizeof(arr2) == length;
-    {
-        for (int i=0; i<length; i++) {
-             if(arr1[i] != arr2[i]){
-                return false;
-             }
-        }
-
-        return true;
-    }
-
-    void copy(float[] arr1, float[]arr2, int length)
-    @requires sizeof(arr1) == length;
-    @requires sizeof(arr2) == length;
-    {
-        for (int i=0; i<length; i++) {
-             arr2[i] = arr1[i];
-        }
-    }
+// namespace model {
+//     bool arrequals(float[] arr1, float[]arr2, int length)
+//     {
+//         for (int i=0; i<length; i++) {
+//              if(arr1[i] != arr2[i]){
+//                 return false;
+//              }
+//         }
+//
+//         return true;
+//     }
+//
+//     void copy(float[] arr1, float[]arr2, int length)
+//     {
+//         for (int i=0; i<length; i++) {
+//              arr2[i] = arr1[i];
+//         }
+//     }
 
 
 TEST(ModelTest, NoDependenceOnWorldCords) {
@@ -143,9 +137,6 @@ TEST(ModelTest, RIGHT_GIVES_RIGHT) {
     EXPECT_EQ(state_dot_res[5]>0,true)
 
 }
-
-} //model namespace
-
 
 
 int main(int argc, char* argv[]) {

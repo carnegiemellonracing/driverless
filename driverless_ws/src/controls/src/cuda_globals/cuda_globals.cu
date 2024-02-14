@@ -16,7 +16,7 @@ namespace controls {
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
             1, 0, 0,
             0, 1, 0,
-            0, 0, 0
+            0, 0, 1
         };
     }
 }
