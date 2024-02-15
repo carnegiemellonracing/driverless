@@ -29,10 +29,10 @@ public:
     // finds the progress points to split given bucket 
     std::vector<double> progressSplits(bucket b);
 
-    /** big wrapper function that calls each of the helpers
-    * @param segment segment struct
+    /** @brief updates a given vector with the progress sections to optimize over
+    * @note about the usage of progressVector: vector of progresses that indicate sections to
+    * optimize over, should optimize as car is going
+    * @param progressVector can be accessed by the optimizer file as it is being updated
     */
-    // if checkStartNewBucket true, then reset running avg to 0 and start new bucket
-    // else, update running avg
-    void updateSegments(segment_t segment);
+    void updateSegments(std::vector<double>* progressVector);
     
