@@ -4,10 +4,12 @@ from rclpy.node import Node
 from eufs_msgs.msg import ConeArray
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 import perceptions.planning_stuff.svm_utils as svm_utils
-from interfaces.msg import SplineFrames
+# from interfaces.msg import SplineFrames
+from eufs_msgs.msg import SplineFrames
 from geometry_msgs.msg import Point
 
 import numpy as np
+import time
 
 
 # configure QOS profile
@@ -38,25 +40,38 @@ class MidlineNode(Node):
                                                  qos_profile=RELIABLE_QOS_PROFILE)
     
     def cone_callback(self, cones):
-        blue = np.array()
+
+        s = time.time()
+
+        blue = []
         for cone in cones.blue_cones:
             blue.append([cone.x, cone.y, 0])
 
         yellow = []
         for cone in cones.yellow_cones:
             yellow.append([cone.x, cone.y, 1])
-        
-        data = np.vstack([np.array(blue), np.array(yellow)])
-        print(data)
 
+        if len(yellow) == 0 or len(blue) == 0:
+            # NOTE: don't send midline if not seeing a single side
+            return
+        
+        data = np.vstack([np.array(blue).reshape(-1, 3), np.array(yellow).reshape(-1, 3)])
+        # print(data)
+
+        s_svm = time.time()
         downsampled_boundary_points = svm_utils.process(data)
+        e_svm = time.time()
+        print(f"svm util: {int(1000 * (e_svm - s_svm))}")
         # print(downsampled_boundary_points)
 
         points = []
         msg = SplineFrames()
 
         for np_point in downsampled_boundary_points:
-            new_point = Point(np_point[0], np_point[1], 0)
+            new_point = Point()
+            new_point.x = float(np_point[0])
+            new_point.y = float(np_point[1])
+            new_point.z = float(0)
             points.append(new_point)
 
         msg.midpoints = points
@@ -65,9 +80,11 @@ class MidlineNode(Node):
 
         self.midline_pub.publish(msg)
 
+        e = time.time()
+        print(f"Entire: {int(1000 * (e - s)):.3f}")
+
 
 def main():
-    print("hello world")
     rclpy.init()
     midline_node = MidlineNode()
     rclpy.spin(midline_node)
