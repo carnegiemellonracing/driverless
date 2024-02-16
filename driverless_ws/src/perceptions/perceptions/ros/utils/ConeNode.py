@@ -58,7 +58,7 @@ class ConeNode(Node):
 
         # initialize cone publisher
         self.publish_timer = self.create_timer(1/PUBLISH_FPS, self.publish_cones)
-        self.cone_publisher = self.create_publisher(ConeArray, PERC_CONE_TOPIC, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.cone_publisher = self.create_publisher(ConeArray, PERC_CONE_TOPIC, qos_profile=RELIABLE_QOS_PROFILE)
 
         # deubgging mode visualizer
         if debug:
@@ -143,11 +143,7 @@ class ConeNode(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-<<<<<<< HEAD
-    cone_node = ConeNode(debug=True)
-=======
     cone_node = ConeNode(debug=False)
->>>>>>> 4cddf2d063e4437785ebaeab26e5971ca05653cd
 
     rclpy.spin(cone_node)
 
