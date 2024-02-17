@@ -41,8 +41,9 @@ def pretty_print(rows, columns):
     print('-' * (sum(lengths) + len(columns) + 1))
 
 
-def get_points(FILE = "fsdv/path_planning/raceline/data/test_tracks/Austin.csv"):
+def get_points(FILE = "cmrdv_ws/src/cmrdv_planning/planning_codebase/ekf/data/test_tracks/Austin.csv"):
     track = np.genfromtxt(FILE, delimiter=",")
+
 
     return track
 
@@ -69,11 +70,16 @@ def midpoints_graphical_test():
     print('\n### PATH PLANNING GRAPHICAL TEST - Midpoints interpolation ###\n')
 
     points = get_points()
+    print("\nPOINTS\n", points)
     points = points[::2, :] # filter points to play with less data
 
     lcones, rcones = get_cones(points)
+    print("\nLCONES\n", lcones)
+    print("\nRCONES\n", rcones)
 
-    interpolated_points, _ = generate_centerline_from_cones(lcones, rcones, 10)
+    cones = np.column_stack(([lcones], [rcones]))
+    print("\n ALL CONES",cones)
+    interpolated_points, _ = generate_centerline_from_cones(cones, 10)
 
     # Graphically checking interpolation:
 
@@ -164,6 +170,7 @@ def curvature_to_progress_graphical_test():
 
 def path_optimization_graphical_test():    
     points = get_points()
+    print("\n!!!!!!PATH OP POINTS!!!!!!!", points)
     points = points[::5, :] # filter points to play with less data
 
     lcones, rcones = get_cones(points)
@@ -243,6 +250,6 @@ def path_optimization_graphical_test():
 
 ### TESTS
 
-#midpoints_graphical_test()
+midpoints_graphical_test()
 #curvature_to_progress_graphical_test()
-path_optimization_graphical_test()
+# path_optimization_graphical_test()
