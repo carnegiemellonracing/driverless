@@ -92,6 +92,20 @@ namespace controls {
             void ControllerNode::publish_state_trajectories(const std::vector<float>& state_trajectories) {
                 visualization_msgs::msg::MarkerArray paths {};
 
+                std::cout << "States:" << std::endl;
+                for (int i = 0; i < num_samples; i++) {
+                    for (int j = 0; j < num_timesteps; j++) {
+                        std::cout << "{ ";
+                        for (int k = 0; k < state_dims; k++) {
+                            std::cout << state_trajectories[i * num_timesteps * state_dims + j * state_dims + k] << " ";
+                        }
+                        std::cout << " }";
+                    }
+                    std::cout << std::endl;
+                }
+                std::cout << std::endl;
+
+
                 for (uint32_t i = 0; i < num_samples; i++) {
                     visualization_msgs::msg::Marker lines {};
                     lines.type = visualization_msgs::msg::Marker::LINE_STRIP;
@@ -102,7 +116,7 @@ namespace controls {
                     lines.color.r = 1.0f;
                     lines.color.a = 1.0f;
                     lines.scale.y = lines.scale.z = 1.0f;
-                    lines.scale.x = 0.00001f;
+                    lines.scale.x = 0.0001f;
 
                     for (uint32_t j = 0; j < num_timesteps; j++) {
                         geometry_msgs::msg::Point point;

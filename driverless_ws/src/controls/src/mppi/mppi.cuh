@@ -29,7 +29,7 @@ namespace controls {
             const float s = sinf(frame.tangent_angle);
             const float c = cosf(frame.tangent_angle);
 
-            const float prog_dot = xdot * c+ ydot * s;
+            const float prog_dot = xdot * c + ydot * s;
             const float curv_y_dot = -xdot * s + ydot * c;
             const float curv_yaw_dot = -frame.curvature * prog_dot + yawdot;
 
@@ -58,9 +58,9 @@ namespace controls {
 
             float world_state_dot[state_dims];
             ONLINE_DYNAMICS_FUNC(world_state, action, world_state_dot);
-
             world_state_dot_to_curv_state_dot(world_state_dot, frame);
             const auto& curv_state_dot = world_state_dot;
+            printf("World state x: %f  curv state x: %f\n", world_state_dot[0], curv_state_dot[0]);
 
             for (uint8_t i = 0; i < state_dims; i++) {
                 curv_state_out[i] = curv_state_dot[i] * timestep;  // TODO: Euler's method, make better
@@ -76,7 +76,7 @@ namespace controls {
             const float progress_dot = xdot * cosf(curv_yaw) - ydot * sin(curv_yaw);
             const float speed_cost = zero_speed_cost * expf(-speed_cost_decay_factor * progress_dot);
 
-            double distance_cost = offset_1m_cost * offset * offset;
+            const float distance_cost = offset_1m_cost * offset * offset;
 
             return speed_cost + distance_cost;
         }
