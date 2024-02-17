@@ -49,7 +49,7 @@ class FileNode(DataNode):
 
         # self.data updated by DataNode subscribers
         filepath = os.path.join(DATA_DIR, datafile_name)
-        np.savez(filepath, **self.data)
+        self.data.save(filepath)
 
         # update instance value
         self.save_instance += 1
