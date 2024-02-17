@@ -3,8 +3,9 @@
 #include <thrust/transform_reduce.h>
 #include <thrust/execution_policy.h>
 #include <constants.hpp>
+#include <cuda_utils.cuh>
+#include <cuda_constants.cuh>
 
-#include "cuda_constants.cuh"
 #include "types.cuh"
 
 
@@ -19,12 +20,18 @@ namespace controls {
 
             __host__ __device__ void operator() (size_t idx) const {
                 const size_t action_idx = (idx / action_dims) * action_dims;
-                const size_t row_idx = idx % action_dims * action_dims;
+                const size_t action_dim = idx % action_dims;
+                const size_t row_idx = action_dim * action_dims;
 
-                const auto res = dot<float>(&cuda_globals::perturbs_incr_std[row_idx], &std_normals.get()[action_idx],
-                                            action_dims);
+                const auto res = dot<float>(
+                    &cuda_globals::perturbs_incr_std[row_idx],
+                    &std_normals.get()[action_idx],
+                    action_dims);
 
-                std_normals.get()[idx] = res * m_sqrt_timestep;
+                std_normals.get()[idx] = clamp(
+                    res * m_sqrt_timestep,
+                    cuda_globals::action_deriv_min[action_dim] * controller_period,
+                    cuda_globals::action_deriv_max[action_dim] * controller_period);
             }
 
             private:
@@ -100,8 +107,6 @@ namespace controls {
 
                     const float c = cost(x_curr);
                     j_curr -= c;
-                    // printf("sample: %i\ntime: %f state: { x: %f, y: %f, yaw: %f, xdot: %f, ydot: %f, yawdot: %f }\ncost: %f\n\n",
-                    //     i, j * controller_period, x_curr[0],  x_curr[1], x_curr[2], x_curr[3], x_curr[4], x_curr[5], c);
                     cost_to_gos[i * num_timesteps + j] = j_curr;
                 }
             }
@@ -109,9 +114,16 @@ namespace controls {
 
         // Functors to operate on Action
 
-        struct AddActions {
+        struct AddActionsClamped {
             __host__ __device__ DeviceAction operator() (const DeviceAction& a1, const DeviceAction& a2) const {
-                return a1 + a2;
+                DeviceAction res;
+                for (uint8_t i = 0; i < action_dims; i++) {
+                    res.data[i] = clamp(
+                        a1.data[i] + a2.data[i],
+                        cuda_globals::action_min[i],
+                        cuda_globals::action_max[i]);
+                }
+                return res;
             }
         };
 

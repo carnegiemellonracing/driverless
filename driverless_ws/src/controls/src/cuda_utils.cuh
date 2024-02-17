@@ -118,4 +118,9 @@ namespace controls {
         }
     }
 
+    template<typename T>
+    __host__ __device__ static T clamp(T n, T low, T high) {
+        return min(max(n, low), high);
+    }
+
 }

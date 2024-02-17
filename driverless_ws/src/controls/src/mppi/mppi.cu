@@ -22,6 +22,7 @@ namespace controls {
         MppiController_Impl::MppiController_Impl()
             : m_action_trajectories(num_action_trajectories),
               m_cost_to_gos(num_samples * num_timesteps),
+              m_rng(),
 #ifdef PUBLISH_STATES
               m_state_trajectories(num_samples * num_timesteps * state_dims),
 #endif
@@ -85,7 +86,8 @@ namespace controls {
 
             thrust::inclusive_scan_by_key(keys, keys + num_samples * num_timesteps,
                                           actions, actions,
-                                          Equal<size_t> {}, AddActions {});
+                                          Equal<size_t> {},
+                                          AddActionsClamped {});
         }
 
         void MppiController_Impl::generate_brownians() {
