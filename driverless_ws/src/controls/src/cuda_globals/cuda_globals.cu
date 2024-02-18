@@ -11,19 +11,19 @@ namespace controls {
 
         __constant__ size_t spline_texture_elems = 0;
 
-        __constant__ float curr_state[state_dims] = {};
+        __constant__ float curr_state[state_dims] = {10, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
-            0.1, 0, 0,
-            0, 100, 0,
-            0, 99, 14.107
+            0.2, 0, 0,
+            0, 500, 0,
+            0, 0, 500
         };
 
         __constant__ const float action_min[action_dims] = {
-            -0.5, -2000, -2000
+            -0.5, -1000, -1000
         };
         __constant__ const float action_max[action_dims] = {
-            0.5, 2000, 2000
+            0.5, 1000, 1000
         };
 
         __constant__ const float action_deriv_min[action_dims] = {

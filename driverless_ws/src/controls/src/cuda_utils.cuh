@@ -95,6 +95,15 @@ namespace controls {
         }
     }
 
+    __host__ __device__ static bool any_nan(const float* vec, size_t n) {
+        for (size_t i = 0; i < n; i++) {
+            if (std::isnan(vec[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     template<typename T>
     __host__ __device__ T dot(const T* a, const T* b, size_t n) {
         T res {};

@@ -1,5 +1,9 @@
+#pragma once
+
 #include <iostream>
 #include <cmath>
+#include <cuda_utils.cuh>
+#include <cassert>
 
 //SOURSE: SEE OVERLEAF MPPI DOCUMENTATION
 
@@ -28,10 +32,12 @@ namespace controls {
             //tire model constants
             constexpr float max_force_x_at_1N = 1.3f; //Maximum force x TO IMPLEMENT
             constexpr float slip_ratio_max_x = 0.1; //slip ratio that yields the max force TO IMPLEMENT
-            constexpr float post_saturation_force_x = 1; // After tires start slipping what force we get
+            constexpr float post_saturation_force_x = 1.0; // After tires start slipping what force we get
             constexpr float max_force_y_at_1N = 1.5f; //Maximum force Y TO IMPLEMENT
             constexpr float slip_angle_max_y = 0.1; //slip ratio that yields the max force TO IMPLEMENT
-            constexpr float post_saturation_force_y = 1; // After tires start slipping what force we get
+            constexpr float post_saturation_force_y = 1.0; // After tires start slipping what force we get
+
+            constexpr float slip_ratio_saturation = 0.1; // minimum velocity magnitude for wheel slip
 
             //trig functions in degrees
 //            __host__ __device__ static float cosd(float degrees) {
@@ -65,6 +71,15 @@ namespace controls {
                         -1 : 0;
             }
 
+            template<typename T>
+            __host__ __device__ T square(T x) {
+                return x * x;
+            }
+
+            template<typename T>
+            __host__ __device__ T cross2d(T a, T b, T c, T d) {
+                return a * d - b * c;
+            }
 
             //calculates slip ratio
             //Forces array implanted with X and Y force of wheel
@@ -75,33 +90,41 @@ namespace controls {
                 //gets x force
                 if (abs(slip_ratio) < abs(slip_ratio_max_x)) {
                     float numerator = load * slip_ratio * max_force_y_at_1N;
-                    float within_sqrt = powf(tanf(slip_angle), 2) +
-                                        powf((max_force_y_at_1N / max_force_x_at_1N), 2);
+                    float within_sqrt = square(tanf(slip_angle)) +
+                                        square((max_force_y_at_1N / max_force_x_at_1N));
+                    assert(!std::isnan(within_sqrt) && "within sqrt was nan in linear x");
                     float denominator = slip_ratio_max_x * sqrtf(within_sqrt);
+                    assert(denominator > 0);
                     forces[0] = numerator / denominator;
                 } else {
                     float numerator = load * post_saturation_force_x * max_force_y_at_1N;
-                    float within_sqrt = powf(tanf(slip_angle), 2) +
-                                        powf((max_force_y_at_1N / max_force_x_at_1N), 2);
+                    float within_sqrt = square(tanf(slip_angle)) +
+                                        square(max_force_y_at_1N / max_force_x_at_1N);
+                    assert(!std::isnan(within_sqrt) && "within sqrt was nan in saturated x");
                     float denominator = max_force_x_at_1N * sqrtf(within_sqrt);
+                    assert(denominator > 0);
                     forces[0] = sign(slip_ratio) * numerator / denominator;
                 }
 
                 //computes y force
-                if (slip_angle < slip_angle_max_y) {
+                if (abs(slip_angle) < abs(slip_angle_max_y)) {
                     forces[1] = load * max_force_y_at_1N / slip_angle_max_y * slip_angle;
                 } else {
-                    forces[1] = load * post_saturation_force_y;
+                    forces[1] = load * post_saturation_force_y * sign(slip_angle);
                 }
             }
 
             //calculates slip ratio
             __host__ __device__ static float calculate_slip_ratio(float wheel_speed, float velocity) {
-                if (velocity == 0)
-                    return 0;
-
+                velocity = abs(velocity);
+                if (velocity == 0) {
+                    return sign(wheel_speed) * slip_ratio_saturation;
+                }
                 float tangential_velo = wheel_speed * WHEEL_RADIUS;
-                return (tangential_velo - velocity) / velocity;
+                return clamp(
+                        (tangential_velo - velocity) / velocity,
+                        -slip_ratio_saturation,
+                        slip_ratio_saturation);
             }
 
 
@@ -136,27 +159,34 @@ namespace controls {
                 float torque_rear = action[2];
 
                 //compares wheel forces
-                float front_slip_ratio = calculate_slip_ratio(front_wheel_speed,
-                                                              x_dot_car);
-                float rear_slip_ratio = calculate_slip_ratio(rear_wheel_speed,
-                                                             x_dot_car);
                 float y_dot_front_tire = y_dot_car + yaw_rate *CG_TO_FRONT;
-                float numerator = x_dot_car * cosf(steering_angle) + (y_dot_front_tire) * sinf(steering_angle);
-                float denominator = sqrtf(x_dot_car * x_dot_car + y_dot_front_tire * y_dot_front_tire);
+                float front_tire_vel_cross = cross2d(x_dot_car, y_dot_front_tire, cosf(steering_angle), sinf(steering_angle));
+                float front_tire_speed = sqrtf(x_dot_car * x_dot_car + y_dot_front_tire * y_dot_front_tire);
 
-                float front_slip_angle = denominator == 0 ?
-                        0 : acosf(numerator / denominator);
+                float front_slip_angle = front_tire_speed == 0 ?
+                        0 : asinf(clamp(front_tire_vel_cross / front_tire_speed, -1.0f, 1.0f));
+
+                assert(!std::isnan(front_slip_angle) && "front slip angle is nan");
 
                 float y_dot_rear_tire = y_dot_car - yaw_rate *CG_TO_REAR;
-                numerator = x_dot_car;
-                denominator = sqrtf(x_dot_car * x_dot_car + y_dot_rear_tire *y_dot_rear_tire);
-                float rear_slip_angle = denominator == 0 ?
-                        0 : acosf(x_dot_car / denominator);
+                float rear_tire_speed = sqrtf(x_dot_car * x_dot_car + y_dot_rear_tire * y_dot_rear_tire);
+                float rear_slip_angle = rear_tire_speed == 0 ?
+                        0 : asinf(clamp(-y_dot_rear_tire / rear_tire_speed, -1.0f, 1.0f));
+
+                assert(!std::isnan(rear_slip_angle) && "rear slip angle is nan");
+
+                float front_tire_long_component = x_dot_car * cos(steering_angle) + y_dot_front_tire * sin(steering_angle);
+                float front_slip_ratio = calculate_slip_ratio(front_wheel_speed, front_tire_long_component);
+                float rear_slip_ratio = calculate_slip_ratio(rear_wheel_speed, x_dot_car);
 
                 float front_load =
                         (CAR_MASS * GRAVITY + downforce) * CG_TO_REAR / BODY_LENGTH - pitch_moment / CG_TO_FRONT;
+
+                assert(!std::isnan(front_load) && "front load is nan");
                 float rear_load =
                         (CAR_MASS * GRAVITY + downforce) * CG_TO_FRONT / BODY_LENGTH + pitch_moment / CG_TO_REAR;
+
+                assert(!std::isnan(rear_load) && "rear load is nan");
 
                 float front_forces_tire[2];  // wrt tire
                 float rear_forces_tire[2];
@@ -167,15 +197,22 @@ namespace controls {
                 float front_force_x_car =
                         front_forces_tire[0] * cosf(steering_angle)
                         - front_forces_tire[1] * sinf(steering_angle);
+                assert(!std::isnan(front_force_x_car) && "front force x car is nan");
+
                 float front_force_y_car =
                         front_forces_tire[0] * sinf(steering_angle)
                         + front_forces_tire[1] * cosf(steering_angle);
+                assert(!std::isnan(front_force_y_car) && "front force y car is nan");
+
                 float rear_force_x_car = rear_forces_tire[0];
+                assert(!std::isnan(rear_force_x_car) && "rear force x car is nan");
+
                 float rear_force_y_car = rear_forces_tire[1];
+                assert(!std::isnan(rear_force_y_car) && "rear force y car is nan");
 
                 //gets drag
-                float drag_x = LOGITUDNAL_AERO_CONSTANT * powf(x_dot_car, 2);
-                float drag_y = LATERAL_AERO_CONSTANT * powf(y_dot_car, 2);
+                float drag_x = LOGITUDNAL_AERO_CONSTANT * square(x_dot_car);
+                float drag_y = LATERAL_AERO_CONSTANT * square(y_dot_car);
 
 
                 //Updates dot array
@@ -184,12 +221,13 @@ namespace controls {
                 state_dot[1] =
                         x_dot_car * sinf(yaw_world) + y_dot_car * cosf(yaw_world);
                 state_dot[2] = yaw_rate;
+
                 state_dot[3] = (front_force_x_car + rear_force_x_car - drag_x) / CAR_MASS +
                                y_dot_car * yaw_rate;
                 state_dot[4] = (front_force_y_car + rear_force_y_car - drag_y) / CAR_MASS -
                                x_dot_car * yaw_rate;
                 state_dot[5] =
-                        (CG_TO_FRONT * front_force_x_car - CG_TO_REAR * rear_force_x_car) /
+                        (CG_TO_FRONT * front_force_y_car - CG_TO_REAR * rear_force_y_car) /
                         CAR_ROTATIONAL_INTERTIA;
                 state_dot[6] = 0; //might need to change
                 state_dot[7] = 0;
@@ -197,6 +235,7 @@ namespace controls {
                 state_dot[8] =
                         (torque_front - WHEEL_RADIUS * front_forces_tire[0])
                         / WHEEL_ROTATIONAL_INTERIA;
+
                 state_dot[9] =
                         (torque_rear - WHEEL_RADIUS * rear_forces_tire[0])
                         / WHEEL_ROTATIONAL_INTERIA;

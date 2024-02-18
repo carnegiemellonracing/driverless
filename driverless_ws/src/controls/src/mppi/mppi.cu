@@ -28,10 +28,13 @@ namespace controls {
 #endif
               m_last_action_trajectory(num_timesteps * action_dims - 1) {  // -1 because last element will always be
                                                                              // inferred from second to last
-            thrust::copy(
-                init_action_trajectory, init_action_trajectory + (num_timesteps - 1) * action_dims,
-                m_last_action_trajectory.begin()
-            );
+            for (uint32_t i = 0; i < num_timesteps; i++) {
+                DeviceAction to_send;
+                for (int j = 0; j < action_dims; j++) {
+                    to_send.data[j] = init_action_trajectory[i * action_dims + j];
+                }
+                m_last_action_trajectory[i] = to_send;
+            }
 
             CURAND_CALL(curandCreateGenerator(&m_rng, rng_type));
             CURAND_CALL(curandSetPseudoRandomGeneratorSeed(m_rng, seed));
@@ -63,11 +66,23 @@ namespace controls {
 
             std::cout << "\nreducing actions..." << std::endl;
             // not actually on device, just still in a device action struct
-            DeviceAction dev_action = reduce_actions();
+            thrust::device_vector<DeviceAction> averaged_trajectory = reduce_actions();
 
-            Action action;
-            std::copy(std::begin(dev_action.data), std::end(dev_action.data), action.begin());
-            return action;
+            thrust::copy(
+                averaged_trajectory.begin() + 1,
+                averaged_trajectory.end(),
+                m_last_action_trajectory.begin()
+            );
+
+            DeviceAction host_action = averaged_trajectory[0];
+
+            Action result_action;
+            std::copy(
+                std::begin(host_action.data), std::end(host_action.data),
+                result_action.begin()
+            );
+
+            return result_action;
         }
 
 #ifdef PUBLISH_STATES
@@ -102,7 +117,7 @@ namespace controls {
         }
 
 
-        DeviceAction MppiController_Impl::reduce_actions() {
+        thrust::device_vector<DeviceAction> MppiController_Impl::reduce_actions() {
             // averaged_actions is where the weighted averages are stored
             // initialize it to 0 
             thrust::device_vector<DeviceAction> averaged_actions (num_timesteps);
@@ -115,24 +130,7 @@ namespace controls {
                 m_cost_to_gos.data().get()
             });
 
-            thrust::host_vector<DeviceAction> averaged_actions_host = averaged_actions;
-            DeviceAction res;
-
-            // copy averaged action into result for returning
-            for (int i = 0; i < action_dims; i++) {
-                res.data[i] = averaged_actions_host.data()[0].data[i];
-            }
-
-            auto averaged_actions_as_floats = thrust::device_pointer_cast<float>(
-                reinterpret_cast<float*>(averaged_actions.data().get())
-            );
-            thrust::copy(
-                averaged_actions_as_floats + action_dims,
-                averaged_actions_as_floats + action_dims * (num_timesteps - 1),
-                m_last_action_trajectory.begin()
-            );
-
-            return res;
+            return averaged_actions;
         }
 
         void MppiController_Impl::populate_cost() {
