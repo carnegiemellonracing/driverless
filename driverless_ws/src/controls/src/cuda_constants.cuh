@@ -6,7 +6,7 @@
 
 #include "constants.hpp"
 
-#define ONLINE_DYNAMICS_FUNC controls::model::dummy::dynamics
+#define ONLINE_DYNAMICS_FUNC controls::model::bicycle::dynamics
 
 
 namespace controls {

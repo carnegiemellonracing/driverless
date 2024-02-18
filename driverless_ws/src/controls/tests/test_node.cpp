@@ -80,13 +80,13 @@ namespace controls {
 
         void TestNode::print_message(const interfaces::msg::ControlAction& msg) {
             std::cout << "Swangle: " << msg.swangle << " Torque f: " <<
-                msg.torque_f << " Torque r: " << msg.torque_r << std::endl << std::endl;;
+                msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl << std::endl;;
         }
 
         void TestNode::publish_spline() {
             std::cout << "Publishing spline" << std::endl << std::endl;
-            const auto spline = sine_spline(1, 0.3, 3, 0.05);
-//            const auto spline = line_spline(100, 0.5);
+//            const auto spline = sine_spline(1, 0.3, 3, 0.05);
+            const auto spline = line_spline(100, 0.5);
             m_spline_publisher->publish(spline);
         }
     }

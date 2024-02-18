@@ -51,17 +51,28 @@ namespace controls {
             const float progress = curv_state[state_x_idx];
             const float tex_coord = progress / spline_frame_separation;
             const SplineFrame frame {tex1D<float4>(cuda_globals::d_spline_texture_object, tex_coord)};
+            printf("Frame: %f %f %f %f\n", frame.x, frame.y, frame.tangent_angle, frame.curvature);
 
             float world_state[state_dims];
             memcpy(world_state, curv_state, sizeof(world_state));
             curv_state_to_world_state(world_state, frame);
 
+            assert(!any_nan(world_state, state_dims) && "World state was nan during model");
+
             float world_state_dot[state_dims];
             ONLINE_DYNAMICS_FUNC(world_state, action, world_state_dot);
-            world_state_dot_to_curv_state_dot(world_state_dot, frame);
-            const auto& curv_state_dot = world_state_dot;
-            printf("World state x: %f  curv state x: %f\n", world_state_dot[0], curv_state_dot[0]);
 
+            assert(!any_nan(world_state_dot, state_dims) && "World state dot was nan directly after dynamics call");
+
+            world_state_dot_to_curv_state_dot(world_state_dot, frame);
+
+            assert(!any_nan(world_state_dot, state_dims) && "Curv state dot was nan after dynamics call");
+
+            const auto& curv_state_dot = world_state_dot;
+            // printf("curv state dot: %f %f %f %f %f %f %f %f %f %f\n", curv_state_dot[0], curv_state_dot[1], curv_state_dot[2],
+            //        curv_state_dot[3], curv_state_dot[4], curv_state_dot[5], curv_state_dot[6], curv_state_dot[7], curv_state_dot[8], curv_state_dot[9]);
+//            printf("curv state x: %f\n", curv_state_dot[0]);
+//
             for (uint8_t i = 0; i < state_dims; i++) {
                 curv_state_out[i] = curv_state_dot[i] * timestep;  // TODO: Euler's method, make better
             }
@@ -108,7 +119,7 @@ namespace controls {
             /**
              * num_timesteps x action_dims array. Best-guess action trajectory to which perturbations are added.
              */
-            thrust::device_vector<float> m_last_action_trajectory;
+            thrust::device_vector<DeviceAction> m_last_action_trajectory;
 
 #ifdef PUBLISH_STATES
             /**
@@ -126,7 +137,7 @@ namespace controls {
              * @brief Retrieves action based on cost to go using reduction.
              * @return Action
              */
-            DeviceAction reduce_actions();
+            thrust::device_vector<DeviceAction> reduce_actions();
 
             /**
              * @brief Calculates costs to go

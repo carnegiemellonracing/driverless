@@ -18,7 +18,7 @@ namespace controls {
             explicit TransformStdNormal(thrust::device_ptr<float> std_normals)
                     : std_normals {std_normals} { }
 
-            __host__ __device__ void operator() (size_t idx) const {
+            __device__ void operator() (size_t idx) const {
                 const size_t action_idx = (idx / action_dims) * action_dims;
                 const size_t action_dim = idx % action_dims;
                 const size_t row_idx = action_dim * action_dims;
@@ -49,7 +49,7 @@ namespace controls {
 #endif
             float* cost_to_gos;
 
-            const float* action_trajectory_base;
+            const DeviceAction* action_trajectory_base;
             const float* curr_state;
 
             PopulateCost(thrust::device_ptr<float> brownians,
@@ -58,7 +58,7 @@ namespace controls {
                          thrust::device_ptr<float> sampled_state_trajectories,
 #endif
                          thrust::device_ptr<float> cost_to_gos,
-                         const thrust::device_ptr<float>& action_trajectory_base,
+                         const thrust::device_ptr<DeviceAction>& action_trajectory_base,
                          const thrust::device_ptr<float>& curr_state)
                     : brownians {brownians.get()},
                       sampled_action_trajectories {sampled_action_trajectories.get()},
@@ -73,6 +73,10 @@ namespace controls {
                 float j_curr = 0;
                 float x_curr[state_dims];
 
+                // printf("curv state: %f %f %f %f %f %f %f %f %f %f\n", curr_state[0], curr_state[1], curr_state[2],
+                //        curr_state[3], curr_state[4], curr_state[5], curr_state[6], curr_state[7], curr_state[8], curr_state[9]);
+                assert(!any_nan(cuda_globals::curr_state, state_dims) && "State was nan in populate cost entry");
+
                 // printf("POPLATE COST %i: copying curr_state", i);
                 // copy current state into x_curr
                 memcpy(x_curr, curr_state, sizeof(float) * state_dims);
@@ -81,18 +85,24 @@ namespace controls {
                 for (uint32_t j = 0; j < num_timesteps; j++) {
                     float* u_ij = IDX_3D(sampled_action_trajectories, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, 0));
 
+                    // VERY CURSED. We want the last action in the best guess action to be the same as the second
+                    // to last one (since we have to initialize it something). Taking the min of j and m - 1 saves
+                    // us a host->device copy
+                    const uint32_t idx = min(j, num_timesteps - 2);
+                    assert(!any_nan(action_trajectory_base[idx].data, action_dims) && "Control action base was nan");
+
                     for (uint32_t k = 0; k < action_dims; k++) {
-
-                        // VERY CURSED. We want the last action in the best guess action to be the same as the second
-                        // to last one (since we have to initialize it something). Taking the min of j and m - 1 saves
-                        // us a host->device copy
-                        const uint32_t idx = min(j, num_timesteps - 1) * action_dims + k;
-
-                        u_ij[k] = action_trajectory_base[idx]
+                        u_ij[k] = action_trajectory_base[idx].data[k]
                                   + *IDX_3D(brownians, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, k));
                     }
 
+                    // printf("control action: %f, %f, %f\n", u_ij[0], u_ij[1], u_ij[2]);
+                    assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
+
                     model(x_curr, u_ij, x_curr, controller_period);
+
+                    assert(!any_nan(x_curr, state_dims) && "State was nan after model step");
+
 #ifdef PUBLISH_STATES
                     memcpy(
                         IDX_3D(
@@ -115,7 +125,7 @@ namespace controls {
         // Functors to operate on Action
 
         struct AddActionsClamped {
-            __host__ __device__ DeviceAction operator() (const DeviceAction& a1, const DeviceAction& a2) const {
+            __device__ DeviceAction operator() (const DeviceAction& a1, const DeviceAction& a2) const {
                 DeviceAction res;
                 for (uint8_t i = 0; i < action_dims; i++) {
                     res.data[i] = clamp(
@@ -129,14 +139,14 @@ namespace controls {
 
         template<size_t k>
         struct DivBy {
-            __host__ __device__ size_t operator() (size_t i) const {
+            __device__ size_t operator() (size_t i) const {
                 return i / k;
             }
         };
 
         template<typename T>
         struct Equal {
-            __host__ __device__ bool operator() (T a, T b) {
+            __device__ bool operator() (T a, T b) {
                 return a == b;
             }
         };
@@ -152,7 +162,11 @@ namespace controls {
                 const DeviceAction& a0 = action_weight_t0.action;
                 const DeviceAction& a1 = action_weight_t1.action;
 
-                return {(w0 * a0 + w1 * a1) / (w0 + w1), w0 + w1};
+                return {
+                    w0 + w1 == 0 ?
+                        DeviceAction {} : (w0 * a0 + w1 * a1) / (w0 + w1),
+                    w0 + w1
+                };
             }
         };
 
@@ -193,6 +207,7 @@ namespace controls {
 
         struct ReduceTimestep {
             DeviceAction* averaged_action;
+            DeviceAction* action_trajectory_base;
 
             const float* action_trajectories;
             const float* cost_to_gos;
@@ -210,11 +225,18 @@ namespace controls {
                 thrust::counting_iterator<uint32_t> indices {idx * num_samples};
 
                 // applies a unary operator - IndexToActionWeightTuple before reducing over the samples with reduction_functor
-                averaged_action[idx] = thrust::transform_reduce(
+                const ActionWeightTuple res = thrust::transform_reduce(
                         thrust::device,
                         indices, indices + num_samples,
                         IndexToActionWeightTuple {action_trajectories, cost_to_gos},
-                        ActionWeightTuple { DeviceAction {}, 0 }, reduction_functor).action;
+                        ActionWeightTuple { DeviceAction {}, 0 }, reduction_functor);
+
+                if (res.weight == 0) {
+                    printf("Action at timestep %i had 0 weight. Using previous.\n", idx);
+                    averaged_action[idx] = action_trajectory_base[min(idx, num_timesteps - 2)];
+                } else {
+                    averaged_action[idx] = res.action;
+                }
             }
         };
     }
