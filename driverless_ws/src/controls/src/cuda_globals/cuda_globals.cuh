@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cuda_constants.cuh>
 #include <state/state_estimator.cuh>
 #include <mutex>
 
@@ -11,7 +12,7 @@ namespace controls {
 
         // host symbols (may still point to device)
 
-        extern cudaArray_t spline_array;
+        extern float4* spline_texture_buf;
         extern cudaTextureObject_t spline_texture_object;
         extern bool spline_texture_created;
 

@@ -11,12 +11,17 @@ namespace controls {
             TestNode ();
 
         private:
-            void print_message(const interfaces::msg::ControlAction& msg);
+            void on_action(const ActionMsg& msg);
             void publish_spline();
+            void publish_state();
 
-            rclcpp::Subscription<interfaces::msg::ControlAction>::SharedPtr m_subscriber;
-            rclcpp::Publisher<interfaces::msg::SplineFrameList>::SharedPtr m_spline_publisher;
+            rclcpp::Subscription<ActionMsg>::SharedPtr m_subscriber;
+            rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
+            rclcpp::Publisher<StateMsg>::SharedPtr m_state_publisher;
             rclcpp::TimerBase::SharedPtr m_spline_timer;
+
+            // thomas model state
+            std::array<double, 13> m_world_state {};
         };
 
     }

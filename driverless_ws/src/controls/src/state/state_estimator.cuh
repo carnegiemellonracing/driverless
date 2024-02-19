@@ -14,7 +14,7 @@ namespace controls {
             StateEstimator_Impl();
 
             void on_spline(const SplineMsg& spline_msg) override;
-            void on_slam(const SlamMsg& slam_msg) override;
+            void on_state(const StateMsg& state_msg) override;
 
             ~StateEstimator_Impl() override;
 

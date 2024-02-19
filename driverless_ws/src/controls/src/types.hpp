@@ -1,9 +1,9 @@
 #pragma once
 
 #include <interfaces/msg/spline_frame_list.hpp>
-#include <geometry_msgs/msg/pose2_d.hpp>
 #include <array>
-#include <interfaces/msg/detail/control_action__struct.hpp>
+#include <interfaces/msg/control_action.hpp>
+#include <interfaces/msg/controls_state.hpp>
 
 #include "constants.hpp"
 
@@ -13,7 +13,7 @@ namespace controls {
     using State = std::array<float, state_dims>;
 
     using SplineMsg = interfaces::msg::SplineFrameList;
-    using SlamMsg = geometry_msgs::msg::Pose2D;
+    using StateMsg = interfaces::msg::ControlsState;
     using ActionMsg = interfaces::msg::ControlAction;
 
     class Controller {
