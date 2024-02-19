@@ -9,11 +9,11 @@ namespace controls {
     constexpr const char *controller_node_name = "controller";
     constexpr const char *control_action_topic_name = "control_action";
     constexpr const char *spline_topic_name = "spline";
-    constexpr const char *slam_topic_name = "slam";
+    constexpr const char *state_topic_name = "state";
     constexpr const char *state_trajectories_topic_name = "state_trajectories";
     const rclcpp::QoS control_action_qos (rclcpp::KeepLast(10));
     const rclcpp::QoS spline_qos (rclcpp::KeepLast(1));
-    const rclcpp::QoS slam_qos (rclcpp::KeepLast(1));
+    const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS state_trajectories_qos (rclcpp::KeepLast(10));
 
     // MPPI stuff

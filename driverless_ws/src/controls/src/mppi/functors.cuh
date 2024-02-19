@@ -11,6 +11,121 @@
 
 namespace controls {
     namespace mppi {
+
+        __device__ static SplineFrame get_interpolated_frame(float progress) {
+            const float texcoord = progress / spline_frame_separation;
+            const int low_idx = floorf(texcoord);
+            const int high_idx = low_idx + 1;
+            const float t = texcoord - low_idx;
+            const SplineFrame frame_low {tex1Dfetch<float4>(cuda_globals::d_spline_texture_object, low_idx)};
+            const SplineFrame frame_high {tex1Dfetch<float4>(cuda_globals::d_spline_texture_object, high_idx)};
+
+            return {
+                (1 - t) * frame_low.x + t * frame_high.x,
+                (1 - t) * frame_low.y + t * frame_high.y,
+                (1 - t) * frame_low.tangent_angle + t * frame_high.tangent_angle,
+                (1 - t) * frame_low.curvature + t * frame_high.curvature,
+            };
+        }
+
+        __device__ static void curv_state_to_world_state(float state[], SplineFrame frame) {
+            const float offset = state[state_y_idx];
+            const float yaw_curv = state[state_yaw_idx];
+
+            const float2 normal {-sinf(frame.tangent_angle), cosf(frame.tangent_angle)};
+            state[state_x_idx] = frame.x + offset * normal.x;
+            state[state_y_idx] = frame.y + offset * normal.y;
+            state[state_yaw_idx] = frame.tangent_angle + yaw_curv;
+        }
+
+        __device__ static void world_state_dot_to_curv_state_dot(float state_dot[], SplineFrame frame, float yaw_curv) {
+            const float xdot = state_dot[state_x_idx];
+            const float ydot = state_dot[state_y_idx];
+            const float yawdot = state_dot[state_yaw_idx];
+
+            const float s = sinf(frame.tangent_angle);
+            const float c = cosf(frame.tangent_angle);
+
+            const float prog_dot = xdot * c + ydot * s;
+            const float curv_y_dot = -xdot * s + ydot * c;
+            const float curv_yaw_dot = -frame.curvature * prog_dot + yawdot;
+
+            state_dot[state_x_idx] = prog_dot;
+            state_dot[state_y_idx] = curv_y_dot;
+            state_dot[state_yaw_idx] = curv_yaw_dot;
+        }
+
+        /**
+         * \brief Advances curvilinear state one timestep according to action. `curv_state` and `action` may be
+         *        invalid after call.
+         *
+         * \param[in] curv_state Curvilinear state of the vehicle
+         * \param[in] action Action taken
+         * \param[out] curv_state_out Returned next state
+         * \param[in] timestep Timestep
+         */
+        __device__ static void model(const float curv_state[], const float action[], float curv_state_out[], float timestep) {
+            const float progress = curv_state[state_x_idx];
+            const float yaw_curv = curv_state[state_yaw_idx];
+            const SplineFrame frame = get_interpolated_frame(progress);
+
+            if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
+                printf("action: %f %f %f\n", action[0], action[1], action[2]);
+                printf("curv state: %f %f %f %f %f %f %f %f %f %f\n", curv_state[0], curv_state[1], curv_state[2],
+                       curv_state[3], curv_state[4], curv_state[5], curv_state[6], curv_state[7], curv_state[8], curv_state[9]);
+                printf("Frame: %f %f %f %f\n", frame.x, frame.y, frame.tangent_angle, frame.curvature);
+            }
+
+
+
+            float world_state[state_dims];
+            memcpy(world_state, curv_state, sizeof(world_state));
+            curv_state_to_world_state(world_state, frame);
+
+            assert(!any_nan(world_state, state_dims) && "World state was nan during model");
+
+            float world_state_dot[state_dims];
+            ONLINE_DYNAMICS_FUNC(world_state, action, world_state_dot);
+
+            float mid_state[state_dims];
+            for (uint8_t i = 0; i < state_dims; i++) {
+                mid_state[i] = world_state_dot[i] * 0.5 * timestep;
+            }
+
+            ONLINE_DYNAMICS_FUNC(mid_state, action, world_state_dot);
+
+            assert(!any_nan(world_state_dot, state_dims) && "World state dot was nan directly after dynamics call");
+
+            world_state_dot_to_curv_state_dot(world_state_dot, frame, yaw_curv);
+
+            assert(!any_nan(world_state_dot, state_dims) && "Curv state dot was nan after dynamics call");
+
+            const auto& curv_state_dot = world_state_dot;
+
+            for (uint8_t i = 0; i < state_dims; i++) {
+                curv_state_out[i] = curv_state_dot[i] * timestep;
+            }
+
+            if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
+                printf("curv state dot: %f %f %f %f %f %f %f %f %f %f\n", curv_state_dot[0], curv_state_dot[1], curv_state_dot[2],
+                       curv_state_dot[3], curv_state_dot[4], curv_state_dot[5], curv_state_dot[6], curv_state_dot[7], curv_state_dot[8], curv_state_dot[9]);
+            }
+        }
+
+        __device__ static float cost(float curv_state[]) {
+            const float curv_yaw = curv_state[state_yaw_idx];
+            const float xdot = curv_state[state_car_xdot_idx];
+            const float ydot = curv_state[state_car_ydot_idx];
+            const float offset = curv_state[state_y_idx];
+
+            const float progress_dot = xdot * cosf(curv_yaw) - ydot * sin(curv_yaw);
+            const float speed_cost = zero_speed_cost * expf(-speed_cost_decay_factor * progress_dot);
+
+            const float distance_cost = offset_1m_cost * offset * offset;
+
+            return speed_cost + distance_cost;
+        }
+
         // Functors for Brownian Generation
         struct TransformStdNormal {
             thrust::device_ptr<float> std_normals;
@@ -50,7 +165,6 @@ namespace controls {
             float* cost_to_gos;
 
             const DeviceAction* action_trajectory_base;
-            const float* curr_state;
 
             PopulateCost(thrust::device_ptr<float> brownians,
                          thrust::device_ptr<float> sampled_action_trajectories,
@@ -58,16 +172,14 @@ namespace controls {
                          thrust::device_ptr<float> sampled_state_trajectories,
 #endif
                          thrust::device_ptr<float> cost_to_gos,
-                         const thrust::device_ptr<DeviceAction>& action_trajectory_base,
-                         const thrust::device_ptr<float>& curr_state)
+                         const thrust::device_ptr<DeviceAction>& action_trajectory_base)
                     : brownians {brownians.get()},
                       sampled_action_trajectories {sampled_action_trajectories.get()},
 #ifdef PUBLISH_STATES
                       sampled_state_trajectories {sampled_state_trajectories.get()},
 #endif
                       cost_to_gos {cost_to_gos.get()},
-                      action_trajectory_base {action_trajectory_base.get()},
-                      curr_state {curr_state.get()} {}
+                      action_trajectory_base {action_trajectory_base.get()} {}
 
             __device__ void operator() (uint32_t i) const {
                 float j_curr = 0;
@@ -79,7 +191,7 @@ namespace controls {
 
                 // printf("POPLATE COST %i: copying curr_state", i);
                 // copy current state into x_curr
-                memcpy(x_curr, curr_state, sizeof(float) * state_dims);
+                memcpy(x_curr, cuda_globals::curr_state, sizeof(float) * state_dims);
 
                 // for each timestep, calculate cost and add to get cost to go
                 for (uint32_t j = 0; j < num_timesteps; j++) {
@@ -99,20 +211,21 @@ namespace controls {
                     // printf("control action: %f, %f, %f\n", u_ij[0], u_ij[1], u_ij[2]);
                     assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
 
+                    if (__cudaGet_blockIdx().x == 0 && __cudaGet_threadIdx().x == 0) {
+                        printf("j: %i\n", j);
+                    }
                     model(x_curr, u_ij, x_curr, controller_period);
 
                     assert(!any_nan(x_curr, state_dims) && "State was nan after model step");
 
 #ifdef PUBLISH_STATES
-                    memcpy(
-                        IDX_3D(
-                            sampled_state_trajectories,
-                            dim3(num_samples, num_timesteps, state_dims),
-                            dim3(i, j, 0)
-                        ),
-                        x_curr,
-                        sizeof(float) * state_dims
+                    float* world_state = IDX_3D(
+                        sampled_state_trajectories,
+                        dim3(num_samples, num_timesteps, state_dims),
+                        dim3(i, j, 0)
                     );
+                    memcpy(world_state, x_curr, sizeof(float) * state_dims);
+                    // curv_state_to_world_state(world_state, get_interpolated_frame(x_curr[state_x_idx]));
 #endif
 
                     const float c = cost(x_curr);
@@ -214,8 +327,9 @@ namespace controls {
 
             const ActionAverage reduction_functor {};
 
-            ReduceTimestep (DeviceAction* averaged_action, const float* action_trajectories, const float* cost_to_gos)
+            ReduceTimestep (DeviceAction* averaged_action, DeviceAction* action_trajectory_base, const float* action_trajectories, const float* cost_to_gos)
                     : averaged_action {averaged_action},
+                      action_trajectory_base {action_trajectory_base},
                       action_trajectories {action_trajectories},
                       cost_to_gos {cost_to_gos} { }
 

@@ -13,8 +13,8 @@
 namespace controls {
     namespace state {
 
-        std::unique_ptr<StateEstimator> StateEstimator::create() {
-            return std::make_unique<StateEstimator_Impl>();
+        std::shared_ptr<StateEstimator> StateEstimator::create() {
+            return std::make_shared<StateEstimator_Impl>();
         }
 
 
@@ -62,15 +62,17 @@ namespace controls {
                 32, 32, 32, 32, cudaChannelFormatKindFloat
             );
 
-            CUDA_CALL(cudaMallocArray(&cuda_globals::spline_array, &channel_desc, max_spline_texture_elems, 1));
+            CUDA_CALL(cudaMalloc(&cuda_globals::spline_texture_buf, sizeof(float4) * max_spline_texture_elems));
 
             cudaResourceDesc resource_desc {};
-            resource_desc.resType = cudaResourceTypeArray;
-            resource_desc.res.array.array = cuda_globals::spline_array;
+            resource_desc.resType = cudaResourceTypeLinear;
+            resource_desc.res.linear.desc = channel_desc;
+            resource_desc.res.linear.devPtr = cuda_globals::spline_texture_buf;
+            resource_desc.res.linear.sizeInBytes = max_spline_texture_elems * sizeof(float4);
 
             cudaTextureDesc texture_desc {};
             texture_desc.addressMode[0] = cudaAddressModeClamp;
-            texture_desc.filterMode = cudaFilterModeLinear;
+            texture_desc.filterMode = cudaFilterModePoint;
             texture_desc.readMode = cudaReadModeElementType;
             texture_desc.normalizedCoords = false;
 
@@ -90,7 +92,7 @@ namespace controls {
             assert(cuda_globals::spline_texture_created);
 
             cudaDestroyTextureObject(cuda_globals::spline_texture_object);
-            cudaFreeArray(cuda_globals::spline_array);
+            cudaFree(cuda_globals::spline_texture_buf);
 
             cuda_globals::spline_texture_created = false;
         }
@@ -101,7 +103,7 @@ namespace controls {
             m_spline_frames.clear();
             m_spline_frames.reserve(spline_msg.frames.size());
 
-            for (const interfaces::msg::SplineFrame& frame : spline_msg.frames) {
+            for (const auto& frame : spline_msg.frames) {
                 m_spline_frames.push_back(SplineFrame {frame.x, frame.y, 0.0f, 0.0f});
             }
 
@@ -134,10 +136,17 @@ namespace controls {
             std::cout << "-------------------\n" << std::endl;
         }
 
-        void StateEstimator_Impl::on_slam(const SlamMsg& slam_msg) {
-            m_world_state[state_x_idx] = slam_msg.x;
-            m_world_state[state_y_idx] = slam_msg.y;
-            m_world_state[state_yaw_idx] = slam_msg.theta;
+        void StateEstimator_Impl::on_state(const StateMsg& state_msg) {
+            m_world_state[state_x_idx] = state_msg.x;
+            m_world_state[state_y_idx] = state_msg.y;
+            m_world_state[state_yaw_idx] = state_msg.yaw;
+            m_world_state[state_car_xdot_idx] = state_msg.xcar_dot;
+            m_world_state[state_car_ydot_idx] = state_msg.ycar_dot;
+            m_world_state[state_yawdot_idx] = state_msg.yaw_dot;
+            m_world_state[state_mx_idx] = state_msg.moment_y;
+            m_world_state[state_fz_idx] = state_msg.downforce;
+            m_world_state[state_whl_speed_f_idx] = state_msg.whl_speed_f;
+            m_world_state[state_whl_speed_r_idx] = state_msg.whl_speed_r;
 
             recalculate_curv_state();
             sync_curv_state();
@@ -150,10 +159,9 @@ namespace controls {
             assert(elems <= max_spline_texture_elems);
             CUDA_CALL(cudaMemcpyToSymbolAsync(cuda_globals::spline_texture_elems, &elems, sizeof(elems)));
 
-            CUDA_CALL(cudaMemcpy2DToArrayAsync(
-                cuda_globals::spline_array, 0, 0,
-                m_spline_frames.data(),
-                elems * sizeof(SplineFrame), elems * sizeof(SplineFrame), 1,
+            CUDA_CALL(cudaMemcpy(
+                cuda_globals::spline_texture_buf, m_spline_frames.data(),
+                sizeof(SplineFrame) * elems,
                 cudaMemcpyHostToDevice
             ));
         }

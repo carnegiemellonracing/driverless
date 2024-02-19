@@ -3,7 +3,7 @@
 namespace controls {
     namespace cuda_globals {
 
-        cudaArray_t spline_array;
+        float4* spline_texture_buf;
         cudaTextureObject_t spline_texture_object;
         bool spline_texture_created = false;
 
@@ -14,9 +14,9 @@ namespace controls {
         __constant__ float curr_state[state_dims] = {10, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
-            0.2, 0, 0,
-            0, 500, 0,
-            0, 0, 500
+            0.1, 0, 0,
+            0, 1, 0,
+            0, 0, 1
         };
 
         __constant__ const float action_min[action_dims] = {

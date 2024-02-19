@@ -15,8 +15,8 @@
 namespace controls {
     namespace mppi {
 
-        std::unique_ptr<MppiController> MppiController::create() {
-            return std::make_unique<MppiController_Impl>();
+        std::shared_ptr<MppiController> MppiController::create() {
+            return std::make_shared<MppiController_Impl>();
         }
 
         MppiController_Impl::MppiController_Impl()
@@ -86,7 +86,9 @@ namespace controls {
         }
 
 #ifdef PUBLISH_STATES
-        std::vector<float> MppiController_Impl::last_state_trajectories() const {
+        std::vector<float> MppiController_Impl::last_state_trajectories() {
+            std::lock_guard<std::mutex> guard {m_state_trajectories_mutex};
+
             std::vector<float> result (m_state_trajectories.size());
             thrust::copy(m_state_trajectories.begin(), m_state_trajectories.end(), result.begin());
 
@@ -126,6 +128,7 @@ namespace controls {
             // for_each applies the ReduceTimestep functor to every idx in the range [0, num_timesteps)
             thrust::for_each(indices, indices + num_timesteps, ReduceTimestep {
                 averaged_actions.data().get(),
+                m_last_action_trajectory.data().get(),
                 m_action_trajectories.data().get(),
                 m_cost_to_gos.data().get()
             });
@@ -136,22 +139,20 @@ namespace controls {
         void MppiController_Impl::populate_cost() {
             thrust::counting_iterator<uint32_t> indices {0};
 
-            float* curr_state_ptr;
-            cudaGetSymbolAddress(
-                reinterpret_cast<void**>(&curr_state_ptr),
-                cuda_globals::curr_state
-            );
-
-            PopulateCost populate_cost {
-                m_action_trajectories.data(),
-                m_action_trajectories.data(),
+            {
 #ifdef PUBLISH_STATES
-                m_state_trajectories.data(),
+                std::lock_guard<std::mutex> state_trajectories_guard {m_state_trajectories_mutex};
 #endif
-                m_cost_to_gos.data(), m_last_action_trajectory.data(),
-                thrust::device_pointer_cast(curr_state_ptr)};
+                PopulateCost populate_cost {
+                    m_action_trajectories.data(),
+                    m_action_trajectories.data(),
+    #ifdef PUBLISH_STATES
+                    m_state_trajectories.data(),
+    #endif
+                    m_cost_to_gos.data(), m_last_action_trajectory.data()};
 
-            thrust::for_each(indices, indices + num_samples, populate_cost);
+                thrust::for_each(indices, indices + num_samples, populate_cost);
+            }
         }
 
     }

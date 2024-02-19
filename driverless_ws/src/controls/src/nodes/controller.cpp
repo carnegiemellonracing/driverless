@@ -8,14 +8,18 @@
 #include <visualization_msgs/msg/marker_array.hpp>
 #include <visualization_msgs/msg/marker.hpp>
 
+#ifdef PUBLISH_STATES
+#include <display/display.hpp>
+#endif
+
 #include "controller.hpp"
 
 namespace controls {
     namespace nodes {
 
             ControllerNode::ControllerNode(
-                std::unique_ptr<state::StateEstimator> state_estimator,
-                std::unique_ptr<mppi::MppiController> mppi_controller)
+                std::shared_ptr<state::StateEstimator> state_estimator,
+                std::shared_ptr<mppi::MppiController> mppi_controller)
                 : Node {controller_node_name},
 
                   m_state_estimator {std::move(state_estimator)},
@@ -33,28 +37,27 @@ namespace controls {
                           control_action_qos)
                   },
 
-                  m_spline_subscription {
-                      create_subscription<SplineMsg>(
-                          spline_topic_name, spline_qos,
-                          [this] (const SplineMsg::SharedPtr msg) { spline_callback(*msg); })
-                  },
-
-                  m_slam_subscription {
-                      create_subscription<SlamMsg>(
-                          spline_topic_name, spline_qos,
-                          [this] (const SlamMsg::SharedPtr msg) { slam_callback(*msg); })
-                  },
-
-#ifdef PUBLISH_STATES
-                  m_state_trajectory_publisher {
-                      create_publisher<visualization_msgs::msg::MarkerArray>(
-                          state_trajectories_topic_name,
-                          state_trajectories_qos)
-                  },
-#endif
-
                   m_action_read {std::make_unique<Action>()},
-                  m_action_write {std::make_unique<Action>()} { }
+                  m_action_write {std::make_unique<Action>()} {
+
+                rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group {
+                    create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};
+
+                rclcpp::SubscriptionOptions options {};
+                options.callback_group = state_estimation_callback_group;
+
+                m_spline_subscription = create_subscription<SplineMsg>(
+                    spline_topic_name, spline_qos,
+                    [this] (const SplineMsg::SharedPtr msg) { spline_callback(*msg); },
+                    options
+                );
+
+                m_state_subscription  = create_subscription<StateMsg>(
+                    state_topic_name, state_qos,
+                    [this] (const StateMsg::SharedPtr msg) { state_callback(*msg); },
+                    options
+                );
+            }
 
             void ControllerNode::publish_action_callback() {
                 std::lock_guard<std::mutex> action_read_guard {action_read_mut};
@@ -69,10 +72,10 @@ namespace controls {
                 run_mppi();
             }
 
-            void ControllerNode::slam_callback(const SlamMsg& slam_msg) {
+            void ControllerNode::state_callback(const StateMsg& state_msg) {
                 std::cout << "Received slam" << std::endl;
 
-                m_state_estimator->on_slam(slam_msg);
+                m_state_estimator->on_state(state_msg);
                 run_mppi();
             }
 
@@ -84,62 +87,8 @@ namespace controls {
                 msg.torque_rl = action[action_torque_r_idx] / 2;
                 msg.torque_rr = action[action_torque_r_idx] / 2;
 
-                // std::cout << "Publishing message: { swangle: " << msg.swangle << ", torque_f: "
-                //           << msg.torque_f << ", torque_r: " << msg.torque_r << " }" << std::endl;
-
                 m_action_publisher->publish(msg);
             }
-
-#ifdef PUBLISH_STATES
-            void ControllerNode::publish_state_trajectories(const std::vector<float>& state_trajectories) {
-                visualization_msgs::msg::MarkerArray paths {};
-
-                // std::cout << "States:" << std::endl;
-                // for (int i = 0; i < num_samples; i++) {
-                //     for (int j = 0; j < num_timesteps; j++) {
-                //         std::cout << "{ ";
-                //         for (int k = 0; k < 2; k++) {
-                //             std::cout << state_trajectories[i * num_timesteps * state_dims + j * state_dims + k] << " ";
-                //         }
-                //         std::cout << " }";
-                //     }
-                //     std::cout << std::endl;
-                // }
-                // std::cout << std::endl;
-
-
-                for (uint32_t i = 0; i < 1; i++) {
-                    visualization_msgs::msg::Marker lines {};
-                    lines.type = visualization_msgs::msg::Marker::LINE_STRIP;
-                    lines.header.stamp = get_clock()->now();
-                    lines.header.frame_id = "/world_frame";
-                    lines.id = i;
-                    lines.pose.orientation.w = 1.0f;
-                    lines.color.r = 1.0f;
-                    lines.color.a = 1.0f;
-                    lines.scale.y = lines.scale.z = 1.0f;
-                    lines.scale.x = 0.000001f;
-
-                    for (uint32_t j = 0; j < num_timesteps; j++) {
-                        geometry_msgs::msg::Point point;
-
-                        const float* state = &state_trajectories[
-                            i * num_timesteps * state_dims + j * state_dims
-                        ];
-
-                        point.x = state[state_x_idx];
-                        point.y = state[state_y_idx];
-                        point.z = 0;
-
-                        lines.points.push_back(point);
-                    }
-
-                    paths.markers.push_back(lines);
-                }
-
-                m_state_trajectory_publisher->publish(paths);
-            }
-#endif
 
             void ControllerNode::run_mppi() {
                 std::cout << "-------- RUN MPPI -------" << std::endl;
@@ -154,11 +103,6 @@ namespace controls {
 
                 std::cout << "swapping action buffers" << std::endl;
                 swap_action_buffers();
-
-#ifdef PUBLISH_STATES
-                RCLCPP_DEBUG(get_logger(), "publishing state trajectories");
-                publish_state_trajectories(m_mppi_controller->last_state_trajectories());
-#endif
             }
 
             void ControllerNode::swap_action_buffers() {
@@ -176,21 +120,62 @@ namespace controls {
 int main(int argc, char *argv[]) {
     using namespace controls;
 
-    std::unique_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create();
-    std::unique_ptr<mppi::MppiController> controller = mppi::MppiController::create();
+    std::shared_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create();
+    std::shared_ptr<mppi::MppiController> controller = mppi::MppiController::create();
 
     rclcpp::init(argc, argv);
     std::cout << "rclcpp initialized" << std::endl;
 
-    const auto node = std::make_shared<nodes::ControllerNode>(
-        std::move(state_estimator),
-        std::move(controller)
-    );
-
+    const auto node = std::make_shared<nodes::ControllerNode>(state_estimator, controller);
     std::cout << "controller node created" << std::endl;
 
-    rclcpp::spin(node);
+    std::mutex thread_died_mut;
+    std::condition_variable thread_died_cond;
+    bool thread_died = false;
 
+    std::thread node_thread {[&] {
+        rclcpp::executors::MultiThreadedExecutor exec;
+        exec.add_node(node);
+        exec.spin();
+
+        {
+            std::lock_guard<std::mutex> guard {thread_died_mut};
+
+            std::cout << "Node terminated. Exiting..." << std::endl;
+            thread_died = true;
+            thread_died_cond.notify_all();
+        }
+    }};
+
+    std::cout << "controller node thread launched" << std::endl;
+
+
+#ifdef PUBLISH_STATES
+    display::Display display {controller, state_estimator};
+    std::cout << "display created" << std::endl;
+
+    std::thread display_thread {[&] {
+        display.run();
+
+        {
+            std::lock_guard<std::mutex> guard {thread_died_mut};
+
+            std::cout << "Display thread closed. Exiting.." << std::endl;
+            thread_died = true;
+            thread_died_cond.notify_all();
+        }
+    }};
+    std::cout << "display thread launched" << std::endl;
+#endif
+
+    {
+        std::unique_lock<std::mutex> guard {thread_died_mut};
+        if (!thread_died) {
+            thread_died_cond.wait(guard);
+        }
+    }
+
+    std::cout << "Shutting down" << std::endl;
     rclcpp::shutdown();
     return 0;
 }
