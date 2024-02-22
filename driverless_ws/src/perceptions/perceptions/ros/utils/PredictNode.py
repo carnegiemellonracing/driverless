@@ -71,7 +71,6 @@ class PredictNode(DataNode):
         # display if necessary
         if self.debug:
             self.predictor.display()
-            print(cones)
 
         # publish message
         msg = conversions.cones_to_msg(cones)
