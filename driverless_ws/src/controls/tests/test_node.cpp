@@ -1,13 +1,8 @@
 #include <iostream>
 #include <types.hpp>
 #include <constants.hpp>
-#include <interfaces/msg/control_action.hpp>
-#include <interfaces/msg/spline_frame_list.hpp>
-#include <interfaces/msg/spline_list.hpp>
 #include <cmath>
-#include <rclcpp/rclcpp.hpp>
 #include <glm/glm.hpp>
-#include <std_msgs/msg/header.hpp>
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
 #include <model/two_track/codegen/minimal_state_function.h>
@@ -33,8 +28,7 @@ namespace controls {
               m_state_publisher {create_publisher<StateMsg>(state_topic_name, state_qos)} {
         }
 
-        interfaces::msg::SplineFrameList
-        sine_spline(float period, float amplitude, float progress, float density) {
+        SplineMsg sine_spline(float period, float amplitude, float progress, float density) {
             using namespace glm;
 
             interfaces::msg::SplineFrameList result {};
@@ -58,11 +52,10 @@ namespace controls {
             return result;
         }
 
-        interfaces::msg::SplineFrameList
-        line_spline(float progress, float density) {
+        SplineMsg line_spline(float progress, float density) {
             using namespace glm;
 
-            interfaces::msg::SplineFrameList result {};
+            SplineMsg result {};
 
             fvec2 point {0.0f, 0.0f};
             float total_dist = 0;
@@ -78,7 +71,6 @@ namespace controls {
                 point += delta;
             }
 
-            result.header = std_msgs::msg::Header {};
             return result;
         }
 
@@ -103,14 +95,20 @@ namespace controls {
             dstatedt[0] = x_world_dot;
             dstatedt[1] = y_world_dot;
             dstatedt[2] = yaw_dot;
-            std::copy(std::begin(minimal_state), std::end(minimal_state), &dstatedt[3]);
+            memcpy(&dstatedt[3], minimal_state_dot, sizeof(minimal_state_dot));
 
-            return 0;
+            return GSL_SUCCESS;
         }
 
         void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
             std::cout << "Swangle: " << msg.swangle << " Torque f: " <<
                 msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl << std::endl;
+
+            ActionMsg adj_msg = msg;
+            adj_msg.torque_fl /= 1000.;
+            adj_msg.torque_fl /= 1000.;
+            adj_msg.torque_fl /= 1000.;
+            adj_msg.torque_fl /= 1000.;
 
             gsl_odeiv2_system system {};
             system.function = model_func;
@@ -131,19 +129,22 @@ namespace controls {
             }
 
             gsl_odeiv2_driver_free(driver);
-
             publish_state();
         }
 
         void TestNode::publish_spline() {
             std::cout << "Publishing spline" << std::endl << std::endl;
-//            const auto spline = sine_spline(1, 0.3, 3, 0.05);
-            const auto spline = line_spline(100, 0.5);
+            const auto spline = sine_spline(5, 1, 100, 0.5);
+            // const auto spline = line_spline(100, 0.5);
             m_spline_publisher->publish(spline);
         }
 
         void TestNode::publish_state() {
-            std::cout << "Publishing state" << std::endl << std::endl;
+            std::cout << "Publishing state" << std::endl;
+            for (float dim : m_world_state) {
+                std::cout << dim << " ";
+            }
+            std::cout << std::endl << std::endl;
 
             StateMsg msg {};
             msg.x = m_world_state[0];

@@ -2,7 +2,6 @@
 
 #include <cuda_constants.cuh>
 #include <state/state_estimator.cuh>
-#include <mutex>
 
 #include "constants.hpp"
 

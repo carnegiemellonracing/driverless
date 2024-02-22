@@ -40,7 +40,7 @@ namespace controls {
             void update_loop(SDL_Window* window);
 
             glm::fvec2 m_cam_pos {0.0f, 0.0f};
-            glm::fvec2 m_cam_scale {1.0f, 1.0f};
+            float m_cam_scale = 1.0f;
 
             GLuint m_shader_program;
             GLint m_cam_pos_loc;

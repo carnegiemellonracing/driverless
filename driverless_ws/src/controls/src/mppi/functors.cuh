@@ -69,6 +69,7 @@ namespace controls {
             const float yaw_curv = curv_state[state_yaw_idx];
             const SplineFrame frame = get_interpolated_frame(progress);
 
+            // If first thread, print info
             if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
                 printf("action: %f %f %f\n", action[0], action[1], action[2]);
                 printf("curv state: %f %f %f %f %f %f %f %f %f %f\n", curv_state[0], curv_state[1], curv_state[2],
@@ -76,32 +77,27 @@ namespace controls {
                 printf("Frame: %f %f %f %f\n", frame.x, frame.y, frame.tangent_angle, frame.curvature);
             }
 
-
-
+            // create local world state vector
             float world_state[state_dims];
             memcpy(world_state, curv_state, sizeof(world_state));
             curv_state_to_world_state(world_state, frame);
-
             assert(!any_nan(world_state, state_dims) && "World state was nan during model");
 
+
+            // Call dynamics model. Outputs dstate/dt, but may take timestep into consideration for stability
+            // or accuracy purposes. Extenionsally, forward euler should be done on this.
+
+            // We do this instead of directly calculating the next step because world state dot -> curv state dot is
+            // much cheaper to calculate (given current curv state) than world state -> curv state
             float world_state_dot[state_dims];
-            ONLINE_DYNAMICS_FUNC(world_state, action, world_state_dot);
-
-            float mid_state[state_dims];
-            for (uint8_t i = 0; i < state_dims; i++) {
-                mid_state[i] = world_state_dot[i] * 0.5 * timestep;
-            }
-
-            ONLINE_DYNAMICS_FUNC(mid_state, action, world_state_dot);
-
+            ONLINE_DYNAMICS_FUNC(world_state, action, world_state_dot, timestep);
             assert(!any_nan(world_state_dot, state_dims) && "World state dot was nan directly after dynamics call");
 
-            world_state_dot_to_curv_state_dot(world_state_dot, frame, yaw_curv);
 
+            world_state_dot_to_curv_state_dot(world_state_dot, frame, yaw_curv);
             assert(!any_nan(world_state_dot, state_dims) && "Curv state dot was nan after dynamics call");
 
             const auto& curv_state_dot = world_state_dot;
-
             for (uint8_t i = 0; i < state_dims; i++) {
                 curv_state_out[i] = curv_state_dot[i] * timestep;
             }
@@ -225,7 +221,7 @@ namespace controls {
                         dim3(i, j, 0)
                     );
                     memcpy(world_state, x_curr, sizeof(float) * state_dims);
-                    // curv_state_to_world_state(world_state, get_interpolated_frame(x_curr[state_x_idx]));
+                    curv_state_to_world_state(world_state, get_interpolated_frame(x_curr[state_x_idx]));
 #endif
 
                     const float c = cost(x_curr);
