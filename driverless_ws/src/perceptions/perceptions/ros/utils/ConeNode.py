@@ -139,17 +139,25 @@ class ConeNode(Node):
         self.flush_cones()
         
         return
-
-def main(args=None):
+    
+def start_cone_node(args=None, debug=False):
     rclpy.init(args=args)
 
-    cone_node = ConeNode(debug=True)
+    cone_node = ConeNode(debug=debug)
 
     rclpy.spin(cone_node)
 
     cone_node.destroy_node()
     rclpy.shutdown()
 
+    return
+
+def main(args=None):
+    start_cone_node(args=args, debug=False)
+    return
+
+def main_debug(args=None):
+    start_cone_node(args=args, debug=True)
     return
 
 if __name__ == "__main__":
