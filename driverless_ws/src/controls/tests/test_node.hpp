@@ -1,7 +1,6 @@
 #pragma once
 
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
+#include <rclcpp/rclcpp.hpp>
 
 namespace controls {
     namespace tests {
@@ -21,7 +20,7 @@ namespace controls {
             rclcpp::TimerBase::SharedPtr m_spline_timer;
 
             // thomas model state
-            std::array<double, 13> m_world_state {};
+            std::array<double, 13> m_world_state {1, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
         };
 
     }

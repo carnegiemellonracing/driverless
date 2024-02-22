@@ -1,13 +1,12 @@
 #include <cuda_utils.cuh>
-#include <interfaces/msg/spline_frame_list.hpp>
-#include <interfaces/msg/spline_frame.hpp>
 #include <cuda_globals/cuda_globals.cuh>
 #include <glm/glm.hpp>
+#include <cuda_constants.cuh>
+
 
 #include "state_estimator.cuh"
 #include "state_estimator.hpp"
 
-#include <cuda_constants.cuh>
 
 
 namespace controls {
@@ -143,13 +142,17 @@ namespace controls {
             m_world_state[state_car_xdot_idx] = state_msg.xcar_dot;
             m_world_state[state_car_ydot_idx] = state_msg.ycar_dot;
             m_world_state[state_yawdot_idx] = state_msg.yaw_dot;
-            m_world_state[state_mx_idx] = state_msg.moment_y;
+            m_world_state[state_my_idx] = state_msg.moment_y;
             m_world_state[state_fz_idx] = state_msg.downforce;
             m_world_state[state_whl_speed_f_idx] = state_msg.whl_speed_f;
             m_world_state[state_whl_speed_r_idx] = state_msg.whl_speed_r;
 
             recalculate_curv_state();
             sync_curv_state();
+        }
+
+        std::vector<SplineFrame> StateEstimator_Impl::get_spline_frames() const {
+            return m_spline_frames;
         }
 
         void StateEstimator_Impl::send_frames_to_texture() {
@@ -169,56 +172,45 @@ namespace controls {
         void StateEstimator_Impl::recalculate_curv_state() {
             using namespace glm;
 
-            auto distance_to_segment = [this] (fvec2 pos, size_t segment) {
-                const SplineFrame frame = m_spline_frames[segment];
-                return length(pos - fvec2(frame.x, frame.y));
-            };
-
             const fvec2 world_pos {m_world_state[state_x_idx], m_world_state[state_y_idx]};
 
-            size_t min_dist_segment = 0;
-            float min_dist = distance_to_segment(world_pos, min_dist_segment);
-            for (size_t i = 0; i < m_spline_frames.size(); i++) {
-                const float this_dist = distance_to_segment(world_pos, i);
-                if (this_dist < min_dist) {
-                    min_dist = this_dist;
-                    min_dist_segment = i;
+            float min_dist_progress;
+            float min_dist_offset;
+            float min_dist_curv_yaw;
+            float min_dist;
+            bool found = false;
+            for (size_t i = 0; i < m_spline_frames.size() - 1; i++) {
+                SplineFrame frame1 = m_spline_frames[i];
+                SplineFrame frame2 = m_spline_frames[i + 1];
+
+                const fvec2 frame1pos {frame1.x, frame1.y};
+                const fvec2 frame2pos {frame2.x, frame2.y};
+                const fvec2 segment_disp = frame2pos - frame1pos;
+                const fvec2 tangent = normalize(segment_disp);
+                const fvec2 car_disp = world_pos - frame1pos;
+                const float closest_progress_on_line = dot(tangent, car_disp);
+                if (closest_progress_on_line < 0 || closest_progress_on_line >= segment_disp.length()) {
+                    continue;
+                }
+
+                const fvec2 closest_point = frame1pos + closest_progress_on_line * tangent;
+                const float car_dist = distance(closest_point, world_pos);
+
+                if (!found || car_dist < min_dist) {
+                    found = true;
+
+                    min_dist = car_dist;
+                    min_dist_progress = i * spline_frame_separation + closest_progress_on_line;
+                    min_dist_offset = car_dist;
+                    min_dist_curv_yaw = m_world_state[state_yaw_idx] - atan2(tangent.y, tangent.x);
                 }
             }
 
-            const SplineFrame frame = m_spline_frames[min_dist_segment];
-            const fvec2 segment_start {frame.x, frame.y};
+            assert(found);
 
-            float arc_progress;
-            float offset;
-            float curv_yaw;
-
-            if (frame.curvature == 0) {
-                const fvec2 normal {sin(frame.tangent_angle), -cos(frame.tangent_angle)};
-                offset = dot(world_pos - segment_start, normal);
-                arc_progress = length(world_pos - normal * offset - segment_start);
-                curv_yaw = m_world_state[state_yaw_idx] - frame.tangent_angle;
-
-            } else {
-                const float angle_to_center = frame.tangent_angle + radians(90.);
-                const fvec2 center_to_start = -fvec2 {cos(angle_to_center), sin(angle_to_center)} / frame.curvature;
-
-                const fvec2 center = segment_start - center_to_start;
-                const fvec2 center_to_pos = world_pos - center;
-
-                const float vecs_crossed = center_to_start.x * center_to_pos.y - center_to_pos.x * center_to_start.y;
-                const float angle_along_arc = asin(frame.curvature * vecs_crossed / length(center_to_pos));
-
-                arc_progress = angle_along_arc / abs(frame.curvature);
-                offset = length(center_to_start) - length(center_to_pos);
-                curv_yaw = m_world_state[state_yaw_idx] - (frame.tangent_angle + arc_progress * frame.curvature);
-            }
-
-            assert(arc_progress >= 0);
-
-            m_curv_state[state_x_idx] = min_dist_segment * spline_frame_separation + arc_progress;
-            m_curv_state[state_y_idx] = offset;
-            m_curv_state[state_yaw_idx] = curv_yaw;
+            m_curv_state[state_x_idx] = min_dist_progress;
+            m_curv_state[state_y_idx] = min_dist_offset;
+            m_curv_state[state_yaw_idx] = min_dist_curv_yaw;
             std::copy(&m_world_state[3], m_world_state.end(), &m_curv_state[3]);
         }
 

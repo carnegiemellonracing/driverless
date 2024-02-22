@@ -48,8 +48,8 @@ namespace controls {
     constexpr uint8_t state_car_xdot_idx = 3;
     constexpr uint8_t state_car_ydot_idx = 4;
     constexpr uint8_t state_yawdot_idx = 5;
-    constexpr uint8_t state_fz_idx = 6;
-    constexpr uint8_t state_mx_idx = 7;
+    constexpr uint8_t state_my_idx = 8;
+    constexpr uint8_t state_fz_idx = 7;
     constexpr uint8_t state_whl_speed_f_idx = 8;
     constexpr uint8_t state_whl_speed_r_idx = 9;
 

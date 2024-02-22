@@ -10,8 +10,10 @@ namespace controls {
         public:
             static std::shared_ptr<StateEstimator> create();
 
-            virtual void on_spline(const controls::SplineMsg& spline_msg) =0;
+            virtual void on_spline(const SplineMsg& spline_msg) =0;
             virtual void on_state(const StateMsg& state_msg) =0;
+
+            //virtual std::vector<SplineFrame> get_spline_frames() const =0;
 
             virtual ~StateEstimator() = default;
         };

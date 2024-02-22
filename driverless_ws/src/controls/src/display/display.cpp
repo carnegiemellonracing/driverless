@@ -137,7 +137,7 @@ namespace controls {
                 "#version 330 core\n"
                 "layout (location = 0) in vec2 aPos;\n"
                 "uniform vec2 camPos;"
-                "uniform vec2 camScale;"
+                "uniform float camScale;"
                 "void main()\n"
                 "{\n"
                 "   gl_Position = vec4((aPos - camPos) / camScale, 0.0f, 1.0f);\n"
@@ -221,8 +221,8 @@ namespace controls {
             for (uint32_t i = 0; i < num_samples; i++) {
                 for (uint32_t j = 0; j < num_timesteps; j++) {
                     uint32_t state_idx = i * state_dims * num_timesteps + j * state_dims;
-                    m_trajectories[i].vertex_buf[2 * j] = states[state_idx] * 100;
-                    m_trajectories[i].vertex_buf[2 * j + 1] = states[state_idx + 1] * 100;
+                    m_trajectories[i].vertex_buf[2 * j] = states[state_idx];
+                    m_trajectories[i].vertex_buf[2 * j + 1] = states[state_idx + 1];
                 }
             }
 
@@ -280,34 +280,28 @@ namespace controls {
                 const uint8_t* keyboard_state = SDL_GetKeyboardState(nullptr);
 
                 if (keyboard_state[SDL_SCANCODE_LEFT]) {
-                    m_cam_pos += strafe_speed * delta_time * glm::fvec2(-1,0);
+                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(-1,0);
                 }
                 if (keyboard_state[SDL_SCANCODE_RIGHT]) {
-                    m_cam_pos += strafe_speed * delta_time * glm::fvec2(1,0);
+                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(1,0);
                 }
                 if (keyboard_state[SDL_SCANCODE_UP]) {
-                    m_cam_pos += strafe_speed * delta_time * glm::fvec2(0,1);
+                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,1);
                 }
                 if (keyboard_state[SDL_SCANCODE_DOWN]) {
-                    m_cam_pos += strafe_speed * delta_time * glm::fvec2(0,-1);
+                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,-1);
                 }
 
                 if (keyboard_state[SDL_SCANCODE_S]) {
-                    m_cam_scale *= glm::pow(
-                        (1 + scale_speed) * glm::fvec2(1,1),
-                        glm::fvec2(delta_time, delta_time
-                    ));
+                    m_cam_scale *= pow(1 + scale_speed, delta_time);
                 }
                 if (keyboard_state[SDL_SCANCODE_W]) {
-                    m_cam_scale *= glm::pow(
-                        1 / (1 + scale_speed) * glm::fvec2(1,1),
-                        glm::fvec2(delta_time, delta_time
-                    ));
+                    m_cam_scale *= pow(1 / (1 + scale_speed), delta_time);
                 }
 
                 glUseProgram(m_shader_program);
                 glUniform2f(m_cam_pos_loc, m_cam_pos.x, m_cam_pos.y);
-                glUniform2f(m_cam_scale_loc, m_cam_scale.x, m_cam_scale.y);
+                glUniform1f(m_cam_scale_loc, m_cam_scale);
 
                 glClear(GL_COLOR_BUFFER_BIT);
 
@@ -326,8 +320,6 @@ namespace controls {
             }
 
             SDL_Quit();
-
-
         }
 
     }

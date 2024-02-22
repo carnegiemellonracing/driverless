@@ -16,6 +16,12 @@
 #define CUDA_CALL(x) (cuda_assert(x, __FILE__, __LINE__))
 #define CURAND_CALL(x) (curand_assert(x, __FILE__, __LINE__))
 
+#ifdef PARANOID
+#define paranoid_assert(x) (assert(x))
+#else
+#define paranoid_assert(x) ((void)0)
+#endif
+
 
 namespace controls {
 
@@ -131,5 +137,4 @@ namespace controls {
     __host__ __device__ static T clamp(T n, T low, T high) {
         return min(max(n, low), high);
     }
-
 }

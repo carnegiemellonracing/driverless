@@ -5,8 +5,6 @@
 #include <constants.hpp>
 #include <interfaces/msg/control_action.hpp>
 #include <state/state_estimator.hpp>
-#include <visualization_msgs/msg/marker_array.hpp>
-#include <visualization_msgs/msg/marker.hpp>
 
 #ifdef PUBLISH_STATES
 #include <display/display.hpp>

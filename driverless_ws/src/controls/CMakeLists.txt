@@ -34,6 +34,7 @@ find_package(GSL REQUIRED)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/../)
 include_directories(${PROJECT_SOURCE_DIR}/extern/include)
+include_directories($<INSTALL_INTERFACE:include>)
 
 file(GLOB TWO_TRACK_CPP src/model/two_track/codegen/*.cpp)
 set(LIB_SOURCES
@@ -51,6 +52,10 @@ if (PUBLISH_STATES)
           src/display/display.cpp
           extern/src/glad.c
   )
+endif()
+
+if (PARANOID)
+  add_compile_options(-DPARANOID)
 endif()
 
 add_compile_options(-g -O0)
@@ -105,8 +110,8 @@ if(BUILD_TESTING)
       DESTINATION lib/${PROJECT_NAME}
   )
 
-  add_executable(model_wrapper tests/model/model_wrapper.cu)
-  target_link_libraries(model_wrapper controls_lib)
+#  add_executable(model_wrapper tests/model/model_wrapper.cu)
+#  target_link_libraries(model_wrapper controls_lib)
 
 endif()
 
