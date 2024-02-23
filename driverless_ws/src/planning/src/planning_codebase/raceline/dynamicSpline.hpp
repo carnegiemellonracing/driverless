@@ -2,14 +2,25 @@
 #include "racelineEigen.hpp"
 
 public:
-    std::vector<double>* progressVector; // in meters, signifies end points of each segment
-
     // section of track progress that share similar curvature
     struct bucket {
         double startProgress; // start of the bucket
         double endProgress; // end of the bucket
         double sumCurvature; // sum of curvatures at sample points
+
+        // below are fields to be used by optimizer
+        double avgCurvature; // running avg of bucket
+        std::vector<pair<double, double>> bluePoints; // points on the blue cone spline
+        std::vector<pair<double, double>> yellowPoints; // points on the yellow cone spline
     };
+
+    std::vector<bucket>* bucketsVector; // contains bucket structs, which contain the start and end points
+                                       // of each segment and points in between
+
+    /** function to make vector of splines from std::vector<std::pair<double,double>> 
+        (blue or yellow cones) of perception data
+    */
+    std::pair<std::vector<Spline>,std::vector<double>> makeSplinesVector (std::vector<std::pair<double,double>> cones);
 
     /** update running average of current bucket, update splines vector
      * @arg curvature: curvature is added to the current average
@@ -23,11 +34,8 @@ public:
     //bool checkStartNewBucket(double runningAvg, double newCurvature);
     bool checkStartNewBucket(bucket b, double newCurvature);
 
-    // how many times to split a bucket based on curvature
-    int getNumBucketSplits(double curvature, bucket b);
-
     // finds the progress points to split given bucket 
-    std::vector<double> progressSplits(bucket b);
+    void progressSplits(bucket b);
 
     /** @brief updates a given vector with the progress sections to optimize over
     * @note about the usage of progressVector: vector of progresses that indicate sections to

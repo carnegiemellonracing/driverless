@@ -104,6 +104,7 @@ public:
 
 // new functions translated from python (path_optimization.py)
 double get_curvature(double progress);
+// interpolate_raceline Tuple[np.ndarray[float], Spline, float]
 
 
 Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts);
