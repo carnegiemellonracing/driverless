@@ -142,19 +142,19 @@ namespace controls {
            */
             __host__ __device__ static void dynamics(const float state[], const float action[], float state_dot[], float timestep) {
                 //unpackages state array
-                float yaw_world = state[state_yaw_idx];
-                float x_dot_car = state[state_car_xdot_idx];
-                float y_dot_car = state[state_car_ydot_idx];
-                float yaw_rate = state[state_yawdot_idx];
+                const float yaw_world = state[state_yaw_idx];
+                const float x_dot_car = state[state_car_xdot_idx];
+                const float y_dot_car = state[state_car_ydot_idx];
+                const float yaw_rate = state[state_yawdot_idx];
                 // float pitch_moment = state[6];
                 // float downforce = state[7];
-                float front_wheel_speed = state[state_whl_speed_f_idx];
-                float rear_wheel_speed = state[state_whl_speed_r_idx];
+                const float front_wheel_speed = state[state_whl_speed_f_idx];
+                const float rear_wheel_speed = state[state_whl_speed_r_idx];
 
                 //unpackages action
-                float steering_angle = action[action_swangle_idx];
-                float torque_front = action[action_torque_f_idx];
-                float torque_rear = action[action_torque_r_idx];
+                const float steering_angle = action[action_swangle_idx];
+                const float torque_front = action[action_torque_f_idx];
+                const float torque_rear = action[action_torque_r_idx];
 
                 //compares wheel forces
                 float y_dot_front_tire = y_dot_car + yaw_rate *CG_TO_FRONT;
@@ -225,7 +225,7 @@ namespace controls {
 
                 //Updates dot array
                 state_dot[state_x_idx] = x_dot_car * cosf(yaw_world) - y_dot_car * sinf(yaw_world);
-                state_dot[state_y_idx] + x_dot_car * sinf(yaw_world) + y_dot_car * cosf(yaw_world);
+                state_dot[state_y_idx] = x_dot_car * sinf(yaw_world) + y_dot_car * cosf(yaw_world);
                 state_dot[state_yaw_idx] = yaw_rate;
                 state_dot[state_car_xdot_idx] = (front_force_x_car + rear_force_x_car) / CAR_MASS + y_dot_car * yaw_rate;
                 state_dot[state_car_ydot_idx] = (front_force_y_car + rear_force_y_car) / CAR_MASS - x_dot_car * yaw_rate;

@@ -133,7 +133,7 @@ namespace controls {
 
         void TestNode::publish_spline() {
             std::cout << "Publishing spline" << std::endl << std::endl;
-            const auto spline = sine_spline(5, 1, 100, 0.5);
+            const auto spline = sine_spline(20, 5, 100, 0.5);
             // const auto spline = line_spline(100, 0.5);
             m_spline_publisher->publish(spline);
         }

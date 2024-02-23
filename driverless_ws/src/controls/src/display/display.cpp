@@ -34,7 +34,9 @@ namespace controls {
             glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertex_buf.size(), vertex_buf.data(), GL_DYNAMIC_DRAW);
 
             glBindVertexArray(VAO);
-            glDrawArrays(GL_LINE_STRIP, 0, vertex_buf.size());
+
+            assert(vertex_buf.size() % 2 == 0);
+            glDrawArrays(GL_LINE_STRIP, 0, vertex_buf.size() / 2);
         }
 
         Display::Display(
