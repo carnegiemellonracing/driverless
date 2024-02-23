@@ -117,10 +117,6 @@ namespace controls {
 
             assert(cuda_globals::spline_texture_created);
 
-            std::cout << "sending spline to device texture..." << std::endl;
-            send_frames_to_texture();
-            std::cout << "done.\n" << std::endl;
-
             std::cout << "recalculating curvilinear state..." << std::endl;
             recalculate_curv_state();
             std::cout << "done. State: \n";
@@ -128,15 +124,12 @@ namespace controls {
                 std::cout << m_curv_state[i] << " ";
             }
             std::cout << std::endl;
-
-            std::cout << "syncing curvilinear state to device..." << std::endl;
-            sync_curv_state();
-            std::cout << "done.\n" << std::endl;
-
             std::cout << "-------------------\n" << std::endl;
         }
 
         void StateEstimator_Impl::on_state(const StateMsg& state_msg) {
+            std::cout << "------- ON STATE -----" << std::endl;
+
             m_world_state[state_x_idx] = state_msg.x;
             m_world_state[state_y_idx] = state_msg.y;
             m_world_state[state_yaw_idx] = state_msg.yaw;
@@ -147,9 +140,22 @@ namespace controls {
             m_world_state[state_fz_idx] = state_msg.downforce;
             m_world_state[state_whl_speed_f_idx] = state_msg.whl_speed_f;
             m_world_state[state_whl_speed_r_idx] = state_msg.whl_speed_r;
+            
+            std::cout << "-------------------\n" << std::endl;
+        }
 
-            recalculate_curv_state();
+        void StateEstimator_Impl::sync_to_device() {
+            std::cout << "sending spline to device texture..." << std::endl;
+            send_frames_to_texture();
+            std::cout << "done.\n" << std::endl;
+
+            std::cout << "syncing curvilinear state to device..." << std::endl;
             sync_curv_state();
+            std::cout << "done.\n" << std::endl;
+
+            // if we allow this to be async, host buffer may be edited by
+            // state callbacks during transfer (no bueno)
+            cudaDeviceSynchronize();
         }
 
         std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() const {

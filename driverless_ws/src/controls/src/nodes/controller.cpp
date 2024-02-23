@@ -66,15 +66,23 @@ namespace controls {
             void ControllerNode::spline_callback(const SplineMsg& spline_msg) {
                 std::cout << "Received spline" << std::endl;
 
-                m_state_estimator->on_spline(spline_msg);
-                run_mppi();
+                {
+                    std::lock_guard<std::mutex> guard {state_mut};
+
+                    m_state_estimator->on_spline(spline_msg);
+                    notify_state_dirty();
+                }
             }
 
             void ControllerNode::state_callback(const StateMsg& state_msg) {
                 std::cout << "Received slam" << std::endl;
 
-                m_state_estimator->on_state(state_msg);
-                run_mppi();
+                {
+                    std::lock_guard<std::mutex> guard {state_mut};
+
+                    m_state_estimator->on_state(state_msg);
+                    notify_state_dirty();
+                }
             }
 
             void ControllerNode::publish_action(const Action& action) const {
@@ -88,19 +96,30 @@ namespace controls {
                 m_action_publisher->publish(msg);
             }
 
-            void ControllerNode::run_mppi() {
-                std::cout << "-------- RUN MPPI -------" << std::endl;
+            std::thread ControllerNode::launch_mppi() {
+                return {[this] {
+                    std::unique_lock<std::mutex> state_lock {state_mut};
 
-                std::cout << "locking action_write" << std::endl;
-                {
-                    std::lock_guard<std::mutex> action_write_guard {action_write_mut};
+                    while (true) {
+                        state_lock.lock();
+                        state_cond_var.wait();
+                        m_state_estimator->sync_to_device();
+                        state_lock.unlock();
 
-                    std::cout << "generating action" << std::endl;
-                    *m_action_write = m_mppi_controller->generate_action();
-                }
+                        std::cout << "-------- MPPI -------" << std::endl;
 
-                std::cout << "swapping action buffers" << std::endl;
-                swap_action_buffers();
+                        Action action = m_mppi_controller->generate_action();
+                        {
+                            std::lock_guard<std::mutex> action_guard {action_write_mut};
+                            *m_action_write = action;
+                        }
+
+                        std::cout << "swapping action buffers" << std::endl;
+                        swap_action_buffers();
+
+                        std::cout << "---------------------" << std::endl;
+                    }
+                }}
             }
 
             void ControllerNode::swap_action_buffers() {

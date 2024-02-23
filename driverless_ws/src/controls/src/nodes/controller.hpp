@@ -1,6 +1,7 @@
 #pragma once
 
 #include <state/state_estimator.hpp>
+#include <condition_variable>
 
 
 namespace controls {
@@ -25,7 +26,9 @@ namespace controls {
              */
             void publish_action(const Action& action) const;
 
-            void run_mppi();
+            std::thread launch_mppi();
+
+            void notify_state_dirty();
             void swap_action_buffers();
 
             std::shared_ptr<state::StateEstimator> m_state_estimator;
@@ -39,6 +42,9 @@ namespace controls {
             std::unique_ptr<Action> m_action_write;
             std::mutex action_read_mut;
             std::mutex action_write_mut;
+
+            std::mutex state_mut;
+            std::condition_variable state_cond_var;
 
 #ifdef PUBLISH_STATES
             void display_state_trajectories(const std::vector<float>& state_trajectories);

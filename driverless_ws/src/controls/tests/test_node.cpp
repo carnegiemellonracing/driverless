@@ -22,7 +22,7 @@ namespace controls {
               m_spline_publisher {create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
 
               m_spline_timer {create_wall_timer(
-                  std::chrono::duration<float, std::milli>(1000),
+                  std::chrono::duration<float, std::milli>(100),
                     [this]{ publish_spline(); })},
 
               m_state_publisher {create_publisher<StateMsg>(state_topic_name, state_qos)} {
