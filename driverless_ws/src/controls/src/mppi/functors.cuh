@@ -81,6 +81,8 @@ namespace controls {
             float world_state[state_dims];
             memcpy(world_state, curv_state, sizeof(world_state));
             curv_state_to_world_state(world_state, frame);
+            printf("world state: %f %f %f %f %f %f %f %f %f %f\n", world_state[0], world_state[1], world_state[2],
+                       world_state[3], world_state[4], world_state[5], world_state[6], world_state[7], world_state[8], world_state[9]);
             assert(!any_nan(world_state, state_dims) && "World state was nan during model");
 
 
@@ -91,6 +93,8 @@ namespace controls {
             // much cheaper to calculate (given current curv state) than world state -> curv state
             float world_state_dot[state_dims];
             ONLINE_DYNAMICS_FUNC(world_state, action, world_state_dot, timestep);
+            printf("world state dot: %f %f %f %f %f %f %f %f %f %f\n", world_state_dot[0], world_state_dot[1], world_state_dot[2],
+                       world_state_dot[3], world_state_dot[4], world_state_dot[5], world_state_dot[6], world_state_dot[7], world_state_dot[8], world_state_dot[9]);
             assert(!any_nan(world_state_dot, state_dims) && "World state dot was nan directly after dynamics call");
 
 
