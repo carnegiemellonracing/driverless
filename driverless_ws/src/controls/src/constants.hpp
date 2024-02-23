@@ -22,8 +22,8 @@ namespace controls {
     constexpr double controller_freq = 100.;
 
     /** Controller target period, in sec */
-    constexpr uint32_t num_samples = 1;
-    constexpr uint32_t num_timesteps = 1;
+    constexpr uint32_t num_samples = 1024;
+    constexpr uint32_t num_timesteps = 128;
     constexpr uint8_t action_dims = 3;
     constexpr uint8_t state_dims = 10;
     constexpr float temperature = 1.0f;

@@ -34,7 +34,7 @@ namespace controls {
             glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertex_buf.size(), vertex_buf.data(), GL_DYNAMIC_DRAW);
 
             glBindVertexArray(VAO);
-            glDrawArrays(GL_LINE_STRIP, 0, num_timesteps);
+            glDrawArrays(GL_LINE_STRIP, 0, vertex_buf.size());
         }
 
         Display::Display(
@@ -241,7 +241,7 @@ namespace controls {
 
             for (uint32_t i = 0; i < num_samples; i++) {
                 if (m_trajectories[i].vertex_buf.size() < num_timesteps) {
-                    m_trajectories[i].vertex_buf = std::vector<float> (num_samples * 2);
+                    m_trajectories[i].vertex_buf = std::vector<float> (num_timesteps * 2);
                 }
 
                 for (uint32_t j = 0; j < num_timesteps; j++) {
@@ -263,6 +263,7 @@ namespace controls {
         void Display::draw_spline() {
             auto frames = m_state_estimator->get_spline_frames();
 
+            assert(m_spline != nullptr);
             m_spline->vertex_buf = std::vector<float>(frames.size() * 2);
             for (size_t i = 0; i < frames.size(); i++) {
                 m_spline->vertex_buf[2 * i] = frames[i].x;

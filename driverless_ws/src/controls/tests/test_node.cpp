@@ -48,7 +48,6 @@ namespace controls {
                 point += delta;
             }
 
-            result.header = std_msgs::msg::Header {};
             return result;
         }
 
@@ -106,15 +105,15 @@ namespace controls {
 
             ActionMsg adj_msg = msg;
             adj_msg.torque_fl /= 1000.;
-            adj_msg.torque_fl /= 1000.;
-            adj_msg.torque_fl /= 1000.;
-            adj_msg.torque_fl /= 1000.;
+            adj_msg.torque_fr /= 1000.;
+            adj_msg.torque_rl /= 1000.;
+            adj_msg.torque_rr /= 1000.;
 
             gsl_odeiv2_system system {};
             system.function = model_func;
             system.dimension = 13;
             system.jacobian = nullptr;
-            system.params = (void*)&msg;
+            system.params = (void*)&adj_msg;
 
             gsl_odeiv2_driver* driver = gsl_odeiv2_driver_alloc_y_new(
                 &system,

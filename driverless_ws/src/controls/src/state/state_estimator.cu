@@ -2,6 +2,7 @@
 #include <cuda_globals/cuda_globals.cuh>
 #include <glm/glm.hpp>
 #include <cuda_constants.cuh>
+#include <cmath>
 
 
 #include "state_estimator.cuh"
@@ -176,10 +177,11 @@ namespace controls {
         void StateEstimator_Impl::recalculate_curv_state() {
             using namespace glm;
 
+            const float world_yaw = m_world_state[state_yaw_idx];
             const fvec2 world_pos {m_world_state[state_x_idx], m_world_state[state_y_idx]};
 
             auto distance_to_frame = [world_pos] (const SplineFrame& frame) {
-                fvec2 p {frame.x, frame.y};
+                const fvec2 p {frame.x, frame.y};
                 return distance(world_pos, p);
             };
 
@@ -187,64 +189,72 @@ namespace controls {
             assert(m_spline_frames.size() > 0);
 
             float min_dist = distance_to_frame(m_spline_frames[0]);
-            SplineFrame min_dist_frame = m_spline_frames[0];
-            float min_dist_progress = 0;
+            size_t min_dist_index = 0;
             for (size_t i = 1; i < m_spline_frames.size(); i++) {
                 const SplineFrame& frame = m_spline_frames[i];
                 const float dist = distance_to_frame(frame);
                 if (dist < min_dist) {
                     min_dist = dist;
-                    min_dist_frame = frame;
-                    min_dist_progress = i * spline_frame_separation;
+                    min_dist_index = i;
                 }
             }
 
-            const fvec2 framepos {min_dist_frame.}
-            const fvec2 tangent {cos(min_dist_frame.tangent_angle), sin(min_dist_frame.tangent_angle)};
-            const fvec2 car_disp = world_pos - min_dist_frame.;
-            //     const float closest_progress_on_line = dot(tangent, car_disp);
-            //     const fvec2 car_disp = world_pos - frame1pos
+            const SplineFrame frame_a = m_spline_frames[min_dist_index];
+            const fvec2 a {frame_a.x, frame_a.y};
+            const fvec2 a_tangent {cos(frame_a.tangent_angle), sin(frame_a.tangent_angle)};
+            const fvec2 a_normal {-a_tangent.y, a_tangent.x};
+            const float progress_to_a = min_dist_index * spline_frame_separation;
 
-            // float min_dist_progress;
-            // float min_dist_offset;
-            // float min_dist_curv_yaw;
-            // float min_dist;
-            // bool found = false;
-            // for (size_t i = 0; i < m_spline_frames.size() - 1; i++) {
-            //     SplineFrame frame1 = m_spline_frames[i];
-            //     SplineFrame frame2 = m_spline_frames[i + 1];
-            //
-            //     const fvec2 frame1pos {frame1.x, frame1.y};
-            //     const fvec2 frame2pos {frame2.x, frame2.y};
-            //     const fvec2 segment_disp = frame2pos - frame1pos;
-            //     const fvec2 tangent = normalize(segment_disp);
-            //     const fvec2 car_disp = world_pos - frame1pos;
-            //     const float closest_progress_on_line = dot(tangent, car_disp);
-            //     if (closest_progress_on_line < 0 || closest_progress_on_line >= segment_disp.length()) {
-            //         continue;
-            //     }
-            //
-            //     const fvec2 closest_point = frame1pos + closest_progress_on_line * tangent;
-            //     const float car_dist = distance(closest_point, world_pos);
-            //
-            //     if (!found || car_dist < min_dist) {
-            //         found = true;
-            //
-            //         min_dist = car_dist;
-            //         min_dist_progress = i * spline_frame_separation + closest_progress_on_line;
-            //
-            //         fvec2 normal {-tangent.y, tangent.x};
-            //         min_dist_offset = dot(normal, world_pos - car_dist);
-            //         min_dist_curv_yaw = m_world_state[state_yaw_idx] - atan2(tangent.y, tangent.x);
-            //     }
-            // }
-            //
-            // assert(found);
-            //
-            // m_curv_state[state_x_idx] = min_dist_progress;
-            // m_curv_state[state_y_idx] = min_dist_offset;
-            // m_curv_state[state_yaw_idx] = min_dist_curv_yaw;
-            // std::copy(&m_world_state[3], m_world_state.end(), &m_curv_state[3]);
+            const float progress_from_a = dot(a_tangent, world_pos - a);
+
+            const float progress_a = progress_to_a + progress_from_a;
+            const float offset_a = dot(a_normal, world_pos - a);
+            const float curv_yaw_a = world_yaw - frame_a.tangent_angle;
+
+            float progress;
+            float offset;
+            float curv_yaw;
+
+            if (progress_from_a != 0
+                && !(progress_from_a < 0 && min_dist_index == 0)
+                && !(progress_from_a > 0 && min_dist_index == m_spline_frames.size() - 1)) {
+
+                SplineFrame frame_b;
+                float progress_to_b;
+
+                if (progress_from_a < 0) {
+                    frame_b = m_spline_frames[min_dist_index - 1];
+                    progress_to_b = (min_dist_index - 1) * spline_frame_separation;
+                } else {  // progress_from_a > 0
+                    frame_b = m_spline_frames[min_dist_index + 1];
+                    progress_to_b = (min_dist_index + 1) * spline_frame_separation;
+                }
+
+                const fvec2 b {frame_b.x, frame_b.y};
+                const fvec2 a_to_b = b - a;
+                const float a_to_b_dist = length(a_to_b);
+                const float t = glm::clamp(dot(a_to_b, world_pos - a) / (a_to_b_dist * a_to_b_dist), 0.0f, 1.0f);
+
+                const fvec2 tangent_b {cos(frame_b.tangent_angle), sin(frame_b.tangent_angle)};
+                const fvec2 normal_b {-tangent_b.y, tangent_b.x};
+
+                const float progress_b = progress_to_b + dot(tangent_b, world_pos - b);
+                const float offset_b = dot(normal_b, world_pos - b);
+                const float curv_yaw_b = world_yaw - frame_b.tangent_angle;
+
+                progress = (1 - t) * progress_a + t * progress_b;
+                offset = (1 - t) * offset_a + t * offset_b;
+                curv_yaw = (1 - t) * curv_yaw_a + t * curv_yaw_b;
+            } else {
+                progress = progress_a;
+                offset = offset_a;
+                curv_yaw = curv_yaw_a;
+            }
+
+            m_curv_state[state_x_idx] = progress;
+            m_curv_state[state_y_idx] = offset;
+            m_curv_state[state_yaw_idx] = curv_yaw;
+            std::copy(&m_world_state[3], m_world_state.end(), &m_curv_state[3]);
         }
 
         void StateEstimator_Impl::sync_curv_state() {
