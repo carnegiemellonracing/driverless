@@ -11,11 +11,36 @@ using namespace std::chrono_literals;
 
 namespace controls {
     namespace display {
+
+        Display::Trajectory::Trajectory(glm::fvec4 color, GLuint program)
+            : color(color), program(program) {
+
+            glGenVertexArrays(1, &VAO);
+            glGenBuffers(1, &VBO);
+
+            glBindVertexArray(VAO);
+
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
+            glEnableVertexAttribArray(0);
+
+            color_loc = glGetUniformLocation(program, "col");
+        }
+
+        void Display::Trajectory::draw() {
+            glUniform4f(color_loc, color.x, color.y, color.z, color.w);
+
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertex_buf.size(), vertex_buf.data(), GL_DYNAMIC_DRAW);
+
+            glBindVertexArray(VAO);
+            glDrawArrays(GL_LINE_STRIP, 0, num_timesteps);
+        }
+
         Display::Display(
             std::shared_ptr<mppi::MppiController> controller,
             std::shared_ptr<state::StateEstimator> state_estimator)
-                : m_trajectories {},
-                  m_controller {std::move(controller)},
+                : m_controller {std::move(controller)},
                   m_state_estimator {std::move(state_estimator)} {
         }
 
@@ -28,7 +53,7 @@ namespace controls {
                 "MPPI Display",
                 SDL_WINDOWPOS_CENTERED,
                 SDL_WINDOWPOS_CENTERED,
-                Display::width, Display::height,
+                width, height,
                 SDL_WINDOW_OPENGL
             );
 
@@ -136,8 +161,8 @@ namespace controls {
             const GLchar* vertexShaderSource[] = {
                 "#version 330 core\n"
                 "layout (location = 0) in vec2 aPos;\n"
-                "uniform vec2 camPos;"
-                "uniform float camScale;"
+                "uniform vec2 camPos;\n"
+                "uniform float camScale;\n"
                 "void main()\n"
                 "{\n"
                 "   gl_Position = vec4((aPos - camPos) / camScale, 0.0f, 1.0f);\n"
@@ -159,9 +184,10 @@ namespace controls {
             const GLchar* fragmentShaderSource[] = {
                 "#version 330 core\n"
                 "out vec4 FragColor;\n"
+                "uniform vec4 col;"
                 "void main()\n"
                 "{\n"
-                "   FragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);\n"
+                "   FragColor = col;\n"
                 "}"
             };
 
@@ -200,17 +226,12 @@ namespace controls {
 
         void Display::init_trajectories() {
             for (uint32_t i = 0; i < num_samples; i++) {
-                m_trajectories.emplace_back();
-                Trajectory& t = m_trajectories.back();
-
-                glGenVertexArrays(1, &t.VAO);
-                glGenBuffers(1, &t.position_VBO);
-
-                glBindVertexArray(t.VAO);
-                glBindBuffer(GL_ARRAY_BUFFER, t.position_VBO);
-                glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
-                glEnableVertexAttribArray(0);
+                m_trajectories.emplace_back(glm::fvec4 {1.0f, 0.0f, 0.0f, 0.0f}, m_shader_program);
             }
+        }
+
+        void Display::init_spline() {
+            m_spline = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, m_shader_program);
         }
 
         void Display::fill_trajectories() {
@@ -219,43 +240,43 @@ namespace controls {
             std::vector<float> states = m_controller->last_state_trajectories();
 
             for (uint32_t i = 0; i < num_samples; i++) {
+                if (m_trajectories[i].vertex_buf.size() < num_timesteps) {
+                    m_trajectories[i].vertex_buf = std::vector<float> (num_samples * 2);
+                }
+
                 for (uint32_t j = 0; j < num_timesteps; j++) {
                     uint32_t state_idx = i * state_dims * num_timesteps + j * state_dims;
                     m_trajectories[i].vertex_buf[2 * j] = states[state_idx];
                     m_trajectories[i].vertex_buf[2 * j + 1] = states[state_idx + 1];
                 }
             }
-
-            // for (uint32_t i = 0; i < num_samples; i++) {
-            //     float angle = (float)i / num_samples * M_PI - M_PI / 2;
-            //     fvec2 dir {cos(angle), sin(angle)};
-            //
-            //     for (uint32_t j = 0; j < num_timesteps; j++) {
-            //         fvec2 point = dir * ((float)j / num_timesteps);
-            //         m_trajectories[i].vertex_buf[2 * j] = point.x;
-            //         m_trajectories[i].vertex_buf[2 * j + 1] = point.y;
-            //     }
-            // }
         }
 
         void Display::draw_trajectories() {
             glUseProgram(m_shader_program);
-
             for (uint32_t i = 0; i < num_samples; i++) {
                 Trajectory& t = m_trajectories[i];
-
-                glBindBuffer(GL_ARRAY_BUFFER, t.position_VBO);
-                glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_timesteps * 2, t.vertex_buf.data(), GL_DYNAMIC_DRAW);
-
-                glBindVertexArray(t.VAO);
-                glDrawArrays(GL_LINE_STRIP, 0, num_timesteps);
+                t.draw();
             }
+        }
+
+        void Display::draw_spline() {
+            auto frames = m_state_estimator->get_spline_frames();
+
+            m_spline->vertex_buf = std::vector<float>(frames.size() * 2);
+            for (size_t i = 0; i < frames.size(); i++) {
+                m_spline->vertex_buf[2 * i] = frames[i].x;
+                m_spline->vertex_buf[2 * i + 1] = frames[i].y;
+            }
+
+            m_spline->draw();
         }
 
         void Display::run() {
             SDL_Window* window = init_sdl2();
             init_gl(window);
             init_trajectories();
+            init_spline();
 
             update_loop(window);
         }
@@ -307,6 +328,8 @@ namespace controls {
 
                 fill_trajectories();
                 draw_trajectories();
+
+                draw_spline();
 
                 SDL_GL_SwapWindow(window);
 

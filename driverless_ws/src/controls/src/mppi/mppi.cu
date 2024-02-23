@@ -9,6 +9,9 @@
 
 #include "cuda_utils.cuh"
 #include "mppi.cuh"
+
+#include <mutex>
+
 #include "functors.cuh"
 
 
@@ -146,9 +149,9 @@ namespace controls {
                 PopulateCost populate_cost {
                     m_action_trajectories.data(),
                     m_action_trajectories.data(),
-    #ifdef PUBLISH_STATES
+#ifdef PUBLISH_STATES
                     m_state_trajectories.data(),
-    #endif
+#endif
                     m_cost_to_gos.data(), m_last_action_trajectory.data()};
 
                 thrust::for_each(indices, indices + num_samples, populate_cost);

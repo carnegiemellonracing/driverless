@@ -1,6 +1,7 @@
 #pragma once
 
 #include <types.hpp>
+#include <glm/fwd.hpp>
 
 
 namespace controls {
@@ -13,7 +14,7 @@ namespace controls {
             virtual void on_spline(const SplineMsg& spline_msg) =0;
             virtual void on_state(const StateMsg& state_msg) =0;
 
-            //virtual std::vector<SplineFrame> get_spline_frames() const =0;
+            virtual std::vector<glm::fvec2> get_spline_frames() const =0;
 
             virtual ~StateEstimator() = default;
         };

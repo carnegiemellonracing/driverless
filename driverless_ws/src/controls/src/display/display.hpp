@@ -26,17 +26,32 @@ namespace controls {
             void run();
 
         private:
-            struct Trajectory {
-                GLuint position_VBO;
+            class Trajectory {
+            public:
+                Trajectory(glm::fvec4 color, GLuint program);
+
+                void draw();
+
+                std::vector<float> vertex_buf;
+
+            private:
+                glm::fvec4 color;
+                GLuint program;
+                GLint color_loc;
+                GLuint VBO;
                 GLuint VAO;
-                std::array<float, num_timesteps * 2> vertex_buf;
             };
 
             SDL_Window* init_sdl2();
             void init_gl(SDL_Window* window);
             void init_trajectories();
+            void init_spline();
+
             void fill_trajectories();
             void draw_trajectories();
+
+            void draw_spline();
+
             void update_loop(SDL_Window* window);
 
             glm::fvec2 m_cam_pos {0.0f, 0.0f};
@@ -47,6 +62,7 @@ namespace controls {
             GLint m_cam_scale_loc;
 
             std::vector<Trajectory> m_trajectories;
+            std::unique_ptr<Trajectory> m_spline = nullptr;
 
             std::shared_ptr<mppi::MppiController> m_controller;
             std::shared_ptr<state::StateEstimator> m_state_estimator;
