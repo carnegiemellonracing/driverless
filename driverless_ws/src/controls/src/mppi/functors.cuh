@@ -99,7 +99,7 @@ namespace controls {
 
             const auto& curv_state_dot = world_state_dot;
             for (uint8_t i = 0; i < state_dims; i++) {
-                curv_state_out[i] = curv_state_dot[i] * timestep;
+                curv_state_out[i] = curv_state[i] + curv_state_dot[i] * timestep;
             }
 
             if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
@@ -299,15 +299,16 @@ namespace controls {
             __device__ ActionWeightTuple operator() (const uint32_t idx) const {
                 ActionWeightTuple res {};
                 // as we increment idx, we iterate over the samples first
-                const uint32_t i = idx % num_samples;
+                const uint32_t i = idx % num_samples; // sample
                 // j should hold constant over a single reduction, it represents which timestep we are reducing over
-                const uint32_t j = idx / num_samples;
+                const uint32_t j = idx / num_samples;  // timestep
                 memcpy(&res.action.data, IDX_3D(action_trajectories,
                                                 action_trajectories_dims,
                                                 dim3(i, j, 0)), sizeof(float) * action_dims);
 
                 // right now cost to gos is shifted down by the value in the last timestep, so adjust for that
-                const float cost_to_go = cost_to_gos[i * num_timesteps + j] - cost_to_gos[(i + 1) * num_timesteps - 1];
+                const float anthony_adjustment = cost_to_gos[(i + 1) * num_timesteps - 2] - 2 * cost_to_gos[(i + 1) * num_timesteps - 1];
+                const float cost_to_go = cost_to_gos[i * num_timesteps + j] + anthony_adjustment;
                 res.weight = __expf(-1.0f / temperature * cost_to_go);
 
                 return res;

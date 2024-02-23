@@ -16,7 +16,7 @@ namespace controls {
             void on_spline(const SplineMsg& spline_msg) override;
             void on_state(const StateMsg& state_msg) override;
 
-            std::vector<SplineFrame> get_spline_frames() const;
+            std::vector<glm::fvec2> get_spline_frames() const override;
 
             ~StateEstimator_Impl() override;
 

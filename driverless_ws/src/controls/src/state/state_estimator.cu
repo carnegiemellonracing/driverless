@@ -151,8 +151,12 @@ namespace controls {
             sync_curv_state();
         }
 
-        std::vector<SplineFrame> StateEstimator_Impl::get_spline_frames() const {
-            return m_spline_frames;
+        std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() const {
+            std::vector<glm::fvec2> res (m_spline_frames.size());
+            for (size_t i = 0; i < m_spline_frames.size(); i++) {
+                res[i] = {m_spline_frames[i].x, m_spline_frames[i].y};
+            }
+            return res;
         }
 
         void StateEstimator_Impl::send_frames_to_texture() {
@@ -174,44 +178,73 @@ namespace controls {
 
             const fvec2 world_pos {m_world_state[state_x_idx], m_world_state[state_y_idx]};
 
-            float min_dist_progress;
-            float min_dist_offset;
-            float min_dist_curv_yaw;
-            float min_dist;
-            bool found = false;
-            for (size_t i = 0; i < m_spline_frames.size() - 1; i++) {
-                SplineFrame frame1 = m_spline_frames[i];
-                SplineFrame frame2 = m_spline_frames[i + 1];
+            auto distance_to_frame = [world_pos] (const SplineFrame& frame) {
+                fvec2 p {frame.x, frame.y};
+                return distance(world_pos, p);
+            };
 
-                const fvec2 frame1pos {frame1.x, frame1.y};
-                const fvec2 frame2pos {frame2.x, frame2.y};
-                const fvec2 segment_disp = frame2pos - frame1pos;
-                const fvec2 tangent = normalize(segment_disp);
-                const fvec2 car_disp = world_pos - frame1pos;
-                const float closest_progress_on_line = dot(tangent, car_disp);
-                if (closest_progress_on_line < 0 || closest_progress_on_line >= segment_disp.length()) {
-                    continue;
-                }
 
-                const fvec2 closest_point = frame1pos + closest_progress_on_line * tangent;
-                const float car_dist = distance(closest_point, world_pos);
+            assert(m_spline_frames.size() > 0);
 
-                if (!found || car_dist < min_dist) {
-                    found = true;
-
-                    min_dist = car_dist;
-                    min_dist_progress = i * spline_frame_separation + closest_progress_on_line;
-                    min_dist_offset = car_dist;
-                    min_dist_curv_yaw = m_world_state[state_yaw_idx] - atan2(tangent.y, tangent.x);
+            float min_dist = distance_to_frame(m_spline_frames[0]);
+            SplineFrame min_dist_frame = m_spline_frames[0];
+            float min_dist_progress = 0;
+            for (size_t i = 1; i < m_spline_frames.size(); i++) {
+                const SplineFrame& frame = m_spline_frames[i];
+                const float dist = distance_to_frame(frame);
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    min_dist_frame = frame;
+                    min_dist_progress = i * spline_frame_separation;
                 }
             }
 
-            assert(found);
+            const fvec2 framepos {min_dist_frame.}
+            const fvec2 tangent {cos(min_dist_frame.tangent_angle), sin(min_dist_frame.tangent_angle)};
+            const fvec2 car_disp = world_pos - min_dist_frame.;
+            //     const float closest_progress_on_line = dot(tangent, car_disp);
+            //     const fvec2 car_disp = world_pos - frame1pos
 
-            m_curv_state[state_x_idx] = min_dist_progress;
-            m_curv_state[state_y_idx] = min_dist_offset;
-            m_curv_state[state_yaw_idx] = min_dist_curv_yaw;
-            std::copy(&m_world_state[3], m_world_state.end(), &m_curv_state[3]);
+            // float min_dist_progress;
+            // float min_dist_offset;
+            // float min_dist_curv_yaw;
+            // float min_dist;
+            // bool found = false;
+            // for (size_t i = 0; i < m_spline_frames.size() - 1; i++) {
+            //     SplineFrame frame1 = m_spline_frames[i];
+            //     SplineFrame frame2 = m_spline_frames[i + 1];
+            //
+            //     const fvec2 frame1pos {frame1.x, frame1.y};
+            //     const fvec2 frame2pos {frame2.x, frame2.y};
+            //     const fvec2 segment_disp = frame2pos - frame1pos;
+            //     const fvec2 tangent = normalize(segment_disp);
+            //     const fvec2 car_disp = world_pos - frame1pos;
+            //     const float closest_progress_on_line = dot(tangent, car_disp);
+            //     if (closest_progress_on_line < 0 || closest_progress_on_line >= segment_disp.length()) {
+            //         continue;
+            //     }
+            //
+            //     const fvec2 closest_point = frame1pos + closest_progress_on_line * tangent;
+            //     const float car_dist = distance(closest_point, world_pos);
+            //
+            //     if (!found || car_dist < min_dist) {
+            //         found = true;
+            //
+            //         min_dist = car_dist;
+            //         min_dist_progress = i * spline_frame_separation + closest_progress_on_line;
+            //
+            //         fvec2 normal {-tangent.y, tangent.x};
+            //         min_dist_offset = dot(normal, world_pos - car_dist);
+            //         min_dist_curv_yaw = m_world_state[state_yaw_idx] - atan2(tangent.y, tangent.x);
+            //     }
+            // }
+            //
+            // assert(found);
+            //
+            // m_curv_state[state_x_idx] = min_dist_progress;
+            // m_curv_state[state_y_idx] = min_dist_offset;
+            // m_curv_state[state_yaw_idx] = min_dist_curv_yaw;
+            // std::copy(&m_world_state[3], m_world_state.end(), &m_curv_state[3]);
         }
 
         void StateEstimator_Impl::sync_curv_state() {
