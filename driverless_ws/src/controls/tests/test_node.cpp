@@ -51,6 +51,33 @@ namespace controls {
             return result;
         }
 
+        SplineMsg spiral_spine(float progress, float density) {
+            using namespace glm;
+
+            interfaces::msg::SplineFrameList result {};
+
+            fvec2 point {0.0f, 0.0f};
+            float total_dist = 0;
+
+            while (total_dist < progress) {
+                interfaces::msg::SplineFrame frame {};
+                frame.x = point.x;
+                frame.y = point.y;
+
+                float theta = atan(frame.y / frame.x);
+                theta += 1.0f;
+
+                result.frames.push_back(std::move(frame));
+
+                fvec2 delta = normalize(fvec2(theta * cos(theta), theta * sin(theta))) * density;
+                total_dist += length(delta);
+                point += delta;
+            }
+
+            return result;
+        }
+
+
         SplineMsg line_spline(float progress, float density) {
             using namespace glm;
 
@@ -100,7 +127,7 @@ namespace controls {
         }
 
         void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
-            std::cout << "Swangle: " << msg.swangle << " Torque f: " <<
+            std::cout << "Swangle: " << msg.swangle * (180 / M_PI) << " Torque f: " <<
                 msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl << std::endl;
 
             ActionMsg adj_msg = msg;
@@ -132,7 +159,8 @@ namespace controls {
 
         void TestNode::publish_spline() {
             // std::cout << "Publishing spline" << std::endl << std::endl;
-            const auto spline = sine_spline(20, 5, 100, 0.5);
+            const auto spline = sine_spline(30, 5, 200, 0.5);
+            // const auto spline = spiral_spine(200, 0.5);
             // const auto spline = line_spline(100, 0.5);
             m_spline_publisher->publish(spline);
         }
