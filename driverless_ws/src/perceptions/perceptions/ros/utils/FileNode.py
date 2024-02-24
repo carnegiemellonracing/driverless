@@ -14,7 +14,7 @@ import numpy as np
 
 # set to determine what folder to create (find in ~/driverless/driverless_ws/<FOLDER_NAME>)
 # DO NOT MAKE "src", "build", "install", or "log"
-FOLDER_NAME = "tt-09-29-1"
+FOLDER_NAME = "three-laps-0-subset"
 
 # define path to data directory
 WS_DIR = Path(__file__).parents[3]
@@ -26,7 +26,7 @@ class FileNode(DataNode):
         super().__init__(name="file_node")
 
         # create timer for saving on interval
-        self.interval = 1
+        self.interval = 0.5
         self.save_timer = self.create_timer(self.interval, self.save_callback)
         self.save_instance = 0
 
@@ -49,7 +49,7 @@ class FileNode(DataNode):
 
         # self.data updated by DataNode subscribers
         filepath = os.path.join(DATA_DIR, datafile_name)
-        np.savez(filepath, **self.data)
+        self.data.save(filepath)
 
         # update instance value
         self.save_instance += 1
