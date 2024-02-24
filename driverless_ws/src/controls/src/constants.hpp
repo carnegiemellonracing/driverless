@@ -22,20 +22,22 @@ namespace controls {
     constexpr double controller_freq = 50.;
 
     /** Controller target period, in sec */
-    constexpr uint32_t num_samples = 2048;
+    constexpr uint32_t num_samples = 4096;
     constexpr uint32_t num_timesteps = 128;
     constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 10;
-    constexpr float temperature = 1.0f;
+    constexpr float temperature = 5.8f; // used to be 5.0
     constexpr unsigned long long seed = 0;
     constexpr uint32_t num_action_trajectories = action_dims * num_timesteps * num_samples;
 
     constexpr float init_action_trajectory[num_timesteps * action_dims] = {};
 
     // Cost params
-    constexpr float zero_speed_cost = 0.5f;
-    constexpr float speed_cost_decay_factor = 1.0f;
+    constexpr float zero_speed_cost = 1.0f; // used to be 1.0
+    constexpr float speed_cost_decay_factor = 2.0f;
     constexpr float offset_1m_cost = 1.0f;
+    constexpr float target_speed = 5.0f;
+    constexpr float speed_weight = 0.1f; // 0.1
 
 
     // State Estimation

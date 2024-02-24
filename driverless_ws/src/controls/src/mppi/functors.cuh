@@ -119,7 +119,9 @@ namespace controls {
             const float offset = curv_state[state_y_idx];
 
             const float progress_dot = xdot * cosf(curv_yaw) - ydot * sin(curv_yaw);
-            const float speed_cost = zero_speed_cost * expf(-speed_cost_decay_factor * progress_dot);
+            // const float speed_cost = zero_speed_cost * expf(-speed_cost_decay_factor * progress_dot);
+            const float speed_deviation = (target_speed - progress_dot);
+            const float speed_cost = speed_weight * speed_deviation * speed_deviation;
 
             const float distance_cost = offset_1m_cost * offset * offset;
 
