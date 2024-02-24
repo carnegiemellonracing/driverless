@@ -19,12 +19,12 @@ namespace controls {
     // MPPI stuff
 
     /** Controller target frequency, in Hz */
-    constexpr double controller_freq = 100.;
+    constexpr double controller_freq = 50.;
 
     /** Controller target period, in sec */
-    constexpr uint32_t num_samples = 1024;
+    constexpr uint32_t num_samples = 2048;
     constexpr uint32_t num_timesteps = 128;
-    constexpr uint8_t action_dims = 3;
+    constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 10;
     constexpr float temperature = 1.0f;
     constexpr unsigned long long seed = 0;
@@ -54,8 +54,9 @@ namespace controls {
     constexpr uint8_t state_whl_speed_r_idx = 9;
 
     constexpr uint8_t action_swangle_idx = 0;
-    constexpr uint8_t action_torque_f_idx = 1;
-    constexpr uint8_t action_torque_r_idx = 2;
+    constexpr uint8_t action_torque_idx = 1;
+    // constexpr uint8_t action_torque_f_idx = 1;
+    // constexpr uint8_t action_torque_r_idx = 2;
 
     // derived quantities
     constexpr float controller_period = 1. / controller_freq;

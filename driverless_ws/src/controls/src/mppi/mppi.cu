@@ -53,6 +53,7 @@ namespace controls {
             // call kernels
             std::cout << "generating brownians..." << std::endl;
             generate_brownians();
+            cudaDeviceSynchronize();
 
             // print_tensor(m_action_trajectories, action_trajectories_dims);
             // std::cout << std::endl;
@@ -107,7 +108,7 @@ namespace controls {
             thrust::inclusive_scan_by_key(keys, keys + num_samples * num_timesteps,
                                           actions, actions,
                                           Equal<size_t> {},
-                                          AddActionsClamped {});
+                                          AddActions {});
         }
 
         void MppiController_Impl::generate_brownians() {

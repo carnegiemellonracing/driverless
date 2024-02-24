@@ -71,7 +71,7 @@ namespace controls {
 
             // If first thread, print info
             if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
-                printf("action: %f %f %f\n", action[0], action[1], action[2]);
+                printf("action: %f %f\n", action[0], action[1]);
                 printf("curv state: %f %f %f %f %f %f %f %f %f %f\n", curv_state[0], curv_state[1], curv_state[2],
                        curv_state[3], curv_state[4], curv_state[5], curv_state[6], curv_state[7], curv_state[8], curv_state[9]);
                 printf("Frame: %f %f %f %f\n", frame.x, frame.y, frame.tangent_angle, frame.curvature);
@@ -206,6 +206,11 @@ namespace controls {
                     for (uint32_t k = 0; k < action_dims; k++) {
                         u_ij[k] = action_trajectory_base[idx].data[k]
                                   + *IDX_3D(brownians, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, k));
+                        u_ij[k] = clamp(
+                            u_ij[k],
+                            cuda_globals::action_min[k],
+                            cuda_globals::action_max[k]
+                        );
                     }
 
                     // printf("control action: %f, %f, %f\n", u_ij[0], u_ij[1], u_ij[2]);
@@ -237,14 +242,11 @@ namespace controls {
 
         // Functors to operate on Action
 
-        struct AddActionsClamped {
+        struct AddActions {
             __device__ DeviceAction operator() (const DeviceAction& a1, const DeviceAction& a2) const {
                 DeviceAction res;
                 for (uint8_t i = 0; i < action_dims; i++) {
-                    res.data[i] = clamp(
-                        a1.data[i] + a2.data[i],
-                        cuda_globals::action_min[i],
-                        cuda_globals::action_max[i]);
+                    res.data[i] = a1.data[i] + a2.data[i];
                 }
                 return res;
             }
@@ -309,6 +311,11 @@ namespace controls {
                 memcpy(&res.action.data, IDX_3D(action_trajectories,
                                                 action_trajectories_dims,
                                                 dim3(i, j, 0)), sizeof(float) * action_dims);
+
+                assert(cuda_globals::action_min[0] <= res.action.data[0]);
+                assert(cuda_globals::action_max[0] >= res.action.data[0]);
+                assert(cuda_globals::action_min[1] <= res.action.data[1]);
+                assert(cuda_globals::action_max[1] >= res.action.data[1]);
 
                 // right now cost to gos is shifted down by the value in the last timestep, so adjust for that
                 const float anthony_adjustment = cost_to_gos[(i + 1) * num_timesteps - 2] - 2 * cost_to_gos[(i + 1) * num_timesteps - 1];
