@@ -14,23 +14,22 @@ namespace controls {
         __constant__ float curr_state[state_dims] = {10, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
-            0.5, 0, 0,
-            0, 100, 0,
-            0, 100, 0
+            0.5, 0,
+            0, 100
         };
 
         __constant__ const float action_min[action_dims] = {
-            -0.5, -3000, -3000
+            -0.5, -1000
         };
         __constant__ const float action_max[action_dims] = {
-            0.5, 3000, 3000
+            0.5, 1000
         };
 
         __constant__ const float action_deriv_min[action_dims] = {
-            -1.0, -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity()
+            -1.0, -std::numeric_limits<float>::infinity()
         };
         __constant__ const float action_deriv_max[action_dims] = {
-            1.0, std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity()
+            1.0, std::numeric_limits<float>::infinity()
         };
     }
 }

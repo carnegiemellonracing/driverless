@@ -40,15 +40,11 @@ namespace controls {
 
             std::unique_ptr<Action> m_action_read;
             std::unique_ptr<Action> m_action_write;
-            std::mutex action_read_mut;
-            std::mutex action_write_mut;
+            std::mutex m_action_read_mut;
+            std::mutex m_action_write_mut;
 
-            std::mutex state_mut;
-            std::condition_variable state_cond_var;
-
-#ifdef PUBLISH_STATES
-            void display_state_trajectories(const std::vector<float>& state_trajectories);
-#endif
+            std::mutex m_state_mut;
+            std::condition_variable m_state_cond_var;
         };
 
     }

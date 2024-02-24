@@ -25,7 +25,7 @@ namespace controls {
 
                   m_action_timer {
                       create_wall_timer(
-                          std::chrono::duration<float>(1),
+                          std::chrono::duration<float>(0.5),
                           [this] { publish_action_callback(); })
                   },
 
@@ -55,10 +55,12 @@ namespace controls {
                     [this] (const StateMsg::SharedPtr msg) { state_callback(*msg); },
                     options
                 );
+
+                launch_mppi().detach();
             }
 
             void ControllerNode::publish_action_callback() {
-                std::lock_guard<std::mutex> action_read_guard {action_read_mut};
+                std::lock_guard<std::mutex> action_read_guard {m_action_read_mut};
 
                 publish_action(*m_action_read);
             }
@@ -67,50 +69,52 @@ namespace controls {
                 std::cout << "Received spline" << std::endl;
 
                 {
-                    std::lock_guard<std::mutex> guard {state_mut};
-
+                    std::lock_guard<std::mutex> guard {m_state_mut};
                     m_state_estimator->on_spline(spline_msg);
-                    notify_state_dirty();
                 }
+
+                notify_state_dirty();
             }
 
             void ControllerNode::state_callback(const StateMsg& state_msg) {
                 std::cout << "Received slam" << std::endl;
 
                 {
-                    std::lock_guard<std::mutex> guard {state_mut};
+                    std::lock_guard<std::mutex> guard {m_state_mut};
 
                     m_state_estimator->on_state(state_msg);
-                    notify_state_dirty();
                 }
+
+                notify_state_dirty();
             }
 
             void ControllerNode::publish_action(const Action& action) const {
                 interfaces::msg::ControlAction msg;
                 msg.swangle = action[action_swangle_idx];
-                msg.torque_fl = action[action_torque_f_idx] / 2;
-                msg.torque_fr = action[action_torque_f_idx] / 2;
-                msg.torque_rl = action[action_torque_r_idx] / 2;
-                msg.torque_rr = action[action_torque_r_idx] / 2;
+                msg.torque_fl = action[action_torque_idx] / 4;
+                msg.torque_fr = action[action_torque_idx] / 4;
+                msg.torque_rl = action[action_torque_idx] / 4;
+                msg.torque_rr = action[action_torque_idx] / 4;
 
                 m_action_publisher->publish(msg);
             }
 
             std::thread ControllerNode::launch_mppi() {
-                return {[this] {
-                    std::unique_lock<std::mutex> state_lock {state_mut};
-
+                return std::thread {[this] {
                     while (true) {
-                        state_lock.lock();
-                        state_cond_var.wait();
+                        std::unique_lock<std::mutex> state_lock {m_state_mut};
+
+                        m_state_cond_var.wait(state_lock);
                         m_state_estimator->sync_to_device();
+
                         state_lock.unlock();
+
 
                         std::cout << "-------- MPPI -------" << std::endl;
 
                         Action action = m_mppi_controller->generate_action();
                         {
-                            std::lock_guard<std::mutex> action_guard {action_write_mut};
+                            std::lock_guard<std::mutex> action_guard {m_action_write_mut};
                             *m_action_write = action;
                         }
 
@@ -119,13 +123,17 @@ namespace controls {
 
                         std::cout << "---------------------" << std::endl;
                     }
-                }}
+                }};
+            }
+
+            void ControllerNode::notify_state_dirty() {
+                m_state_cond_var.notify_all();
             }
 
             void ControllerNode::swap_action_buffers() {
-                std::lock(action_read_mut, action_write_mut);  // lock both using a deadlock avoidance scheme
-                std::lock_guard<std::mutex> action_read_guard {action_read_mut, std::adopt_lock};
-                std::lock_guard<std::mutex> action_write_guard {action_write_mut, std::adopt_lock};
+                std::lock(m_action_read_mut, m_action_write_mut);  // lock both using a deadlock avoidance scheme
+                std::lock_guard<std::mutex> action_read_guard {m_action_read_mut, std::adopt_lock};
+                std::lock_guard<std::mutex> action_write_guard {m_action_write_mut, std::adopt_lock};
 
                 std::swap(m_action_read, m_action_write);
             }

@@ -12,8 +12,6 @@ namespace controls {
         namespace bicycle {
             //model constants
             constexpr float pi = 3.1415926535;
-            constexpr float ACTION_DIMS = 3;
-            constexpr float STATE_DIMS = 10;
 
             //physics constants
             constexpr float GRAVITY = 9.81; //in m/s^2
@@ -30,10 +28,10 @@ namespace controls {
 
 
             //tire model constants
-            constexpr float max_force_x_at_1N = 1.3f; //Maximum force x TO IMPLEMENT
+            constexpr float max_force_x_at_1N = 1.0f; //Maximum force x TO IMPLEMENT
             constexpr float slip_ratio_max_x = 0.1; //slip ratio that yields the max force TO IMPLEMENT
             constexpr float post_saturation_force_x = 1.0; // After tires start slipping what force we get
-            constexpr float max_force_y_at_1N = 1.5f; //Maximum force Y TO IMPLEMENT
+            constexpr float max_force_y_at_1N = 1.0f; //Maximum force Y TO IMPLEMENT
             constexpr float slip_angle_max_y = 0.1; //slip ratio that yields the max force TO IMPLEMENT
             constexpr float post_saturation_force_y = 1.0; // After tires start slipping what force we get
 
@@ -153,8 +151,8 @@ namespace controls {
 
                 //unpackages action
                 const float steering_angle = action[action_swangle_idx];
-                const float torque_front = action[action_torque_f_idx];
-                const float torque_rear = action[action_torque_r_idx];
+                const float torque_front = action[action_torque_idx] / 2;
+                const float torque_rear = action[action_torque_idx] / 2;
 
                 //compares wheel forces
                 float y_dot_front_tire = y_dot_car + yaw_rate *CG_TO_FRONT;
