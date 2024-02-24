@@ -70,7 +70,7 @@ std::pair<std::vector<Spline>,std::vector<double>> makeSplinesVector(std::vector
         coneMatrix(1, i) = cones[i].second;
     }
 
-    td::pair<std::vector<Spline>,std::vector<double>> res = raceline_gen(logger, coneMatrix, std::rand(), 4, false);
+    std::pair<std::vector<Spline>,std::vector<double>> res = raceline_gen(logger, coneMatrix, std::rand(), 4, false);
 
     return res;
 }
@@ -81,11 +81,11 @@ std::pair<std::vector<Spline>,std::vector<double>> makeSplinesVector(std::vector
 * optimize over, should optimize as car is going
 * @param progressVector can be accessed by the optimizer file as it is being updated
 */
-void updateSegments(std::vector<double>* bucketVector) {
+void updateSegments(std::vector<bucket>* bucketVector, perceptionsData perceptions_data) {
     // make vector of splines
     // vector of outer cones
-    std::vector<std::pair<double,double>> blueCones = segment.perceptions_data.bluecones;
-    std::vector<std::pair<double,double>> yellowCones = segment.perceptions_data.yellowcones;
+    std::vector<std::pair<double,double>> blueCones = perceptions_data.bluecones;
+    std::vector<std::pair<double,double>> yellowCones = perceptions_data.yellowcones;
 
     std::pair<std::vector<Spline>,std::vector<double>> blueRes = makeSplinesVector(blueCones);
     std::pair<std::vector<Spline>,std::vector<double>> yellowRes = makeSplinesVector(yellowCones);

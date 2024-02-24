@@ -563,3 +563,53 @@ double get_curvature(std::vector<double> progress,std::vector<spline> splines, s
     return curvatures;
 }
 
+/** replicating the searchSorted function from numpy
+ * @param arr: a sorted vector of doubles
+ * @param target: the value to search for
+*/
+int searchSorted (std::vector<double> arr, double target) {
+    int left = 0;
+    int right = arr.size() - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) {
+            return mid;
+        }
+        if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return right;
+}
+
+/** 
+ * returns the point on the raceline at a given progress
+ * @param progress: a singel progress along the raceline
+ * @param splines: vector of splines that make up the raceline
+ * @param cumulated_lengths: vector of the cumulated lengths of the splines
+ * @param previous_index: index of spline where progress begins (?????)
+ * NOT USING PREVIOUS_INDEX HERE, but it is in the orginal interpolate_raceline function in python-19a
+ * @param precision: number of points used to get approximation for a specific spline
+ * @return tuple representing point on the raceline at progress
+*/
+
+std::tuple<double> interpolate_raceline(double progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths, int precision = 20) {
+    int index = searchSorted(cumulated_lengths, progress);
+
+    Spline = splines[index];
+
+    double delta = 0;
+
+    if (index == 0) {
+        delta = progress;
+    } else {
+        delta = progress - cumulated_lengths[index-1];
+    }
+
+    
+}
+
+
+
