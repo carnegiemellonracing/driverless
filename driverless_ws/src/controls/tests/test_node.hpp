@@ -21,6 +21,8 @@ namespace controls {
 
             // thomas model state
             std::array<double, 13> m_world_state {0, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
+
+            double m_time = 0;
         };
 
     }

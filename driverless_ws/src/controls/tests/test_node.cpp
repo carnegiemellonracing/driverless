@@ -121,8 +121,7 @@ namespace controls {
                 1e-4, 1e-4, 1e-4
             );
 
-            double time = 0;
-            int result = gsl_odeiv2_driver_apply(driver, &time, controller_period, m_world_state.data());
+            int result = gsl_odeiv2_driver_apply(driver, &m_time, m_time + controller_period, m_world_state.data());
             if (result != GSL_SUCCESS) {
                 throw std::runtime_error("GSL driver failed");
             }
@@ -144,6 +143,7 @@ namespace controls {
                 std::cout << dim << " ";
             }
             std::cout << std::endl << std::endl;
+            std::cout << "Time: " << m_time << std::endl;
 
             StateMsg msg {};
             msg.x = m_world_state[0];
