@@ -1,5 +1,5 @@
 #include <math.h>
-#include <realDynamicSpline.hpp>
+#include <dynamicSpline.hpp>
 #include "generator.hpp"
 
 /** @brief Calculate running average of bucket by incorprating curvature into
@@ -81,11 +81,13 @@ std::pair<std::vector<Spline>,std::vector<double>> makeSplinesVector(std::vector
 * optimize over, should optimize as car is going
 * @param progressVector can be accessed by the optimizer file as it is being updated
 */
-void updateSegments(std::vector<bucket>* bucketVector, perceptionsData perceptions_data) {
+void updateSegments(std::vector<bucket>* bucketVector, 
+                    std::vector<std::pair<double,double>> blueCones,
+                    std::vector<std::pair<double,double>> yellowCones) {
     // make vector of splines
     // vector of outer cones
-    std::vector<std::pair<double,double>> blueCones = perceptions_data.bluecones;
-    std::vector<std::pair<double,double>> yellowCones = perceptions_data.yellowcones;
+    // std::vector<std::pair<double,double>> blueCones = perceptions_data.bluecones;
+    // std::vector<std::pair<double,double>> yellowCones = perceptions_data.yellowcones;
 
     std::pair<std::vector<Spline>,std::vector<double>> blueRes = makeSplinesVector(blueCones);
     std::pair<std::vector<Spline>,std::vector<double>> yellowRes = makeSplinesVector(yellowCones);
