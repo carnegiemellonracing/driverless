@@ -38,6 +38,10 @@ RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
 CONE_NODE_NAME = "cone_node"
 PUBLISH_FPS = 10
 VIS_UPDATE_FPS = 25
+MAX_ZED_CONE_RANGE = 10
+
+def within_range(coords):
+    return np.linalg.norm(np.numpy(coords)) <= MAX_ZED_CONE_RANGE
 
 class ConeNode(Node):
 
@@ -94,6 +98,7 @@ class ConeNode(Node):
     def yolov5_zed_cone_callback(self, msg):
         '''receive cones from yolov5_zed_node predictor'''
         cones = conv.msg_to_cones(msg)
+        cones.filter(within_range)
         self.cones.add_cones(cones)
 
         return
@@ -101,6 +106,7 @@ class ConeNode(Node):
     def yolov5_zed2_cone_callback(self, msg):
         '''receive cones from yolov5_zed2_node predictor'''
         cones = conv.msg_to_cones(msg)
+        cones.filter(within_range)
         self.cones.add_cones(cones)
 
         return
