@@ -105,12 +105,14 @@ namespace controls {
                         std::unique_lock<std::mutex> state_lock {m_state_mut};
 
                         m_state_cond_var.wait(state_lock);
-                        m_state_estimator->sync_to_device();
 
+                        auto start_time = std::chrono::high_resolution_clock::now();
+                        std::cout << "-------- MPPI -------" << std::endl;
+                        
+                        std::cout << "syncing state to device" << std::endl;
+                        m_state_estimator->sync_to_device();
                         state_lock.unlock();
 
-
-                        std::cout << "-------- MPPI -------" << std::endl;
 
                         Action action = m_mppi_controller->generate_action();
                         {
@@ -120,6 +122,8 @@ namespace controls {
 
                         std::cout << "swapping action buffers" << std::endl;
                         swap_action_buffers();
+
+                        std::cout << "time elapsed: " << std::chrono::system_clock::now() - 
 
                         std::cout << "---------------------" << std::endl;
                     }

@@ -70,19 +70,19 @@ namespace controls {
             const SplineFrame frame = get_interpolated_frame(progress);
 
             // If first thread, print info
-            if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
-                printf("action: %f %f\n", action[0], action[1]);
-                printf("curv state: %f %f %f %f %f %f %f %f %f %f\n", curv_state[0], curv_state[1], curv_state[2],
-                       curv_state[3], curv_state[4], curv_state[5], curv_state[6], curv_state[7], curv_state[8], curv_state[9]);
-                printf("Frame: %f %f %f %f\n", frame.x, frame.y, frame.tangent_angle, frame.curvature);
-            }
+            // if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
+            //     printf("action: %f %f\n", action[0], action[1]);
+            //     printf("curv state: %f %f %f %f %f %f %f %f %f %f\n", curv_state[0], curv_state[1], curv_state[2],
+            //            curv_state[3], curv_state[4], curv_state[5], curv_state[6], curv_state[7], curv_state[8], curv_state[9]);
+            //     printf("Frame: %f %f %f %f\n", frame.x, frame.y, frame.tangent_angle, frame.curvature);
+            // }
 
             // create local world state vector
             float world_state[state_dims];
             memcpy(world_state, curv_state, sizeof(world_state));
             curv_state_to_world_state(world_state, frame);
-            printf("world state: %f %f %f %f %f %f %f %f %f %f\n", world_state[0], world_state[1], world_state[2],
-                       world_state[3], world_state[4], world_state[5], world_state[6], world_state[7], world_state[8], world_state[9]);
+            // printf("world state: %f %f %f %f %f %f %f %f %f %f\n", world_state[0], world_state[1], world_state[2],
+            //            world_state[3], world_state[4], world_state[5], world_state[6], world_state[7], world_state[8], world_state[9]);
             assert(!any_nan(world_state, state_dims) && "World state was nan during model");
 
 
@@ -93,8 +93,8 @@ namespace controls {
             // much cheaper to calculate (given current curv state) than world state -> curv state
             float world_state_dot[state_dims];
             ONLINE_DYNAMICS_FUNC(world_state, action, world_state_dot, timestep);
-            printf("world state dot: %f %f %f %f %f %f %f %f %f %f\n", world_state_dot[0], world_state_dot[1], world_state_dot[2],
-                       world_state_dot[3], world_state_dot[4], world_state_dot[5], world_state_dot[6], world_state_dot[7], world_state_dot[8], world_state_dot[9]);
+            // printf("world state dot: %f %f %f %f %f %f %f %f %f %f\n", world_state_dot[0], world_state_dot[1], world_state_dot[2],
+                    //    world_state_dot[3], world_state_dot[4], world_state_dot[5], world_state_dot[6], world_state_dot[7], world_state_dot[8], world_state_dot[9]);
             assert(!any_nan(world_state_dot, state_dims) && "World state dot was nan directly after dynamics call");
 
 
@@ -106,10 +106,10 @@ namespace controls {
                 curv_state_out[i] = curv_state[i] + curv_state_dot[i] * timestep;
             }
 
-            if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
-                printf("curv state dot: %f %f %f %f %f %f %f %f %f %f\n", curv_state_dot[0], curv_state_dot[1], curv_state_dot[2],
-                       curv_state_dot[3], curv_state_dot[4], curv_state_dot[5], curv_state_dot[6], curv_state_dot[7], curv_state_dot[8], curv_state_dot[9]);
-            }
+            // if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
+            //     printf("curv state dot: %f %f %f %f %f %f %f %f %f %f\n", curv_state_dot[0], curv_state_dot[1], curv_state_dot[2],
+            //            curv_state_dot[3], curv_state_dot[4], curv_state_dot[5], curv_state_dot[6], curv_state_dot[7], curv_state_dot[8], curv_state_dot[9]);
+            // }
         }
 
         __device__ static float cost(float curv_state[]) {
@@ -216,9 +216,9 @@ namespace controls {
                     // printf("control action: %f, %f, %f\n", u_ij[0], u_ij[1], u_ij[2]);
                     assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
 
-                    if (__cudaGet_blockIdx().x == 0 && __cudaGet_threadIdx().x == 0) {
-                        printf("j: %i\n", j);
-                    }
+                    // if (__cudaGet_blockIdx().x == 0 && __cudaGet_threadIdx().x == 0) {
+                    //     printf("j: %i\n", j);
+                    // }
                     model(x_curr, u_ij, x_curr, controller_period);
 
                     assert(!any_nan(x_curr, state_dims) && "State was nan after model step");

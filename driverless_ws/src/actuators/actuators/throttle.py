@@ -3,6 +3,7 @@ from rclpy.node import Node
 from interfaces.msg import ControlAction
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy
 from std_msgs.msg import Int32
+import numpy as np
 import can
 import time
 import math
@@ -11,7 +12,7 @@ BUSTYPE = 'pcan'
 CHANNEL = 'PCAN_USBBUS1'
 BITRATE = 500000
 TIMER_HZ = 100
-MAX_TORQUE = 2000 #this is completely made up
+MAX_TORQUE = 1000 #this is completely made up
 MAX_REQUEST = 255 #hypothetically real max is 255
 
 ADC_BIAS = 2212
@@ -20,7 +21,7 @@ SLOPE = 34.5
 CMDLINE_QOS_PROFILE = QoSProfile(
     depth=10,  # Set the queue depth
     reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_RELIABLE,  # Set the reliability policy
-    durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL  # Set the durability policy
+    durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_VOLATILE  # Set the durability policy
 )
 
 class ActuatorNode(Node):
@@ -80,7 +81,7 @@ class ActuatorNode(Node):
         self.torque_request = int(torque_percent*127 + 128)
         print(self.torque_request) 
 
-        desired_wheel_angle = msg.swangle * 180/math.pi # convert from radians to degrees
+        desired_wheel_angle = np.degrees(msg.swangle) # convert from radians to degrees
         clamped_wheel_angle = min(max(desired_wheel_angle, -20), 20)
         adc_val = int(SLOPE * clamped_wheel_angle + ADC_BIAS)
         self.swangle = int(hex(adc_val)[2:], 16)
