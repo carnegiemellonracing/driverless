@@ -25,7 +25,7 @@ namespace controls {
 
                   m_action_timer {
                       create_wall_timer(
-                          std::chrono::duration<float>(0.5),
+                          std::chrono::duration<float>(0.1),
                           [this] { publish_action_callback(); })
                   },
 
@@ -123,7 +123,8 @@ namespace controls {
                         std::cout << "swapping action buffers" << std::endl;
                         swap_action_buffers();
 
-                        std::cout << "time elapsed: " << std::chrono::system_clock::now() - 
+                        auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time);
+                        std::cout << "time elapsed: " << time_elapsed.count() << std::endl;
 
                         std::cout << "---------------------" << std::endl;
                     }
