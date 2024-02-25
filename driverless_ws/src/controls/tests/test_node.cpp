@@ -58,20 +58,20 @@ namespace controls {
 
             fvec2 point {0.0f, 0.0f};
             float total_dist = 0;
+            float theta = 0.0f;
+            const float a = 100.0f;
 
             while (total_dist < progress) {
                 interfaces::msg::SplineFrame frame {};
-                frame.x = point.x;
-                frame.y = point.y;
-
-                float theta = atan(frame.y / frame.x);
-                theta += 1.0f;
-
+                frame.x = a * theta * cos(theta);
+                frame.y = a * theta * sin(theta);
+            
                 result.frames.push_back(std::move(frame));
 
-                fvec2 delta = normalize(fvec2(theta * cos(theta), theta * sin(theta))) * density;
-                total_dist += length(delta);
-                point += delta;
+                fvec2 ds_dtheta = a * fvec2(cos(theta) - theta * sin(theta), sin(theta) + theta * cos(theta));
+                const float delta = density / length(ds_dtheta);
+                total_dist += density;
+                theta += delta;
             }
 
             return result;
