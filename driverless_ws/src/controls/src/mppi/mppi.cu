@@ -130,19 +130,19 @@ namespace controls {
             State state = m_last_curr_state;
             result[0] = {state[state_x_idx], state[state_y_idx]};
 
-            int64_t i = -1;
-            while (i < m_last_action_trajectory.size()) {
-                if (i >= 0) {
-                    action = m_last_action_trajectory[i];
+            size_t i = 0;
+            while (i < m_last_action_trajectory.size() + 1) {
+                if (i >= 1) {
+                    action = m_last_action_trajectory[i - 1];
                 }
 
-                // State state_dot;
-                // ONLINE_DYNAMICS_FUNC(state.data(), action.data, state_dot.data(), controller_period);
-                // for (uint8_t j = 0; j < state_dims; j++) {
-                //     state[j] += state_dot[j] * controller_period;
-                // }
+                State state_dot;
+                ONLINE_DYNAMICS_FUNC(state.data(), action.data, state_dot.data(), controller_period);
+                for (uint8_t j = 0; j < state_dims; j++) {
+                    state[j] += state_dot[j] * controller_period;
+                }
 
-                result[i + 1] = {i, i};
+                result[i] = {state[state_x_idx], state[state_y_idx]};
 
                 i++;
             }

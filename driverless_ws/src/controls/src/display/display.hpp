@@ -28,7 +28,7 @@ namespace controls {
         private:
             class Trajectory {
             public:
-                Trajectory(glm::fvec4 color, GLuint program);
+                Trajectory(glm::fvec4 color, float thickness, GLuint program);
 
                 void draw();
 
@@ -36,6 +36,7 @@ namespace controls {
 
             private:
                 glm::fvec4 color;
+                float thickness;
                 GLuint program;
                 GLint color_loc;
                 GLuint VBO;
