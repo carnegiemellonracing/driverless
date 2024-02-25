@@ -25,7 +25,7 @@ namespace controls {
 
                   m_action_timer {
                       create_wall_timer(
-                          std::chrono::duration<float>(0.1),
+                          std::chrono::duration<float>(controller_publish_period),
                           [this] { publish_action_callback(); })
                   },
 
@@ -38,8 +38,9 @@ namespace controls {
                   m_action_read {std::make_unique<Action>()},
                   m_action_write {std::make_unique<Action>()},
 
-                  received_first_spline {false} {
+                  m_received_first_spline {false} {
 
+                // create a callback group that prevents state and spline callbacks from being executed concurrently
                 rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group {
                     create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};
 
@@ -58,6 +59,8 @@ namespace controls {
                     options
                 );
 
+                // start mppi :D
+                // this won't immediately begin publishing, since it waits for the first dirty state
                 launch_mppi().detach();
             }
 
@@ -81,7 +84,7 @@ namespace controls {
             void ControllerNode::state_callback(const StateMsg& state_msg) {
                 std::cout << "Received state" << std::endl;
 
-                if (!received_first_spline) {
+                if (!m_received_first_spline) {
                     std::cout << "No spline received yet. Ignoring..." << std::endl;
                     return;
                 }
@@ -110,26 +113,36 @@ namespace controls {
                     while (true) {
                         std::unique_lock<std::mutex> state_lock {m_state_mut};
 
+                        // wait for state to be dirtied
                         m_state_cond_var.wait(state_lock);
 
+                        // record time to estimate speed
                         auto start_time = std::chrono::high_resolution_clock::now();
                         std::cout << "-------- MPPI -------" << std::endl;
-                        
+
+                        // send state to device (i.e. cuda globals)
+                        // (also serves to lock state since nothing else updates gpu state)
                         std::cout << "syncing state to device" << std::endl;
                         m_state_estimator->sync_to_device();
+
+                        // we don't need the host state anymore, so release the lock and let state callbacks proceed
                         state_lock.unlock();
 
-
+                        // run mppi, and write action to the write buffer
                         Action action = m_mppi_controller->generate_action();
                         {
                             std::lock_guard<std::mutex> action_guard {m_action_write_mut};
                             *m_action_write = action;
                         }
 
+                        // swap the read and write buffers so publish action read this action
                         std::cout << "swapping action buffers" << std::endl;
                         swap_action_buffers();
 
-                        auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time);
+                        // calculate and print time elapsed
+                        auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                            std::chrono::high_resolution_clock::now() - start_time
+                        );
                         std::cout << "time elapsed: " << time_elapsed.count() << std::endl;
 
                         std::cout << "---------------------" << std::endl;
@@ -156,15 +169,18 @@ namespace controls {
 int main(int argc, char *argv[]) {
     using namespace controls;
 
+    // create resources
     std::shared_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create();
     std::shared_ptr<mppi::MppiController> controller = mppi::MppiController::create();
 
     rclcpp::init(argc, argv);
     std::cout << "rclcpp initialized" << std::endl;
 
+    // instantiate node
     const auto node = std::make_shared<nodes::ControllerNode>(state_estimator, controller);
     std::cout << "controller node created" << std::endl;
 
+    // create a condition variable to notify main thread when either display or node dies
     std::mutex thread_died_mut;
     std::condition_variable thread_died_cond;
     bool thread_died = false;
@@ -204,6 +220,7 @@ int main(int argc, char *argv[]) {
     std::cout << "display thread launched" << std::endl;
 #endif
 
+    // wait for a thread to die
     {
         std::unique_lock<std::mutex> guard {thread_died_mut};
         if (!thread_died) {
