@@ -18,7 +18,7 @@ namespace controls {
 
             void sync_to_device() override;
 
-            std::vector<glm::fvec2> get_spline_frames() const override;
+            std::vector<glm::fvec2> get_spline_frames() override;
 
             ~StateEstimator_Impl() override;
 
@@ -28,6 +28,7 @@ namespace controls {
             void sync_curv_state();
 
             std::vector<SplineFrame> m_spline_frames;
+
             State m_curv_state;
             State m_world_state;
         };

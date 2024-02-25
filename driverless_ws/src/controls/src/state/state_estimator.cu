@@ -117,6 +117,7 @@ namespace controls {
 
             assert(cuda_globals::spline_texture_created);
 
+
             std::cout << "recalculating curvilinear state..." << std::endl;
             recalculate_curv_state();
             std::cout << "done. State: \n";
@@ -124,6 +125,7 @@ namespace controls {
                 std::cout << m_curv_state[i] << " ";
             }
             std::cout << std::endl;
+
             std::cout << "-------------------\n" << std::endl;
         }
 
@@ -140,6 +142,15 @@ namespace controls {
             m_world_state[state_fz_idx] = state_msg.downforce;
             m_world_state[state_whl_speed_f_idx] = state_msg.whl_speed_f;
             m_world_state[state_whl_speed_r_idx] = state_msg.whl_speed_r;
+
+            std::cout << "recalculating curvilinear state..." << std::endl;
+            recalculate_curv_state();
+            std::cout << "done. State: \n";
+            for (uint32_t i = 0; i < state_dims; i++) {
+                std::cout << m_curv_state[i] << " ";
+            }
+
+            memcpy(cuda_globals::curr_world_state_host, m_world_state.data(), sizeof(cuda_globals::curr_world_state_host));
             
             std::cout << "-------------------\n" << std::endl;
         }
@@ -147,6 +158,7 @@ namespace controls {
         void StateEstimator_Impl::sync_to_device() {
             std::cout << "sending spline to device texture..." << std::endl;
             send_frames_to_texture();
+
             std::cout << "done.\n" << std::endl;
 
             std::cout << "syncing curvilinear state to device..." << std::endl;
@@ -158,7 +170,7 @@ namespace controls {
             cudaDeviceSynchronize();
         }
 
-        std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() const {
+        std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() {
             std::vector<glm::fvec2> res (m_spline_frames.size());
             for (size_t i = 0; i < m_spline_frames.size(); i++) {
                 res[i] = {m_spline_frames[i].x, m_spline_frames[i].y};
