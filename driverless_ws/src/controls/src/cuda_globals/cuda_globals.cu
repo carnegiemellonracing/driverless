@@ -7,6 +7,8 @@ namespace controls {
         cudaTextureObject_t spline_texture_object;
         bool spline_texture_created = false;
 
+        float curr_world_state_host[state_dims] = {};
+
         __constant__ cudaTextureObject_t d_spline_texture_object;
 
         __constant__ size_t spline_texture_elems = 0;
