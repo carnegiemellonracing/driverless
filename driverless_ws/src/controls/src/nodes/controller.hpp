@@ -45,6 +45,8 @@ namespace controls {
 
             std::mutex m_state_mut;
             std::condition_variable m_state_cond_var;
+
+            std::atomic<bool> received_first_spline;
         };
 
     }
