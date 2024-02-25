@@ -36,7 +36,9 @@ namespace controls {
                   },
 
                   m_action_read {std::make_unique<Action>()},
-                  m_action_write {std::make_unique<Action>()} {
+                  m_action_write {std::make_unique<Action>()},
+
+                  received_first_spline {false} {
 
                 rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group {
                     create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};
@@ -77,7 +79,12 @@ namespace controls {
             }
 
             void ControllerNode::state_callback(const StateMsg& state_msg) {
-                std::cout << "Received slam" << std::endl;
+                std::cout << "Received state" << std::endl;
+
+                if (!received_first_spline) {
+                    std::cout << "No spline received yet. Ignoring..." << std::endl;
+                    return;
+                }
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
