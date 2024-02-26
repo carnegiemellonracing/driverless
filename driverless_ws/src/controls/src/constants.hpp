@@ -20,6 +20,11 @@ namespace controls {
 
     /** Controller target frequency, in Hz */
     constexpr double controller_freq = 50.;
+    constexpr float controller_period = 1. / controller_freq;
+
+    constexpr double controller_publish_freq = 10.;
+    constexpr float controller_publish_period = 1. / controller_publish_freq;
+
 
     /** Controller target period, in sec */
     constexpr uint32_t num_samples = 4096;
@@ -59,7 +64,4 @@ namespace controls {
     constexpr uint8_t action_torque_idx = 1;
     // constexpr uint8_t action_torque_f_idx = 1;
     // constexpr uint8_t action_torque_r_idx = 2;
-
-    // derived quantities
-    constexpr float controller_period = 1. / controller_freq;
 }
