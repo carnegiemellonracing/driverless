@@ -28,7 +28,7 @@ namespace controls {
         private:
             class Trajectory {
             public:
-                Trajectory(glm::fvec4 color, GLuint program);
+                Trajectory(glm::fvec4 color, float thickness, GLuint program);
 
                 void draw();
 
@@ -36,6 +36,7 @@ namespace controls {
 
             private:
                 glm::fvec4 color;
+                float thickness;
                 GLuint program;
                 GLint color_loc;
                 GLuint VBO;
@@ -46,11 +47,13 @@ namespace controls {
             void init_gl(SDL_Window* window);
             void init_trajectories();
             void init_spline();
+            void init_best_guess();
 
             void fill_trajectories();
             void draw_trajectories();
 
             void draw_spline();
+            void draw_best_guess();
 
             void update_loop(SDL_Window* window);
 
@@ -63,6 +66,7 @@ namespace controls {
 
             std::vector<Trajectory> m_trajectories;
             std::unique_ptr<Trajectory> m_spline = nullptr;
+            std::unique_ptr<Trajectory> m_best_guess = nullptr;
 
             std::shared_ptr<mppi::MppiController> m_controller;
             std::shared_ptr<state::StateEstimator> m_state_estimator;
