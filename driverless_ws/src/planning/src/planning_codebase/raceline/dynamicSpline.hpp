@@ -1,5 +1,6 @@
 #include "frenetEigen.hpp"
-#include "racelineEigen.hpp"
+#include "raceline.hpp"
+#include "../midline/generator.hpp"
 
 public:
     // section of track progress that share similar curvature

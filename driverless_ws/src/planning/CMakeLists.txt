@@ -19,28 +19,30 @@
   find_package(GSL REQUIRED)
   find_package(interfaces REQUIRED)
 
-  add_library(planning_export src/planning_codebase/raceline/raceline.cpp)
-  ament_target_dependencies(planning_export interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
+  add_executable(dynamic_spline src/planning_codebase/raceline/dynamicSpline.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp src/planning_codebase/)
+  ament_target_dependencies(dynamic_spline interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
 
+  # add_library(planning_export src/planning_codebase/raceline/raceline.cpp)
+  # ament_target_dependencies(planning_export interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
 
-  add_executable(midpoint_test src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
-  # add_executable(midline_test src/generator.cpp src/raceline/raceline.cpp)
-  ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
+  # add_executable(midpoint_test src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
+  # ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
 
-  ament_export_targets(planning_exportTargets HAS_LIBRARY_TARGET)
-  ament_export_dependencies(interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
-  
-  # ament_target_dependencies(midline_test rclcpp std_msgs geometry_msgs eufs_msgs GSL)
+  # ament_export_targets(planning_exportTargets HAS_LIBRARY_TARGET)
+  # ament_export_dependencies(interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
 
   install(
-    TARGETS midpoint_test
+    # TARGETS midpoint_test
+    TARGETS dynamic_spline
     DESTINATION lib/${PROJECT_NAME}
   )
 
-  install(
-    TARGETS planning_export
-    EXPORT planning_exportTargets
-    DESTINATION lib/${PROJECT_NAME}
-  )
+  # install(
+    # TARGETS planning_export
+    # EXPORT planning_exportTargets
+    # TARGETS dynamic_spline
+    # EXPORT dynamic_splineTargets
+    # DESTINATION lib/${PROJECT_NAME}
+  # )
 
   ament_package()

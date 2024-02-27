@@ -1,6 +1,5 @@
 #include <math.h>
-#include <dynamicSpline.hpp>
-#include "generator.hpp"
+#include "dynamicSpline.hpp"
 
 /** @brief Calculate running average of bucket by incorprating curvature into
  * current avg
@@ -127,4 +126,8 @@ void updateSegments(std::vector<bucket>* bucketVector,
             currBucket.sumCurvature = curve;
         }
     }
+}
+
+int main () {
+    return 0;
 }
