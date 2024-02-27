@@ -509,11 +509,11 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
  * @param new_vals the new values to inject into the original array
  * @return the indices at which new values should be injected to maintain sorted order
 */
-std:vector<int> inject_clamped(std::vector<double> old_vals, std::vector<double> new_vals) {
-    std:vector<int> indices;
+std::vector<int> inject_clamped(std::vector<double> old_vals, std::vector<double> new_vals) {
+    std::vector<int> indices;
 
-    int old_idx = 0
-    int new_idx = 0
+    int old_idx = 0;
+    int new_idx = 0;
     int old_len = old_vals.size();
     int new_len = new_vals.size();
 
@@ -539,7 +539,7 @@ std:vector<int> inject_clamped(std::vector<double> old_vals, std::vector<double>
  * @param cumulated_lengths: vector of the cumulated lengths of the splines
  * @return curvature at progress
 */
-double get_curvature(std::vector<double> progress,std::vector<spline> splines, std::vector<double> cumulated_lengths) {
+double get_curvature_raceline(std::vector<double> progress,std::vector<spline> splines, std::vector<double> cumulated_lengths) {
     // indices of splines that progress should be on 
     int indices = inject_clamped(cumulated_lengths, progress);
 
@@ -551,7 +551,7 @@ double get_curvature(std::vector<double> progress,std::vector<spline> splines, s
             min_x -= cumulated_lengths[index-1];
         }
         
-        curvature = frenet.get_curvature(
+        curvature = get_curvature(
             splines[index].get_first_der(),
             splines[index].get_second_der(),
             min_x
@@ -598,7 +598,7 @@ int searchSorted (std::vector<double> arr, double target) {
 std::tuple<double> interpolate_raceline(double progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths, int precision = 20) {
     int index = searchSorted(cumulated_lengths, progress);
 
-    Spline = splines[index];
+    Spline  = splines[index];
 
     double delta = 0;
 

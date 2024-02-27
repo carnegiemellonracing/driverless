@@ -2,46 +2,46 @@
 #include "raceline.hpp"
 #include "../midline/generator.hpp"
 
-public:
-    // section of track progress that share similar curvature
-    struct bucket {
-        double startProgress; // start of the bucket
-        double endProgress; // end of the bucket
-        double sumCurvature; // sum of curvatures at sample points
 
-        // below are fields to be used by optimizer
-        double avgCurvature; // running avg of bucket
-        std::vector<pair<double, double>> bluePoints; // points on the blue cone spline
-        std::vector<pair<double, double>> yellowPoints; // points on the yellow cone spline
-    };
+// section of track progress that share similar curvature
+struct bucket {
+    double startProgress; // start of the bucket
+    double endProgress; // end of the bucket
+    double sumCurvature; // sum of curvatures at sample points
 
-    std::vector<bucket>* bucketsVector; // contains bucket structs, which contain the start and end points
-                                       // of each segment and points in between
+    // below are fields to be used by optimizer
+    double avgCurvature; // running avg of bucket
+    std::vector<std::pair<double, double>> bluePoints; // points on the blue cone spline
+    std::vector<std::pair<double, double>> yellowPoints; // points on the yellow cone spline
+};
 
-    /** function to make vector of splines from std::vector<std::pair<double,double>> 
-        (blue or yellow cones) of perception data
-    */
-    std::pair<std::vector<Spline>,std::vector<double>> makeSplinesVector (std::vector<std::pair<double,double>> cones);
+std::vector<bucket>* bucketsVector; // contains bucket structs, which contain the start and end points
+                                    // of each segment and points in between
 
-    /** update running average of current bucket, update splines vector
-     * @arg curvature: curvature is added to the current average
-     * @arg bucket: use numPointsInAvg in struct
-    */
-    double calcRunningAvgCurve(double curvature, bucket b);
-    // spline_along to get single point (p) on spline (s)
-    // get_curvature, taking
+/** function to make vector of splines from std::vector<std::pair<double,double>> 
+    (blue or yellow cones) of perception data
+*/
+std::pair<std::vector<Spline>,std::vector<double>> makeSplinesVector (std::vector<std::pair<double,double>> cones);
 
-    // if running average of current bucket is significantly different from next cones
-    //bool checkStartNewBucket(double runningAvg, double newCurvature);
-    bool checkStartNewBucket(bucket b, double newCurvature);
+/** update running average of current bucket, update splines vector
+ * @arg curvature: curvature is added to the current average
+ * @arg bucket: use numPointsInAvg in struct
+*/
+double calcRunningAvgCurve(double curvature, bucket b);
+// spline_along to get single point (p) on spline (s)
+// get_curvature, taking
 
-    // finds the progress points to split given bucket 
-    void progressSplits(bucket b);
+// if running average of current bucket is significantly different from next cones
+//bool checkStartNewBucket(double runningAvg, double newCurvature);
+bool checkStartNewBucket(bucket b, double newCurvature);
 
-    /** @brief updates a given vector with the progress sections to optimize over
-    * @note about the usage of progressVector: vector of progresses that indicate sections to
-    * optimize over, should optimize as car is going
-    * @param progressVector can be accessed by the optimizer file as it is being updated
-    */
-    void updateSegments(std::vector<double>* progressVector);
+// finds the progress points to split given bucket 
+void progressSplits(bucket b);
+
+/** @brief updates a given vector with the progress sections to optimize over
+* @note about the usage of progressVector: vector of progresses that indicate sections to
+* optimize over, should optimize as car is going
+* @param progressVector can be accessed by the optimizer file as it is being updated
+*/
+void updateSegments(std::vector<double>* progressVector);
     

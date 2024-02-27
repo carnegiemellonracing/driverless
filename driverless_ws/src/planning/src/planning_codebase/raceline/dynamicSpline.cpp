@@ -6,7 +6,7 @@
  * Run after the endProgress is updated (to avoid possibly diving by 0)
  * @param b bucket struct
 */
-double calcRunningAvgCurv(bucket b){
+double calcRunningAvgCurv(bucket* b){
     return b.sumCurvature / (b.endProgress - b.startProgress);
 }
 
@@ -37,18 +37,21 @@ void progressSplits(bucket b,
     double diff = b.endProgress - b.startProgress;
     double interval = 0.5; // @TODO tunable param
 
+    std::vector<double> cumulativeLenBlue = blueRaceline.second;
+    std::vector<double> cumulativeLenYellow = yellowRaceline.second;
+
     // get the total length of both racelines
-        double totalBlueSplinesLength = blueRaceline.second[cumulativeLen.size()-1];
-        double totalYellowSplinesLength = yellowRaceline.second[cumulativeLen.size()-1];
+        double totalBlueSplinesLength = blueRaceline.second[cumulativeLenBlue.size()-1];
+        double totalYellowSplinesLength = yellowRaceline.second[cumulativeLenYellow.size()-1];
 
     for (double percent = b.startProgress; percent <= b.endProgress; percent += interval){
         // convert percent prog into meter prog for both racelines
         double progMeterBlue = (percent*totalBlueSplinesLength)/100;
         double progMeterYellow = (percent*totalYellowSplinesLength)/100;
       
-        pair<double, double> xyBlue = interpolate_raceline(progMeterBlue, blueRaceline.first, 
+        std::pair<double, double> xyBlue = interpolate_raceline(progMeterBlue, blueRaceline.first, 
                                                         blueRaceline.second);
-        pair<double, double> xyYellow = interpolate_raceline(progMeterYellow, yellowRaceline.first, 
+        std::pair<double, double> xyYellow = interpolate_raceline(progMeterYellow, yellowRaceline.first, 
                                                         yellowRaceline.second);
 
         b.bluePoints.push_back(xyBlue);
@@ -68,6 +71,8 @@ std::pair<std::vector<Spline>,std::vector<double>> makeSplinesVector(std::vector
         coneMatrix(0, i) = cones[i].first;
         coneMatrix(1, i) = cones[i].second;
     }
+
+    rclcpp::Logger logger = rclcpp::get_logger();
 
     std::pair<std::vector<Spline>,std::vector<double>> res = raceline_gen(logger, coneMatrix, std::rand(), 4, false);
 
@@ -96,34 +101,34 @@ void updateSegments(std::vector<bucket>* bucketVector,
 
     // init bucket
     bucket* currBucket = new bucket;
-    currBucket.startProgress = 0;
-    currBucket.startProgress = 0;
-    currBucket.sumCurvature = 0;
+    currBucket->startProgress = 0;
+    currBucket->startProgress = 0;
+    currBucket->sumCurvature = 0;
     
     // loop through progress and use get curvature on each progress
     int increment = 1; // FLEXIBLE: change this if running too slow
     int totalProgress = 100;
-    int totalBlueSplinesLength = cumulativeLen[cumulativeLen.size()-1]
+    int totalBlueSplinesLength = cumulativeLen[cumulativeLen.size()-1];
     // double totalProgress = cumulativeLen[cumulativeLen.size()-1]
     
-    for (int currPercentProgress = 0; currPercentProgress <= totalProgress, currPercentProgress += increment) {
+    for (int currPercentProgress = 0; currPercentProgress <= totalProgress; currPercentProgress += increment) {
         double currProgress = (currPercentProgress*totalBlueSplinesLength)/100; // progress in meters
-        double curve = get_curvature(currProgress, racetrackSplines, cumulativeLen)
+        double curve = get_curvature_raceline(currProgress, racetrackSplines, cumulativeLen);
         // compare curve to avgCurvature of the curr bucket
-        currBucket.endProgress = currPercentProgress;
+        currBucket->endProgress = currPercentProgress;
         if (!checkStartNewBucket(currBucket, curve)) {
             // if fits in curr bucket, update the sum curvature
-            currBucket.sumCurvature += curve;
+            currBucket->sumCurvature += curve;
         }
         else { // if doesn't fit, new bucket, start new average
             // take care of splits for curr bucket
             progressSplits(currBucket); // fill in the current bucket's blue and yellow points vectors
-            currBucket.avgCurvature = calcRunningAvgCurv(currBucket);
+            currBucket->avgCurvature = calcRunningAvgCurv(currBucket);
             bucketVector.push_back(currBucket);
             currBucket = new bucket;
-            currBucket.startProgress = currPercentProgress;
-            currBucket.endProgress = currPercentProgress;
-            currBucket.sumCurvature = curve;
+            currBucket->startProgress = currPercentProgress;
+            currBucket->endProgress = currPercentProgress;
+            currBucket->sumCurvature = curve;
         }
     }
 }
