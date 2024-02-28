@@ -53,8 +53,7 @@ namespace controls {
 
         // methods
 
-        StateEstimator_Impl::StateEstimator_Impl()
-            : m_curv_state {}, m_world_state {} {
+        StateEstimator_Impl::StateEstimator_Impl() {
 
             assert(!cuda_globals::spline_texture_created);
 
@@ -104,7 +103,11 @@ namespace controls {
             m_spline_frames.reserve(spline_msg.frames.size());
 
             for (const auto& frame : spline_msg.frames) {
-                m_spline_frames.push_back(SplineFrame {frame.x, frame.y, 0.0f, 0.0f});
+                m_spline_frames.push_back(SplineFrame {
+                    static_cast<float>(frame.x),
+                    static_cast<float>(frame.y)
+                    , 0.0f, 0.0f
+                });
             }
 
             std::cout << "populating tangent angles..." << std::endl;

@@ -2,6 +2,7 @@
 #include <types.hpp>
 #include <constants.hpp>
 #include <cmath>
+#include <geometry_msgs/msg/point.hpp>
 #include <glm/glm.hpp>
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
@@ -31,16 +32,16 @@ namespace controls {
         SplineMsg sine_spline(float period, float amplitude, float progress, float density) {
             using namespace glm;
 
-            interfaces::msg::SplineFrameList result {};
+            SplineMsg result {};
 
             fvec2 point {0.0f, 0.0f};
             float total_dist = 0;
 
             while (total_dist < progress) {
-                interfaces::msg::SplineFrame frame {};
+                geometry_msgs::msg::Point frame {};
                 frame.x = point.x;
                 frame.y = point.y;
-                result.frames.push_back(std::move(frame));
+                result.frames.push_back(frame);
 
                 fvec2 delta = normalize(fvec2(1.0f, amplitude * 2 * M_PI / period * cos(2 * M_PI / period * point.x)))
                             * density;
@@ -54,7 +55,7 @@ namespace controls {
         SplineMsg spiral_spine(float progress, float density) {
             using namespace glm;
 
-            interfaces::msg::SplineFrameList result {};
+            SplineMsg result {};
 
             fvec2 point {0.0f, 0.0f};
             float total_dist = 0;
@@ -62,7 +63,7 @@ namespace controls {
             const float a = 100.0f;
 
             while (total_dist < progress) {
-                interfaces::msg::SplineFrame frame {};
+                geometry_msgs::msg::Point frame {};
                 frame.x = a * theta * cos(theta);
                 frame.y = a * theta * sin(theta);
             
@@ -87,7 +88,7 @@ namespace controls {
             float total_dist = 0;
 
             while (total_dist < progress) {
-                interfaces::msg::SplineFrame frame {};
+                geometry_msgs::msg::Point frame {};
                 frame.x = point.x;
                 frame.y = point.y;
                 result.frames.push_back(std::move(frame));

@@ -28,7 +28,7 @@ namespace controls {
 
     /** Controller target period, in sec */
     constexpr uint32_t num_samples = 4096;
-    constexpr uint32_t num_timesteps = 128;
+    constexpr uint32_t num_timesteps = 64;
     constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 10;
     constexpr float temperature = 5.8f; // used to be 5.0

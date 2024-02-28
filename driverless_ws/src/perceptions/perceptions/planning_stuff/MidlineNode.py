@@ -1,11 +1,10 @@
 
 import rclpy
 from rclpy.node import Node
-from eufs_msgs.msg import ConeArray
+from eufs_msgs.msg import ConeArrayWithCovariance
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 import perceptions.planning_stuff.svm_utils as svm_utils
-# from interfaces.msg import SplineFrames
-from eufs_msgs.msg import SplineFrames
+from interfaces.msg import SplineFrames
 from geometry_msgs.msg import Point
 
 import numpy as np
@@ -31,12 +30,12 @@ class MidlineNode(Node):
 
     def __init__(self):
         super().__init__("midline_node")
-        self.cone_sub = self.create_subscription(msg_type=ConeArray,
-                                                 topic="/perc_cones",
+        self.cone_sub = self.create_subscription(msg_type=ConeArrayWithCovariance,
+                                                 topic="/cones",
                                                  callback=self.cone_callback,
                                                  qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
-                                                 topic="/midline",
+                                                 topic="/spline",
                                                  qos_profile=RELIABLE_QOS_PROFILE)
     
     def cone_callback(self, cones):
@@ -45,11 +44,11 @@ class MidlineNode(Node):
 
         blue = []
         for cone in cones.blue_cones:
-            blue.append([cone.x, cone.y, 0])
+            blue.append([cone.point.y, cone.point.x, 0])
 
         yellow = []
         for cone in cones.yellow_cones:
-            yellow.append([cone.x, cone.y, 1])
+            yellow.append([cone.point.y, cone.point.x, 1])
 
         if len(yellow) == 0 or len(blue) == 0:
             # NOTE: don't send midline if not seeing a single side
@@ -69,12 +68,12 @@ class MidlineNode(Node):
 
         for np_point in downsampled_boundary_points:
             new_point = Point()
-            new_point.x = float(np_point[0])
-            new_point.y = float(np_point[1])
+            new_point.x = float(np_point[1]) #turning into SAE coordinates
+            new_point.y = float(np_point[0])
             new_point.z = float(0)
             points.append(new_point)
 
-        msg.midpoints = points
+        msg.frames = points
         
         #TODO: add car pos to each midpoint to get global point
 

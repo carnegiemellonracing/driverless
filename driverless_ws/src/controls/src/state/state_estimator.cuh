@@ -29,8 +29,8 @@ namespace controls {
 
             std::vector<SplineFrame> m_spline_frames;
 
-            State m_curv_state;
-            State m_world_state;
+            State m_curv_state = {};
+            State m_world_state = {0, 0, 0, 3, 0, 0, 0, 0, 0, 0};
         };
 
     }
