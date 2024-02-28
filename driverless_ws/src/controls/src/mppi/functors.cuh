@@ -15,23 +15,26 @@ namespace controls {
         /**
          * Get curvilinear frame at `progress` by interpolating from the spline texture
          *
-         * @param progress Progess along spline
-         * @returns spline frame texture interpolated at `progress`
+         * @param progress[in] Progess along spline
+         * @param frame[out]
+         * @param extra_progress[out]
          */
-        __device__ static SplineFrame get_interpolated_frame(const float progress) {
+        __device__ void get_interpolated_frame(const float progress, SplineFrame& frame, float& extra_progress) {
             const float texcoord = progress / spline_frame_separation;
-            const int low_idx = floorf(texcoord);
-            const int high_idx = low_idx + 1;
+            const size_t low_idx = clamp((size_t)floorf(texcoord), 0UL, cuda_globals::spline_texture_elems - 1);
+            const size_t high_idx = clamp((size_t)floorf(texcoord) + 1, 0UL, cuda_globals::spline_texture_elems - 1);
             const float t = texcoord - low_idx;
             const SplineFrame frame_low {tex1Dfetch<float4>(cuda_globals::d_spline_texture_object, low_idx)};
             const SplineFrame frame_high {tex1Dfetch<float4>(cuda_globals::d_spline_texture_object, high_idx)};
 
-            return {
+            frame = {
                 (1 - t) * frame_low.x + t * frame_high.x,
                 (1 - t) * frame_low.y + t * frame_high.y,
                 (1 - t) * frame_low.tangent_angle + t * frame_high.tangent_angle,
                 (1 - t) * frame_low.curvature + t * frame_high.curvature,
             };
+
+            extra_progress = t * spline_frame_separation;
         }
 
         /**
@@ -39,19 +42,21 @@ namespace controls {
          *
          * @param[inout] state Curvilinear state to transform
          * @param[in] frame Current interpolated curvilinear frame
+         * @param[in] extra_progress Progress from frame to car
          */
-        __device__ static void curv_state_to_world_state(float state[], const SplineFrame frame) {
+        __device__ static void curv_state_to_world_state(float state[], const SplineFrame frame, const float extra_progress) {
+            const float progress = state[state_x_idx];
             const float offset = state[state_y_idx];
             const float yaw_curv = state[state_yaw_idx];
 
-            const float2 normal {-sinf(frame.tangent_angle), cosf(frame.tangent_angle)};
-            state[state_x_idx] = frame.x + offset * normal.x;
-            state[state_y_idx] = frame.y + offset * normal.y;
+            const float2 tangent {cosf(frame.tangent_angle), sinf(frame.tangent_angle)};
+            const float2 normal {-tangent.y, tangent.x};
+            state[state_x_idx] = frame.x + offset * normal.x + extra_progress * tangent.x;
+            state[state_y_idx] = frame.y + offset * normal.y + extra_progress * tangent.y;
             state[state_yaw_idx] = frame.tangent_angle + yaw_curv;
         }
 
-        __device__ static void world_state_dot_to_curv_state_dot(
-            float state_dot[], const SplineFrame frame, const float yaw_curv) {
+        __device__ static void world_state_dot_to_curv_state_dot(float state_dot[], const SplineFrame frame) {
 
             const float xdot = state_dot[state_x_idx];
             const float ydot = state_dot[state_y_idx];
@@ -81,12 +86,14 @@ namespace controls {
         __device__ static void model(const float curv_state[], const float action[], float curv_state_out[], float timestep) {
             const float progress = curv_state[state_x_idx];
             const float yaw_curv = curv_state[state_yaw_idx];
-            const SplineFrame frame = get_interpolated_frame(progress);
+            SplineFrame frame;
+            float extra_progress;
+            get_interpolated_frame(progress, frame, extra_progress);
 
             // create local world state vector
             float world_state[state_dims];
             memcpy(world_state, curv_state, sizeof(world_state));
-            curv_state_to_world_state(world_state, frame);
+            curv_state_to_world_state(world_state, frame, extra_progress);
             assert(!any_nan(world_state, state_dims) && "World state was nan during model");
 
 
@@ -100,7 +107,7 @@ namespace controls {
             assert(!any_nan(world_state_dot, state_dims) && "World state dot was nan directly after dynamics call");
 
 
-            world_state_dot_to_curv_state_dot(world_state_dot, frame, yaw_curv);
+            world_state_dot_to_curv_state_dot(world_state_dot, frame);
             assert(!any_nan(world_state_dot, state_dims) && "Curv state dot was nan after dynamics call");
 
             const auto& curv_state_dot = world_state_dot;
@@ -229,7 +236,10 @@ namespace controls {
                         dim3(i, j, 0)
                     );
                     memcpy(world_state, x_curr, sizeof(float) * state_dims);
-                    curv_state_to_world_state(world_state, get_interpolated_frame(x_curr[state_x_idx]));
+                    SplineFrame frame;
+                    float frame_progress;
+                    get_interpolated_frame(x_curr[state_x_idx], frame, frame_progress);
+                    curv_state_to_world_state(world_state, frame, frame_progress);
 #endif
 
                     const float c = cost(x_curr);
