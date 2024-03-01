@@ -28,12 +28,12 @@ namespace controls {
 
 
             //tire model constants
-            constexpr float max_force_x_at_1N = 1.0f; //Maximum force x TO IMPLEMENT
+            constexpr float max_force_x_at_1N = 0.8f; //Maximum force x TO IMPLEMENT
             constexpr float slip_ratio_max_x = 0.1; //slip ratio that yields the max force TO IMPLEMENT
-            constexpr float post_saturation_force_x = 1.0; // After tires start slipping what force we get
-            constexpr float max_force_y_at_1N = 1.0f; //Maximum force Y TO IMPLEMENT
+            constexpr float post_saturation_force_x = 0.6; // After tires start slipping what force we get
+            constexpr float max_force_y_at_1N = 0.8f; //Maximum force Y TO IMPLEMENT
             constexpr float slip_angle_max_y = 0.1; //slip ratio that yields the max force TO IMPLEMENT
-            constexpr float post_saturation_force_y = 1.0; // After tires start slipping what force we get
+            constexpr float post_saturation_force_y = 0.6; // After tires start slipping what force we get
 
             constexpr float slip_ratio_saturation = 0.1; // minimum velocity magnitude for wheel slip
 

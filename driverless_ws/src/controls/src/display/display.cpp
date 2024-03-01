@@ -1,10 +1,13 @@
 #include "display.hpp"
 
 #include <chrono>
+#include <cuda_constants.cuh>
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <gsl/gsl_odeiv2.h>
+#include <mppi/types.cuh>
 
 using namespace std::chrono_literals;
 
@@ -12,8 +15,8 @@ using namespace std::chrono_literals;
 namespace controls {
     namespace display {
 
-        Display::Trajectory::Trajectory(glm::fvec4 color, GLuint program)
-            : color(color), program(program) {
+        Display::Trajectory::Trajectory(glm::fvec4 color, float thickness, GLuint program)
+            : color(color), program(program), thickness(thickness) {
 
             glGenVertexArrays(1, &VAO);
             glGenBuffers(1, &VBO);
@@ -29,6 +32,7 @@ namespace controls {
 
         void Display::Trajectory::draw() {
             glUniform4f(color_loc, color.x, color.y, color.z, color.w);
+            glLineWidth(thickness);
 
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
             glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertex_buf.size(), vertex_buf.data(), GL_DYNAMIC_DRAW);
@@ -228,12 +232,16 @@ namespace controls {
 
         void Display::init_trajectories() {
             for (uint32_t i = 0; i < num_samples; i++) {
-                m_trajectories.emplace_back(glm::fvec4 {1.0f, 0.0f, 0.0f, 0.0f}, m_shader_program);
+                m_trajectories.emplace_back(glm::fvec4 {1.0f, 0.0f, 0.0f, 0.0f}, 1, m_shader_program);
             }
         }
 
         void Display::init_spline() {
-            m_spline = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, m_shader_program);
+            m_spline = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_shader_program);
+        }
+
+        void Display::init_best_guess() {
+            m_best_guess = std::make_unique<Trajectory>(glm::fvec4 {0.0f, 1.0f, 0.0f, 1.0f}, 5, m_shader_program);
         }
 
         void Display::fill_trajectories() {
@@ -275,11 +283,25 @@ namespace controls {
             m_spline->draw();
         }
 
+        void Display::draw_best_guess() {
+            auto frames = m_controller->last_reduced_state_trajectory();
+
+            assert(m_best_guess != nullptr);
+            m_best_guess->vertex_buf = std::vector<float>(frames.size() * 2);
+            for (size_t i = 0; i < frames.size(); i++) {
+                m_best_guess->vertex_buf[2 * i] = frames[i].x;
+                m_best_guess->vertex_buf[2 * i + 1] = frames[i].y;
+            }
+
+            m_best_guess->draw();
+        }
+
         void Display::run() {
             SDL_Window* window = init_sdl2();
             init_gl(window);
             init_trajectories();
             init_spline();
+            init_best_guess();
 
             update_loop(window);
         }
@@ -333,6 +355,7 @@ namespace controls {
                 draw_trajectories();
 
                 draw_spline();
+                draw_best_guess();
 
                 SDL_GL_SwapWindow(window);
 

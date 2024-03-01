@@ -15,6 +15,8 @@ namespace controls {
         extern cudaTextureObject_t spline_texture_object;
         extern bool spline_texture_created;
 
+        extern float curr_world_state_host[state_dims];
+
         // device symbols
 
         extern __constant__ cudaTextureObject_t d_spline_texture_object;
