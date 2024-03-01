@@ -35,6 +35,7 @@ setup(
             # util nodes
             'data_node = perceptions.ros.utils.DataNode:main',
             'sync_node = perceptions.ros.utils.SyncNode:main',
+            'file_node = perceptions.ros.utils.FileNode:main',
 
             # predictor nodes
             'yolov5_zed_node = perceptions.ros.predictors.YOLOv5Node:main_zed',
