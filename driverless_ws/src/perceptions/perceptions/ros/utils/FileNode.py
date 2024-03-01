@@ -14,7 +14,7 @@ import numpy as np
 
 # set to determine what folder to create (find in ~/driverless/driverless_ws/<FOLDER_NAME>)
 # DO NOT MAKE "src", "build", "install", or "log"
-FOLDER_NAME = "three-laps-0-subset"
+FOLDER_NAME = "three-laps-large"
 
 # define path to data directory
 WS_DIR = Path(__file__).parents[3]
