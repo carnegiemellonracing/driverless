@@ -12,7 +12,7 @@ BUSTYPE = 'pcan'
 CHANNEL = 'PCAN_USBBUS1'
 BITRATE = 500000
 TIMER_HZ = 100
-MAX_TORQUE = 1000 #this is completely made up
+MAX_TORQUE = 200 #this is completely made up
 MAX_REQUEST = 255 #hypothetically real max is 255
 
 ADC_BIAS = 2212

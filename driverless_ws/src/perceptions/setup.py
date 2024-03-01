@@ -42,12 +42,11 @@ setup(
             'yolov5_zed2_node = perceptions.ros.predictors.YOLOv5Node:main_zed2',
             'lidar_node = perceptions.ros.predictors.LidarNode:main',
 
-            'yolov5_zed_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed_debug',
-            'yolov5_zed2_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed2_debug',
-
             # cone node
             'cone_node = perceptions.ros.utils.ConeNode:main',
-            'cone_node_debug = perceptions.ros.utils.ConeNode:main_debug'
+
+            # midline node
+            'midline_node = perceptions.planning_stuff.MidlineNode:main'
         ],
     },
 )

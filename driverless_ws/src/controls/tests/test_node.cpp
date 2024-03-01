@@ -2,6 +2,7 @@
 #include <types.hpp>
 #include <constants.hpp>
 #include <cmath>
+#include <geometry_msgs/msg/point.hpp>
 #include <glm/glm.hpp>
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
@@ -31,16 +32,16 @@ namespace controls {
         SplineMsg sine_spline(float period, float amplitude, float progress, float density) {
             using namespace glm;
 
-            interfaces::msg::SplineFrameList result {};
+            SplineMsg result {};
 
             fvec2 point {0.0f, 0.0f};
             float total_dist = 0;
 
             while (total_dist < progress) {
-                interfaces::msg::SplineFrame frame {};
+                geometry_msgs::msg::Point frame {};
                 frame.x = point.x;
                 frame.y = point.y;
-                result.frames.push_back(std::move(frame));
+                result.frames.push_back(frame);
 
                 fvec2 delta = normalize(fvec2(1.0f, amplitude * 2 * M_PI / period * cos(2 * M_PI / period * point.x)))
                             * density;
@@ -51,6 +52,33 @@ namespace controls {
             return result;
         }
 
+        SplineMsg spiral_spine(float progress, float density) {
+            using namespace glm;
+
+            SplineMsg result {};
+
+            fvec2 point {0.0f, 0.0f};
+            float total_dist = 0;
+            float theta = 0.0f;
+            const float a = 100.0f;
+
+            while (total_dist < progress) {
+                geometry_msgs::msg::Point frame {};
+                frame.x = a * theta * cos(theta);
+                frame.y = a * theta * sin(theta);
+            
+                result.frames.push_back(std::move(frame));
+
+                fvec2 ds_dtheta = a * fvec2(cos(theta) - theta * sin(theta), sin(theta) + theta * cos(theta));
+                const float delta = density / length(ds_dtheta);
+                total_dist += density;
+                theta += delta;
+            }
+
+            return result;
+        }
+
+
         SplineMsg line_spline(float progress, float density) {
             using namespace glm;
 
@@ -60,7 +88,7 @@ namespace controls {
             float total_dist = 0;
 
             while (total_dist < progress) {
-                interfaces::msg::SplineFrame frame {};
+                geometry_msgs::msg::Point frame {};
                 frame.x = point.x;
                 frame.y = point.y;
                 result.frames.push_back(std::move(frame));
@@ -100,7 +128,7 @@ namespace controls {
         }
 
         void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
-            std::cout << "Swangle: " << msg.swangle << " Torque f: " <<
+            std::cout << "Swangle: " << msg.swangle * (180 / M_PI) << " Torque f: " <<
                 msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl << std::endl;
 
             ActionMsg adj_msg = msg;
@@ -132,7 +160,8 @@ namespace controls {
 
         void TestNode::publish_spline() {
             // std::cout << "Publishing spline" << std::endl << std::endl;
-            const auto spline = sine_spline(20, 5, 100, 0.5);
+            const auto spline = sine_spline(30, 5, 200, 0.5);
+            // const auto spline = spiral_spine(200, 0.5);
             // const auto spline = line_spline(100, 0.5);
             m_spline_publisher->publish(spline);
         }
