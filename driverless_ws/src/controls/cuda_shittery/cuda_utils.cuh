@@ -1,6 +1,10 @@
 #pragma once
 
 #include <curand.h>
+#include <cstdio>
+#include <iostream>
+
+#include "config.cuh"
 
 #define IDX_2D_PITCHED(tensor, idx, pitch) ((decltype(tensor))((char*)tensor + idx.y * pitch + idx.x * sizeof(std::remove_pointer<decltype(tensor)>::type)))
 #define IDX_3D_PITCHED(tensor, dims, idx, pitch) ((decltype(tensor))((char*)tensor + idx.x * dims.y * pitch + idx.y * pitch + idx.z * sizeof(std::remove_pointer<decltype(tensor)>::type)))
@@ -72,7 +76,7 @@ static void cuda_assert(cudaError_t code, const char *file, int line, bool abort
 {
     if (code != cudaSuccess)
     {
-        fprintf(stderr,"cuda assert: %s. Location: %s:%d\n", cudaGetErrorString(code), file, line);
+        fprintf(stderr,"cuda assert: (%i) %s. Location: %s:%d\n", code, cudaGetErrorString(code), file, line);
         if (abort) exit(code);
     }
 }
