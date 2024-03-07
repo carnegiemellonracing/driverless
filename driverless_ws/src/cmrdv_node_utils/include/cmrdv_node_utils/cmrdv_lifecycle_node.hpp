@@ -51,16 +51,49 @@ namespace cmrdv_node_utils
             virtual ~CMRDVLifecycleNode();
 
 
+            // 
+
             /**
-             * \brief Overrides: See https://github.com/ros2/rclcpp/blob/foxy/rclcpp_lifecycle/include/rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp for their details
-             * NOTE: These methods are NOT meant to be used by extending classes. Instead the corresponding handle_<method> methods should be used 
-             *       to ensure the full CMRDVLifecycleNode compliance.
+             * \brief Software Architecture Implementation (DO NOT OVERRIDE)
+             * 
+             * \note use corresponding "handle_<method>" function instead.
+             * \note Overrides: See https://github.com/ros2/rclcpp/blob/foxy/rclcpp_lifecycle/include/rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp for their details
              */
             cmrdv_node_utils::CallbackReturn on_configure(const rclcpp_lifecycle::State &prev_state) override;
+            /**
+             * \brief Software Architecture Implementation (DO NOT OVERRIDE)
+             * 
+             * \note use corresponding "handle_<method>" function instead.
+             * \note Overrides: See https://github.com/ros2/rclcpp/blob/foxy/rclcpp_lifecycle/include/rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp for their details
+             */
             cmrdv_node_utils::CallbackReturn on_activate(const rclcpp_lifecycle::State &prev_state) override;
+            /**
+             * \brief Software Architecture Implementation (DO NOT OVERRIDE)
+             * 
+             * \note use corresponding "handle_<method>" function instead.
+             * \note Overrides: See https://github.com/ros2/rclcpp/blob/foxy/rclcpp_lifecycle/include/rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp for their details
+             */
             cmrdv_node_utils::CallbackReturn on_deactivate(const rclcpp_lifecycle::State &prev_state) override;
+            /**
+             * \brief Software Architecture Implementation (DO NOT OVERRIDE)
+             * 
+             * \note use corresponding "handle_<method>" function instead.
+             * \note Overrides: See https://github.com/ros2/rclcpp/blob/foxy/rclcpp_lifecycle/include/rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp for their details
+             */
             cmrdv_node_utils::CallbackReturn on_cleanup(const rclcpp_lifecycle::State &prev_state) override;
+            /**
+             * \brief Software Architecture Implementation (DO NOT OVERRIDE)
+             * 
+             * \note use corresponding "handle_<method>" function instead.
+             * \note Overrides: See https://github.com/ros2/rclcpp/blob/foxy/rclcpp_lifecycle/include/rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp for their details
+             */
             cmrdv_node_utils::CallbackReturn on_error(const rclcpp_lifecycle::State &prev_state) override;
+            /**
+             * \brief Software Architecture Implementation (DO NOT OVERRIDE)
+             * 
+             * \note use corresponding "handle_<method>" function instead.
+             * \note Overrides: See https://github.com/ros2/rclcpp/blob/foxy/rclcpp_lifecycle/include/rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp for their details
+             */
             cmrdv_node_utils::CallbackReturn on_shutdown(const rclcpp_lifecycle::State &prev_state) override;
 
 
@@ -93,7 +126,7 @@ namespace cmrdv_node_utils
              *        This method should be overriden to clear any runtime state data that would prevent reconfiguring of the node
              *        and or deactivate any timers/callbacks that should only trigger in the ACTIVE state
              * 
-             *        NOTE: CMRDVLifecycleNode will automatically deactivate publishers on this callback. 
+             * \note CMRDVLifecycleNode will automatically deactivate publishers on this callback. 
              * 
              * \param state The previous state 
              * 
@@ -108,7 +141,7 @@ namespace cmrdv_node_utils
              *        This method should be overriden to clear any state and memory allocation that occurred.
              *        When completed the node should be fully unconfigured.
              * 
-             *        NOTE: CMRDVLifecycleNode will automatically deactivate publishers and clear timer pointers
+             * \note CMRDVLifecycleNode will automatically deactivate publishers and clear timer pointers
              * 
              * \param state The previous state 
              * 
@@ -132,6 +165,20 @@ namespace cmrdv_node_utils
 
 
             /**
+             * \brief Callback triggered when transitioning from any state to ErrorProcessing due to the error signal.
+             *        This method should be overriden to add any exception handling logic.
+             * 
+             *  \note CMRDVLifecycleNode will automatically publish a SystemAlert before this is triggered. 
+             * 
+             * \param state The previous state 
+             * 
+             * \return A callback success flag. If SUCCESS then the state will transition to UNCONFIGURED. 
+             *        If FAILURE or ERROR occurs the state will transition to FINALIZED and the process will shutdown
+             */
+            virtual cmrdv_node_utils::CallbackReturn handle_on_error(const rclcpp_lifecycle::State &prev_state, const std::string &exception_string);
+
+
+            /**
              * \brief Convenience method to build a shared pointer from this object.
              * 
              * \return A shared pointer which points to this object
@@ -142,10 +189,10 @@ namespace cmrdv_node_utils
             // TODO: create more of these type of functions
             /**
              * \brief Publishes a SystemAlert message to the rest of the cmrdv node system
-             *        NOTE: This callback will automatically populate the msg.source_node field based on this node name.
+             * \note This callback will automatically populate the msg.source_node field based on this node name.
              * \param msg The message to publish
              */
-            // TODO: setup cmrdiv_msgs
+            // TODO: setup cmrdv_msgs
             // void publish_system_alert(const cmrdv_msgs::msg::SystemAlert &msg);
 
 
@@ -153,7 +200,7 @@ namespace cmrdv_node_utils
              * \brief Override of parent method. See descriptive comments here:
              *  https://github.com/ros2/rclcpp/blob/4859c4e43576d0c6fe626679b2c2604a9a8b336c/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp#L230
              * 
-             * NOTE: The function object passed to this method will be moved using std::move. 
+             * \note The function object passed to this method will be moved using std::move. 
              *       The user should therefore assume ownership of this function object has been relinquished
              */
             template <
@@ -192,7 +239,7 @@ namespace cmrdv_node_utils
              * \brief Override of parent method. See descriptive comments here:
              *  https://github.com/ros2/rclcpp/blob/4859c4e43576d0c6fe626679b2c2604a9a8b336c/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp#L463
              * 
-             * NOTE: The function object passed to this method will be moved using std::move. 
+             * \note The function object passed to this method will be moved using std::move. 
              *       The user should therefore assume ownership of this function object has been relinquished
              */
             rclcpp_lifecycle::LifecycleNode::OnSetParametersCallbackHandle::SharedPtr
@@ -204,7 +251,7 @@ namespace cmrdv_node_utils
              * \brief Override of parent method. See descriptive comments here:
              *  https://github.com/ros2/rclcpp/blob/4859c4e43576d0c6fe626679b2c2604a9a8b336c/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp#L249
              *
-             * NOTE: The function object passed to this method will be moved using std::move. 
+             * \note The function object passed to this method will be moved using std::move. 
              *       The user should therefore assume ownership of this function object has been relinquished
              */
             template <typename DurationRepT = int64_t, typename DurationT = std::milli, typename CallbackT>
@@ -219,7 +266,7 @@ namespace cmrdv_node_utils
             /**
              * \brief Method to create a timer whose lifecycle can be managed by this node.
              *  
-             *  NOTE: In foxy the LifecycleNode api is slightly out of sync with the node api so there is not a create_timer method there. We use rclcpp directly here
+             *  \note: In foxy the LifecycleNode api is slightly out of sync with the node api so there is not a create_timer method there. We use rclcpp directly here
              *  
              *  \param clock The underlying clock to use for the timer.
              *  \param period The period of trigger of the timer.
@@ -228,7 +275,7 @@ namespace cmrdv_node_utils
              * 
              *  \return A pointer to an intialized timer. The timer will be cancled when this node transitions through a deactivate/cleanup sequence
              *
-             * NOTE: The function object passed to this method will be moved using std::move. 
+             * \note The function object passed to this method will be moved using std::move. 
              *       The user should therefore assume ownership of this function object has been relinquished
              * 
              */
@@ -245,9 +292,9 @@ namespace cmrdv_node_utils
              * \brief Override of rclcpp method. See descriptive comments here:
              *  https://github.com/ros2/rclcpp/blob/4859c4e43576d0c6fe626679b2c2604a9a8b336c/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp#L271
              *  
-             *  NOTE: In foxy the LifecycleNode api is slightly out of sync with the node api so there is not a create_timer method there. We use rclcpp directly here
+             * \note In foxy the LifecycleNode api is slightly out of sync with the node api so there is not a create_timer method there. We use rclcpp directly here
              *
-             * NOTE: The function object passed to this method will be moved using std::move. 
+             * \note The function object passed to this method will be moved using std::move. 
              *       The user should therefore assume ownership of this function object has been relinquished
              */
             template <typename ServiceT, typename CallbackT>
@@ -263,7 +310,7 @@ namespace cmrdv_node_utils
              * \brief Override of parent method. See descriptive comments here:
              *  https://github.com/ros2/rclcpp/blob/d7804e1b3fd9676d302ec72f02c49ba04cbed5e6/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp#L260
              * 
-             * VERY IMPORTANT NOTE: While the callback group default appears to be nullptr this is not actually the case. 
+             * VERY IMPORTANT \note While the callback group default appears to be nullptr this is not actually the case. 
              *                      On call the group will be set to the Reentrant CallbackGroup this->service_callback_group_ 
              *                      This group is created explicitly for services to support a synchronous callback paradigm similar to ROS1. 
              *                      Care should be taken when changing this default group value.
