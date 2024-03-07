@@ -34,7 +34,7 @@ namespace class_loader
 }  // namespace class_loader
 
 
-namespace cmrdv_ros2_utils 
+namespace cmrdv_node_utils 
 {
 
     /// LifecycleComponentWrapper handles the services to load, unload, and get the list of loaded components.
@@ -181,11 +181,11 @@ namespace cmrdv_ros2_utils
             ///// Overrides /////
 
             // handle_on_configure is not used
-            cmrdv_ros2_utils::CallbackReturn handle_on_activate(const rclcpp_lifecycle::State &prev_state) override;
-            cmrdv_ros2_utils::CallbackReturn handle_on_deactivate(const rclcpp_lifecycle::State &prev_state) override;
-            cmrdv_ros2_utils::CallbackReturn handle_on_cleanup(const rclcpp_lifecycle::State &prev_state) override;
-            cmrdv_ros2_utils::CallbackReturn handle_on_error(const rclcpp_lifecycle::State &prev_state, const std::string &exception_string) override;
-            cmrdv_ros2_utils::CallbackReturn handle_on_shutdown(const rclcpp_lifecycle::State &prev_state) override;
+            cmrdv_node_utils::CallbackReturn handle_on_activate(const rclcpp_lifecycle::State &prev_state) override;
+            cmrdv_node_utils::CallbackReturn handle_on_deactivate(const rclcpp_lifecycle::State &prev_state) override;
+            cmrdv_node_utils::CallbackReturn handle_on_cleanup(const rclcpp_lifecycle::State &prev_state) override;
+            cmrdv_node_utils::CallbackReturn handle_on_error(const rclcpp_lifecycle::State &prev_state, const std::string &exception_string) override;
+            cmrdv_node_utils::CallbackReturn handle_on_shutdown(const rclcpp_lifecycle::State &prev_state) override;
 
             ///// END CMRDV CHANGE /////
 

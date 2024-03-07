@@ -6,6 +6,7 @@
 #include <thread>
 #include <boost/optional.hpp>
 
+#include "lifecycle_msgs/msg/state.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/rclcpp.hpp"
 
@@ -40,7 +41,7 @@ namespace cmrdv_node_utils
              * 
              * \param options The configurations options for this node
              */
-            // CMRDV_ROS2_UTILS_PUBLIC --->EXPLORE VISIBILITY
+            // CMRDV_NODE_UTILS_PUBLIC --->EXPLORE VISIBILITY
             explicit CMRDVLifecycleNode(const rclcpp::NodeOptions &options);
 
 
@@ -328,15 +329,27 @@ namespace cmrdv_node_utils
             //! Topic to subscribe to by default for SystemAlert messages
             const std::string system_alert_topic_{"/system_alert"};
 
+
             //! System alert publisher
             // std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<cmrdv_msgs::msg::SystemAlert>>
                 // system_alert_pub_;
 
+
             //! A list of lifecycle publishers produced from this node whose lifetimes can be managed
             std::vector<std::shared_ptr<rclcpp_lifecycle::LifecyclePublisherInterface>> lifecycle_publishers_;
 
+
             //! A list of timers produced from this node whose lifetimes can be managed
             std::vector<std::shared_ptr<rclcpp::TimerBase>> timers_;
+
+
+            //! Mutex for use with exception handling
+            std::mutex exception_mutex_;
+
+
+            //! Optional caught exception description which serves as a workaround for adding exception handling to primary states
+            boost::optional<std::string> caught_exception_;
+
 
             //! Reentrant callback group to use with service calls. Setup this way so that this class' functions
             //  can be called from topic callbacks

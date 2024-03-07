@@ -2,7 +2,7 @@
 #ifdef CMRDV_NODE_UTILS__CMRDV_LIFECYCLE_NODE_HPP_
 
 
-namespace cmrdv_ros2_utils {
+namespace cmrdv_node_utils {
 
 	template <typename MessageT, typename AllocatorT = std::allocator<void>>
 	std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<MessageT, AllocatorT>>
@@ -170,4 +170,4 @@ namespace cmrdv_ros2_utils {
 
 
 
-#endif // CMRDV_ROS2_UTILS__CMRDV_LIFECYCLE_NODE_HPP_"
+#endif // CMRDV_NODE_UTILS__CMRDV_LIFECYCLE_NODE_HPP_"
