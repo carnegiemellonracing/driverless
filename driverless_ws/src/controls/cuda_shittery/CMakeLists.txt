@@ -8,6 +8,7 @@ set(CMAKE_C_STANDARD 99)
 find_package(CUDAToolkit)
 find_package(sdl2)
 find_package(OpenGL)
+find_package(glm)
 
 include_directories(extern/include)
 include_directories(./)
@@ -21,7 +22,8 @@ set_target_properties(cuda_shittery PROPERTIES
 target_link_libraries(cuda_shittery PRIVATE
         ${CMAKE_DL_LIBS}
         ${SDL2_LIBRARIES}
-        OpenGL::GL OpenGL::GLU)
+        OpenGL::GL OpenGL::GLU
+        glm::glm)
 
 target_compile_options(cuda_shittery PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
         --generate-line-info
