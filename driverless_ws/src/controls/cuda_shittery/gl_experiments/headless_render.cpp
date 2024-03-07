@@ -22,7 +22,7 @@ constexpr const char* vertex_source = R"(
     layout (location = 0) uniform float scale;
 
     void main() {
-        gl_Position = vec4(scale * i_world_pos, abs(i_curv_pose.x), 1.0);
+        gl_Position = vec4(scale * i_world_pos, abs(i_curv_pose.y), 1.0);
         o_curv_pose = i_curv_pose;
     }
 )";
@@ -35,7 +35,7 @@ constexpr const char* fragment_source = R"(
     out vec4 FragColor;
 
     void main() {
-        FragColor = vec4(abs(o_curv_pose.y), 0.0f, 0.0f, 0.0f);
+        FragColor = vec4(o_curv_pose, 0.0f);
     }
 )";
 
@@ -343,6 +343,8 @@ void update_path(const GlPath& path, glm::fvec2 samples[], size_t n, float width
             indices.push_back(l1i);
             indices.push_back(p1i);
         }
+
+        total_progress += new_progress;
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, path.vbo);
@@ -404,7 +406,7 @@ int main() {
     GLuint shader = compile_shader(vertex_source, fragment_source);
     constexpr GLint scale_loc = 0;
     glUseProgram(shader);
-    glUniform1f(scale_loc, 0.5f);
+    glUniform1f(scale_loc, 0.25f);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
