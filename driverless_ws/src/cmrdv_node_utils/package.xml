@@ -3,7 +3,7 @@
 <package format="3">
   <name>cmrdv_node_utils</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Package of ROS2 utilities in carma.</description>
   <maintainer email="lebonbruce@gmail.com">root</maintainer>
   <license>TODO: License declaration</license>
 
@@ -11,6 +11,15 @@
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+
+  <depend>launch</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>rclcpp_components</depend>
+  <depend>rcutils</depend>
+  <depend>ament_index_cpp</depend>
+  <depend>class_loader</depend>
+  <depend>composition_interfaces</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

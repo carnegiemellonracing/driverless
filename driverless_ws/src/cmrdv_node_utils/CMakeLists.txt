@@ -17,9 +17,27 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(rcutils REQUIRED)
+find_package(ament_index_cpp REQUIRED)
+find_package(class_loader REQUIRED)
+find_package(composition_interfaces REQUIRED)
+find_package(rcpputils REQUIRED)
+find_package(Boost REQUIRED)
+
+set(dependencies
+    rclcpp
+    rclcpp_lifecycle
+    rcutils
+    rclcpp_components
+    ament_index_cpp
+    class_loader
+    composition_interfaces
+    rcpputils
+    Boost
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
