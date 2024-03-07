@@ -146,7 +146,7 @@ namespace cmrdv_node_utils
             virtual void on_load_node(
                 const std::shared_ptr<rmw_request_id_t> request_header,
                 const std::shared_ptr<LoadNode::Request> request,
-                std::shared_ptr<LoadNode::Response> response);
+                std::shared_ptr<LoadNode::Response> response, boost::optional<uint64_t> internal_id = boost::none);
 
 
             /// Service callback to unload a node in the component
@@ -178,8 +178,19 @@ namespace cmrdv_node_utils
                 std::shared_ptr<ListNodes::Response> response);
 
 
-            ///// Overrides /////
+            ///// CARMA CHANGE /////
 
+            /**
+             * \brief Helper method to unload all the currently loaded nodes
+             * 
+             * The primary unloading logic is propagated to the on_unload_node
+             * 
+             * \return True if all nodes were successfully unloaded. False is otherwise
+             */ 
+            bool unload_all_nodes();
+
+
+            ///// Overrides /////
             // handle_on_configure is not used
             cmrdv_node_utils::CallbackReturn handle_on_activate(const rclcpp_lifecycle::State &prev_state) override;
             cmrdv_node_utils::CallbackReturn handle_on_deactivate(const rclcpp_lifecycle::State &prev_state) override;
@@ -207,7 +218,6 @@ namespace cmrdv_node_utils
             std::unordered_map<uint64_t, std::pair<rmw_request_id_t, LoadNode::Request>> load_node_requests_;
 
             //// END CMRDV CHANGE ////
-
     };
 
 }  // namespace rclcpp_components
