@@ -1,12 +1,17 @@
 #ifndef CMRDV_NODE_UTILS__CMRDV_LIFECYCLE_NODE_HPP_
 #define CMRDV_NODE_UTILS__CMRDV_LIFECYCLE_NODE_HPP_
 
+#include <memory>
+#include <string>
+#include <thread>
+#include <boost/optional.hpp>
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 
-namespace cmrdv_node_utils {
+namespace cmrdv_node_utils 
+{
 
     using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
@@ -21,14 +26,12 @@ namespace cmrdv_node_utils {
      * Each lifecycle node has a heartbeat publisher. In the event this node is not able to publish a 'safe' heartbeat status 
      *      it will result in a SystemAlert message being published and the node shutting down.
      * 
-     * 
-     * 
      * The user can add their own exception, alert, and shutdown handling using corresponding handler functions:
      *      handle_on_error, handle_on_system_alert, handle_on_shutdown
      * 
-     * 
     */
-    class CMRDVLifecycleNode : public rclcpp_lifecycle::LifecycleNode {
+    class CMRDVLifecycleNode : public rclcpp_lifecycle::LifecycleNode 
+    {
 
         public:
 
@@ -37,7 +40,7 @@ namespace cmrdv_node_utils {
              * 
              * \param options The configurations options for this node
              */
-            cmrdv_node_UTILS_PUBLIC
+            // CMRDV_ROS2_UTILS_PUBLIC --->EXPLORE VISIBILITY
             explicit CMRDVLifecycleNode(const rclcpp::NodeOptions &options);
 
 
@@ -127,14 +130,12 @@ namespace cmrdv_node_utils {
             virtual cmrdv_node_utils::CallbackReturn handle_on_shutdown(const rclcpp_lifecycle::State &prev_state);
 
 
-
             /**
              * \brief Convenience method to build a shared pointer from this object.
              * 
              * \return A shared pointer which points to this object
              */
             std::shared_ptr<cmrdv_node_utils::CMRDVLifecycleNode> shared_from_this();
-
 
 
             // TODO: create more of these type of functions
@@ -144,8 +145,7 @@ namespace cmrdv_node_utils {
              * \param msg The message to publish
              */
             // TODO: setup cmrdiv_msgs
-            void publish_system_alert(const cmrdv_msgs::msg::SystemAlert &msg);
-
+            // void publish_system_alert(const cmrdv_msgs::msg::SystemAlert &msg);
 
 
             /**
@@ -160,7 +160,7 @@ namespace cmrdv_node_utils {
                 typename CallbackT,
                 typename AllocatorT = std::allocator<void>,
                 typename CallbackMessageT =
-                typename rclcpp::subscription_traits::has_message_type<CallbackT>::type,
+                    typename rclcpp::subscription_traits::has_message_type<CallbackT>::type,
                 typename SubscriptionT = rclcpp::Subscription<MessageT, AllocatorT>,
                 typename MessageMemoryStrategyT = rclcpp::message_memory_strategy::MessageMemoryStrategy<
                     CallbackMessageT,
@@ -175,7 +175,6 @@ namespace cmrdv_node_utils {
                 typename MessageMemoryStrategyT::SharedPtr msg_mem_strat = (MessageMemoryStrategyT::create_default()));
 
 
-
             /**
              * \brief Override of parent method. See descriptive comments here:
              *  https://github.com/ros2/rclcpp/blob/4859c4e43576d0c6fe626679b2c2604a9a8b336c/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp#L201
@@ -186,7 +185,6 @@ namespace cmrdv_node_utils {
                 const std::string &topic_name,
                 const rclcpp::QoS &qos,
                 const rclcpp_lifecycle::PublisherOptionsWithAllocator<AllocatorT> &options = (rclcpp_lifecycle::create_default_publisher_options<AllocatorT>()));
-
 
 
             /**
@@ -201,7 +199,6 @@ namespace cmrdv_node_utils {
                 rclcpp_lifecycle::LifecycleNode::OnParametersSetCallbackType callback);
 
 
-
             /**
              * \brief Override of parent method. See descriptive comments here:
              *  https://github.com/ros2/rclcpp/blob/4859c4e43576d0c6fe626679b2c2604a9a8b336c/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp#L249
@@ -210,13 +207,12 @@ namespace cmrdv_node_utils {
              *       The user should therefore assume ownership of this function object has been relinquished
              */
             template <typename DurationRepT = int64_t, typename DurationT = std::milli, typename CallbackT>
-            std::shared_ptr<rclcpp::TimerBase> // NOTE: TimerBase must be used here to account for the fact that the exception handling lambda will have a different type from the input callback type due to being a possible differnet location in code (member vs non-member method etc.).
+            std::shared_ptr<rclcpp::TimerBase> // NOTE: return value of TimerBase must be used here to account for the fact that the exception handling lambda will have a different type from the input callback type due to being a possible differnet location in code (member vs non-member method etc.).
                                             // Therefore the old return statement of typename rclcpp::WallTimer<CallbackT>::SharedPtr is replaced with TimerBase
             create_wall_timer(
                 std::chrono::duration<DurationRepT, DurationT> period,
                 CallbackT callback,
                 rclcpp::CallbackGroup::SharedPtr group = nullptr);
-
 
 
             /**
@@ -244,7 +240,6 @@ namespace cmrdv_node_utils {
                 rclcpp::CallbackGroup::SharedPtr group = nullptr);
 
 
-
             /**
              * \brief Override of rclcpp method. See descriptive comments here:
              *  https://github.com/ros2/rclcpp/blob/4859c4e43576d0c6fe626679b2c2604a9a8b336c/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp#L271
@@ -263,7 +258,6 @@ namespace cmrdv_node_utils {
                 rclcpp::CallbackGroup::SharedPtr group = nullptr);
 
 
-
             /**
              * \brief Override of parent method. See descriptive comments here:
              *  https://github.com/ros2/rclcpp/blob/d7804e1b3fd9676d302ec72f02c49ba04cbed5e6/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_node.hpp#L260
@@ -279,7 +273,6 @@ namespace cmrdv_node_utils {
             create_client(const std::string service_name, 
                 const rmw_qos_profile_t & qos_profile = rmw_qos_profile_services_default,
                 rclcpp::CallbackGroup::SharedPtr group = nullptr);
-
 
 
         protected:
@@ -307,12 +300,10 @@ namespace cmrdv_node_utils {
             void send_error_alert_msg_for_string(const std::string &alert_string);
 
             
-            
             /**
              * \brief Activate all publishers to allow publication
              */
             void activate_publishers();
-
 
 
             /**
@@ -321,12 +312,10 @@ namespace cmrdv_node_utils {
             void deactivate_publishers();
 
 
-
             /**
              * \brief Reset all publisher pointers
              */
             void cleanup_publishers();
-
 
 
             /**
@@ -340,8 +329,8 @@ namespace cmrdv_node_utils {
             const std::string system_alert_topic_{"/system_alert"};
 
             //! System alert publisher
-            std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<cmrdv_msgs::msg::SystemAlert>>
-                system_alert_pub_;
+            // std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<cmrdv_msgs::msg::SystemAlert>>
+                // system_alert_pub_;
 
             //! A list of lifecycle publishers produced from this node whose lifetimes can be managed
             std::vector<std::shared_ptr<rclcpp_lifecycle::LifecyclePublisherInterface>> lifecycle_publishers_;
@@ -354,13 +343,15 @@ namespace cmrdv_node_utils {
             rclcpp::CallbackGroup::SharedPtr service_callback_group_;
 
 
-
         private:
             // TODO: setup cmrdv error handlers and heartbeat system
 
+    };
 
-    } // namespace cmrdv_node_utils     
+} // namespace cmrdv_node_utils     
 
-}
+// Template functions cannot be linked unless the implementation is provided
+// Therefore include implementation to allow for template functions
+#include "internal/cmrdv_lifecycle_node.tpp"
 
-#endif // CMRDV_NODE_UTILS__CMRDV_LIFECYCLE_NODE_HPP_
+#endif // CMRDV_NODE_UTILS__CMRDV_LIFECYCLE_NODE_HPP_"
