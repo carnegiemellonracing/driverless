@@ -20,9 +20,10 @@ constexpr const char* vertex_source = R"(
     out vec3 o_curv_pose;
 
     layout (location = 0) uniform float scale;
+    layout (location = 1) uniform float width;
 
     void main() {
-        gl_Position = vec4(scale * i_world_pos, abs(i_curv_pose.y), 1.0);
+        gl_Position = vec4(scale * i_world_pos, abs(i_curv_pose.y) / width, 1.0);
         o_curv_pose = i_curv_pose;
     }
 )";
@@ -35,7 +36,7 @@ constexpr const char* fragment_source = R"(
     out vec4 FragColor;
 
     void main() {
-        FragColor = vec4(o_curv_pose, 0.0f);
+        FragColor = vec4(abs(o_curv_pose.y), 0.0f, 0.0f, 0.0f);
     }
 )";
 
@@ -396,6 +397,7 @@ GlPath gen_path() {
 
 
 int main() {
+    constexpr float width = 5;
     SDL_Window* window = init_sdl2_gl("gl experiment", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, max_width, max_height, 0);
 
     GLuint fbo, rbo;
@@ -405,16 +407,18 @@ int main() {
 
     GLuint shader = compile_shader(vertex_source, fragment_source);
     constexpr GLint scale_loc = 0;
+    constexpr GLint width_loc = 1;
     glUseProgram(shader);
     glUniform1f(scale_loc, 0.25f);
+    glUniform1f(width_loc, width);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
     GlPath path = gen_path();
 
-    std::vector<glm::fvec2> samples = sine_spline(6.28f, 1.0f, 10.0f, 0.1f);
-    update_path(path, samples.data(), samples.size(), 1.0f);
+    std::vector<glm::fvec2> samples = sine_spline(6.28f, 1.0f, 10.0f, 0.5f);
+    update_path(path, samples.data(), samples.size(), width);
 
     draw_triangles(shader, path.vao, samples.size() * 6 - 2);
 
