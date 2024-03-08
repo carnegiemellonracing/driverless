@@ -12,6 +12,8 @@ import perceptions.ros.utils.conversions as conv
 
 # perceptions Library visualization functions (for 3D data)
 from perc22a.predictors.utils.vis.Vis3D import Vis3D
+from perc22a.predictors.utils.vis.Vis2D import Vis2D
+
 import open3d as o3d
 
 from perceptions.topics import \
@@ -66,7 +68,8 @@ class ConeNode(Node):
 
         # deubgging mode visualizer
         if debug:
-            self.vis = Vis3D()
+            self.vis3D = Vis3D()
+            self.vis2D = Vis2D()
             self.display_timer = self.create_timer(1/VIS_UPDATE_FPS, self.update_vis)
 
         # if debugging, initialize visualizer
@@ -78,7 +81,8 @@ class ConeNode(Node):
 
     def update_vis(self):
         # update and interact with vis
-        self.vis.update()
+        self.vis3D.update()
+        self.vis2D.update()
 
         return
     
@@ -92,7 +96,8 @@ class ConeNode(Node):
         points[:, 0] = -points[:, 0]
         points = self.pose_transformer.to_origin("lidar", points, inverse=False)
 
-        self.vis.set_points(points)
+        self.vis3D.set_points(points)
+        self.vis2D.set_points(points)
 
 
     def yolov5_zed_cone_callback(self, msg):
@@ -134,7 +139,8 @@ class ConeNode(Node):
 
         # update visualizer
         if self.debug:
-            self.vis.set_cones(self.cones)
+            self.vis3D.set_cones(self.cones)
+            self.vis2D.set_cones(self.cones)
 
         # publish cones
         print(f"publishing {len(self.cones)} cones")
