@@ -41,7 +41,7 @@ VIS_UPDATE_FPS = 25
 
 class ConeNode(Node):
 
-    def __init__(self, debug=False, visualize_points=True):
+    def __init__(self, debug=True, visualize_points=True):
         super().__init__(CONE_NODE_NAME)
 
         self.cones = Cones()
