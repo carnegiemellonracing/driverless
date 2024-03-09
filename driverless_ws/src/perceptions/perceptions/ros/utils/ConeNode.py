@@ -68,6 +68,7 @@ class ConeNode(Node):
 
         # deubgging mode visualizer
         if debug:
+            print('vis on')
             self.vis3D = Vis3D()
             self.vis2D = Vis2D()
             self.display_timer = self.create_timer(1/VIS_UPDATE_FPS, self.update_vis)
