@@ -47,7 +47,7 @@ def within_range(coords):
 
 class ConeNode(Node):
 
-    def __init__(self, debug=False, visualize_points=True):
+    def __init__(self, debug=True, visualize_points=True):
         super().__init__(CONE_NODE_NAME)
 
         self.cones = Cones()
@@ -140,6 +140,7 @@ class ConeNode(Node):
 
         # update visualizer
         if self.debug:
+            print('updating vis')
             self.vis3D.set_cones(self.cones)
             self.vis2D.set_cones(self.cones)
 
