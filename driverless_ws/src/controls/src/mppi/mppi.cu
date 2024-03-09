@@ -6,8 +6,8 @@
 #include <mutex>
 #include <cuda_globals/cuda_globals.cuh>
 #include <cmath>
+#include <utils/cuda_utils.cuh>
 
-#include "cuda_utils.cuh"
 #include "mppi.cuh"
 #include "functors.cuh"
 
@@ -45,38 +45,24 @@ namespace controls {
         }
 
         Action MppiController_Impl::generate_action() {
+#ifdef PUBLISH_STATES
+            std::lock(m_state_trajectories_mutex, m_last_action_trajectory_mutex);
+            std::lock_guard<std::mutex> state_trajectories_guard {m_state_trajectories_mutex, std::adopt_lock};
+            std::lock_guard<std::mutex> action_trajectory_guard {m_last_action_trajectory_mutex, std::adopt_lock};
+#endif
+
             assert(cuda_globals::spline_texture_created);
 
 #ifdef PUBLISH_STATES
-            {
-                std::lock_guard<std::mutex> guard {m_state_trajectories_mutex};
-                memcpy(m_last_curr_state.data(), cuda_globals::curr_world_state_host, sizeof(cuda_globals::curr_world_state_host));
-            }
+            memcpy(m_last_curr_state.data(), cuda_globals::curr_world_state_host, sizeof(cuda_globals::curr_world_state_host));
 #endif
 
             // call kernels
             std::cout << "generating brownians..." << std::endl;
             generate_brownians();
-            cudaDeviceSynchronize();
-
-            // print_tensor(m_action_trajectories, action_trajectories_dims);
-            // std::cout << std::endl;
-
 
             std::cout << "populating cost..." << std::endl;
-            {
-#ifdef PUBLISH_STATES
-                std::lock_guard<std::mutex> state_trajectories_guard {m_state_trajectories_mutex};
-#endif
-                populate_cost();
-            }
-
-            // std::cout << "Action Trajectories:" << std::endl;
-            // print_tensor(m_action_trajectories, action_trajectories_dims);
-
-            // std::cout << "Costs to go: " << std::endl;
-            // print_tensor(m_cost_to_gos, dim3(num_samples, 1, num_timesteps));
-            // std::cout << std::endl;
+            populate_cost();
 
             std::cout << "\nreducing actions..." << std::endl;
             // not actually on device, just still in a device action struct
@@ -90,24 +76,17 @@ namespace controls {
                 result_action.begin()
             );
 
-
-            {
-#ifdef PUBLISH_STATES
-                std::lock_guard<std::mutex> guard {m_state_trajectories_mutex};
-#endif
-
-                thrust::copy(
-                    averaged_trajectory.begin() + 1,
-                    averaged_trajectory.end(),
-                    m_last_action_trajectory.begin()
-                );
+            thrust::copy(
+                averaged_trajectory.begin() + 1,
+                averaged_trajectory.end(),
+                m_last_action_trajectory.begin()
+            );
 
 #ifdef PUBLISH_STATES
-                m_last_action = host_action;
+            m_last_action = host_action;
 #endif
 
-                return result_action;
-            }
+            return result_action;
         }
 
 #ifdef PUBLISH_STATES

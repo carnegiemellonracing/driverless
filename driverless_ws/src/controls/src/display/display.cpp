@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <gsl/gsl_odeiv2.h>
 #include <mppi/types.cuh>
+#include <utils/gl_utils.hpp>
 
 using namespace std::chrono_literals;
 

@@ -17,15 +17,15 @@ namespace controls {
 
         class MppiController_Impl : public MppiController {
         public:
-             MppiController_Impl();
+            MppiController_Impl();
 
-             Action generate_action() override;
+            Action generate_action() override;
 
 
 #ifdef PUBLISH_STATES
-             std::vector<float> last_state_trajectories() override;
+            std::vector<float> last_state_trajectories() override;
 
-             std::vector<glm::fvec2> last_reduced_state_trajectory() override;
+            std::vector<glm::fvec2> last_reduced_state_trajectory() override;
 #endif
 
              ~MppiController_Impl() override;
@@ -49,14 +49,13 @@ namespace controls {
             thrust::device_vector<DeviceAction> m_last_action_trajectory;
 #ifdef PUBLISH_STATES
             DeviceAction m_last_action;
-            State m_last_curr_state;
             std::mutex m_last_action_trajectory_mutex;
 
             /**
-             * \brief State trajectories generated from curr_state and action trajectories. Sent to rviz when
-             *        debugging.
+             * State trajectories generated from curr_state and action trajectories. Sent to display when enabled
              */
             thrust::device_vector<float> m_state_trajectories;
+            State m_last_curr_state;
             std::mutex m_state_trajectories_mutex;
 #endif
 
@@ -65,13 +64,13 @@ namespace controls {
             void generate_brownians();
 
             /**
-             * @brief Retrieves action based on cost to go using reduction.
-             * @return Action
+             * Retrieves action based on cost to go using reduction.
+             * @returns Action
              */
             thrust::device_vector<DeviceAction> reduce_actions();
 
             /**
-             * @brief Calculates costs to go
+             * Calculates costs to go
              */
             void populate_cost();
 
