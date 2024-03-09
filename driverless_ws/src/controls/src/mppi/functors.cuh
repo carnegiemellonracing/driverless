@@ -3,7 +3,7 @@
 #include <thrust/transform_reduce.h>
 #include <thrust/execution_policy.h>
 #include <constants.hpp>
-#include <cuda_utils.cuh>
+#include <utils/cuda_utils.cuh>
 #include <cuda_constants.cuh>
 
 #include "types.cuh"

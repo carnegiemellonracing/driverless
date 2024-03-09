@@ -1,4 +1,4 @@
-#include <cuda_utils.cuh>
+#include <utils/cuda_utils.cuh>
 #include <cuda_globals/cuda_globals.cuh>
 #include <glm/glm.hpp>
 #include <cuda_constants.cuh>
@@ -119,7 +119,6 @@ namespace controls {
             std::cout << "done.\n" << std::endl;
 
             assert(cuda_globals::spline_texture_created);
-
 
             std::cout << "recalculating curvilinear state..." << std::endl;
             recalculate_curv_state();

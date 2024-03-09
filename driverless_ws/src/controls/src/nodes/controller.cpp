@@ -78,6 +78,8 @@ namespace controls {
                     m_state_estimator->on_spline(spline_msg);
                 }
 
+                m_received_first_spline = true;
+
                 notify_state_dirty();
             }
 
