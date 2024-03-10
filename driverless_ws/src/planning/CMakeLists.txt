@@ -1,43 +1,46 @@
-cmake_minimum_required(VERSION 3.5)
-project(planning)
+  cmake_minimum_required(VERSION 3.5)
+  project(planning)
 
-# Default to C++14
-if(NOT CMAKE_CXX_STANDARD)
+  # Default to C++14
+  if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
-endif()
+  endif()
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
+  if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic -O0)
+  endif()
 
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(eufs_msgs REQUIRED)
-find_package(GSL REQUIRED)
+  find_package(ament_cmake REQUIRED)
+  find_package(rclcpp REQUIRED)
+  find_package(std_msgs REQUIRED)
+  find_package(geometry_msgs REQUIRED)
+  find_package(eufs_msgs REQUIRED)
+  find_package(Eigen3 3.3 REQUIRED)
+  find_package(GSL REQUIRED)
+  find_package(interfaces REQUIRED)
 
-add_executable(midline src/midpoint.cpp src/generator.cpp src/raceline/raceline.cpp)
-ament_target_dependencies(midline rclcpp std_msgs eufs_msgs geometry_msgs GSL)
+  add_library(planning_export src/planning_codebase/raceline/raceline.cpp)
+  ament_target_dependencies(planning_export interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
 
 
+  add_executable(midpoint_test src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
+  # add_executable(midline_test src/generator.cpp src/raceline/raceline.cpp)
+  ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
 
-add_executable(talker pub.cpp)
-ament_target_dependencies(talker rclcpp std_msgs)
+  ament_export_targets(planning_exportTargets HAS_LIBRARY_TARGET)
+  ament_export_dependencies(interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
+  
+  # ament_target_dependencies(midline_test rclcpp std_msgs geometry_msgs eufs_msgs GSL)
 
-install(TARGETS
-  talker
-  DESTINATION lib/${PROJECT_NAME})
+  install(
+    TARGETS midpoint_test
+    DESTINATION lib/${PROJECT_NAME}
+  )
 
-add_executable(listener sub.cpp)
-ament_target_dependencies(listener rclcpp std_msgs)
+  install(
+    TARGETS planning_export
+    EXPORT planning_exportTargets
+    DESTINATION lib/${PROJECT_NAME}
+  )
 
-install(TARGETS
-  talker
-  listener
-  DESTINATION lib/${PROJECT_NAME})
-install(TARGETS
-  midline
-  DESTINATION lib/${PROJECT_NAME})
-
-ament_package()
+  ament_package()

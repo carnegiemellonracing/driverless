@@ -1,11 +1,12 @@
 from setuptools import setup
+from setuptools import find_namespace_packages
 
 package_name = 'perceptions'
 
 setup(
     name=package_name,
     version='0.0.0',
-    packages=[package_name],
+    packages=[package_name] + find_namespace_packages(),
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
@@ -20,9 +21,14 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'data_node = perceptions.DataNode:main',
-            'stereo_node = perceptions.StereoNode:main',
-            'lidar_node = perceptions.LidarNode:main'
+            # util nodes
+            'zed_node = perceptions.ros.utils.ZEDNode:main',
+            'data_node = perceptions.ros.utils.DataNode:main',
+            'sync_node = perceptions.ros.utils.SyncNode:main',
+
+            # predictor nodes
+            'yolov5_node = perceptions.ros.predictors.YOLOv5Node:main',
+            'lidar_node = perceptions.ros.predictors.LidarNode:main'
         ],
     },
 )

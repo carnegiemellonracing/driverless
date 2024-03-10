@@ -42,10 +42,12 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/CarROT.msg"
   "msg/ConeList.msg"
   "msg/ConePositions.msg"
+  "msg/DataFrame.msg"
   "msg/PairROT.msg"
   "msg/Points.msg"
   "msg/Spline.msg"
   "msg/SplineList.msg"
+  "msg/ControlAction.msg"
   DEPENDENCIES geometry_msgs sensor_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 ament_package()
