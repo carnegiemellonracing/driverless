@@ -1,4 +1,16 @@
+#pragma once
+
 namespace controls {
-    using cfloat = float;
-    using csize = unsigned int;
+
+    union SplineFrame {
+        float4 texel;
+
+        struct {
+            float x;
+            float y;
+            float tangent_angle;
+            float curvature;
+        };
+    };
+
 }

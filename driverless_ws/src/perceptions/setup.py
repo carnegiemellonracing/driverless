@@ -1,6 +1,9 @@
 from setuptools import setup
 from setuptools import find_namespace_packages
 
+from glob import glob
+import os
+
 package_name = 'perceptions'
 
 setup(
@@ -11,6 +14,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -21,14 +25,28 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            # raw data nodes
+            'zed_node = perceptions.ros.utils.ZEDNode:main_zed',
+            'zed2_node = perceptions.ros.utils.ZEDNode:main_zed2',
+
+            # debugging nodes
+            'lidar_vis_node = perceptions.ros.utils.debug.LidarVisNode:main',
+
             # util nodes
-            'zed_node = perceptions.ros.utils.ZEDNode:main',
             'data_node = perceptions.ros.utils.DataNode:main',
             'sync_node = perceptions.ros.utils.SyncNode:main',
+            'file_node = perceptions.ros.utils.FileNode:main',
 
             # predictor nodes
-            'yolov5_node = perceptions.ros.predictors.YOLOv5Node:main',
-            'lidar_node = perceptions.ros.predictors.LidarNode:main'
+            'yolov5_zed_node = perceptions.ros.predictors.YOLOv5Node:main_zed',
+            'yolov5_zed2_node = perceptions.ros.predictors.YOLOv5Node:main_zed2',
+            'lidar_node = perceptions.ros.predictors.LidarNode:main',
+
+            # cone node
+            'cone_node = perceptions.ros.utils.ConeNode:main',
+
+            # midline node
+            'midline_node = perceptions.planning_stuff.MidlineNode:main'
         ],
     },
 )

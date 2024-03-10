@@ -3,7 +3,7 @@
 #include <math.h>
 #include <algorithm>
 #include <iostream>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include <rclcpp/rclcpp.hpp>
 #ifndef MIDPOINTGENERATOR
 #define MIDPOINTGENERATOR
@@ -32,10 +32,9 @@ public:
 
     MidpointGenerator(int interpolation_number=30);
 
-    std::vector<std::pair<double,double>> sorted_by_norm(std::vector<std::pair<double,double>> inp);
-    // gsl_matrix *sorted_by_norm(gsl_matrix *list);
+    std::vector<std::pair<double,double>> sorted_by_norm(rclcpp::Logger logger,std::vector<std::pair<double,double>> inp);
+    // std::vector<std::pair<double,double>> sorted_by_norm_x2(rclcpp::Logger logger,std::vector<std::pair<double,double>> inp);
     
-
     std::vector<Spline> generate_splines(rclcpp::Logger logger, Eigen::MatrixXd& midpoints);    
     Eigen::MatrixXd generate_points(rclcpp::Logger logger, perceptionsData perceptions_data);  
     Eigen::MatrixXd interpolate_cones(rclcpp::Logger logger, perceptionsData perceptions_data, int interpolation_number = -1);
@@ -44,7 +43,7 @@ public:
 
 };
 
-Eigen::MatrixXd midpoint(rclcpp::Logger logger, Eigen::MatrixXd& inner,Eigen::MatrixXd& outer);
+Eigen::MatrixXd midpoint(rclcpp::Logger logger, Eigen::MatrixXd& left,Eigen::MatrixXd& right);
 
 #endif
 
