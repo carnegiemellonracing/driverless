@@ -69,7 +69,7 @@ class ConeNode(Node):
         # deubgging mode visualizer
         if debug:
             print('vis on')
-            self.vis3D = Vis3D()
+#            self.vis3D = Vis3D()
             self.vis2D = Vis2D()
             self.display_timer = self.create_timer(1/VIS_UPDATE_FPS, self.update_vis)
 
@@ -82,7 +82,7 @@ class ConeNode(Node):
 
     def update_vis(self):
         # update and interact with vis
-        self.vis3D.update()
+ #       self.vis3D.update()
         self.vis2D.update()
 
         return
@@ -97,7 +97,7 @@ class ConeNode(Node):
         points[:, 0] = -points[:, 0]
         points = self.pose_transformer.to_origin("lidar", points, inverse=False)
 
-        self.vis3D.set_points(points)
+  #      self.vis3D.set_points(points)
         self.vis2D.set_points(points)
 
 
@@ -141,7 +141,7 @@ class ConeNode(Node):
         # update visualizer
         if self.debug:
             print('updating vis')
-            self.vis3D.set_cones(self.cones)
+   #         self.vis3D.set_cones(self.cones)
             self.vis2D.set_cones(self.cones)
 
         # publish cones
