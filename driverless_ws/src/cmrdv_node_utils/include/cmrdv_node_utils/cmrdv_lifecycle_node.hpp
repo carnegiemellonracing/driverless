@@ -22,6 +22,7 @@
 #include <boost/optional.hpp>
 
 #include "lifecycle_msgs/msg/state.hpp"
+#include "std_msgs/msg/string.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/rclcpp.hpp"
 
@@ -386,11 +387,13 @@ namespace cmrdv_node_utils
              */
             void cleanup_timers();
 
+            void publish_system_alert(const std_msgs::msg::String &msg);
+
+            void timer_callback();
 
             // TODO: REFACTOR FOR CMRDV
             //! Topic to subscribe to by default for SystemAlert messages
             const std::string system_alert_topic_{"/system_alert"};
-
 
             //! System alert publisher
             // std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<cmrdv_msgs::msg::SystemAlert>>
@@ -419,8 +422,10 @@ namespace cmrdv_node_utils
 
 
         private:
-            // TODO: setup cmrdv error handlers and heartbeat system
 
+            // TODO: setup cmrdv error handlers and heartbeat system
+            rclcpp::TimerBase::SharedPtr system_alert_timer_;
+            rclcpp::Publisher<std_msgs::msg::String>::SharedPtr system_alert_pub_;
     };
 
 } // namespace cmrdv_node_utils     

@@ -18,11 +18,15 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <chrono>
 
 #include "lifecycle_msgs/msg/state.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "rclcpp_components/register_node_macro.hpp"
 
+#include "std_msgs/msg/string.hpp"
+
+using namespace std::chrono_literals;
 
 namespace cmrdv_node_utils 
 {
@@ -53,12 +57,43 @@ namespace cmrdv_node_utils
 
     CallbackReturn CMRDVLifecycleNode::on_configure(const rclcpp_lifecycle::State &prev_state) 
     {
-        // system_alert_pub_ = create_publisher<cmrdv_msgs::msg::SystemAlert>(
-        //     system_alert_topic_, 10);
+        system_alert_pub_ = this->create_publisher<std_msgs::msg::String>(
+            system_alert_topic_, 10);
+
+        auto callback_func = [this]() -> void
+        {
+            auto message = std_msgs::msg::String();
+            message.data = "Alive";
+            this->publish_system_alert(message);
+        };
+
+        system_alert_timer_ = this->create_wall_timer(
+            500ms, callback_func
+        );
 
         return handle_on_configure(prev_state);
     }
 
+    void CMRDVLifecycleNode::timer_callback() {
+        auto message = std_msgs::msg::String();
+        message.data = "Alive";
+        this->publish_system_alert(message);
+    }
+
+    void
+    CMRDVLifecycleNode::publish_system_alert(const std_msgs::msg::String &msg)
+    {
+        system_alert_pub_->publish(msg);
+        return;
+    }
+
+    // void CMRDVLifecycleNode::timer_callback()
+    // {
+    //     auto message = std_msgs::msg::String();
+    //     message.data = "Hi";
+    //     // RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
+    //     system_alert_pub_->publish(message);
+    // }
 
     CallbackReturn CMRDVLifecycleNode::on_activate(const rclcpp_lifecycle::State &prev_state)
     {
@@ -104,7 +139,7 @@ namespace cmrdv_node_utils
 
             try
             {
-                send_error_alert_msg_for_string(error_string);
+                // send_error_alert_msg_for_string(error_string);
                 RCLCPP_ERROR_STREAM(get_logger(), "Sent on_error system alert");
             }
             catch (const std::exception &e)
@@ -181,7 +216,7 @@ namespace cmrdv_node_utils
 
             try
             {
-                send_error_alert_msg_for_string(error_msg);
+                // send_error_alert_msg_for_string(error_msg);
                 RCLCPP_ERROR_STREAM(get_logger(), "Sent handle_primary_state_exception system alert");
             }
             catch (const std::exception &e)
