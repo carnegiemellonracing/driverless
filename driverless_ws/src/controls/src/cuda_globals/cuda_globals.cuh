@@ -1,25 +1,22 @@
 #pragma once
 
 #include <cuda_constants.cuh>
-#include <state/state_estimator.cuh>
 
 #include "constants.hpp"
 
 
 namespace controls {
     namespace cuda_globals {
-
-        // host symbols (may still point to device)
-
-        extern float4* spline_texture_buf;
-        extern cudaTextureObject_t spline_texture_object;
-        extern bool spline_texture_created;
-
-        extern float curr_world_state_host[state_dims];
+        struct CurvFrameLookupTexInfo {
+            float xcenter;
+            float ycenter;
+            float width;
+        };
 
         // device symbols
 
-        extern __constant__ cudaTextureObject_t d_spline_texture_object;
+        extern __constant__ cudaTextureObject_t curv_frame_lookup_tex;
+        extern __constant__ CurvFrameLookupTexInfo curv_frame_lookup_tex_info;
 
         extern __constant__ size_t spline_texture_elems;
 

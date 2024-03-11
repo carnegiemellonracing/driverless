@@ -15,18 +15,21 @@
 namespace controls {
     namespace mppi {
 
-        std::shared_ptr<MppiController> MppiController::create() {
-            return std::make_shared<MppiController_Impl>();
+        std::shared_ptr<MppiController> MppiController::create(std::mutex& mutex) {
+            return std::make_shared<MppiController_Impl>(mutex);
         }
 
-        MppiController_Impl::MppiController_Impl()
+        MppiController_Impl::MppiController_Impl(std::mutex& mutex)
             : m_action_trajectories(num_action_trajectories),
               m_cost_to_gos(num_samples * num_timesteps),
               m_rng(),
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
               m_state_trajectories(num_samples * num_timesteps * state_dims),
+              m_last_action {},
+              m_last_curr_state {},
 #endif
-              m_last_action_trajectory(num_timesteps - 1) {  // -1 because last element will always be
+              m_last_action_trajectory(num_timesteps - 1),
+              m_mutex (mutex) {  // -1 because last element will always be
                                                                              // inferred from second to last
             for (uint32_t i = 0; i < num_timesteps - 1; i++) {
                 DeviceAction to_send;
@@ -45,17 +48,7 @@ namespace controls {
         }
 
         Action MppiController_Impl::generate_action() {
-#ifdef PUBLISH_STATES
-            std::lock(m_state_trajectories_mutex, m_last_action_trajectory_mutex);
-            std::lock_guard<std::mutex> state_trajectories_guard {m_state_trajectories_mutex, std::adopt_lock};
-            std::lock_guard<std::mutex> action_trajectory_guard {m_last_action_trajectory_mutex, std::adopt_lock};
-#endif
-
-            assert(cuda_globals::spline_texture_created);
-
-#ifdef PUBLISH_STATES
-            memcpy(m_last_curr_state.data(), cuda_globals::curr_world_state_host, sizeof(cuda_globals::curr_world_state_host));
-#endif
+            std::lock_guard<std::mutex> guard {m_mutex};
 
             // call kernels
             std::cout << "generating brownians..." << std::endl;
@@ -82,16 +75,16 @@ namespace controls {
                 m_last_action_trajectory.begin()
             );
 
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
             m_last_action = host_action;
 #endif
 
             return result_action;
         }
 
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
         std::vector<float> MppiController_Impl::last_state_trajectories() {
-            std::lock_guard<std::mutex> guard {m_state_trajectories_mutex};
+            std::lock_guard<std::mutex> guard {m_mutex};
 
             std::vector<float> result (m_state_trajectories.size());
             thrust::copy(m_state_trajectories.begin(), m_state_trajectories.end(), result.begin());
@@ -100,7 +93,7 @@ namespace controls {
         }
 
         std::vector<glm::fvec2> MppiController_Impl::last_reduced_state_trajectory() {
-            std::lock_guard<std::mutex> guard {m_last_action_trajectory_mutex};
+            std::lock_guard<std::mutex> guard {m_mutex};
 
             std::vector<glm::fvec2> result (m_last_action_trajectory.size() + 1);
 
@@ -176,7 +169,7 @@ namespace controls {
             PopulateCost populate_cost {
                 m_action_trajectories.data(),
                 m_action_trajectories.data(),
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
                 m_state_trajectories.data(),
 #endif
                 m_cost_to_gos.data(), m_last_action_trajectory.data()};

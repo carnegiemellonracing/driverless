@@ -1,4 +1,5 @@
 #include <utils/cuda_utils.cuh>
+#include <utils/gl_utils.hpp>
 #include <cuda_globals/cuda_globals.cuh>
 #include <glm/glm.hpp>
 #include <cuda_constants.cuh>
@@ -8,130 +9,135 @@
 #include "state_estimator.cuh"
 #include "state_estimator.hpp"
 
+#include <SDL2/SDL_video.h>
 
 
 namespace controls {
     namespace state {
 
-        std::shared_ptr<StateEstimator> StateEstimator::create() {
-            return std::make_shared<StateEstimator_Impl>();
+        std::shared_ptr<StateEstimator> StateEstimator::create(std::mutex& mutex) {
+            return std::make_shared<StateEstimator_Impl>(mutex);
         }
 
 
         // StateEstimator_Impl helpers
 
-        void populate_tangent_angles(std::vector<SplineFrame>& frames) {
-            assert(frames.size() > 1);
+        constexpr const char* vertex_source = R"(
+            #version 330 core
+            #extension GL_ARB_explicit_uniform_location : enable
 
-            auto angle_from_to = [] (const SplineFrame& a, const SplineFrame& b) {
-                const float dx = b.x - a.x;
-                const float dy = b.y - a.y;
-                return std::atan2(dy, dx);
-            };
+            layout (location = 0) in vec2 i_world_pos;
+            layout (location = 1) in vec3 i_curv_pose;
 
-            frames[0].tangent_angle = angle_from_to(frames[0], frames[1]);
-            for (size_t i = 1; i < frames.size() - 1; i++) {
-                frames[i].tangent_angle = angle_from_to(frames[i - 1], frames[i + 1]);
+            out vec3 o_curv_pose;
+
+            layout (location = 0) uniform float scale;
+            layout (location = 1) uniform vec2 center;
+
+            const float far_frustum = 10.0f;
+
+            void main() {
+                gl_Position = vec4(scale * (i_world_pos - center), abs(i_curv_pose.y) / far_frustum, 1.0);  // 10 = far frustum
+                o_curv_pose = i_curv_pose;
             }
-            frames.back().tangent_angle = angle_from_to(*(frames.end() - 2), frames.back());
-        }
+        )";
 
-        void populate_curvatures(std::vector<SplineFrame>& frames) {
-            assert(frames.size() > 1);
+        constexpr const char* fragment_source = R"(
+            #version 330 core
 
-            auto curvature_from_to = [] (const SplineFrame& a, const SplineFrame& b, uint8_t samples_apart) {
-                const float dphi = b.tangent_angle - a.tangent_angle;
-                return dphi / (samples_apart * spline_frame_separation);
-            };
+            in vec3 o_curv_pose;
 
-            frames[0].curvature = curvature_from_to(frames[0], frames[1], 1);
-            for (size_t i = 1; i < frames.size() - 1; i++) {
-                frames[i].curvature = curvature_from_to(frames[i - 1], frames[i + 1], 2);
+            out vec4 FragColor;
+
+            void main() {
+                FragColor = vec4(o_curv_pose, 0.0f);
             }
-            frames.back().curvature = curvature_from_to(*(frames.end() - 2), frames.back(), 1);
-        }
+        )";
 
         // methods
 
-        StateEstimator_Impl::StateEstimator_Impl() {
-
-            assert(!cuda_globals::spline_texture_created);
-
-            cudaChannelFormatDesc channel_desc = cudaCreateChannelDesc(
-                32, 32, 32, 32, cudaChannelFormatKindFloat
+        StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex)
+            : m_mutex {mutex} {
+#ifdef DISPLAY
+            m_gl_window = utils::create_sdl2_gl_window(
+                "Spline Frame Lookup", curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                0, &m_gl_context
             );
+#else
+            // dummy window to create opengl context for curv frame buffer
+            m_gl_window = utils::create_sdl2_gl_window(
+                "Spline Frame Lookup Dummy", 1, 1,
+                SDL_WINDOW_HIDDEN, &m_gl_context
+            );
+#endif
 
-            CUDA_CALL(cudaMalloc(&cuda_globals::spline_texture_buf, sizeof(float4) * max_spline_texture_elems));
+            m_gl_path_shader = utils::compile_shader(vertex_source, fragment_source);
 
-            cudaResourceDesc resource_desc {};
-            resource_desc.resType = cudaResourceTypeLinear;
-            resource_desc.res.linear.desc = channel_desc;
-            resource_desc.res.linear.devPtr = cuda_globals::spline_texture_buf;
-            resource_desc.res.linear.sizeInBytes = max_spline_texture_elems * sizeof(float4);
+            glClearColor(0.0f, 0.0f, 0.0f, -1.0f);
 
-            cudaTextureDesc texture_desc {};
-            texture_desc.addressMode[0] = cudaAddressModeClamp;
-            texture_desc.filterMode = cudaFilterModePoint;
-            texture_desc.readMode = cudaReadModeElementType;
-            texture_desc.normalizedCoords = false;
+            glEnable(GL_DEPTH_TEST);
+            glDepthFunc(GL_LESS);
 
-            CUDA_CALL(cudaCreateTextureObject(
-                &cuda_globals::spline_texture_object, &resource_desc, &texture_desc, nullptr
-            ));
+            gen_curv_frame_lookup_framebuffer();
+            gen_gl_path();
+        }
 
-            CUDA_CALL(cudaMemcpyToSymbol(
-                cuda_globals::d_spline_texture_object, &cuda_globals::spline_texture_object,
-                sizeof(cuda_globals::spline_texture_object)
-            ));
+        void StateEstimator_Impl::gen_curv_frame_lookup_framebuffer() {
+            glGenFramebuffers(1, &m_curv_frame_lookup_fbo);
+            glBindFramebuffer(GL_FRAMEBUFFER, m_curv_frame_lookup_fbo);
 
-            cuda_globals::spline_texture_created = true;
+            glGenRenderbuffers(1, &m_curv_frame_lookup_rbo);
+            glBindRenderbuffer(GL_RENDERBUFFER, m_curv_frame_lookup_rbo);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA32F, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_curv_frame_lookup_rbo);
+
+            //add a depth buffer
+            GLuint depth_rbo;
+            glGenRenderbuffers(1, &depth_rbo);
+            glBindRenderbuffer(GL_RENDERBUFFER, depth_rbo);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, curv_frame_lookup_tex_width,  curv_frame_lookup_tex_width);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rbo);
+
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+                throw std::runtime_error("Framebuffer is not complete");
+            }
         }
 
         StateEstimator_Impl::~StateEstimator_Impl() {
-            assert(cuda_globals::spline_texture_created);
-
-            cudaDestroyTextureObject(cuda_globals::spline_texture_object);
-            cudaFree(cuda_globals::spline_texture_buf);
-
-            cuda_globals::spline_texture_created = false;
+            SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
 
         void StateEstimator_Impl::on_spline(const SplineMsg& spline_msg) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
             std::cout << "------- ON SPLINE -----" << std::endl;
+
+            // callback in a new thread, so isn't already current
+            SDL_GL_MakeCurrent(m_gl_window, m_gl_context);
 
             m_spline_frames.clear();
             m_spline_frames.reserve(spline_msg.frames.size());
 
             for (const auto& frame : spline_msg.frames) {
-                m_spline_frames.push_back(SplineFrame {
+                m_spline_frames.push_back({
                     static_cast<float>(frame.x),
                     static_cast<float>(frame.y)
-                    , 0.0f, 0.0f
                 });
             }
 
-            std::cout << "populating tangent angles..." << std::endl;
-            populate_tangent_angles(m_spline_frames);
-            std::cout << "done.\n" << std::endl;
+            std::cout << "generating spline frame lookup texture info..." << std::endl;
+            gen_tex_info();
+            std::cout << "xcenter: " << m_curv_frame_lookup_tex_info.xcenter << " ycenter: " << m_curv_frame_lookup_tex_info.ycenter << " width: " << m_curv_frame_lookup_tex_info.width << std::endl;
 
-            std::cout << "populating curvatures..." << std::endl;
-            populate_curvatures(m_spline_frames);
-            std::cout << "done.\n" << std::endl;
-
-            assert(cuda_globals::spline_texture_created);
-
-            std::cout << "recalculating curvilinear state..." << std::endl;
-            recalculate_curv_state();
-            std::cout << "done. State: \n";
-            for (uint32_t i = 0; i < state_dims; i++) {
-                std::cout << m_curv_state[i] << " ";
-            }
-            std::cout << std::endl;
+            std::cout << "filling OpenGL buffers..." << std::endl;
+            fill_path_buffers();
 
             std::cout << "-------------------\n" << std::endl;
         }
 
         void StateEstimator_Impl::on_state(const StateMsg& state_msg) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
             std::cout << "------- ON STATE -----" << std::endl;
 
             m_world_state[state_x_idx] = state_msg.x;
@@ -144,28 +150,18 @@ namespace controls {
             m_world_state[state_fz_idx] = state_msg.downforce;
             m_world_state[state_whl_speed_f_idx] = state_msg.whl_speed_f;
             m_world_state[state_whl_speed_r_idx] = state_msg.whl_speed_r;
-
-            std::cout << "recalculating curvilinear state..." << std::endl;
-            recalculate_curv_state();
-            std::cout << "done. State: \n";
-            for (uint32_t i = 0; i < state_dims; i++) {
-                std::cout << m_curv_state[i] << " ";
-            }
-
-            memcpy(cuda_globals::curr_world_state_host, m_world_state.data(), sizeof(cuda_globals::curr_world_state_host));
             
             std::cout << "-------------------\n" << std::endl;
         }
 
         void StateEstimator_Impl::sync_to_device() {
-            std::cout << "sending spline to device texture..." << std::endl;
-            send_frames_to_texture();
+            std::lock_guard<std::mutex> guard {m_mutex};
 
-            std::cout << "done.\n" << std::endl;
+            std::cout << "rendering curv frame lookup table..." << std::endl;
+            render_curv_frame_lookup();
 
             std::cout << "syncing curvilinear state to device..." << std::endl;
-            sync_curv_state();
-            std::cout << "done.\n" << std::endl;
+            sync_world_state();
 
             // if we allow this to be async, host buffer may be edited by
             // state callbacks during transfer (no bueno)
@@ -173,6 +169,8 @@ namespace controls {
         }
 
         std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
             std::vector<glm::fvec2> res (m_spline_frames.size());
             for (size_t i = 0; i < m_spline_frames.size(); i++) {
                 res[i] = {m_spline_frames[i].x, m_spline_frames[i].y};
@@ -180,107 +178,174 @@ namespace controls {
             return res;
         }
 
-        void StateEstimator_Impl::send_frames_to_texture() {
-            assert(cuda_globals::spline_texture_created);
-
-            size_t elems = m_spline_frames.size();
-            assert(elems <= max_spline_texture_elems);
-            CUDA_CALL(cudaMemcpyToSymbolAsync(cuda_globals::spline_texture_elems, &elems, sizeof(elems)));
-
-            CUDA_CALL(cudaMemcpy(
-                cuda_globals::spline_texture_buf, m_spline_frames.data(),
-                sizeof(SplineFrame) * elems,
-                cudaMemcpyHostToDevice
+        void StateEstimator_Impl::sync_world_state() {
+            CUDA_CALL(cudaMemcpyToSymbolAsync(
+                cuda_globals::curr_state, &m_world_state, state_dims * sizeof(float)
             ));
         }
 
-        void StateEstimator_Impl::recalculate_curv_state() {
-            using namespace glm;
+        void StateEstimator_Impl::sync_tex_info() {
+            CUDA_CALL(cudaMemcpyToSymbolAsync(
+                cuda_globals::curv_frame_lookup_tex_info, &m_curv_frame_lookup_tex_info, sizeof(cuda_globals::CurvFrameLookupTexInfo)
+            ));
+        }
 
-            const float world_yaw = m_world_state[state_yaw_idx];
-            const fvec2 world_pos {m_world_state[state_x_idx], m_world_state[state_y_idx]};
+        void StateEstimator_Impl::gen_tex_info() {
+            float xmin = std::numeric_limits<float>::infinity();
+            float ymin = std::numeric_limits<float>::infinity();
+            float xmax = -std::numeric_limits<float>::infinity();
+            float ymax = -std::numeric_limits<float>::infinity();
 
-            auto distance_to_frame = [world_pos] (const SplineFrame& frame) {
-                const fvec2 p {frame.x, frame.y};
-                return distance(world_pos, p);
+            for (const glm::fvec2 frame : m_spline_frames) {
+                xmin = std::min(xmin, frame.x);
+                xmax = std::max(xmax, frame.x);
+                ymin = std::min(ymin, frame.y);
+                ymax = std::max(ymax, frame.y);
+            }
+
+            m_curv_frame_lookup_tex_info.xcenter = (xmax + xmin) / 2;
+            m_curv_frame_lookup_tex_info.ycenter = (ymax + ymin) / 2;
+            m_curv_frame_lookup_tex_info.width = std::max(xmax - xmin, ymax - ymin) + curv_frame_lookup_padding * 2;
+        }
+
+        void StateEstimator_Impl::render_curv_frame_lookup() {
+            glBindFramebuffer(GL_FRAMEBUFFER, m_curv_frame_lookup_fbo);
+
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glUseProgram(m_gl_path_shader);
+            glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
+            glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
+
+            glBindVertexArray(m_gl_path.vao);
+            glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
+
+#ifdef DISPLAY
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+            glBlitFramebuffer(
+                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                GL_COLOR_BUFFER_BIT, GL_NEAREST
+            );
+
+            SDL_GL_SwapWindow(m_gl_window);
+#endif
+        }
+
+        void StateEstimator_Impl::gen_gl_path() {
+            glGenVertexArrays(1, &m_gl_path.vao);
+            glGenBuffers(1, &m_gl_path.vbo);
+            glGenBuffers(1, &m_gl_path.ebo);
+
+            glBindVertexArray(m_gl_path.vao);
+            glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
+            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+            glEnableVertexAttribArray(1);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
+
+            glBindVertexArray(0);
+        }
+
+        void StateEstimator_Impl::fill_path_buffers() {
+            struct Vertex {
+                struct {
+                    float x;
+                    float y;
+                } world;
+
+                struct {
+                    float progress;
+                    float offset;
+                    float heading;
+                } curv;
             };
 
+            const float radius = track_width * 0.5f;
+            const size_t n = m_spline_frames.size();
 
-            assert(m_spline_frames.size() > 0);
+            std::vector<Vertex> vertices;
+            vertices.reserve(n);
 
-            float min_dist = distance_to_frame(m_spline_frames[0]);
-            size_t min_dist_index = 0;
-            for (size_t i = 1; i < m_spline_frames.size(); i++) {
-                const SplineFrame& frame = m_spline_frames[i];
-                const float dist = distance_to_frame(frame);
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    min_dist_index = i;
+            std::vector<GLuint> indices;
+            indices.reserve(n * 6 * 3);
+
+            float total_progress = 0;
+            for (size_t i = 0; i < n - 1; i++) {
+                glm::fvec2 p1 = m_spline_frames[i];
+                glm::fvec2 p2 = m_spline_frames[i + 1];
+
+                glm::fvec2 disp = p2 - p1;
+                float new_progress = glm::length(disp);
+                float segment_heading = std::atan2(disp.y, disp.x);
+
+
+                glm::fvec2 prev = i == 0 ? p1 : m_spline_frames[i - 1];
+                float secant_heading = std::atan2(p2.y - prev.y, p2.x - prev.x);
+
+                glm::fvec2 dir = glm::normalize(disp);
+                glm::fvec2 normal = glm::fvec2(-dir.y, dir.x);
+
+                glm::fvec2 low1 = p1 - normal * radius;
+                glm::fvec2 low2 = p2 - normal * radius;
+                glm::fvec2 high1 = p1 + normal * radius;
+                glm::fvec2 high2 = p2 + normal * radius;
+
+                if (i == 0) {
+                    vertices.push_back({{p1.x, p1.y}, {total_progress, 0.0f, segment_heading}});
                 }
+                vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, secant_heading}});
+
+                vertices.push_back({{low1.x, low1.y}, {total_progress, -radius, segment_heading}});
+                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, -radius, segment_heading}});
+                vertices.push_back({{high1.x, high1.y}, {total_progress, radius, segment_heading}});
+                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, radius, segment_heading}});
+
+                const GLuint p1i = i == 0 ? 0 : (i - 1) * 5 + 1;
+                const GLuint p2i = i * 5 + 1;
+                const GLuint l1i = i * 5 + 2;
+                const GLuint l2i = i * 5 + 3;
+                const GLuint h1i = i * 5 + 4;
+                const GLuint h2i = i * 5 + 5;
+
+                indices.push_back(p1i);
+                indices.push_back(p2i);
+                indices.push_back(h2i);
+
+                indices.push_back(h1i);
+                indices.push_back(p1i);
+                indices.push_back(h2i);
+
+                indices.push_back(l1i);
+                indices.push_back(l2i);
+                indices.push_back(p2i);
+
+                indices.push_back(p1i);
+                indices.push_back(l1i);
+                indices.push_back(p2i);
+
+                if (i > 0) {
+                    const GLuint lpi = (i - 1) * 5 + 3;
+                    const GLuint hpi = (i - 1) * 5 + 5;
+
+                    indices.push_back(hpi);
+                    indices.push_back(p1i);
+                    indices.push_back(h1i);
+
+                    indices.push_back(lpi);
+                    indices.push_back(l1i);
+                    indices.push_back(p1i);
+                }
+
+                total_progress += new_progress;
             }
 
-            const SplineFrame frame_a = m_spline_frames[min_dist_index];
-            const fvec2 a {frame_a.x, frame_a.y};
-            const fvec2 a_tangent {cos(frame_a.tangent_angle), sin(frame_a.tangent_angle)};
-            const fvec2 a_normal {-a_tangent.y, a_tangent.x};
-            const float progress_to_a = min_dist_index * spline_frame_separation;
+            glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
 
-            const float progress_from_a = dot(a_tangent, world_pos - a);
-
-            const float progress_a = progress_to_a + progress_from_a;
-            const float offset_a = dot(a_normal, world_pos - a);
-            const float curv_yaw_a = world_yaw - frame_a.tangent_angle;
-
-            float progress;
-            float offset;
-            float curv_yaw;
-
-            if (progress_from_a != 0
-                && !(progress_from_a < 0 && min_dist_index == 0)
-                && !(progress_from_a > 0 && min_dist_index == m_spline_frames.size() - 1)) {
-
-                SplineFrame frame_b;
-                float progress_to_b;
-
-                if (progress_from_a < 0) {
-                    frame_b = m_spline_frames[min_dist_index - 1];
-                    progress_to_b = (min_dist_index - 1) * spline_frame_separation;
-                } else {  // progress_from_a > 0
-                    frame_b = m_spline_frames[min_dist_index + 1];
-                    progress_to_b = (min_dist_index + 1) * spline_frame_separation;
-                }
-
-                const fvec2 b {frame_b.x, frame_b.y};
-                const fvec2 a_to_b = b - a;
-                const float a_to_b_dist = length(a_to_b);
-                const float t = glm::clamp(dot(a_to_b, world_pos - a) / (a_to_b_dist * a_to_b_dist), 0.0f, 1.0f);
-
-                const fvec2 tangent_b {cos(frame_b.tangent_angle), sin(frame_b.tangent_angle)};
-                const fvec2 normal_b {-tangent_b.y, tangent_b.x};
-
-                const float progress_b = progress_to_b + dot(tangent_b, world_pos - b);
-                const float offset_b = dot(normal_b, world_pos - b);
-                const float curv_yaw_b = world_yaw - frame_b.tangent_angle;
-
-                progress = (1 - t) * progress_a + t * progress_b;
-                offset = (1 - t) * offset_a + t * offset_b;
-                curv_yaw = (1 - t) * curv_yaw_a + t * curv_yaw_b;
-            } else {
-                progress = progress_a;
-                offset = offset_a;
-                curv_yaw = curv_yaw_a;
-            }
-
-            m_curv_state[state_x_idx] = progress;
-            m_curv_state[state_y_idx] = offset;
-            m_curv_state[state_yaw_idx] = curv_yaw;
-            std::copy(&m_world_state[3], m_world_state.end(), &m_curv_state[3]);
-        }
-
-        void StateEstimator_Impl::sync_curv_state() {
-            CUDA_CALL(cudaMemcpyToSymbolAsync(
-                cuda_globals::curr_state, &m_curv_state, state_dims * sizeof(float)
-            ));
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
         }
 
     }

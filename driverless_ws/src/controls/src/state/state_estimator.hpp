@@ -1,7 +1,7 @@
 #pragma once
 
 #include <types.hpp>
-#include <glm/fwd.hpp>
+#include <glm/glm.hpp>
 
 
 namespace controls {
@@ -9,7 +9,7 @@ namespace controls {
 
         class StateEstimator {
         public:
-            static std::shared_ptr<StateEstimator> create();
+            static std::shared_ptr<StateEstimator> create(std::mutex& mutex);
 
             virtual void on_spline(const SplineMsg& spline_msg) =0;
             virtual void on_state(const StateMsg& state_msg) =0;

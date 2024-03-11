@@ -6,7 +6,7 @@
 #include <interfaces/msg/control_action.hpp>
 #include <state/state_estimator.hpp>
 
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
 #include <display/display.hpp>
 #endif
 
@@ -61,7 +61,7 @@ namespace controls {
 
                 // start mppi :D
                 // this won't immediately begin publishing, since it waits for the first dirty state
-                launch_mppi().detach();
+                // launch_mppi().detach();
             }
 
             void ControllerNode::publish_action_callback() {
@@ -170,10 +170,13 @@ namespace controls {
 
 int main(int argc, char *argv[]) {
     using namespace controls;
+    
+    std::mutex mppi_mutex;
+    std::mutex state_mutex;
 
     // create resources
-    std::shared_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create();
-    std::shared_ptr<mppi::MppiController> controller = mppi::MppiController::create();
+    std::shared_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create(state_mutex);
+    std::shared_ptr<mppi::MppiController> controller = mppi::MppiController::create(mppi_mutex);
 
     rclcpp::init(argc, argv);
     std::cout << "rclcpp initialized" << std::endl;
@@ -204,22 +207,22 @@ int main(int argc, char *argv[]) {
     std::cout << "controller node thread launched" << std::endl;
 
 
-#ifdef PUBLISH_STATES
-    display::Display display {controller, state_estimator};
-    std::cout << "display created" << std::endl;
-
-    std::thread display_thread {[&] {
-        display.run();
-
-        {
-            std::lock_guard<std::mutex> guard {thread_died_mut};
-
-            std::cout << "Display thread closed. Exiting.." << std::endl;
-            thread_died = true;
-            thread_died_cond.notify_all();
-        }
-    }};
-    std::cout << "display thread launched" << std::endl;
+#ifdef DISPLAY
+    // display::Display display {controller, state_estimator};
+    // std::cout << "display created" << std::endl;
+    //
+    // std::thread display_thread {[&] {
+    //     display.run();
+    //
+    //     {
+    //         std::lock_guard<std::mutex> guard {thread_died_mut};
+    //
+    //         std::cout << "Display thread closed. Exiting.." << std::endl;
+    //         thread_died = true;
+    //         thread_died_cond.notify_all();
+    //     }
+    // }};
+    // std::cout << "display thread launched" << std::endl;
 #endif
 
     // wait for a thread to die

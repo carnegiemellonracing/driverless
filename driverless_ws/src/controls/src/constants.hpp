@@ -48,6 +48,9 @@ namespace controls {
     // State Estimation
 
     constexpr float spline_frame_separation = 0.5f;  // meters
+    constexpr uint32_t curv_frame_lookup_tex_width = 512;
+    constexpr float curv_frame_lookup_padding = 0; // meters
+    constexpr float track_width = 3.0f;
 
     constexpr uint8_t state_x_idx = 0;
     constexpr uint8_t state_y_idx = 1;
@@ -62,6 +65,5 @@ namespace controls {
 
     constexpr uint8_t action_swangle_idx = 0;
     constexpr uint8_t action_torque_idx = 1;
-    // constexpr uint8_t action_torque_f_idx = 1;
-    // constexpr uint8_t action_torque_r_idx = 2;
+
 }
