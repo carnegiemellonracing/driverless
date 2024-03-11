@@ -404,7 +404,7 @@ int main() {
     gen_framebuffer(max_width, max_height, fbo, rbo);
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
+0
     GLuint shader = compile_shader(vertex_source, fragment_source);
     constexpr GLint scale_loc = 0;
     constexpr GLint width_loc = 1;

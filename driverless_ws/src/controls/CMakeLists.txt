@@ -36,19 +36,9 @@ include_directories(${PROJECT_SOURCE_DIR}/../)
 include_directories(${PROJECT_SOURCE_DIR}/extern/include)
 include_directories($<INSTALL_INTERFACE:include>)
 
-file(GLOB TWO_TRACK_CPP src/model/two_track/codegen/*.cpp)
-set(LIB_SOURCES
-        src/mppi/mppi.cu
-        src/state/state_estimator.cu
-        src/cuda_globals/cuda_globals.cu
-        ${TWO_TRACK_CPP}
-        src/display/display.cpp
-        extern/src/glad.c
-)
-
-if (PUBLISH_STATES)
+if (DISPLAY)
   # set to copy the states to host
-  add_compile_options(-DPUBLISH_STATES)
+  add_compile_options(-DDISPLAY)
 endif()
 
 if (PARANOID)
@@ -57,6 +47,18 @@ endif()
 
 
 # **** Controls Lib *****
+
+file(GLOB TWO_TRACK_SRCS src/model/two_track/codegen/*.cpp)
+
+set(LIB_SOURCES
+        src/mppi/mppi.cu
+        src/state/state_estimator.cu
+        src/cuda_globals/cuda_globals.cu
+        src/display/display.cpp
+        extern/src/glad.c
+        src/utils/gl_utils.cpp
+        ${TWO_TRACK_SRCS}
+)
 
 add_library(controls_lib SHARED ${LIB_SOURCES})
 ament_target_dependencies(controls_lib rclcpp std_msgs interfaces glm)

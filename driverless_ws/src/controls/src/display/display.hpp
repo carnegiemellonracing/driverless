@@ -43,7 +43,6 @@ namespace controls {
                 GLuint VAO;
             };
 
-            SDL_Window* init_sdl2();
             void init_gl(SDL_Window* window);
             void init_trajectories();
             void init_spline();
