@@ -14,63 +14,43 @@ from launch_ros.descriptions import ComposableNode
 # If package is already in your workspace (i.e. one of the cmrdv_ packages) you don't need to write "launch/" as I've done here
 
 def generate_launch_description():
-    # ld = LaunchDescription()
+    ld = LaunchDescription()
     
-    # # stereo_mode = Node(
-    # #     package='stereo',
-    # #     executable='stereo_cones'
-    # # )
+    # stereo_mode = Node(
+    #     package='stereo',
+    #     executable='stereo_cones'
+    # )
 
-    # # lidar_node = Node(
-    # #     package='perceptions',
-    # #     executable='lidar_sub'
-    # # )
+    # lidar_node = Node(
+    #     package='perceptions',
+    #     executable='lidar_sub'
+    # )
 
-    # velodyne = IncludeLaunchDescription(
+    velodyne = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_directory('velodyne'),
+                         'velodyne-all-nodes-VLP16-launch.py')
+        )
+    )
+
+    # sbg = IncludeLaunchDescription(
     #     PythonLaunchDescriptionSource(
-    #         os.path.join(get_package_share_directory('velodyne'),
-    #                      'velodyne-all-nodes-VLP16-launch.py')
+    #         os.path.join(get_package_share_directory('sbg_driver'),
+    #                      'sbg_driver_launch.py')
+    #     )
+    # )
+    # zed = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         os.path.join(get_package_share_directory('zed_wrapper'),
+    #                      'zed2.launch.py')
     #     )
     # )
 
-    # # sbg = IncludeLaunchDescription(
-    # #     PythonLaunchDescriptionSource(
-    # #         os.path.join(get_package_share_directory('sbg_driver'),
-    # #                      'sbg_driver_launch.py')
-    # #     )
-    # # )
-    # # zed = IncludeLaunchDescription(
-    # #     PythonLaunchDescriptionSource(
-    # #         os.path.join(get_package_share_directory('zed_wrapper'),
-    # #                      'zed2.launch.py')
-    # #     )
-    # # )
-
-    # # ld.add_action(stereo_mode)
-    # # ld.add_action(lidar_node)
-    # ld.add_action(velodyne)
-    # # ld.add_action(sbg)
+    # ld.add_action(stereo_mode)
+    # ld.add_action(lidar_node)
+    ld.add_action(velodyne)
+    # ld.add_action(sbg)
     
     
-    ld = launch.LaunchDescription([
-        ComposableNodeContainer(
-            package='cmrdv_node_utils',
-            name='wrapper_container',
-            executable='lifecycle_component_wrapper_st',
-            namespace="/",
-            exec_name='wrapper_container',
-            composable_node_descriptions=[
-
-                ComposableNode(
-                    package='cmrdv_node_utils',
-                    plugin='cmrdv_node_utils_testing::MinimalNode',
-                    name='minimal_node'
-                ),
-            ]
-        ),
-
-        # We can start this test right away as there is nothing else to wait on
-        launch_testing.actions.ReadyToTest()
-    ])
 
     return ld

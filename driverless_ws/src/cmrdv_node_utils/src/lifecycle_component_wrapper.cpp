@@ -25,6 +25,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <boost/algorithm/string.hpp> // CMRDV CHANGE
 
 #include <ament_index_cpp/get_resource.hpp>
 #include <class_loader/class_loader.hpp>
@@ -88,9 +89,7 @@ namespace cmrdv_node_utils
     {
         std::string content;
         std::string base_path;
-        if (
-            !ament_index_cpp::get_resource(
-            resource_index, package_name, content, &base_path))
+        if (!ament_index_cpp::get_resource(resource_index, package_name, content, &base_path))
         {
             throw rclcpp_components::ComponentManagerException("Could not find requested resource in ament index");
         }
@@ -231,8 +230,7 @@ namespace cmrdv_node_utils
         {
             auto resources = get_component_resources(request->package_name);
 
-            for (const auto & resource : resources) 
-            {
+            for (const auto & resource : resources) {
                 if (resource.first != request->plugin_name) {
                     continue;
                 }
@@ -262,7 +260,53 @@ namespace cmrdv_node_utils
 
                 try {
                     node_wrappers_[node_id] = factory->create_node_instance(options);
-                } catch (const std::exception & ex) {
+
+                    /////
+                    // CMRDV CHANGE START
+                    /////
+                    // Here we check if the log-level argument has been set on this component's options
+                    // If the argument has been set then we set the log level for the default logger of this component
+                    auto log_level_arg_it = std::find(options.arguments().begin(), options.arguments().end(), "--log-level");
+
+                    if (log_level_arg_it == options.arguments().end()) {
+                        RCLCPP_DEBUG(get_logger(), "--log-level arg does not appear to be set");
+                    
+                    } else if (log_level_arg_it + 1 == options.arguments().end()) {
+                        RCLCPP_ERROR(get_logger(), "--log-level arg option provided but the log level itself was not");
+                    
+                    } else {
+                        // If the log-level has been set on this component then try to set it for the specific logger
+                        RCUTILS_LOG_SEVERITY sev = RCUTILS_LOG_SEVERITY_WARN;
+
+                        std::advance(log_level_arg_it, 1);
+                        std::string log_level = *log_level_arg_it;
+                        boost::algorithm::to_lower(log_level);
+
+                        // Identify the severity with warning as default
+                        if (log_level == "debug") {
+                            sev = RCUTILS_LOG_SEVERITY_DEBUG;
+                        } else if (log_level == "info") {
+                            sev = RCUTILS_LOG_SEVERITY_INFO;
+                        } else if (log_level == "error") {
+                            sev = RCUTILS_LOG_SEVERITY_ERROR;
+                        } else if (log_level == "fatal") {
+                            sev = RCUTILS_LOG_SEVERITY_FATAL;
+                        } else {
+                            sev = RCUTILS_LOG_SEVERITY_WARN;
+                        }
+                        // Set the log level
+                        auto result = rcutils_logging_set_logger_level(node_wrappers_[node_id].get_node_base_interface()->get_name(), sev);
+                        
+                        if (result != RCUTILS_RET_OK) {
+                            RCLCPP_ERROR(get_logger(), "FAILED to set log level when provided with --log-level argument");
+                        }
+                    }
+                    /////
+                    // CMRDV CHANGE END
+                    /////
+
+                } catch (const std::exception & ex) 
+                {
                     // In the case that the component constructor throws an exception,
                     // rethrow into the following catch block.
                     throw rclcpp_components::ComponentManagerException(
@@ -273,6 +317,36 @@ namespace cmrdv_node_utils
                     throw rclcpp_components::ComponentManagerException("Component constructor threw an exception");
                 }
 
+                /////
+                // CMRDV CHANGE START
+                /////
+
+
+                // Check if the loaded node is a lifecycle node and if it is then updates its activation
+                for (const auto & a : request->extra_arguments) {
+                    const rclcpp::Parameter extra_argument = rclcpp::Parameter::from_parameter_msg(a);
+                    
+                    if (extra_argument.get_name() == "is_lifecycle_node") {
+
+                        if (extra_argument.get_type() != rclcpp::ParameterType::PARAMETER_BOOL) {
+                            throw rclcpp_components::ComponentManagerException(
+                                    "Extra component argument 'is_lifecycle_node' must be a boolean");
+                        }
+
+                        if (extra_argument.as_bool()) {
+                            RCLCPP_INFO_STREAM(get_logger(), "A lifecycle component has been loaded by the LifecycleComponentWrapper. Attempting to move it to the ACTIVE state.");
+                            
+                            std::shared_ptr<rclcpp_lifecycle::LifecycleNode> lifecycle_node = std::static_pointer_cast<rclcpp_lifecycle::LifecycleNode>(node_wrappers_[node_id].get_node_instance());
+                            lifecycle_node->configure();
+                            lifecycle_node->activate();
+                        }
+                    }
+                }
+
+                /////
+                // CMRDV CHANGE END
+                /////
+
                 auto node = node_wrappers_[node_id].get_node_base_interface();
                 if (auto exec = executor_.lock()) {
                     exec->add_node(node, true);
@@ -282,15 +356,15 @@ namespace cmrdv_node_utils
                 response->success = true;
                 return;
             }
-
             RCLCPP_ERROR(
-                get_logger(), 
-                "Failed to find class with the requested plugin name '%s' in the loaded library",
+                get_logger(), "Failed to find class with the requested plugin name '%s' in "
+                "the loaded library",
                 request->plugin_name.c_str());
+
             response->error_message = "Failed to find class with the requested plugin name.";
             response->success = false;
-        } catch (const rclcpp_components::ComponentManagerException & ex) 
-        {
+            
+        } catch (const rclcpp_components::ComponentManagerException & ex) {
             RCLCPP_ERROR(get_logger(), "%s", ex.what());
             response->error_message = ex.what();
             response->success = false;
