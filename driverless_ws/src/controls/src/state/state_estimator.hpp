@@ -16,7 +16,7 @@ namespace controls {
 
             virtual void sync_to_device() =0;
 
-            virtual std::vector<glm::fvec2> get_spline_frames() const =0;
+            virtual std::vector<glm::fvec2> get_spline_frames() =0;
 
             virtual ~StateEstimator() = default;
         };

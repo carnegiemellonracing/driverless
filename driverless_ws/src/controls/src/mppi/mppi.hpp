@@ -1,6 +1,9 @@
 #pragma once
 
 #include <types.hpp>
+#include <vector>
+#include <vector>
+#include <glm/glm.hpp>
 
 
 namespace controls {
@@ -13,6 +16,7 @@ namespace controls {
 
 #ifdef PUBLISH_STATES
             virtual std::vector<float> last_state_trajectories() =0;
+            virtual std::vector<glm::fvec2> last_reduced_state_trajectory() = 0;
 #endif
 
             virtual ~MppiController() = default;

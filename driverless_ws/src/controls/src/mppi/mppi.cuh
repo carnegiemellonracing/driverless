@@ -1,7 +1,11 @@
 #pragma once
 
+
 #include <thrust/device_ptr.h>
 #include <types.hpp>
+#include <vector>
+#include <vector>
+#include <glm/glm.hpp>
 
 #include "cuda_constants.cuh"
 #include "types.cuh"
@@ -17,11 +21,14 @@ namespace controls {
 
             Action generate_action() override;
 
+
 #ifdef PUBLISH_STATES
             std::vector<float> last_state_trajectories() override;
+
+            std::vector<glm::fvec2> last_reduced_state_trajectory() override;
 #endif
 
-            ~MppiController_Impl() override;
+             ~MppiController_Impl() override;
 
         private:
             /**
@@ -31,22 +38,24 @@ namespace controls {
             thrust::device_vector<float> m_action_trajectories;
 
             /**
-             * num_samples x num_timesteps array of costs to go. Used for action weighting.
-             */
+            * num_samples x num_timesteps array of costs to go. Used for action weighting.
+            */
             thrust::device_vector<float> m_cost_to_gos;
+
 
             /**
              * num_timesteps x action_dims array. Best-guess action trajectory to which perturbations are added.
              */
             thrust::device_vector<DeviceAction> m_last_action_trajectory;
-
 #ifdef PUBLISH_STATES
+            DeviceAction m_last_action;
+            std::mutex m_last_action_trajectory_mutex;
+
             /**
-             * \brief State trajectories generated from curr_state and action trajectories. Sent to rviz when
-             *        debugging.
+             * State trajectories generated from curr_state and action trajectories. Sent to display when enabled
              */
             thrust::device_vector<float> m_state_trajectories;
-
+            State m_last_curr_state;
             std::mutex m_state_trajectories_mutex;
 #endif
 
@@ -55,20 +64,16 @@ namespace controls {
             void generate_brownians();
 
             /**
-             * @brief Retrieves action based on cost to go using reduction.
-             * @return Action
+             * Retrieves action based on cost to go using reduction.
+             * @returns Action
              */
             thrust::device_vector<DeviceAction> reduce_actions();
 
             /**
-             * @brief Calculates costs to go
+             * Calculates costs to go
              */
             void populate_cost();
 
         };
-
-
-
-
     }
 }

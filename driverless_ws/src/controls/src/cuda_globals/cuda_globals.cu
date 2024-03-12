@@ -7,6 +7,8 @@ namespace controls {
         cudaTextureObject_t spline_texture_object;
         bool spline_texture_created = false;
 
+        float curr_world_state_host[state_dims] = {};
+
         __constant__ cudaTextureObject_t d_spline_texture_object;
 
         __constant__ size_t spline_texture_elems = 0;
@@ -14,7 +16,7 @@ namespace controls {
         __constant__ float curr_state[state_dims] = {10, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
-            0.5, 0,
+            0.1, 0,
             0, 100
         };
 
