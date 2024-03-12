@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdexcept>
 #include <glad/glad.h>
 #include <SDL2/SDL.h>
 
@@ -17,5 +18,7 @@ namespace controls {
         void print_shader_log(GLuint shader);
         void gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
         GLuint compile_shader(const char* vertex_source, const char* fragment_source);
+        void make_gl_current_or_except(SDL_Window* window, SDL_GLContext gl_context);
+        void sync_gl_and_unbind_context(SDL_Window* window);
     }
 }

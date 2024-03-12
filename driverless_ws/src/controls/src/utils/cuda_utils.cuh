@@ -87,7 +87,7 @@ namespace controls {
     {
         if (code != cudaSuccess)
         {
-            fprintf(stderr,"cuda assert: %s. Location: %s:%d\n", cudaGetErrorString(code), file, line);
+            fprintf(stderr,"cuda assert: %s (%i). Location: %s:%d\n", cudaGetErrorString(code), code, file, line);
             if (abort) exit(code);
         }
     }
@@ -96,7 +96,7 @@ namespace controls {
     {
         if (code != CURAND_STATUS_SUCCESS)
         {
-            fprintf(stderr,"curand assert: %s. Location: %s:%d\n", curandGetErrorString(code), file, line);
+            fprintf(stderr,"curand assert: %s (%i). Location: %s:%d\n", curandGetErrorString(code), code, file, line);
             if (abort) exit(code);
         }
     }
@@ -131,6 +131,14 @@ namespace controls {
             }
             std::cout << std::endl;
         }
+    }
+
+    __device__ static void printf_vector(const float vec[], size_t n) {
+        printf("{ ");
+        for (size_t i = 0; i < n; i++) {
+            printf("%f ", vec[i]);
+        }
+        printf(" }\n");
     }
 
     template<typename T>

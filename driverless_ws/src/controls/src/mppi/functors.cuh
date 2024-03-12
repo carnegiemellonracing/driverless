@@ -14,14 +14,14 @@ namespace controls {
     namespace mppi {
 
         /**
-         * Advances curvilinear state one timestep according to action. `world_state` and `action` may be invalid after call.
+         * Advances curvilinear state one timestep according to action.
          *
          * @param[in] world_state world state of the vehicle
          * @param[in] action Action taken
-         * @param[out] curv_state_out Returned next state
+         * @param[out] world_state_out Returned next state
          * @param[in] timestep Timestep
          */
-        __device__ static void model(const float world_state[], const float action[], float curv_state_out[], float timestep) {
+        __device__ static void model(const float world_state[], const float action[], float world_state_out[], float timestep) {
             // Call dynamics model. Outputs dstate/dt, but may take timestep into consideration for stability
             // or accuracy purposes. Extenionsally, forward euler should be done on this.
 
@@ -29,11 +29,13 @@ namespace controls {
             // curvilinear coordinates. TODO: refactor model to directly update next state
             float world_state_dot[state_dims];
             ONLINE_DYNAMICS_FUNC(world_state, action, world_state_dot, timestep);
-            assert(!any_nan(world_state_dot, state_dims) && "World state dot was nan directly after dynamics call");
+            paranoid_assert(!any_nan(world_state_dot, state_dims) && "World state dot was nan directly after dynamics call");
+            paranoid_assert(!any_nan(world_state, state_dims) && "World state was nan directly after dynamics call");
 
             for (uint8_t i = 0; i < state_dims; i++) {
-                curv_state_out[i] = world_state[i] + world_state_dot[i] * timestep;
+                world_state_out[i] = world_state[i] + world_state_dot[i] * timestep;
             }
+            paranoid_assert(!any_nan(world_state_out, state_dims) && "World state out was nan directly after dynamics call");
         }
 
         /**
@@ -125,18 +127,16 @@ namespace controls {
                 float j_curr = 0;
                 float x_curr[state_dims];
 
-                // printf("curv state: %f %f %f %f %f %f %f %f %f %f\n", curr_state[0], curr_state[1], curr_state[2],
-                //        curr_state[3], curr_state[4], curr_state[5], curr_state[6], curr_state[7], curr_state[8], curr_state[9]);
-                assert(!any_nan(cuda_globals::curr_state, state_dims) && "State was nan in populate cost entry");
+                paranoid_assert(!any_nan(cuda_globals::curr_state, state_dims) && "State was nan in populate cost entry");
 
-                // printf("POPLATE COST %i: copying curr_state", i);
                 // copy current state into x_curr
                 memcpy(x_curr, cuda_globals::curr_state, sizeof(float) * state_dims);
 
                 float init_curv_pose[3];
                 bool out_of_bounds;
                 cuda_globals::sample_curv_state(x_curr, init_curv_pose, out_of_bounds);
-                assert(!out_of_bounds && "Initial state was out of bounds");
+                paranoid_assert(!out_of_bounds && "Initial state was out of bounds");
+                __syncthreads();
 
                 // for each timestep, calculate cost and add to get cost to go
                 for (uint32_t j = 0; j < num_timesteps; j++) {
@@ -146,7 +146,7 @@ namespace controls {
                     // to last one (since we have to initialize it something). Taking the min of j and m - 1 saves
                     // us a host->device copy
                     const uint32_t idx = min(j, num_timesteps - 2);
-                    assert(!any_nan(action_trajectory_base[idx].data, action_dims) && "Control action base was nan");
+                    paranoid_assert(!any_nan(action_trajectory_base[idx].data, action_dims) && "Control action base was nan");
 
                     for (uint32_t k = 0; k < action_dims; k++) {
                         u_ij[k] = action_trajectory_base[idx].data[k]
@@ -158,9 +158,10 @@ namespace controls {
                         );
                     }
 
-                    assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
+                    paranoid_assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
                     model(x_curr, u_ij, x_curr, controller_period);
-                    assert(!any_nan(x_curr, state_dims) && "State was nan after model step");
+                    paranoid_assert(!any_nan(x_curr, state_dims) && "State was nan after model step");
+                    __syncthreads();
 
 #ifdef DISPLAY
                     float* world_state = IDX_3D(
@@ -172,8 +173,11 @@ namespace controls {
 #endif
 
                     const float c = cost(x_curr, init_curv_pose[0], controller_period * (j + 1));
+                    __syncthreads();
+
                     j_curr -= c;
                     cost_to_gos[i * num_timesteps + j] = j_curr;
+                    paranoid_assert(!isnan(c) && "cost-to-go was nan");
                 }
             }
         };
@@ -253,15 +257,27 @@ namespace controls {
                                                 action_trajectories_dims,
                                                 dim3(i, j, 0)), sizeof(float) * action_dims);
 
-                assert(cuda_globals::action_min[0] <= res.action.data[0]);
-                assert(cuda_globals::action_max[0] >= res.action.data[0]);
-                assert(cuda_globals::action_min[1] <= res.action.data[1]);
-                assert(cuda_globals::action_max[1] >= res.action.data[1]);
+                paranoid_assert(cuda_globals::action_min[0] <= res.action.data[0]);
+                paranoid_assert(cuda_globals::action_max[0] >= res.action.data[0]);
+                paranoid_assert(cuda_globals::action_min[1] <= res.action.data[1]);
+                paranoid_assert(cuda_globals::action_max[1] >= res.action.data[1]);
 
                 // right now cost to gos is shifted down by the value in the last timestep, so adjust for that
-                const float anthony_adjustment = cost_to_gos[(i + 1) * num_timesteps - 2] - 2 * cost_to_gos[(i + 1) * num_timesteps - 1];
-                const float cost_to_go = cost_to_gos[i * num_timesteps + j] + anthony_adjustment;
+                const float final_step = cost_to_gos[(i + 1) * num_timesteps - 1];
+                const float penult_step = cost_to_gos[(i + 1) * num_timesteps - 2];
+
+                float cost_to_go;
+                if (isinf(final_step)) {
+                    cost_to_go = std::numeric_limits<float>::infinity();
+                } else {
+                    const float anthony_adjustment = penult_step - 2 * final_step;
+                    cost_to_go = cost_to_gos[i * num_timesteps + j] + anthony_adjustment;
+                }
+                paranoid_assert(!isnan(cost_to_go) && "cost-to-go was nan in tuple generation");
+                __syncthreads();
+
                 res.weight = expf(-1.0f / temperature * cost_to_go);
+                paranoid_assert(!isnan(res.weight) && "weight was nan");
 
                 return res;
             }
@@ -300,6 +316,7 @@ namespace controls {
                 } else {
                     averaged_action[idx] = res.action;
                 }
+                paranoid_assert(!any_nan(averaged_action[idx].data, action_dims) && "Averaged action was nan");
             }
         };
     }

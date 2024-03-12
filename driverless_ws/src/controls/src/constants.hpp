@@ -27,7 +27,7 @@ namespace controls {
 
 
     /** Controller target period, in sec */
-    constexpr uint32_t num_samples = 4096;
+    constexpr uint32_t num_samples = 1024 * 16;
     constexpr uint32_t num_timesteps = 64;
     constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 10;
@@ -58,7 +58,7 @@ namespace controls {
     constexpr uint8_t state_car_xdot_idx = 3;
     constexpr uint8_t state_car_ydot_idx = 4;
     constexpr uint8_t state_yawdot_idx = 5;
-    constexpr uint8_t state_my_idx = 8;
+    constexpr uint8_t state_my_idx = 6;
     constexpr uint8_t state_fz_idx = 7;
     constexpr uint8_t state_whl_speed_f_idx = 8;
     constexpr uint8_t state_whl_speed_r_idx = 9;

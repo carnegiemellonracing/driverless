@@ -29,6 +29,8 @@ namespace controls {
 
             void gen_tex_info();
             void render_curv_frame_lookup();
+            void map_curv_frame_lookup();
+            void unmap_curv_frame_lookup();
             void sync_world_state();
             void sync_tex_info();
             void gen_curv_frame_lookup_framebuffer();
@@ -39,7 +41,7 @@ namespace controls {
 
             State m_world_state = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-            cudaTextureObject_t m_curv_frame_lookup_texture;
+            cudaGraphicsResource_t m_curv_frame_lookup_rsc;
             cuda_globals::CurvFrameLookupTexInfo m_curv_frame_lookup_tex_info;
             GLuint m_curv_frame_lookup_fbo;
             GLuint m_curv_frame_lookup_rbo;
@@ -50,6 +52,8 @@ namespace controls {
             SDL_GLContext m_gl_context;
 
             std::mutex& m_mutex;
+            std::mutex m_gl_context_mutex;
+            bool m_curv_frame_lookup_mapped;
         };
 
     }

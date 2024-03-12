@@ -54,11 +54,16 @@ set(LIB_SOURCES
         src/mppi/mppi.cu
         src/state/state_estimator.cu
         src/cuda_globals/cuda_globals.cu
-        src/display/display.cpp
         extern/src/glad.c
         src/utils/gl_utils.cpp
         ${TWO_TRACK_SRCS}
 )
+
+if (DISPLAY)
+  set(LIB_SOURCES
+          ${LIB_SOURCES}
+          src/display/display.cpp)
+endif()
 
 add_library(controls_lib SHARED ${LIB_SOURCES})
 ament_target_dependencies(controls_lib rclcpp std_msgs interfaces glm)
@@ -66,9 +71,15 @@ target_link_libraries(controls_lib CUDA::curand OpenGL::GL OpenGL::GLU ${SDL2_LI
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
-          -g --generate-line-info --use_fast_math
+          -g --generate-line-info
           >)
+else ()
+  add_compile_options(-O3)
 endif()
+
+target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
+        --use_fast_math --expt-relaxed-constexpr
+        >)
 
 ament_export_targets(controls_libExport HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp std_msgs interfaces glm visualization_msgs)

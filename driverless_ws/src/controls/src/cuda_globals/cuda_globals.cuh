@@ -13,6 +13,7 @@ namespace controls {
             float width;
         };
 
+
         // device symbols
 
         extern __constant__ cudaTextureObject_t curv_frame_lookup_tex;

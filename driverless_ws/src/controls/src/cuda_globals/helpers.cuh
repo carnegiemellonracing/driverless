@@ -5,7 +5,7 @@
 
 namespace controls {
     namespace cuda_globals {
-        __device__ static void sample_curv_state(float world_pose[3], float curv_pose[3], bool& out_of_bounds) {
+        __device__ static void sample_curv_state(const float world_pose[3], float curv_pose[3], bool& out_of_bounds) {
             const float x = world_pose[0];
             const float y = world_pose[1];
             const float yaw = world_pose[2];
@@ -20,6 +20,12 @@ namespace controls {
             curv_pose[0] = parallel_pose.x;
             curv_pose[1] = parallel_pose.y;
             curv_pose[2] = yaw - parallel_pose.z;
+
+            // if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
+            //     printf("tex info: %f, %f, %f\n", curv_frame_lookup_tex_info.xcenter, curv_frame_lookup_tex_info.ycenter, curv_frame_lookup_tex_info.width);
+            //     printf("parallel_pose: %f, %f, %f\n", parallel_pose.x, parallel_pose.y, parallel_pose.z);
+            // }
+            // __syncthreads();
 
             out_of_bounds = parallel_pose.w < 0;
         }

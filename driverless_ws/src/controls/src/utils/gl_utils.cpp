@@ -159,5 +159,17 @@ namespace controls {
 
             return program_id;
         }
+
+        void make_gl_current_or_except(SDL_Window* window, SDL_GLContext gl_context) {
+            if (SDL_GL_MakeCurrent(window, gl_context) < 0) {
+                throw std::runtime_error(SDL_GetError());
+            }
+        }
+
+        void sync_gl_and_unbind_context(SDL_Window *window) {
+            glFinish();
+            make_gl_current_or_except(window, nullptr);
+        }
+
     }
 }

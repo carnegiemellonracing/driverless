@@ -61,7 +61,7 @@ namespace controls {
 
                 // start mppi :D
                 // this won't immediately begin publishing, since it waits for the first dirty state
-                // launch_mppi().detach();
+                launch_mppi().detach();
             }
 
             void ControllerNode::publish_action_callback() {
@@ -208,21 +208,21 @@ int main(int argc, char *argv[]) {
 
 
 #ifdef DISPLAY
-    // display::Display display {controller, state_estimator};
-    // std::cout << "display created" << std::endl;
-    //
-    // std::thread display_thread {[&] {
-    //     display.run();
-    //
-    //     {
-    //         std::lock_guard<std::mutex> guard {thread_died_mut};
-    //
-    //         std::cout << "Display thread closed. Exiting.." << std::endl;
-    //         thread_died = true;
-    //         thread_died_cond.notify_all();
-    //     }
-    // }};
-    // std::cout << "display thread launched" << std::endl;
+    display::Display display {controller, state_estimator};
+    std::cout << "display created" << std::endl;
+
+    std::thread display_thread {[&] {
+        display.run();
+
+        {
+            std::lock_guard<std::mutex> guard {thread_died_mut};
+
+            std::cout << "Display thread closed. Exiting.." << std::endl;
+            thread_died = true;
+            thread_died_cond.notify_all();
+        }
+    }};
+    std::cout << "display thread launched" << std::endl;
 #endif
 
     // wait for a thread to die

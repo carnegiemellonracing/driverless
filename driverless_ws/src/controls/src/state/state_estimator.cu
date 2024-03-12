@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <cuda_constants.cuh>
 #include <cmath>
+#include <cuda_gl_interop.h>
 
 
 #include "state_estimator.cuh"
@@ -37,7 +38,7 @@ namespace controls {
             const float far_frustum = 10.0f;
 
             void main() {
-                gl_Position = vec4(scale * (i_world_pos - center), abs(i_curv_pose.y) / far_frustum, 1.0);  // 10 = far frustum
+                gl_Position = vec4(scale * (i_world_pos - center), abs(i_curv_pose.y) / far_frustum, 1.0);
                 o_curv_pose = i_curv_pose;
             }
         )";
@@ -50,14 +51,16 @@ namespace controls {
             out vec4 FragColor;
 
             void main() {
-                FragColor = vec4(o_curv_pose, 0.0f);
+                FragColor = vec4(o_curv_pose, 1.0f);
             }
         )";
 
         // methods
 
         StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex)
-            : m_mutex {mutex} {
+            : m_mutex {mutex}, m_curv_frame_lookup_mapped {false} {
+            std::lock_guard<std::mutex> guard {mutex};
+
 #ifdef DISPLAY
             m_gl_window = utils::create_sdl2_gl_window(
                 "Spline Frame Lookup", curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
@@ -71,15 +74,22 @@ namespace controls {
             );
 #endif
 
+            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
+
             m_gl_path_shader = utils::compile_shader(vertex_source, fragment_source);
 
             glClearColor(0.0f, 0.0f, 0.0f, -1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            SDL_GL_SwapWindow(m_gl_window);
 
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
 
             gen_curv_frame_lookup_framebuffer();
             gen_gl_path();
+
+            glFinish();
+            utils::make_gl_current_or_except(m_gl_window, nullptr);
         }
 
         void StateEstimator_Impl::gen_curv_frame_lookup_framebuffer() {
@@ -112,8 +122,7 @@ namespace controls {
 
             std::cout << "------- ON SPLINE -----" << std::endl;
 
-            // callback in a new thread, so isn't already current
-            SDL_GL_MakeCurrent(m_gl_window, m_gl_context);
+            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
             m_spline_frames.clear();
             m_spline_frames.reserve(spline_msg.frames.size());
@@ -131,6 +140,8 @@ namespace controls {
 
             std::cout << "filling OpenGL buffers..." << std::endl;
             fill_path_buffers();
+
+            utils::sync_gl_and_unbind_context(m_gl_window);
 
             std::cout << "-------------------\n" << std::endl;
         }
@@ -157,15 +168,24 @@ namespace controls {
         void StateEstimator_Impl::sync_to_device() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
+            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
+
+            std::cout << "unmapping CUDA curv frame lookup texture for OpenGL rendering ..." << std::endl;
+            unmap_curv_frame_lookup();
+
             std::cout << "rendering curv frame lookup table..." << std::endl;
             render_curv_frame_lookup();
 
-            std::cout << "syncing curvilinear state to device..." << std::endl;
+            std::cout << "mapping OpenGL curv frame texture back to CUDA..." << std::endl;
+            map_curv_frame_lookup();
+
+            std::cout << "syncing world state to device..." << std::endl;
             sync_world_state();
 
-            // if we allow this to be async, host buffer may be edited by
-            // state callbacks during transfer (no bueno)
-            cudaDeviceSynchronize();
+            std::cout << "syncing spline frame lookup texture info to device..." << std::endl;
+            sync_tex_info();
+
+            utils::sync_gl_and_unbind_context(m_gl_window);
         }
 
         std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() {
@@ -230,6 +250,41 @@ namespace controls {
 
             SDL_GL_SwapWindow(m_gl_window);
 #endif
+        }
+
+        void StateEstimator_Impl::map_curv_frame_lookup() {
+            CUDA_CALL(cudaGraphicsGLRegisterImage(&m_curv_frame_lookup_rsc, m_curv_frame_lookup_rbo, GL_RENDERBUFFER, cudaGraphicsRegisterFlagsNone));
+
+            if (!m_curv_frame_lookup_mapped) {
+                m_curv_frame_lookup_mapped = true;
+
+                CUDA_CALL(cudaGraphicsMapResources(1, &m_curv_frame_lookup_rsc));
+            }
+
+            cudaResourceDesc img_rsc_desc {};
+            img_rsc_desc.resType = cudaResourceTypeMipmappedArray;
+            CUDA_CALL(cudaGraphicsResourceGetMappedMipmappedArray(&img_rsc_desc.res.mipmap.mipmap, m_curv_frame_lookup_rsc));
+
+            cudaTextureDesc img_tex_desc {};
+            img_tex_desc.addressMode[0] = cudaAddressModeClamp;
+            img_tex_desc.addressMode[1] = cudaAddressModeClamp;
+            img_tex_desc.filterMode = cudaFilterModeLinear;
+            img_tex_desc.readMode = cudaReadModeElementType;
+            img_tex_desc.normalizedCoords = true;
+
+            cudaTextureObject_t tex;
+            CUDA_CALL(cudaCreateTextureObject(&tex, &img_rsc_desc, &img_tex_desc, nullptr));
+            CUDA_CALL(cudaMemcpyToSymbolAsync(
+                cuda_globals::curv_frame_lookup_tex, &tex, sizeof(cudaTextureObject_t)
+            ));
+        }
+
+        void StateEstimator_Impl::unmap_curv_frame_lookup() {
+            if (!m_curv_frame_lookup_mapped)
+                return;
+
+            CUDA_CALL(cudaGraphicsUnmapResources(1, &m_curv_frame_lookup_rsc));
+            m_curv_frame_lookup_mapped = false;
         }
 
         void StateEstimator_Impl::gen_gl_path() {
