@@ -37,31 +37,6 @@ namespace controls {
 
             constexpr float slip_ratio_saturation = 0.1; // minimum velocity magnitude for wheel slip
 
-            //trig functions in degrees
-//            __host__ __device__ static float cosd(float degrees) {
-//                return cosf(degrees * pi / 180);
-//            }
-//
-//            //trig functions in degrees
-//            __host__ __device__ static float sind(float degrees) {
-//                return sinf(degrees * pi / 180);
-//            }
-//
-//            //trig functions in degrees
-//            __host__ __device__ static float tand(float degrees) {
-//                return tanf(degrees * pi / 180);
-//            }
-//
-//            //trig functions in degrees
-//            __host__ __device__ static float cotd(float degrees) {
-//                return 1 / tanf(degrees * pi / 180);
-//            }
-//
-//            //trig functions in degrees
-//            __host__ __device__ static float arccosd(float input) {
-//                return 180*acos(input)/pi;
-//            }
-
             template<typename T>
             __host__ __device__ int sign(T x) {
                 return x > 0 ?
@@ -90,18 +65,20 @@ namespace controls {
                     float numerator = load * slip_ratio * max_force_y_at_1N;
                     float within_sqrt = square(tanf(slip_angle)) +
                                         square((max_force_y_at_1N / max_force_x_at_1N));
-                    assert(!std::isnan(within_sqrt) && "within sqrt was nan in linear x");
+                    paranoid_assert(!std::isnan(within_sqrt) && "within sqrt was nan in linear x");
                     float denominator = slip_ratio_max_x * sqrtf(within_sqrt);
-                    assert(denominator > 0);
+                    paranoid_assert(denominator > 0 && "denominator was 0 in linear x");
                     forces[0] = numerator / denominator;
+                    paranoid_assert(!std::isnan(forces[0]) && "forces[0] was nan in linear x");
                 } else {
                     float numerator = load * post_saturation_force_x * max_force_y_at_1N;
                     float within_sqrt = square(tanf(slip_angle)) +
                                         square(max_force_y_at_1N / max_force_x_at_1N);
-                    assert(!std::isnan(within_sqrt) && "within sqrt was nan in saturated x");
+                    paranoid_assert(!std::isnan(within_sqrt) && "within sqrt was nan in saturated x");
                     float denominator = max_force_x_at_1N * sqrtf(within_sqrt);
-                    assert(denominator > 0);
+                    paranoid_assert(denominator > 0 && "denominator was 0 in saturated x");
                     forces[0] = sign(slip_ratio) * numerator / denominator;
+                    paranoid_assert(!std::isnan(forces[0]) && "forces[0] was nan in saturated x");
                 }
 
                 //computes y force
@@ -110,6 +87,7 @@ namespace controls {
                 } else {
                     forces[1] = load * post_saturation_force_y * sign(slip_angle);
                 }
+                paranoid_assert(!std::isnan(forces[1]) && "forces[1] was nan in tire model");
             }
 
             //calculates slip ratio
@@ -219,7 +197,6 @@ namespace controls {
                 //gets drag
                 // float drag_x = LOGITUDNAL_AERO_CONSTANT * square(x_dot_car);
                 // float drag_y = LATERAL_AERO_CONSTANT * square(y_dot_car);
-
 
                 //Updates dot array
                 state_dot[state_x_idx] = x_dot_car * cosf(yaw_world) - y_dot_car * sinf(yaw_world);

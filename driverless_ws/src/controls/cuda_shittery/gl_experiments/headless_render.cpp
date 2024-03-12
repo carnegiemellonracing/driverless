@@ -398,7 +398,8 @@ GlPath gen_path() {
 
 int main() {
     constexpr float width = 5;
-    SDL_Window* window = init_sdl2_gl("gl experiment", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, max_width, max_height, 0);
+    init_sdl2_gl("gl experiment 1", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, max_width, max_height, 0);
+    SDL_Window* window = init_sdl2_gl("gl experiment 2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, max_width, max_height, 0);
 
     GLuint fbo, rbo;
     gen_framebuffer(max_width, max_height, fbo, rbo);
@@ -426,6 +427,8 @@ int main() {
     glBlitFramebuffer(0, 0, max_width, max_height, 0, 0, max_width, max_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
     SDL_GL_SwapWindow(window);
+
+    cuda_test(rbo, max_width, max_height);
 
     sigset_t set;
     sigfillset(&set);
