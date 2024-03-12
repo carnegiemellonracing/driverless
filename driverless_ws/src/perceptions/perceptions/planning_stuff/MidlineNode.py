@@ -1,7 +1,7 @@
 
 import rclpy
 from rclpy.node import Node
-from eufs_msgs.msg import ConeArrayWithCovariance
+from eufs_msgs.msg import ConeArray
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 import perceptions.planning_stuff.svm_utils as svm_utils
 from interfaces.msg import SplineFrames
@@ -30,10 +30,10 @@ class MidlineNode(Node):
 
     def __init__(self):
         super().__init__("midline_node")
-        self.cone_sub = self.create_subscription(msg_type=ConeArrayWithCovariance,
-                                                 topic="/cones",
+        self.cone_sub = self.create_subscription(msg_type=ConeArray,
+                                                 topic="/perc_cones",
                                                  callback=self.cone_callback,
-                                                 qos_profile=BEST_EFFORT_QOS_PROFILE)
+                                                 qos_profile=RELIABLE_QOS_PROFILE)
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
                                                  topic="/spline",
                                                  qos_profile=RELIABLE_QOS_PROFILE)
@@ -44,11 +44,11 @@ class MidlineNode(Node):
 
         blue = []
         for cone in cones.blue_cones:
-            blue.append([cone.point.y, cone.point.x, 0])
+            blue.append([cone.y, cone.x, 0])
 
         yellow = []
         for cone in cones.yellow_cones:
-            yellow.append([cone.point.y, cone.point.x, 1])
+            yellow.append([cone.y, cone.x, 1])
 
         if len(yellow) == 0 or len(blue) == 0:
             # NOTE: don't send midline if not seeing a single side
