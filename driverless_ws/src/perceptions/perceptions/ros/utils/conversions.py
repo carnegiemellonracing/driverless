@@ -58,6 +58,21 @@ def pointcloud2_to_npy(pc2_msg: PointCloud2):
 
     return points_arr
 
+def npy_to_pointcloud2(pc):
+    pc_array = np.zeros(len(pc), dtype=[
+        ('x', np.float32),
+        ('y', np.float32),
+        ('z', np.float32),
+        ('intensity', np.float32),
+    ])
+    pc_array['x'] = pc[:, 0]
+    pc_array['y'] = pc[:, 1]
+    pc_array['z'] = pc[:, 2]
+    pc_array['intensity'] = 255
+
+    pc_msg = rnp.msgify(PointCloud2, pc_array)
+    return pc_msg
+
 def cones_to_msg(cones: Cones) -> ConeArray:
     '''convert perc22a Cones datatype to ConeArray ROS2 msg type'''
     
