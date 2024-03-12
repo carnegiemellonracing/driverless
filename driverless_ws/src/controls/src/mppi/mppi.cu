@@ -3,15 +3,12 @@
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
 #include <thrust/iterator/constant_iterator.h>
-
+#include <mutex>
 #include <cuda_globals/cuda_globals.cuh>
 #include <cmath>
+#include <utils/cuda_utils.cuh>
 
-#include "cuda_utils.cuh"
 #include "mppi.cuh"
-
-#include <mutex>
-
 #include "functors.cuh"
 
 
@@ -29,9 +26,9 @@ namespace controls {
 #ifdef PUBLISH_STATES
               m_state_trajectories(num_samples * num_timesteps * state_dims),
 #endif
-              m_last_action_trajectory(num_timesteps * action_dims - 1) {  // -1 because last element will always be
+              m_last_action_trajectory(num_timesteps - 1) {  // -1 because last element will always be
                                                                              // inferred from second to last
-            for (uint32_t i = 0; i < num_timesteps; i++) {
+            for (uint32_t i = 0; i < num_timesteps - 1; i++) {
                 DeviceAction to_send;
                 for (int j = 0; j < action_dims; j++) {
                     to_send.data[j] = init_action_trajectory[i * action_dims + j];
@@ -48,35 +45,28 @@ namespace controls {
         }
 
         Action MppiController_Impl::generate_action() {
+#ifdef PUBLISH_STATES
+            std::lock(m_state_trajectories_mutex, m_last_action_trajectory_mutex);
+            std::lock_guard<std::mutex> state_trajectories_guard {m_state_trajectories_mutex, std::adopt_lock};
+            std::lock_guard<std::mutex> action_trajectory_guard {m_last_action_trajectory_mutex, std::adopt_lock};
+#endif
+
             assert(cuda_globals::spline_texture_created);
+
+#ifdef PUBLISH_STATES
+            memcpy(m_last_curr_state.data(), cuda_globals::curr_world_state_host, sizeof(cuda_globals::curr_world_state_host));
+#endif
 
             // call kernels
             std::cout << "generating brownians..." << std::endl;
             generate_brownians();
-            cudaDeviceSynchronize();
-
-            // print_tensor(m_action_trajectories, action_trajectories_dims);
-            // std::cout << std::endl;
 
             std::cout << "populating cost..." << std::endl;
             populate_cost();
 
-            // std::cout << "Action Trajectories:" << std::endl;
-            // print_tensor(m_action_trajectories, action_trajectories_dims);
-
-            // std::cout << "Costs to go: " << std::endl;
-            // print_tensor(m_cost_to_gos, dim3(num_samples, 1, num_timesteps));
-            // std::cout << std::endl;
-
             std::cout << "\nreducing actions..." << std::endl;
             // not actually on device, just still in a device action struct
             thrust::device_vector<DeviceAction> averaged_trajectory = reduce_actions();
-
-            thrust::copy(
-                averaged_trajectory.begin() + 1,
-                averaged_trajectory.end(),
-                m_last_action_trajectory.begin()
-            );
 
             DeviceAction host_action = averaged_trajectory[0];
 
@@ -85,6 +75,16 @@ namespace controls {
                 std::begin(host_action.data), std::end(host_action.data),
                 result_action.begin()
             );
+
+            thrust::copy(
+                averaged_trajectory.begin() + 1,
+                averaged_trajectory.end(),
+                m_last_action_trajectory.begin()
+            );
+
+#ifdef PUBLISH_STATES
+            m_last_action = host_action;
+#endif
 
             return result_action;
         }
@@ -95,6 +95,36 @@ namespace controls {
 
             std::vector<float> result (m_state_trajectories.size());
             thrust::copy(m_state_trajectories.begin(), m_state_trajectories.end(), result.begin());
+
+            return result;
+        }
+
+        std::vector<glm::fvec2> MppiController_Impl::last_reduced_state_trajectory() {
+            std::lock_guard<std::mutex> guard {m_last_action_trajectory_mutex};
+
+            std::vector<glm::fvec2> result (m_last_action_trajectory.size() + 1);
+
+            DeviceAction action = m_last_action;
+
+            State state = m_last_curr_state;
+            result[0] = {state[state_x_idx], state[state_y_idx]};
+
+            size_t i = 0;
+            while (i < m_last_action_trajectory.size() + 1) {
+                if (i >= 1) {
+                    action = m_last_action_trajectory[i - 1];
+                }
+
+                State state_dot;
+                ONLINE_DYNAMICS_FUNC(state.data(), action.data, state_dot.data(), controller_period);
+                for (uint8_t j = 0; j < state_dims; j++) {
+                    state[j] += state_dot[j] * controller_period;
+                }
+
+                result[i] = {state[state_x_idx], state[state_y_idx]};
+
+                i++;
+            }
 
             return result;
         }
@@ -143,21 +173,15 @@ namespace controls {
         void MppiController_Impl::populate_cost() {
             thrust::counting_iterator<uint32_t> indices {0};
 
-            {
+            PopulateCost populate_cost {
+                m_action_trajectories.data(),
+                m_action_trajectories.data(),
 #ifdef PUBLISH_STATES
-                std::lock_guard<std::mutex> state_trajectories_guard {m_state_trajectories_mutex};
+                m_state_trajectories.data(),
 #endif
-                PopulateCost populate_cost {
-                    m_action_trajectories.data(),
-                    m_action_trajectories.data(),
-#ifdef PUBLISH_STATES
-                    m_state_trajectories.data(),
-#endif
-                    m_cost_to_gos.data(), m_last_action_trajectory.data()};
+                m_cost_to_gos.data(), m_last_action_trajectory.data()};
 
-                thrust::for_each(indices, indices + num_samples, populate_cost);
-            }
+            thrust::for_each(indices, indices + num_samples, populate_cost);
         }
-
     }
 }

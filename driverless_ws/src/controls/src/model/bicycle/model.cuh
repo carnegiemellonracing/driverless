@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <cmath>
-#include <cuda_utils.cuh>
+#include <utils/cuda_utils.cuh>
 #include <cassert>
 
 //SOURSE: SEE OVERLEAF MPPI DOCUMENTATION

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <types.hpp>
-#include <cuda_utils.cuh>
+#include <utils/cuda_utils.cuh>
 
 
 namespace controls {

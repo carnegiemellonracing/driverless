@@ -12,14 +12,19 @@
 #include "interfaces/msg/spline.hpp"
 // #include "frenet.hpp"
 // #include "runpy.hpp"
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 
 //publish topic example
 //ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 1.0, y: 2.0, z: 3.0}]}"   
-
-
 // ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 0.0, y: 3.0, z: 0.0}, {x: 1.414, y: 2.236 , z: 0.0}, {x: 3.0, y: 0.0 , z: 0.0}], yellow_cones: [{x: 0.0, y: 2.0, z: 0.0}, {x: 1.414, y: 1.414, z: 0.0}, {x: 2.0, y: 0.0, z: 0.0}]}"   
+
+
+
+// ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: -1.0, y: 1.0, z: 0.0}, {x: -1, y: 2, z: 0.0}, {x: -1.0, y: 3.0 , z: 0.0}], yellow_cones: [{x: 1.0, y: 1.0, z: 0.0}, {x: 1, y: 2, z: 0.0}, {x: 1.0, y: 3.0, z: 0.0}]}"   
+
+
+// ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 1.0, y: -1.0, z: 0.0}, {x: 2, y: -1, z: 0.0}, {x: 3.0, y: -1.0 , z: 0.0}], yellow_cones: [{x: 1.0, y: 1.0, z: 0.0}, {x: 2, y: 1, z: 0.0}, {x: 3.0, y: 1.0, z: 0.0}]}"   
 
 
 using std::placeholders::_1;
@@ -148,7 +153,7 @@ class MidpointNode : public rclcpp::Node
     {
       subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArray>("/stereo_node_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
       // subscription_lap_num = this->create_subscription<std_msgs::msg::String>("/lap_num", 10, std::bind(&MidpointNode::lap_callback, this, _1));
-      publisher_rcl_pt = this->create_publisher<interfaces::msg::Spline>("/midpoint_spline",10);
+      publisher_rcl_pt = this->create_publisher<interfaces::msg::Spline>("/midline",10);
       // publisher_rcl_pt = this->create_publisher<std_msgs::msg::String>("/midpoint_points",10);
       //     rclcpp::TimerBase::SharedPtr  timer_ = this->create_wall_timer(
       // 500ms, std::bind(&MinimalPublisher::timer_callback, this));
@@ -161,10 +166,6 @@ class MidpointNode : public rclcpp::Node
 
 int main(int argc, char * argv[])
 {
-  // // RCLCPP_INFO(this->get_logger(), "Started Midpoint Node");
-  // rclcpp::init(argc, argv);
-  // rclcpp::spin(std::make_shared<MidpointNode>());
-  // rclcpp::shutdown();
   rclcpp::init(argc, argv);
   auto node = std::make_shared<MidpointNode>();
   RCLCPP_INFO(node->get_logger(), "got output\n");
