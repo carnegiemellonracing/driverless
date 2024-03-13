@@ -19,7 +19,10 @@ namespace controls {
 
             void sync_to_device() override;
 
+#ifdef DISPLAY
             std::vector<glm::fvec2> get_spline_frames() override;
+            void get_offset_pixels(OffsetImage& offset_image) override;
+#endif
 
             ~StateEstimator_Impl() override;
 

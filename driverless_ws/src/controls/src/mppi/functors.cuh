@@ -60,7 +60,7 @@ namespace controls {
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
             const float speed_deviation = target_speed - approx_speed_along;
-            const float speed_cost = speed_weight * speed_deviation * speed_deviation;
+            const float speed_cost = speed_weight * abs(speed_deviation);
 
             const float distance_cost = offset_1m_cost * offset * offset;
 

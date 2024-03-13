@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include <glm/glm.hpp>
+#include <utils/gl_utils.hpp>
 
 namespace controls {
     namespace display {
@@ -17,6 +18,17 @@ namespace controls {
             static constexpr float strafe_speed = 1.5;
             static constexpr float scale_speed = 1;
 
+            static constexpr GLint traj_shader_cam_pos_loc = 0;
+            static constexpr GLint traj_shader_cam_scale_loc = 1;
+            static constexpr GLint traj_shader_color_loc = 2;
+
+            static constexpr GLint img_shader_cam_pos_loc = 0;
+            static constexpr GLint img_shader_cam_scale_loc = 1;
+            static constexpr GLint img_shader_img_center_loc = 2;
+            static constexpr GLint img_shader_img_width_loc = 3;
+            static constexpr GLint img_shader_img_tex_loc = 4;
+
+            static constexpr size_t num_samples_to_draw = 1024;
 
             Display(
                 std::shared_ptr<mppi::MppiController> controller,
@@ -44,6 +56,7 @@ namespace controls {
             };
 
             void init_gl(SDL_Window* window);
+            void init_img();
             void init_trajectories();
             void init_spline();
             void init_best_guess();
@@ -54,18 +67,22 @@ namespace controls {
             void draw_spline();
             void draw_best_guess();
 
+            void draw_offset_image();
+
             void update_loop(SDL_Window* window);
 
             glm::fvec2 m_cam_pos {0.0f, 0.0f};
             float m_cam_scale = 1.0f;
 
-            GLuint m_shader_program;
-            GLint m_cam_pos_loc;
-            GLint m_cam_scale_loc;
+            GLuint m_trajectory_shader_program;
+            GLuint m_img_shader_program;
 
             std::vector<Trajectory> m_trajectories;
             std::unique_ptr<Trajectory> m_spline = nullptr;
             std::unique_ptr<Trajectory> m_best_guess = nullptr;
+
+            utils::GLObj m_offset_img_obj;
+            GLuint m_offset_img_tex;
 
             std::shared_ptr<mppi::MppiController> m_controller;
             std::shared_ptr<state::StateEstimator> m_state_estimator;

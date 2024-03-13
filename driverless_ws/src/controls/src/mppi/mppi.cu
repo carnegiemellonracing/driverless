@@ -77,6 +77,11 @@ namespace controls {
 
 #ifdef DISPLAY
             m_last_action = host_action;
+            CUDA_CALL(cudaMemcpyFromSymbol(
+                m_last_curr_state.data(),
+                cuda_globals::curr_state,
+                state_dims * sizeof(float)
+            ));
 #endif
 
             return result_action;
