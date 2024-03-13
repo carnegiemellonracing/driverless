@@ -10,8 +10,8 @@ namespace controls {
         __constant__ float curr_state[state_dims] = {10, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
-            0.1, 0,
-            0, 100
+            0.25, 0,
+            0, 1000
         };
 
         __constant__ const float action_min[action_dims] = {

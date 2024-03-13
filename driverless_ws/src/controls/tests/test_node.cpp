@@ -43,7 +43,7 @@ namespace controls {
                 frame.y = point.y;
                 result.frames.push_back(frame);
 
-                fvec2 delta = normalize(fvec2(1.0f, amplitude * 2 * M_PI / period * cos(2 * M_PI / period * point.x)))
+                fvec2 delta = normalize(fvec2(1.0f, amplitude * 2 * M_PI / period * cos(2 * M_PI / period * point.x - M_PI / 2)))
                             * density;
                 total_dist += length(delta);
                 point += delta;

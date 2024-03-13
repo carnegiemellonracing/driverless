@@ -188,6 +188,7 @@ namespace controls {
             utils::sync_gl_and_unbind_context(m_gl_window);
         }
 
+#ifdef DISPLAY
         std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
@@ -197,6 +198,32 @@ namespace controls {
             }
             return res;
         }
+
+        void StateEstimator_Impl::get_offset_pixels(OffsetImage &offset_image) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            SDL_GLContext prev_context = SDL_GL_GetCurrentContext();
+            SDL_Window* prev_window = SDL_GL_GetCurrentWindow();
+
+            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
+
+            offset_image.pixels = std::vector<float>(curv_frame_lookup_tex_width * curv_frame_lookup_tex_width);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
+            glReadPixels(
+                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                GL_GREEN, GL_FLOAT,
+                offset_image.pixels.data()
+            );
+
+            offset_image.pix_width = curv_frame_lookup_tex_width;
+            offset_image.pix_height = curv_frame_lookup_tex_width;
+            offset_image.center = {m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter};
+            offset_image.world_width = m_curv_frame_lookup_tex_info.width;
+
+            utils::sync_gl_and_unbind_context(m_gl_window);
+            utils::make_gl_current_or_except(prev_window, prev_context);
+        }
+#endif
 
         void StateEstimator_Impl::sync_world_state() {
             CUDA_CALL(cudaMemcpyToSymbolAsync(

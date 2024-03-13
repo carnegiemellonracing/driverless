@@ -2,19 +2,86 @@
 
 #include <chrono>
 #include <cuda_constants.cuh>
-#include <iostream>
-#include <SDL2/SDL.h>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <gsl/gsl_odeiv2.h>
 #include <mppi/types.cuh>
-#include <utils/gl_utils.hpp>
+
 
 using namespace std::chrono_literals;
 
 
 namespace controls {
     namespace display {
+
+        constexpr const char* traj_vertexShaderSource = R"(
+            #version 330 core
+            #extension GL_ARB_explicit_uniform_location : enable
+
+            layout (location = 0) in vec2 aPos;
+
+            layout (location = 0) uniform vec2 camPos;
+            layout (location = 1) uniform float camScale;
+
+            void main()
+            {
+               gl_Position = vec4((aPos - camPos) / camScale, 0.0f, 1.0f);
+            }
+        )";
+
+
+        constexpr const char* traj_fragmentShaderSource = R"(
+            #version 330 core
+            #extension GL_ARB_explicit_uniform_location : enable
+
+            out vec4 FragColor;
+
+            layout (location = 2) uniform vec4 col;
+
+            void main()
+            {
+               FragColor = col;
+            }
+        )";
+
+        constexpr const char* img_vertex_source = R"(
+            #version 330 core
+            #extension GL_ARB_explicit_uniform_location : enable
+
+
+            layout (location = 0) in vec2 aPos;
+            layout (location = 1) in vec2 i_texCoord;
+
+            layout (location = 0) uniform vec2 camPos;
+            layout (location = 1) uniform float camScale;
+            layout (location = 2) uniform vec2 imgCenter;
+            layout (location = 3) uniform float imgWidth;
+
+            out vec2 texCoord;
+
+            void main()
+            {
+                gl_Position = vec4((aPos * imgWidth * 0.5f + imgCenter - camPos) / camScale, 0.0f, 1.0f);
+                texCoord = i_texCoord;
+            }
+        )";
+
+        constexpr const char* img_fragment_source = R"(
+            #version 330 core
+            #extension GL_ARB_explicit_uniform_location : enable
+
+            in vec2 texCoord;
+
+            out vec4 FragColor;
+
+            layout (location = 4) uniform sampler2D img;
+
+            void main()
+            {
+               FragColor = vec4(0.0f, 0.0f, abs(texture(img, texCoord).x), 0.0f);
+            }
+        )";
+
 
         Display::Trajectory::Trajectory(glm::fvec4 color, float thickness, GLuint program)
             : color(color), program(program), thickness(thickness) {
@@ -52,51 +119,68 @@ namespace controls {
         }
 
         void Display::init_gl(SDL_Window* window) {
-            const char* vertexShaderSource = R"(
-                #version 330 core
-                layout (location = 0) in vec2 aPos;
-                uniform vec2 camPos;
-                uniform float camScale;
-                void main()
-                {
-                   gl_Position = vec4((aPos - camPos) / camScale, 0.0f, 1.0f);
-                }
-            )";
-
-
-            const char* fragmentShaderSource = R"(
-                #version 330 core
-                out vec4 FragColor;
-                uniform vec4 col;
-                void main()
-                {
-                   FragColor = col;
-                }
-            )";
-
-            m_shader_program = utils::compile_shader(vertexShaderSource, fragmentShaderSource);
-
-            m_cam_pos_loc = glGetUniformLocation(m_shader_program, "camPos");
-            m_cam_scale_loc = glGetUniformLocation(m_shader_program, "camScale");
+            m_trajectory_shader_program = utils::compile_shader(traj_vertexShaderSource, traj_fragmentShaderSource);
+            m_img_shader_program = utils::compile_shader(img_vertex_source, img_fragment_source);
 
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glLineWidth(1.0f);
             glDisable(GL_DEPTH_TEST);
             glDisable(GL_CULL_FACE);
+            // glEnable(GL_TEXTURE_2D);
         }
 
         void Display::init_trajectories() {
-            for (uint32_t i = 0; i < num_samples; i++) {
-                m_trajectories.emplace_back(glm::fvec4 {1.0f, 0.0f, 0.0f, 0.0f}, 1, m_shader_program);
+            for (uint32_t i = 0; i < num_samples_to_draw; i++) {
+                m_trajectories.emplace_back(glm::fvec4 {1.0f, 0.0f, 0.0f, 0.0f}, 1, m_trajectory_shader_program);
             }
         }
 
         void Display::init_spline() {
-            m_spline = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_shader_program);
+            m_spline = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_trajectory_shader_program);
         }
 
         void Display::init_best_guess() {
-            m_best_guess = std::make_unique<Trajectory>(glm::fvec4 {0.0f, 1.0f, 0.0f, 1.0f}, 5, m_shader_program);
+            m_best_guess = std::make_unique<Trajectory>(glm::fvec4 {0.0f, 1.0f, 0.0f, 1.0f}, 5, m_trajectory_shader_program);
+        }
+
+        void Display::init_img() {
+            constexpr float vertices[] = {
+                -1.0f, -1.0f,     0.0f, 0.0f,
+                1.0f, -1.0f,      1.0f, 0.0f,
+                1.0f, 1.0f,       1.0f, 1.0f,
+                -1.0f, 1.0f,      0.0f, 1.0f
+            };
+
+            constexpr GLuint indices[] = {
+                0, 1, 2,
+                2, 3, 0
+            };
+
+            glGenVertexArrays(1, &m_offset_img_obj.vao);
+            glGenBuffers(1, &m_offset_img_obj.vbo);
+            glGenBuffers(1, &m_offset_img_obj.ebo);
+
+            glBindVertexArray(m_offset_img_obj.vao);
+            glBindBuffer(GL_ARRAY_BUFFER, m_offset_img_obj.vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_offset_img_obj.ebo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+            glEnableVertexAttribArray(1);
+
+            glBindVertexArray(0);
+
+            glGenTextures(1, &m_offset_img_tex);
+            glBindTexture(GL_TEXTURE_2D, m_offset_img_tex);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            glUseProgram(m_img_shader_program);
+            glUniform1i(img_shader_img_tex_loc, 0);
         }
 
         void Display::fill_trajectories() {
@@ -104,7 +188,7 @@ namespace controls {
 
             std::vector<float> states = m_controller->last_state_trajectories();
 
-            for (uint32_t i = 0; i < num_samples; i++) {
+            for (uint32_t i = 0; i < num_samples_to_draw; i++) {
                 if (m_trajectories[i].vertex_buf.size() < num_timesteps) {
                     m_trajectories[i].vertex_buf = std::vector<float> (num_timesteps * 2);
                 }
@@ -118,8 +202,8 @@ namespace controls {
         }
 
         void Display::draw_trajectories() {
-            glUseProgram(m_shader_program);
-            for (uint32_t i = 0; i < num_samples; i++) {
+            glUseProgram(m_trajectory_shader_program);
+            for (uint32_t i = 0; i < num_samples_to_draw; i++) {
                 Trajectory& t = m_trajectories[i];
                 t.draw();
             }
@@ -151,12 +235,36 @@ namespace controls {
             m_best_guess->draw();
         }
 
+        void Display::draw_offset_image() {
+            state::StateEstimator::OffsetImage offset_image;
+            m_state_estimator->get_offset_pixels(offset_image);
+
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, m_offset_img_tex);
+            glTexImage2D(
+                GL_TEXTURE_2D, 0, GL_R32F,
+                offset_image.pix_width, offset_image.pix_height,
+                0, GL_RED, GL_FLOAT, offset_image.pixels.data()
+            );
+
+            glUseProgram(m_img_shader_program);
+            glUniform2f(img_shader_cam_pos_loc, m_cam_pos.x, m_cam_pos.y);
+            glUniform1f(img_shader_cam_scale_loc, m_cam_scale);
+            glUniform2f(img_shader_img_center_loc, offset_image.center.x, offset_image.center.y);
+            glUniform1f(img_shader_img_width_loc, offset_image.world_width);
+
+            glBindVertexArray(m_offset_img_obj.vao);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+            glBindVertexArray(0);
+        }
+
         void Display::run() {
             SDL_Window* window = utils::create_sdl2_gl_window("MPPI Display", width, height);
             init_gl(window);
             init_trajectories();
             init_spline();
             init_best_guess();
+            init_img();
 
             update_loop(window);
         }
@@ -200,11 +308,13 @@ namespace controls {
                     m_cam_scale *= pow(1 / (1 + scale_speed), delta_time);
                 }
 
-                glUseProgram(m_shader_program);
-                glUniform2f(m_cam_pos_loc, m_cam_pos.x, m_cam_pos.y);
-                glUniform1f(m_cam_scale_loc, m_cam_scale);
+                glUseProgram(m_trajectory_shader_program);
+                glUniform2f(traj_shader_cam_pos_loc, m_cam_pos.x, m_cam_pos.y);
+                glUniform1f(traj_shader_cam_scale_loc, m_cam_scale);
 
                 glClear(GL_COLOR_BUFFER_BIT);
+
+                draw_offset_image();
 
                 fill_trajectories();
                 draw_trajectories();
