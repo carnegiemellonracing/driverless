@@ -79,11 +79,11 @@ namespace controls {
             m_gl_path_shader = utils::compile_shader(vertex_source, fragment_source);
 
             glClearColor(0.0f, 0.0f, 0.0f, -1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
-            SDL_GL_SwapWindow(m_gl_window);
 
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
+
+            glViewport(0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width);
 
             gen_curv_frame_lookup_framebuffer();
             gen_gl_path();
@@ -101,7 +101,6 @@ namespace controls {
             glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA32F, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_curv_frame_lookup_rbo);
 
-            //add a depth buffer
             GLuint depth_rbo;
             glGenRenderbuffers(1, &depth_rbo);
             glBindRenderbuffer(GL_RENDERBUFFER, depth_rbo);
@@ -135,11 +134,14 @@ namespace controls {
             }
 
             std::cout << "generating spline frame lookup texture info..." << std::endl;
-            gen_tex_info();
-            std::cout << "xcenter: " << m_curv_frame_lookup_tex_info.xcenter << " ycenter: " << m_curv_frame_lookup_tex_info.ycenter << " width: " << m_curv_frame_lookup_tex_info.width << std::endl;
+            gen_tex_info({m_world_state[state_x_idx], m_world_state[state_y_idx]});
+            std::cout << "xcenter: " << m_curv_frame_lookup_tex_info.xcenter
+                      << " ycenter: " << m_curv_frame_lookup_tex_info.ycenter <<
+                         " width: " << m_curv_frame_lookup_tex_info.width
+            << std::endl;
 
             std::cout << "filling OpenGL buffers..." << std::endl;
-            fill_path_buffers();
+            fill_path_buffers({m_world_state[state_x_idx], m_world_state[state_y_idx]});
 
             utils::sync_gl_and_unbind_context(m_gl_window);
 
@@ -237,11 +239,11 @@ namespace controls {
             ));
         }
 
-        void StateEstimator_Impl::gen_tex_info() {
-            float xmin = std::numeric_limits<float>::infinity();
-            float ymin = std::numeric_limits<float>::infinity();
-            float xmax = -std::numeric_limits<float>::infinity();
-            float ymax = -std::numeric_limits<float>::infinity();
+        void StateEstimator_Impl::gen_tex_info(glm::fvec2 car_pos) {
+            float xmin = car_pos.x;
+            float ymin = car_pos.y;
+            float xmax = car_pos.x;
+            float ymax = car_pos.y;
 
             for (const glm::fvec2 frame : m_spline_frames) {
                 xmin = std::min(xmin, frame.x);
@@ -330,7 +332,7 @@ namespace controls {
             glBindVertexArray(0);
         }
 
-        void StateEstimator_Impl::fill_path_buffers() {
+        void StateEstimator_Impl::fill_path_buffers(glm::fvec2 car_pos) {
             struct Vertex {
                 struct {
                     float x;
@@ -348,10 +350,7 @@ namespace controls {
             const size_t n = m_spline_frames.size();
 
             std::vector<Vertex> vertices;
-            vertices.reserve(n);
-
             std::vector<GLuint> indices;
-            indices.reserve(n * 6 * 3);
 
             float total_progress = 0;
             for (size_t i = 0; i < n - 1; i++) {
@@ -422,6 +421,56 @@ namespace controls {
 
                 total_progress += new_progress;
             }
+
+            // allow car to be before first frame
+            {
+                const GLuint ai = 2;
+                const GLuint bi = 0;
+                const GLuint ci = 4;
+
+                const glm::fvec2 a = {vertices[ai].world.x, vertices[ai].world.y};
+                const glm::fvec2 b = {vertices[bi].world.x, vertices[bi].world.y};
+                const glm::fvec2 c = {vertices[ci].world.x, vertices[ci].world.y};
+
+                const glm::fvec2 ac_unit = glm::normalize(c - a);
+                const glm::fvec2 ac_norm = glm::fvec2(ac_unit.y, -ac_unit.x);
+
+                if (glm::dot(car_pos - b, ac_norm) < 0) { // car is behind first triangles
+                    const glm::fvec2 bcar = car_pos - b;
+                    const glm::fvec2 car_parallel_plane = glm::normalize(glm::fvec2(bcar.y, -bcar.x));
+                    const glm::fvec2 new_edge_center = b + bcar * (glm::length(bcar) + car_padding) / glm::length(bcar);
+
+                    const glm::fvec2 v1_world = new_edge_center - car_parallel_plane * radius;
+                    const glm::fvec2 v2_world = new_edge_center + car_parallel_plane * radius;
+
+                    const float v1_progress = glm::dot( v1_world - b, ac_norm);
+                    const float v2_progress = glm::dot(v2_world - b, ac_norm);
+
+                    const float v1_offset = glm::dot(v1_world - b, ac_unit);
+                    const float v2_offset = glm::dot(v2_world - b, ac_unit);
+
+                    const float v1_heading = vertices[bi].curv.heading;
+                    const float v2_heading = vertices[bi].curv.heading;
+
+                    const Vertex v1 = {{v1_world.x, v1_world.y}, {v1_progress, v1_offset, v1_heading}};
+                    const Vertex v2 = {{v2_world.x, v2_world.y}, {v2_progress, v2_offset, v2_heading}};
+
+                    vertices.push_back(v1);
+                    vertices.push_back(v2);
+
+                    const GLuint v1i = vertices.size() - 2;
+                    const GLuint v2i = vertices.size() - 1;
+
+                    indices.push_back(v1i);
+                    indices.push_back(ai);
+                    indices.push_back(ci);
+
+                    indices.push_back(v1i);
+                    indices.push_back(ci);
+                    indices.push_back(v2i);
+                }
+            }
+
 
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);

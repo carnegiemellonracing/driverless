@@ -27,7 +27,7 @@ namespace controls {
 
 
     /** Controller target period, in sec */
-    constexpr uint32_t num_samples = 1024 * 32;
+    constexpr uint32_t num_samples = 1024 * 8;
     constexpr uint32_t num_timesteps = 96;
     constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 10;
@@ -49,6 +49,7 @@ namespace controls {
     constexpr uint32_t curv_frame_lookup_tex_width = 512;
     constexpr float curv_frame_lookup_padding = 0; // meters
     constexpr float track_width = 5.0f;
+    constexpr float car_padding = 3.0f;
 
     constexpr uint8_t state_x_idx = 0;
     constexpr uint8_t state_y_idx = 1;

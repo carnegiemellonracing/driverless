@@ -148,6 +148,7 @@ namespace controls {
              * Otherwise, it would be impossible to generate a curvilinear state.
              */
             std::atomic<bool> m_received_first_spline;
+            std::atomic<bool> m_received_first_state;
         };
     }
 }
