@@ -14,14 +14,17 @@ import time
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
  
 from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC
+from perceptions.topics import LEFT2_IMAGE_TOPIC, RIGHT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC, DEPTH2_IMAGE_TOPIC
 from perceptions.zed import ZEDSDK
 
-from eufs_msgs.msg import ConeArray, DataFrame
+from eufs_msgs.msg import ConeArray #, DataFrame
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
 from std_msgs.msg import Header
 import cv2
 from cv_bridge import CvBridge
+
+PUBLISH_FPS = 15
 
 BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
                          history = QoSHistoryPolicy.KEEP_LAST,
@@ -34,19 +37,45 @@ RELIABLE_QOS_PROFILE = QoSProfile(
             durability=QoSDurabilityPolicy.VOLATILE,
             history=QoSHistoryPolicy.KEEP_LAST,
         )
+
+CAMERA_PARAM = "camera"
+ZED_STR = "zed"
+ZED2_STR = "zed2"
+
+# map cameras to their topics and serials numbers
+CAMERA_INFO = {
+    ZED_STR: (15080, LEFT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC), 
+    ZED2_STR: (27680008, LEFT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC)
+} # TODO: need serial numbers
         
 class ZEDNode(Node):
 
-    def __init__(self):
-        super().__init__('stereo_predictor')
+    def __init__(self, camera_name=ZED2_STR):
+        '''Initializes the ZED Node which publishes left color image and XYZ image
 
+        Because there are multiple cameras for 22a, multiple ZEDNode classes 
+        should be launched, one for each camera. Entry points for each camera are
+        found at the bottom of this file and are registered in perceptions/setup.py
+
+        Arguments:
+            camera_name (str): name of camera to initialize (ZED_STR or ZED2_STR)
+        '''
+
+        super().__init__(f"{camera_name}_node")
+        
+        # ensure appropriate camera name
+        self.camera_name = camera_name
+        assert(self.camera_name in list(CAMERA_INFO.keys()))
+
+        # unpack camera information
+        self.serial_num, left_topic, xyz_topic = CAMERA_INFO[self.camera_name]
         
         # initialize all publishers
         # self.dataframe_publisher = self.create_publisher(msg_type=DataFrame,
         #                                                  topic='/DataFrame',
         #                                                  qos_profile=RELIABLE_QOS_PROFILE)
         self.left_publisher = self.create_publisher(msg_type=Image,
-                                                     topic=LEFT_IMAGE_TOPIC,
+                                                     topic=left_topic,
                                                      qos_profile=RELIABLE_QOS_PROFILE)
         # self.right_publisher = self.create_publisher(msg_type=Image,
         #                                              topic=RIGHT_IMAGE_TOPIC,
@@ -55,31 +84,27 @@ class ZEDNode(Node):
         #                                              topic=DEPTH_IMAGE_TOPIC,
         #                                              qos_profile=RELIABLE_QOS_PROFILE)
         self.xyz_publisher = self.create_publisher(msg_type=Image,
-                                                   topic=XYZ_IMAGE_TOPIC,
+                                                   topic=xyz_topic,
                                                    qos_profile=RELIABLE_QOS_PROFILE)
 
         # initialize timer interval for publishing the data
-        # TODO: frame rate higher than actual update rate
-        frame_rate = 50
-        self.data_syncer = self.create_timer(1/frame_rate, self.inference)
+        self.data_syncer = self.create_timer(1/PUBLISH_FPS, self.publish)
 
         # initialize the ZEDSDK API for receiving raw data
-        self.zed = ZEDSDK()
+        self.zed = ZEDSDK(serial_num=self.serial_num)
         self.zed.open()
 
         self.bridge = CvBridge()
         self.frame_id = 0
 
-    def inference(self):
+    def publish(self):
         # try displaying the image
 
         s = time.time()
 
+        # grab zed node data
         left, right, depth, xyz = self.zed.grab_data()
-        # cv2.imshow("left", left)
-        # cv2.waitKey(30)
-        # convert the data and check that it is the same going and backwards
-        # have to extract out nan values that don't count to compare image values
+
         header = Header()
         header.stamp = self.get_clock().now().to_msg()
         header.frame_id = str(self.frame_id)
@@ -99,21 +124,26 @@ class ZEDNode(Node):
         t = time.time()
         print(f"Publishing data: {1000 * (t - s):.3f}ms (frame_id: {header.frame_id}, stamp: {header.stamp})")
 
-        
-
-def main(args=None):
+def main_zed(args=None):
+    # defaults to ZED2
     rclpy.init(args=args)
-
-    minimal_subscriber = ZEDNode()
+    minimal_subscriber = ZEDNode(camera_name=ZED_STR)
 
     rclpy.spin(minimal_subscriber)
+    
+    minimal_subscriber.destroy_node()
+    rclpy.shutdown()
 
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
+def main_zed2(args=None):
+    # defaults to ZED2
+    rclpy.init(args=args)
+    minimal_subscriber = ZEDNode(camera_name=ZED2_STR)
+
+    rclpy.spin(minimal_subscriber)
+    
     minimal_subscriber.destroy_node()
     rclpy.shutdown()
 
 
 if __name__ == '__main__':
-    main()
+    main_zed2()

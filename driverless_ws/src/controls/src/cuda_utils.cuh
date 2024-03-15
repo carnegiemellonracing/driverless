@@ -5,9 +5,22 @@
 
 #include "constants.hpp"
 
+/** @brief indexes into a 3-dimensional tensor that is represented in memory as a single nested array.
+ * Note: 0 <= idx.x < dim.x
+ * \param tensor the array to be indexed into
+ * \param dims (outermost, middle, innermost) dimensions
+ * \param idx (outermost, middle, innermost) index
+ * \returns address of the desired element
+*/
 #define IDX_3D(tensor, dims, idx) (&tensor[idx.x * dims.y * dims.z + idx.y * dims.z + idx.z])
 #define CUDA_CALL(x) (cuda_assert(x, __FILE__, __LINE__))
 #define CURAND_CALL(x) (curand_assert(x, __FILE__, __LINE__))
+
+#ifdef PARANOID
+#define paranoid_assert(x) (assert(x))
+#else
+#define paranoid_assert(x) ((void)0)
+#endif
 
 
 namespace controls {
@@ -88,6 +101,15 @@ namespace controls {
         }
     }
 
+    __host__ __device__ static bool any_nan(const float* vec, size_t n) {
+        for (size_t i = 0; i < n; i++) {
+            if (std::isnan(vec[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     template<typename T>
     __host__ __device__ T dot(const T* a, const T* b, size_t n) {
         T res {};
@@ -97,4 +119,22 @@ namespace controls {
         return res;
     }
 
+    template<typename T>
+    static void print_tensor(T tensor, dim3 dims) {
+        for (uint i = 0; i < dims.x; i++) {
+            for (uint j = 0; j < dims.y; j++) {
+                std::cout << "{ ";
+                for (uint k = 0; k < dims.z; k++) {
+                    std::cout << *IDX_3D(tensor, dims, dim3(i, j, k)) << " ";
+                }
+                std::cout << "} ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    template<typename T>
+    __host__ __device__ static T clamp(T n, T low, T high) {
+        return n > high ? high : n < low ? low : n;
+    }
 }

@@ -27,8 +27,6 @@ namespace controls {
             ActionWeightTuple awt2;
             ActionWeightTuple awt3;
 
-            action
-
         };
 
         TEST(MPPITest, AddActionsTest_Positive) {
@@ -67,9 +65,53 @@ namespace controls {
             free(cost_to_gos)
         }
 
+        TEST(MPPITest, ReduceTimestepTest) {
+            float *action_trajectories = calloc(num_action_trajectories, sizeof(float));
+            float *cost_to_gos = calloc(num_timesteps * num_samples, sizeof(float));
+            DeviceAction *averaged_actions = calloc(num_timesteps, sizeof(DeviceAction));
+            timestep = 3; // 4th column
+            for (size_t i = 0; i < num_samples; i++) {
+                float i_float = float(i)
+                *(IDX_3D(action_trajectories, action_trajectories_dims, dim3(i, timestep, 0))) = i_float;
+                *(IDX_3D(action_trajectories, action_trajectories_dims, dim3(i, timestep, 1))) = i_float * 1.5f
+                *(IDX_3D(action_trajectories, action_trajectories_dims, dim3(i, timestep, 2))) = i_float + 10.0f
+                // should still be a unweighted average
+                cost_to_gos[i * num_timesteps + timestep] = 2;
+            }
+            ReduceTimestep functor {averaged_actions, action_trajectories, cost_to_gos};
+            functor(timestep);
+            DeviceAction intended_action = {{511.5f, 767.25f, 512.5f}};
+            for (size_t i = 0; i < action_dims; i++) {
+                EXPECT_FLOAT_EQ(averaged_actions[timestep].data[i], intended.action.data[i]);
+            }
+            free(averaged_actions);
+            free(action_trajectories);
+            free(cost_to_gos);
+        }
 
+        TEST(MPPITest, ReduceTimestepTest_hard) {
+            float *action_trajectories = calloc(num_action_trajectories, sizeof(float));
+            float *cost_to_gos = calloc(num_timesteps * num_samples, sizeof(float));
+            DeviceAction *averaged_actions = calloc(num_timesteps, sizeof(DeviceAction));
+            timestep = 3; // 4th column
+            for (size_t i = 0; i < num_samples; i++) {
+                float i_float = float(i)
+                *(IDX_3D(action_trajectories, action_trajectories_dims, dim3(i, timestep, 0))) = i_float;
+                *(IDX_3D(action_trajectories, action_trajectories_dims, dim3(i, timestep, 1))) = i_float * 1.5f
+                *(IDX_3D(action_trajectories, action_trajectories_dims, dim3(i, timestep, 2))) = i_float + 10.0f
+                cost_to_gos[i * num_timesteps + timestep] = -std::log(i + 1);
+            }
+            ReduceTimestep functor {averaged_actions, action_trajectories, cost_to_gos};
+            functor(timestep);
+            DeviceAction intended_action = {{2050.0f / 3.0f, 1025.0f, 3459225.0f / 43648.0f}};
+            for (size_t i = 0; i < action_dims; i++) {
+                EXPECT_FLOAT_EQ(averaged_actions[timestep].data[i], intended.action.data[i]);
+            }
+            free(averaged_actions);
+            free(action_trajectories);
+            free(cost_to_gos);
+        }
     }
-
 }
 
 

@@ -61,11 +61,15 @@ struct PopulateCost {
                 u_ij[k] = action_trajectory_base[idx] 
                        + *IDX_3D(brownians, dim3(num_perturbs, num_timesteps, action_dims), dim3(i, j, k));
             }
+<<<<<<< HEAD
+            x_curr = model(x_curr, u_ij) * timestep; // Euler's method, TODO make better;
+=======
 
             // printf("i: %llu  j: %llu  j_curr: %f x_curr: %f %f u_ij: %f %f\n", i, j, j_curr, x_curr[0], x_curr[1], u_ij[0], u_ij[1]);
 
             model(x_curr, u_ij, x_curr, timestep); // Euler's method, TODO make better;
 
+>>>>>>> fixed stategen
             j_curr -= cost(x_curr);
             cost_to_gos[i * num_timesteps + j] = j_curr;
         } 
