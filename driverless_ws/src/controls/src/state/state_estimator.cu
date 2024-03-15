@@ -2,6 +2,7 @@
 #include <utils/gl_utils.hpp>
 #include <cuda_globals/cuda_globals.cuh>
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <cuda_constants.cuh>
 #include <cmath>
 #include <cuda_gl_interop.h>
@@ -145,7 +146,51 @@ namespace controls {
 
             utils::sync_gl_and_unbind_context(m_gl_window);
 
+            m_spline_ready = true;
+
             std::cout << "-------------------\n" << std::endl;
+        }
+
+        void StateEstimator_Impl::on_world_twist(const TwistMsg &twist_msg) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            const float yaw = m_world_state[state_yaw_idx];
+            const float car_xdot = twist_msg.twist.linear.x * std::cos(yaw) - twist_msg.twist.linear.y * std::sin(yaw);
+            const float car_ydot = twist_msg.twist.linear.x * std::sin(yaw) + twist_msg.twist.linear.y * std::cos(yaw);
+            const float car_yawdot = twist_msg.twist.angular.z;
+
+            m_world_state[state_car_xdot_idx] = car_xdot;
+            m_world_state[state_car_ydot_idx] = car_ydot;
+            m_world_state[state_yawdot_idx] = car_yawdot;
+
+            m_world_twist_ready = true;
+        }
+
+        void StateEstimator_Impl::on_world_quat(const QuatMsg &quat_msg) {
+            using namespace glm;
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            const fquat quat = dquat(
+                quat_msg.quaternion.w, quat_msg.quaternion.x, quat_msg.quaternion.y, quat_msg.quaternion.z
+            );
+
+            const fmat3x3 rot = mat3_cast(quat);
+            const fvec3 ihatprime = rot * fvec3(1, 0, 0);
+            const float yaw = std::atan2(ihatprime.y, ihatprime.x);
+
+            m_world_state[state_yaw_idx] = yaw;
+
+            m_world_yaw_ready = true;
+        }
+
+        void StateEstimator_Impl::on_world_pose(const PoseMsg &pose_msg) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            m_world_state[state_x_idx] = pose_msg.pose.position.x;
+            m_world_state[state_y_idx] = pose_msg.pose.position.y;
+            m_world_state[state_yaw_idx] = pose_msg.pose.orientation.z;
+
+            m_world_yaw_ready = true;
         }
 
         void StateEstimator_Impl::on_state(const StateMsg& state_msg) {
@@ -163,7 +208,10 @@ namespace controls {
             m_world_state[state_fz_idx] = state_msg.downforce;
             m_world_state[state_whl_speed_f_idx] = state_msg.whl_speed_f;
             m_world_state[state_whl_speed_r_idx] = state_msg.whl_speed_r;
-            
+
+            m_world_twist_ready = true;
+            m_world_yaw_ready = true;
+
             std::cout << "-------------------\n" << std::endl;
         }
 
@@ -188,6 +236,10 @@ namespace controls {
             sync_tex_info();
 
             utils::sync_gl_and_unbind_context(m_gl_window);
+        }
+
+        bool StateEstimator_Impl::is_ready() {
+            return m_spline_ready && m_world_twist_ready && m_world_yaw_ready;
         }
 
 #ifdef DISPLAY
