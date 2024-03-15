@@ -4,7 +4,7 @@
  * --- OVERVIEW ---
  * Running `main` starts up to two tasks:
  *    1. Spinning the controller node
- *    2. Starting the OpenGL display, if PUBLISH_STATES is defined -- TODO: rename to DISPLAY
+ *    2. Starting the OpenGL display, if DISPLAY is defined
  *
  * Each of these is started asynchronously, and the process terminates after either tasks exits.
  */
@@ -68,12 +68,36 @@ namespace controls {
             void spline_callback(const SplineMsg& spline_msg);
 
             /**
-             * Callback for state subscription. Forwards message to `StateEstimator::on_state`, and notifies MPPI
-             * thread of the dirty state.
+             * Callback for full world state subscription. Forwards message to `StateEstimator::on_state`, and notifies MPPI
+             * thread of the dirty state. Mostly for debugging.
              *
-             * @param state_msg Received state message
+             * @param state_msg Received world state message
              */
             void state_callback(const StateMsg& state_msg);
+
+            /**
+             * Callback for world twist subscription. Forwards message to `StateEstimator::on_world_twist`, and notifies MPPI
+             * thread of the dirty state. Likely from GPS.
+             *
+             * @param twist_msg Received twist message
+             */
+            void world_twist_callback(const TwistMsg& twist_msg);
+
+            /**
+             * Callback for world quaternion subscription. Forwards message to `StateEstimator::on_world_quat`, and notifies MPPI
+             * thread of the dirty state. Likely from GPS.
+             *
+             * @param quat_msg Received quaternion message
+             */
+            void world_quat_callback(const QuatMsg& quat_msg);
+
+            /**
+             * Callback for world pose subscription. Forwards message to `StateEstimator::on_world_pose`, and notifies MPPI
+             * thread of the dirty state. Likely from GPS.
+             *
+             * @param pose_msg Received pose message
+             */
+            void world_pose_callback(const PoseMsg& pose_msg);
 
             /**
              * Publish an action
@@ -111,6 +135,8 @@ namespace controls {
             rclcpp::Publisher<ActionMsg>::SharedPtr m_action_publisher;
             rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription;
             rclcpp::Subscription<StateMsg>::SharedPtr m_state_subscription;
+            rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription;
+            rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription;
 
 
             // Action double buffer
@@ -142,12 +168,6 @@ namespace controls {
              * callbacks notify it. `m_state_mut` must be acquired before waiting on this.
              */
             std::condition_variable m_state_cond_var;
-
-            /**
-             * Whether or not a spline has been received since initialization. If not, we reject published states.
-             * Otherwise, it would be impossible to generate a curvilinear state.
-             */
-            std::atomic<bool> m_received_first_spline;
         };
     }
 }

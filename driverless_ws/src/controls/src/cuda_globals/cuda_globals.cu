@@ -2,22 +2,16 @@
 
 namespace controls {
     namespace cuda_globals {
-
-        float4* spline_texture_buf;
-        cudaTextureObject_t spline_texture_object;
-        bool spline_texture_created = false;
-
-        float curr_world_state_host[state_dims] = {};
-
-        __constant__ cudaTextureObject_t d_spline_texture_object;
+        __constant__ cudaTextureObject_t curv_frame_lookup_tex;
+        __constant__ CurvFrameLookupTexInfo curv_frame_lookup_tex_info;
 
         __constant__ size_t spline_texture_elems = 0;
 
         __constant__ float curr_state[state_dims] = {10, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
-            0.1, 0,
-            0, 100
+            0.25, 0,
+            0, 1000
         };
 
         __constant__ const float action_min[action_dims] = {
