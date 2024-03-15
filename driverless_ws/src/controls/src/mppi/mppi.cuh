@@ -11,28 +11,15 @@
 namespace controls {
     namespace mppi {
 
-        __device__ static void model(const float state[], const float action[], float state_out[], float timestep) {
-            float state_dot[action_dims];
-            ONLINE_DYNAMICS_FUNC(state, action ,state_dot);
-            for (uint8_t i = 0; i < state_dims; i++) {
-                state_out[i] += state_dot[i] * timestep;
-            }
-        }
-
-        __device__ static float cost(float state[]) {
-            // sum the vector of state
-            float sum = 0;
-            for (size_t i = 0; i < state_dims; i++) {
-                sum += state[i];
-            }
-            return sum;
-        }
-
         class MppiController_Impl : public MppiController {
         public:
             MppiController_Impl();
 
             Action generate_action() override;
+
+#ifdef PUBLISH_STATES
+            std::vector<float> last_state_trajectories() override;
+#endif
 
             ~MppiController_Impl() override;
 
@@ -41,18 +28,29 @@ namespace controls {
              * num_samples x num_timesteps x actions_dims device tensor. Used to store action brownians,
              * perturbations, and action trajectories at different points in the algorithm.
              */
-            thrust::device_ptr<float> m_action_trajectories;
+            thrust::device_vector<float> m_action_trajectories;
 
             /**
              * num_samples x num_timesteps array of costs to go. Used for action weighting.
              */
-            thrust::device_ptr<float> m_cost_to_gos;
+            thrust::device_vector<float> m_cost_to_gos;
 
             /**
              * num_timesteps x action_dims array. Best-guess action trajectory to which perturbations are added.
              */
-            thrust::device_ptr<float> m_last_action_trajectory;
+            thrust::device_vector<DeviceAction> m_last_action_trajectory;
 
+#ifdef PUBLISH_STATES
+            /**
+             * \brief State trajectories generated from curr_state and action trajectories. Sent to rviz when
+             *        debugging.
+             */
+            thrust::device_vector<float> m_state_trajectories;
+
+            std::mutex m_state_trajectories_mutex;
+#endif
+
+            curandGenerator_t m_rng;
 
             void generate_brownians();
 
@@ -60,7 +58,7 @@ namespace controls {
              * @brief Retrieves action based on cost to go using reduction.
              * @return Action
              */
-            DeviceAction reduce_actions();
+            thrust::device_vector<DeviceAction> reduce_actions();
 
             /**
              * @brief Calculates costs to go

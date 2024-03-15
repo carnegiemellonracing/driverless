@@ -1,20 +1,20 @@
 #include <cuda_utils.cuh>
-#include <interfaces/msg/spline_frame_list.hpp>
-#include <interfaces/msg/spline_frame.hpp>
 #include <cuda_globals/cuda_globals.cuh>
 #include <glm/glm.hpp>
+#include <cuda_constants.cuh>
+#include <cmath>
+
 
 #include "state_estimator.cuh"
 #include "state_estimator.hpp"
 
-#include <cuda_constants.cuh>
 
 
 namespace controls {
     namespace state {
 
-        std::unique_ptr<StateEstimator> StateEstimator::create() {
-            return std::make_unique<StateEstimator_Impl>();
+        std::shared_ptr<StateEstimator> StateEstimator::create() {
+            return std::make_shared<StateEstimator_Impl>();
         }
 
 
@@ -62,20 +62,27 @@ namespace controls {
                 32, 32, 32, 32, cudaChannelFormatKindFloat
             );
 
-            CUDA_CALL(cudaMallocArray(&cuda_globals::spline_array, &channel_desc, max_spline_texture_elems, 1));
+            CUDA_CALL(cudaMalloc(&cuda_globals::spline_texture_buf, sizeof(float4) * max_spline_texture_elems));
 
             cudaResourceDesc resource_desc {};
-            resource_desc.resType = cudaResourceTypeArray;
-            resource_desc.res.array.array = cuda_globals::spline_array;
+            resource_desc.resType = cudaResourceTypeLinear;
+            resource_desc.res.linear.desc = channel_desc;
+            resource_desc.res.linear.devPtr = cuda_globals::spline_texture_buf;
+            resource_desc.res.linear.sizeInBytes = max_spline_texture_elems * sizeof(float4);
 
             cudaTextureDesc texture_desc {};
             texture_desc.addressMode[0] = cudaAddressModeClamp;
-            texture_desc.filterMode = cudaFilterModeLinear;
+            texture_desc.filterMode = cudaFilterModePoint;
             texture_desc.readMode = cudaReadModeElementType;
             texture_desc.normalizedCoords = false;
 
             CUDA_CALL(cudaCreateTextureObject(
                 &cuda_globals::spline_texture_object, &resource_desc, &texture_desc, nullptr
+            ));
+
+            CUDA_CALL(cudaMemcpyToSymbol(
+                cuda_globals::d_spline_texture_object, &cuda_globals::spline_texture_object,
+                sizeof(cuda_globals::spline_texture_object)
             ));
 
             cuda_globals::spline_texture_created = true;
@@ -85,7 +92,7 @@ namespace controls {
             assert(cuda_globals::spline_texture_created);
 
             cudaDestroyTextureObject(cuda_globals::spline_texture_object);
-            cudaFreeArray(cuda_globals::spline_array);
+            cudaFree(cuda_globals::spline_texture_buf);
 
             cuda_globals::spline_texture_created = false;
         }
@@ -96,7 +103,7 @@ namespace controls {
             m_spline_frames.clear();
             m_spline_frames.reserve(spline_msg.frames.size());
 
-            for (const interfaces::msg::SplineFrame& frame : spline_msg.frames) {
+            for (const auto& frame : spline_msg.frames) {
                 m_spline_frames.push_back(SplineFrame {frame.x, frame.y, 0.0f, 0.0f});
             }
 
@@ -110,28 +117,53 @@ namespace controls {
 
             assert(cuda_globals::spline_texture_created);
 
-            std::cout << "sending spline to device texture..." << std::endl;
-            send_frames_to_texture();
-            std::cout << "done.\n" << std::endl;
-
             std::cout << "recalculating curvilinear state..." << std::endl;
             recalculate_curv_state();
+            std::cout << "done. State: \n";
+            for (uint32_t i = 0; i < state_dims; i++) {
+                std::cout << m_curv_state[i] << " ";
+            }
+            std::cout << std::endl;
+            std::cout << "-------------------\n" << std::endl;
+        }
+
+        void StateEstimator_Impl::on_state(const StateMsg& state_msg) {
+            std::cout << "------- ON STATE -----" << std::endl;
+
+            m_world_state[state_x_idx] = state_msg.x;
+            m_world_state[state_y_idx] = state_msg.y;
+            m_world_state[state_yaw_idx] = state_msg.yaw;
+            m_world_state[state_car_xdot_idx] = state_msg.xcar_dot;
+            m_world_state[state_car_ydot_idx] = state_msg.ycar_dot;
+            m_world_state[state_yawdot_idx] = state_msg.yaw_dot;
+            m_world_state[state_my_idx] = state_msg.moment_y;
+            m_world_state[state_fz_idx] = state_msg.downforce;
+            m_world_state[state_whl_speed_f_idx] = state_msg.whl_speed_f;
+            m_world_state[state_whl_speed_r_idx] = state_msg.whl_speed_r;
+            
+            std::cout << "-------------------\n" << std::endl;
+        }
+
+        void StateEstimator_Impl::sync_to_device() {
+            std::cout << "sending spline to device texture..." << std::endl;
+            send_frames_to_texture();
             std::cout << "done.\n" << std::endl;
 
             std::cout << "syncing curvilinear state to device..." << std::endl;
             sync_curv_state();
             std::cout << "done.\n" << std::endl;
 
-            std::cout << "-------------------\n" << std::endl;
+            // if we allow this to be async, host buffer may be edited by
+            // state callbacks during transfer (no bueno)
+            cudaDeviceSynchronize();
         }
 
-        void StateEstimator_Impl::on_slam(const SlamMsg& slam_msg) {
-            m_world_state[state_x_idx] = slam_msg.x;
-            m_world_state[state_y_idx] = slam_msg.y;
-            m_world_state[state_yaw_idx] = slam_msg.theta;
-
-            recalculate_curv_state();
-            sync_curv_state();
+        std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() const {
+            std::vector<glm::fvec2> res (m_spline_frames.size());
+            for (size_t i = 0; i < m_spline_frames.size(); i++) {
+                res[i] = {m_spline_frames[i].x, m_spline_frames[i].y};
+            }
+            return res;
         }
 
         void StateEstimator_Impl::send_frames_to_texture() {
@@ -141,10 +173,9 @@ namespace controls {
             assert(elems <= max_spline_texture_elems);
             CUDA_CALL(cudaMemcpyToSymbolAsync(cuda_globals::spline_texture_elems, &elems, sizeof(elems)));
 
-            CUDA_CALL(cudaMemcpy2DToArrayAsync(
-                cuda_globals::spline_array, 0, 0,
-                m_spline_frames.data(),
-                elems * sizeof(SplineFrame), elems * sizeof(SplineFrame), 1,
+            CUDA_CALL(cudaMemcpy(
+                cuda_globals::spline_texture_buf, m_spline_frames.data(),
+                sizeof(SplineFrame) * elems,
                 cudaMemcpyHostToDevice
             ));
         }
@@ -152,54 +183,81 @@ namespace controls {
         void StateEstimator_Impl::recalculate_curv_state() {
             using namespace glm;
 
-            auto distance_to_segment = [this] (fvec2 pos, size_t segment) {
-                const SplineFrame frame = m_spline_frames[segment];
-                return length(pos - fvec2(frame.x, frame.y));
-            };
-
+            const float world_yaw = m_world_state[state_yaw_idx];
             const fvec2 world_pos {m_world_state[state_x_idx], m_world_state[state_y_idx]};
 
-            size_t min_dist_segment = 0;
-            float min_dist = distance_to_segment(world_pos, min_dist_segment);
-            for (size_t i = 0; i < m_spline_frames.size(); i++) {
-                const float this_dist = distance_to_segment(world_pos, i);
-                if (this_dist < min_dist) {
-                    min_dist = this_dist;
-                    min_dist_segment = i;
+            auto distance_to_frame = [world_pos] (const SplineFrame& frame) {
+                const fvec2 p {frame.x, frame.y};
+                return distance(world_pos, p);
+            };
+
+
+            assert(m_spline_frames.size() > 0);
+
+            float min_dist = distance_to_frame(m_spline_frames[0]);
+            size_t min_dist_index = 0;
+            for (size_t i = 1; i < m_spline_frames.size(); i++) {
+                const SplineFrame& frame = m_spline_frames[i];
+                const float dist = distance_to_frame(frame);
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    min_dist_index = i;
                 }
             }
 
-            const SplineFrame frame = m_spline_frames[min_dist_segment];
-            const fvec2 segment_start {frame.x, frame.y};
+            const SplineFrame frame_a = m_spline_frames[min_dist_index];
+            const fvec2 a {frame_a.x, frame_a.y};
+            const fvec2 a_tangent {cos(frame_a.tangent_angle), sin(frame_a.tangent_angle)};
+            const fvec2 a_normal {-a_tangent.y, a_tangent.x};
+            const float progress_to_a = min_dist_index * spline_frame_separation;
 
-            float arc_progress;
+            const float progress_from_a = dot(a_tangent, world_pos - a);
+
+            const float progress_a = progress_to_a + progress_from_a;
+            const float offset_a = dot(a_normal, world_pos - a);
+            const float curv_yaw_a = world_yaw - frame_a.tangent_angle;
+
+            float progress;
             float offset;
             float curv_yaw;
 
-            if (frame.curvature == 0) {
-                const fvec2 normal {sin(frame.tangent_angle), -cos(frame.tangent_angle)};
-                offset = dot(world_pos - segment_start, normal);
-                arc_progress = length(world_pos - normal * offset - segment_start);
-                curv_yaw = m_world_state[state_yaw_idx] - frame.tangent_angle;
+            if (progress_from_a != 0
+                && !(progress_from_a < 0 && min_dist_index == 0)
+                && !(progress_from_a > 0 && min_dist_index == m_spline_frames.size() - 1)) {
 
+                SplineFrame frame_b;
+                float progress_to_b;
+
+                if (progress_from_a < 0) {
+                    frame_b = m_spline_frames[min_dist_index - 1];
+                    progress_to_b = (min_dist_index - 1) * spline_frame_separation;
+                } else {  // progress_from_a > 0
+                    frame_b = m_spline_frames[min_dist_index + 1];
+                    progress_to_b = (min_dist_index + 1) * spline_frame_separation;
+                }
+
+                const fvec2 b {frame_b.x, frame_b.y};
+                const fvec2 a_to_b = b - a;
+                const float a_to_b_dist = length(a_to_b);
+                const float t = glm::clamp(dot(a_to_b, world_pos - a) / (a_to_b_dist * a_to_b_dist), 0.0f, 1.0f);
+
+                const fvec2 tangent_b {cos(frame_b.tangent_angle), sin(frame_b.tangent_angle)};
+                const fvec2 normal_b {-tangent_b.y, tangent_b.x};
+
+                const float progress_b = progress_to_b + dot(tangent_b, world_pos - b);
+                const float offset_b = dot(normal_b, world_pos - b);
+                const float curv_yaw_b = world_yaw - frame_b.tangent_angle;
+
+                progress = (1 - t) * progress_a + t * progress_b;
+                offset = (1 - t) * offset_a + t * offset_b;
+                curv_yaw = (1 - t) * curv_yaw_a + t * curv_yaw_b;
             } else {
-                const float angle_to_center = frame.tangent_angle + radians(90.);
-                const fvec2 center_to_start = -fvec2 {cos(angle_to_center), sin(angle_to_center)} / frame.curvature;
-
-                const fvec2 center = segment_start - center_to_start;
-                const fvec2 center_to_pos = world_pos - center;
-
-                const float vecs_crossed = center_to_start.x * center_to_pos.y - center_to_pos.x * center_to_start.y;
-                const float angle_along_arc = asin(frame.curvature * vecs_crossed / length(center_to_pos));
-
-                arc_progress = angle_along_arc / abs(frame.curvature);
-                offset = length(center_to_start) - length(center_to_pos);
-                curv_yaw = m_world_state[state_yaw_idx] - (frame.tangent_angle + arc_progress * frame.curvature);
+                progress = progress_a;
+                offset = offset_a;
+                curv_yaw = curv_yaw_a;
             }
 
-            assert(arc_progress >= 0);
-
-            m_curv_state[state_x_idx] = min_dist_segment * spline_frame_separation + arc_progress;
+            m_curv_state[state_x_idx] = progress;
             m_curv_state[state_y_idx] = offset;
             m_curv_state[state_yaw_idx] = curv_yaw;
             std::copy(&m_world_state[3], m_world_state.end(), &m_curv_state[3]);
