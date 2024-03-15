@@ -2,11 +2,13 @@ import rclpy
 from rclpy.node import Node
 from interfaces.msg import ControlAction
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy
+from interfaces.msg import ControlAction
 from std_msgs.msg import Int32
 import numpy as np
 import can
 import time
 import math
+import pdb
 
 BUSTYPE = 'pcan'
 CHANNEL = 'PCAN_USBBUS1'
@@ -24,11 +26,14 @@ CMDLINE_QOS_PROFILE = QoSProfile(
     durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_VOLATILE  # Set the durability policy
 )
 
+
 class ActuatorNode(Node):
 
     def __init__(self):
         super().__init__('minimal_publisher')
         self.bus2 = can.interface.Bus(bustype=BUSTYPE, channel=CHANNEL, bitrate=BITRATE)
+        
+
         self.subscription = self.create_subscription(
             ControlAction,
             '/control_action',  # Replace with the desired topic name
@@ -67,6 +72,7 @@ class ActuatorNode(Node):
         steering_msg = can.Message(arbitration_id=0x134, data = [0x00ff & self.swangle, (0xff00 & self.swangle)>>8, 6,5,7,8,9,1], is_extended_id=False)
         self.bus2.send(steering_msg)
         print(f"steering Message Sent: {steering_msg.data}")
+        # print(self.swangle)
         print("----------------------")
     
     def callback(self,msg):
@@ -104,6 +110,7 @@ def main(args=None):
     # Destroy the node explicitly
     # (optional - otherwise it will be done automatically
     # when the garbage collector destroys the node object)
+    # minimal_publisher.bus2.shutdown()
     minimal_publisher.destroy_node()
     rclpy.shutdown()
 

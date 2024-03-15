@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'throttle_node = actuators.throttle:main',
+            'sweeping_node = actuators.sweeping:main'
         ],
     },
 )
