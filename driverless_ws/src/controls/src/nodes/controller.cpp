@@ -6,7 +6,7 @@
 #include <interfaces/msg/control_action.hpp>
 #include <state/state_estimator.hpp>
 
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
 #include <display/display.hpp>
 #endif
 
@@ -36,9 +36,7 @@ namespace controls {
                   },
 
                   m_action_read {std::make_unique<Action>()},
-                  m_action_write {std::make_unique<Action>()},
-
-                  m_received_first_spline {false} {
+                  m_action_write {std::make_unique<Action>()} {
 
                 // create a callback group that prevents state and spline callbacks from being executed concurrently
                 rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group {
@@ -56,6 +54,20 @@ namespace controls {
                 m_state_subscription  = create_subscription<StateMsg>(
                     state_topic_name, state_qos,
                     [this] (const StateMsg::SharedPtr msg) { state_callback(*msg); },
+                    options
+                );
+
+               // no pose subscription, since everything in car frame for now. will change when fast mode is implemented
+
+                m_world_quat_subscription = create_subscription<QuatMsg>(
+                    world_quat_topic_name, world_quat_qos,
+                    [this] (const QuatMsg::SharedPtr msg) { world_quat_callback(*msg); },
+                    options
+                );
+
+                m_world_twist_subscription = create_subscription<TwistMsg>(
+                    world_twist_topic_name, world_twist_qos,
+                    [this] (const TwistMsg::SharedPtr msg) { world_twist_callback(*msg); },
                     options
                 );
 
@@ -78,22 +90,48 @@ namespace controls {
                     m_state_estimator->on_spline(spline_msg);
                 }
 
-                m_received_first_spline = true;
-
                 notify_state_dirty();
             }
 
             void ControllerNode::state_callback(const StateMsg& state_msg) {
                 std::cout << "Received state" << std::endl;
 
-                if (!m_received_first_spline) {
-                    std::cout << "No spline received yet. Ignoring..." << std::endl;
-                    return;
-                }
-
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
                     m_state_estimator->on_state(state_msg);
+                }
+
+                notify_state_dirty();
+            }
+
+            void ControllerNode::world_twist_callback(const TwistMsg &twist_msg) {
+                std::cout << "Received twist" << std::endl;
+
+                {
+                    std::lock_guard<std::mutex> guard {m_state_mut};
+                    m_state_estimator->on_world_twist(twist_msg);
+                }
+
+                notify_state_dirty();
+            }
+
+            void ControllerNode::world_quat_callback(const QuatMsg &quat_msg) {
+                std::cout << "Received quat" << std::endl;
+
+                {
+                    std::lock_guard<std::mutex> guard {m_state_mut};
+                    m_state_estimator->on_world_quat(quat_msg);
+                }
+
+                notify_state_dirty();
+            }
+
+            void ControllerNode::world_pose_callback(const PoseMsg &pose_msg) {
+                std::cout << "Received pose" << std::endl;
+
+                {
+                    std::lock_guard<std::mutex> guard {m_state_mut};
+                    m_state_estimator->on_world_pose(pose_msg);
                 }
 
                 notify_state_dirty();
@@ -115,8 +153,10 @@ namespace controls {
                     while (true) {
                         std::unique_lock<std::mutex> state_lock {m_state_mut};
 
-                        // wait for state to be dirtied
-                        m_state_cond_var.wait(state_lock);
+                        m_state_cond_var.wait(state_lock);  // wait to be dirtied
+                        while (!m_state_estimator->is_ready()) {
+                            m_state_cond_var.wait(state_lock);
+                        }
 
                         // record time to estimate speed
                         auto start_time = std::chrono::high_resolution_clock::now();
@@ -170,10 +210,13 @@ namespace controls {
 
 int main(int argc, char *argv[]) {
     using namespace controls;
+    
+    std::mutex mppi_mutex;
+    std::mutex state_mutex;
 
     // create resources
-    std::shared_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create();
-    std::shared_ptr<mppi::MppiController> controller = mppi::MppiController::create();
+    std::shared_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create(state_mutex);
+    std::shared_ptr<mppi::MppiController> controller = mppi::MppiController::create(mppi_mutex);
 
     rclcpp::init(argc, argv);
     std::cout << "rclcpp initialized" << std::endl;
@@ -204,7 +247,7 @@ int main(int argc, char *argv[]) {
     std::cout << "controller node thread launched" << std::endl;
 
 
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
     display::Display display {controller, state_estimator};
     std::cout << "display created" << std::endl;
 

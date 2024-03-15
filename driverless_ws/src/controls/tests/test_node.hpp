@@ -20,7 +20,7 @@ namespace controls {
             rclcpp::TimerBase::SharedPtr m_spline_timer;
 
             // thomas model state
-            std::array<double, 13> m_world_state {0, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
+            std::array<double, 13> m_world_state {-3, 0.5, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
 
             double m_time = 0;
         };

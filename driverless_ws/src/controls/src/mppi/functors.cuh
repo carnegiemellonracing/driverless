@@ -5,6 +5,7 @@
 #include <constants.hpp>
 #include <utils/cuda_utils.cuh>
 #include <cuda_constants.cuh>
+#include <cuda_globals/helpers.cuh>
 
 #include "types.cuh"
 
@@ -13,119 +14,53 @@ namespace controls {
     namespace mppi {
 
         /**
-         * Get curvilinear frame at `progress` by interpolating from the spline texture
+         * Advances curvilinear state one timestep according to action.
          *
-         * @param progress[in] Progess along spline
-         * @param frame[out]
-         * @param extra_progress[out]
+         * @param[in] world_state world state of the vehicle
+         * @param[in] action Action taken
+         * @param[out] world_state_out Returned next state
+         * @param[in] timestep Timestep
          */
-        __device__ void get_interpolated_frame(const float progress, SplineFrame& frame, float& extra_progress) {
-            const float texcoord = progress / spline_frame_separation;
-            const size_t low_idx = clamp((size_t)floorf(texcoord), 0UL, cuda_globals::spline_texture_elems - 1);
-            const size_t high_idx = clamp((size_t)floorf(texcoord) + 1, 0UL, cuda_globals::spline_texture_elems - 1);
-            const float t = texcoord - low_idx;
-            const SplineFrame frame_low {tex1Dfetch<float4>(cuda_globals::d_spline_texture_object, low_idx)};
-            const SplineFrame frame_high {tex1Dfetch<float4>(cuda_globals::d_spline_texture_object, high_idx)};
-
-            frame = {
-                (1 - t) * frame_low.x + t * frame_high.x,
-                (1 - t) * frame_low.y + t * frame_high.y,
-                (1 - t) * frame_low.tangent_angle + t * frame_high.tangent_angle,
-                (1 - t) * frame_low.curvature + t * frame_high.curvature,
-            };
-
-            extra_progress = t * spline_frame_separation;
-        }
-
-        /**
-         * Transform curvilinear state to world state given its current spline frame
-         *
-         * @param[inout] state Curvilinear state to transform
-         * @param[in] frame Current interpolated curvilinear frame
-         * @param[in] extra_progress Progress from frame to car
-         */
-        __device__ static void curv_state_to_world_state(float state[], const SplineFrame frame, const float extra_progress) {
-            const float progress = state[state_x_idx];
-            const float offset = state[state_y_idx];
-            const float yaw_curv = state[state_yaw_idx];
-
-            const float2 tangent {cosf(frame.tangent_angle), sinf(frame.tangent_angle)};
-            const float2 normal {-tangent.y, tangent.x};
-            state[state_x_idx] = frame.x + offset * normal.x + extra_progress * tangent.x;
-            state[state_y_idx] = frame.y + offset * normal.y + extra_progress * tangent.y;
-            state[state_yaw_idx] = frame.tangent_angle + yaw_curv;
-        }
-
-        __device__ static void world_state_dot_to_curv_state_dot(float state_dot[], const SplineFrame frame) {
-
-            const float xdot = state_dot[state_x_idx];
-            const float ydot = state_dot[state_y_idx];
-            const float yawdot = state_dot[state_yaw_idx];
-
-            const float s = sinf(frame.tangent_angle);
-            const float c = cosf(frame.tangent_angle);
-
-            const float prog_dot = xdot * c + ydot * s;
-            const float curv_y_dot = -xdot * s + ydot * c;
-            const float curv_yaw_dot = -frame.curvature * prog_dot + yawdot;
-
-            state_dot[state_x_idx] = prog_dot;
-            state_dot[state_y_idx] = curv_y_dot;
-            state_dot[state_yaw_idx] = curv_yaw_dot;
-        }
-
-        /**
-         * \brief Advances curvilinear state one timestep according to action. `curv_state` and `action` may be
-         *        invalid after call.
-         *
-         * \param[in] curv_state Curvilinear state of the vehicle
-         * \param[in] action Action taken
-         * \param[out] curv_state_out Returned next state
-         * \param[in] timestep Timestep
-         */
-        __device__ static void model(const float curv_state[], const float action[], float curv_state_out[], float timestep) {
-            const float progress = curv_state[state_x_idx];
-            const float yaw_curv = curv_state[state_yaw_idx];
-            SplineFrame frame;
-            float extra_progress;
-            get_interpolated_frame(progress, frame, extra_progress);
-
-            // create local world state vector
-            float world_state[state_dims];
-            memcpy(world_state, curv_state, sizeof(world_state));
-            curv_state_to_world_state(world_state, frame, extra_progress);
-            assert(!any_nan(world_state, state_dims) && "World state was nan during model");
-
-
+        __device__ static void model(const float world_state[], const float action[], float world_state_out[], float timestep) {
             // Call dynamics model. Outputs dstate/dt, but may take timestep into consideration for stability
             // or accuracy purposes. Extenionsally, forward euler should be done on this.
 
-            // We do this instead of directly calculating the next step because world state dot -> curv state dot is
-            // much cheaper to calculate (given current curv state) than world state -> curv state
+            // We do this instead of directly calculating the next step because updating directly didn't work in
+            // curvilinear coordinates. TODO: refactor model to directly update next state
             float world_state_dot[state_dims];
             ONLINE_DYNAMICS_FUNC(world_state, action, world_state_dot, timestep);
-            assert(!any_nan(world_state_dot, state_dims) && "World state dot was nan directly after dynamics call");
+            paranoid_assert(!any_nan(world_state_dot, state_dims) && "World state dot was nan directly after dynamics call");
+            paranoid_assert(!any_nan(world_state, state_dims) && "World state was nan directly after dynamics call");
 
-
-            world_state_dot_to_curv_state_dot(world_state_dot, frame);
-            assert(!any_nan(world_state_dot, state_dims) && "Curv state dot was nan after dynamics call");
-
-            const auto& curv_state_dot = world_state_dot;
             for (uint8_t i = 0; i < state_dims; i++) {
-                curv_state_out[i] = curv_state[i] + curv_state_dot[i] * timestep;
+                world_state_out[i] = world_state[i] + world_state_dot[i] * timestep;
             }
+            paranoid_assert(!any_nan(world_state_out, state_dims) && "World state out was nan directly after dynamics call");
         }
 
-        __device__ static float cost(float curv_state[]) {
-            const float curv_yaw = curv_state[state_yaw_idx];
-            const float xdot = curv_state[state_car_xdot_idx];
-            const float ydot = curv_state[state_car_ydot_idx];
-            const float offset = curv_state[state_y_idx];
+        /**
+         * Calculate cost at a particular state.
+         *
+         * @param world_state World state of the vehicle
+         * @param start_progress Progress at the start of the trajectory
+         * @param time_since_traj_start Time elapsed since trjaectory start
+         * @returns Cost at the given state
+         */
+        __device__ static float cost(float world_state[], float start_progress, float time_since_traj_start) {
+            float curv_pose[3];
+            bool out_out_bounds;
+            cuda_globals::sample_curv_state(world_state, curv_pose, out_out_bounds);
 
-            const float progress_dot = xdot * cosf(curv_yaw) - ydot * sin(curv_yaw);
-            // const float speed_cost = zero_speed_cost * expf(-speed_cost_decay_factor * progress_dot);
-            const float speed_deviation = (target_speed - progress_dot);
-            const float speed_cost = speed_weight * speed_deviation * speed_deviation;
+            if (out_out_bounds) {
+                return std::numeric_limits<float>::infinity();
+            }
+
+            const float progress = curv_pose[0];
+            const float offset = curv_pose[1];
+
+            const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
+            const float speed_deviation = target_speed - approx_speed_along;
+            const float speed_cost = speed_weight * abs(speed_deviation);
 
             const float distance_cost = offset_1m_cost * offset * offset;
 
@@ -140,9 +75,9 @@ namespace controls {
                     : std_normals {std_normals} { }
 
             __device__ void operator() (size_t idx) const {
-                const size_t action_idx = (idx / action_dims) * action_dims;
+                const size_t action_idx = (idx / action_dims) * action_dims; // index into std_normals for beginning of action
                 const size_t action_dim = idx % action_dims;
-                const size_t row_idx = action_dim * action_dims;
+                const size_t row_idx = action_dim * action_dims;  // index into perturbs_incr_std for beginning of row
 
                 const auto res = dot<float>(
                     &cuda_globals::perturbs_incr_std[row_idx],
@@ -159,13 +94,14 @@ namespace controls {
                 float m_sqrt_timestep = std::sqrt(controller_period);  // sqrt seconds
         };
 
+
         // Functors for cost calculation
 
         // Gets us the costs to go
         struct PopulateCost {
             float* brownians;
             float* sampled_action_trajectories;
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
             float* sampled_state_trajectories;
 #endif
             float* cost_to_gos;
@@ -174,14 +110,14 @@ namespace controls {
 
             PopulateCost(thrust::device_ptr<float> brownians,
                          thrust::device_ptr<float> sampled_action_trajectories,
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
                          thrust::device_ptr<float> sampled_state_trajectories,
 #endif
                          thrust::device_ptr<float> cost_to_gos,
                          const thrust::device_ptr<DeviceAction>& action_trajectory_base)
                     : brownians {brownians.get()},
                       sampled_action_trajectories {sampled_action_trajectories.get()},
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
                       sampled_state_trajectories {sampled_state_trajectories.get()},
 #endif
                       cost_to_gos {cost_to_gos.get()},
@@ -191,13 +127,15 @@ namespace controls {
                 float j_curr = 0;
                 float x_curr[state_dims];
 
-                // printf("curv state: %f %f %f %f %f %f %f %f %f %f\n", curr_state[0], curr_state[1], curr_state[2],
-                //        curr_state[3], curr_state[4], curr_state[5], curr_state[6], curr_state[7], curr_state[8], curr_state[9]);
-                assert(!any_nan(cuda_globals::curr_state, state_dims) && "State was nan in populate cost entry");
+                paranoid_assert(!any_nan(cuda_globals::curr_state, state_dims) && "State was nan in populate cost entry");
 
-                // printf("POPLATE COST %i: copying curr_state", i);
                 // copy current state into x_curr
                 memcpy(x_curr, cuda_globals::curr_state, sizeof(float) * state_dims);
+
+                float init_curv_pose[3];
+                bool out_of_bounds;
+                cuda_globals::sample_curv_state(x_curr, init_curv_pose, out_of_bounds);
+                paranoid_assert(!out_of_bounds && "Initial state was out of bounds");
 
                 // for each timestep, calculate cost and add to get cost to go
                 for (uint32_t j = 0; j < num_timesteps; j++) {
@@ -207,7 +145,7 @@ namespace controls {
                     // to last one (since we have to initialize it something). Taking the min of j and m - 1 saves
                     // us a host->device copy
                     const uint32_t idx = min(j, num_timesteps - 2);
-                    assert(!any_nan(action_trajectory_base[idx].data, action_dims) && "Control action base was nan");
+                    paranoid_assert(!any_nan(action_trajectory_base[idx].data, action_dims) && "Control action base was nan");
 
                     for (uint32_t k = 0; k < action_dims; k++) {
                         u_ij[k] = action_trajectory_base[idx].data[k]
@@ -219,35 +157,28 @@ namespace controls {
                         );
                     }
 
-                    // printf("control action: %f, %f, %f\n", u_ij[0], u_ij[1], u_ij[2]);
-                    assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
-
-                    // if (__cudaGet_blockIdx().x == 0 && __cudaGet_threadIdx().x == 0) {
-                    //     printf("j: %i\n", j);
-                    // }
+                    paranoid_assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
                     model(x_curr, u_ij, x_curr, controller_period);
+                    paranoid_assert(!any_nan(x_curr, state_dims) && "State was nan after model step");
 
-                    assert(!any_nan(x_curr, state_dims) && "State was nan after model step");
-
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
                     float* world_state = IDX_3D(
                         sampled_state_trajectories,
                         dim3(num_samples, num_timesteps, state_dims),
                         dim3(i, j, 0)
                     );
                     memcpy(world_state, x_curr, sizeof(float) * state_dims);
-                    SplineFrame frame;
-                    float frame_progress;
-                    get_interpolated_frame(x_curr[state_x_idx], frame, frame_progress);
-                    curv_state_to_world_state(world_state, frame, frame_progress);
 #endif
 
-                    const float c = cost(x_curr);
+                    const float c = cost(x_curr, init_curv_pose[0], controller_period * (j + 1));
+
                     j_curr -= c;
                     cost_to_gos[i * num_timesteps + j] = j_curr;
+                    paranoid_assert(!isnan(c) && "cost-to-go was nan");
                 }
             }
         };
+
 
         // Functors to operate on Action
 
@@ -277,6 +208,7 @@ namespace controls {
 
 
         // Functors for action reduction
+
         struct ActionAverage {
             __device__ ActionWeightTuple operator()(const ActionWeightTuple& action_weight_t0,
                                                     const ActionWeightTuple& action_weight_t1) const
@@ -295,7 +227,7 @@ namespace controls {
         };
 
         /** 
-         * @brief Captures pointers to action trajectories and cost to gos
+         * Captures pointers to action trajectories and cost to gos
          * Produces a weight for a single action based on its cost to go
         */
         struct IndexToActionWeightTuple {
@@ -307,10 +239,11 @@ namespace controls {
                       cost_to_gos {cost_to_gos} {}
 
             /**
-             * \param idx refers to the index for the timesteps x samples matrix 
+             * @param idx refers to the index for the timesteps x samples matrix
              * (transposed from normal to make the reduction work)
-             * \return a tuple of the action indexed from the trajectories 
-             * and the weight of that action (strictly positive) based on its cost to go*/            
+             * @returns a tuple of the action indexed from the trajectories
+             * and the weight of that action (strictly positive) based on its cost to go
+             */
             __device__ ActionWeightTuple operator() (const uint32_t idx) const {
                 ActionWeightTuple res {};
                 // as we increment idx, we iterate over the samples first
@@ -321,15 +254,26 @@ namespace controls {
                                                 action_trajectories_dims,
                                                 dim3(i, j, 0)), sizeof(float) * action_dims);
 
-                assert(cuda_globals::action_min[0] <= res.action.data[0]);
-                assert(cuda_globals::action_max[0] >= res.action.data[0]);
-                assert(cuda_globals::action_min[1] <= res.action.data[1]);
-                assert(cuda_globals::action_max[1] >= res.action.data[1]);
+                paranoid_assert(cuda_globals::action_min[0] <= res.action.data[0]);
+                paranoid_assert(cuda_globals::action_max[0] >= res.action.data[0]);
+                paranoid_assert(cuda_globals::action_min[1] <= res.action.data[1]);
+                paranoid_assert(cuda_globals::action_max[1] >= res.action.data[1]);
 
                 // right now cost to gos is shifted down by the value in the last timestep, so adjust for that
-                const float anthony_adjustment = cost_to_gos[(i + 1) * num_timesteps - 2] - 2 * cost_to_gos[(i + 1) * num_timesteps - 1];
-                const float cost_to_go = cost_to_gos[i * num_timesteps + j] + anthony_adjustment;
-                res.weight = __expf(-1.0f / temperature * cost_to_go);
+                const float final_step = cost_to_gos[(i + 1) * num_timesteps - 1];
+                const float penult_step = cost_to_gos[(i + 1) * num_timesteps - 2];
+
+                float cost_to_go;
+                if (isinf(final_step)) {
+                    cost_to_go = std::numeric_limits<float>::infinity();
+                } else {
+                    const float anthony_adjustment = penult_step - 2 * final_step;
+                    cost_to_go = cost_to_gos[i * num_timesteps + j] + anthony_adjustment;
+                }
+                paranoid_assert(!isnan(cost_to_go) && "cost-to-go was nan in tuple generation");
+
+                res.weight = expf(-1.0f / temperature * cost_to_go);
+                paranoid_assert(!isnan(res.weight) && "weight was nan");
 
                 return res;
             }
@@ -368,6 +312,7 @@ namespace controls {
                 } else {
                     averaged_action[idx] = res.action;
                 }
+                paranoid_assert(!any_nan(averaged_action[idx].data, action_dims) && "Averaged action was nan");
             }
         };
     }

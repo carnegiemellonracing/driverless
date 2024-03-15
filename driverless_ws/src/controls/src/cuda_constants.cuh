@@ -2,7 +2,6 @@
 
 #include <curand.h>
 #include <model/bicycle/model.cuh>
-#include <model/dummy/model.cuh>
 
 #include "constants.hpp"
 
