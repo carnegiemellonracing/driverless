@@ -39,7 +39,7 @@ namespace controls {
         }
 
         /**
-         * Calculate cost at a particular state. Potentially divergent, so __syncthreads() after calling if needed.
+         * Calculate cost at a particular state.
          *
          * @param world_state World state of the vehicle
          * @param start_progress Progress at the start of the trajectory
@@ -136,7 +136,6 @@ namespace controls {
                 bool out_of_bounds;
                 cuda_globals::sample_curv_state(x_curr, init_curv_pose, out_of_bounds);
                 paranoid_assert(!out_of_bounds && "Initial state was out of bounds");
-                __syncthreads();
 
                 // for each timestep, calculate cost and add to get cost to go
                 for (uint32_t j = 0; j < num_timesteps; j++) {
@@ -161,7 +160,6 @@ namespace controls {
                     paranoid_assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
                     model(x_curr, u_ij, x_curr, controller_period);
                     paranoid_assert(!any_nan(x_curr, state_dims) && "State was nan after model step");
-                    __syncthreads();
 
 #ifdef DISPLAY
                     float* world_state = IDX_3D(
@@ -173,7 +171,6 @@ namespace controls {
 #endif
 
                     const float c = cost(x_curr, init_curv_pose[0], controller_period * (j + 1));
-                    __syncthreads();
 
                     j_curr -= c;
                     cost_to_gos[i * num_timesteps + j] = j_curr;
@@ -274,7 +271,6 @@ namespace controls {
                     cost_to_go = cost_to_gos[i * num_timesteps + j] + anthony_adjustment;
                 }
                 paranoid_assert(!isnan(cost_to_go) && "cost-to-go was nan in tuple generation");
-                __syncthreads();
 
                 res.weight = expf(-1.0f / temperature * cost_to_go);
                 paranoid_assert(!isnan(res.weight) && "weight was nan");

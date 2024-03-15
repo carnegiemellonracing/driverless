@@ -30,7 +30,7 @@ namespace controls {
             constexpr static GLint shader_scale_loc = 0;
             constexpr static GLint shader_center_loc = 1;
 
-            void gen_tex_info();
+            void gen_tex_info(glm::fvec2 car_pos);
             void render_curv_frame_lookup();
             void map_curv_frame_lookup();
             void unmap_curv_frame_lookup();
@@ -38,11 +38,11 @@ namespace controls {
             void sync_tex_info();
             void gen_curv_frame_lookup_framebuffer();
             void gen_gl_path();
-            void fill_path_buffers();
+            void fill_path_buffers(glm::fvec2 car_pos);
 
             std::vector<glm::fvec2> m_spline_frames;
 
-            State m_world_state = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            State m_world_state = {};
 
             cudaGraphicsResource_t m_curv_frame_lookup_rsc;
             cuda_globals::CurvFrameLookupTexInfo m_curv_frame_lookup_tex_info;

@@ -31,9 +31,9 @@ namespace controls {
             constexpr float max_force_x_at_1N = 0.8f; //Maximum force x TO IMPLEMENT
             constexpr float slip_ratio_max_x = 0.1; //slip ratio that yields the max force TO IMPLEMENT
             constexpr float post_saturation_force_x = 0.6; // After tires start slipping what force we get
-            constexpr float max_force_y_at_1N = 0.8f; //Maximum force Y TO IMPLEMENT
+            constexpr float max_force_y_at_1N = 1.0f; //Maximum force Y TO IMPLEMENT
             constexpr float slip_angle_max_y = 0.1; //slip ratio that yields the max force TO IMPLEMENT
-            constexpr float post_saturation_force_y = 0.6; // After tires start slipping what force we get
+            constexpr float post_saturation_force_y = 0.8; // After tires start slipping what force we get
 
             constexpr float slip_ratio_saturation = 0.1; // minimum velocity magnitude for wheel slip
 
@@ -93,9 +93,11 @@ namespace controls {
             //calculates slip ratio
             __host__ __device__ static float calculate_slip_ratio(float wheel_speed, float velocity) {
                 velocity = abs(velocity);
+
                 if (velocity == 0) {
                     return sign(wheel_speed) * slip_ratio_saturation;
                 }
+
                 float tangential_velo = wheel_speed * WHEEL_RADIUS;
                 return clamp(
                         (tangential_velo - velocity) / velocity,

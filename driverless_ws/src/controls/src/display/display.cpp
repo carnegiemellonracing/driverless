@@ -126,7 +126,6 @@ namespace controls {
             glLineWidth(1.0f);
             glDisable(GL_DEPTH_TEST);
             glDisable(GL_CULL_FACE);
-            // glEnable(GL_TEXTURE_2D);
         }
 
         void Display::init_trajectories() {

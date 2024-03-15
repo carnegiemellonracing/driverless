@@ -86,15 +86,12 @@ namespace controls {
             void ControllerNode::state_callback(const StateMsg& state_msg) {
                 std::cout << "Received state" << std::endl;
 
-                if (!m_received_first_spline) {
-                    std::cout << "No spline received yet. Ignoring..." << std::endl;
-                    return;
-                }
-
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
                     m_state_estimator->on_state(state_msg);
                 }
+
+                m_received_first_state = true;
 
                 notify_state_dirty();
             }
@@ -117,6 +114,12 @@ namespace controls {
 
                         // wait for state to be dirtied
                         m_state_cond_var.wait(state_lock);
+
+                        // technically could get into a situation where its updated between the check and the wait
+                        // but who cares, we'll just be notified on the next receive
+                        if (!m_received_first_spline || !m_received_first_state) {
+                            continue;
+                        }
 
                         // record time to estimate speed
                         auto start_time = std::chrono::high_resolution_clock::now();

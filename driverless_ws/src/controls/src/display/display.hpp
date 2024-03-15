@@ -28,7 +28,7 @@ namespace controls {
             static constexpr GLint img_shader_img_width_loc = 3;
             static constexpr GLint img_shader_img_tex_loc = 4;
 
-            static constexpr size_t num_samples_to_draw = 1024;
+            static constexpr size_t num_samples_to_draw = std::min(1024U, num_samples);
 
             Display(
                 std::shared_ptr<mppi::MppiController> controller,
