@@ -65,7 +65,7 @@ Spline::Spline(polynomial interpolation_poly) {
     this->spl_poly = interpolation_poly;
 }
 
-Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path, int sort_ind) {
+Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path_id, int sort_ind) {
     this->spl_poly=interpolation_poly;
     this->first_der = first;
     this->second_der = second;
