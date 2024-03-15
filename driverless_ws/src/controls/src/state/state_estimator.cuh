@@ -15,9 +15,14 @@ namespace controls {
             StateEstimator_Impl(std::mutex& mutex);
 
             void on_spline(const SplineMsg& spline_msg) override;
+            void on_world_twist(const TwistMsg& twist_msg) override;
+            void on_world_quat(const QuatMsg& quat_msg) override;
+            void on_world_pose(const PoseMsg& pose_msg) override;
             void on_state(const StateMsg& state_msg) override;
 
             void sync_to_device() override;
+
+            bool is_ready() override;
 
 #ifdef DISPLAY
             std::vector<glm::fvec2> get_spline_frames() override;
@@ -57,6 +62,10 @@ namespace controls {
             std::mutex& m_mutex;
             std::mutex m_gl_context_mutex;
             bool m_curv_frame_lookup_mapped;
+
+            bool m_spline_ready = false;
+            bool m_world_twist_ready = false;
+            bool m_world_yaw_ready = false;
         };
 
     }

@@ -10,11 +10,14 @@ namespace controls {
     constexpr const char *control_action_topic_name = "control_action";
     constexpr const char *spline_topic_name = "spline";
     constexpr const char *state_topic_name = "state";
-    constexpr const char *state_trajectories_topic_name = "state_trajectories";
+    constexpr const char *world_twist_topic_name = "filter/twist";
+    constexpr const char *world_quat_topic_name = "filter/quaternion";
+
     const rclcpp::QoS control_action_qos (rclcpp::KeepLast(10));
     const rclcpp::QoS spline_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
-    const rclcpp::QoS state_trajectories_qos (rclcpp::KeepLast(10));
+    const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
+    const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1));
 
     // MPPI stuff
 
@@ -50,6 +53,10 @@ namespace controls {
     constexpr float curv_frame_lookup_padding = 0; // meters
     constexpr float track_width = 5.0f;
     constexpr float car_padding = 3.0f;
+    constexpr bool estimate_whl_speeds = true;
+
+
+    // Indices
 
     constexpr uint8_t state_x_idx = 0;
     constexpr uint8_t state_y_idx = 1;
