@@ -153,6 +153,47 @@ namespace controls {
                 float m_sqrt_timestep = std::sqrt(controller_period);  // sqrt seconds
         };
 
+
+        //Created by Ayush Garg so like don't trust
+        struct logpProbabilityDensity {
+            thrust::device_ptr<float> perubation;
+            thrust::device_ptr<float> logpProbabilityDensities;
+
+
+            explicit logpProbabilityDensity(thrust::device_ptr<float> perubation, 
+            thrust::device_ptr<float> logpProbabilityDensities;)
+                    : perubation {perubation}
+                    logpProbabilityDensities {logpProbabilityDensities} { }
+
+            __device__ void operator() (size_t idx) const {
+                if(idx%action_dims){
+                    const size_t action_idx = (idx / action_dims) * action_dims;
+
+                    const auto res = 0;
+                    
+                    for(i=0; i<action_dims; i++;){
+                        //NEED TO IMPLEMENT MAGIC MATRIX IS TRANSPOSE OF INVERSE OF COVARIANCE MATRIX
+                        //TRANSPOSED FOR EFFCIENECY
+
+                        //Dot product of pertubations and ith column
+                        const intermediate =  (dot<float>( &perubation.get()[action_idx], 
+                            cuda_globals::magicMatrix[i*action_dims], action_dims));
+
+                        //part i of dot product of final dot product
+                        res = res + intermediate * &perubation.get()[action_idx+i];
+
+                    //NEED TO IMPMENT MAGIC CONSTANT
+                    //actually set the log probability distribution
+                    logpProbabilityDensities.get()[action_idx] =  magic_constant - .5*res;
+                    }
+
+                    
+                }
+
+            }
+
+        };
+
         // Functors for cost calculation
 
         // Gets us the costs to go
