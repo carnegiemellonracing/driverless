@@ -123,6 +123,19 @@ namespace controls {
         }
 
 
+        //Created by Ayush Garg so like don't trust
+        void MppiController_Impl::logpProbabilityDensity() {
+            
+            // Calculates Log probability density
+            thrust::counting_iterator<size_t> indices {0};
+            thrust::for_each(indices, indices + num_action_trajectories, TransformStdNormal {m_action_trajectories.data(), 
+            logpProbabilityDensitiesToGO.data()});
+
+            //Makes it To Go
+            prefix_scan(logpProbabilityDensitiesToGO.data());
+        }
+
+
         thrust::device_vector<DeviceAction> MppiController_Impl::reduce_actions() {
             // averaged_actions is where the weighted averages are stored
             // initialize it to 0 
