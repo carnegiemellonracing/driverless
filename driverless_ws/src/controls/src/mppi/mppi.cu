@@ -57,6 +57,9 @@ namespace controls {
 
             // print_tensor(m_action_trajectories, action_trajectories_dims);
             // std::cout << std::endl;
+            std::cout << "generating Log Probability Densities..." << std::endl;
+            generate_log_probability_density();
+            cudaDeviceSynchronize(); //TODO: do we need this?
 
             std::cout << "populating cost..." << std::endl;
             populate_cost();
@@ -123,16 +126,12 @@ namespace controls {
         }
 
 
-        //Created by Ayush Garg so like don't trust
-        void MppiController_Impl::logpProbabilityDensity() {
+        void MppiController_Impl::generate_log_probability_density() {
             
             // Calculates Log probability density
             thrust::counting_iterator<size_t> indices {0};
-            thrust::for_each(indices, indices + num_action_trajectories, TransformStdNormal {m_action_trajectories.data(), 
-            logpProbabilityDensitiesToGO.data()});
-
-            //Makes it To Go
-            prefix_scan(logpProbabilityDensitiesToGO.data());
+            thrust::for_each(indices, indices + num_action_trajectories, LogProbabilityDensity {m_action_trajectories.data(),
+            m_log_prob_densities.data()});
         }
 
 
@@ -147,7 +146,8 @@ namespace controls {
                 averaged_actions.data().get(),
                 m_last_action_trajectory.data().get(),
                 m_action_trajectories.data().get(),
-                m_cost_to_gos.data().get()
+                m_cost_to_gos.data().get(),
+                m_log_prob_densities.data().get()
             });
 
             return averaged_actions;
@@ -166,7 +166,7 @@ namespace controls {
 #ifdef PUBLISH_STATES
                     m_state_trajectories.data(),
 #endif
-                    m_cost_to_gos.data(), m_last_action_trajectory.data()};
+                    m_cost_to_gos.data(),m_log_prob_densities.data(), m_last_action_trajectory.data()};
 
                 thrust::for_each(indices, indices + num_samples, populate_cost);
             }

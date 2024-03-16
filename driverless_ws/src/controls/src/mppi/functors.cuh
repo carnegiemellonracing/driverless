@@ -154,40 +154,48 @@ namespace controls {
         };
 
 
-        //Created by Ayush Garg so like don't trust
-        struct logpProbabilityDensity {
-            thrust::device_ptr<float> perubation;
-            thrust::device_ptr<float> logpProbabilityDensities;
+        /**@brief
+         *
+         *@Author:Ayush Garg and Anthony Yip
+         *
+         * @params perturbation n x m x q disturbance matrix
+         * logProabilityDensities n x m matrix to store result
+         *
+         * globals used:
+         * magic_matrix q x q covariance matrix (inversed then transposed)
+         * TRANSPOSED FOR EFFCIENECY AND LOCALITY
+         * magic_constant ugly thing with square roots and determinant of covariance
+         * TODO: Implement magic_matrix, magic_constant
+         */
+        struct LogProbabilityDensity {
+            thrust::device_ptr<float> perturbation;
+            thrust::device_ptr<float> log_probability_densities;
 
 
-            explicit logpProbabilityDensity(thrust::device_ptr<float> perubation, 
-            thrust::device_ptr<float> logpProbabilityDensities;)
-                    : perubation {perubation}
-                    logpProbabilityDensities {logpProbabilityDensities} { }
+            explicit LogProbabilityDensity(thrust::device_ptr<float> perturbation,
+            thrust::device_ptr<float> log_probability_densities)
+                    : perturbation {perturbation}
+                    log_probability_densities {log_probability_densities} { }
 
             __device__ void operator() (size_t idx) const {
-                if(idx%action_dims){
-                    const size_t action_idx = (idx / action_dims) * action_dims;
-
+                // Ensures start of control action
+                if(idx%action_dims==0){
                     const auto res = 0;
-                    
-                    for(i=0; i<action_dims; i++;){
-                        //NEED TO IMPLEMENT MAGIC MATRIX IS TRANSPOSE OF INVERSE OF COVARIANCE MATRIX
-                        //TRANSPOSED FOR EFFCIENECY
+
+                    for(i=0; i<action_dims; i++){
 
                         //Dot product of pertubations and ith column
-                        const intermediate =  (dot<float>( &perubation.get()[action_idx], 
-                            cuda_globals::magicMatrix[i*action_dims], action_dims));
+                        //TODO: what is dot?
+                        const intermediate = (dot<float>( &perturbation.get()[idx],
+                            &cuda_globals::magic_matrix[i*action_dims], action_dims));
 
                         //part i of dot product of final dot product
-                        res = res + intermediate * &perubation.get()[action_idx+i];
-
-                    //NEED TO IMPMENT MAGIC CONSTANT
-                    //actually set the log probability distribution
-                    logpProbabilityDensities.get()[action_idx] =  magic_constant - .5*res;
+                        res += intermediate * perturbation.get()[idx+i];
                     }
+p
+                    //actually set the log probability distribution
+                    log_probability_densities.get()[idx] =  magic_constant - .5*res;
 
-                    
                 }
 
             }
@@ -196,7 +204,17 @@ namespace controls {
 
         // Functors for cost calculation
 
-        // Gets us the costs to go
+        /** @brief Computes cost using the model and cost function, triangularizes both D and J
+         *
+         * @params brownians[in] brownian perturbation with mean 0
+         * sampled_action_trajectories[in] same as brownians?
+         * sampled_state_trajectories[in] for publishing states
+         * cost_to_gos[out] stores the negative cost so far
+         * log_prob_densities[in/out] stores the negative log_prob_densities so far
+         * action_trajectory_base[in]curr
+         * i[in] index over timesteps
+         *
+         */ //TODO: why do we need both brownians and sampled_action_trajectories?
         struct PopulateCost {
             float* brownians;
             float* sampled_action_trajectories;
@@ -204,6 +222,7 @@ namespace controls {
             float* sampled_state_trajectories;
 #endif
             float* cost_to_gos;
+            float* log_prob_densities;
 
             const DeviceAction* action_trajectory_base;
 
@@ -213,6 +232,7 @@ namespace controls {
                          thrust::device_ptr<float> sampled_state_trajectories,
 #endif
                          thrust::device_ptr<float> cost_to_gos,
+                         thrust::device_ptr<float> log_prob_densities,
                          const thrust::device_ptr<DeviceAction>& action_trajectory_base)
                     : brownians {brownians.get()},
                       sampled_action_trajectories {sampled_action_trajectories.get()},
@@ -220,30 +240,36 @@ namespace controls {
                       sampled_state_trajectories {sampled_state_trajectories.get()},
 #endif
                       cost_to_gos {cost_to_gos.get()},
+                      log_prob_densities {log_prob_densities.get()},
                       action_trajectory_base {action_trajectory_base.get()} {}
 
+                      // i iterates over num_samples
             __device__ void operator() (uint32_t i) const {
-                float j_curr = 0;
-                float x_curr[state_dims];
+                //Varibles used in ToGo Calculation
+                float j_curr = 0; // accumulator of negative cost so far
+                float d_curr = 0; // accumulator of negative log probability so far
+                float x_curr[state_dims]; // current world state
 
                 // printf("curv state: %f %f %f %f %f %f %f %f %f %f\n", curr_state[0], curr_state[1], curr_state[2],
                 //        curr_state[3], curr_state[4], curr_state[5], curr_state[6], curr_state[7], curr_state[8], curr_state[9]);
                 assert(!any_nan(cuda_globals::curr_state, state_dims) && "State was nan in populate cost entry");
 
-                // printf("POPLATE COST %i: copying curr_state", i);
+                // printf("POPULATE COST %i: copying curr_state", i);
                 // copy current state into x_curr
                 memcpy(x_curr, cuda_globals::curr_state, sizeof(float) * state_dims);
 
                 // for each timestep, calculate cost and add to get cost to go
+                // iterate through time because state depends on previous state (can't parallelize)
                 for (uint32_t j = 0; j < num_timesteps; j++) {
                     float* u_ij = IDX_3D(sampled_action_trajectories, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, 0));
 
                     // VERY CURSED. We want the last action in the best guess action to be the same as the second
-                    // to last one (since we have to initialize it something). Taking the min of j and m - 1 saves
+                    // to last one (since we have to initialize it something). Taking the min of j and m - 2 saves
                     // us a host->device copy
                     const uint32_t idx = min(j, num_timesteps - 2);
                     assert(!any_nan(action_trajectory_base[idx].data, action_dims) && "Control action base was nan");
 
+                    // perturb initial control action guess with the brownian, clamp to reasonable bounds
                     for (uint32_t k = 0; k < action_dims; k++) {
                         u_ij[k] = action_trajectory_base[idx].data[k]
                                   + *IDX_3D(brownians, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, k));
@@ -260,6 +286,8 @@ namespace controls {
                     if (__cudaGet_blockIdx().x == 0 && __cudaGet_threadIdx().x == 0) {
                         printf("j: %i\n", j);
                     }
+
+
                     model(x_curr, u_ij, x_curr, controller_period);
 
                     assert(!any_nan(x_curr, state_dims) && "State was nan after model step");
@@ -273,10 +301,19 @@ namespace controls {
                     memcpy(world_state, x_curr, sizeof(float) * state_dims);
                     curv_state_to_world_state(world_state, get_interpolated_frame(x_curr[state_x_idx]));
 #endif
-
+                    // Converts D and J Matrices to To-Go
+                    // ALSO VERY CURSED FOR 2 REASONS:
+                    // REASON 1: We have decided to not lower-triangularize the cost-to-gos, but also the log prob
+                    // densities at the same time
+                    // REASON 2: To save a loop over timesteps, we have essentially calculated the negative cost
+                    // so far and stored it in cost_to_gos. During weighting, we will add back the total cost of the
+                    // entire trajectory (which is |cost_to_gos| at final timestep). Likewise with log_prob_densities
                     const float c = cost(x_curr);
+                    const float d = log_prob_densities[i*num_timesteps + j];
                     j_curr -= c;
+                    d_curr -= d;
                     cost_to_gos[i * num_timesteps + j] = j_curr;
+                    log_prob_densities[i * num_timesteps + j] = d_curr;
                 }
             }
         };
@@ -328,15 +365,17 @@ namespace controls {
 
         /** 
          * @brief Captures pointers to action trajectories and cost to gos
-         * Produces a weight for a single action based on its cost to go
+         * Produces a weight for a single action based on its cost to go and log probability density
         */
         struct IndexToActionWeightTuple {
             const float* action_trajectories;
             const float* cost_to_gos;
+            const float* log_prob_densities;
 
             __device__ IndexToActionWeightTuple (const float* action_trajectories, const float* cost_to_gos)
                     : action_trajectories {action_trajectories},
-                      cost_to_gos {cost_to_gos} {}
+                      cost_to_gos {cost_to_gos},
+                      log_prob_densities {log_prob_densities} {}
 
             /**
              * \param idx refers to the index for the timesteps x samples matrix 
@@ -359,9 +398,15 @@ namespace controls {
                 assert(cuda_globals::action_max[1] >= res.action.data[1]);
 
                 // right now cost to gos is shifted down by the value in the last timestep, so adjust for that
+                // NOTE: we take second last column - 2 * last column because we want to scale the cost up by
+                // total cost over the trajectory + cost of the last action
+                // (cause the last column of the triangular matrix has a one at the bottom)
+                // (preserve the cost of the last action)
                 const float anthony_adjustment = cost_to_gos[(i + 1) * num_timesteps - 2] - 2 * cost_to_gos[(i + 1) * num_timesteps - 1];
+                const float ayush_adjustment = log_prob_densities[(i + 1) * num_timesteps - 2] - 2 * log_prob_densities[(i + 1) * num_timesteps - 1];
                 const float cost_to_go = cost_to_gos[i * num_timesteps + j] + anthony_adjustment;
-                res.weight = __expf(-1.0f / temperature * cost_to_go);
+                const float log_prob_density = log_prob_densities[i * num_timesteps + j] + ayush_adjustment;
+                res.weight = __expf(-1.0f / temperature * cost_to_go - log_prob_density);
 
                 return res;
             }
@@ -373,15 +418,17 @@ namespace controls {
 
             const float* action_trajectories;
             const float* cost_to_gos;
+            const float* log_probability_densities;
 
             const ActionAverage reduction_functor {};
 
-            ReduceTimestep (DeviceAction* averaged_action, DeviceAction* action_trajectory_base, const float* action_trajectories, const float* cost_to_gos)
+            ReduceTimestep (DeviceAction* averaged_action, DeviceAction* action_trajectory_base, const float* action_trajectories, const float* cost_to_gos, const float log_probability_densities)
                     : averaged_action {averaged_action},
                       action_trajectory_base {action_trajectory_base},
                       action_trajectories {action_trajectories},
-                      cost_to_gos {cost_to_gos} { }
-
+                      cost_to_gos {cost_to_gos}
+                      log_probability_densities {log_probability_densities}
+                      { }
             __device__ void operator() (const uint32_t idx) {
                 // idx ranges from 0 to num_timesteps - 1
                 // idx represents a timestep
@@ -391,7 +438,7 @@ namespace controls {
                 const ActionWeightTuple res = thrust::transform_reduce(
                         thrust::device,
                         indices, indices + num_samples,
-                        IndexToActionWeightTuple {action_trajectories, cost_to_gos},
+                        IndexToActionWeightTuple {action_trajectories, cost_to_gos,log_probability_densities},
                         ActionWeightTuple { DeviceAction {}, 0 }, reduction_functor);
 
                 if (res.weight == 0) {
