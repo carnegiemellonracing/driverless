@@ -12,8 +12,8 @@ namespace controls {
     namespace display {
         class Display {
         public:
-            static constexpr int width = 512;
-            static constexpr int height = 512;
+            static constexpr int width = 1024;
+            static constexpr int height = 1024;
             static constexpr float framerate = 60;
             static constexpr float strafe_speed = 1.5;
             static constexpr float scale_speed = 1;

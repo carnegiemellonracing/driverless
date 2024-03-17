@@ -6,6 +6,7 @@
 #include <utils/cuda_utils.cuh>
 #include <cuda_constants.cuh>
 #include <cuda_globals/helpers.cuh>
+#include <math_constants.h>
 
 #include "types.cuh"
 
@@ -52,15 +53,18 @@ namespace controls {
             cuda_globals::sample_curv_state(world_state, curv_pose, out_out_bounds);
 
             if (out_out_bounds) {
-                return std::numeric_limits<float>::infinity();
+                return CUDART_INF_F;
             }
 
             const float progress = curv_pose[0];
             const float offset = curv_pose[1];
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
-            const float speed_deviation = target_speed - approx_speed_along;
-            const float speed_cost = speed_weight * abs(speed_deviation);
+            const float speed_deviation = approx_speed_along - target_speed;
+            const float speed_cost = max(
+                no_speed_cost / (target_speed * target_speed) * speed_deviation * speed_deviation,
+                speed_deviation * overspeed_1m_cost
+            );
 
             const float distance_cost = offset_1m_cost * offset * offset;
 
@@ -95,9 +99,63 @@ namespace controls {
         };
 
 
+        /**@brief
+         *
+         *@Author:Ayush Garg and Anthony Yip
+         *
+         * @params perturbation n x m x q disturbance matrix
+         * logProabilityDensities n x m matrix to store result
+         *
+         * globals used:
+         * magic_matrix q x q covariance matrix (inversed then transposed)
+         * TRANSPOSED FOR EFFCIENECY AND LOCALITY
+         * magic_constant ugly thing with square roots and determinant of covariance
+         * TODO: Implement magic_matrix, magic_constant
+         */
+        struct LogProbabilityDensity {
+            thrust::device_ptr<float> perturbation;
+            thrust::device_ptr<float> log_probability_densities;
+
+
+            explicit LogProbabilityDensity(thrust::device_ptr<float> perturbation,
+            thrust::device_ptr<float> log_probability_densities)
+                    : perturbation {perturbation},
+                      log_probability_densities {log_probability_densities} { }
+
+            __device__ void operator() (size_t idx) const {
+                float perturb[action_dims];
+                memcpy(&perturb, &perturbation.get()[idx * action_dims], sizeof(float) * action_dims);
+
+                float res = 0;
+                for(uint8_t i= 0; i < action_dims; i++){
+
+                    //Dot product of pertubations and ith column
+                    const float intermediate =
+                        dot<float>( perturb, &cuda_globals::perturbs_incr_var_inv[i*action_dims], action_dims);
+
+                    //part i of dot product of final dot product
+                    res += intermediate * perturbation.get()[idx * action_dims +i] * controller_period;
+                }
+
+                //actually set the log probability distribution
+                log_probability_densities.get()[idx] = -.5*res;
+            }
+
+        };
+
         // Functors for cost calculation
 
-        // Gets us the costs to go
+        /** @brief Computes cost using the model and cost function, triangularizes both D and J
+         *
+         * @params brownians[in] brownian perturbation with mean 0
+         * sampled_action_trajectories[in] same as brownians?
+         * sampled_state_trajectories[in] for publishing states
+         * cost_to_gos[out] stores the negative cost so far
+         * log_prob_densities[in/out] stores the negative log_prob_densities so far
+         * action_trajectory_base[in]curr
+         * i[in] index over timesteps
+         *
+         */ //TODO: why do we need both brownians and sampled_action_trajectories?
         struct PopulateCost {
             float* brownians;
             float* sampled_action_trajectories;
@@ -105,6 +163,7 @@ namespace controls {
             float* sampled_state_trajectories;
 #endif
             float* cost_to_gos;
+            float* log_prob_densities;
 
             const DeviceAction* action_trajectory_base;
 
@@ -114,6 +173,7 @@ namespace controls {
                          thrust::device_ptr<float> sampled_state_trajectories,
 #endif
                          thrust::device_ptr<float> cost_to_gos,
+                         thrust::device_ptr<float> log_prob_densities,
                          const thrust::device_ptr<DeviceAction>& action_trajectory_base)
                     : brownians {brownians.get()},
                       sampled_action_trajectories {sampled_action_trajectories.get()},
@@ -121,11 +181,15 @@ namespace controls {
                       sampled_state_trajectories {sampled_state_trajectories.get()},
 #endif
                       cost_to_gos {cost_to_gos.get()},
+                      log_prob_densities {log_prob_densities.get()},
                       action_trajectory_base {action_trajectory_base.get()} {}
 
+                      // i iterates over num_samples
             __device__ void operator() (uint32_t i) const {
-                float j_curr = 0;
-                float x_curr[state_dims];
+                //Varibles used in ToGo Calculation
+                float j_curr = 0; // accumulator of negative cost so far
+                float d_curr = 0; // accumulator of negative log probability so far
+                float x_curr[state_dims]; // current world state
 
                 paranoid_assert(!any_nan(cuda_globals::curr_state, state_dims) && "State was nan in populate cost entry");
 
@@ -138,15 +202,17 @@ namespace controls {
                 paranoid_assert(!out_of_bounds && "Initial state was out of bounds");
 
                 // for each timestep, calculate cost and add to get cost to go
+                // iterate through time because state depends on previous state (can't parallelize)
                 for (uint32_t j = 0; j < num_timesteps; j++) {
                     float* u_ij = IDX_3D(sampled_action_trajectories, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, 0));
 
                     // VERY CURSED. We want the last action in the best guess action to be the same as the second
-                    // to last one (since we have to initialize it something). Taking the min of j and m - 1 saves
+                    // to last one (since we have to initialize it something). Taking the min of j and m - 2 saves
                     // us a host->device copy
                     const uint32_t idx = min(j, num_timesteps - 2);
                     paranoid_assert(!any_nan(action_trajectory_base[idx].data, action_dims) && "Control action base was nan");
 
+                    // perturb initial control action guess with the brownian, clamp to reasonable bounds
                     for (uint32_t k = 0; k < action_dims; k++) {
                         u_ij[k] = action_trajectory_base[idx].data[k]
                                   + *IDX_3D(brownians, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, k));
@@ -157,7 +223,7 @@ namespace controls {
                         );
                     }
 
-                    paranoid_assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
+                    assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
                     model(x_curr, u_ij, x_curr, controller_period);
                     paranoid_assert(!any_nan(x_curr, state_dims) && "State was nan after model step");
 
@@ -169,11 +235,20 @@ namespace controls {
                     );
                     memcpy(world_state, x_curr, sizeof(float) * state_dims);
 #endif
-
+                    // Converts D and J Matrices to To-Go
+                    // ALSO VERY CURSED FOR 2 REASONS:
+                    // REASON 1: We have decided to not lower-triangularize the cost-to-gos, but also the log prob
+                    // densities at the same time
+                    // REASON 2: To save a loop over timesteps, we have essentially calculated the negative cost
+                    // so far and stored it in cost_to_gos. During weighting, we will add back the total cost of the
+                    // entire trajectory (which is |cost_to_gos| at final timestep). Likewise with log_prob_densities
                     const float c = cost(x_curr, init_curv_pose[0], controller_period * (j + 1));
-
+                    const float d = log_prob_densities[i*num_timesteps + j];
                     j_curr -= c;
+                    d_curr -= d;
                     cost_to_gos[i * num_timesteps + j] = j_curr;
+                    log_prob_densities[i * num_timesteps + j] = d_curr;
+                    
                     paranoid_assert(!isnan(c) && "cost-to-go was nan");
                 }
             }
@@ -213,16 +288,48 @@ namespace controls {
             __device__ ActionWeightTuple operator()(const ActionWeightTuple& action_weight_t0,
                                                     const ActionWeightTuple& action_weight_t1) const
             {
-                const float w0 = action_weight_t0.weight;
-                const float w1 = action_weight_t1.weight;
-                const DeviceAction& a0 = action_weight_t0.action;
-                const DeviceAction& a1 = action_weight_t1.action;
+                // log(1 + exp(log w2 - log w1)) + log w1
 
-                return {
-                    w0 + w1 == 0 ?
-                        DeviceAction {} : (w0 * a0 + w1 * a1) / (w0 + w1),
-                    w0 + w1
-                };
+                DeviceAction a_min, a_max;
+                float lw_min, lw_max;
+                if (action_weight_t1.log_weight >= action_weight_t0.log_weight) {
+                    a_min = action_weight_t0.action;
+                    a_max = action_weight_t1.action;
+                    lw_min = action_weight_t0.log_weight;
+                    lw_max = action_weight_t1.log_weight;
+                } else {
+                    a_min = action_weight_t1.action;
+                    a_max = action_weight_t0.action;
+                    lw_min = action_weight_t1.log_weight;
+                    lw_max = action_weight_t0.log_weight;
+                }
+
+                paranoid_assert(!isnan(lw_min) && !isnan(lw_max) && "log weight was nan in action reduce start");
+                paranoid_assert(!any_nan(a_min.data, action_dims) && !any_nan(a_max.data, action_dims) && "Action was nan in action reduce start");
+
+                paranoid_assert(lw_min <= lw_max && "Log weights were not sorted");
+
+                const bool lw_min_inf = isinf(lw_min);
+                const bool lw_max_inf = isinf(lw_max);
+
+                paranoid_assert(!(lw_min_inf && lw_max_inf && lw_min > 0 && lw_max > 0) && "Both log weights were inf and positive");
+
+                ActionWeightTuple res;
+                if (lw_max_inf && lw_max < 0) {
+                    res = {DeviceAction {}, -CUDART_INF_F};
+                } else {
+                    const float lw_min_prime = lw_min - lw_max;
+                    const float w_min_prime = expf(lw_min_prime);
+                    res = {
+                        (a_max + w_min_prime * a_min) / (1 + w_min_prime),
+                        lw_max + log1pf(w_min_prime)
+                    };
+                }
+
+                paranoid_assert(!isnan(res.log_weight) && "log weight was nan in action reduce end");
+                paranoid_assert(!any_nan(res.action.data, action_dims) && "Action was nan in action reduce end");
+
+                return res;
             }
         };
 
@@ -233,10 +340,12 @@ namespace controls {
         struct IndexToActionWeightTuple {
             const float* action_trajectories;
             const float* cost_to_gos;
+            const float* log_prob_densities;
 
-            __device__ IndexToActionWeightTuple (const float* action_trajectories, const float* cost_to_gos)
+            __device__ IndexToActionWeightTuple (const float* action_trajectories, const float* cost_to_gos, const float* log_prob_densities)
                     : action_trajectories {action_trajectories},
-                      cost_to_gos {cost_to_gos} {}
+                      cost_to_gos {cost_to_gos},
+                      log_prob_densities {log_prob_densities} {}
 
             /**
              * @param idx refers to the index for the timesteps x samples matrix
@@ -265,15 +374,20 @@ namespace controls {
 
                 float cost_to_go;
                 if (isinf(final_step)) {
-                    cost_to_go = std::numeric_limits<float>::infinity();
+                    cost_to_go = CUDART_INF_F;
                 } else {
                     const float anthony_adjustment = penult_step - 2 * final_step;
                     cost_to_go = cost_to_gos[i * num_timesteps + j] + anthony_adjustment;
                 }
                 paranoid_assert(!isnan(cost_to_go) && "cost-to-go was nan in tuple generation");
 
-                res.weight = expf(-1.0f / temperature * cost_to_go);
-                paranoid_assert(!isnan(res.weight) && "weight was nan");
+                const float ayush_adjustment = log_prob_densities[(i + 1) * num_timesteps - 2] - 2 * log_prob_densities[(i + 1) * num_timesteps - 1];
+                const float log_prob_density = log_prob_densities[i * num_timesteps + j] + ayush_adjustment;
+                paranoid_assert(!isnan(log_prob_density) && "log prob density was nan in tuple generation");
+                // printf("j: %i Log prob density: %f\n", j, log_prob_density);
+
+                res.log_weight = -1.0f / temperature * cost_to_go - log_prob_density;
+                paranoid_assert(!isnan(res.log_weight) && "log weight was nan");
 
                 return res;
             }
@@ -285,15 +399,17 @@ namespace controls {
 
             const float* action_trajectories;
             const float* cost_to_gos;
+            const float* log_probability_densities;
 
             const ActionAverage reduction_functor {};
 
-            ReduceTimestep (DeviceAction* averaged_action, DeviceAction* action_trajectory_base, const float* action_trajectories, const float* cost_to_gos)
+            ReduceTimestep (DeviceAction* averaged_action, DeviceAction* action_trajectory_base, const float* action_trajectories, const float* cost_to_gos, const float* log_probability_densities)
                     : averaged_action {averaged_action},
                       action_trajectory_base {action_trajectory_base},
                       action_trajectories {action_trajectories},
-                      cost_to_gos {cost_to_gos} { }
-
+                      cost_to_gos {cost_to_gos},
+                      log_probability_densities {log_probability_densities}
+                      { }
             __device__ void operator() (const uint32_t idx) {
                 // idx ranges from 0 to num_timesteps - 1
                 // idx represents a timestep
@@ -303,10 +419,10 @@ namespace controls {
                 const ActionWeightTuple res = thrust::transform_reduce(
                         thrust::device,
                         indices, indices + num_samples,
-                        IndexToActionWeightTuple {action_trajectories, cost_to_gos},
-                        ActionWeightTuple { DeviceAction {}, 0 }, reduction_functor);
+                        IndexToActionWeightTuple {action_trajectories, cost_to_gos, log_probability_densities},
+                        ActionWeightTuple { DeviceAction {}, -CUDART_INF_F }, reduction_functor);
 
-                if (res.weight == 0) {
+                if (res.log_weight == 0) {
                     printf("Action at timestep %i had 0 weight. Using previous.\n", idx);
                     averaged_action[idx] = action_trajectory_base[min(idx, num_timesteps - 2)];
                 } else {

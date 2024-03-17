@@ -25,6 +25,8 @@ namespace controls {
 
         extern __constant__ const float perturbs_incr_std[action_dims * action_dims];
 
+        extern __constant__ const float perturbs_incr_var_inv[action_dims * action_dims];
+
         extern __constant__ const float action_min[action_dims];
         extern __constant__ const float action_max[action_dims];
         extern __constant__ const float action_deriv_min[action_dims];

@@ -71,6 +71,12 @@ namespace controls {
                     options
                 );
 
+                m_world_pose_subscription = create_subscription<PoseMsg>(
+                    world_pose_topic_name, world_pose_qos,
+                    [this] (const PoseMsg::SharedPtr msg) { world_pose_callback(*msg); },
+                    options
+                );
+
                 // start mppi :D
                 // this won't immediately begin publishing, since it waits for the first dirty state
                 launch_mppi().detach();
@@ -144,7 +150,12 @@ namespace controls {
                 msg.torque_fr = action[action_torque_idx] / 4;
                 msg.torque_rl = action[action_torque_idx] / 4;
                 msg.torque_rr = action[action_torque_idx] / 4;
-
+                if (rear_wheel_drive) {
+                    msg.torque_fl = 0;
+                    msg.torque_fr = 0;
+                    msg.torque_rl = action[action_torque_idx] / 2;
+                    msg.torque_rr = action[action_torque_idx] / 2;
+                }
                 m_action_publisher->publish(msg);
             }
 
@@ -164,8 +175,12 @@ namespace controls {
 
                         // send state to device (i.e. cuda globals)
                         // (also serves to lock state since nothing else updates gpu state)
-                        std::cout << "syncing state to device" << std::endl;
-                        m_state_estimator->sync_to_device();
+                        {
+                            std::lock_guard<std::mutex> guard {m_action_read_mut};
+                            std::cout << "syncing state to device" << std::endl;
+                            m_state_estimator->sync_to_device(m_action_read->at(action_swangle_idx));
+                        }
+
 
                         // we don't need the host state anymore, so release the lock and let state callbacks proceed
                         state_lock.unlock();
