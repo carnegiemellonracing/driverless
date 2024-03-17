@@ -13,10 +13,15 @@ namespace controls {
             void on_action(const ActionMsg& msg);
             void publish_spline();
             void publish_state();
+            void publish_quat();
+            void publish_twist();
 
             rclcpp::Subscription<ActionMsg>::SharedPtr m_subscriber;
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
             rclcpp::Publisher<StateMsg>::SharedPtr m_state_publisher;
+            rclcpp::Publisher<QuatMsg>::SharedPtr m_quat_publisher;
+            rclcpp::Publish<TwistMsg>::SharedPtr m_twist_publisher;
+
             rclcpp::TimerBase::SharedPtr m_spline_timer;
 
             // thomas model state
