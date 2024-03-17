@@ -10,25 +10,20 @@ namespace controls {
         __constant__ float curr_state[state_dims] = {10, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 
+        constexpr float swangle_swangle_std = 0.1;
+        constexpr float torque_torque_std = 500;
         // NOTE:WHEN CHANGING ENSURE YOU ALSO CHANGE MAGIC MATRIX AND MAGIC NUMBER
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
-            0.25, 0,
-            0, 1000
+            swangle_swangle_std, 0,
+            0, torque_torque_std
         };
 
-        // covariance matrix is perturbs_incr_std squared:
-        // (1/16, 0)
-        // (0, 1E6)
 
-        // NOTE: magic_matrix and magic_number are dependent on perturbs_incr_std
-        // hard coded for efficiency reasons (determinant/inverse/sqrt can't be calculated at compile time)
-        __constant__ const float magic_matrix[action_dims * action_dims] = {
-            16, 0,
-            0, 1E-6
+        // TODO: make sigma inverse more general (for non diagonal A)
+        __constant__ const float perturbs_incr_var_inv[action_dims * action_dims] = {
+            1 / (swangle_swangle_std * swangle_swangle_std), 0,
+            0, 1 / (torque_torque_std * torque_torque_std)
         };
-
-        //-ln(sqrt((2pi)^action_dims * det(covariance matrix)))
-        __constant__ const float magic_number= 3.68358385145;
 
         __constant__ const float action_min[action_dims] = {
             -0.5, -1000

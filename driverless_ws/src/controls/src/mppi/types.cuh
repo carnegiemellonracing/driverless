@@ -12,7 +12,7 @@ namespace controls {
 
         struct ActionWeightTuple {
             DeviceAction action; // weighted average action
-            float weight; // total weight
+            float log_weight; // total weight
         };
 
         __host__ __device__ static DeviceAction operator+ (const DeviceAction& a1, const DeviceAction& a2) {
