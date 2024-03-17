@@ -7,6 +7,8 @@
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
 #include <model/two_track/codegen/minimal_state_function.h>
+#include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include "test_node.hpp"
 
@@ -24,9 +26,15 @@ namespace controls {
 
               m_spline_timer {create_wall_timer(
                   std::chrono::duration<float, std::milli>(100),
-                    [this]{ publish_spline(); })},
+                    [this]{ publish_spline(); publish_quat(); publish_twist(); publish_pose(); })},
 
-              m_state_publisher {create_publisher<StateMsg>(state_topic_name, state_qos)} {
+              m_state_publisher {create_publisher<StateMsg>(state_topic_name, state_qos)},
+              
+              m_quat_publisher {create_publisher<QuatMsg>(world_quat_topic_name, world_quat_qos)},
+
+              m_twist_publisher {create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
+
+              m_pose_publisher {create_publisher<PoseMsg>(world_pose_topic_name, world_pose_qos)} {
         }
 
         SplineMsg sine_spline(float period, float amplitude, float progress, float density) {
@@ -155,7 +163,10 @@ namespace controls {
             }
 
             gsl_odeiv2_driver_free(driver);
-            publish_state();
+
+            // publish_state();
+            publish_quat();
+            publish_twist();
         }
 
         void TestNode::publish_spline() {
@@ -187,6 +198,49 @@ namespace controls {
             msg.whl_speed_r = m_world_state[11] + m_world_state[12];
 
             m_state_publisher->publish(msg);
+        }
+
+        void TestNode::publish_quat() {
+            std::cout << "Publishing state (quaternions)" << std::endl;
+            std::cout << "Time: " << m_time << std::endl;
+            
+            glm::dquat quat = glm::angleAxis(m_world_state[2], glm::dvec3 {0.0, 0.0, 1.0});
+
+            QuatMsg msg {};
+            msg.quaternion.w = quat.w;
+            msg.quaternion.x = quat.x;
+            msg.quaternion.y = quat.y;
+            msg.quaternion.z = quat.z;
+
+            m_quat_publisher->publish(msg);
+        }
+
+        void TestNode::publish_twist() {
+            std::cout << "Publishing state (twist)" << std::endl;
+            std::cout << "Time: " << m_time << std::endl;
+
+            TwistMsg msg {};
+            msg.twist.linear.x = m_world_state[3];
+            msg.twist.linear.y = m_world_state[4];
+            msg.twist.linear.z = 0.0;
+
+            msg.twist.angular.x = 0.0;
+            msg.twist.angular.y = 0.0;
+            msg.twist.angular.z = m_world_state[5];
+
+            m_twist_publisher->publish(msg);
+        }
+
+        void TestNode::publish_pose() {
+            std::cout << "Publishing state (pose)" << std::endl;
+            std::cout << "Time: " << m_time << std::endl;
+
+            PoseMsg msg {};
+            msg.pose.position.x = m_world_state[state_x_idx];
+            msg.pose.position.y = m_world_state[state_y_idx];
+            msg.pose.position.z = 0.0;
+
+            m_pose_publisher->publish(msg);
         }
     }
 }

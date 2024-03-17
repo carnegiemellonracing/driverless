@@ -17,7 +17,7 @@ namespace controls {
             virtual void on_world_pose(const PoseMsg& pose_msg) =0;
             virtual void on_state(const StateMsg& state_msg) =0;
 
-            virtual void sync_to_device() =0;
+            virtual void sync_to_device(float swangle) =0;
 
             virtual bool is_ready() = 0;
 

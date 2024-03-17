@@ -33,6 +33,13 @@ namespace controls {
         private:
             void generate_brownians();
 
+            void generate_log_probability_density();
+
+            /**
+             * @brief Calculates costs to go
+             */
+            void populate_cost();
+
             /**
              * Retrieves action based on cost to go using reduction.
              * @returns Action
@@ -40,20 +47,20 @@ namespace controls {
             thrust::device_vector<DeviceAction> reduce_actions();
 
             /**
-             * Calculates costs to go
-             */
-            void populate_cost();
-
-
-            /**
-             * num_samples x num_timesteps x actions_dims device tensor. Used to store action brownians,
-             * perturbations, and action trajectories at different points in the algorithm.
+             * num_samples x num_timesteps x actions_dims device tensor. Used to store brownians,
+             * perturbed actions, and action trajectories at different points in the algorithm.
              */
             thrust::device_vector<float> m_action_trajectories;
 
             /**
-            * num_samples x num_timesteps array of costs to go. Used for action weighting.
-            */
+             * num_samples x num_timesteps device tensor. Used to store the log probability densities (calculated after
+             * brownian generations), then made "to-go"
+             */
+            thrust::device_vector<float> m_log_prob_densities;
+
+            /**
+             * num_samples x num_timesteps array of costs to go. Used for action weighting.
+             */
             thrust::device_vector<float> m_cost_to_gos;
 
 
