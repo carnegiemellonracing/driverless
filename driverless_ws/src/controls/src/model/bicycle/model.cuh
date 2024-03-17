@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <cmath>
-#include <cuda_utils.cuh>
+#include <utils/cuda_utils.cuh>
 #include <cassert>
 
 //SOURSE: SEE OVERLEAF MPPI DOCUMENTATION
@@ -28,39 +28,14 @@ namespace controls {
 
 
             //tire model constants
-            constexpr float max_force_x_at_1N = 1.0f; //Maximum force x TO IMPLEMENT
+            constexpr float max_force_x_at_1N = 0.8f; //Maximum force x TO IMPLEMENT
             constexpr float slip_ratio_max_x = 0.1; //slip ratio that yields the max force TO IMPLEMENT
-            constexpr float post_saturation_force_x = 1.0; // After tires start slipping what force we get
+            constexpr float post_saturation_force_x = 0.6; // After tires start slipping what force we get
             constexpr float max_force_y_at_1N = 1.0f; //Maximum force Y TO IMPLEMENT
             constexpr float slip_angle_max_y = 0.1; //slip ratio that yields the max force TO IMPLEMENT
-            constexpr float post_saturation_force_y = 1.0; // After tires start slipping what force we get
+            constexpr float post_saturation_force_y = 0.8; // After tires start slipping what force we get
 
             constexpr float slip_ratio_saturation = 0.1; // minimum velocity magnitude for wheel slip
-
-            //trig functions in degrees
-//            __host__ __device__ static float cosd(float degrees) {
-//                return cosf(degrees * pi / 180);
-//            }
-//
-//            //trig functions in degrees
-//            __host__ __device__ static float sind(float degrees) {
-//                return sinf(degrees * pi / 180);
-//            }
-//
-//            //trig functions in degrees
-//            __host__ __device__ static float tand(float degrees) {
-//                return tanf(degrees * pi / 180);
-//            }
-//
-//            //trig functions in degrees
-//            __host__ __device__ static float cotd(float degrees) {
-//                return 1 / tanf(degrees * pi / 180);
-//            }
-//
-//            //trig functions in degrees
-//            __host__ __device__ static float arccosd(float input) {
-//                return 180*acos(input)/pi;
-//            }
 
             template<typename T>
             __host__ __device__ int sign(T x) {
@@ -90,18 +65,20 @@ namespace controls {
                     float numerator = load * slip_ratio * max_force_y_at_1N;
                     float within_sqrt = square(tanf(slip_angle)) +
                                         square((max_force_y_at_1N / max_force_x_at_1N));
-                    assert(!std::isnan(within_sqrt) && "within sqrt was nan in linear x");
+                    paranoid_assert(!std::isnan(within_sqrt) && "within sqrt was nan in linear x");
                     float denominator = slip_ratio_max_x * sqrtf(within_sqrt);
-                    assert(denominator > 0);
+                    paranoid_assert(denominator > 0 && "denominator was 0 in linear x");
                     forces[0] = numerator / denominator;
+                    paranoid_assert(!std::isnan(forces[0]) && "forces[0] was nan in linear x");
                 } else {
                     float numerator = load * post_saturation_force_x * max_force_y_at_1N;
                     float within_sqrt = square(tanf(slip_angle)) +
                                         square(max_force_y_at_1N / max_force_x_at_1N);
-                    assert(!std::isnan(within_sqrt) && "within sqrt was nan in saturated x");
+                    paranoid_assert(!std::isnan(within_sqrt) && "within sqrt was nan in saturated x");
                     float denominator = max_force_x_at_1N * sqrtf(within_sqrt);
-                    assert(denominator > 0);
+                    paranoid_assert(denominator > 0 && "denominator was 0 in saturated x");
                     forces[0] = sign(slip_ratio) * numerator / denominator;
+                    paranoid_assert(!std::isnan(forces[0]) && "forces[0] was nan in saturated x");
                 }
 
                 //computes y force
@@ -110,14 +87,17 @@ namespace controls {
                 } else {
                     forces[1] = load * post_saturation_force_y * sign(slip_angle);
                 }
+                paranoid_assert(!std::isnan(forces[1]) && "forces[1] was nan in tire model");
             }
 
             //calculates slip ratio
             __host__ __device__ static float calculate_slip_ratio(float wheel_speed, float velocity) {
                 velocity = abs(velocity);
+
                 if (velocity == 0) {
                     return sign(wheel_speed) * slip_ratio_saturation;
                 }
+
                 float tangential_velo = wheel_speed * WHEEL_RADIUS;
                 return clamp(
                         (tangential_velo - velocity) / velocity,
@@ -219,7 +199,6 @@ namespace controls {
                 //gets drag
                 // float drag_x = LOGITUDNAL_AERO_CONSTANT * square(x_dot_car);
                 // float drag_y = LATERAL_AERO_CONSTANT * square(y_dot_car);
-
 
                 //Updates dot array
                 state_dot[state_x_idx] = x_dot_car * cosf(yaw_world) - y_dot_car * sinf(yaw_world);

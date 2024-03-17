@@ -1,7 +1,11 @@
 #pragma once
 
+
 #include <thrust/device_ptr.h>
 #include <types.hpp>
+#include <vector>
+#include <vector>
+#include <glm/glm.hpp>
 
 #include "cuda_constants.cuh"
 #include "types.cuh"
@@ -13,17 +17,35 @@ namespace controls {
 
         class MppiController_Impl : public MppiController {
         public:
-            MppiController_Impl();
+            MppiController_Impl(std::mutex& mutex);
 
             Action generate_action() override;
 
-#ifdef PUBLISH_STATES
+
+#ifdef DISPLAY
             std::vector<float> last_state_trajectories() override;
+
+            std::vector<glm::fvec2> last_reduced_state_trajectory() override;
 #endif
 
-            ~MppiController_Impl() override;
+             ~MppiController_Impl() override;
 
         private:
+            void generate_brownians();
+
+            void generate_log_probability_density();
+
+            /**
+             * @brief Calculates costs to go
+             */
+            void populate_cost();
+
+            /**
+             * Retrieves action based on cost to go using reduction.
+             * @returns Action
+             */
+            thrust::device_vector<DeviceAction> reduce_actions();
+
             /**
              * num_samples x num_timesteps x actions_dims device tensor. Used to store brownians,
              * perturbed actions, and action trajectories at different points in the algorithm.
@@ -41,42 +63,24 @@ namespace controls {
              */
             thrust::device_vector<float> m_cost_to_gos;
 
+
             /**
              * num_timesteps x action_dims array. Best-guess action trajectory to which perturbations are added.
              */
             thrust::device_vector<DeviceAction> m_last_action_trajectory;
+#ifdef DISPLAY
+            DeviceAction m_last_action;
 
-#ifdef PUBLISH_STATES
             /**
-             * \brief State trajectories generated from curr_state and action trajectories. Sent to rviz when
-             *        debugging.
+             * State trajectories generated from curr_state and action trajectories. Sent to display when enabled
              */
             thrust::device_vector<float> m_state_trajectories;
-
-            std::mutex m_state_trajectories_mutex;
+            State m_last_curr_state;
 #endif
 
             curandGenerator_t m_rng;
 
-            void generate_brownians();
-
-            void generate_log_probability_density();
-
-            /**
-             * @brief Retrieves action based on cost to go using reduction.
-             * @return Action
-             */
-            thrust::device_vector<DeviceAction> reduce_actions();
-
-            /**
-             * @brief Calculates costs to go
-             */
-            void populate_cost();
-
+            std::mutex& m_mutex;
         };
-
-
-
-
     }
 }
