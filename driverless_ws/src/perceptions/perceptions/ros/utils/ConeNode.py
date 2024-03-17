@@ -10,9 +10,11 @@ from perc22a.predictors.utils.cones import Cones
 from perc22a.predictors.utils.transform.transform import PoseTransformations
 import perceptions.ros.utils.conversions as conv
 
+from perc22a.utils.Timer import Timer
+
 # perceptions Library visualization functions (for 3D data)
-from perc22a.predictors.utils.vis.Vis3D import Vis3D
-import open3d as o3d
+# from perc22a.predictors.utils.vis.Vis3D import Vis3D
+from perc22a.predictors.utils.vis.Vis2D import Vis2D
 
 from perceptions.topics import \
     YOLOV5_ZED_CONE_TOPIC, \
@@ -38,10 +40,17 @@ RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
 CONE_NODE_NAME = "cone_node"
 PUBLISH_FPS = 10
 VIS_UPDATE_FPS = 25
+MAX_ZED_CONE_RANGE = 12.5
+
+def within_range(coords):
+    return np.linalg.norm(np.array(coords)) <= MAX_ZED_CONE_RANGE
+
+def zero_cone_z(coords):
+    return [coords[0], coords[1], 0]
 
 class ConeNode(Node):
 
-    def __init__(self, debug=False, visualize_points=True):
+    def __init__(self, debug=True, visualize_points=True):
         super().__init__(CONE_NODE_NAME)
 
         self.cones = Cones()
@@ -53,7 +62,7 @@ class ConeNode(Node):
 
         # initialize point cloud subscriber for visualization (and pose transformer)
         if debug and visualize_points:
-            self.create_subscription(PointCloud2, POINT_TOPIC, self.point_cloud_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+            # self.create_subscription(PointCloud2, POINT_TOPIC, self.point_cloud_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
             self.pose_transformer = PoseTransformations()
 
         # initialize cone publisher
@@ -62,7 +71,8 @@ class ConeNode(Node):
 
         # deubgging mode visualizer
         if debug:
-            self.vis = Vis3D()
+#            self.vis3D = Vis3D()
+            self.vis2D = Vis2D()
             self.display_timer = self.create_timer(1/VIS_UPDATE_FPS, self.update_vis)
 
         # if debugging, initialize visualizer
@@ -70,11 +80,16 @@ class ConeNode(Node):
         self.visualize_points = visualize_points
         self.stop = False
 
+        # sufficient cone policy implementation
+        self.got_zed_left = False
+        self.got_zed_right = False
+
         return
 
     def update_vis(self):
         # update and interact with vis
-        self.vis.update()
+ #       self.vis3D.update()
+        self.vis2D.update()
 
         return
     
@@ -86,22 +101,34 @@ class ConeNode(Node):
         points = points[:, :3]
         points = points[:, [1, 0, 2]]
         points[:, 0] = -points[:, 0]
-        points = self.pose_transformer.to_origin("lidar", points, inverse=False)
+        
+        t = Timer()
 
-        self.vis.set_points(points)
+        t.start("pose")
+        points = self.pose_transformer.to_origin("lidar", points, inverse=False)
+        t.end("pose")
+
+  #      self.vis3D.set_points(points)
+        self.vis2D.set_points(points)
 
 
     def yolov5_zed_cone_callback(self, msg):
         '''receive cones from yolov5_zed_node predictor'''
         cones = conv.msg_to_cones(msg)
+        cones.filter(within_range)
         self.cones.add_cones(cones)
+
+        self.got_zed_right = True
 
         return
     
     def yolov5_zed2_cone_callback(self, msg):
         '''receive cones from yolov5_zed2_node predictor'''
         cones = conv.msg_to_cones(msg)
+        cones.filter(within_range)
         self.cones.add_cones(cones)
+
+        self.got_zed_left = True
 
         return
 
@@ -113,11 +140,12 @@ class ConeNode(Node):
         return
     
     def sufficient_cones(self):
-        return len(self.cones) > 0
+        return len(self.cones) > 0 and self.got_zed_left and self.got_zed_right
 
     def flush_cones(self):
         self.cones = Cones()
-
+        self.got_zed_left = False
+        self.got_zed_right = False
         return
 
     def publish_cones(self):
@@ -128,7 +156,11 @@ class ConeNode(Node):
 
         # update visualizer
         if self.debug:
-            self.vis.set_cones(self.cones)
+   #         self.vis3D.set_cones(self.cones)
+            self.vis2D.set_cones(self.cones)
+
+        # reset the height of the cone to 0
+        self.cones.map(zero_cone_z)
 
         # publish cones
         print(f"publishing {len(self.cones)} cones")
