@@ -137,6 +137,7 @@ namespace controls {
             rclcpp::Subscription<StateMsg>::SharedPtr m_state_subscription;
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription;
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription;
+            rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription;
 
 
             // Action double buffer

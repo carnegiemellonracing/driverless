@@ -20,7 +20,7 @@ namespace controls {
             void on_world_pose(const PoseMsg& pose_msg) override;
             void on_state(const StateMsg& state_msg) override;
 
-            void sync_to_device() override;
+            void sync_to_device(float swangle) override;
 
             bool is_ready() override;
 
@@ -44,6 +44,7 @@ namespace controls {
             void gen_curv_frame_lookup_framebuffer();
             void gen_gl_path();
             void fill_path_buffers(glm::fvec2 car_pos);
+            void estimate_whl_speeds(float swangle);
 
             std::vector<glm::fvec2> m_spline_frames;
 

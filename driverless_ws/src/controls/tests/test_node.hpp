@@ -15,17 +15,19 @@ namespace controls {
             void publish_state();
             void publish_quat();
             void publish_twist();
+            void publish_pose();
 
             rclcpp::Subscription<ActionMsg>::SharedPtr m_subscriber;
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
             rclcpp::Publisher<StateMsg>::SharedPtr m_state_publisher;
             rclcpp::Publisher<QuatMsg>::SharedPtr m_quat_publisher;
-            rclcpp::Publish<TwistMsg>::SharedPtr m_twist_publisher;
+            rclcpp::Publisher<PoseMsg>::SharedPtr m_pose_publisher;
+            rclcpp::Publisher<TwistMsg>::SharedPtr m_twist_publisher;
 
             rclcpp::TimerBase::SharedPtr m_spline_timer;
 
             // thomas model state
-            std::array<double, 13> m_world_state {-3, 0.5, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
+            std::array<double, 13> m_world_state {-5, 0.5, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
 
             double m_time = 0;
         };
