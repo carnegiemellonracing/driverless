@@ -22,6 +22,7 @@ namespace controls {
         MppiController_Impl::MppiController_Impl(std::mutex& mutex)
             : m_action_trajectories(num_action_trajectories),
               m_cost_to_gos(num_samples * num_timesteps),
+              m_log_prob_densities(num_samples * num_timesteps),
               m_rng(),
 #ifdef DISPLAY
               m_state_trajectories(num_samples * num_timesteps * state_dims),
@@ -160,8 +161,10 @@ namespace controls {
             
             // Calculates Log probability density
             thrust::counting_iterator<size_t> indices {0};
-            thrust::for_each(indices, indices + num_action_trajectories, LogProbabilityDensity {m_action_trajectories.data(),
-            m_log_prob_densities.data()});
+            thrust::for_each(
+                indices, indices + num_samples * num_timesteps,
+                LogProbabilityDensity {m_action_trajectories.data(), m_log_prob_densities.data()}
+            );
         }
 
 

@@ -30,7 +30,7 @@ namespace controls {
 
 
     /** Controller target period, in sec */
-    constexpr uint32_t num_samples = 1024 * 8;
+    constexpr uint32_t num_samples = 1024 * 32;
     constexpr uint32_t num_timesteps = 96;
     constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 10;

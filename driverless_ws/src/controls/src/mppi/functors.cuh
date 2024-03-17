@@ -6,6 +6,7 @@
 #include <utils/cuda_utils.cuh>
 #include <cuda_constants.cuh>
 #include <cuda_globals/helpers.cuh>
+#include <math_constants.h>
 
 #include "types.cuh"
 
@@ -52,7 +53,7 @@ namespace controls {
             cuda_globals::sample_curv_state(world_state, curv_pose, out_out_bounds);
 
             if (out_out_bounds) {
-                return std::numeric_limits<float>::infinity();
+                return CUDART_INF_F;
             }
 
             const float progress = curv_pose[0];
@@ -115,30 +116,26 @@ namespace controls {
 
             explicit LogProbabilityDensity(thrust::device_ptr<float> perturbation,
             thrust::device_ptr<float> log_probability_densities)
-                    : perturbation {perturbation}
-                    log_probability_densities {log_probability_densities} { }
+                    : perturbation {perturbation},
+                      log_probability_densities {log_probability_densities} { }
 
             __device__ void operator() (size_t idx) const {
-                // Ensures start of control action
-                if(idx%action_dims==0){
-                    const auto res = 0;
+                float perturb[action_dims];
+                memcpy(&perturb, &perturbation.get()[idx * action_dims], sizeof(float) * action_dims);
 
-                    for(i=0; i<action_dims; i++){
+                float res = 0;
+                for(uint8_t i= 0; i < action_dims; i++){
 
-                        //Dot product of pertubations and ith column
-                        //TODO: what is dot?
-                        const intermediate = (dot<float>( &perturbation.get()[idx],
-                            &cuda_globals::magic_matrix[i*action_dims], action_dims));
+                    //Dot product of pertubations and ith column
+                    const float intermediate =
+                        dot<float>( perturb, &cuda_globals::perturbs_incr_var_inv[i*action_dims], action_dims);
 
-                        //part i of dot product of final dot product
-                        res += intermediate * perturbation.get()[idx+i];
-                    }
-p
-                    //actually set the log probability distribution
-                    log_probability_densities.get()[idx] =  magic_constant - .5*res;
-
+                    //part i of dot product of final dot product
+                    res += intermediate * perturbation.get()[idx * action_dims +i] * controller_period;
                 }
 
+                //actually set the log probability distribution
+                log_probability_densities.get()[idx] = -.5*res;
             }
 
         };
@@ -288,16 +285,48 @@ p
             __device__ ActionWeightTuple operator()(const ActionWeightTuple& action_weight_t0,
                                                     const ActionWeightTuple& action_weight_t1) const
             {
-                const float w0 = action_weight_t0.weight;
-                const float w1 = action_weight_t1.weight;
-                const DeviceAction& a0 = action_weight_t0.action;
-                const DeviceAction& a1 = action_weight_t1.action;
+                // log(1 + exp(log w2 - log w1)) + log w1
 
-                return {
-                    w0 + w1 == 0 ?
-                        DeviceAction {} : (w0 * a0 + w1 * a1) / (w0 + w1),
-                    w0 + w1
-                };
+                DeviceAction a_min, a_max;
+                float lw_min, lw_max;
+                if (action_weight_t1.log_weight >= action_weight_t0.log_weight) {
+                    a_min = action_weight_t0.action;
+                    a_max = action_weight_t1.action;
+                    lw_min = action_weight_t0.log_weight;
+                    lw_max = action_weight_t1.log_weight;
+                } else {
+                    a_min = action_weight_t1.action;
+                    a_max = action_weight_t0.action;
+                    lw_min = action_weight_t1.log_weight;
+                    lw_max = action_weight_t0.log_weight;
+                }
+
+                paranoid_assert(!isnan(lw_min) && !isnan(lw_max) && "log weight was nan in action reduce start");
+                paranoid_assert(!any_nan(a_min.data, action_dims) && !any_nan(a_max.data, action_dims) && "Action was nan in action reduce start");
+
+                paranoid_assert(lw_min <= lw_max && "Log weights were not sorted");
+
+                const bool lw_min_inf = isinf(lw_min);
+                const bool lw_max_inf = isinf(lw_max);
+
+                paranoid_assert(!(lw_min_inf && lw_max_inf && lw_min > 0 && lw_max > 0) && "Both log weights were inf and positive");
+
+                ActionWeightTuple res;
+                if (lw_max_inf && lw_max < 0) {
+                    res = {DeviceAction {}, -CUDART_INF_F};
+                } else {
+                    const float lw_min_prime = lw_min - lw_max;
+                    const float w_min_prime = expf(lw_min_prime);
+                    res = {
+                        (a_max + w_min_prime * a_min) / (1 + w_min_prime),
+                        lw_max + log1pf(w_min_prime)
+                    };
+                }
+
+                paranoid_assert(!isnan(res.log_weight) && "log weight was nan in action reduce end");
+                paranoid_assert(!any_nan(res.action.data, action_dims) && "Action was nan in action reduce end");
+
+                return res;
             }
         };
 
@@ -310,7 +339,7 @@ p
             const float* cost_to_gos;
             const float* log_prob_densities;
 
-            __device__ IndexToActionWeightTuple (const float* action_trajectories, const float* cost_to_gos)
+            __device__ IndexToActionWeightTuple (const float* action_trajectories, const float* cost_to_gos, const float* log_prob_densities)
                     : action_trajectories {action_trajectories},
                       cost_to_gos {cost_to_gos},
                       log_prob_densities {log_prob_densities} {}
@@ -342,7 +371,7 @@ p
 
                 float cost_to_go;
                 if (isinf(final_step)) {
-                    cost_to_go = std::numeric_limits<float>::infinity();
+                    cost_to_go = CUDART_INF_F;
                 } else {
                     const float anthony_adjustment = penult_step - 2 * final_step;
                     cost_to_go = cost_to_gos[i * num_timesteps + j] + anthony_adjustment;
@@ -351,9 +380,11 @@ p
 
                 const float ayush_adjustment = log_prob_densities[(i + 1) * num_timesteps - 2] - 2 * log_prob_densities[(i + 1) * num_timesteps - 1];
                 const float log_prob_density = log_prob_densities[i * num_timesteps + j] + ayush_adjustment;
+                paranoid_assert(!isnan(log_prob_density) && "log prob density was nan in tuple generation");
+                // printf("j: %i Log prob density: %f\n", j, log_prob_density);
 
-                res.weight = expf(-1.0f / temperature * cost_to_go - log_prob_density);
-                paranoid_assert(!isnan(res.weight) && "weight was nan");
+                res.log_weight = -1.0f / temperature * cost_to_go - log_prob_density;
+                paranoid_assert(!isnan(res.log_weight) && "log weight was nan");
 
                 return res;
             }
@@ -369,11 +400,11 @@ p
 
             const ActionAverage reduction_functor {};
 
-            ReduceTimestep (DeviceAction* averaged_action, DeviceAction* action_trajectory_base, const float* action_trajectories, const float* cost_to_gos, const float log_probability_densities)
+            ReduceTimestep (DeviceAction* averaged_action, DeviceAction* action_trajectory_base, const float* action_trajectories, const float* cost_to_gos, const float* log_probability_densities)
                     : averaged_action {averaged_action},
                       action_trajectory_base {action_trajectory_base},
                       action_trajectories {action_trajectories},
-                      cost_to_gos {cost_to_gos}
+                      cost_to_gos {cost_to_gos},
                       log_probability_densities {log_probability_densities}
                       { }
             __device__ void operator() (const uint32_t idx) {
@@ -385,10 +416,10 @@ p
                 const ActionWeightTuple res = thrust::transform_reduce(
                         thrust::device,
                         indices, indices + num_samples,
-                        IndexToActionWeightTuple {action_trajectories, cost_to_gos,log_probability_densities},
-                        ActionWeightTuple { DeviceAction {}, 0 }, reduction_functor);
+                        IndexToActionWeightTuple {action_trajectories, cost_to_gos, log_probability_densities},
+                        ActionWeightTuple { DeviceAction {}, -CUDART_INF_F }, reduction_functor);
 
-                if (res.weight == 0) {
+                if (res.log_weight == 0) {
                     printf("Action at timestep %i had 0 weight. Using previous.\n", idx);
                     averaged_action[idx] = action_trajectory_base[min(idx, num_timesteps - 2)];
                 } else {
