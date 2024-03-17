@@ -12,12 +12,14 @@ namespace controls {
     constexpr const char *state_topic_name = "state";
     constexpr const char *world_twist_topic_name = "filter/twist";
     constexpr const char *world_quat_topic_name = "filter/quaternion";
+    constexpr const char *world_pose_topic_name = "filter/pose";
 
     const rclcpp::QoS control_action_qos (rclcpp::KeepLast(10));
     const rclcpp::QoS spline_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1));
+    const rclcpp::QoS world_pose_qos (rclcpp::KeepLast(1));
 
     // MPPI stuff
 
@@ -30,11 +32,11 @@ namespace controls {
 
 
     /** Controller target period, in sec */
-    constexpr uint32_t num_samples = 1024 * 32;
+    constexpr uint32_t num_samples = 1024 * 8;
     constexpr uint32_t num_timesteps = 96;
     constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 10;
-    constexpr float temperature = 0.5f;
+    constexpr float temperature = 1.0f;
     constexpr unsigned long long seed = 0;
     constexpr uint32_t num_action_trajectories = action_dims * num_timesteps * num_samples;
 
@@ -42,8 +44,9 @@ namespace controls {
 
     // Cost params
     constexpr float offset_1m_cost = 1.0f;
-    constexpr float target_speed = 7.5f;
-    constexpr float speed_weight = 0.05f;
+    constexpr float target_speed = 2.0f;
+    constexpr float no_speed_cost = 1.0f;
+    constexpr float overspeed_1m_cost = 1.0f;
 
 
     // State Estimation
@@ -54,6 +57,8 @@ namespace controls {
     constexpr float track_width = 5.0f;
     constexpr float car_padding = 3.0f;
     constexpr bool estimate_whl_speeds = true;
+    constexpr float cg_to_front = 0.775;
+    constexpr float whl_radius = 0.2286;
 
 
     // Indices
@@ -71,5 +76,7 @@ namespace controls {
 
     constexpr uint8_t action_swangle_idx = 0;
     constexpr uint8_t action_torque_idx = 1;
+
+    constexpr bool rear_wheel_drive = true;
 
 }

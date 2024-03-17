@@ -1,5 +1,7 @@
 #include "cuda_globals.cuh"
 
+#include <math_constants.h>
+
 namespace controls {
     namespace cuda_globals {
         __constant__ cudaTextureObject_t curv_frame_lookup_tex;
@@ -11,7 +13,7 @@ namespace controls {
 
 
         constexpr float swangle_swangle_std = 0.1;
-        constexpr float torque_torque_std = 500;
+        constexpr float torque_torque_std = 100;
         // NOTE:WHEN CHANGING ENSURE YOU ALSO CHANGE MAGIC MATRIX AND MAGIC NUMBER
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
             swangle_swangle_std, 0,
@@ -26,10 +28,10 @@ namespace controls {
         };
 
         __constant__ const float action_min[action_dims] = {
-            -0.5, -1000
+            -0.5, -200
         };
         __constant__ const float action_max[action_dims] = {
-            0.5, 1000
+            0.5, 200
         };
 
         __constant__ const float action_deriv_min[action_dims] = {

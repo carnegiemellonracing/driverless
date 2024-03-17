@@ -131,8 +131,8 @@ namespace controls {
 
                 //unpackages action
                 const float steering_angle = action[action_swangle_idx];
-                const float torque_front = action[action_torque_idx] / 2;
-                const float torque_rear = action[action_torque_idx] / 2;
+                const float torque_front = rear_wheel_drive ? 0 : action[action_torque_idx] / 2;
+                const float torque_rear = rear_wheel_drive ? action[action_torque_idx] : action[action_torque_idx] / 2;
 
                 //compares wheel forces
                 float y_dot_front_tire = y_dot_car + yaw_rate *CG_TO_FRONT;

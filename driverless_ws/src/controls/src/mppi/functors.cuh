@@ -60,8 +60,11 @@ namespace controls {
             const float offset = curv_pose[1];
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
-            const float speed_deviation = target_speed - approx_speed_along;
-            const float speed_cost = speed_weight * abs(speed_deviation);
+            const float speed_deviation = approx_speed_along - target_speed;
+            const float speed_cost = max(
+                no_speed_cost / (target_speed * target_speed) * speed_deviation * speed_deviation,
+                speed_deviation * overspeed_1m_cost
+            );
 
             const float distance_cost = offset_1m_cost * offset * offset;
 

@@ -215,8 +215,11 @@ namespace controls {
             std::cout << "-------------------\n" << std::endl;
         }
 
-        void StateEstimator_Impl::sync_to_device() {
+        void StateEstimator_Impl::sync_to_device(float swangle) {
             std::lock_guard<std::mutex> guard {m_mutex};
+
+            // TODO: make wheel speed estimation optional
+            estimate_whl_speeds(swangle);
 
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
@@ -531,5 +534,16 @@ namespace controls {
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
         }
 
+        void StateEstimator_Impl::estimate_whl_speeds(float swangle) {
+            const float xdot = m_world_state[state_car_xdot_idx];
+            const float yawdot = m_world_state[state_yawdot_idx];
+
+            const float whl_speed_f = (xdot * std::cos(swangle) + cg_to_front * yawdot * std::sin(swangle)) / whl_radius;
+            const float whl_speed_r = xdot / whl_radius;
+
+            m_world_state[state_whl_speed_f_idx] = whl_speed_f;
+            m_world_state[state_whl_speed_r_idx] = whl_speed_r;
+            std::cout << "whl_speed_f: " << whl_speed_f << " whl_speed_r: " << whl_speed_r << std::endl;
+        }
     }
 }
