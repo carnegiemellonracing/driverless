@@ -6,7 +6,7 @@
 #include <interfaces/msg/control_action.hpp>
 #include <state/state_estimator.hpp>
 
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
 #include <display/display.hpp>
 #endif
 
@@ -25,7 +25,7 @@ namespace controls {
 
                   m_action_timer {
                       create_wall_timer(
-                          std::chrono::duration<float>(0.5),
+                          std::chrono::duration<float>(controller_publish_period),
                           [this] { publish_action_callback(); })
                   },
 
@@ -38,6 +38,7 @@ namespace controls {
                   m_action_read {std::make_unique<Action>()},
                   m_action_write {std::make_unique<Action>()} {
 
+                // create a callback group that prevents state and spline callbacks from being executed concurrently
                 rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group {
                     create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};
 
@@ -56,6 +57,22 @@ namespace controls {
                     options
                 );
 
+               // no pose subscription, since everything in car frame for now. will change when fast mode is implemented
+
+                m_world_quat_subscription = create_subscription<QuatMsg>(
+                    world_quat_topic_name, world_quat_qos,
+                    [this] (const QuatMsg::SharedPtr msg) { world_quat_callback(*msg); },
+                    options
+                );
+
+                m_world_twist_subscription = create_subscription<TwistMsg>(
+                    world_twist_topic_name, world_twist_qos,
+                    [this] (const TwistMsg::SharedPtr msg) { world_twist_callback(*msg); },
+                    options
+                );
+
+                // start mppi :D
+                // this won't immediately begin publishing, since it waits for the first dirty state
                 launch_mppi().detach();
             }
 
@@ -77,12 +94,44 @@ namespace controls {
             }
 
             void ControllerNode::state_callback(const StateMsg& state_msg) {
-                std::cout << "Received slam" << std::endl;
+                std::cout << "Received state" << std::endl;
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
-
                     m_state_estimator->on_state(state_msg);
+                }
+
+                notify_state_dirty();
+            }
+
+            void ControllerNode::world_twist_callback(const TwistMsg &twist_msg) {
+                std::cout << "Received twist" << std::endl;
+
+                {
+                    std::lock_guard<std::mutex> guard {m_state_mut};
+                    m_state_estimator->on_world_twist(twist_msg);
+                }
+
+                notify_state_dirty();
+            }
+
+            void ControllerNode::world_quat_callback(const QuatMsg &quat_msg) {
+                std::cout << "Received quat" << std::endl;
+
+                {
+                    std::lock_guard<std::mutex> guard {m_state_mut};
+                    m_state_estimator->on_world_quat(quat_msg);
+                }
+
+                notify_state_dirty();
+            }
+
+            void ControllerNode::world_pose_callback(const PoseMsg &pose_msg) {
+                std::cout << "Received pose" << std::endl;
+
+                {
+                    std::lock_guard<std::mutex> guard {m_state_mut};
+                    m_state_estimator->on_world_pose(pose_msg);
                 }
 
                 notify_state_dirty();
@@ -104,22 +153,39 @@ namespace controls {
                     while (true) {
                         std::unique_lock<std::mutex> state_lock {m_state_mut};
 
-                        m_state_cond_var.wait(state_lock);
-                        m_state_estimator->sync_to_device();
+                        m_state_cond_var.wait(state_lock);  // wait to be dirtied
+                        while (!m_state_estimator->is_ready()) {
+                            m_state_cond_var.wait(state_lock);
+                        }
 
-                        state_lock.unlock();
-
-
+                        // record time to estimate speed
+                        auto start_time = std::chrono::high_resolution_clock::now();
                         std::cout << "-------- MPPI -------" << std::endl;
 
+                        // send state to device (i.e. cuda globals)
+                        // (also serves to lock state since nothing else updates gpu state)
+                        std::cout << "syncing state to device" << std::endl;
+                        m_state_estimator->sync_to_device();
+
+                        // we don't need the host state anymore, so release the lock and let state callbacks proceed
+                        state_lock.unlock();
+
+                        // run mppi, and write action to the write buffer
                         Action action = m_mppi_controller->generate_action();
                         {
                             std::lock_guard<std::mutex> action_guard {m_action_write_mut};
                             *m_action_write = action;
                         }
 
+                        // swap the read and write buffers so publish action read this action
                         std::cout << "swapping action buffers" << std::endl;
                         swap_action_buffers();
+
+                        // calculate and print time elapsed
+                        auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                            std::chrono::high_resolution_clock::now() - start_time
+                        );
+                        std::cout << "time elapsed: " << time_elapsed.count() << std::endl;
 
                         std::cout << "---------------------" << std::endl;
                     }
@@ -144,16 +210,22 @@ namespace controls {
 
 int main(int argc, char *argv[]) {
     using namespace controls;
+    
+    std::mutex mppi_mutex;
+    std::mutex state_mutex;
 
-    std::shared_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create();
-    std::shared_ptr<mppi::MppiController> controller = mppi::MppiController::create();
+    // create resources
+    std::shared_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create(state_mutex);
+    std::shared_ptr<mppi::MppiController> controller = mppi::MppiController::create(mppi_mutex);
 
     rclcpp::init(argc, argv);
     std::cout << "rclcpp initialized" << std::endl;
 
+    // instantiate node
     const auto node = std::make_shared<nodes::ControllerNode>(state_estimator, controller);
     std::cout << "controller node created" << std::endl;
 
+    // create a condition variable to notify main thread when either display or node dies
     std::mutex thread_died_mut;
     std::condition_variable thread_died_cond;
     bool thread_died = false;
@@ -175,7 +247,7 @@ int main(int argc, char *argv[]) {
     std::cout << "controller node thread launched" << std::endl;
 
 
-#ifdef PUBLISH_STATES
+#ifdef DISPLAY
     display::Display display {controller, state_estimator};
     std::cout << "display created" << std::endl;
 
@@ -193,6 +265,7 @@ int main(int argc, char *argv[]) {
     std::cout << "display thread launched" << std::endl;
 #endif
 
+    // wait for a thread to die
     {
         std::unique_lock<std::mutex> guard {thread_died_mut};
         if (!thread_died) {
