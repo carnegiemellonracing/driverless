@@ -39,6 +39,10 @@ CONE_NODE_NAME = "cone_node"
 PUBLISH_FPS = 10
 VIS_UPDATE_FPS = 25
 
+MAX_CONE_DIST = 15
+def within_max_dist(cone):
+    return np.linalg.norm(np.array(cone)) < MAX_CONE_DIST
+
 class ConeNode(Node):
 
     def __init__(self, debug=False, visualize_points=True):
@@ -58,7 +62,7 @@ class ConeNode(Node):
 
         # initialize cone publisher
         self.publish_timer = self.create_timer(1/PUBLISH_FPS, self.publish_cones)
-        self.cone_publisher = self.create_publisher(ConeArray, PERC_CONE_TOPIC, qos_profile=RELIABLE_QOS_PROFILE)
+        self.cone_publisher = self.create_publisher(ConeArray, PERC_CONE_TOPIC, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         # deubgging mode visualizer
         if debug:
@@ -129,6 +133,9 @@ class ConeNode(Node):
         # update visualizer
         if self.debug:
             self.vis.set_cones(self.cones)
+
+        # filter cones that are too far away
+        self.cones.filter(within_max_dist)
 
         # publish cones
         print(f"publishing {len(self.cones)} cones")

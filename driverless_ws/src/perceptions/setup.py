@@ -42,13 +42,7 @@ setup(
             'lidar_node = perceptions.ros.predictors.LidarNode:main',
 
             # cone node
-            'cone_node = perceptions.ros.utils.ConeNode:main',
-
-            # midline node
-            'midline_node = perceptions.planning_stuff.MidlineNode:main',
-
-            # raceline node
-            'raceline_node = perceptions.planning_stuff.RacelineNode:main'
+            'cone_node = perceptions.ros.utils.ConeNode:main'
         ],
     },
 )
