@@ -1,5 +1,6 @@
 #include "raceline.hpp"
 #include <Eigen/Dense>
+#include "rclcpp/rclcpp.hpp"
 // #include "random.h"
 
 polynomial poly(int deg = 3){
@@ -61,11 +62,18 @@ double poly_eval(polynomial a, double x){
     return result;
 }
 
+// Curvature at point(s) `min_x` based on 2d curvature equation
+// https://mathworld.wolfram.com/Curvature.html
+double get_curvature(polynomial poly_der_1, polynomial poly_der_2,
+                     double min_x) {
+  return poly_eval(poly_der_2, min_x) /
+         (1 + pow(pow(poly_eval(poly_der_1, min_x), 2), 3 / 2));
+}
 Spline::Spline(polynomial interpolation_poly) {
     this->spl_poly = interpolation_poly;
 }
 
-Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path_id, int sort_ind) {
+Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path, int sort_ind) {
     this->spl_poly=interpolation_poly;
     this->first_der = first;
     this->second_der = second;
@@ -539,19 +547,19 @@ std::vector<int> inject_clamped(std::vector<double> old_vals, std::vector<double
  * @param cumulated_lengths: vector of the cumulated lengths of the splines
  * @return curvature at progress
 */
-double get_curvature_raceline(std::vector<double> progress,std::vector<spline> splines, std::vector<double> cumulated_lengths) {
+std::vector<double> get_curvature_raceline(std::vector<double> progress,std::vector<Spline> splines, std::vector<double> cumulated_lengths) {
     // indices of splines that progress should be on 
-    int indices = inject_clamped(cumulated_lengths, progress);
+    std::vector<int> indices = inject_clamped(cumulated_lengths, progress);
 
-    curvatures = std::vector<double>;
+    std::vector<double> curvatures;
     for (int i = 0; i < progress.size(); i++){
-        min_x = progress[i];
+        int min_x = progress[i];
         int index = indices[i];
         if (index > 0){
             min_x -= cumulated_lengths[index-1];
         }
         
-        curvature = get_curvature(
+        double curvature = get_curvature(
             splines[index].get_first_der(),
             splines[index].get_second_der(),
             min_x
@@ -595,21 +603,20 @@ int searchSorted (std::vector<double> arr, double target) {
  * @return tuple representing point on the raceline at progress
 */
 
-std::tuple<double> interpolate_raceline(double progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths, int precision = 20) {
+std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
+                                        std::vector<double> cumulated_lengths, int precision = 20) {
     int index = searchSorted(cumulated_lengths, progress);
-
-    Spline  = splines[index];
-
+    Spline curr = splines[index];
     double delta = 0;
-
+    
     if (index == 0) {
         delta = progress;
     } else {
         delta = progress - cumulated_lengths[index-1];
     }
 
-    
+    std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> result =
+        curr.along(delta, 0, precision);
+    Eigen::VectorXd point = std::get<0>(result);
+    return std::make_pair(point(0), point(1));
 }
-
-
-

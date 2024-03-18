@@ -95,13 +95,13 @@ std::vector<std::pair<double,double>> blue_cones = {
     std::make_pair(-4,2)
 }
 
-void runMatPlot() {
-// translate these
-plt.scatter(yellow_cones[:, 0], yellow_cones[:, 1], c="orange"),
-plt.scatter(blue_cones[:, 0], blue_cones[:, 1], c="blue")
+void main() {
+    // translate these
+    plt.scatter(yellow_cones[:, 0], yellow_cones[:, 1], c="orange"),
+    plt.scatter(blue_cones[:, 0], blue_cones[:, 1], c="blue")
 
-ax = plt.gca()
-ax.set_aspect("equal", adjustable="box")
+    ax = plt.gca()
+    ax.set_aspect("equal", adjustable="box")
 
-plt.show()
+    plt.show()  
 }

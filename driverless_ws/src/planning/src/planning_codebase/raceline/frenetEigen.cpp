@@ -8,9 +8,9 @@
 #include <numeric>
 #include <vector>
 #include <Eigen/Dense>
-#include <Eigen/Polynomial>
+#include <Eigen/PolynomialSolver.h>
 #include "frenetEigen.hpp"
-#include "racelineEigen.hpp"
+// #include "racelineEigen.hpp"
 
 
 //irrelevent function now, but still keeping it

@@ -32,11 +32,8 @@ bool checkStartNewBucket(bucket b, double newCurvature) {
 void progressSplits(bucket* b, 
         std::pair<std::vector<Spline>,std::vector<double>> blueRaceline,
         std::pair<std::vector<Spline>,std::vector<double>> yellowRaceline){
-    // get the difference between start and end progress
 
-    double diff = b->endProgress - b->startProgress;
     double interval = 0.5; // @TODO tunable param
-
     std::vector<double> cumulativeLenBlue = blueRaceline.second;
     std::vector<double> cumulativeLenYellow = yellowRaceline.second;
 
@@ -50,9 +47,9 @@ void progressSplits(bucket* b,
         double progMeterYellow = (percent*totalYellowSplinesLength)/100;
       
         std::pair<double, double> xyBlue = interpolate_raceline(progMeterBlue, blueRaceline.first, 
-                                                        blueRaceline.second);
+                                                        blueRaceline.second, 20);
         std::pair<double, double> xyYellow = interpolate_raceline(progMeterYellow, yellowRaceline.first, 
-                                                        yellowRaceline.second);
+                                                        yellowRaceline.second, 20);
 
         b->bluePoints.push_back(xyBlue);
         b->yellowPoints.push_back(xyYellow);
@@ -72,9 +69,9 @@ std::pair<std::vector<Spline>,std::vector<double>> makeSplinesVector(std::vector
         coneMatrix(1, i) = cones[i].second;
     }
 
-    rclcpp::Logger logger = rclcpp::get_logger();
-
-    std::pair<std::vector<Spline>,std::vector<double>> res = raceline_gen(logger, coneMatrix, std::rand(), 4, false);
+    /*@TODO: how to make a dummy logger?*/
+    auto dummy_logger = rclcpp::get_logger("du");
+    std::pair<std::vector<Spline>,std::vector<double>> res = raceline_gen(dummy_logger, coneMatrix, std::rand(), 4, false);
 
     return res;
 }
@@ -113,7 +110,9 @@ void updateSegments(std::vector<bucket> bucketVector,
     
     for (int currPercentProgress = 0; currPercentProgress <= totalProgress; currPercentProgress += increment) {
         double currProgress = (currPercentProgress*totalBlueSplinesLength)/100; // progress in meters
-        double curve = get_curvature_raceline(currProgress, racetrackSplines, cumulativeLen);
+        std::vector<double> currProgressVec;
+        currProgressVec.push_back(currProgress);
+        double curve = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen)[0];
         // compare curve to avgCurvature of the curr bucket
         currBucket.endProgress = currPercentProgress;
         if (!checkStartNewBucket(currBucket, curve)) {
@@ -122,7 +121,7 @@ void updateSegments(std::vector<bucket> bucketVector,
         }
         else { // if doesn't fit, new bucket, start new average
             // take care of splits for curr bucket
-            progressSplits(&currBucket); // fill in the current bucket's blue and yellow points vectors
+            progressSplits(&currBucket, blueRes, yellowRes); // fill in the current bucket's blue and yellow points vectors
             currBucket.avgCurvature = calcRunningAvgCurv(currBucket);
             bucketVector.push_back(currBucket);
             bucket currBucket;

@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include <cmath>
+//#include </opt/ros/foxy/include/rclcpp/rclcpp.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #ifndef RACELINE
@@ -103,8 +104,10 @@ public:
 };
 
 // new functions translated from python (path_optimization.py)
-double get_curvature(double progress);
+std::vector<double> get_curvature_raceline(std::vector<double> progress,std::vector<Spline> splines, std::vector<double> cumulated_lengths);
 // interpolate_raceline Tuple[np.ndarray[float], Spline, float]
+std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
+                                        std::vector<double> cumulated_lengths, int precision);
 
 
 Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts);

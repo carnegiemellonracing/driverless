@@ -26,6 +26,9 @@ struct projection {
   }
 };
 
+double get_curvature(polynomial poly_der_1, polynomial poly_der_2,
+                     double min_x);
+
 projection frenet(float x, float y, std::vector<Spline> path,
                   std::vector<double> lengths,
                   float prev_progress = prev_progress_flag, float v_x = 0,
