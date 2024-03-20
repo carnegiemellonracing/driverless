@@ -46,7 +46,13 @@ setup(
 
             # cone node
             'cone_node = perceptions.ros.utils.ConeNode:main',
-            'cone_node_debug = perceptions.ros.utils.ConeNode:main_debug',
+
+            'cone_node_lidar = perceptions.ros.utils.ConeNode:main_lidar',
+            'cone_node_lidar_debug = perceptions.ros.utils.ConeNode:main_lidar_debug',
+            'cone_node_zed = perceptions.ros.utils.ConeNode:main_zed',
+            'cone_node_zed_debug = perceptions.ros.utils.ConeNode:main_zed_debug',
+            'cone_node_all = perceptions.ros.utils.ConeNode:main_all',
+            'cone_node_all_debug = perceptions.ros.utils.ConeNode:main_all_debug',
 
             # midline node
             'midline_node = perceptions.planning_stuff.MidlineNode:main',
