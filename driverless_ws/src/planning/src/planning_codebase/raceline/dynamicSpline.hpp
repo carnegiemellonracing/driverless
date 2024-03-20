@@ -1,4 +1,4 @@
-#include "frenetEigen.hpp"
+// #include "frenetEigen.hpp"
 #include "raceline.hpp"
 #include "../midline/generator.hpp"
 
@@ -15,7 +15,7 @@ struct bucket {
     std::vector<std::pair<double, double>> yellowPoints; // points on the yellow cone spline
 };
 
-std::vector<bucket>* bucketsVector; // contains bucket structs, which contain the start and end points
+// std::vector<bucket>* bucketsVector; // contains bucket structs, which contain the start and end points
                                     // of each segment and points in between
 
 /** function to make vector of splines from std::vector<std::pair<double,double>> 

@@ -18,9 +18,10 @@
   find_package(Eigen3 3.3 REQUIRED)
   find_package(GSL REQUIRED)
   find_package(interfaces REQUIRED)
+  find_package(matplotlib-cpp REQUIRED)
 
-  add_executable(dynamic_spline src/planning_codebase/raceline/dynamicSpline.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp src/planning_codebase/)
-  ament_target_dependencies(dynamic_spline interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
+  add_executable(dynamic_spline src/planning_codebase/raceline/dsTest.cpp src/planning_codebase/raceline/dynamicSpline.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
+  ament_target_dependencies(dynamic_spline interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL matplotlib-cpp)
 
   # add_library(planning_export src/planning_codebase/raceline/raceline.cpp)
   # ament_target_dependencies(planning_export interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
