@@ -16,7 +16,7 @@ from perc22a.mergers.PipelineType import PipelineType
 from perc22a.mergers.merger_factory import \
     create_lidar_merger, \
     create_zed_merger, \
-    create_all_merger, \
+    create_all_merger
 
 from perc22a.utils.Timer import Timer
 
@@ -27,7 +27,7 @@ from perceptions.topics import \
     YOLOV5_ZED_CONE_TOPIC, \
     YOLOV5_ZED2_CONE_TOPIC, \
     LIDAR_CONE_TOPIC, \
-    PERC_CONE_TOPIC, \
+    PERC_CONE_TOPIC
 
 # general imports
 import numpy as np
