@@ -50,7 +50,7 @@ class ConeNode(Node):
 
         self.cones = Cones()
 
-        # initialize all cone subscribers
+        # initialize all cone subscribers   
         self.create_subscription(ConeArray, YOLOV5_ZED_CONE_TOPIC, self.yolov5_zed_cone_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.create_subscription(ConeArray, YOLOV5_ZED2_CONE_TOPIC, self.yolov5_zed2_cone_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.create_subscription(ConeArray, LIDAR_CONE_TOPIC, self.lidar_cone_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
@@ -62,7 +62,7 @@ class ConeNode(Node):
 
         # initialize cone publisher
         self.publish_timer = self.create_timer(1/PUBLISH_FPS, self.publish_cones)
-        self.cone_publisher = self.create_publisher(ConeArray, PERC_CONE_TOPIC, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.cone_publisher = self.create_publisher(ConeArray, PERC_CONE_TOPIC, qos_profile=RELIABLE_QOS_PROFILE)
 
         # deubgging mode visualizer
         if debug:
