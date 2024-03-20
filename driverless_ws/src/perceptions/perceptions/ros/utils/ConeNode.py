@@ -12,8 +12,11 @@ import perceptions.ros.utils.conversions as conv
 
 # Cone Merger and pipeline enum type
 from perc22a.mergers.MergerInterface import Merger
-from perc22a.mergers.BaseMerger import BaseMerger
 from perc22a.mergers.PipelineType import PipelineType
+from perc22a.mergers.merger_factory import \
+    create_lidar_merger, \
+    create_zed_merger, \
+    create_all_merger, \
 
 from perc22a.utils.Timer import Timer
 
@@ -25,7 +28,6 @@ from perceptions.topics import \
     YOLOV5_ZED2_CONE_TOPIC, \
     LIDAR_CONE_TOPIC, \
     PERC_CONE_TOPIC, \
-    POINT_TOPIC
 
 # general imports
 import numpy as np
@@ -121,10 +123,10 @@ class ConeNode(Node):
         
         return
     
-def start_cone_node(args=None, debug=False):
+def start_cone_node(merger, args=None, debug=False):
     rclpy.init(args=args)
 
-    cone_node = ConeNode(debug=debug)
+    cone_node = ConeNode(merger, debug=debug)
 
     rclpy.spin(cone_node)
 
@@ -133,13 +135,33 @@ def start_cone_node(args=None, debug=False):
 
     return
 
-def main(args=None):
-    start_cone_node(args=args, debug=False)
+def main_lidar(args=None):
+    start_cone_node(create_lidar_merger(), args=args, debug=False)
     return
 
-def main_debug(args=None):
-    start_cone_node(args=args, debug=True)
+def main_lidar_debug(args=None):
+    start_cone_node(create_lidar_merger(), args=args, debug=True)
     return
+
+def main_zed(args=None):
+    start_cone_node(create_zed_merger(), args=args, debug=False)
+    return
+
+def main_zed_debug(args=None):
+    start_cone_node(create_zed_merger(), args=args, debug=True)
+    return
+
+def main_all(args=None):
+    start_cone_node(create_all_merger(), args=args, debug=False)
+    return
+
+def main_all_debug(args=None):
+    start_cone_node(create_all_merger(), args=args, debug=True)
+    return
+
+# TODO: decide which policy is best and call it from main() (default to zed)
+def main(args=None):
+    main_zed()
 
 if __name__ == "__main__":
     main()
