@@ -10,10 +10,14 @@ from perc22a.predictors.utils.cones import Cones
 from perc22a.predictors.utils.transform.transform import PoseTransformations
 import perceptions.ros.utils.conversions as conv
 
+# Cone Merger and pipeline enum type
+from perc22a.mergers.MergerInterface import Merger
+from perc22a.mergers.BaseMerger import BaseMerger
+from perc22a.mergers.PipelineType import PipelineType
+
 from perc22a.utils.Timer import Timer
 
-# perceptions Library visualization functions (for 3D data)
-# from perc22a.predictors.utils.vis.Vis3D import Vis3D
+# perceptions Library visualization functions (for 2D data)
 from perc22a.predictors.utils.vis.Vis2D import Vis2D
 
 from perceptions.topics import \
@@ -24,7 +28,6 @@ from perceptions.topics import \
     POINT_TOPIC
 
 # general imports
-import cv2
 import numpy as np
 
 # configure QOS profile
@@ -42,28 +45,19 @@ PUBLISH_FPS = 10
 VIS_UPDATE_FPS = 25
 MAX_ZED_CONE_RANGE = 12.5
 
-def within_range(coords):
-    return np.linalg.norm(np.array(coords)) <= MAX_ZED_CONE_RANGE
-
-def zero_cone_z(coords):
-    return [coords[0], coords[1], 0]
-
 class ConeNode(Node):
 
-    def __init__(self, debug=True, visualize_points=True):
+    def __init__(self, merger: Merger, debug=True):
         super().__init__(CONE_NODE_NAME)
 
+        # save our merger for merging cone outputs    
         self.cones = Cones()
+        self.merger = merger
 
         # initialize all cone subscribers
         self.create_subscription(ConeArray, YOLOV5_ZED_CONE_TOPIC, self.yolov5_zed_cone_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.create_subscription(ConeArray, YOLOV5_ZED2_CONE_TOPIC, self.yolov5_zed2_cone_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.create_subscription(ConeArray, LIDAR_CONE_TOPIC, self.lidar_cone_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-
-        # initialize point cloud subscriber for visualization (and pose transformer)
-        if debug and visualize_points:
-            # self.create_subscription(PointCloud2, POINT_TOPIC, self.point_cloud_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-            self.pose_transformer = PoseTransformations()
 
         # initialize cone publisher
         self.publish_timer = self.create_timer(1/PUBLISH_FPS, self.publish_cones)
@@ -71,104 +65,59 @@ class ConeNode(Node):
 
         # deubgging mode visualizer
         if debug:
-#            self.vis3D = Vis3D()
             self.vis2D = Vis2D()
             self.display_timer = self.create_timer(1/VIS_UPDATE_FPS, self.update_vis)
 
         # if debugging, initialize visualizer
         self.debug = debug
-        self.visualize_points = visualize_points
-        self.stop = False
-
-        # sufficient cone policy implementation
-        self.got_zed_left = False
-        self.got_zed_right = False
 
         return
 
     def update_vis(self):
         # update and interact with vis
- #       self.vis3D.update()
         self.vis2D.update()
-
         return
-    
-    def point_cloud_callback(self, msg):
-        points = conv.pointcloud2_to_npy(msg)[:, :3]
-
-        points = points[np.any(points != 0, axis=1)]
-        
-        points = points[:, :3]
-        points = points[:, [1, 0, 2]]
-        points[:, 0] = -points[:, 0]
-        
-        t = Timer()
-
-        t.start("pose")
-        points = self.pose_transformer.to_origin("lidar", points, inverse=False)
-        t.end("pose")
-
-  #      self.vis3D.set_points(points)
-        self.vis2D.set_points(points)
-
 
     def yolov5_zed_cone_callback(self, msg):
         '''receive cones from yolov5_zed_node predictor'''
         cones = conv.msg_to_cones(msg)
-        cones.filter(within_range)
-        self.cones.add_cones(cones)
-
-        self.got_zed_right = True
+        self.merger.add(cones, PipelineType.ZED_PIPELINE)
 
         return
     
     def yolov5_zed2_cone_callback(self, msg):
         '''receive cones from yolov5_zed2_node predictor'''
         cones = conv.msg_to_cones(msg)
-        cones.filter(within_range)
-        self.cones.add_cones(cones)
-
-        self.got_zed_left = True
+        self.merger.add(cones, PipelineType.ZED2_PIPELINE)
 
         return
 
     def lidar_cone_callback(self, msg):
         '''receive cones from lidar_node predictor'''
         cones = conv.msg_to_cones(msg)
-        self.cones.add_cones(cones)
+        self.merger.add(cones, PipelineType.LIDAR)
 
-        return
-    
-    def sufficient_cones(self):
-        return len(self.cones) > 0 and self.got_zed_left and self.got_zed_right
-
-    def flush_cones(self):
-        self.cones = Cones()
-        self.got_zed_left = False
-        self.got_zed_right = False
         return
 
     def publish_cones(self):
 
-        if not self.sufficient_cones():
+        # check cone publication conditions met
+        if not self.merger.sufficient():
             self.get_logger().warn(f"Not got sufficient cones")
             return 
 
+        # get the merged cones and reset 
+        merged_cones = self.merger.merge()
+        self.merger.reset()
+
         # update visualizer
         if self.debug:
-   #         self.vis3D.set_cones(self.cones)
-            self.vis2D.set_cones(self.cones)
-
-        # reset the height of the cone to 0
-        self.cones.map(zero_cone_z)
+            self.vis2D.set_cones(merged_cones)
 
         # publish cones
-        print(f"publishing {len(self.cones)} cones")
-        msg = conv.cones_to_msg(self.cones)
+        print(f"Published {len(merged_cones)} cones")
+        msg = conv.cones_to_msg(merged_cones)
         self.cone_publisher.publish(msg)
-            
-        # flush cones
-        self.flush_cones()
         
         return
     
