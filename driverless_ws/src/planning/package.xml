@@ -4,7 +4,7 @@
   <name>planning</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="akhandelwal2025@gmail.com">ankit</maintainer>
+  <maintainer email="squirrel@gmail.com">ankit</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

@@ -48,6 +48,10 @@ def within_range(coords):
 def zero_cone_z(coords):
     return [coords[0], coords[1], 0]
 
+MAX_CONE_DIST = 15
+def within_max_dist(cone):
+    return np.linalg.norm(np.array(cone)) < MAX_CONE_DIST
+
 class ConeNode(Node):
 
     def __init__(self, debug=True, visualize_points=True):
@@ -55,7 +59,7 @@ class ConeNode(Node):
 
         self.cones = Cones()
 
-        # initialize all cone subscribers
+        # initialize all cone subscribers   
         self.create_subscription(ConeArray, YOLOV5_ZED_CONE_TOPIC, self.yolov5_zed_cone_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.create_subscription(ConeArray, YOLOV5_ZED2_CONE_TOPIC, self.yolov5_zed2_cone_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.create_subscription(ConeArray, LIDAR_CONE_TOPIC, self.lidar_cone_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
@@ -162,6 +166,9 @@ class ConeNode(Node):
         # reset the height of the cone to 0
         self.cones.map(zero_cone_z)
 
+        # filter cones that are too far away
+        self.cones.filter(within_max_dist)
+
         # publish cones
         print(f"publishing {len(self.cones)} cones")
         msg = conv.cones_to_msg(self.cones)
@@ -175,7 +182,7 @@ class ConeNode(Node):
 def start_cone_node(args=None, debug=False):
     rclpy.init(args=args)
 
-    cone_node = ConeNode(debug=debug)
+    cone_node = ConeNode(debug=False)
 
     rclpy.spin(cone_node)
 

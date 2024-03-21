@@ -43,6 +43,6 @@ def process(data):
             accumulated_dist = 0
     
     downsampled = np.array(list(downsampled))
-    # print(downsampled)
+    print(downsampled)
 
     return downsampled
