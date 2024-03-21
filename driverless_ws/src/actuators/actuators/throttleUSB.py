@@ -12,7 +12,7 @@ import struct
 
 BITRATE = 500000
 TIMER_HZ = 100
-MAX_TORQUE = 2000 #this is completely made up
+MAX_TORQUE = 10 #this is completely made up
 MAX_REQUEST = 255 #hypothetically real max is 255
 
 ADC_BIAS = 2212
@@ -81,7 +81,7 @@ class ActuatorNode(Node):
             continue
         
         msg = struct.pack(">hh", data[0], data[1])
-        #msg = bytearray([1,2,3,4])
+        # msg = bytearray([1,2,3,4])
         # msg = bytearray([7,7,7,7])
         
         self.ser.write(msg) 
@@ -105,7 +105,7 @@ class ActuatorNode(Node):
         (fl, fr, rl, rr) = (msg.torque_fl, msg.torque_fr, msg.torque_rl, msg.torque_rr)
         print(f"fl: {fl} |fr: {fr} | rl: {rl} | rr: {rr}")
         #torque_avg = (fl+fr+rl+rr)/4
-        torque_avg = (rl + rr)/2
+        torque_avg = (fl + fr)/2
         torque_percent = min(1,max((torque_avg/MAX_TORQUE),-1)) #fucked clamping fix later
 
         #TODO: Read through CDC code and figure out what max regen request is to clamp in the negative direction
@@ -114,7 +114,8 @@ class ActuatorNode(Node):
         print(self.torque_request) 
 
         desired_wheel_angle = np.degrees(msg.swangle) # convert from radians to degrees
-        clamped_wheel_angle = min(max(desired_wheel_angle, -20), 20)
+        # desired_wheel_angle = msg.swangle
+        clamped_wheel_angle = min(max(desired_wheel_angle, -19), 19)
         adc_val = int(SLOPE * clamped_wheel_angle + ADC_BIAS)
         self.swangle = int(hex(adc_val)[2:], 16)
         print(f"swangle: {self.swangle}")
