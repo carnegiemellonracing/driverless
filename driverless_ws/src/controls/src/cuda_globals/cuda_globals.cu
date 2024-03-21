@@ -1,6 +1,6 @@
 #include "cuda_globals.cuh"
+#include "utils/cuda_utils.cuh"
 
-#include <math_constants.h>
 
 namespace controls {
     namespace cuda_globals {
@@ -28,10 +28,10 @@ namespace controls {
         };
 
         __constant__ const float action_min[action_dims] = {
-            -0.5, -200
+            -0.5, -10.0
         };
         __constant__ const float action_max[action_dims] = {
-            0.5, 200
+            0.5, 10.0
         };
 
         __constant__ const float action_deriv_min[action_dims] = {

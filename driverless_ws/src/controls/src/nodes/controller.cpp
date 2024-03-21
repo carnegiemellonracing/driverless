@@ -148,12 +148,33 @@ namespace controls {
                 msg.torque_fr = action[action_torque_idx] / 4;
                 msg.torque_rl = action[action_torque_idx] / 4;
                 msg.torque_rr = action[action_torque_idx] / 4;
-                if (rear_wheel_drive) {
-                    msg.torque_fl = 0;
-                    msg.torque_fr = 0;
-                    msg.torque_rl = action[action_torque_idx] / 2;
-                    msg.torque_rr = action[action_torque_idx] / 2;
+
+                switch (torque_mode) {
+                    case TorqueMode::AWD:
+                        msg.torque_fl = action[action_torque_idx] / 4;
+                        msg.torque_fr = action[action_torque_idx] / 4;
+                        msg.torque_rl = action[action_torque_idx] / 4;
+                        msg.torque_rr = action[action_torque_idx] / 4;
+                        break;
+
+                    case TorqueMode::FWD:
+                        msg.torque_fl = action[action_torque_idx] / 2;
+                        msg.torque_fr = action[action_torque_idx] / 2;
+                        msg.torque_rl = 0;
+                        msg.torque_rr = 0;
+                        break;
+
+                    case TorqueMode::RWD:
+                        msg.torque_fl = 0;
+                        msg.torque_fr = 0;
+                        msg.torque_rl = action[action_torque_idx] / 2;
+                        msg.torque_rr = action[action_torque_idx] / 2;
+                        break;
+
+                    default:
+                        throw std::runtime_error("Invalid torque mode");
                 }
+
                 m_action_publisher->publish(msg);
             }
 
