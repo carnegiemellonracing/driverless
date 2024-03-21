@@ -133,8 +133,8 @@ namespace controls {
 
             for (const auto& frame : spline_msg.frames) {
                 m_spline_frames.push_back({
-                    static_cast<float>(frame.x),
-                    static_cast<float>(frame.y)
+                    static_cast<float>(frame.y),
+                    static_cast<float>(frame.x)
                 });
             }
 
@@ -159,8 +159,8 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             const float yaw = m_world_state[state_yaw_idx];
-            const float car_xdot = twist_msg.twist.linear.x * std::cos(yaw) - twist_msg.twist.linear.y * std::sin(yaw);
-            const float car_ydot = -twist_msg.twist.linear.x * std::sin(yaw) - twist_msg.twist.linear.y * std::cos(yaw);
+            const float car_xdot = twist_msg.twist.linear.x * std::cos(yaw) + twist_msg.twist.linear.y * std::sin(yaw);
+            const float car_ydot = -twist_msg.twist.linear.x * std::sin(yaw) + twist_msg.twist.linear.y * std::cos(yaw);
             const float car_yawdot = twist_msg.twist.angular.z;
 
             m_world_state[state_car_xdot_idx] = car_xdot;
