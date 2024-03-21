@@ -47,8 +47,8 @@ namespace controls {
 
             while (total_dist < progress) {
                 geometry_msgs::msg::Point frame {};
-                frame.x = point.x;
-                frame.y = point.y;
+                frame.y = point.x;
+                frame.x = point.y;
                 result.frames.push_back(frame);
 
                 fvec2 delta = normalize(fvec2(1.0f, amplitude * 2 * M_PI / period * cos(2 * M_PI / period * point.x - M_PI / 2)))
@@ -164,6 +164,11 @@ namespace controls {
 
             gsl_odeiv2_driver_free(driver);
 
+            std::cout << "Publishing state" << std::endl;
+            for (float dim : m_world_state)
+            {
+                std::cout << dim << " ";
+            }
             // publish_state();
             publish_quat();
             publish_twist();
@@ -178,10 +183,6 @@ namespace controls {
         }
 
         void TestNode::publish_state() {
-            std::cout << "Publishing state" << std::endl;
-            for (float dim : m_world_state) {
-                std::cout << dim << " ";
-            }
             std::cout << std::endl << std::endl;
             std::cout << "Time: " << m_time << std::endl;
 
@@ -220,13 +221,19 @@ namespace controls {
             std::cout << "Time: " << m_time << std::endl;
 
             TwistMsg msg {};
-            msg.twist.linear.x = m_world_state[3];
-            msg.twist.linear.y = m_world_state[4];
+
+            const float yaw = m_world_state[state_yaw_idx];
+            const float car_xdot = m_world_state[state_car_xdot_idx];
+            const float car_ydot = m_world_state[state_car_ydot_idx];
+            const float yawdot = m_world_state[state_yawdot_idx];
+
+            msg.twist.linear.x = car_xdot * std::cos(yaw) - car_ydot * std::sin(yaw);
+            msg.twist.linear.y = car_xdot * std::sin(yaw) + car_ydot * std::cos(yaw);
             msg.twist.linear.z = 0.0;
 
             msg.twist.angular.x = 0.0;
             msg.twist.angular.y = 0.0;
-            msg.twist.angular.z = m_world_state[5];
+            msg.twist.angular.z = yawdot;
 
             m_twist_publisher->publish(msg);
         }

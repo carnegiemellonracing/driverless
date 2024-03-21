@@ -159,8 +159,8 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             const float yaw = m_world_state[state_yaw_idx];
-            const float car_xdot = twist_msg.twist.linear.x * std::cos(yaw) - twist_msg.twist.linear.y * std::sin(yaw);
-            const float car_ydot = twist_msg.twist.linear.x * std::sin(yaw) + twist_msg.twist.linear.y * std::cos(yaw);
+            const float car_xdot = twist_msg.twist.linear.x * std::cos(yaw) + twist_msg.twist.linear.y * std::sin(yaw);
+            const float car_ydot = -twist_msg.twist.linear.x * std::sin(yaw) + twist_msg.twist.linear.y * std::cos(yaw);
             const float car_yawdot = twist_msg.twist.angular.z;
 
             m_world_state[state_car_xdot_idx] = car_xdot;
@@ -186,6 +186,13 @@ namespace controls {
 
             m_world_yaw_ready = true;
         }
+
+        // const float w = quat_msg.quaternion.w;
+        // const float x = quat_msg.quaternion.x;
+        // const float y = quat_msg.quaternion.y;
+        // const float z = quat_msg.quaternion.z;
+
+        // const float yaw = std::atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z));
 
         void StateEstimator_Impl::on_world_pose(const PoseMsg &pose_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -221,6 +228,12 @@ namespace controls {
 
         void StateEstimator_Impl::sync_to_device(float swangle) {
             std::lock_guard<std::mutex> guard {m_mutex};
+
+            std::cout << "Publishing state" << std::endl;
+            for (float dim : m_world_state)
+            {
+                std::cout << dim << " ";
+            }
 
             // TODO: make wheel speed estimation optional
             estimate_whl_speeds(swangle);
