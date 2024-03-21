@@ -145,4 +145,9 @@ namespace controls {
     __host__ __device__ static T clamp(T n, T low, T high) {
         return n > high ? high : n < low ? low : n;
     }
+
+    template<typename T>
+    constexpr T radians(T degrees) {
+        return degrees * M_PI / 180;
+    }
 }
