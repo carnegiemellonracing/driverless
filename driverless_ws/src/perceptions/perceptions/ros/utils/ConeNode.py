@@ -110,16 +110,7 @@ class ConeNode(Node):
     def lidar_cone_callback(self, msg):
         '''receive cones from lidar_node predictor'''
         cones = conv.msg_to_cones(msg)
-<<<<<<< HEAD
         self.merger.add(cones, PipelineType.LIDAR)
-=======
-        self.cones.add_cones(cones)
-
-        return
-    
-    def sufficient_cones(self):
-        return len(self.cones) > 0 #and self.got_zed_left and self.got_zed_right
->>>>>>> main
 
         return
 
