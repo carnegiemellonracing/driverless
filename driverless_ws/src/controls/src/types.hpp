@@ -10,7 +10,6 @@
 
 #include "constants.hpp"
 
-
 namespace controls {
     using Action = std::array<float, action_dims>;
     using State = std::array<float, state_dims>;
