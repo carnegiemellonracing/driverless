@@ -144,7 +144,7 @@ class ConeNode(Node):
         return
     
     def sufficient_cones(self):
-        return len(self.cones) > 0 and self.got_zed_left and self.got_zed_right
+        return len(self.cones) > 0 #and self.got_zed_left and self.got_zed_right
 
     def flush_cones(self):
         self.cones = Cones()
