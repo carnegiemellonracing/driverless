@@ -53,6 +53,7 @@ class MidlineNode(Node):
 
         if len(yellow) == 0 or len(blue) == 0:
             # NOTE: don't send midline if not seeing a single side
+            print("Not receiving either yellow or blue cones")
             return
         
         data = np.vstack([np.array(blue).reshape(-1, 3), np.array(yellow).reshape(-1, 3)])
