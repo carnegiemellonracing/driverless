@@ -24,30 +24,15 @@
 
 
   add_executable(midpoint_test src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
-  # add_executable(midline_test src/generator.cpp src/raceline/raceline.cpp)
   ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
-
-  # add_executable(squirrel src/planning_codebase/midline/svm_midline.cpp)
-  # ament_target_dependencies(squirrel rclcpp)
-
-  #   target_include_directories(squirrel PUBLIC
-  #   ${PROJECT_SOURCE_DIR}/include
-  #   /usr/include/libsvm # Include svm directory 
-  #  )
 
   ament_export_targets(planning_exportTargets HAS_LIBRARY_TARGET)
   ament_export_dependencies(interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
-  # ament_target_dependencies(midline_test rclcpp std_msgs geometry_msgs eufs_msgs GSL)
 
-#   install(TARGETS
-#   squirrel
-#   DESTINATION lib/${PROJECT_NAME}
-#  )
-
-  install(
-    TARGETS midpoint_test
-    DESTINATION lib/${PROJECT_NAME}
-  )
+  # install(
+  #   TARGETS midpoint_test
+  #   DESTINATION lib/${PROJECT_NAME}
+  # )
 
   install(
     TARGETS planning_export
