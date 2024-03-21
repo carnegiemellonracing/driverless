@@ -74,10 +74,16 @@ class MidlineNode(Node):
             new_point.z = float(0)
             points.append(new_point)
 
-        msg.frames = points
-        
-        #TODO: add car pos to each midpoint to get global point
 
+
+        if len(points < 2):
+            print("LESS THAN 2 FRAMES")
+            return
+
+
+        msg.frames = points
+        print("num frames:",len(points))
+        #TODO: add car pos to each midpoint to get global point
         self.midline_pub.publish(msg)
 
         e = time.time()
