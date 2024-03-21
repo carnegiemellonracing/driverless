@@ -57,8 +57,6 @@ namespace controls {
                     options
                 );
 
-               // no pose subscription, since everything in car frame for now. will change when fast mode is implemented
-
                 m_world_quat_subscription = create_subscription<QuatMsg>(
                     world_quat_topic_name, world_quat_qos,
                     [this] (const QuatMsg::SharedPtr msg) { world_quat_callback(*msg); },
