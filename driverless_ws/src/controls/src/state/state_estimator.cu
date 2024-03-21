@@ -326,7 +326,7 @@ namespace controls {
 
             m_curv_frame_lookup_tex_info.xcenter = (xmax + xmin) / 2;
             m_curv_frame_lookup_tex_info.ycenter = (ymax + ymin) / 2;
-            m_curv_frame_lookup_tex_info.width = std::max(xmax - xmin, ymax - ymin) + curv_frame_lookup_padding * 2;
+            m_curv_frame_lookup_tex_info.width = std::max(xmax - xmin, ymax - ymin) + car_padding * 2;
         }
 
         void StateEstimator_Impl::render_curv_frame_lookup() {
