@@ -39,6 +39,7 @@ class MidlineNode(Node):
                                                  qos_profile=RELIABLE_QOS_PROFILE)
     
     def cone_callback(self, cones):
+        print("Recieiving cone callback in midline")
 
         s = time.time()
 
