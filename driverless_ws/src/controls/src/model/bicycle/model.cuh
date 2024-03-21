@@ -131,8 +131,23 @@ namespace controls {
 
                 //unpackages action
                 const float steering_angle = action[action_swangle_idx];
-                const float torque_front = rear_wheel_drive ? 0 : action[action_torque_idx] / 2;
-                const float torque_rear = rear_wheel_drive ? action[action_torque_idx] : action[action_torque_idx] / 2;
+                float torque_front, torque_rear;
+                switch (torque_mode) {
+                    case TorqueMode::AWD:
+                        torque_front = action[action_torque_idx] * 0.5f;
+                        torque_rear = action[action_torque_idx] * 0.5f;
+                        break;
+                    case TorqueMode::FWD:
+                        torque_front = action[action_torque_idx];
+                        torque_rear = 0;
+                        break;
+                    case TorqueMode::RWD:
+                        torque_front = 0;
+                        torque_rear = action[action_torque_idx];
+                        break;
+                }
+                torque_front *= gear_ratio;
+                torque_rear *= gear_ratio;
 
                 //compares wheel forces
                 float y_dot_front_tire = y_dot_car + yaw_rate *CG_TO_FRONT;
@@ -171,8 +186,8 @@ namespace controls {
                 // symplectic euler: to deal with discontiuities, we take the limit from the appropriate direction
                 tireModel(front_slip_ratio, front_slip_angle, front_load, front_forces_tire);
                 tireModel(rear_slip_ratio, rear_slip_angle, rear_load, rear_forces_tire);
-                float front_wheel_speed_next = front_wheel_speed + (torque_front - WHEEL_RADIUS * front_forces_tire[0]) / WHEEL_ROTATIONAL_INTERIA * timestep;
-                float rear_wheel_speed_next = rear_wheel_speed + (torque_rear - WHEEL_RADIUS * rear_forces_tire[0]) / WHEEL_ROTATIONAL_INTERIA * timestep;
+                float front_wheel_speed_next = front_wheel_speed + (torque_front - WHEEL_RADIUS * front_forces_tire[0] - sign(front_wheel_speed) * rolling_resistance_tire_torque) / WHEEL_ROTATIONAL_INTERIA * timestep;
+                float rear_wheel_speed_next = rear_wheel_speed + (torque_rear - WHEEL_RADIUS * rear_forces_tire[0] - sign(rear_wheel_speed) * rolling_resistance_tire_torque) / WHEEL_ROTATIONAL_INTERIA * timestep;
                 float front_slip_ratio_next = calculate_slip_ratio(front_wheel_speed_next, front_tire_long_component);
                 float rear_slip_ratio_next = calculate_slip_ratio(rear_wheel_speed_next, x_dot_car);
                 paranoid_assert(!std::isnan(front_slip_ratio_next) && "front slip ratio next is nan");
