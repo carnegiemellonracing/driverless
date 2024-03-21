@@ -44,7 +44,7 @@ class MidlineNode(Node):
 
         blue = []
         for cone in cones.blue_cones:
-            blue.append([cone.y, cone.x, 0]) #TODO: y,x or x,y??
+            blue.append([cone.y, cone.x, 0])
 
         yellow = []
         for cone in cones.yellow_cones:

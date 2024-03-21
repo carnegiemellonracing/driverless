@@ -23,7 +23,7 @@ RELIABLE_QOS_PROFILE = QoSProfile(
 
 class RacelineNode(Node):
     def __init__(self):
-        super().__init__("raceline node")
+        super().__init__("raceline_node")
         self.track_bounds_sub = self.create_subscription(msg_type=TrackBounds,
                                                          topic="/track_bounds",
                                                          callback=self.track_bounds_callback,
