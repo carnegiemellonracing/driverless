@@ -16,7 +16,7 @@ MAX_TORQUE = 10 #this is completely made up
 MAX_REQUEST = 255 #hypothetically real max is 255
 
 ADC_BIAS = 2212
-SLOPE = 34.5
+SLOPE = -34.5
 
 CMDLINE_QOS_PROFILE = QoSProfile(
     depth=10,  # Set the queue depth
