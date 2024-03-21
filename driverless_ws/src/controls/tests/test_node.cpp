@@ -140,10 +140,10 @@ namespace controls {
                 msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl << std::endl;
 
             ActionMsg adj_msg = msg;
-            adj_msg.torque_fl /= 1000.;
-            adj_msg.torque_fr /= 1000.;
-            adj_msg.torque_rl /= 1000.;
-            adj_msg.torque_rr /= 1000.;
+            adj_msg.torque_fl *= gear_ratio / 1000.;
+            adj_msg.torque_fr *= gear_ratio / 1000.;
+            adj_msg.torque_rl *= gear_ratio / 1000.;
+            adj_msg.torque_rr *= gear_ratio / 1000.;
 
             gsl_odeiv2_system system {};
             system.function = model_func;
