@@ -47,19 +47,6 @@ PUBLISH_FPS = 10
 VIS_UPDATE_FPS = 25
 MAX_ZED_CONE_RANGE = 12.5
 
-<<<<<<< HEAD
-=======
-def within_range(coords):
-    return np.linalg.norm(np.array(coords)) <= MAX_ZED_CONE_RANGE
-
-def zero_cone_z(coords):
-    return [coords[0], coords[1], 0]
-
-MAX_CONE_DIST = 15
-def within_max_dist(cone):
-    return np.linalg.norm(np.array(cone)) < MAX_CONE_DIST
-
->>>>>>> main
 class ConeNode(Node):
 
     def __init__(self, merger: Merger, debug=True):
@@ -128,9 +115,6 @@ class ConeNode(Node):
         # update visualizer
         if self.debug:
             self.vis2D.set_cones(merged_cones)
-
-        # filter cones that are too far away
-        self.cones.filter(within_max_dist)
 
         # publish cones
         print(f"Published {len(merged_cones)} cones")
