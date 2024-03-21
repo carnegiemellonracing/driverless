@@ -45,14 +45,14 @@ class RacelineNode(Node):
         tum_input = np.array(tum_input)
         tum_output = main_globaltraj(tum_input)
         msg = SplineFrames()
-        msg.fastmode = True
+        # msg.fastmode = True
         raceline_points = []
         for raceline_point in tum_output:
             point = Point()
             point.x = float(raceline_point[0])
             point.y = float(raceline_point[1])
             raceline_points.append(point)
-        msg.points = raceline_points
+        msg.frames = raceline_points
         self.raceline_pub.publish(msg)
 
 def main():
