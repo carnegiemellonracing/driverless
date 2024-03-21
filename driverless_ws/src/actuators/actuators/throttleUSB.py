@@ -4,16 +4,15 @@ from interfaces.msg import ControlAction
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy
 from std_msgs.msg import Int32
 import numpy as np
-import can
+import serial
 import time
 import math
 import signal
+import struct
 
-BUSTYPE = 'pcan'
-CHANNEL = 'PCAN_USBBUS1'
 BITRATE = 500000
 TIMER_HZ = 100
-MAX_TORQUE = 50 #this is completely made up
+MAX_TORQUE = 2000 #this is completely made up
 MAX_REQUEST = 255 #hypothetically real max is 255
 
 ADC_BIAS = 2212
@@ -29,7 +28,8 @@ class ActuatorNode(Node):
 
     def __init__(self):
         super().__init__('minimal_publisher')
-        self.bus2 = can.interface.Bus(bustype=BUSTYPE, channel=CHANNEL, bitrate=BITRATE,auto_reset=True)
+        # self.ser = can.interface.Bus(bustype=BUSTYPE, channel=CHANNEL, bitrate=BITRATE,auto_reset=True)
+        self.ser = serial.Serial("/dev/ttyUSB1", baudrate=9600, timeout=0.1)
         self.subscription = self.create_subscription(
             ControlAction,
             '/control_action',  # Replace with the desired topic name
@@ -44,12 +44,14 @@ class ActuatorNode(Node):
         # )
         timer_period = 1/TIMER_HZ  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
-
         
+        self.ser.reset_input_buffer()
 
         # self.even = True
         self.swangle = int(hex(ADC_BIAS)[2:], 16)
         self.torque_request = 0
+        msg = bytearray([0, 0,0,0])
+        self.ser.write(msg) 
         # self.accumulator = 0
 
     def timer_callback(self):
@@ -64,22 +66,39 @@ class ActuatorNode(Node):
 
         # first element in data array is throttle(uint8), next 2 is steering (int16)
         #where is this arbitration_id coming from? is this just our CAN ID?
-        try:
-            throttle_msg = can.Message(arbitration_id=0x2D2, data = [self.torque_request]*8, is_extended_id=False)
-            self.bus2.send(throttle_msg)
-            print(f"Throttle Message Sent: {throttle_msg.data}")
+        # try:
+            # throttle_msg = can.Message(arbitration_id=0x2D2, data = [self.torque_request]*8, is_extended_id=False)
+            # self.ser.send(throttle_msg)
+        
+        #AIM recieves uint_8[8]
+        data = (self.torque_request, self.swangle)
+        print(data)
+        x = bytearray()
+        while(not x):
+            x = self.ser.read(1)
+            if x:
+                print(x.hex())
+            continue
+        
+        msg = struct.pack(">hh", data[0], data[1])
+        #msg = bytearray([1,2,3,4])
+        # msg = bytearray([7,7,7,7])
+        
+        self.ser.write(msg) 
 
-            steering_msg = can.Message(arbitration_id=0x134, data = [0x00ff & self.swangle, (0xff00 & self.swangle)>>8, 6,5,7,8,9,1], is_extended_id=False)
-            self.bus2.send(steering_msg)
-            print(f"steering Message Sent: {steering_msg.data}")
-            print("----------------------")
-        except:
-            print("tried to send")
-            returnVal = self.bus2.reset()
-            if self.bus2._is_shutdown:
-                self.bus2 = can.interface.Bus(bustype=BUSTYPE, channel=CHANNEL, bitrate=BITRATE)
-            else: self.bus2.shutdown()
-            print("Reset Return Value: ", returnVal)
+        print(f"Throttle Message Sent: {msg.hex()}, {msg}")
+
+            # steering_msg = can.Message(arbitration_id=0x134, data = [0x00ff & self.swangle, (0xff00 & self.swangle)>>8, 6,5,7,8,9,1], is_extended_id=False)
+            # self.ser.send(steering_msg)
+            # print(f"steering Message Sent: {steering_msg.data}")
+            # print("----------------------")
+        # except:
+        #     print("tried to send")
+        #     returnVal = self.ser.reset()
+        #     if self.ser._is_shutdown:
+        #         self.ser = can.interface.Bus(bustype=BUSTYPE, channel=CHANNEL, bitrate=BITRATE)
+        #     else: self.ser.shutdown()
+        #     print("Reset Return Value: ", returnVal)
 
     def callback(self,msg):
         #TODO: SHIFT TORQUE VALUE TO BE CENTERED AROUND 128
@@ -114,7 +133,8 @@ def main(args=None):
 
     def sigint_handler(*args):
         print("ur mom closing down for business")
-        minimal_publisher.bus2.shutdown()
+        minimal_publisher.ser.close()
+        # minimal_publisher.ser.shutdown()
         minimal_publisher.destroy_node()
         rclpy.shutdown()
     

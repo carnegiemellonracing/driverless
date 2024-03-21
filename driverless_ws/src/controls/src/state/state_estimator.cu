@@ -1,3 +1,7 @@
+#ifndef GLM_FORCE_QUAT_DATA_WXYZ
+#define GLM_FORCE_QUAT_DATA_WXYZ
+#endif
+
 #include <utils/cuda_utils.cuh>
 #include <utils/gl_utils.hpp>
 #include <cuda_globals/cuda_globals.cuh>
