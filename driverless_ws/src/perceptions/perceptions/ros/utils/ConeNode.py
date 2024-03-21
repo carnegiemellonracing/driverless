@@ -182,11 +182,7 @@ class ConeNode(Node):
 def start_cone_node(args=None, debug=False):
     rclpy.init(args=args)
 
-<<<<<<< HEAD
-    cone_node = ConeNode(debug=debug)
-=======
     cone_node = ConeNode(debug=False)
->>>>>>> 19-plan-eigen-refactor
 
     rclpy.spin(cone_node)
 
