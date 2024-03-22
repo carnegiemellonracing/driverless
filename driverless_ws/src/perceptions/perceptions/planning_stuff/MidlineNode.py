@@ -77,7 +77,7 @@ class MidlineNode(Node):
 
 
 
-        if len(points < 2):
+        if len(points) < 2:
             print("LESS THAN 2 FRAMES")
             return
 

@@ -55,7 +55,7 @@ namespace controls {
     constexpr uint32_t curv_frame_lookup_tex_width = 512;
     constexpr float curv_frame_lookup_padding = 0; // meters
     constexpr float track_width = 5.0f;
-    constexpr float car_padding = 10.0f;
+    constexpr float car_padding = 3.0f;
     constexpr bool estimate_whl_speeds = true;
     constexpr float cg_to_front = 0.775;
     constexpr float whl_radius = 0.2286;

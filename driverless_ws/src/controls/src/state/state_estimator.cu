@@ -158,9 +158,8 @@ namespace controls {
         void StateEstimator_Impl::on_world_twist(const TwistMsg &twist_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            const float yaw = m_world_state[state_yaw_idx];
-            const float car_xdot = twist_msg.twist.linear.x * std::cos(yaw) + twist_msg.twist.linear.y * std::sin(yaw);
-            const float car_ydot = -twist_msg.twist.linear.x * std::sin(yaw) + twist_msg.twist.linear.y * std::cos(yaw);
+            const float car_xdot = twist_msg.twist.linear.x * std::cos(m_gps_heading) + twist_msg.twist.linear.y * std::sin(m_gps_heading);
+            const float car_ydot = twist_msg.twist.linear.x * std::sin(m_gps_heading) - twist_msg.twist.linear.y * std::cos(m_gps_heading);
             const float car_yawdot = twist_msg.twist.angular.z;
 
             m_world_state[state_car_xdot_idx] = car_xdot;
@@ -180,9 +179,10 @@ namespace controls {
 
             const fmat3x3 rot = mat3_cast(quat);
             const fvec3 ihatprime = rot * fvec3(1, 0, 0);
-            const float yaw = std::atan2(ihatprime.y, ihatprime.x);
+            const float heading = std::atan2(ihatprime.y, ihatprime.x);
 
-            m_world_state[state_yaw_idx] = yaw;
+            m_world_state[state_yaw_idx] = 0;
+            m_gps_heading = heading;
 
             m_world_yaw_ready = true;
         }
@@ -421,6 +421,10 @@ namespace controls {
             const float radius = track_width * 0.5f;
             const size_t n = m_spline_frames.size();
 
+            if (n < 2) {
+                throw std::runtime_error("less than 2 spline frames! (bruh andrew and/or deep)");
+            }
+
             std::vector<Vertex> vertices;
             std::vector<GLuint> indices;
 
@@ -507,7 +511,8 @@ namespace controls {
                 const glm::fvec2 ac_unit = glm::normalize(c - a);
                 const glm::fvec2 ac_norm = glm::fvec2(ac_unit.y, -ac_unit.x);
 
-                if (glm::dot(car_pos - b, ac_norm) < 0) { // car is behind first triangles
+                // if (glm::dot(car_pos - b, ac_norm) < 0) { // car is behind first triangles
+                if (true) {
                     const glm::fvec2 bcar = car_pos - b;
                     const glm::fvec2 car_parallel_plane = glm::normalize(glm::fvec2(bcar.y, -bcar.x));
                     const glm::fvec2 new_edge_center = b + bcar * (glm::length(bcar) + car_padding) / glm::length(bcar);
