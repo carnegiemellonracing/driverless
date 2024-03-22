@@ -7,6 +7,10 @@ import perceptions.planning_stuff.svm_utils as svm_utils
 from interfaces.msg import SplineFrames
 from geometry_msgs.msg import Point
 
+import perceptions.ros.utils.conversions as conv
+from perc22a.svm.svm_utils import cones_to_midline
+from perc22a.predictors.utils.vis.Vis2D import Vis2D
+
 import numpy as np
 import time
 
@@ -37,33 +41,26 @@ class MidlineNode(Node):
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
                                                  topic="/spline",
                                                  qos_profile=RELIABLE_QOS_PROFILE)
+        self.vis = Vis2D()
+
     
     def cone_callback(self, cones):
         print("Recieiving cone callback in midline")
 
         s = time.time()
 
-        blue = []
-        for cone in cones.blue_cones:
-            blue.append([cone.y, cone.x, 0])
-
-        yellow = []
-        for cone in cones.yellow_cones:
-            yellow.append([cone.y, cone.x, 1])
-
-        if len(yellow) == 0 or len(blue) == 0:
-            # NOTE: don't send midline if not seeing a single side
-            print("Not receiving either yellow or blue cones")
-            return
-        
-        data = np.vstack([np.array(blue).reshape(-1, 3), np.array(yellow).reshape(-1, 3)])
-        # print(data)
+        cones = conv.msg_to_cones(cones)
 
         s_svm = time.time()
-        downsampled_boundary_points = svm_utils.process(data)
+        downsampled_boundary_points = cones_to_midline(cones)
         e_svm = time.time()
         print(f"svm util: {int(1000 * (e_svm - s_svm))}")
         # print(downsampled_boundary_points)
+
+        self.vis.set_cones(cones)
+        if len(downsampled_boundary_points) > 0:
+            self.vis.set_points(downsampled_boundary_points)
+            self.vis.update()
 
         points = []
         msg = SplineFrames()
