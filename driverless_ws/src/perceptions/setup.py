@@ -40,6 +40,7 @@ setup(
             'yolov5_zed_node = perceptions.ros.predictors.YOLOv5Node:main_zed',
             'yolov5_zed2_node = perceptions.ros.predictors.YOLOv5Node:main_zed2',
             'lidar_node = perceptions.ros.predictors.LidarNode:main',
+            'lidar_node_debug = perceptions.ros.predictors.LidarNode:main_debug'
 
             'yolov5_zed_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed_debug',
             'yolov5_zed2_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed2_debug',

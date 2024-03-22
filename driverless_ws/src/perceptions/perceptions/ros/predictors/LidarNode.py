@@ -19,6 +19,15 @@ class LidarNode(PredictNode):
     def init_predictor(self):
         return LidarPredictor()
 
+def main_debug(args=None):
+    rclpy.init(args=args)
+
+    stereo_node = LidarNode(debug_flag=True)
+
+    rclpy.spin(stereo_node)
+
+    stereo_node.destroy_node()
+    rclpy.shutdown()
 
 def main(args=None):
     rclpy.init(args=args)

@@ -6,7 +6,7 @@ def process(data):
 
     X = data[:, :2]
     y = data[:, -1]
-    model = svm.SVC(kernel='poly', degree=3, C=10, coef0=1.0)
+    model = svm.SVC(kernel='poly', degree=3, C=1, coef0=10.0)
     model.fit(X, y)
 
     step = 0.1
@@ -17,6 +17,7 @@ def process(data):
     
     Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
     Z = Z.reshape(xx.shape)
+    print(Z)
 
     boundary_points = []
     for i in range(1, len(xx)):
