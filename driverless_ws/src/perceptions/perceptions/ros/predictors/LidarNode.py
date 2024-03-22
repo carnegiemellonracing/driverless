@@ -11,8 +11,8 @@ NODE_NAME = "lidar_node"
 
 class LidarNode(PredictNode):
 
-    def __init__(self):
-        super().__init__(name=NODE_NAME,  debug_flag=False, time_flag=True)
+    def __init__(self, debug=False):
+        super().__init__(name=NODE_NAME,  debug_flag=debug, time_flag=True)
         
         return
     
@@ -22,7 +22,7 @@ class LidarNode(PredictNode):
 def main_debug(args=None):
     rclpy.init(args=args)
 
-    stereo_node = LidarNode(debug_flag=True)
+    stereo_node = LidarNode(debug=True)
 
     rclpy.spin(stereo_node)
 
