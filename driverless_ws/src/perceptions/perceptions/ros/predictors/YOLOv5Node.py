@@ -9,20 +9,20 @@ from perc22a.predictors.stereo.YOLOv5Predictor import YOLOv5Predictor
 
 class YOLOv5Node(PredictNode):
 
-    def __init__(self, camera="zed2", debug=False):
+    def __init__(self, camera="zed2", debug=False, own_zed=None):
         node_name = f"yolov5_{camera}_node"
         self.camera = camera
         
         # initialize attributes, then setup prediction node
-        super().__init__(name=node_name, debug_flag=debug, time_flag=True)
+        super().__init__(name=node_name, debug_flag=debug, time_flag=True, own_zed=own_zed)
         return
 
     def init_predictor(self):
         return YOLOv5Predictor(camera=self.camera)
     
-def start_zed_node(args=None, camera="zed2", debug=False):
+def start_zed_node(args=None, camera="zed2", debug=False, own_zed=None):
     rclpy.init(args=args)
-    yolov5_node = YOLOv5Node(camera=camera, debug=debug)
+    yolov5_node = YOLOv5Node(camera=camera, debug=debug, own_zed=own_zed)
 
     rclpy.spin(yolov5_node)
 
@@ -41,6 +41,17 @@ def main_zed(args=None):
 def main_zed2(args=None):
     start_zed_node(args=args, camera="zed2", debug=False)
 
+def main_zed_own_debug(args=None):
+    start_zed_node(args=args, camera="zed", debug=True, own_zed="zed")
+
+def main_zed2_own_debug(args=None):
+    start_zed_node(args=args, camera="zed2", debug=True, own_zed="zed2")
+
+def main_zed_own(args=None):
+    start_zed_node(args=args, camera="zed", debug=False, own_zed="zed")
+
+def main_zed2_own(args=None):
+    start_zed_node(args=args, camera="zed2", debug=False, own_zed="zed2")
 
 if __name__ == "__main__":
     main_zed2()
