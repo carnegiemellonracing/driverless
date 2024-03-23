@@ -18,11 +18,31 @@
   find_package(Eigen3 3.3 REQUIRED)
   find_package(GSL REQUIRED)
   find_package(interfaces REQUIRED)
-  find_package(matplotlib-cpp REQUIRED)
+  
+  # Set the path to Python.h
+
+  # Add the directory containing Python.h to the include path
+  # include_directories(/usr/include/python3.8)
+  # include_directories(/usr/include/x86_64-linux-gnu/python3.8)
+  # Find Python
+  find_package(Python3 COMPONENTS Interpreter Development)
+
+  if (NOT Python3_FOUND)
+    message(FATAL_ERROR "Python 3 interpreter and development files not found")
+  endif()
+  include_directories(${Python3_INCLUDE_DIRS})
+
 
   add_executable(dynamic_spline src/planning_codebase/raceline/dsTest.cpp src/planning_codebase/raceline/dynamicSpline.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
-  ament_target_dependencies(dynamic_spline interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL matplotlib-cpp)
+  ament_target_dependencies(dynamic_spline interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
+  # Include Python library path
+link_directories(/usr/lib/x86_64-linux-gnu/)
 
+# Link against Python library
+target_link_libraries(dynamic_spline python3.8)
+
+# Include matplotlib-cpp library path (adjust path as necessary)
+include_directories(/home/planning/driverless/driverless/driverless_ws/src/matplotlib-cpp)
   # add_library(planning_export src/planning_codebase/raceline/raceline.cpp)
   # ament_target_dependencies(planning_export interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
 
