@@ -46,7 +46,7 @@ namespace controls {
     constexpr float offset_1m_cost = 2.0f;
     constexpr float target_speed = 2.5f;
     constexpr float no_speed_cost = 1.0f;
-    constexpr float overspeed_1m_cost = 1.0f;
+    constexpr float overspeed_1m_cost = 0.1f;
 
 
     // State Estimation
@@ -78,7 +78,7 @@ namespace controls {
     constexpr uint8_t action_torque_idx = 1;
 
     constexpr float gear_ratio = 15.0f;
-    constexpr float rolling_resistance_tire_torque = 10.0f;
+    constexpr float rolling_resistance_tire_torque = 20.0f;
 
     enum class TorqueMode {
         AWD,

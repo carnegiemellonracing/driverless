@@ -146,8 +146,7 @@ namespace controls {
         return n > high ? high : n < low ? low : n;
     }
 
-    template<typename T>
-    constexpr T radians(T degrees) {
+    constexpr float radians(float degrees) {
         return degrees * M_PI / 180;
     }
 }
