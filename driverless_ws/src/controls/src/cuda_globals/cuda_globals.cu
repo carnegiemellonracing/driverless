@@ -28,10 +28,10 @@ namespace controls {
         };
 
         __constant__ const float action_min[action_dims] = {
-            -0.5, -10.0
+            -radians(19), -10.0
         };
         __constant__ const float action_max[action_dims] = {
-            0.5, 10.0
+            radians(19), 10.0
         };
 
         __constant__ const float action_deriv_min[action_dims] = {

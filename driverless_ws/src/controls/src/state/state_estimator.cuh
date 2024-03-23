@@ -67,6 +67,8 @@ namespace controls {
             bool m_spline_ready = false;
             bool m_world_twist_ready = false;
             bool m_world_yaw_ready = false;
+
+            float m_gps_heading;
         };
 
     }
