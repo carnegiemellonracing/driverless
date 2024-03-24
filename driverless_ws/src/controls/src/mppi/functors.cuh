@@ -54,7 +54,7 @@ namespace controls {
             cuda_globals::sample_curv_state(world_state, curv_pose, out_out_bounds);
 
             const float angular_accel = model::slipless::angular_accel(world_state[state_speed_idx], action[action_swangle_idx]);
-            const float abs_centripedal_accel = angular_accel * world_state[state_speed_idx];
+            const float abs_centripedal_accel = fabsf(angular_accel * world_state[state_speed_idx]);
 
             if (out_out_bounds 
              || abs_centripedal_accel > lat_tractive_capability) {
@@ -73,7 +73,9 @@ namespace controls {
 
             const float distance_cost = offset_1m_cost * offset * offset;
 
-            return speed_cost + distance_cost;
+            const float torque_change_cost = torque_100N_per_sec_cost * (action[action_torque_idx] - last_action[action_torque_idx]) / controller_period;
+
+            return speed_cost + distance_cost + torque_change_cost;
         }
 
         // Functors for Brownian Generation

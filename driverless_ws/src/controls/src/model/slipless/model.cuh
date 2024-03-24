@@ -45,10 +45,17 @@ namespace controls {
                         break;
                 }
 
+                const float speed_dot =
+                    (torque_front * cosf(swangle - slip_angle) + torque_rear * cosf(slip_angle)) / (whl_radius * car_mass)
+                    - rolling_drag / car_mass;
+
+                // prevent reversing, and prevent accidentally overshooting 0 speed in integration
+                const float speed_dot_adj = max(speed_dot, -max(speed, 0.0f) / timestep);
+
                 state_dot[state_x_idx] = speed * cosf(speed_yaw);
                 state_dot[state_y_idx] = speed * sinf(speed_yaw);
                 state_dot[state_yaw_idx] = angular_accel(speed, swangle);
-                state_dot[state_speed_idx] = (torque_front * cosf(swangle) + torque_rear) / (whl_radius * car_mass);
+                state_dot[state_speed_idx] = speed_dot_adj;
             }
         }
     }

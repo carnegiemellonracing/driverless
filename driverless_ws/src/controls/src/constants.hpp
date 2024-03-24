@@ -47,6 +47,7 @@ namespace controls {
     constexpr float target_speed = 5.0f;
     constexpr float no_speed_cost = 1.0f;
     constexpr float overspeed_1m_cost = 0.1f;
+    constexpr float torque_100N_per_sec_cost = 0.0f;
 
 
     // State Estimation
@@ -64,7 +65,7 @@ namespace controls {
     constexpr float whl_radius = 0.2286;
     constexpr float gear_ratio = 15.0f;
     constexpr float car_mass = 310.0f;
-    constexpr float rolling_resistance_tire_torque = 20.0f;
+    constexpr float rolling_drag = 400; // N
     constexpr float long_tractive_capability = 5.0f; // m/s^2 
     constexpr float lat_tractive_capability = 5.0f; // m/s^2
 
