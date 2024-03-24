@@ -140,7 +140,7 @@ namespace controls {
         }
 
         void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
-            std::cout << "Swangle: " << msg.swangle * (180 / M_PI) << " Torque f: " <<
+            std::cout << "\nSwangle: " << msg.swangle * (180 / M_PI) << " Torque f: " <<
                 msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl << std::endl;
 
             ActionMsg adj_msg = msg;
@@ -173,6 +173,7 @@ namespace controls {
             {
                 std::cout << dim << " ";
             }
+            std::cout << std::endl;
             
             publish_quat();
             publish_twist();
@@ -187,8 +188,8 @@ namespace controls {
         }
 
         void TestNode::publish_quat() {
-            std::cout << "Publishing state (quaternions)" << std::endl;
-            std::cout << "Time: " << m_time << std::endl;
+            // std::cout << "Publishing state (quaternions)" << std::endl;
+            // std::cout << "Time: " << m_time << std::endl;
             
             glm::dquat quat = glm::angleAxis(m_world_state[2], glm::dvec3 {0.0, 0.0, 1.0});
 
@@ -202,8 +203,8 @@ namespace controls {
         }
 
         void TestNode::publish_twist() {
-            std::cout << "Publishing state (twist)" << std::endl;
-            std::cout << "Time: " << m_time << std::endl;
+            // std::cout << "Publishing state (twist)" << std::endl;
+            // std::cout << "Time: " << m_time << std::endl;
 
             TwistMsg msg {};
 
@@ -224,8 +225,8 @@ namespace controls {
         }
 
         void TestNode::publish_pose() {
-            std::cout << "Publishing state (pose)" << std::endl;
-            std::cout << "Time: " << m_time << std::endl;
+            // std::cout << "Publishing state (pose)" << std::endl;
+            // std::cout << "Time: " << m_time << std::endl;
 
             PoseMsg msg {};
             msg.pose.position.x = m_world_state[0];

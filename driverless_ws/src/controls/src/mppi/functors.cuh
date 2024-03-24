@@ -73,7 +73,7 @@ namespace controls {
 
             const float distance_cost = offset_1m_cost * offset * offset;
 
-            const float torque_change_cost = torque_100N_per_sec_cost * (action[action_torque_idx] - last_action[action_torque_idx]) / controller_period;
+            const float torque_change_cost = torque_100N_per_sec_cost * fabsf(action[action_torque_idx] - last_action[action_torque_idx]) / controller_period / 100;
 
             return speed_cost + distance_cost + torque_change_cost;
         }

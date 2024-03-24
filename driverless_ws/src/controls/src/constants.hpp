@@ -47,7 +47,7 @@ namespace controls {
     constexpr float target_speed = 5.0f;
     constexpr float no_speed_cost = 1.0f;
     constexpr float overspeed_1m_cost = 0.1f;
-    constexpr float torque_100N_per_sec_cost = 0.0f;
+    constexpr float torque_100N_per_sec_cost = 0.05f;
 
 
     // State Estimation
