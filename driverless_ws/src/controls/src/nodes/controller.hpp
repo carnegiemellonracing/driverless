@@ -68,14 +68,6 @@ namespace controls {
             void spline_callback(const SplineMsg& spline_msg);
 
             /**
-             * Callback for full world state subscription. Forwards message to `StateEstimator::on_state`, and notifies MPPI
-             * thread of the dirty state. Mostly for debugging.
-             *
-             * @param state_msg Received world state message
-             */
-            void state_callback(const StateMsg& state_msg);
-
-            /**
              * Callback for world twist subscription. Forwards message to `StateEstimator::on_world_twist`, and notifies MPPI
              * thread of the dirty state. Likely from GPS.
              *
@@ -134,7 +126,6 @@ namespace controls {
 
             rclcpp::Publisher<ActionMsg>::SharedPtr m_action_publisher;
             rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription;
-            rclcpp::Subscription<StateMsg>::SharedPtr m_state_subscription;
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription;
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription;
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription;
