@@ -12,7 +12,8 @@ namespace controls {
              */
 
             __host__ __device__ static float angular_accel(const float speed, const float swangle) {
-                const float back_whl_to_center_of_rot = (cg_to_front + cg_to_rear) / tanf(swangle);
+                const float kinematic_swangle = swangle / (1 + understeer_slope * speed);
+                const float back_whl_to_center_of_rot = (cg_to_front + cg_to_rear) / tanf(kinematic_swangle);
                 return copysignf(speed / sqrtf(cg_to_rear * cg_to_rear + back_whl_to_center_of_rot * back_whl_to_center_of_rot), swangle);
             }
 
@@ -23,7 +24,9 @@ namespace controls {
                 const float swangle = action[action_swangle_idx];
                 const float torque = action[action_torque_idx] * gear_ratio;
 
-                const float slip_angle = atanf(cg_to_rear / (cg_to_front + cg_to_rear) * tanf(swangle));
+                const float kinematic_swangle = swangle / (1 + understeer_slope * speed);
+
+                const float slip_angle = atanf(cg_to_rear / (cg_to_front + cg_to_rear) * tanf(kinematic_swangle));
                 const float speed_yaw = yaw + slip_angle;
 
                 constexpr float saturating_tire_torque = long_tractive_capability * car_mass * whl_radius / 2;
