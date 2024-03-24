@@ -51,12 +51,6 @@ namespace controls {
                     options
                 );
 
-                m_state_subscription  = create_subscription<StateMsg>(
-                    state_topic_name, state_qos,
-                    [this] (const StateMsg::SharedPtr msg) { state_callback(*msg); },
-                    options
-                );
-
                 m_world_quat_subscription = create_subscription<QuatMsg>(
                     world_quat_topic_name, world_quat_qos,
                     [this] (const QuatMsg::SharedPtr msg) { world_quat_callback(*msg); },
@@ -92,17 +86,6 @@ namespace controls {
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
                     m_state_estimator->on_spline(spline_msg);
-                }
-
-                notify_state_dirty();
-            }
-
-            void ControllerNode::state_callback(const StateMsg& state_msg) {
-                std::cout << "Received state" << std::endl;
-
-                {
-                    std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_state(state_msg);
                 }
 
                 notify_state_dirty();

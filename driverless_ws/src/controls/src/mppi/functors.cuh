@@ -7,6 +7,7 @@
 #include <cuda_constants.cuh>
 #include <cuda_globals/helpers.cuh>
 #include <math_constants.h>
+#include <model/slipless/model.cuh>
 
 #include "types.cuh"
 
@@ -47,12 +48,16 @@ namespace controls {
          * @param time_since_traj_start Time elapsed since trjaectory start
          * @returns Cost at the given state
          */
-        __device__ static float cost(float world_state[], float start_progress, float time_since_traj_start) {
+        __device__ static float cost(const float world_state[], const float action[], const float last_action[], float start_progress, float time_since_traj_start) {
             float curv_pose[3];
             bool out_out_bounds;
             cuda_globals::sample_curv_state(world_state, curv_pose, out_out_bounds);
 
-            if (out_out_bounds) {
+            const float angular_accel = model::slipless::angular_accel(world_state[state_speed_idx], action[action_swangle_idx]);
+            const float abs_centripedal_accel = angular_accel * world_state[state_speed_idx];
+
+            if (out_out_bounds 
+             || abs_centripedal_accel > lat_tractive_capability) {
                 return CUDART_INF_F;
             }
 
@@ -242,7 +247,8 @@ namespace controls {
                     // REASON 2: To save a loop over timesteps, we have essentially calculated the negative cost
                     // so far and stored it in cost_to_gos. During weighting, we will add back the total cost of the
                     // entire trajectory (which is |cost_to_gos| at final timestep). Likewise with log_prob_densities
-                    const float c = cost(x_curr, init_curv_pose[0], controller_period * (j + 1));
+                    const float *u_ij_last = IDX_3D(sampled_action_trajectories, dim3(num_samples, num_timesteps, action_dims), dim3(i, j == 0 ? 0 : j - 1, 0));
+                    const float c = cost(x_curr, u_ij, u_ij_last, init_curv_pose[0], controller_period * (j + 1));
                     const float d = log_prob_densities[i*num_timesteps + j];
                     j_curr -= c;
                     d_curr -= d;

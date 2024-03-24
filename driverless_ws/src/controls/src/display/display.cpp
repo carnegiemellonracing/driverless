@@ -1,7 +1,6 @@
 #include "display.hpp"
 
 #include <chrono>
-#include <cuda_constants.cuh>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <gsl/gsl_odeiv2.h>
@@ -14,7 +13,7 @@ using namespace std::chrono_literals;
 namespace controls {
     namespace display {
 
-        constexpr const char* traj_vertexShaderSource = R"(
+        constexpr const char *traj_vertexShaderSource = R"(
             #version 330 core
             #extension GL_ARB_explicit_uniform_location : enable
 
@@ -25,10 +24,10 @@ namespace controls {
 
             void main()
             {
-               gl_Position = vec4((aPos - camPos) / camScale, 0.0f, 1.0f);
+               vec2 sae_coords = (aPos - camPos) / camScale;
+               gl_Position = vec4(sae_coords.x, -sae_coords.y, 0.0f, 1.0f);
             }
         )";
-
 
         constexpr const char* traj_fragmentShaderSource = R"(
             #version 330 core
@@ -44,7 +43,7 @@ namespace controls {
             }
         )";
 
-        constexpr const char* img_vertex_source = R"(
+        constexpr const char *img_vertex_source = R"(
             #version 330 core
             #extension GL_ARB_explicit_uniform_location : enable
 
@@ -61,7 +60,8 @@ namespace controls {
 
             void main()
             {
-                gl_Position = vec4((aPos * imgWidth * 0.5f + imgCenter - camPos) / camScale, 0.0f, 1.0f);
+                vec2 sae_coords = (aPos * imgWidth * 0.5f + imgCenter - camPos) / camScale;
+                gl_Position = vec4(sae_coords.x, -sae_coords.y, 0.0f, 1.0f);
                 texCoord = i_texCoord;
             }
         )";
@@ -294,10 +294,10 @@ namespace controls {
                     m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(1,0);
                 }
                 if (keyboard_state[SDL_SCANCODE_UP]) {
-                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,1);
+                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,-1);
                 }
                 if (keyboard_state[SDL_SCANCODE_DOWN]) {
-                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,-1);
+                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,1);
                 }
 
                 if (keyboard_state[SDL_SCANCODE_S]) {

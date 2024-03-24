@@ -160,11 +160,8 @@ namespace controls {
 
             const float car_xdot = twist_msg.twist.linear.x * std::cos(m_gps_heading) + twist_msg.twist.linear.y * std::sin(m_gps_heading);
             const float car_ydot = twist_msg.twist.linear.x * std::sin(m_gps_heading) - twist_msg.twist.linear.y * std::cos(m_gps_heading);
-            const float car_yawdot = twist_msg.twist.angular.z;
 
-            m_world_state[state_car_xdot_idx] = car_xdot;
-            m_world_state[state_car_ydot_idx] = car_ydot;
-            m_world_state[state_yawdot_idx] = car_yawdot;
+            m_world_state[state_speed_idx] = glm::length(glm::fvec2(car_xdot, car_ydot));
 
             m_world_twist_ready = true;
         }
@@ -204,28 +201,6 @@ namespace controls {
             m_world_yaw_ready = true;
         }
 
-        void StateEstimator_Impl::on_state(const StateMsg& state_msg) {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            std::cout << "------- ON STATE -----" << std::endl;
-
-            m_world_state[state_x_idx] = state_msg.x;
-            m_world_state[state_y_idx] = state_msg.y;
-            m_world_state[state_yaw_idx] = state_msg.yaw;
-            m_world_state[state_car_xdot_idx] = state_msg.xcar_dot;
-            m_world_state[state_car_ydot_idx] = state_msg.ycar_dot;
-            m_world_state[state_yawdot_idx] = state_msg.yaw_dot;
-            m_world_state[state_my_idx] = state_msg.moment_y;
-            m_world_state[state_fz_idx] = state_msg.downforce;
-            m_world_state[state_whl_speed_f_idx] = state_msg.whl_speed_f;
-            m_world_state[state_whl_speed_r_idx] = state_msg.whl_speed_r;
-
-            m_world_twist_ready = true;
-            m_world_yaw_ready = true;
-
-            std::cout << "-------------------\n" << std::endl;
-        }
-
         void StateEstimator_Impl::sync_to_device(float swangle) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
@@ -234,9 +209,6 @@ namespace controls {
             {
                 std::cout << dim << " ";
             }
-
-            // TODO: make wheel speed estimation optional
-            estimate_whl_speeds(swangle);
 
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
@@ -511,9 +483,8 @@ namespace controls {
                 const glm::fvec2 ac_unit = glm::normalize(c - a);
                 const glm::fvec2 ac_norm = glm::fvec2(ac_unit.y, -ac_unit.x);
 
-                // if (glm::dot(car_pos - b, ac_norm) < 0) { // car is behind first triangles
-                if (true) {
-                    const glm::fvec2 bcar = car_pos - b;
+                const glm::fvec2 bcar = car_pos - b;
+                if (glm::dot(bcar, ac_norm) < car_padding) {
                     const glm::fvec2 car_parallel_plane = glm::normalize(glm::fvec2(bcar.y, -bcar.x));
                     const glm::fvec2 new_edge_center = b + bcar * (glm::length(bcar) + car_padding) / glm::length(bcar);
 
@@ -529,8 +500,11 @@ namespace controls {
                     const float v1_heading = vertices[bi].curv.heading;
                     const float v2_heading = vertices[bi].curv.heading;
 
-                    const Vertex v1 = {{v1_world.x, v1_world.y}, {v1_progress, v1_offset, v1_heading}};
-                    const Vertex v2 = {{v2_world.x, v2_world.y}, {v2_progress, v2_offset, v2_heading}};
+                    Vertex v1 = {{v1_world.x, v1_world.y}, {v1_progress, v1_offset, v1_heading}};
+                    Vertex v2 = {{v2_world.x, v2_world.y}, {v2_progress, v2_offset, v2_heading}};
+                    if (glm::dot(bcar, ac_norm) > 0) {
+                        std::swap(v1, v2);
+                    }
 
                     vertices.push_back(v1);
                     vertices.push_back(v2);
@@ -554,18 +528,6 @@ namespace controls {
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
-        }
-
-        void StateEstimator_Impl::estimate_whl_speeds(float swangle) {
-            const float xdot = m_world_state[state_car_xdot_idx];
-            const float yawdot = m_world_state[state_yawdot_idx];
-
-            const float whl_speed_f = (xdot * std::cos(swangle) + cg_to_front * yawdot * std::sin(swangle)) / whl_radius;
-            const float whl_speed_r = xdot / whl_radius;
-
-            m_world_state[state_whl_speed_f_idx] = whl_speed_f;
-            m_world_state[state_whl_speed_r_idx] = whl_speed_r;
-            std::cout << "whl_speed_f: " << whl_speed_f << " whl_speed_r: " << whl_speed_r << std::endl;
         }
     }
 }

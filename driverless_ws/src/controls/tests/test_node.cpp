@@ -26,7 +26,7 @@ namespace controls {
 
               m_spline_timer {create_wall_timer(
                   std::chrono::duration<float, std::milli>(100),
-                    [this]{ publish_spline(); publish_quat(); publish_twist(); publish_pose(); })},
+                    [this]{ publish_spline(); publish_quat(); publish_twist(); })},
 
               m_state_publisher {create_publisher<StateMsg>(state_topic_name, state_qos)},
               
@@ -37,7 +37,7 @@ namespace controls {
               m_pose_publisher {create_publisher<PoseMsg>(world_pose_topic_name, world_pose_qos)} {
         }
 
-        SplineMsg sine_spline(float period, float amplitude, float progress, float density) {
+        SplineMsg TestNode::sine_spline(float period, float amplitude, float progress, float density) {
             using namespace glm;
 
             SplineMsg result {};
@@ -45,10 +45,14 @@ namespace controls {
             fvec2 point {0.0f, 0.0f};
             float total_dist = 0;
 
+            const float curr_yaw = m_world_state[state_yaw_idx];
+            const fvec2 curr_pos = {m_world_state[state_x_idx], m_world_state[state_y_idx]};
+
             while (total_dist < progress) {
                 geometry_msgs::msg::Point frame {};
-                frame.y = point.x;
-                frame.x = point.y;
+                fvec2 car_point = point - curr_pos;
+                frame.y = car_point.x * cos(curr_yaw) + car_point.y * sin(curr_yaw) + m_norm_dist(m_rng);
+                frame.x = car_point.x * -sin(curr_yaw) + car_point.y * cos(curr_yaw) + m_norm_dist(m_rng);
                 result.frames.push_back(frame);
 
                 fvec2 delta = normalize(fvec2(1.0f, amplitude * 2 * M_PI / period * cos(2 * M_PI / period * point.x - M_PI / 2)))
@@ -169,7 +173,7 @@ namespace controls {
             {
                 std::cout << dim << " ";
             }
-            // publish_state();
+            
             publish_quat();
             publish_twist();
         }
@@ -180,25 +184,6 @@ namespace controls {
             // const auto spline = spiral_spine(200, 0.5);
             // const auto spline = line_spline(100, 0.5);
             m_spline_publisher->publish(spline);
-        }
-
-        void TestNode::publish_state() {
-            std::cout << std::endl << std::endl;
-            std::cout << "Time: " << m_time << std::endl;
-
-            StateMsg msg {};
-            msg.x = m_world_state[0];
-            msg.y = m_world_state[1];
-            msg.yaw = m_world_state[2];
-            msg.xcar_dot = m_world_state[3];
-            msg.ycar_dot = m_world_state[4];
-            msg.yaw_dot = m_world_state[5];
-            msg.downforce = m_world_state[6];
-            msg.moment_y = m_world_state[7];
-            msg.whl_speed_f = m_world_state[9] + m_world_state[10];
-            msg.whl_speed_r = m_world_state[11] + m_world_state[12];
-
-            m_state_publisher->publish(msg);
         }
 
         void TestNode::publish_quat() {
@@ -222,10 +207,10 @@ namespace controls {
 
             TwistMsg msg {};
 
-            const float yaw = m_world_state[state_yaw_idx];
-            const float car_xdot = m_world_state[state_car_xdot_idx];
-            const float car_ydot = m_world_state[state_car_ydot_idx];
-            const float yawdot = m_world_state[state_yawdot_idx];
+            const float yaw = m_world_state[2];
+            const float car_xdot = m_world_state[3];
+            const float car_ydot = m_world_state[4];
+            const float yawdot = m_world_state[5];
 
             msg.twist.linear.x = car_xdot * std::cos(yaw) - car_ydot * std::sin(yaw);
             msg.twist.linear.y = car_xdot * std::sin(yaw) + car_ydot * std::cos(yaw);
@@ -243,8 +228,8 @@ namespace controls {
             std::cout << "Time: " << m_time << std::endl;
 
             PoseMsg msg {};
-            msg.pose.position.x = m_world_state[state_x_idx];
-            msg.pose.position.y = m_world_state[state_y_idx];
+            msg.pose.position.x = m_world_state[0];
+            msg.pose.position.y = m_world_state[1];
             msg.pose.position.z = 0.0;
 
             m_pose_publisher->publish(msg);
