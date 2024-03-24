@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'throttle_node = actuators.throttleUSB:main',
+            'swangle_input = actuators.swangle_input:main'
         ],
     },
 )
