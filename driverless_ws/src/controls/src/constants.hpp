@@ -68,6 +68,7 @@ namespace controls {
     constexpr float rolling_drag = 400; // N
     constexpr float long_tractive_capability = 5.0f; // m/s^2 
     constexpr float lat_tractive_capability = 5.0f; // m/s^2
+    constexpr float understeer_slope = 0.05;
 
     enum class TorqueMode
     {
@@ -82,7 +83,7 @@ namespace controls {
     constexpr uint8_t state_x_idx = 0;
     constexpr uint8_t state_y_idx = 1;
     constexpr uint8_t state_yaw_idx = 2;
-    constexpr uint8_t state_speed_idx = 3; // only slipless model
+    constexpr uint8_t state_speed_idx = 3;
 
     constexpr uint8_t action_swangle_idx = 0;
     constexpr uint8_t action_torque_idx = 1;
