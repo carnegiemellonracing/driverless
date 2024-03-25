@@ -17,7 +17,6 @@
 
   <depend>rclcpp</depend>
   <depend>message_filters</depend>
-  <depend>eufs_msgs</depend>
   <depend>GSL</depend>
   <depend>Eigen3</depend>
 

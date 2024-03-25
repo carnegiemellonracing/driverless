@@ -1,7 +1,7 @@
 
 # ROS2 message types
 from sensor_msgs.msg import Image, PointCloud2
-from eufs_msgs.msg import ConeArray
+from interfaces.msg import ConeArray
 from geometry_msgs.msg import Point
 
 # perc22a Cone class
