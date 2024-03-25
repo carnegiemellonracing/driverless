@@ -1,4 +1,4 @@
-from eufs_msgs.msg import ConeArray as ConeArray
+from interfaces.msg import ConeArray as ConeArray
 from geometry_msgs.msg import Point
 import json
 

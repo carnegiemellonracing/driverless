@@ -8,7 +8,7 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 from stereo.predict import predict
 # from stereo.ZED import ZEDSDK
 
-from eufs_msgs.msg import ConeArray
+from interfaces.msg import ConeArray
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
 
