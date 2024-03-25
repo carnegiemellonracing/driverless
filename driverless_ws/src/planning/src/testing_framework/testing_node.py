@@ -3,7 +3,7 @@ import driverless_ws.src.planning.testing_framework.midlineplot as midlineplot
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from eufs_msgs.msg import ConeArray as ConeArray
+from interfaces.msg import ConeArray as ConeArray
 from geometry_msgs.msg import Point
 
 

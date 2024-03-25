@@ -2,7 +2,7 @@ tmux new-session -d;  # start new detached tmux session
 
 #rosbag
 tmux send 'source $DRIVERLESS/driverless_ws/install/setup.bash && clear' ENTER;
-tmux send 'ros2 bag record -a -o';   
+#tmux send 'ros2 bag record -a -o';   
 
 #perceptions
 tmux split-window -h -p 100;                            
@@ -31,12 +31,15 @@ tmux send 'source $DRIVERLESS/driverless_ws/install/setup.bash && ros2 run actua
 #sbg
 tmux split-window -h -p 60;                             # split the detached tmux session
 tmux send 'source ~/movella_ws/install/setup.bash && ros2 launch bluespace_ai_xsens_mti_driver xsens_mti_node.launch.py';                    
+
+#controller
 tmux split-window -h -p 70;
-tmux send 'source ~/Documents/driverless/driverless_ws/install/setup.bash && ros2 run perceptions midline_node';
-tmux select-pane -t 0;
+tmux send 'source $DRIVERLESS/driverless_ws/install/setup.bash && ros2 run controls controller';
+
+#actuator
 tmux split-window -v -p 70;
-tmux send 'source ~/Documents/driverless/driverless_ws/install/setup.bash && ros2 run controls controller';
-tmux split-window -v -p 70;
-tmux send 'source ~/Documents/driverless/driverless_ws/install/setup.bash && ros2 run actuators throttle_node';
-tmux a;                                                 # open (attach) tmux session.
+tmux send 'source $DRIVERLESS/driverless_ws/install/setup.bash && ros2 run actuators throttle_node';
+
+# open (attach) tmux session.
+tmux a;                                                 
 
