@@ -106,14 +106,16 @@ void testMakeSplinesVector() {
     // make a std::vector<std::pair<double,double>> with 2 different polynomials
     // one point overlap, have 7 points in total 
     std::vector<std::pair<double,double>> blue_cones = {
-        std::make_pair(1.382, 9.425), // y = 2x^3 + 3x
-        std::make_pair(1.192, 6.963),
-        std::make_pair(0.494, 1.723),
-        std::make_pair(0, 0), // y = 2x^3 + 5x^2 + x
-        std::make_pair(-0.68, 1.003), 
-        std::make_pair(-1.78, 2.782),
-        std::make_pair(-2.56, -3.346)
+        std::make_pair(400, 400),
+        std::make_pair(300, 300),
+        std::make_pair(200, 200),
+        std::make_pair(100, 100)
     };
+
+    // std::make_pair(589, 167.513),
+    // std::make_pair(455, 101.664),
+    // std::make_pair(320, 94.88),
+    // std::make_pair(201, 21.194), 
 
     // std::make_pair(1.382, 9.425), // y = 2x^3 + 3x
     // std::make_pair(1.192, 6.963),
@@ -133,8 +135,8 @@ void testMakeSplinesVector() {
     // should return a vecotr of cumulativeLengths
     std::vector<double> cumulativeLengths = slVectors.second;
 
-    assert(splines.size() == 2);
-    assert(cumulativeLengths.size() == 2);
+    assert(splines.size() == 1);
+    assert(cumulativeLengths.size() == 1);
 
     for (int i = 0; i < splines.size(); i++){
         polynomial poly = splines[i].get_SplPoly();
@@ -160,21 +162,21 @@ int main() {
     
     std::cout << "Hello, world!" << std::endl;
 
-    //testMakeSplinesVector();
+    testMakeSplinesVector();
 
-    int n = 5000; // number of data points
-    std::vector<double> x(n), y(n);
-    for(int i=0; i<n; ++i) {
-        double t = 2*M_PI*i/n;
-        x.at(i) = 16*sin(t)*sin(t)*sin(t);
-        y.at(i) = 13*cos(t) - 5*cos(2*t) - 2*cos(3*t) - cos(4*t);
-    }
+    // int n = 5000; // number of data points
+    // std::vector<double> x(n), y(n);
+    // for(int i=0; i<n; ++i) {
+    //     double t = 2*M_PI*i/n;
+    //     x.at(i) = 16*sin(t)*sin(t)*sin(t);
+    //     y.at(i) = 13*cos(t) - 5*cos(2*t) - 2*cos(3*t) - cos(4*t);
+    // }
 
-    plt::plot(x, y, "r-", x, [](double d) { return 12.5+abs(sin(d)); }, "k-");
+    // plt::plot(x, y, "r-", x, [](double d) { return 12.5+abs(sin(d)); }, "k-");
 
 
-    // show plots
-    plt::show();
+    // // show plots
+    // plt::show();
     
     return 0;
 }
