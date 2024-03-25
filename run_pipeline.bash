@@ -2,7 +2,7 @@ tmux new-session -d;  # start new detached tmux session
 
 #rosbag
 tmux send 'source $DRIVERLESS/driverless_ws/install/setup.bash && clear' ENTER;
-tmux send 'ros2 bag record -a -o';   
+#tmux send 'ros2 bag record -a -o';   
 
 #perceptions
 tmux split-window -h -p 100;                            
