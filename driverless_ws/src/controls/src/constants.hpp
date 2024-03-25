@@ -27,7 +27,7 @@ namespace controls {
     constexpr double controller_freq = 50.;
     constexpr float controller_period = 1. / controller_freq;
 
-    constexpr double controller_publish_freq = 10.;
+    constexpr double controller_publish_freq = 50.;
     constexpr float controller_publish_period = 1. / controller_publish_freq;
 
 
@@ -45,7 +45,7 @@ namespace controls {
     // Cost params
     constexpr float offset_1m_cost = 2.0f;
     constexpr float target_speed = 10.0f;
-    constexpr float no_speed_cost = 3.0f;
+    constexpr float no_speed_cost = 5.0f;
     constexpr float overspeed_1m_cost = 1.0f;
     constexpr float torque_100N_per_sec_cost = 0.0f;
 
@@ -56,7 +56,7 @@ namespace controls {
     constexpr uint32_t curv_frame_lookup_tex_width = 512;
     constexpr float curv_frame_lookup_padding = 0; // meters
     constexpr float track_width = 5.0f;
-    constexpr float car_padding = 3.0f;
+    constexpr float car_padding = spline_frame_separation;
     constexpr bool should_estimate_whl_speeds = false;
 
     // Car params
