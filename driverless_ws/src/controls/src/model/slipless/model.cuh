@@ -29,7 +29,7 @@ namespace controls {
                 const float slip_angle = atanf(cg_to_rear / (cg_to_front + cg_to_rear) * tanf(kinematic_swangle));
                 const float speed_yaw = yaw + slip_angle;
 
-                constexpr float saturating_tire_torque = long_tractive_capability * car_mass * whl_radius / 2;
+                constexpr float saturating_tire_torque = saturating_motor_torque * 0.5f * gear_ratio;
                 float torque_front, torque_rear;
                 switch (torque_mode) {
                     case TorqueMode::AWD:
