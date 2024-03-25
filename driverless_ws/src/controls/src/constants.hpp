@@ -44,10 +44,10 @@ namespace controls {
 
     // Cost params
     constexpr float offset_1m_cost = 2.0f;
-    constexpr float target_speed = 5.0f;
-    constexpr float no_speed_cost = 1.0f;
-    constexpr float overspeed_1m_cost = 0.1f;
-    constexpr float torque_100N_per_sec_cost = 0.05f;
+    constexpr float target_speed = 10.0f;
+    constexpr float no_speed_cost = 3.0f;
+    constexpr float overspeed_1m_cost = 1.0f;
+    constexpr float torque_100N_per_sec_cost = 0.0f;
 
 
     // State Estimation
@@ -65,10 +65,12 @@ namespace controls {
     constexpr float whl_radius = 0.2286;
     constexpr float gear_ratio = 15.0f;
     constexpr float car_mass = 310.0f;
-    constexpr float rolling_drag = 400; // N
+    constexpr float rolling_drag = 200.0f; // N
     constexpr float long_tractive_capability = 5.0f; // m/s^2 
     constexpr float lat_tractive_capability = 5.0f; // m/s^2
-    constexpr float understeer_slope = 0.05;
+    constexpr float understeer_slope = 0.025f;
+    constexpr float brake_enable_speed = 2.0f;
+    constexpr float saturating_motor_torque = long_tractive_capability * car_mass * whl_radius / gear_ratio;
 
     enum class TorqueMode
     {

@@ -108,7 +108,7 @@ namespace controls {
 
         /**@brief
          *
-         *@Author:Ayush Garg and Anthony Yip
+         * @Author:Ayush Garg and Anthony Yip
          *
          * @params perturbation n x m x q disturbance matrix
          * logProabilityDensities n x m matrix to store result
@@ -221,13 +221,17 @@ namespace controls {
 
                     // perturb initial control action guess with the brownian, clamp to reasonable bounds
                     for (uint32_t k = 0; k < action_dims; k++) {
-                        u_ij[k] = action_trajectory_base[idx].data[k]
+                        const float recentered_brownian = action_trajectory_base[idx].data[k]
                                   + *IDX_3D(brownians, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, k));
-                        u_ij[k] = clamp(
-                            u_ij[k],
+                        const float clamped_brownian = clamp(
+                            recentered_brownian,
                             cuda_globals::action_min[k],
                             cuda_globals::action_max[k]
                         );
+                        const float deadzoned = k == action_torque_idx && x_curr[state_speed_idx] < brake_enable_speed ?
+                            max(clamped_brownian, 0.0f) : clamped_brownian;
+
+                        u_ij[k] = deadzoned;
                     }
 
                     assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
