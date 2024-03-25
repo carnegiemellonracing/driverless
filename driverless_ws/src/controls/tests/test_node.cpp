@@ -7,7 +7,6 @@
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
 #include <model/two_track/codegen/minimal_state_function.h>
-#include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 
 #include "test_node.hpp"
@@ -15,101 +14,103 @@
 
 namespace controls {
     namespace tests {
-        TestNode::TestNode()
+        TestNode::TestNode(uint32_t seed)
             : Node{"test_node"},
 
               m_subscriber (create_subscription<ActionMsg>(
                     control_action_topic_name, control_action_qos,
                     [this] (const ActionMsg::SharedPtr msg) { on_action(*msg); })),
 
-              m_spline_publisher {create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
-
               m_spline_timer {create_wall_timer(
                   std::chrono::duration<float, std::milli>(100),
                     [this]{ publish_spline(); publish_quat(); publish_twist(); })},
 
+              m_spline_publisher {create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
               m_state_publisher {create_publisher<StateMsg>(state_topic_name, state_qos)},
-              
               m_quat_publisher {create_publisher<QuatMsg>(world_quat_topic_name, world_quat_qos)},
-
               m_twist_publisher {create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
+              m_pose_publisher {create_publisher<PoseMsg>(world_pose_topic_name, world_pose_qos)},
 
-              m_pose_publisher {create_publisher<PoseMsg>(world_pose_topic_name, world_pose_qos)} {
+              m_rng {seed} {
+
+
+            next_segment();
+            next_segment();
         }
 
-        SplineMsg TestNode::sine_spline(float period, float amplitude, float progress, float density) {
-            using namespace glm;
+        void TestNode::next_segment() {
 
-            SplineMsg result {};
+            m_segment1 = m_segment2;
+            m_spline_mid_pos = m_spline_end_pos;
 
-            fvec2 point {0.0f, 0.0f};
-            float total_dist = 0;
+            float end_heading;
+            glm::fvec2 end_pos;
+            switch (m_last_segment_type) {
+                case SegmentType::NONE:
+                case SegmentType::ARC: {
+                    bool is_straight = m_uniform_dist(m_rng) < straight_after_arc_prob;
+                    if (is_straight) {
+                        m_segment2 = straight_segment(m_spline_end_pos, m_uniform_dist(m_rng) * (max_straight - min_straight) + min_straight, m_spline_end_heading);
+                        m_last_segment_type = SegmentType::STRAIGHT;
+                        end_heading = m_spline_end_heading;
+                        end_pos = m_segment2.back();
 
-            const float curr_yaw = m_world_state[state_yaw_idx];
-            const fvec2 curr_pos = {m_world_state[state_x_idx], m_world_state[state_y_idx]};
+                    } else {
+                        float radius = m_uniform_dist(m_rng) * (max_radius - min_radius) + min_radius;
+                        float arc_rad = (m_uniform_dist(m_rng) - 0.5f) * (max_arc_rad - min_arc_rad) * 2;
+                        end_heading = m_spline_end_heading + arc_rad;
 
-            while (total_dist < progress) {
-                geometry_msgs::msg::Point frame {};
-                fvec2 car_point = point - curr_pos;
-                frame.y = car_point.x * cos(curr_yaw) + car_point.y * sin(curr_yaw) + m_norm_dist(m_rng);
-                frame.x = car_point.x * -sin(curr_yaw) + car_point.y * cos(curr_yaw) + m_norm_dist(m_rng);
-                result.frames.push_back(frame);
+                        m_segment2 = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
+                        m_last_segment_type = SegmentType::ARC;
+                        m_spline_end_heading = m_spline_end_heading + arc_rad;
 
-                fvec2 delta = normalize(fvec2(1.0f, amplitude * 2 * M_PI / period * cos(2 * M_PI / period * point.x - M_PI / 2)))
-                            * density;
-                total_dist += length(delta);
-                point += delta;
+                        end_pos = m_segment2.back();
+                    }
+                    break;
+                }
+
+                case SegmentType::STRAIGHT: {
+                    float radius = m_uniform_dist(m_rng) * (max_radius - min_radius) + min_radius;
+                    float arc_rad = (m_uniform_dist(m_rng) - 0.5f) * (max_arc_rad - min_arc_rad) * 2;
+                    end_heading = m_spline_end_heading + arc_rad;
+
+                    m_segment2 = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
+                    m_last_segment_type = SegmentType::ARC;
+
+                    end_pos = m_segment2.back();
+                    break;
+                }
             }
 
+            m_spline_end_heading = end_heading;
+            m_spline_end_pos = end_pos;
+        }
+
+        std::vector<glm::fvec2> TestNode::arc_segment(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
+            std::vector<glm::fvec2> result;
+
+            float arc_rad = end_heading - start_heading;
+            float center_heading = arc_rad > 0 ?
+                start_heading + M_PI_2 : start_heading - M_PI_2;
+
+            glm::fvec2 center = m_spline_end_pos + radius * glm::fvec2 {glm::cos(center_heading), glm::sin(center_heading)};
+            float start_angle = std::atan2(start_pos.y - center.y, start_pos.x - center.x);
+
+            const uint32_t steps = glm::abs(radius * arc_rad / spline_frame_separation);
+            const float step_rad = arc_rad / steps;
+            for (uint32_t i = 1; i <= steps; i++) {
+                float angle = start_angle + i * step_rad;
+                result.push_back(center + radius * glm::fvec2 {glm::cos(angle), glm::sin(angle)});
+            }
             return result;
         }
 
-        SplineMsg spiral_spine(float progress, float density) {
-            using namespace glm;
-
-            SplineMsg result {};
-
-            fvec2 point {0.0f, 0.0f};
-            float total_dist = 0;
-            float theta = 0.0f;
-            const float a = 100.0f;
-
-            while (total_dist < progress) {
-                geometry_msgs::msg::Point frame {};
-                frame.x = a * theta * cos(theta);
-                frame.y = a * theta * sin(theta);
-            
-                result.frames.push_back(frame);
-
-                fvec2 ds_dtheta = a * fvec2(cos(theta) - theta * sin(theta), sin(theta) + theta * cos(theta));
-                const float delta = density / length(ds_dtheta);
-                total_dist += density;
-                theta += delta;
+        std::vector<glm::fvec2> TestNode::straight_segment(glm::fvec2 start, float length, float heading) {
+            std::vector<glm::fvec2> result;
+            const uint32_t steps = length / spline_frame_separation;
+            for (uint32_t i = 1; i <= steps; i++) {
+                result.push_back(start + i * spline_frame_separation * glm::fvec2 {glm::cos(heading), glm::sin(heading)});
             }
-
-            return result;
-        }
-
-
-        SplineMsg line_spline(float progress, float density) {
-            using namespace glm;
-
-            SplineMsg result {};
-
-            fvec2 point {0.0f, 0.0f};
-            float total_dist = 0;
-
-            while (total_dist < progress) {
-                geometry_msgs::msg::Point frame {};
-                frame.x = point.x;
-                frame.y = point.y;
-                result.frames.push_back(frame);
-
-                fvec2 delta = fvec2(1, 0) * density;
-                total_dist += length(delta);
-                point += delta;
-            }
-
             return result;
         }
 
@@ -177,14 +178,35 @@ namespace controls {
             
             publish_quat();
             publish_twist();
+
+            const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
+            if (distance(car_pos, m_spline_end_pos) < distance(car_pos, m_spline_mid_pos)) {
+                next_segment();
+            }
         }
 
         void TestNode::publish_spline() {
-            // std::cout << "Publishing spline" << std::endl << std::endl;
-            const auto spline = sine_spline(30, 5, 100, 0.5);
-            // const auto spline = spiral_spine(200, 0.5);
-            // const auto spline = line_spline(100, 0.5);
-            m_spline_publisher->publish(spline);
+            SplineMsg msg {};
+
+            const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
+            const float car_heading = m_world_state[2];
+
+            auto gen_point = [&car_pos, car_heading](const glm::fvec2& point) {
+                geometry_msgs::msg::Point p;
+                glm::fvec2 rel_point = point - car_pos;
+                p.y = rel_point.x * glm::cos(car_heading) + rel_point.y * glm::sin(car_heading);
+                p.x = rel_point.x * -glm::sin(car_heading) + rel_point.y * glm::cos(car_heading);
+                return p;
+            };
+
+            for (const glm::fvec2& point : m_segment1) {
+                msg.frames.push_back(gen_point(point));
+            }
+            for (const glm::fvec2& point : m_segment2) {
+                msg.frames.push_back(gen_point(point));
+            }
+
+            m_spline_publisher->publish(msg);
         }
 
         void TestNode::publish_quat() {
@@ -239,9 +261,18 @@ namespace controls {
 }
 
 int main(int argc, char* argv[]){
+    uint32_t seed;
+    if (argc == 1) {
+        std::cout << "No seed given, using default 0" << std::endl;
+        seed = 0;
+    } else {
+        seed = strtol(argv[1], nullptr, 10);
+        std::cout << "Using seed " << seed << std::endl;
+    }
+
     rclcpp::init(argc, argv);
 
-    rclcpp::spin(std::make_shared<controls::tests::TestNode>());
+    rclcpp::spin(std::make_shared<controls::tests::TestNode>(seed));
 
     rclcpp::shutdown();
     return 0;

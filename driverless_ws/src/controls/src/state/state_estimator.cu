@@ -486,9 +486,8 @@ namespace controls {
                 glm::fvec2 bcar = car_pos - b;
                 if (glm::dot(bcar, ac_norm) < car_padding) {
                     if (glm::dot(bcar, ac_norm) >= 0) {
-                        bcar *= -1;
+                        bcar = -ac_norm * car_padding;
                     }
-
                     const glm::fvec2 car_parallel_plane = glm::normalize(glm::fvec2(bcar.y, -bcar.x));
                     const glm::fvec2 new_edge_center = b + bcar * (glm::length(bcar) + car_padding) / glm::length(bcar);
 
