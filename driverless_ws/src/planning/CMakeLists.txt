@@ -14,20 +14,19 @@
   find_package(rclcpp REQUIRED)
   find_package(std_msgs REQUIRED)
   find_package(geometry_msgs REQUIRED)
-  find_package(eufs_msgs REQUIRED)
   find_package(Eigen3 REQUIRED)
   find_package(GSL REQUIRED)
   find_package(interfaces REQUIRED)
 
   add_library(planning_export src/planning_codebase/raceline/raceline.cpp)
-  ament_target_dependencies(planning_export interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
+  ament_target_dependencies(planning_export interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
 
 
   add_executable(midpoint_test src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
-  ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
+  ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
 
   ament_export_targets(planning_exportTargets HAS_LIBRARY_TARGET)
-  ament_export_dependencies(interfaces rclcpp std_msgs geometry_msgs Eigen3 eufs_msgs GSL)
+  ament_export_dependencies(interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
 
   # install(
   #   TARGETS midpoint_test
