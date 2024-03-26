@@ -21,8 +21,8 @@
 namespace controls {
     namespace state {
 
-        std::shared_ptr<StateEstimator> StateEstimator::create(std::mutex& mutex) {
-            return std::make_shared<StateEstimator_Impl>(mutex);
+        std::shared_ptr<StateEstimator> StateEstimator::create(std::mutex& mutex, LoggerFunc logger) {
+            return std::make_shared<StateEstimator_Impl>(mutex, logger);
         }
 
 
@@ -62,10 +62,11 @@ namespace controls {
 
         // methods
 
-        StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex)
-            : m_mutex {mutex}, m_curv_frame_lookup_mapped {false} {
+        StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger)
+            : m_mutex {mutex}, m_logger {logger} {
             std::lock_guard<std::mutex> guard {mutex};
 
+            m_logger("initializing state estimator");
 #ifdef DISPLAY
             m_gl_window = utils::create_sdl2_gl_window(
                 "Spline Frame Lookup", curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
@@ -79,10 +80,13 @@ namespace controls {
             );
 #endif
 
+            m_logger("making state estimator gl context current");
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
+            m_logger("compiling state estimator shaders");
             m_gl_path_shader = utils::compile_shader(vertex_source, fragment_source);
 
+            m_logger("setting state estimator gl properties");
             glClearColor(0.0f, 0.0f, 0.0f, -1.0f);
 
             glEnable(GL_DEPTH_TEST);
@@ -90,11 +94,13 @@ namespace controls {
 
             glViewport(0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width);
 
+            m_logger("generating state estimator gl buffers");
             gen_curv_frame_lookup_framebuffer();
             gen_gl_path();
 
             glFinish();
             utils::make_gl_current_or_except(m_gl_window, nullptr);
+            m_logger("finished state estimator initialization");
         }
 
         void StateEstimator_Impl::gen_curv_frame_lookup_framebuffer() {
@@ -124,7 +130,7 @@ namespace controls {
         void StateEstimator_Impl::on_spline(const SplineMsg& spline_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            std::cout << "------- ON SPLINE -----" << std::endl;
+            m_logger("beginning state estimator spline processing");
 
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
@@ -138,21 +144,17 @@ namespace controls {
                 });
             }
 
-            std::cout << "generating spline frame lookup texture info..." << std::endl;
+            m_logger("generating spline frame lookup texture info...");
             gen_tex_info({m_world_state[state_x_idx], m_world_state[state_y_idx]});
-            std::cout << "xcenter: " << m_curv_frame_lookup_tex_info.xcenter
-                      << " ycenter: " << m_curv_frame_lookup_tex_info.ycenter <<
-                         " width: " << m_curv_frame_lookup_tex_info.width
-            << std::endl;
 
-            std::cout << "filling OpenGL buffers..." << std::endl;
+            m_logger("filling OpenGL buffers...");
             fill_path_buffers({m_world_state[state_x_idx], m_world_state[state_y_idx]});
 
             utils::sync_gl_and_unbind_context(m_gl_window);
 
             m_spline_ready = true;
 
-            std::cout << "-------------------\n" << std::endl;
+            m_logger("finished state estimator spline processing");
         }
 
         void StateEstimator_Impl::on_world_twist(const TwistMsg &twist_msg) {
@@ -204,34 +206,44 @@ namespace controls {
         void StateEstimator_Impl::sync_to_device(float swangle) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            std::cout << "Publishing state" << std::endl;
-            for (float dim : m_world_state)
-            {
-                std::cout << dim << " ";
-            }
-
+            m_logger("beginning state estimator device sync");
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
-            std::cout << "unmapping CUDA curv frame lookup texture for OpenGL rendering ..." << std::endl;
+            m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
             unmap_curv_frame_lookup();
 
-            std::cout << "rendering curv frame lookup table..." << std::endl;
+            m_logger("rendering curv frame lookup table...");
             render_curv_frame_lookup();
 
-            std::cout << "mapping OpenGL curv frame texture back to CUDA..." << std::endl;
+            m_logger("mapping OpenGL curv frame texture back to CUDA");
             map_curv_frame_lookup();
 
-            std::cout << "syncing world state to device..." << std::endl;
+            m_logger("syncing world state to device");
             sync_world_state();
 
-            std::cout << "syncing spline frame lookup texture info to device..." << std::endl;
+            m_logger("syncing spline frame lookup texture info to device");
             sync_tex_info();
 
             utils::sync_gl_and_unbind_context(m_gl_window);
+            m_logger("finished state estimator device sync");
         }
 
         bool StateEstimator_Impl::is_ready() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
             return m_spline_ready && m_world_twist_ready && m_world_yaw_ready;
+        }
+
+        State StateEstimator_Impl::get_state() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            return m_world_state;
+        }
+
+        void StateEstimator_Impl::set_logger(LoggerFunc logger) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            m_logger = logger;
         }
 
 #ifdef DISPLAY
