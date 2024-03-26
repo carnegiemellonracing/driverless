@@ -12,7 +12,7 @@ namespace controls {
 
         class StateEstimator_Impl : public StateEstimator {
         public:
-            StateEstimator_Impl(std::mutex& mutex);
+            StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger);
 
             void on_spline(const SplineMsg& spline_msg) override;
             void on_world_twist(const TwistMsg& twist_msg) override;
@@ -22,6 +22,10 @@ namespace controls {
             void sync_to_device(float swangle) override;
 
             bool is_ready() override;
+
+            State get_state() override;
+
+            void set_logger(LoggerFunc logger) override;
 
 #ifdef DISPLAY
             std::vector<glm::fvec2> get_spline_frames() override;
@@ -67,6 +71,8 @@ namespace controls {
             bool m_world_yaw_ready = false;
 
             float m_gps_heading;
+
+            LoggerFunc m_logger;
         };
 
     }

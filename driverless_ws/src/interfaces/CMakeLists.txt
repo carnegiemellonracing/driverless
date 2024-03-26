@@ -49,8 +49,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/SplineList.msg"
   "msg/SplineFrames.msg"
   "msg/ControlAction.msg"
-  "msg/ControlsState.msg"
   "msg/ConeArray.msg"
+  "msg/ControlsState.msg"
+  "msg/ControllerInfo.msg"
   DEPENDENCIES geometry_msgs sensor_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 
