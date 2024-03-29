@@ -163,7 +163,7 @@ namespace controls {
             const float car_xdot = twist_msg.twist.linear.x * std::cos(m_gps_heading) + twist_msg.twist.linear.y * std::sin(m_gps_heading);
             const float car_ydot = twist_msg.twist.linear.x * std::sin(m_gps_heading) - twist_msg.twist.linear.y * std::cos(m_gps_heading);
 
-            m_world_state[state_speed_idx] = glm::length(glm::fvec2(car_xdot, car_ydot));
+            m_world_state[state_speed_idx] = 2.0f; //glm::length(glm::fvec2(car_xdot, car_ydot));
 
             m_world_twist_ready = true;
         }
