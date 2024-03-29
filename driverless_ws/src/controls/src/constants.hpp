@@ -47,7 +47,7 @@ namespace controls {
     // Cost params
 
     constexpr float offset_1m_cost = 2.0f;
-    constexpr float target_speed = 10.0f;
+    constexpr float target_speed = 3.0f;
     constexpr float no_speed_cost = 5.0f;
     constexpr float overspeed_1m_cost = 1.0f;
     constexpr float torque_100N_per_sec_cost = 0.0f;
