@@ -32,10 +32,11 @@ class SteeringTuningNode(Node):
             (np.radians(-10.), TOTAL_THROTTLE / 2, TOTAL_THROTTLE / 2, 0., 0.),
         ])
 
-        self.end_action = (0., -1000., -1000., -1000., -1000.)
+        self.end_action = (0., -0., -0., -0., -0.)
 
     def publish(self, action):
         msg = ControlAction()
+        print(f"Publishing {action}")
         msg.swangle = action[0]
         msg.torque_fl = action[1]
         msg.torque_fr = action[2]
@@ -45,11 +46,11 @@ class SteeringTuningNode(Node):
 
     def run(self):
         for action in self.actions:
-            print(f"Publishing {action}")
             self.publish(action)
             time.sleep(ACTION_DELAY)
 
         self.publish(self.end_action)
+        time.sleep(ACTION_DELAY)
 
 
 def main(args=None):
