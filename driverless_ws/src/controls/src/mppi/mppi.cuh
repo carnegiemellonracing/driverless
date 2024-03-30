@@ -17,9 +17,10 @@ namespace controls {
 
         class MppiController_Impl : public MppiController {
         public:
-            MppiController_Impl(std::mutex& mutex);
+            MppiController_Impl(std::mutex& mutex, LoggerFunc logger);
 
             Action generate_action() override;
+            void set_logger(LoggerFunc logger) override;
 
 
 #ifdef DISPLAY
@@ -79,6 +80,8 @@ namespace controls {
 #endif
 
             curandGenerator_t m_rng;
+
+            LoggerFunc m_logger;
 
             std::mutex& m_mutex;
         };

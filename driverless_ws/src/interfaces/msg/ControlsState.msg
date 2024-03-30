@@ -1,10 +1,6 @@
+std_msgs/Header header
+
 float32 x
 float32 y
 float32 yaw
-float32 xcar_dot
-float32 ycar_dot
-float32 yaw_dot
-float32 moment_y
-float32 downforce
-float32 whl_speed_f
-float32 whl_speed_r
+float32 speed

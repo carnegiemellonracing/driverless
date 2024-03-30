@@ -12,17 +12,20 @@ namespace controls {
 
         class StateEstimator_Impl : public StateEstimator {
         public:
-            StateEstimator_Impl(std::mutex& mutex);
+            StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger);
 
             void on_spline(const SplineMsg& spline_msg) override;
             void on_world_twist(const TwistMsg& twist_msg) override;
             void on_world_quat(const QuatMsg& quat_msg) override;
             void on_world_pose(const PoseMsg& pose_msg) override;
-            void on_state(const StateMsg& state_msg) override;
 
             void sync_to_device(float swangle) override;
 
             bool is_ready() override;
+
+            State get_state() override;
+
+            void set_logger(LoggerFunc logger) override;
 
 #ifdef DISPLAY
             std::vector<glm::fvec2> get_spline_frames() override;
@@ -44,7 +47,6 @@ namespace controls {
             void gen_curv_frame_lookup_framebuffer();
             void gen_gl_path();
             void fill_path_buffers(glm::fvec2 car_pos);
-            void estimate_whl_speeds(float swangle);
 
             std::vector<glm::fvec2> m_spline_frames;
 
@@ -62,13 +64,15 @@ namespace controls {
 
             std::mutex& m_mutex;
             std::mutex m_gl_context_mutex;
-            bool m_curv_frame_lookup_mapped;
+            bool m_curv_frame_lookup_mapped = false;
 
             bool m_spline_ready = false;
             bool m_world_twist_ready = false;
             bool m_world_yaw_ready = false;
 
             float m_gps_heading;
+
+            LoggerFunc m_logger;
         };
 
     }

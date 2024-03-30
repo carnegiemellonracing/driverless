@@ -5,7 +5,7 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 
 # cone datatype for ROS and perc22a
 from sensor_msgs.msg import PointCloud2
-from eufs_msgs.msg import ConeArray
+from interfaces.msg import ConeArray
 from perc22a.predictors.utils.cones import Cones
 from perc22a.predictors.utils.transform.transform import PoseTransformations
 import perceptions.ros.utils.conversions as conv

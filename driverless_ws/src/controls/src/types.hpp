@@ -21,6 +21,9 @@ namespace controls {
     using PoseMsg = geometry_msgs::msg::PoseStamped;
     using StateMsg = interfaces::msg::ControlsState;
 
+    using LoggerFunc = std::function<void(const char*)>;
+    constexpr void no_log(const char*) {};
+
     class Controller {
     public:
         virtual Action generate_action() =0;

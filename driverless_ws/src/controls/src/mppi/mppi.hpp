@@ -10,9 +10,10 @@ namespace controls {
     namespace mppi {
         class MppiController {
         public:
-            static std::shared_ptr<MppiController> create(std::mutex& mutex);
+            static std::shared_ptr<MppiController> create(std::mutex& mutex, LoggerFunc logger = no_log);
 
             virtual Action generate_action() =0;
+            virtual void set_logger(LoggerFunc logger) =0;
 
 #ifdef DISPLAY
             virtual std::vector<float> last_state_trajectories() =0;

@@ -15,11 +15,11 @@
 namespace controls {
     namespace mppi {
 
-        std::shared_ptr<MppiController> MppiController::create(std::mutex& mutex) {
-            return std::make_shared<MppiController_Impl>(mutex);
+        std::shared_ptr<MppiController> MppiController::create(std::mutex& mutex, LoggerFunc logger) {
+            return std::make_shared<MppiController_Impl>(mutex, logger);
         }
 
-        MppiController_Impl::MppiController_Impl(std::mutex& mutex)
+        MppiController_Impl::MppiController_Impl(std::mutex& mutex, LoggerFunc logger)
             : m_action_trajectories(num_action_trajectories),
               m_cost_to_gos(num_samples * num_timesteps),
               m_log_prob_densities(num_samples * num_timesteps),
@@ -30,6 +30,7 @@ namespace controls {
               m_last_curr_state {},
 #endif
               m_last_action_trajectory(num_timesteps - 1),
+              m_logger {logger},
               m_mutex (mutex) {  // -1 because last element will always be
                                                                              // inferred from second to last
             for (uint32_t i = 0; i < num_timesteps - 1; i++) {
@@ -52,18 +53,16 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             // call kernels
-            std::cout << "generating brownians..." << std::endl;
+            m_logger("generating brownians");
             generate_brownians();
 
-            // print_tensor(m_action_trajectories, action_trajectories_dims);
-            // std::cout << std::endl;
-            std::cout << "generating Log Probability Densities..." << std::endl;
+            m_logger("generating Log Probability Densities");
             generate_log_probability_density();
 
-            std::cout << "populating cost..." << std::endl;
+            m_logger("populating cost");
             populate_cost();
 
-            std::cout << "\nreducing actions..." << std::endl;
+            m_logger("reducing actions");
             // not actually on device, just still in a device action struct
             thrust::device_vector<DeviceAction> averaged_trajectory = reduce_actions();
 
@@ -91,6 +90,12 @@ namespace controls {
 #endif
 
             return result_action;
+        }
+
+        void MppiController_Impl::set_logger(LoggerFunc logger) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            m_logger = logger;
         }
 
 #ifdef DISPLAY

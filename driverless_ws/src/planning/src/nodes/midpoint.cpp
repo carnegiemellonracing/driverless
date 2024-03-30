@@ -4,8 +4,7 @@
 #include "std_msgs/msg/int8.hpp"
 #include "geometry_msgs/msg/point.hpp"
 // #include "msg/optimizer_points.hpp"
-#include "eufs_msgs/msg/cone_array.hpp"
-#include "eufs_msgs/msg/point_array.hpp"
+#include "interfaces/msg/cone_array.hpp"
 // #include "interfaces/msg/cone_list.hpp"
 // #include "interfaces/msg/points.hpp"
 #include "../planning_codebase/midline/generator.hpp"
@@ -15,9 +14,9 @@
 #include <eigen3/Eigen/Dense>
 
 // publish topic example
-// ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 1.0, y: 2.0, z: 3.0}]}"
-//  ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 0.0, y: 3.0, z: 0.0}, {x: 1.414, y: 2.236 , z: 0.0}, {x: 3.0, y: 0.0 , z: 0.0}], yellow_cones: [{x: 0.0, y: 2.0, z: 0.0}, {x: 1.414, y: 1.414, z: 0.0}, {x: 2.0, y: 0.0, z: 0.0}]}"
-// ros2 topic pub -1 /stereo_node_cones eufs_msgs/msg/ConeArray "{blue_cones: [{x: 1.0, y: -1.0, z: 0.0}, {x: 2, y: -1, z: 0.0}, {x: 3.0, y: -1.0 , z: 0.0}], yellow_cones: [{x: 1.0, y: 1.0, z: 0.0}, {x: 2, y: 1, z: 0.0}, {x: 3.0, y: 1.0, z: 0.0}]}"
+// ros2 topic pub -1 /stereo_node_cones interfaces/msg/ConeArray "{blue_cones: [{x: 1.0, y: 2.0, z: 3.0}]}"
+//  ros2 topic pub -1 /stereo_node_cones interfaces/msg/ConeArray "{blue_cones: [{x: 0.0, y: 3.0, z: 0.0}, {x: 1.414, y: 2.236 , z: 0.0}, {x: 3.0, y: 0.0 , z: 0.0}], yellow_cones: [{x: 0.0, y: 2.0, z: 0.0}, {x: 1.414, y: 1.414, z: 0.0}, {x: 2.0, y: 0.0, z: 0.0}]}"
+// ros2 topic pub -1 /stereo_node_cones interfaces/msg/ConeArray "{blue_cones: [{x: 1.0, y: -1.0, z: 0.0}, {x: 2, y: -1, z: 0.0}, {x: 3.0, y: -1.0 , z: 0.0}], yellow_cones: [{x: 1.0, y: 1.0, z: 0.0}, {x: 2, y: 1, z: 0.0}, {x: 3.0, y: 1.0, z: 0.0}]}"
 
 using std::placeholders::_1;
 #define DELTA 0.5
@@ -31,9 +30,9 @@ class MidpointNode : public rclcpp::Node
 private:
   perceptionsData perception_data;
 
-  rclcpp::Subscription<eufs_msgs::msg::ConeArray>::SharedPtr subscription_cones;
+  rclcpp::Subscription<interfaces::msg::ConeArray>::SharedPtr subscription_cones;
   // rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_lap_num;
-  // rclcpp::Publisher<eufs_msgs::msg::PointArray>::SharedPtr publisher_rcl_pt;
+  // rclcpp::Publisher<interfaces::msg::PointArray>::SharedPtr publisher_rcl_pt;
   rclcpp::Publisher<interfaces::msg::Spline>::SharedPtr publisher_rcl_pt;
 
   static const int LOOKAHEAD_NEAR = 2;
@@ -50,7 +49,7 @@ private:
     lap = msg->data;
   }
 
-  void cones_callback(const eufs_msgs::msg::ConeArray::SharedPtr msg)
+  void cones_callback(const interfaces::msg::ConeArray::SharedPtr msg)
   {
     RCLCPP_INFO(this->get_logger(), "Hello");
     // return;
@@ -146,7 +145,7 @@ public:
   MidpointNode()
       : Node("midpoint")
   {
-    subscription_cones = this->create_subscription<eufs_msgs::msg::ConeArray>("/stereo_node_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
+    subscription_cones = this->create_subscription<interfaces::msg::ConeArray>("/stereo_node_cones", 10, std::bind(&MidpointNode::cones_callback, this, _1));
     // subscription_lap_num = this->create_subscription<std_msgs::msg::String>("/lap_num", 10, std::bind(&MidpointNode::lap_callback, this, _1));
     publisher_rcl_pt = this->create_publisher<interfaces::msg::Spline>("/midline", 10);
     // publisher_rcl_pt = this->create_publisher<std_msgs::msg::String>("/midpoint_points",10);
