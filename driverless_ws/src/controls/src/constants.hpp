@@ -71,7 +71,7 @@ namespace controls {
     constexpr float gear_ratio = 15.0f;
     constexpr float car_mass = 310.0f;
     constexpr float rolling_drag = 200.0f; // N
-    constexpr float long_tractive_capability = 5.0f; // m/s^2 
+    constexpr float long_tractive_capability = 3.5f; // m/s^2 
     constexpr float lat_tractive_capability = 5.0f; // m/s^2
     constexpr float understeer_slope = 0.025f;
     constexpr float brake_enable_speed = 2.0f;

@@ -29,8 +29,8 @@ tmux split-window -h -p 50;                             # split the detached tmu
 tmux send 'source $DRIVERLESS/driverless_ws/install/setup.bash && ros2 run actuators throttle_node' ENTER;    
 
 # #sbg
-# tmux split-window -h -p 60;                             # split the detached tmux session
-# tmux send 'source ~/movella_ws/install/setup.bash && ros2 launch bluespace_ai_xsens_mti_driver xsens_mti_node.launch.py';                    
+tmux split-window -h -p 60;                             # split the detached tmux session
+tmux send 'source ~/movella_ws/install/setup.bash && ros2 launch bluespace_ai_xsens_mti_driver xsens_mti_node.launch.py';                    
 
 # open (attach) tmux session.
 tmux a;                                                 
