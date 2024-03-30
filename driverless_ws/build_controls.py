@@ -1,0 +1,26 @@
+#!/usr/bin/python3
+
+import argparse
+import os
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Build controls")
+    parser.add_argument("-a", "--asserts", action="store_true")
+    parser.add_argument("-d", "--debug", action="store_true")
+    parser.add_argument("-D", "--display", action="store_true")
+    parser.add_argument("-e", "--export", action="store_true", help="export compile commands")
+
+    args = parser.parse_args()
+    command = "colcon build --packages-select controls --cmake-args"
+    if args.asserts:
+        command += " -DPARANOID=ON"
+    if args.debug:
+        command += " -DCMAKE_BUILD_TYPE=Debug"
+    if args.display:
+        command += " -DDISPLAY=ON"
+    if args.export:
+        command += " -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+
+    os.system(command)
+
+

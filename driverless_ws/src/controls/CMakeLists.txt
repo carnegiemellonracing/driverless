@@ -116,6 +116,9 @@ if(BUILD_TESTING)
   add_executable(controls_test_node tests/test_node.cpp)
   target_link_libraries(controls_test_node controls_lib GSL::gsl)
 
+  add_executable(model_wrapper tests/model/model_wrapper.cu)
+  target_link_libraries(model_wrapper controls_lib)
+
   ament_target_dependencies(controls_test_node rclcpp glm interfaces std_msgs)
 
   install(

@@ -9,11 +9,11 @@ namespace controls {
 
         __constant__ size_t spline_texture_elems = 0;
 
-        __constant__ float curr_state[state_dims] = {10, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        __constant__ float curr_state[state_dims] = {0, 0, 0, 0};
 
 
-        constexpr float swangle_swangle_std = 0.1;
-        constexpr float torque_torque_std = 100;
+        constexpr float swangle_swangle_std = 0.2;
+        constexpr float torque_torque_std = 10;
         // NOTE:WHEN CHANGING ENSURE YOU ALSO CHANGE MAGIC MATRIX AND MAGIC NUMBER
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
             swangle_swangle_std, 0,
@@ -28,10 +28,10 @@ namespace controls {
         };
 
         __constant__ const float action_min[action_dims] = {
-            -0.5, -10.0
+            -radians(19), -saturating_motor_torque
         };
         __constant__ const float action_max[action_dims] = {
-            0.5, 10.0
+            radians(19), saturating_motor_torque
         };
 
         __constant__ const float action_deriv_min[action_dims] = {

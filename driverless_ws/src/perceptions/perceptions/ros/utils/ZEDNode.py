@@ -17,7 +17,7 @@ from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TO
 from perceptions.topics import LEFT2_IMAGE_TOPIC, RIGHT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC, DEPTH2_IMAGE_TOPIC
 from perceptions.zed import ZEDSDK
 
-from eufs_msgs.msg import ConeArray #, DataFrame
+from interfaces.msg import ConeArray #, DataFrame
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
 from std_msgs.msg import Header

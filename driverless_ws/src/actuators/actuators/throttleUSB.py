@@ -12,14 +12,14 @@ import struct
 
 BITRATE = 500000
 TIMER_HZ = 100
-MAX_TORQUE = 10 #this is completely made up
+MAX_TORQUE = 21 #this is completely made up
 MAX_REQUEST = 255 #hypothetically real max is 255
 
 ADC_BIAS = 2212
-SLOPE = -34.5
+SLOPE = 34.5
 
 CMDLINE_QOS_PROFILE = QoSProfile(
-    depth=10,  # Set the queue depth
+    depth=1,  # Set the queue depth
     reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_RELIABLE,  # Set the reliability policy
     durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_VOLATILE  # Set the durability policy
 )
@@ -101,7 +101,6 @@ class ActuatorNode(Node):
         #     print("Reset Return Value: ", returnVal)
 
     def callback(self,msg):
-        #TODO: SHIFT TORQUE VALUE TO BE CENTERED AROUND 128
         (fl, fr, rl, rr) = (msg.torque_fl, msg.torque_fr, msg.torque_rl, msg.torque_rr)
         print(f"fl: {fl} |fr: {fr} | rl: {rl} | rr: {rr}")
         #torque_avg = (fl+fr+rl+rr)/4

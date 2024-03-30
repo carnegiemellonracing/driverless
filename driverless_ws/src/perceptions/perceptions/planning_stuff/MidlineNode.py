@@ -1,7 +1,7 @@
 
 import rclpy
 from rclpy.node import Node
-from eufs_msgs.msg import ConeArray
+from interfaces.msg import ConeArray
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 import perceptions.planning_stuff.svm_utils as svm_utils
 from interfaces.msg import SplineFrames
@@ -67,8 +67,8 @@ class MidlineNode(Node):
 
         for np_point in downsampled_boundary_points:
             new_point = Point()
-            new_point.x = float(np_point[1]) #turning into SAE coordinates
-            new_point.y = float(np_point[0])
+            new_point.x = float(np_point[0]) # turning into not SAE coordinates
+            new_point.y = float(np_point[1])
             new_point.z = float(0)
             points.append(new_point)
 

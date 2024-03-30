@@ -5,7 +5,7 @@ from rclpy.node import Node
 from sensor_msgs.msg import Image, PointCloud2, Imu, NavSatFix
 from geometry_msgs.msg import Vector3Stamped
 from message_filters import ApproximateTimeSynchronizer, Subscriber
-from eufs_msgs.msg import DataFrame
+from interfaces.msg import DataFrame
 
 import time
 

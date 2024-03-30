@@ -13,7 +13,6 @@ Software Versions Required
     - Requires computer restart at times
 
 Packages Required
-- `eufs_msgs`
 - `HesaiLidar_ROS_2.0` (follow [this](https://github.com/carnegiemellonracing/HesaiLidar_ROS_2.0) for build instructions)
     - Note that `hesai_ros_driver` must be built with `--symlink-install`
 - `ros2_numpy`

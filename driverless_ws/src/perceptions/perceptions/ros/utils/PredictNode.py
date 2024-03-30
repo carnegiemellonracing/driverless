@@ -4,7 +4,7 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 
 # for converting predictor output to cone message type
-from eufs_msgs.msg import ConeArray
+from interfaces.msg import ConeArray
 import perceptions.ros.utils.conversions as conversions
 
 # for collecting data from sensors
