@@ -39,10 +39,15 @@ setup(
             # predictor nodes
             'yolov5_zed_node = perceptions.ros.predictors.YOLOv5Node:main_zed',
             'yolov5_zed2_node = perceptions.ros.predictors.YOLOv5Node:main_zed2',
-            'lidar_node = perceptions.ros.predictors.LidarNode:main',
-
             'yolov5_zed_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed_debug',
             'yolov5_zed2_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed2_debug',
+
+            'yolov5_zed_own_node = perceptions.ros.predictors.YOLOv5Node:main_zed_own',
+            'yolov5_zed2_own_node = perceptions.ros.predictors.YOLOv5Node:main_zed2_own',
+            'yolov5_zed_own_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed_own_debug',
+            'yolov5_zed2_own_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed2_own_debug',
+
+            'lidar_node = perceptions.ros.predictors.LidarNode:main',
 
             # cone node
             'cone_node = perceptions.ros.utils.ConeNode:main',

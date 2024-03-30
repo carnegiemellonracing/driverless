@@ -11,6 +11,7 @@ from sensor_msgs.msg import Image, PointCloud2
 import perceptions.ros.utils.conversions as conv
 from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC #, DATAFRAME_TOPIC
 from perceptions.topics import LEFT2_IMAGE_TOPIC, RIGHT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC, DEPTH2_IMAGE_TOPIC
+from perceptions.zed import ZEDSDK
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
@@ -20,6 +21,8 @@ from perc22a.data.utils.DataInstance import DataInstance
 # general imports
 import cv2
 import numpy as np
+
+PUBLISH_FPS = 15
 
 # configure QOS profile
 BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
@@ -36,8 +39,20 @@ ALL_DATA_TYPES = [d for d in DataType]
 
 class DataNode(Node):
 
-    def __init__(self, required_data=ALL_DATA_TYPES, name="data_node", visualize=False):
+    def __init__(self, required_data=ALL_DATA_TYPES, name="data_node", visualize=False, own_zed=None):
+
         super().__init__(name)
+
+        assert(own_zed == None or own_zed == "zed" or own_zed == "zed2" or own_zed == "both")
+
+        if own_zed == "zed" or own_zed == "both":
+            self.zed = ZEDSDK(serial_num=15080)
+            self.zed.open()
+            self.data_syncer = self.create_timer(1/PUBLISH_FPS, self.update_zed_data)
+        if own_zed == "zed2" or own_zed == "both":
+            self.zed2 = ZEDSDK(serial_num=27680008)
+            self.zed2.open()
+            self.data_syncer = self.create_timer(1/PUBLISH_FPS, self.update_zed2_data)
 
         # subscribe to each piece of data that we want to collect on
         self.required_data = required_data
@@ -47,21 +62,21 @@ class DataNode(Node):
         self.data = DataInstance(required_data)
 
 
-        if DataType.ZED_LEFT_COLOR in self.required_data:
+        if DataType.ZED_LEFT_COLOR in self.required_data and (own_zed == "zed2" or own_zed == None):
             self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         
-        if DataType.ZED2_LEFT_COLOR in self.required_data:
+        if DataType.ZED2_LEFT_COLOR in self.required_data and (own_zed == "zed" or own_zed == None):
             self.left2_color_subscriber = self.create_subscription(Image, LEFT2_IMAGE_TOPIC, self.left2_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         
         # if DataType.ZED_RIGHT_COLOR in self.required_data:
         #     self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
-        if DataType.ZED_XYZ_IMG in self.required_data:
+        if DataType.ZED_XYZ_IMG in self.required_data and (own_zed == "zed2" or own_zed == None):
             self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
             if self.visualize:
                 self.xyz_image_window = vis.init_visualizer_window()
                 
-        if DataType.ZED2_XYZ_IMG in self.required_data:
+        if DataType.ZED2_XYZ_IMG in self.required_data and (own_zed == "zed" or own_zed == None):
             self.xyz2_image_subscriber = self.create_subscription(Image, XYZ2_IMAGE_TOPIC, self.xyz2_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
             if self.visualize:
                 self.xyz2_image_window = vis.init_visualizer_window()
@@ -86,6 +101,16 @@ class DataNode(Node):
     def got_all_data(self):
         # returns whether data node has all pieces of data
         return self.data.have_all_data()
+    
+    def update_zed_data(self):
+        left, right, depth, xyz = self.zed.grab_data()
+        self.data[DataType.ZED_LEFT_COLOR] = left
+        self.data[DataType.ZED_XYZ_IMG] = xyz
+
+    def update_zed2_data(self):
+        left, right, depth, xyz = self.zed2.grab_data()
+        self.data[DataType.ZED2_LEFT_COLOR] = left
+        self.data[DataType.ZED2_XYZ_IMG] = xyz
     
     def left_color_callback(self, msg):
         self.data[DataType.ZED_LEFT_COLOR] = conv.img_to_npy(msg)
