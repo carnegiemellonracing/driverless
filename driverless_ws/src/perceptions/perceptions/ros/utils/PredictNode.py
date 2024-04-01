@@ -23,7 +23,7 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
 
 class PredictNode(DataNode):
 
-    def __init__(self, name, debug_flag=False, time_flag=True, flush_data=True, own_zed=None):
+    def __init__(self, name, debug_flag=False, time_flag=True, flush_data=True, own_zed=None, publish_images=False):
         # create predictor, any subclass of PredictNode is required to implement this
         self.predictor = self.init_predictor()
 
@@ -31,7 +31,8 @@ class PredictNode(DataNode):
         super().__init__(
             required_data=self.predictor.required_data(),
             name=name,
-            own_zed = own_zed
+            own_zed = own_zed,
+            publish_images=publish_images
         )
 
         # debugging flags
