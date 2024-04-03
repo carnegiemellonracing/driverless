@@ -46,6 +46,8 @@ setup(
             'yolov5_zed2_own_node = perceptions.ros.predictors.YOLOv5Node:main_zed2_own',
             'yolov5_zed_own_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed_own_debug',
             'yolov5_zed2_own_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed2_own_debug',
+            'yolov5_zed_own_publish_node = perceptions.ros.predictors.YOLOv5Node:main_zed_own_publish',
+            'yolov5_zed2_own_publish_node = perceptions.ros.predictors.YOLOv5Node:main_zed2_own_publish',
 
             'lidar_node = perceptions.ros.predictors.LidarNode:main',
 
