@@ -18,3 +18,14 @@ LIDAR_CONE_TOPIC = "/lidar_node_cones"
 YOLOV5_ZED_CONE_TOPIC = "/yolov5_zed_node_cones"
 YOLOV5_ZED2_CONE_TOPIC = "/yolov5_zed2_node_cones"
 PERC_CONE_TOPIC = "/perc_cones"
+
+#Camera info
+CAMERA_PARAM = "camera"
+ZED_STR = "zed"
+ZED2_STR = "zed2"
+
+# map cameras to their topics and serials numbers
+CAMERA_INFO = {
+    ZED_STR: (15080, LEFT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC), 
+    ZED2_STR: (27680008, LEFT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC)
+} # TODO: need serial numbers
