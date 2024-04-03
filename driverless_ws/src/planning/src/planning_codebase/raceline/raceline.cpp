@@ -64,10 +64,14 @@ double poly_eval(polynomial a, double x){
 
 // Curvature at point(s) `min_x` based on 2d curvature equation
 // https://mathworld.wolfram.com/Curvature.html
-double get_curvature(polynomial poly_der_1, polynomial poly_der_2,
+double get_curvature(polynomial x, polynomial y, polynomial xx, polynomial yy,
                      double min_x) {
-  return poly_eval(poly_der_2, min_x) /
-         (1 + pow(pow(poly_eval(poly_der_1, min_x), 2), 3 / 2));
+  int d2y_dt2 = poly_eval(yy, min_x);
+  int d2x_dt2 = poly_eval(xx, min_x);
+  int dy_dt = poly_eval(y, min_x);
+  int dx_dt = poly_eval(x, min_x);     
+  return fabs(dx_dt * d2y_dt2 - dy_dt * d2x_dt2) /
+                       pow(dx_dt * dx_dt + dy_dt * dy_dt, 1.5);
 }
 Spline::Spline(polynomial interpolation_poly) {
     this->spl_poly = interpolation_poly;
@@ -413,6 +417,28 @@ double arclength(polynomial poly_der1, double x0,double x1){
 }
 
 std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){
+    int n = res.cols(); // number of points passed in
+
+    // construct 2 new matrices of size 2xn (one for index & x, one for index & y)
+    Eigen::VectorXd xRow = res.row(0);
+    Eigen::VectorXd yRow = res.row(1);
+
+    // vector of indices (our 3rd dimension, could in future change to time)
+    Eigen::VectorXd vector_n = Eigen::VectorXd::LinSpaced(n, 0, n - 1);
+
+    Eigen::Matrix<double, 2, n> xMatrix;
+    xMatrix.row(0) = vector_n;
+    xMatrix.row(1) = xRow;
+
+    Eigen::Matrix<double, 2, n> yMatrix;
+    yMatrix.row(0) = vector_n;
+    yMatrix.row(1) = yRow;
+    raceline_gen(logger, xMatrix, path_id, points_per_spline, loop)
+
+    
+}
+
+std::pair<std::vector<Spline>,std::vector<double>> raceline_genhelper(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){
 
     int n = res.cols();
 
@@ -456,9 +482,9 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
 
 
-        Eigen::Matrix2d Q  = rotation_matrix_gen(logger,group);
-        Eigen::VectorXd translation_vector = get_translation_vector(group);
-        Eigen::MatrixXd rotated_points = transform_points(logger,group,Q,translation_vector);
+        // Eigen::Matrix2d Q  = rotation_matrix_gen(logger,group);
+        // Eigen::VectorXd translation_vector = get_translation_vector(group);
+        // Eigen::MatrixXd rotated_points = transform_points(logger,group,Q,translation_vector);
 
         // RCLCPP_INFO(logger, "rotation matrix\n");
         // RCLCPP_INFO(logger, "first point is (%f, %f)\n", Q(0, 0), Q(0, 1));
@@ -475,7 +501,8 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         // RCLCPP_INFO(logger, "second point is (%f, %f)\n", rotated_points(0, 1), rotated_points(1, 1));
 
 
-        polynomial interpolation_poly = lagrange_gen(rotated_points);
+        // polynomial interpolation_poly = lagrange_gen(rotated_points);
+        polynomial interpolation_poly = lagrange_gen(group);
         polynomial first_der = polyder(interpolation_poly);
         polynomial second_der = polyder(first_der);
         
@@ -559,9 +586,12 @@ std::vector<double> get_curvature_raceline(std::vector<double> progress,std::vec
             min_x -= cumulated_lengths[index-1];
         }
         
-        double curvature = get_curvature(
-            splines[index].get_first_der(),
-            splines[index].get_second_der(),
+        double curvature = 
+        get_curvature(
+            splines[index].get_first_derx(),
+            splines[index].get_first_dery(),
+            splines[index].get_second_derx()
+            splines[index].get_second_dery(),
             min_x
         );
 

@@ -31,26 +31,32 @@ polynomial poly_mult(polynomial a,polynomial b);
 
 double poly_eval(polynomial a,double x);
 
+
+// TODO (4/3): restructuring spline class to account for ordering of points
 class Spline
 {
 public:
-    int path_id;
-    int sort_index;
+    int path_id; // what is this?
+    int sort_index; // what is this?
 
-    polynomial spl_poly;
-    polynomial first_der;
-    polynomial second_der;
+    polynomial spl_poly_x; // original poly outputting x
+    polynomial first_der_x;
+    polynomial second_der_x
     
-    Eigen::MatrixXd points;
-    Eigen::MatrixXd rotated_points;
+    Eigen::MatrixXd points_x; // matrix of passed in points (order & x)
 
-    Eigen::Matrix2d Q;
-    Eigen::VectorXd translation_vector;
-    double length;
+    polynomial spl_poly_y; // original poly outputting y
+    polynomial first_der_y;
+    polynomial second_der_y;
+    
+    Eigen::MatrixXd points_y; // matrix of passed in points (order & y)
 
+    // TODO: rewrite function to find length with 
+    double length; // length of the spline
 
-    polynomial get_SplPoly(){ return spl_poly;}
-    void set_SplPoly(polynomial p){
+    polynomial get_SplPoly(){ return spl_poly;} 
+    
+    void set_SplPoly(polynomial p){ 
         spl_poly.deg = p.deg;
         spl_poly.nums = p.nums;
         first_der = polyder(spl_poly);
