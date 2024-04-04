@@ -112,7 +112,7 @@ class ConeNode(Node):
         return
     
     def flush_and_get_data_times(self):
-        times = [self.data_times[datatype] for datatype in self.required_data]
+        times = [self.data_times[datatype] for datatype in self.data_times.keys()]
         min_time = min(times, key=lambda t: t.nanoseconds)
         self.data_times = {}
 
@@ -136,7 +136,7 @@ class ConeNode(Node):
         # publish cones
         print(f"Published {len(merged_cones)} cones")
         msg = conv.cones_to_msg(merged_cones)
-        msg.orig_data_stamp = self.flush_and_get_data_times()
+        msg.orig_data_stamp = self.flush_and_get_data_times().to_msg()
 
         self.cone_publisher.publish(msg)
 

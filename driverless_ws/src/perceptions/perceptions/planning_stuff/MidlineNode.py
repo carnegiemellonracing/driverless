@@ -49,7 +49,7 @@ class MidlineNode(Node):
 
         s = time.time()
 
-        orig_data_time = msg.orig_data_time
+        orig_data_stamp = msg.orig_data_stamp
         cones = conv.msg_to_cones(msg)
 
         s_svm = time.time()
@@ -65,7 +65,7 @@ class MidlineNode(Node):
 
         points = []
         msg = SplineFrames()
-        msg.orig_data_time = orig_data_time
+        msg.orig_data_stamp = orig_data_stamp
 
         for np_point in downsampled_boundary_points:
             new_point = Point()

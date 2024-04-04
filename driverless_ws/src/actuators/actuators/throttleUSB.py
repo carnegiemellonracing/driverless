@@ -1,5 +1,6 @@
 import rclpy
 from rclpy.node import Node
+from rclpy.time import Time
 from interfaces.msg import ControlAction
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy
 from std_msgs.msg import Int32
@@ -52,6 +53,7 @@ class ActuatorNode(Node):
         self.torque_request = 0
         msg = bytearray([0, 0,0,0])
         self.ser.write(msg) 
+        self.orig_data_stamp = None
         # self.accumulator = 0
 
     def timer_callback(self):
@@ -87,6 +89,13 @@ class ActuatorNode(Node):
         self.ser.write(msg) 
 
         print(f"Throttle Message Sent: {msg.hex()}, {msg}")
+        if self.orig_data_stamp is not None:
+            curr_time = self.get_clock().now()
+            curr_nanos = curr_time.seconds_nanoseconds[0] * 1e9 + curr_time.nanoseconds
+            orig_nanos = self.orig_data_stamp.seconds_nanoseconds[0] * 1e9 + self.orig_data_stamp.nanoseconds
+            delta_nanos = curr_nanos - orig_nanos
+            delta_ms = int(delta_nanos / 1e6)
+            print(f"Total Latency: {delta_ms} ms")
 
             # steering_msg = can.Message(arbitration_id=0x134, data = [0x00ff & self.swangle, (0xff00 & self.swangle)>>8, 6,5,7,8,9,1], is_extended_id=False)
             # self.ser.send(steering_msg)
@@ -102,6 +111,8 @@ class ActuatorNode(Node):
 
     def callback(self,msg):
         (fl, fr, rl, rr) = (msg.torque_fl, msg.torque_fr, msg.torque_rl, msg.torque_rr)
+        self.orig_data_stamp = Time.from_msg(msg.orig_data_stamp)
+        
         print(f"fl: {fl} |fr: {fr} | rl: {rl} | rr: {rr}")
         #torque_avg = (fl+fr+rl+rr)/4
         torque_avg = (fl + fr)/2
