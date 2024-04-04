@@ -82,6 +82,9 @@ class DataNode(Node):
                                                         qos_profile=RELIABLE_QOS_PROFILE)
                 self.frame2_id = 0
 
+        # define variables for timing code
+        self.data_times = {}
+
 
         # subscribe to each piece of data that we want to collect on
         self.required_data = required_data
@@ -125,11 +128,21 @@ class DataNode(Node):
                 
     def flush(self):
         # flushes data so that all required data must be collected again
+        # reset the data time as well
         self.data = DataInstance(self.required_data)
+        self.data_times = {}
+
+    def update_data_time(self, datatype):
+        self.data_times[datatype] = self.get_clock().now()
+        return
 
     def got_all_data(self):
         # returns whether data node has all pieces of data
         return self.data.have_all_data()
+    
+    def get_earliest_data_time(self):
+        times = []
+
     
     def publish_zed_data(self, left_publisher, xyz_publisher, frame_id, left_img, xyz_img):
         header = Header()
@@ -145,6 +158,7 @@ class DataNode(Node):
 
 
     def update_zed_data(self):
+        self.update_data_time(DataType.ZED_LEFT_COLOR)
         left, right, depth, xyz = self.zed.grab_data()
         self.data[DataType.ZED_LEFT_COLOR] = left
         self.data[DataType.ZED_XYZ_IMG] = xyz
@@ -152,15 +166,21 @@ class DataNode(Node):
             self.publish_zed_data(self.left_publisher, self.xyz_publisher, self.frame_id, left, xyz)
             self.frame_id += 1
 
+
     def update_zed2_data(self):
+        self.update_data_time(DataType.ZED2_LEFT_COLOR)
+
         left, right, depth, xyz = self.zed2.grab_data()
         self.data[DataType.ZED2_LEFT_COLOR] = left
         self.data[DataType.ZED2_XYZ_IMG] = xyz
         if self.publish_images:
             self.publish_zed_data(self.left2_publisher, self.xyz2_publisher, self.frame2_id, left, xyz)
             self.frame2_id += 1
+
     
     def left_color_callback(self, msg):
+        self.update_data_time(DataType.ZED_LEFT_COLOR)
+
         self.data[DataType.ZED_LEFT_COLOR] = conv.img_to_npy(msg)
 
         if self.visualize:
@@ -168,6 +188,8 @@ class DataNode(Node):
             cv2.waitKey(1)
             
     def left2_color_callback(self, msg):
+        self.update_data_time(DataType.ZED2_LEFT_COLOR)
+
         self.data[DataType.ZED2_LEFT_COLOR] = conv.img_to_npy(msg)
 
         if self.visualize:
@@ -182,6 +204,7 @@ class DataNode(Node):
             cv2.waitKey(1)
 
     def xyz_image_callback(self, msg):
+        self.update_data_time(DataType.ZED_XYZ_IMG)
         self.data[DataType.ZED_XYZ_IMG] = conv.img_to_npy(msg)
 
         if self.visualize:
@@ -195,6 +218,7 @@ class DataNode(Node):
             vis.update_visualizer_window(self.xyz_image_window, points)
             
     def xyz2_image_callback(self, msg):
+        self.update_data_time(DataType.ZED2_XYZ_IMG)
         self.data[DataType.ZED2_XYZ_IMG] = conv.img_to_npy(msg)
 
         if self.visualize:
@@ -214,6 +238,8 @@ class DataNode(Node):
             cv2.imshow("depth", self.data[DataType.ZED_DEPTH_IMG])
 
     def points_callback(self, msg):
+        self.update_data_time(DataType.HESAI_POINTCLOUD)
+
         self.data[DataType.HESAI_POINTCLOUD] = conv.pointcloud2_to_npy(msg)
 
         if self.visualize:
