@@ -1,5 +1,7 @@
 std_msgs/Header header
 
+std_msgs/Time orig_data_stamp
+
 float64[4] spl_poly_coefs
 float64[4] first_der_coefs
 float64[4] second_der_coefs
