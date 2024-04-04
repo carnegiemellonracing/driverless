@@ -141,7 +141,8 @@ class DataNode(Node):
         return self.data.have_all_data()
     
     def get_earliest_data_time(self):
-        times = []
+        times = [self.data_times[datatype] for datatype in self.required_data]
+        return min(times, key=lambda t: t.nanoseconds)
 
     
     def publish_zed_data(self, left_publisher, xyz_publisher, frame_id, left_img, xyz_img):

@@ -76,6 +76,8 @@ class PredictNode(DataNode):
 
         # publish message
         msg = conversions.cones_to_msg(cones)
+        
+        msg.orig_data_stamp = self.get_earliest_data_time()
         self.cone_publisher.publish(msg)
 
         if self.time:

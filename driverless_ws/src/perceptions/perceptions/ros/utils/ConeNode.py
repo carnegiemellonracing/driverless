@@ -1,5 +1,6 @@
 # ROS2 imports
 import rclpy
+from rclpy.time import Time
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 
@@ -73,6 +74,9 @@ class ConeNode(Node):
         # if debugging, initialize visualizer
         self.debug = debug
 
+        # earliest data timings
+        self.data_times = {}
+
         return
 
     def update_vis(self):
@@ -82,6 +86,8 @@ class ConeNode(Node):
 
     def yolov5_zed_cone_callback(self, msg):
         '''receive cones from yolov5_zed_node predictor'''
+        self.data_times[PipelineType.ZED_PIPELINE] = Time.from_msg(msg.orig_data_stamp)
+
         cones = conv.msg_to_cones(msg)
         self.merger.add(cones, PipelineType.ZED_PIPELINE)
 
@@ -89,6 +95,8 @@ class ConeNode(Node):
     
     def yolov5_zed2_cone_callback(self, msg):
         '''receive cones from yolov5_zed2_node predictor'''
+        self.data_times[PipelineType.ZED2_PIPELINE] = Time.from_msg(msg.orig_data_stamp)
+
         cones = conv.msg_to_cones(msg)
         self.merger.add(cones, PipelineType.ZED2_PIPELINE)
 
@@ -96,10 +104,19 @@ class ConeNode(Node):
 
     def lidar_cone_callback(self, msg):
         '''receive cones from lidar_node predictor'''
+        self.data_times[PipelineType.LIDAR] = Time.from_msg(msg.orig_data_stamp)
+
         cones = conv.msg_to_cones(msg)
         self.merger.add(cones, PipelineType.LIDAR)
 
         return
+    
+    def flush_and_get_data_times(self):
+        times = [self.data_times[datatype] for datatype in self.required_data]
+        min_time = min(times, key=lambda t: t.nanoseconds)
+        self.data_times = {}
+
+        return min_time
 
     def publish_cones(self):
 
@@ -119,7 +136,11 @@ class ConeNode(Node):
         # publish cones
         print(f"Published {len(merged_cones)} cones")
         msg = conv.cones_to_msg(merged_cones)
+        msg.orig_data_stamp = self.flush_and_get_data_times()
+
         self.cone_publisher.publish(msg)
+
+        # flush the data times
         
         return
     
