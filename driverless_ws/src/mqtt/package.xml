@@ -11,9 +11,9 @@
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
-  <depend>paho</depend>
-  <!-- <depend>interfaces</depend> -->
-  <!-- <depend>perceptions</depend> -->
+  <depend>paho-mqtt</depend>
+  <depend>interfaces</depend>
+  <depend>perceptions</depend>
   <export>
     <build_type>ament_python</build_type>
   </export>

@@ -2,13 +2,13 @@
 
 import rclpy
 from rclpy.time import Time
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 
 from time import sleep
 import sys
 import threading
 import numpy as np
 import os
-print("hellow")
 import paho.mqtt.client as mqtt
 from rclpy.node import Node
 
@@ -26,7 +26,7 @@ SUBSCRIPTION_TOPIC = '/perc_cones'
 PUBLISH_TOPIC = '/mqtt_topics/perc_cones'
 
 class ConesMQTT(Node):
-    def __init__(self):
+    def __init__(self, ca_certs, certfile, keyfile, endpoint):
         super().__init__(NODE_NAME)
         
         self.sleep_rate = 0.025
@@ -36,7 +36,7 @@ class ConesMQTT(Node):
         # set subscription and publish topics
         self.MQTT_PUB_TOPIC = self.declare_parameter("~mqtt_pub_topic", PUBLISH_TOPIC).value
         self.ROS_TWIST_SUB_TOPIC = self.declare_parameter("~ros2_sub_topic", SUBSCRIPTION_TOPIC).value
-        self.mqttc = mqtt.Client(protocol=mqtt.MQTTv5)
+        self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, "ros2mqtt", protocol=mqtt.MQTTv5)
         self.mqttc.tls_set(
             ca_certs=args.ca,
             certfile=args.certificate,
@@ -65,7 +65,19 @@ def main(args=None):
 
     rclpy.init(args=args)
     try:
-        cones_mqtt = ConesMQTT()
+
+        # gets the aws certificate authority from path
+        ca_certs = sys.argv[0]
+
+        # gets the certificate file 
+        certfile = sys.argv[1]
+
+        keyfile = sys.argv[2]
+
+        endpoint = sys.argv[3]
+
+
+        cones_mqtt = ConesMQTT(ca_certs, certfile, keyfile)
         rclpy.spin(cones_mqtt)
     except rclpy.exceptions.ROSInterruptException:
         pass
