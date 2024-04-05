@@ -45,7 +45,7 @@ RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
                          depth = 5)
 
 CONE_NODE_NAME = "cone_node"
-PUBLISH_FPS = 30
+PUBLISH_FPS = 20
 VIS_UPDATE_FPS = 25
 MAX_ZED_CONE_RANGE = 12.5
 
@@ -135,13 +135,15 @@ class ConeNode(Node):
             self.vis2D.set_cones(merged_cones)
 
         # publish cones
-        print(f"Published {len(merged_cones)} cones")
         msg = conv.cones_to_msg(merged_cones)
-        msg.orig_data_stamp = self.flush_and_get_data_times().to_msg()
+
+        data_time = self.flush_and_get_data_times()
+        msg.orig_data_stamp = data_time.to_msg()
 
         self.cone_publisher.publish(msg)
 
-        # flush the data times
+        data_t = conv.ms_since_time(self.get_clock().now(), data_time)
+        print(f"Published {len(merged_cones)} cones (Data Latency: {data_t}ms)")
         
         return
     
