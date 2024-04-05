@@ -2,6 +2,7 @@
 
 #include <types.hpp>
 #include <glm/glm.hpp>
+#include <builtin_interfaces/msg/time.hpp>
 
 
 namespace controls {
@@ -17,12 +18,10 @@ namespace controls {
             virtual void on_world_pose(const PoseMsg& pose_msg) =0;
 
             virtual void sync_to_device(float swangle) =0;
-
             virtual bool is_ready() =0;
-
             virtual State get_state() =0;
-
             virtual void set_logger(LoggerFunc logger) =0;
+            virtual builtin_interfaces::msg::Time get_orig_data_stamp() =0;
 
 #ifdef DISPLAY
             struct OffsetImage {
