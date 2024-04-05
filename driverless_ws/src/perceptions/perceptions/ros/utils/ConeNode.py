@@ -17,7 +17,8 @@ from perc22a.mergers.PipelineType import PipelineType
 from perc22a.mergers.merger_factory import \
     create_lidar_merger, \
     create_zed_merger, \
-    create_all_merger
+    create_all_merger, \
+    create_any_merger
 
 from perc22a.utils.Timer import Timer
 
@@ -178,6 +179,14 @@ def main_all(args=None):
 
 def main_all_debug(args=None):
     start_cone_node(create_all_merger(), args=args, debug=True)
+    return
+
+def main_any(args=None):
+    start_cone_node(create_any_merger(), args=args, debug=False)
+    return
+
+def main_any_debug(args=None):
+    start_cone_node(create_any_merger(), args=args, debug=True)
     return
 
 # TODO: decide which policy is best and call it from main() (default to zed)
