@@ -1,5 +1,6 @@
 std_msgs/Header header
 
+
 float64[4] spl_poly_coefs
 float64[4] first_der_coefs
 float64[4] second_der_coefs

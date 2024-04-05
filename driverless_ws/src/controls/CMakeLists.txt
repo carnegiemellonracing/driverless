@@ -82,7 +82,7 @@ target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
         >)
 
 ament_export_targets(controls_libExport HAS_LIBRARY_TARGET)
-ament_export_dependencies(rclcpp std_msgs interfaces glm visualization_msgs)
+ament_export_dependencies(rclcpp std_msgs interfaces glm builtin_interfaces)
 
 install(
         TARGETS controls_lib
@@ -96,7 +96,7 @@ install(
 
 add_executable(controller src/nodes/controller.cpp)
 target_link_libraries(controller controls_lib)
-ament_target_dependencies(controller rclcpp interfaces visualization_msgs)
+ament_target_dependencies(controller rclcpp interfaces builtin_interfaces)
 
 install(
         TARGETS controller

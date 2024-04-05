@@ -13,7 +13,7 @@ from perceptions.ros.utils.DataNode import DataNode
 import time
 
 # rate at which to perform predictions at
-PUBLISH_FPS = 10
+PUBLISH_FPS = 30
 
 # configure QOS profile
 BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
@@ -76,6 +76,8 @@ class PredictNode(DataNode):
 
         # publish message
         msg = conversions.cones_to_msg(cones)
+        
+        msg.orig_data_stamp = self.get_earliest_data_time().to_msg()
         self.cone_publisher.publish(msg)
 
         if self.time:

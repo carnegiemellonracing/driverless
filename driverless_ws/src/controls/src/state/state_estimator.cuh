@@ -20,12 +20,10 @@ namespace controls {
             void on_world_pose(const PoseMsg& pose_msg) override;
 
             void sync_to_device(float swangle) override;
-
             bool is_ready() override;
-
             State get_state() override;
-
             void set_logger(LoggerFunc logger) override;
+            builtin_interfaces::msg::Time get_orig_data_stamp() override;
 
 #ifdef DISPLAY
             std::vector<glm::fvec2> get_spline_frames() override;
@@ -73,6 +71,8 @@ namespace controls {
             float m_gps_heading;
 
             LoggerFunc m_logger;
+
+            builtin_interfaces::msg::Time m_orig_data_stamp;
         };
 
     }
