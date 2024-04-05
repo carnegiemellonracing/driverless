@@ -60,8 +60,8 @@ setup(
             'cone_node_zed_debug = perceptions.ros.utils.ConeNode:main_zed_debug',
             'cone_node_all = perceptions.ros.utils.ConeNode:main_all',
             'cone_node_all_debug = perceptions.ros.utils.ConeNode:main_all_debug',
-            'cone_node_any = perceptions.ros.utils.ConeNode:main_all',
-            'cone_node_any_debug = perceptions.ros.utils.ConeNode:main_all_debug',
+            'cone_node_any = perceptions.ros.utils.ConeNode:main_any',
+            'cone_node_any_debug = perceptions.ros.utils.ConeNode:main_any_debug',
 
             # midline node
             'midline_node = perceptions.planning_stuff.MidlineNode:main',
