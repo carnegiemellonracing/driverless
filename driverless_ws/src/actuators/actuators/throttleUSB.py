@@ -1,5 +1,6 @@
 import rclpy
 from rclpy.node import Node
+from rclpy.time import Time
 from interfaces.msg import ControlAction
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy
 from std_msgs.msg import Int32
@@ -29,7 +30,7 @@ class ActuatorNode(Node):
     def __init__(self):
         super().__init__('minimal_publisher')
         # self.ser = can.interface.Bus(bustype=BUSTYPE, channel=CHANNEL, bitrate=BITRATE,auto_reset=True)
-        self.ser = serial.Serial("/dev/ttyUSB1", baudrate=9600, timeout=0.1)
+        # self.ser = serial.Serial("/dev/ttyUSB1", baudrate=9600, timeout=0.1)
         self.subscription = self.create_subscription(
             ControlAction,
             '/control_action',  # Replace with the desired topic name
@@ -45,13 +46,14 @@ class ActuatorNode(Node):
         timer_period = 1/TIMER_HZ  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
         
-        self.ser.reset_input_buffer()
+        # self.ser.reset_input_buffer()
 
         # self.even = True
         self.swangle = int(hex(ADC_BIAS)[2:], 16)
         self.torque_request = 0
         msg = bytearray([0, 0,0,0])
-        self.ser.write(msg) 
+        # self.ser.write(msg) 
+        self.orig_data_stamp = None
         # self.accumulator = 0
 
     def timer_callback(self):
@@ -73,20 +75,25 @@ class ActuatorNode(Node):
         #AIM recieves uint_8[8]
         data = (self.torque_request, self.swangle)
         print(data)
-        x = bytearray()
-        while(not x):
-            x = self.ser.read(1)
-            if x:
-                print(x.hex())
-            continue
+        # x = bytearray()
+        # while(not x):
+        #     # x = self.ser.read(1)
+        #     if x:
+        #         print(x.hex())
+        #     continue
         
         msg = struct.pack(">hh", data[0], data[1])
         # msg = bytearray([1,2,3,4])
         # msg = bytearray([7,7,7,7])
         
-        self.ser.write(msg) 
+        # self.ser.write(msg) 
 
         print(f"Throttle Message Sent: {msg.hex()}, {msg}")
+        if self.orig_data_stamp is not None:
+            curr_time = self.get_clock().now()
+            delta_nanos = curr_time.nanoseconds - self.orig_data_stamp.nanoseconds
+            delta_ms = int(delta_nanos / 1e6)
+            print(f"Total Latency: {delta_ms} ms")
 
             # steering_msg = can.Message(arbitration_id=0x134, data = [0x00ff & self.swangle, (0xff00 & self.swangle)>>8, 6,5,7,8,9,1], is_extended_id=False)
             # self.ser.send(steering_msg)
@@ -102,6 +109,8 @@ class ActuatorNode(Node):
 
     def callback(self,msg):
         (fl, fr, rl, rr) = (msg.torque_fl, msg.torque_fr, msg.torque_rl, msg.torque_rr)
+        self.orig_data_stamp = Time.from_msg(msg.orig_data_stamp)
+        
         print(f"fl: {fl} |fr: {fr} | rl: {rl} | rr: {rr}")
         #torque_avg = (fl+fr+rl+rr)/4
         torque_avg = (fl + fr)/2
@@ -133,7 +142,7 @@ def main(args=None):
 
     def sigint_handler(*args):
         print("ur mom closing down for business")
-        minimal_publisher.ser.close()
+        # minimal_publisher.ser.close()
         # minimal_publisher.ser.shutdown()
         minimal_publisher.destroy_node()
         rclpy.shutdown()

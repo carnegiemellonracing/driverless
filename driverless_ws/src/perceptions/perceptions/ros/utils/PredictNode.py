@@ -76,12 +76,16 @@ class PredictNode(DataNode):
 
         # publish message
         msg = conversions.cones_to_msg(cones)
+        
+        data_time = self.get_earliest_data_time()
+        msg.orig_data_stamp = data_time.to_msg()
         self.cone_publisher.publish(msg)
 
         if self.time:
             # display time taken to perform prediction
             t = (e - s)
-            time_str = f"[Node={self.name}] Predict Time: {t * 1000:.3f}ms"
+            data_t = conversions.ms_since_time(self.get_clock().now(), data_time)
+            time_str = f"[Node={self.name}] Predict Time: {t * 1000:.3f}ms, Data Latency: {data_t:.3f}ms"
             print(time_str)
         
 
