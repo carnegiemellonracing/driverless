@@ -13,10 +13,11 @@ CMDLINE_QOS_PROFILE = QoSProfile(
     durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_VOLATILE  # Set the durability policy
 )
 
-TOTAL_THROTTLE = 4  # motor Nm
 ACTION_DELAY = 2  # sec
+BRAKE_THROTTLE = -20  # total
 
 class SteeringTuningNode(Node):
+
     def __init__(self):
         super().__init__('steering_tuning')
 
@@ -26,13 +27,8 @@ class SteeringTuningNode(Node):
             CMDLINE_QOS_PROFILE
         )
 
-        self.actions = ([
-            (0., TOTAL_THROTTLE / 2, TOTAL_THROTTLE / 2, 0., 0.),
-            (np.radians(10.), TOTAL_THROTTLE / 2, TOTAL_THROTTLE / 2, 0., 0.),
-            (np.radians(-10.), TOTAL_THROTTLE / 2, TOTAL_THROTTLE / 2, 0., 0.),
-        ])
-
-        self.end_action = (0., -0., -0., -0., -0.)
+        self.swangles = [0, np.radians(10), np.radians(-10)]
+        self.end_action = (0., BRAKE_THROTTLE / 2., BRAKE_THROTTLE / 2., 0., 0.)
 
     def publish(self, action):
         msg = ControlAction()
@@ -44,9 +40,9 @@ class SteeringTuningNode(Node):
         msg.torque_rr = action[4]
         self.publisher.publish(msg)
 
-    def run(self):
-        for action in self.actions:
-            self.publish(action)
+    def run(self, throttle):
+        for swangle in self.swangles:
+            self.publish(np.array([swangle, throttle / 2, throttle / 2, 0.0, 0.0]))
             time.sleep(ACTION_DELAY)
 
         self.publish(self.end_action)
@@ -61,8 +57,8 @@ def main(args=None):
     spinner.start()
 
     try:
-        input("Press ENTER to start...")
-        publisher.run()
+        throttle = int(input("Enter throttle (total, Nm): ").strip())
+        publisher.run(throttle)
 
     except BaseException as e:
         print(e)
