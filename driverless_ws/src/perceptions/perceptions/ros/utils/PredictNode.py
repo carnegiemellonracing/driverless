@@ -13,7 +13,7 @@ from perceptions.ros.utils.DataNode import DataNode
 import time
 
 # rate at which to perform predictions at
-PUBLISH_FPS = 10
+PUBLISH_FPS = 30
 
 # configure QOS profile
 BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
