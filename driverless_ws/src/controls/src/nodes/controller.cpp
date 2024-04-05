@@ -135,7 +135,7 @@ namespace controls {
                 notify_state_dirty();
             }
 
-            void ControllerNode::publish_action(const Action& action) const {
+            void ControllerNode::publish_action(const Action& action) {
                 const auto msg = action_to_msg(action);
                 m_action_publisher->publish(msg);
             }
@@ -215,6 +215,9 @@ namespace controls {
 
             ActionMsg ControllerNode::action_to_msg(const Action &action) {
                 interfaces::msg::ControlAction msg;
+                
+                msg.orig_data_stamp = m_state_estimator->get_orig_data_stamp();
+
                 msg.swangle = action[action_swangle_idx];
                 msg.torque_fl = action[action_torque_idx] / 4;
                 msg.torque_fr = action[action_torque_idx] / 4;

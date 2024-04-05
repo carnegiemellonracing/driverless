@@ -2,6 +2,8 @@
 
 std_msgs/Header header
 
+builtin_interfaces/Time orig_data_stamp
+
 geometry_msgs/Point[] blue_cones
 geometry_msgs/Point[] yellow_cones
 geometry_msgs/Point[] orange_cones
