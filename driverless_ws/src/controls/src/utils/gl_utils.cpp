@@ -28,7 +28,9 @@ namespace controls {
             SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 3 );
             SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
 
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+            // get verbose gl warnings
+            // SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+
             SDL_GLContext gl_context = SDL_GL_CreateContext(window);
             if (!gl_context) {
                 std::cerr << SDL_GetError() << std::endl;
@@ -43,7 +45,7 @@ namespace controls {
                 throw std::runtime_error("Failed to set vsync");
             }
 
-            glDebugMessageCallbackARB(gl_debug_callback, nullptr);
+            // glDebugMessageCallbackARB(gl_debug_callback, nullptr);
 
             if (gl_context_out != nullptr) {
                 *gl_context_out = gl_context;
