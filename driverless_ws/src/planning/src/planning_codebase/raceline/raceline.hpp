@@ -54,9 +54,9 @@ public:
     // TODO: rewrite function to find length with 
     double length; // length of the spline
 
-    polynomial get_SplPoly(){ return spl_poly;} 
+    polynomial get_SplPoly(){ return spl_poly;} // original polynomial
     
-    void set_SplPoly(polynomial p){ 
+    void set_SplPoly(polynomial p){ // setting polynomial
         spl_poly.deg = p.deg;
         spl_poly.nums = p.nums;
         first_der = polyder(spl_poly);
@@ -70,14 +70,14 @@ public:
     Eigen::MatrixXd get_points();
     void set_points(Eigen::MatrixXd newpoints);
 
-    Eigen::MatrixXd get_rotated_points();
-    void set_rotated_points(Eigen::MatrixXd newpoints);
+    // Eigen::MatrixXd get_rotated_points();
+    // void set_rotated_points(Eigen::MatrixXd newpoints);
 
-    Eigen::Matrix2d get_Q();
-    void set_Q(Eigen::Matrix2d new_Q);
+    // Eigen::Matrix2d get_Q();
+    // void set_Q(Eigen::Matrix2d new_Q);
 
-    Eigen::VectorXd get_translation();
-    void set_translation(Eigen::VectorXd new_trans);
+    // Eigen::VectorXd get_translation();
+    // void set_translation(Eigen::VectorXd new_trans);
 
     int get_path_id();
     void set_path_id(int new_id);
@@ -89,14 +89,14 @@ public:
     // Eigen::MatrixXd interpolate(Spline spline,int number, std::pair<float,float> bounds = std::make_pair(-1,-1));
     
     // Eigen::MatrixXd interpolate(int number,std::pair<float,float> bounds);
-    Eigen::MatrixXd interpolate(int number, std::pair<float,float> bounds = std::make_pair(0,1));
+    // Eigen::MatrixXd interpolate(int number, std::pair<float,float> bounds = std::make_pair(0,1));
 
 
     bool operator==(Spline const & other) const;
     bool operator<(Spline const & other) const;
 
     std::tuple<Eigen::VectorXd  ,double, Eigen::VectorXd  ,double> along(double progress, double point_index=0, int precision=20);
-    double getderiv(double x);
+    // double getderiv(double x);
 
     // std::pair<double, double> along(double progress) const;
 

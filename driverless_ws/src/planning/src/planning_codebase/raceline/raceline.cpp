@@ -391,18 +391,20 @@ polynomial lagrange_gen(Eigen::MatrixXd& points){
 
 double arclength_f(double x, void* params){
     
-    polynomial p = *(polynomial*)params;
-    double y = poly_eval(p,x);
-    return sqrt(y*y+1);
+    // polynomial p = *(polynomial*)params;
+    std::pair<polynomial, polynomial> p = *(std::pair<polynomial, polynomial>*)params;
+    double xy = poly_eval(p.first(),x);
+    double y = poly_eval(p.second(),x);
+    return sqrt(y*y+xy*xy);
 }
 
 
 // CHECK CORRECTNESS
-double arclength(polynomial poly_der1, double x0,double x1){
+double arclength(polynomial p1, polynomial p2, double x0,double x1){
 
     gsl_function F;
     F.function = &arclength_f;
-    F.params = &poly_der1;
+    F.params = &std::make_pair(p1, p2);
 
     double result, error;
     size_t neval;
@@ -422,6 +424,9 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
     // construct 2 new matrices of size 2xn (one for index & x, one for index & y)
     Eigen::VectorXd xRow = res.row(0);
     Eigen::VectorXd yRow = res.row(1);
+
+    // NOTE! uses an ordering for the points to generate parametrized polynomials
+    // ordering based on vector indices of vector containing points
 
     // vector of indices (our 3rd dimension, could in future change to time)
     Eigen::VectorXd vector_n = Eigen::VectorXd::LinSpaced(n, 0, n - 1);
@@ -590,7 +595,7 @@ std::vector<double> get_curvature_raceline(std::vector<double> progress,std::vec
         get_curvature(
             splines[index].get_first_derx(),
             splines[index].get_first_dery(),
-            splines[index].get_second_derx()
+            splines[index].get_second_derx(),
             splines[index].get_second_dery(),
             min_x
         );
