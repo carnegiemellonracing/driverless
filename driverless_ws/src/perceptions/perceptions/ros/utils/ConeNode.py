@@ -44,7 +44,7 @@ RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
                          depth = 5)
 
 CONE_NODE_NAME = "cone_node"
-PUBLISH_FPS = 10
+PUBLISH_FPS = 30
 VIS_UPDATE_FPS = 25
 MAX_ZED_CONE_RANGE = 12.5
 
