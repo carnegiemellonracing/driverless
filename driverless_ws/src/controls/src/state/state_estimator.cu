@@ -152,6 +152,8 @@ namespace controls {
 
             utils::sync_gl_and_unbind_context(m_gl_window);
 
+            m_orig_data_stamp = spline_msg.orig_data_stamp;
+
             m_spline_ready = true;
 
             m_logger("finished state estimator spline processing");
@@ -186,13 +188,6 @@ namespace controls {
             m_world_yaw_ready = true;
         }
 
-        // const float w = quat_msg.quaternion.w;
-        // const float x = quat_msg.quaternion.x;
-        // const float y = quat_msg.quaternion.y;
-        // const float z = quat_msg.quaternion.z;
-
-        // const float yaw = std::atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z));
-
         void StateEstimator_Impl::on_world_pose(const PoseMsg &pose_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
@@ -201,6 +196,12 @@ namespace controls {
             m_world_state[state_yaw_idx] = pose_msg.pose.orientation.z;
 
             m_world_yaw_ready = true;
+        }
+
+        builtin_interfaces::msg::Time StateEstimator_Impl::get_orig_data_stamp() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            return m_orig_data_stamp;
         }
 
         void StateEstimator_Impl::sync_to_device(float swangle) {

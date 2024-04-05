@@ -98,7 +98,7 @@ namespace controls {
              *
              * @param action Action to publish
              */
-            void publish_action(const Action& action) const;
+            void publish_action(const Action& action);
 
             /**
              * Launch MPPI thread, which loops the following routine persitently:
@@ -116,7 +116,8 @@ namespace controls {
             /** Swap reading action buffer and writing action buffer */
             void swap_action_buffers();
 
-            static ActionMsg action_to_msg(const Action& action);
+            ActionMsg action_to_msg(const Action& action);
+
             static StateMsg state_to_msg(const State& state);
             static void publish_and_print_info(std::ostream &stream, interfaces::msg::ControllerInfo info);
 
