@@ -206,6 +206,8 @@ namespace controls {
                 msg.frames.push_back(gen_point(point));
             }
 
+            msg.orig_data_stamp = get_clock()->now();
+
             m_spline_publisher->publish(msg);
         }
 

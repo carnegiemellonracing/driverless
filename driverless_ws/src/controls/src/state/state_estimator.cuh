@@ -19,11 +19,14 @@ namespace controls {
             void on_world_quat(const QuatMsg& quat_msg) override;
             void on_world_pose(const PoseMsg& pose_msg) override;
 
-            void sync_to_device(float swangle) override;
+            void sync_to_device(float swangle, const rclcpp::Time &time) override;
             bool is_ready() override;
-            State get_state() override;
+            State get_raw_state() override;
+            State get_projected_state() override;
             void set_logger(LoggerFunc logger) override;
-            builtin_interfaces::msg::Time get_orig_data_stamp() override;
+
+            rclcpp::Time get_orig_data_stamp() override;
+            void record_control_action(const Action &action, const rclcpp::Time &ros_time) override;
 
 #ifdef DISPLAY
             std::vector<glm::fvec2> get_spline_frames() override;
@@ -45,10 +48,13 @@ namespace controls {
             void gen_curv_frame_lookup_framebuffer();
             void gen_gl_path();
             void fill_path_buffers(glm::fvec2 car_pos);
+            void update_action_history_to_new_time();
+            void project_current_state(const rclcpp::Time &time);
 
             std::vector<glm::fvec2> m_spline_frames;
 
-            State m_world_state = {};
+            State m_world_state_raw = {};
+            State m_world_state_projected = {};
 
             cudaGraphicsResource_t m_curv_frame_lookup_rsc;
             cuda_globals::CurvFrameLookupTexInfo m_curv_frame_lookup_tex_info;
@@ -72,7 +78,8 @@ namespace controls {
 
             LoggerFunc m_logger;
 
-            builtin_interfaces::msg::Time m_orig_data_stamp;
+            rclcpp::Time m_orig_data_stamp;
+            std::list<std::pair<rclcpp::Time, Action>> m_action_history {{rclcpp::Time {}, Action {}}};
         };
 
     }
