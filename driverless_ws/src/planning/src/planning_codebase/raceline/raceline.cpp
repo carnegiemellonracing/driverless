@@ -3,6 +3,7 @@
 #include "rclcpp/rclcpp.hpp"
 // #include "random.h"
 
+// lagrange gen helper function
 polynomial poly(int deg = 3){
     polynomial inst;
     inst.deg=deg;
@@ -13,12 +14,14 @@ polynomial poly(int deg = 3){
 	return inst;
 }
 
+// lagrange gen helper function
 polynomial poly_one(){
     polynomial p = poly(0);
     p.nums(0)=1;
     return p;
 }
 
+// lagrange gen helper function
 polynomial poly_root(double root){
     polynomial p = poly(1);
     p.nums(0) = -root;
@@ -26,6 +29,7 @@ polynomial poly_root(double root){
     return p;
 }
 
+// derivative of a polynomial
 polynomial polyder(polynomial p){
     if (p.deg ==0) return poly(0);
     polynomial der = poly(p.deg);
@@ -39,7 +43,7 @@ polynomial polyder(polynomial p){
 }
 
 
-
+// multiplies 2 polynomials
 polynomial poly_mult(polynomial a,polynomial b){
     polynomial mult = poly(a.deg+b.deg);
 
@@ -52,6 +56,7 @@ polynomial poly_mult(polynomial a,polynomial b){
 	return mult;
 }
 
+// result of passing in x into poly
 double poly_eval(polynomial a, double x){
     double result = 0;
     double xval = 1.0;
@@ -62,100 +67,98 @@ double poly_eval(polynomial a, double x){
     return result;
 }
 
-// Curvature at point(s) `min_x` based on 2d curvature equation
-// https://mathworld.wolfram.com/Curvature.html
-double get_curvature(polynomial x, polynomial y, polynomial xx, polynomial yy,
+// Curvature at point(s) `min_x` based on parametric curvature equation
+double get_curvature(polynomial fder_x, polynomial fder_y, polynomial sder_x, polynomial sder_y,
                      double min_x) {
-  int d2y_dt2 = poly_eval(yy, min_x);
-  int d2x_dt2 = poly_eval(xx, min_x);
-  int dy_dt = poly_eval(y, min_x);
-  int dx_dt = poly_eval(x, min_x);     
+  int d2y_dt2 = poly_eval(sder_y, min_x);
+  int d2x_dt2 = poly_eval(sder_x, min_x);
+  int dy_dt = poly_eval(fder_y, min_x);
+  int dx_dt = poly_eval(fder_x, min_x);     
   return fabs(dx_dt * d2y_dt2 - dy_dt * d2x_dt2) /
                        pow(dx_dt * dx_dt + dy_dt * dy_dt, 1.5);
 }
+
+// spline constructor (not in use)
 Spline::Spline(polynomial interpolation_poly) {
     this->spl_poly = interpolation_poly;
 }
 
-Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path, int sort_ind) {
-    this->spl_poly=interpolation_poly;
-    this->first_der = first;
-    this->second_der = second;
-    this->path_id = path_id;
-    this->sort_index = sort_ind;
+// main spline function to use
+// matrices are (x, unit) and (y, unit), where unit is col indices
+Spline::Spline(polynomial poly_x, polynomial poly_y, Eigen::MatrixXd points_x, Eigen::MatrixXd points_y) {
+    this->spl_poly_x = poly_x;
+    this->spl_poly_y = poly_y;
+    this->points_x = points_x;
+    this->points_y = points_y;
+    this->first_der_x = poly_der(poly_x);
+    this->first_der_y = poly_der(poly_y);
+    this->second_der_x = poly_der(this->first_der_x);
+    this->second_der_y = poly_der(this->first_der_y);
+    this->length = this->calculateLength();
 }
 
-
-Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind, bool calcLength)
-    : spl_poly(interpolation_poly),points(points_mat), rotated_points(rotated),Q(Q_mat),translation_vector(translation),first_der(first),second_der(second),path_id(path_id),sort_index(sort_ind)
-{
-    if(calcLength){
-        this->length = this->calculateLength();
-    }
-
-}
-
-Spline::~Spline()
-{
-    // ~spl_poly();
-    // polynomial first_der;
-    // polynomial second_der;
-    
-    //No need for this function in Eigen as it frees memory itself
-
-}
-
-//change to calculate length
+// calculate length of spline
 double Spline::calculateLength(){
     // return 1.0;
-    return arclength(first_der, rotated_points(0,0), rotated_points(0, rotated_points.cols()-1));
+    return arclength(this->first_der_x, this->first_der_y, this->points_x(0,0), this->points_x(0, points_x.cols()-1));
 }
 
 // Eigen::MatrixXd Spline::interpolate(int number, std::pair<float, float> bounds){
 //     return interpolate(*this,number,bounds);
 // }
 
-bool Spline::operator==(Spline const & other) const{
-    return this->sort_index==other.sort_index;
+// bool Spline::operator==(Spline const & other) const{
+//     return this->sort_index==other.sort_index;
+// }
+
+// bool Spline::operator<(Spline const & other) const{
+//     return this->sort_index<other.sort_index;
+// }
+
+polynomial Spline::get_first_der_x(){
+    return this->first_der_x;
 }
 
-bool Spline::operator<(Spline const & other) const{
-    return this->sort_index<other.sort_index;
+polynomial Spline::get_first_der_y(){
+    return this->first_der_y;
 }
 
-polynomial Spline::get_first_der(){
-    return this->first_der;
+polynomial Spline::get_second_der_x(){
+    return this->second_der_x;
 }
 
-polynomial Spline::get_second_der(){
-    return this->second_der;
+polynomial Spline::get_second_der_y(){
+    return this->second_der_y;
 }
 
-Eigen::MatrixXd  Spline::get_points(){
-    return points;}
+Eigen::MatrixXd  Spline::get_points_x(){
+    return this->points_x;}
 
-Eigen::MatrixXd  Spline::get_rotated_points(){
-    return rotated_points;
-}
+Eigen::MatrixXd  Spline::get_points_y(){
+    return this->points_y;}
 
-Eigen::Matrix2d Spline::get_Q(){
-    return Q;
-}
+// Eigen::MatrixXd  Spline::get_rotated_points(){
+//     return rotated_points;
+// }
 
-Eigen::VectorXd Spline::get_translation(){
-    return translation_vector;
-}
+// Eigen::Matrix2d Spline::get_Q(){
+//     return Q;
+// }
 
-int Spline::get_path_id(){
-    return path_id;
-}
+// Eigen::VectorXd Spline::get_translation(){
+//     return translation_vector;
+// }
 
-int Spline::get_sort_index(){
-    return sort_index;
-}
+// int Spline::get_path_id(){
+//     return path_id;
+// }
+
+// int Spline::get_sort_index(){
+//     return sort_index;
+//}
 
 
-
+// TODO change this function to not use rotated points and to consider 2 polynomials
 std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double progress, double point_index, int precision){
     
     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> ret;
@@ -241,44 +244,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         return ret;
 }
 
-double Spline::getderiv(double x){
-    Eigen::MatrixXd point_x(1,2);
-    point_x(0,0)=x;
-    point_x(0,1)=0;
-
-    Eigen::MatrixXd gm= reverse_transform(point_x,this->Q,this->translation_vector);
-    return poly_eval(this->first_der,gm.data()[0]);
-
-
-
-}
-
-Eigen::MatrixXd Spline::interpolate(int number, std::pair<float,float> bounds){
-
-    if(bounds.first == -1 && bounds.second == -1){
-        double bound1 = get_rotated_points()(0,0);
-        // MAKE PROPER BOUND 2
-        double bound2 = get_rotated_points()(0,get_rotated_points().cols());
-        bounds = std::make_pair(bound1,bound2);
-    }
-
-    Eigen::MatrixXd points(number,2);
-    
-    for(int i=0;i<number;i++){
-        double x = bounds.first+ (bounds.second-bounds.first)*(i/(number-1));
-        points(i,0)=x;
-        points(i,1)=poly_eval(get_SplPoly(),x);
-    }
-
-    
-
-    Eigen::Matrix2d q = Spline::get_Q();
-    Eigen::VectorXd trans = Spline::get_translation();
-	Eigen::MatrixXd ret= reverse_transform(points, q, trans);
-
-    return ret;
-}
-
+// MIGHT NEED FOR SPLINE ALONG?!
 Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts){
     Eigen::Vector2d beg; beg << pnts.col(0);
     Eigen::Vector2d end; end << pnts.col(pnts.cols()-1);
@@ -301,6 +267,7 @@ Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts)
     return ret;
 }
 
+// MIGHT NEED FOR SPLINE ALONG?!
 Eigen::VectorXd get_translation_vector(Eigen::MatrixXd& group){
     Eigen::Vector2d ret;
     ret(0) = group(0, 0);
@@ -308,34 +275,7 @@ Eigen::VectorXd get_translation_vector(Eigen::MatrixXd& group){
     return ret;
 }
 
-Eigen::MatrixXd transform_points(rclcpp::Logger logger,Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector){
-    Eigen::MatrixXd temp(points.rows(),points.cols());
-        // RCLCPP_INFO(logger, "transform points:rotation");
-        // RCLCPP_INFO(logger, "first point is (%f, %f)\n", Q(0, 0), Q(0, 1));
-        // RCLCPP_INFO(logger, "second point is (%f, %f)\n", Q(1, 0), Q(1, 1));
-    
-    for(int i=0;i<temp.cols();++i){
-        temp(0,i)=points(0,i)-get_translation_vector(0);
-        temp(1,i)=points(1,i)-get_translation_vector(1);
-    }
-
-    // RCLCPP_INFO(logger, "temp");
-    // RCLCPP_INFO(logger, "first point is (%f, %f)\n", temp(0, 0), temp(0, 1));
-    // RCLCPP_INFO(logger, "second point is (%f, %f)\n", temp(1, 0),temp(1, 1));
-
-
-    Eigen::Matrix2d trans = Q.transpose(); 
-    // RCLCPP_INFO(logger, "q.trans");
-    // RCLCPP_INFO(logger, "first point is (%f, %f)\n", trans(0, 0), trans(0, 1));
-    // RCLCPP_INFO(logger, "second point is (%f, %f)\n", trans(1, 0), trans(1, 1));
-    Eigen::MatrixXd ret = Q.transpose() * temp;  
-    // RCLCPP_INFO(logger, "return");
-    // RCLCPP_INFO(logger, "first point is (%f, %f)\n", ret(0, 0), ret(0, 1));
-    // RCLCPP_INFO(logger, "second point is (%f, %f)\n", ret(1, 0), ret(1, 1));
-    
-    return ret;
-}
-
+// MIGHT NEED FOR SPLINE ALONG?!
 Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector){
     Eigen::MatrixXd temp(points.rows(),points.cols());
     for(int i=0;i<temp.cols();++i){
@@ -353,6 +293,7 @@ Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, E
     return ret;
 }
 
+// generates polynomial from points
 polynomial lagrange_gen(Eigen::MatrixXd& points){
     polynomial lagrange_poly = poly(points.cols() - 1);
 
@@ -389,18 +330,19 @@ polynomial lagrange_gen(Eigen::MatrixXd& points){
 
 }
 
+// arclength helper
 double arclength_f(double x, void* params){
     
     // polynomial p = *(polynomial*)params;
     std::pair<polynomial, polynomial> p = *(std::pair<polynomial, polynomial>*)params;
-    double xy = poly_eval(p.first(),x);
-    double y = poly_eval(p.second(),x);
-    return sqrt(y*y+xy*xy);
+    double dx_dt = poly_eval(p.first(),x);
+    double dy_dt = poly_eval(p.second(),x);
+    return sqrt(dy_dt*dy_dt+dx_dt*dx_dt);
 }
 
 
-// CHECK CORRECTNESS
-double arclength(polynomial p1, polynomial p2, double x0,double x1){
+// integrating with gsl to get arclength
+double arclength(polynomial p1, polynomial p2, double low_bound,double up_bound){
 
     gsl_function F;
     F.function = &arclength_f;
@@ -411,19 +353,20 @@ double arclength(polynomial p1, polynomial p2, double x0,double x1){
     // gsl_integration_workspace *w 
     //      = gsl_integration_workspace_alloc (100000);
 
-    gsl_integration_qng (&F, x0, x1, 1, 1e-1, &result, &error, &neval);
+    gsl_integration_qng (&F, low_bound, up_bound, 1, 1e-1, &result, &error, &neval);
     // gsl_integration_workspace_free(w); 
 
     return result;
 
 }
 
-std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){
+// given a set of points, returns a vector of splines and a vector of cumulative lengths
+std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& points, int points_per_spline,bool loop){
     int n = res.cols(); // number of points passed in
 
     // construct 2 new matrices of size 2xn (one for index & x, one for index & y)
-    Eigen::VectorXd xRow = res.row(0);
-    Eigen::VectorXd yRow = res.row(1);
+    Eigen::VectorXd xRow = points.row(0);
+    Eigen::VectorXd yRow = points.row(1);
 
     // NOTE! uses an ordering for the points to generate parametrized polynomials
     // ordering based on vector indices of vector containing points
@@ -438,18 +381,9 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
     Eigen::Matrix<double, 2, n> yMatrix;
     yMatrix.row(0) = vector_n;
     yMatrix.row(1) = yRow;
-    raceline_gen(logger, xMatrix, path_id, points_per_spline, loop)
-
     
-}
-
-std::pair<std::vector<Spline>,std::vector<double>> raceline_genhelper(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){
-
-    int n = res.cols();
 
     std::vector<Spline> splines;
-
-    // Eigen::MatrixXd points=res;
 
     int shift = points_per_spline-1;
     int group_numbers;
@@ -467,74 +401,40 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_genhelper(rclcpp::Lo
     }
     std::vector<std::vector<int>> groups;
 
-    
-    std::vector<double> lengths;
     std::vector<double> cumsum;
-    // lengths.resize(group_numbers);
 
     for(int i=0; i<group_numbers; i++){
-        // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
 
-        // RCLCPP_INFO(logger, "\nnew group beginning\n");
-
-        Eigen::MatrixXd group(2, points_per_spline);
-        for(int k = 0; k < group.cols(); k++) {
+        Eigen::MatrixXd group_x(2, points_per_spline);
+        Eigen::MatrixXd group_y(2, points_per_spline);
+        for(int k = 0; k < group_x.cols(); k++) {
             for (int j = 0; j < 2; j++) {
-                group(j, k) = res(j, i*shift + k);
+                group_x(j, k) = xMatrix(j, i*shift + k);
+                group_y(j, k) = yMatrix(j, i*shift + k);
                 // if (j==1) RCLCPP_INFO(logger, "point %d is (%f, %f)\n", k, group(0, k), group(1,k));
             }
         }
 
-
-
-        // Eigen::Matrix2d Q  = rotation_matrix_gen(logger,group);
-        // Eigen::VectorXd translation_vector = get_translation_vector(group);
-        // Eigen::MatrixXd rotated_points = transform_points(logger,group,Q,translation_vector);
-
-        // RCLCPP_INFO(logger, "rotation matrix\n");
-        // RCLCPP_INFO(logger, "first point is (%f, %f)\n", Q(0, 0), Q(0, 1));
-        // RCLCPP_INFO(logger, "second point is (%f, %f)\n", Q(1, 0), Q(1, 1));
-
-        // RCLCPP_INFO(logger, "Translation vector");
-        // RCLCPP_INFO(logger, "(%f, %f)\n", translation_vector(0, 0), translation_vector(0, 1));
-
-        // RCLCPP_INFO(logger, "rotated_points");
-        // for (int i = 0; i < rotated_points.cols(); i++) {
-        //     RCLCPP_INFO(logger, "point %d is (%f, %f)\n", i, rotated_points(0, i), rotated_points(1, i));
-
-        // }
-        // RCLCPP_INFO(logger, "second point is (%f, %f)\n", rotated_points(0, 1), rotated_points(1, 1));
-
-
         // polynomial interpolation_poly = lagrange_gen(rotated_points);
-        polynomial interpolation_poly = lagrange_gen(group);
-        polynomial first_der = polyder(interpolation_poly);
-        polynomial second_der = polyder(first_der);
-        
-        
-        // Spline* spline = new Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
+        polynomial poly_x = lagrange_gen(group_x);
+        polynomial poly_y = lagrange_gen(group_y);
 
-        lengths.emplace_back(0);
-        // Spline spline = Spline(interpolation_poly, first_der, second_der, path_id,i);
-        Spline spline = Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
+        Spline spline = Spline(poly_x, poly_y, group_x, group_y);
         splines.emplace_back(spline);
 
-        // lengths.push_back(spline.calculateLength());
         if (i == 0) {
-            RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
+            // RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
             // RCLCPP_INFO(logger, "spline derivative is %f + %fx + %fx^2 + %fx^3\n", spline.first_der.nums(0), spline.first_der.nums(1), spline.first_der.nums(2), spline.first_der.nums(3));
             cumsum.push_back(splines[0].calculateLength());
         } else {
-            RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
+            // RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
             cumsum.push_back(cumsum.back()+splines[0].calculateLength());
         }
 
     }
 
     return std::make_pair(splines, cumsum);
-
-
-
+    
 }
 
 // @TODO: searchSorted function
@@ -593,10 +493,10 @@ std::vector<double> get_curvature_raceline(std::vector<double> progress,std::vec
         
         double curvature = 
         get_curvature(
-            splines[index].get_first_derx(),
-            splines[index].get_first_dery(),
-            splines[index].get_second_derx(),
-            splines[index].get_second_dery(),
+            splines[index].get_first_der_x(),
+            splines[index].get_first_der_y(),
+            splines[index].get_second_der_x(),
+            splines[index].get_second_der_y(),
             min_x
         );
 
