@@ -24,19 +24,8 @@ namespace controls {
          * @param[in] timestep Timestep
          */
         __device__ static void model(const float world_state[], const float action[], float world_state_out[], float timestep) {
-            // Call dynamics model. Outputs dstate/dt, but may take timestep into consideration for stability
-            // or accuracy purposes. Extenionsally, forward euler should be done on this.
-
-            // We do this instead of directly calculating the next step because updating directly didn't work in
-            // curvilinear coordinates. TODO: refactor model to directly update next state
-            float world_state_dot[state_dims];
-            ONLINE_DYNAMICS_FUNC(world_state, action, world_state_dot, timestep);
-            paranoid_assert(!any_nan(world_state_dot, state_dims) && "World state dot was nan directly after dynamics call");
-            paranoid_assert(!any_nan(world_state, state_dims) && "World state was nan directly after dynamics call");
-
-            for (uint8_t i = 0; i < state_dims; i++) {
-                world_state_out[i] = world_state[i] + world_state_dot[i] * timestep;
-            }
+            // used to be not a trivial function (lol). Probably optimized out anyway.
+            ONLINE_DYNAMICS_FUNC(world_state, action, world_state_out, timestep);
             paranoid_assert(!any_nan(world_state_out, state_dims) && "World state out was nan directly after dynamics call");
         }
 

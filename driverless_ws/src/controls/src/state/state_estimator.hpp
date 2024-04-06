@@ -17,11 +17,16 @@ namespace controls {
             virtual void on_world_quat(const QuatMsg& quat_msg) =0;
             virtual void on_world_pose(const PoseMsg& pose_msg) =0;
 
-            virtual void sync_to_device(float swangle) =0;
+            virtual void sync_to_device(float swangle, const rclcpp::Time &time) =0;
             virtual bool is_ready() =0;
-            virtual State get_state() =0;
+            virtual State get_raw_state() =0;
+
+            /* Must call sync_to_device to be accurate! */
+            virtual State get_projected_state() =0;
+
             virtual void set_logger(LoggerFunc logger) =0;
-            virtual builtin_interfaces::msg::Time get_orig_data_stamp() =0;
+            virtual rclcpp::Time get_orig_data_stamp() =0;
+            virtual void record_control_action(const Action &action, const rclcpp::Time &ros_time) =0;
 
 #ifdef DISPLAY
             struct OffsetImage {

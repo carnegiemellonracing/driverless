@@ -33,7 +33,7 @@ namespace controls {
     constexpr float controller_publish_period = 1. / controller_publish_freq;
 
     /** Controller target period, in sec */
-    constexpr uint32_t num_samples = 1024 * 8;
+    constexpr uint32_t num_samples = 1;
     constexpr uint32_t num_timesteps = 96;
     constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 4;
@@ -76,6 +76,7 @@ namespace controls {
     constexpr float understeer_slope = 0.025f;
     constexpr float brake_enable_speed = 1.0f;
     constexpr float saturating_motor_torque = long_tractive_capability * car_mass * whl_radius / gear_ratio;
+    constexpr float approx_propogation_delay = 0.0f;  // sec
 
     enum class TorqueMode
     {

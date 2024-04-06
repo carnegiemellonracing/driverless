@@ -15,6 +15,7 @@
 #include "state_estimator.cuh"
 #include "state_estimator.hpp"
 
+#include <mppi/functors.cuh>
 #include <SDL2/SDL_video.h>
 
 
@@ -127,6 +128,47 @@ namespace controls {
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
 
+        void StateEstimator_Impl::update_action_history_to_new_time() {
+            assert(m_action_history.size() >= 1);
+            assert(m_action_history.front().first.nanoseconds() <= m_orig_data_stamp.nanoseconds());
+
+            const auto first_entry_after = std::upper_bound(
+                m_action_history.begin(), m_action_history.end(),
+                std::make_pair(m_orig_data_stamp, Action {}),
+                [] (const std::pair<rclcpp::Time, Action>& pair1, const std::pair<rclcpp::Time, Action>& pair2) {
+                    return pair1.first.nanoseconds() < pair2.first.nanoseconds();
+                }
+            );
+
+            assert(first_entry_after != m_action_history.begin());
+
+            const auto first_entry_before = std::prev(first_entry_after);
+            m_action_history.erase(m_action_history.begin(), first_entry_before);
+        }
+
+        void StateEstimator_Impl::project_current_state(const rclcpp::Time& time) {
+            using namespace glm;
+
+            const uint64_t curr_nanos = time.nanoseconds() + approx_propogation_delay;
+            std::copy(m_world_state_raw.begin(), m_world_state_raw.end(), m_world_state_projected.begin());
+
+            uint64_t sim_nanos = m_orig_data_stamp.nanoseconds();
+            for (auto pair_iter = m_action_history.begin(); pair_iter != m_action_history.end(); ++pair_iter) {
+                const uint64_t next_nanos = std::next(pair_iter) != m_action_history.end() ?
+                    std::next(pair_iter)->first.nanoseconds() : curr_nanos;
+
+                const Action& action = pair_iter->second;
+
+                ONLINE_DYNAMICS_FUNC(
+                    m_world_state_projected.data(), action.data(), m_world_state_projected.data(),
+                    (next_nanos - sim_nanos) / 1e9f
+                );
+
+                sim_nanos = next_nanos;
+            }
+        }
+
+
         void StateEstimator_Impl::on_spline(const SplineMsg& spline_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
@@ -145,14 +187,16 @@ namespace controls {
             }
 
             m_logger("generating spline frame lookup texture info...");
-            gen_tex_info({m_world_state[state_x_idx], m_world_state[state_y_idx]});
+            gen_tex_info({m_world_state_raw[state_x_idx], m_world_state_raw[state_y_idx]});
 
             m_logger("filling OpenGL buffers...");
-            fill_path_buffers({m_world_state[state_x_idx], m_world_state[state_y_idx]});
+            fill_path_buffers({m_world_state_raw[state_x_idx], m_world_state_raw[state_y_idx]});
 
             utils::sync_gl_and_unbind_context(m_gl_window);
 
+            m_logger("updating action history");
             m_orig_data_stamp = spline_msg.orig_data_stamp;
+            update_action_history_to_new_time();
 
             m_spline_ready = true;
 
@@ -165,7 +209,7 @@ namespace controls {
             const float car_xdot = twist_msg.twist.linear.x * std::cos(m_gps_heading) + twist_msg.twist.linear.y * std::sin(m_gps_heading);
             const float car_ydot = twist_msg.twist.linear.x * std::sin(m_gps_heading) - twist_msg.twist.linear.y * std::cos(m_gps_heading);
 
-            m_world_state[state_speed_idx] = glm::length(glm::fvec2(car_xdot, car_ydot));
+            m_world_state_raw[state_speed_idx] = glm::length(glm::fvec2(car_xdot, car_ydot));
 
             m_world_twist_ready = true;
         }
@@ -182,7 +226,7 @@ namespace controls {
             const fvec3 ihatprime = rot * fvec3(1, 0, 0);
             const float heading = std::atan2(ihatprime.y, ihatprime.x);
 
-            m_world_state[state_yaw_idx] = 0;
+            m_world_state_raw[state_yaw_idx] = 0;
             m_gps_heading = heading;
 
             m_world_yaw_ready = true;
@@ -191,23 +235,33 @@ namespace controls {
         void StateEstimator_Impl::on_world_pose(const PoseMsg &pose_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            m_world_state[state_x_idx] = pose_msg.pose.position.x;
-            m_world_state[state_y_idx] = pose_msg.pose.position.y;
-            m_world_state[state_yaw_idx] = pose_msg.pose.orientation.z;
+            m_world_state_raw[state_x_idx] = pose_msg.pose.position.x;
+            m_world_state_raw[state_y_idx] = pose_msg.pose.position.y;
+            m_world_state_raw[state_yaw_idx] = pose_msg.pose.orientation.z;
 
             m_world_yaw_ready = true;
         }
 
-        builtin_interfaces::msg::Time StateEstimator_Impl::get_orig_data_stamp() {
+        rclcpp::Time StateEstimator_Impl::get_orig_data_stamp() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             return m_orig_data_stamp;
         }
 
-        void StateEstimator_Impl::sync_to_device(float swangle) {
+        void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& ros_time) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            m_action_history.emplace_back(ros_time, action);
+        }
+
+        void StateEstimator_Impl::sync_to_device(float swangle, const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_logger("beginning state estimator device sync");
+
+            m_logger("projecting current state");
+            project_current_state(time);
+
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
             m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
@@ -232,13 +286,20 @@ namespace controls {
         bool StateEstimator_Impl::is_ready() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
+            // purposefully don't check for pose; path-planning may not publish state during slow lap (world frame = car frame)
             return m_spline_ready && m_world_twist_ready && m_world_yaw_ready;
         }
 
-        State StateEstimator_Impl::get_state() {
+        State StateEstimator_Impl::get_raw_state() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            return m_world_state;
+            return m_world_state_raw;
+        }
+
+        State StateEstimator_Impl::get_projected_state() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            return m_world_state_projected;
         }
 
         void StateEstimator_Impl::set_logger(LoggerFunc logger) {
@@ -286,7 +347,7 @@ namespace controls {
 
         void StateEstimator_Impl::sync_world_state() {
             CUDA_CALL(cudaMemcpyToSymbolAsync(
-                cuda_globals::curr_state, &m_world_state, state_dims * sizeof(float)
+                cuda_globals::curr_state, &m_world_state_raw, state_dims * sizeof(float)
             ));
         }
 
