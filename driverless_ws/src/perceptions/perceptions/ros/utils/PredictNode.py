@@ -75,7 +75,14 @@ class PredictNode(DataNode):
             self.predictor.display()
 
         # publish message
-        msg = conversions.cones_to_msg(cones, self.quat_msg)
+        msg = conversions.cones_to_msg(cones)
+
+        # get the estimated state
+        pose = self.first_order_approximator.get_pose_msg()
+        if pose is None:
+            self.get_logger().warn(f"Not got valid pose")
+            return 
+        msg.pose = pose
         
         data_time = self.get_earliest_data_time()
         msg.orig_data_stamp = data_time.to_msg()

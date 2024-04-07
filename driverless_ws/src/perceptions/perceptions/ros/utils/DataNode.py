@@ -4,10 +4,10 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 
 # ROS2 message types
-from sensor_msgs.msg import Image, PointCloud2
+from sensor_msgs.msg import Image, PointCloud2, NavSatFix
 from cv_bridge import CvBridge
 from std_msgs.msg import Header
-from geometry_msgs.msg import QuaternionStamped
+from geometry_msgs.msg import QuaternionStamped, Vector3Stamped, Pose2D
 # from interfaces.msg import DataFrame
 
 # ROS2 msg to python datatype conversions
@@ -45,6 +45,57 @@ RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
 ALL_DATA_TYPES = [d for d in DataType]
 
 class DataNode(Node):
+    class FirstOrderApproximator:
+
+        def __init__(self, node, init_pos=np.array([0., 0.]), init_vel=np.array([0., 0.])):
+            self.node = node
+            self.last_pos = init_pos
+            self.accumulated_delta_pos = np.zeros_like(self.last_pos)
+            self.last_vel = init_vel
+            self.last_record_time = None
+            self.yaw = None
+            self.counter = 0
+
+        def record_pos(self, pos):
+            print(f"first order approx. badness: {pos - (self.last_pos + self.accumulated_delta_pos)}")
+            self.counter += 1
+            if (self.counter % 10 != 0):
+                return
+            self.last_pos = pos
+            self.accumulated_delta_pos = np.zeros_like(self.last_pos)
+            self.last_record_time = self.node.get_clock().now()
+
+        def record_vel(self, vel):
+            if self.last_record_time is None:
+                return
+            
+            curr_time = self.node.get_clock().now()
+            dt = (curr_time.nanoseconds - self.last_record_time.nanoseconds) * 1e-9
+            dpos = dt * vel
+            self.accumulated_delta_pos += dpos
+            self.last_vel = vel
+
+        def record_yaw(self, yaw):
+            self.yaw = yaw
+
+        def get_estimated_pos_and_vel(self):
+            return self.last_pos + self.accumulated_delta_pos, self.last_vel
+
+        def get_pose_msg(self):
+            if np.all(self.last_pos == 0) or self.yaw == None:
+                return None
+            
+            pos = self.last_pos + self.accumulated_delta_pos
+
+            pose = Pose2D()
+            pose.x = pos[0]
+            pose.y = pos[1]
+            pose.theta = self.yaw
+            
+            return pose
+
+
+        
 
     def __init__(self, required_data=ALL_DATA_TYPES, name="data_node", visualize=False, own_zed=None, publish_images=False):
 
@@ -100,12 +151,22 @@ class DataNode(Node):
         # define dictionary to store the data
         self.data = DataInstance(required_data)
 
-        # always subscribe to the latest quaternion data
+        # get state estimator information
         self.quat_msg = None
         self.quat_sub = self.create_subscription(msg_type=QuaternionStamped,
                                                  topic="/filter/quaternion",
                                                  callback=self.quat_callback,
                                                  qos_profile=RELIABLE_QOS_PROFILE)
+        self.gnss_sub = self.create_subscription(msg_type=NavSatFix,
+                                                 topic="/gnss",
+                                                 callback=self.gnss_callback,
+                                                 qos_profile=RELIABLE_QOS_PROFILE)
+        self.vel_sub = self.create_subscription(msg_type=NavSatFix,
+                                                 topic="/filter/velocity",
+                                                 callback=self.gnss_callback,
+                                                 qos_profile=RELIABLE_QOS_PROFILE)
+        
+        self.first_order_approximator = DataNode.FirstOrderApproximator(self)
 
 
         if DataType.ZED_LEFT_COLOR in self.required_data and (own_zed == "zed2" or own_zed == None):
@@ -157,6 +218,9 @@ class DataNode(Node):
     def get_earliest_data_time(self):
         times = [self.data_times[datatype] for datatype in self.required_data]
         return min(times, key=lambda t: t.nanoseconds)
+    
+    def get_pose(self):
+        pass
 
     
     def publish_zed_data(self, left_publisher, xyz_publisher, frame_id, left_img, xyz_img):
@@ -193,7 +257,21 @@ class DataNode(Node):
             self.frame2_id += 1
 
     def quat_callback(self, msg):
-        self.quat_msg = msg
+        quat = msg.quaternion
+        q0, q1, q2, q3 = quat.w, quat.x, quat.y, quat.z
+
+        yaw = np.arctan2(2*(q3*q0 +q1*q2), -1+2*(q0*q0 +q1*q1))
+        self.first_order_approximator.record_yaw(yaw)
+
+    def gnss_callback(self, msg):
+        GEO_DEG_TO_M = 111320
+
+        pos = np.array([-msg.longitude, msg.latitude]) * GEO_DEG_TO_M
+        self.first_order_approximator.record_pos(pos)
+
+    def vel_callback(self, msg):
+        vel = np.array([-msg.vector.x, msg.vector.y])
+        self.first_order_approximator.record_vel(vel)
 
     
     def left_color_callback(self, msg):
