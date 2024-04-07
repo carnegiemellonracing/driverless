@@ -65,6 +65,9 @@ setup(
 
             # midline node
             'midline_node = perceptions.planning_stuff.MidlineNode:main',
+
+            # sync test node
+            'sync_test_node = perceptions.planning_stuff.SynchronizationTesterNode:main',
         ],
     },
 )
