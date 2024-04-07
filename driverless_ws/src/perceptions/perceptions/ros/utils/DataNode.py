@@ -54,13 +54,13 @@ class DataNode(Node):
             self.last_vel = init_vel
             self.last_record_time = None
             self.yaw = None
-            self.counter = 0
+            # self.counter = 0
 
         def record_pos(self, pos):
             print(f"first order approx. badness: {pos - (self.last_pos + self.accumulated_delta_pos)}")
-            self.counter += 1
-            if (self.counter % 10 != 0):
-                return
+            # self.counter += 1
+            # if (self.counter % 10 != 0):
+            #     return
             self.last_pos = pos
             self.accumulated_delta_pos = np.zeros_like(self.last_pos)
             self.last_record_time = self.node.get_clock().now()
