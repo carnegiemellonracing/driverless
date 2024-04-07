@@ -4,6 +4,7 @@ from rclpy.time import Time
 from sensor_msgs.msg import Image, PointCloud2
 from interfaces.msg import ConeArray
 from geometry_msgs.msg import Point
+from geometry_msgs.msg import QuaternionStamped
 
 # perc22a Cone class
 from perc22a.predictors.utils.cones import Cones
@@ -74,7 +75,7 @@ def npy_to_pointcloud2(pc):
     pc_msg = rnp.msgify(PointCloud2, pc_array)
     return pc_msg
 
-def cones_to_msg(cones: Cones) -> ConeArray:
+def cones_to_msg(cones: Cones, quat_msg: QuaternionStamped) -> ConeArray:
     '''convert perc22a Cones datatype to ConeArray ROS2 msg type'''
     
     cones_msg = ConeArray()
@@ -83,6 +84,8 @@ def cones_to_msg(cones: Cones) -> ConeArray:
     cones_msg.blue_cones = _cone_to_msg_arr(blue_cones)
     cones_msg.yellow_cones = _cone_to_msg_arr(yellow_cones)
     cones_msg.orange_cones = _cone_to_msg_arr(orange_cones)
+    if quat_msg is not None:
+        cones_msg.quat = quat_msg
     
     return cones_msg
 

@@ -75,7 +75,7 @@ class PredictNode(DataNode):
             self.predictor.display()
 
         # publish message
-        msg = conversions.cones_to_msg(cones)
+        msg = conversions.cones_to_msg(cones, self.quat_msg)
         
         data_time = self.get_earliest_data_time()
         msg.orig_data_stamp = data_time.to_msg()

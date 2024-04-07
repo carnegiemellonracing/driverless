@@ -78,6 +78,9 @@ class ConeNode(Node):
         # earliest data timings
         self.data_times = {}
 
+        # get the most recent quaternion
+        self.quat = None
+
         return
 
     def update_vis(self):
@@ -91,6 +94,7 @@ class ConeNode(Node):
 
         cones = conv.msg_to_cones(msg)
         self.merger.add(cones, PipelineType.ZED_PIPELINE)
+        self.quat = msg.quat
 
         return
     
@@ -100,6 +104,7 @@ class ConeNode(Node):
 
         cones = conv.msg_to_cones(msg)
         self.merger.add(cones, PipelineType.ZED2_PIPELINE)
+        self.quat = msg.quat
 
         return
 
@@ -109,6 +114,7 @@ class ConeNode(Node):
 
         cones = conv.msg_to_cones(msg)
         self.merger.add(cones, PipelineType.LIDAR)
+        self.quat = msg.quat
 
         return
     
@@ -135,7 +141,7 @@ class ConeNode(Node):
             self.vis2D.set_cones(merged_cones)
 
         # publish cones
-        msg = conv.cones_to_msg(merged_cones)
+        msg = conv.cones_to_msg(merged_cones, self.quat)
 
         data_time = self.flush_and_get_data_times()
         msg.orig_data_stamp = data_time.to_msg()

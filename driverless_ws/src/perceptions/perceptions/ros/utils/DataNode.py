@@ -7,6 +7,7 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 from sensor_msgs.msg import Image, PointCloud2
 from cv_bridge import CvBridge
 from std_msgs.msg import Header
+from geometry_msgs.msg import QuaternionStamped
 # from interfaces.msg import DataFrame
 
 # ROS2 msg to python datatype conversions
@@ -99,6 +100,13 @@ class DataNode(Node):
         # define dictionary to store the data
         self.data = DataInstance(required_data)
 
+        # always subscribe to the latest quaternion data
+        self.quat_msg = None
+        self.quat_sub = self.create_subscription(msg_type=QuaternionStamped,
+                                                 topic="/filter/quaternion",
+                                                 callback=self.quat_callback,
+                                                 qos_profile=RELIABLE_QOS_PROFILE)
+
 
         if DataType.ZED_LEFT_COLOR in self.required_data and (own_zed == "zed2" or own_zed == None):
             self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
@@ -183,6 +191,9 @@ class DataNode(Node):
         if self.publish_images:
             self.publish_zed_data(self.left2_publisher, self.xyz2_publisher, self.frame2_id, left, xyz)
             self.frame2_id += 1
+
+    def quat_callback(self, msg):
+        self.quat_msg = msg
 
     
     def left_color_callback(self, msg):
