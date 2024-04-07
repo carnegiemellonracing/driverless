@@ -264,9 +264,9 @@ class DataNode(Node):
         self.first_order_approximator.record_yaw(yaw)
 
     def gnss_callback(self, msg):
-        GEO_DEG_TO_M = 111320
-
-        pos = np.array([-msg.longitude, msg.latitude]) * GEO_DEG_TO_M
+        GEO_DEG_TO_M = 111320.0
+        #TODO: why are these flipped
+        pos = np.array([-msg.latitude, msg.longitude]) * GEO_DEG_TO_M
         self.first_order_approximator.record_pos(pos)
 
     def vel_callback(self, msg):
