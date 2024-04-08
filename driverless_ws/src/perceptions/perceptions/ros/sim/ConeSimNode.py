@@ -34,7 +34,7 @@ PUBLISH_FPS = 10
 VIS_UPDATE_FPS = 25
 MAX_ZED_CONE_RANGE = 12.5
 
-class SimConeNode(Node):
+class ConeSimNode(Node):
 
     def __init__(self, debug=True):
         super().__init__(CONE_NODE_NAME)
@@ -79,7 +79,7 @@ class SimConeNode(Node):
 def start_node(args, debug=False):
     rclpy.init(args=args)
 
-    cone_node = SimConeNode(debug=debug)
+    cone_node = ConeSimNode(debug=debug)
 
     rclpy.spin(cone_node)
 
