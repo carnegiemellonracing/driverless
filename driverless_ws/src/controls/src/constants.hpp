@@ -74,7 +74,7 @@ namespace controls {
     constexpr float long_tractive_capability = 3.5f; // m/s^2 
     constexpr float lat_tractive_capability = 5.0f; // m/s^2
     constexpr float understeer_slope = 0.025f;
-    constexpr float brake_enable_speed = 2.0f;
+    constexpr float brake_enable_speed = 1.0f;
     constexpr float saturating_motor_torque = long_tractive_capability * car_mass * whl_radius / gear_ratio;
 
     enum class TorqueMode

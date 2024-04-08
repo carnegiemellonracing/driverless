@@ -1,5 +1,6 @@
 # ROS2 imports
 import rclpy
+from rclpy.time import Time
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 
@@ -16,7 +17,8 @@ from perc22a.mergers.PipelineType import PipelineType
 from perc22a.mergers.merger_factory import \
     create_lidar_merger, \
     create_zed_merger, \
-    create_all_merger
+    create_all_merger, \
+    create_any_merger
 
 from perc22a.utils.Timer import Timer
 
@@ -43,7 +45,7 @@ RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
                          depth = 5)
 
 CONE_NODE_NAME = "cone_node"
-PUBLISH_FPS = 10
+PUBLISH_FPS = 20
 VIS_UPDATE_FPS = 25
 MAX_ZED_CONE_RANGE = 12.5
 
@@ -73,6 +75,9 @@ class ConeNode(Node):
         # if debugging, initialize visualizer
         self.debug = debug
 
+        # earliest data timings
+        self.data_times = {}
+
         return
 
     def update_vis(self):
@@ -82,6 +87,8 @@ class ConeNode(Node):
 
     def yolov5_zed_cone_callback(self, msg):
         '''receive cones from yolov5_zed_node predictor'''
+        self.data_times[PipelineType.ZED_PIPELINE] = Time.from_msg(msg.orig_data_stamp)
+
         cones = conv.msg_to_cones(msg)
         self.merger.add(cones, PipelineType.ZED_PIPELINE)
 
@@ -89,6 +96,8 @@ class ConeNode(Node):
     
     def yolov5_zed2_cone_callback(self, msg):
         '''receive cones from yolov5_zed2_node predictor'''
+        self.data_times[PipelineType.ZED2_PIPELINE] = Time.from_msg(msg.orig_data_stamp)
+
         cones = conv.msg_to_cones(msg)
         self.merger.add(cones, PipelineType.ZED2_PIPELINE)
 
@@ -96,10 +105,19 @@ class ConeNode(Node):
 
     def lidar_cone_callback(self, msg):
         '''receive cones from lidar_node predictor'''
+        self.data_times[PipelineType.LIDAR] = Time.from_msg(msg.orig_data_stamp)
+
         cones = conv.msg_to_cones(msg)
         self.merger.add(cones, PipelineType.LIDAR)
 
         return
+    
+    def flush_and_get_data_times(self):
+        times = [self.data_times[datatype] for datatype in self.data_times.keys()]
+        min_time = min(times, key=lambda t: t.nanoseconds)
+        self.data_times = {}
+
+        return min_time
 
     def publish_cones(self):
 
@@ -117,9 +135,15 @@ class ConeNode(Node):
             self.vis2D.set_cones(merged_cones)
 
         # publish cones
-        print(f"Published {len(merged_cones)} cones")
         msg = conv.cones_to_msg(merged_cones)
+
+        data_time = self.flush_and_get_data_times()
+        msg.orig_data_stamp = data_time.to_msg()
+
         self.cone_publisher.publish(msg)
+
+        data_t = conv.ms_since_time(self.get_clock().now(), data_time)
+        print(f"Published {len(merged_cones)} cones (Data Latency: {data_t}ms)")
         
         return
     
@@ -157,6 +181,14 @@ def main_all(args=None):
 
 def main_all_debug(args=None):
     start_cone_node(create_all_merger(), args=args, debug=True)
+    return
+
+def main_any(args=None):
+    start_cone_node(create_any_merger(), args=args, debug=False)
+    return
+
+def main_any_debug(args=None):
+    start_cone_node(create_any_merger(), args=args, debug=True)
     return
 
 # TODO: decide which policy is best and call it from main() (default to zed)
