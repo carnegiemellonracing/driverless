@@ -59,6 +59,10 @@ setup(
             'cone_node_all = perceptions.ros.utils.ConeNode:main_all',
             'cone_node_all_debug = perceptions.ros.utils.ConeNode:main_all_debug',
 
+            # simulated cones
+            'sim_cone_node = perceptions.ros.sim.SimConeNode:main',
+            'sim_cone_node_debug = perceptions.ros.sim.SimConeNode:main_debug',
+
             # midline node
             'midline_node = perceptions.planning_stuff.MidlineNode:main',
         ],
