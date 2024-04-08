@@ -65,6 +65,7 @@ setup(
 
             # midline node
             'midline_node = perceptions.planning_stuff.MidlineNode:main',
+            'endtoend_node = perceptions.ros.predictors.EndToEndNode:main'
         ],
     },
 )
