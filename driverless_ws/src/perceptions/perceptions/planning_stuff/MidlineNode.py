@@ -61,7 +61,7 @@ class MidlineNode(Node):
         self.vis.set_cones(cones)
         if len(downsampled_boundary_points) > 0:
             self.vis.set_points(downsampled_boundary_points)
-            self.vis.update()
+        self.vis.update()
 
         points = []
         msg = SplineFrames()

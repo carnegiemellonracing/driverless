@@ -21,7 +21,7 @@ SLOPE = 34.5
 
 CMDLINE_QOS_PROFILE = QoSProfile(
     depth=1,  # Set the queue depth
-    reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_RELIABLE,  # Set the reliability policy
+    reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,  # Set the reliability policy
     durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_VOLATILE  # Set the durability policy
 )
 

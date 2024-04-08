@@ -147,7 +147,8 @@ class DataNode(Node):
         return self.data.have_all_data()
     
     def get_earliest_data_time(self):
-        times = [self.data_times[datatype] for datatype in self.required_data]
+        # TODO: this is not exactly correct
+        times = [self.data_times[datatype] for datatype in self.required_data if datatype in self.data_times]
         return min(times, key=lambda t: t.nanoseconds)
 
     
