@@ -1,6 +1,7 @@
 
 import rclpy
 from rclpy.node import Node
+from rclpy.time import Time
 from interfaces.msg import ConeArray
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 import perceptions.planning_stuff.svm_utils as svm_utils
@@ -44,17 +45,17 @@ class MidlineNode(Node):
         self.vis = Vis2D()
 
     
-    def cone_callback(self, cones):
-        print("Recieiving cone callback in midline")
+    def cone_callback(self, msg):
+        # print("Recieiving cone callback in midline")
 
         s = time.time()
 
-        cones = conv.msg_to_cones(cones)
+        orig_data_stamp = msg.orig_data_stamp
+        cones = conv.msg_to_cones(msg)
 
         s_svm = time.time()
         downsampled_boundary_points = cones_to_midline(cones)
         e_svm = time.time()
-        print(f"svm util: {int(1000 * (e_svm - s_svm))}")
         # print(downsampled_boundary_points)
 
         self.vis.set_cones(cones)
@@ -64,6 +65,7 @@ class MidlineNode(Node):
 
         points = []
         msg = SplineFrames()
+        msg.orig_data_stamp = orig_data_stamp
 
         for np_point in downsampled_boundary_points:
             new_point = Point()
@@ -72,20 +74,20 @@ class MidlineNode(Node):
             new_point.z = float(0)
             points.append(new_point)
 
-
-
         if len(points) < 2:
             print("LESS THAN 2 FRAMES")
             return
 
-
         msg.frames = points
-        print("num frames:",len(points))
         #TODO: add car pos to each midpoint to get global point
         self.midline_pub.publish(msg)
 
         e = time.time()
-        print(f"Entire: {int(1000 * (e - s)):.3f}")
+
+        data_stamp = orig_data_stamp
+        data_t = Time.from_msg(orig_data_stamp)
+        time_since_data = conv.ms_since_time(self.get_clock().now(), data_t)
+        print(f"Entire: {int(1000 * (e - s)):.3f}, Data Latency: {time_since_data:.3f}ms, # frames: {len(points)}")
 
 
 def main():

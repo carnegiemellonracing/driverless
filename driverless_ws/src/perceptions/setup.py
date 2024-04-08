@@ -46,6 +46,8 @@ setup(
             'yolov5_zed2_own_node = perceptions.ros.predictors.YOLOv5Node:main_zed2_own',
             'yolov5_zed_own_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed_own_debug',
             'yolov5_zed2_own_node_debug = perceptions.ros.predictors.YOLOv5Node:main_zed2_own_debug',
+            'yolov5_zed_own_publish_node = perceptions.ros.predictors.YOLOv5Node:main_zed_own_publish',
+            'yolov5_zed2_own_publish_node = perceptions.ros.predictors.YOLOv5Node:main_zed2_own_publish',
 
             'lidar_node = perceptions.ros.predictors.LidarNode:main',
 
@@ -58,6 +60,8 @@ setup(
             'cone_node_zed_debug = perceptions.ros.utils.ConeNode:main_zed_debug',
             'cone_node_all = perceptions.ros.utils.ConeNode:main_all',
             'cone_node_all_debug = perceptions.ros.utils.ConeNode:main_all_debug',
+            'cone_node_any = perceptions.ros.utils.ConeNode:main_any',
+            'cone_node_any_debug = perceptions.ros.utils.ConeNode:main_any_debug',
 
             # simulated cones
             'sim_cone_node = perceptions.ros.sim.SimConeNode:main',
@@ -65,6 +69,9 @@ setup(
 
             # midline node
             'midline_node = perceptions.planning_stuff.MidlineNode:main',
+
+            # sync test node
+            'sync_test_node = perceptions.planning_stuff.SynchronizationTesterNode:main',
         ],
     },
 )

@@ -1,5 +1,6 @@
 
 # ROS2 message types
+from rclpy.time import Time
 from sensor_msgs.msg import Image, PointCloud2
 from interfaces.msg import ConeArray
 from geometry_msgs.msg import Point
@@ -92,3 +93,8 @@ def msg_to_cones(msg: ConeArray) -> Cones:
         _msg_to_cone_arr(msg.yellow_cones),
         _msg_to_cone_arr(msg.orange_cones)
     )
+
+def ms_since_time(now: Time, stamp: Time):
+    delta_nanos = now.nanoseconds - stamp.nanoseconds
+    delta_ms = int(delta_nanos / 1e6)
+    return delta_ms

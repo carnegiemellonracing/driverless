@@ -23,7 +23,7 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFF
 
 class PredictNode(DataNode):
 
-    def __init__(self, name, debug_flag=False, time_flag=True, flush_data=True, own_zed=None):
+    def __init__(self, name, debug_flag=False, time_flag=True, flush_data=True, own_zed=None, publish_images=False):
         # create predictor, any subclass of PredictNode is required to implement this
         self.predictor = self.init_predictor()
 
@@ -31,7 +31,8 @@ class PredictNode(DataNode):
         super().__init__(
             required_data=self.predictor.required_data(),
             name=name,
-            own_zed = own_zed
+            own_zed = own_zed,
+            publish_images=publish_images
         )
 
         # debugging flags
@@ -75,12 +76,16 @@ class PredictNode(DataNode):
 
         # publish message
         msg = conversions.cones_to_msg(cones)
+        
+        data_time = self.get_earliest_data_time()
+        msg.orig_data_stamp = data_time.to_msg()
         self.cone_publisher.publish(msg)
 
         if self.time:
             # display time taken to perform prediction
             t = (e - s)
-            time_str = f"[Node={self.name}] Predict Time: {t * 1000:.3f}ms"
+            data_t = conversions.ms_since_time(self.get_clock().now(), data_time)
+            time_str = f"[Node={self.name}] Predict Time: {t * 1000:.3f}ms, Data Latency: {data_t:.3f}ms"
             print(time_str)
         
 

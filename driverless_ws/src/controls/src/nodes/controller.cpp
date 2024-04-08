@@ -135,7 +135,7 @@ namespace controls {
                 notify_state_dirty();
             }
 
-            void ControllerNode::publish_action(const Action& action) const {
+            void ControllerNode::publish_action(const Action& action) {
                 const auto msg = action_to_msg(action);
                 m_action_publisher->publish(msg);
             }
@@ -156,6 +156,7 @@ namespace controls {
 
                         // save for info publishing later, since might be changed during iteration
                         State curr_state = m_state_estimator->get_state();
+                        builtin_interfaces::msg::Time orig_data_stamp = m_state_estimator->get_orig_data_stamp();
 
                         // send state to device (i.e. cuda globals)
                         // (also serves to lock state since nothing else updates gpu state)
@@ -185,10 +186,14 @@ namespace controls {
                             std::chrono::high_resolution_clock::now() - start_time
                         );
 
+                        // can't use high res clock since need to be aligned with other nodes
+                        auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_data_stamp.nanosec) / 1000000;
+
                         interfaces::msg::ControllerInfo info {};
                         info.action = action_to_msg(action);
                         info.state = state_to_msg(curr_state);
                         info.latency_ms = time_elapsed.count();
+                        info.total_latency_ms = total_time_elapsed;
 
                         std::stringstream ss;
                         publish_and_print_info(ss, info);
@@ -215,6 +220,9 @@ namespace controls {
 
             ActionMsg ControllerNode::action_to_msg(const Action &action) {
                 interfaces::msg::ControlAction msg;
+                
+                msg.orig_data_stamp = m_state_estimator->get_orig_data_stamp();
+
                 msg.swangle = action[action_swangle_idx];
                 msg.torque_fl = action[action_torque_idx] / 4;
                 msg.torque_fr = action[action_torque_idx] / 4;
@@ -273,7 +281,8 @@ namespace controls {
                 << "  y (m): " << info.state.y << "\n"
                 << "  yaw (rad): " << info.state.yaw << "\n"
                 << "  speed (m/s): " << info.state.speed << "\n"
-                << "Latency (ms) " << info.latency_ms << "\n"
+                << "Latency (ms): " << info.latency_ms << "\n"
+                << "Total Latency (ms): " << info.total_latency_ms << "\n"
                 << std::endl;
             }
     }
