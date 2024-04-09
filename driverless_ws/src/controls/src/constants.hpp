@@ -55,7 +55,7 @@ namespace controls {
     constexpr uint32_t num_timesteps = 96;
     constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 4;
-    constexpr float temperature = 1.0f;
+    constexpr float temperature = 0.01f;
     constexpr unsigned long long seed = 0;
     constexpr uint32_t num_action_trajectories = action_dims * num_timesteps * num_samples;
 
@@ -64,7 +64,7 @@ namespace controls {
 
     // Cost params
 
-    constexpr float offset_1m_cost = 2.0f;
+    constexpr float offset_1m_cost = 4.0f;
     constexpr float target_speed = 3.0f;
     constexpr float no_speed_cost = 5.0f;
     constexpr float overspeed_1m_cost = 1.0f;

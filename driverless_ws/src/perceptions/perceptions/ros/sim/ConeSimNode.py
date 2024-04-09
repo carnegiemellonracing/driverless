@@ -40,7 +40,7 @@ class ConeSimNode(Node):
         super().__init__(CONE_NODE_NAME)
 
         # save our merger for merging cone outputs    
-        self.cone_sim = ConeSim()
+        self.cone_sim = ConeSim(period=5)
 
         # initialize cone publisher
         self.publish_timer = self.create_timer(1/PUBLISH_FPS, self.publish_cones)
