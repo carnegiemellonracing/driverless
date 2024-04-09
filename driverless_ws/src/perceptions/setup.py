@@ -69,7 +69,7 @@ setup(
 
             # midline node
             'midline_node = perceptions.planning_stuff.MidlineNode:main',
-            'endtoend_node = perceptions.ros.predictors.EndToEndNode:main'
+            'endtoend_node = perceptions.ros.predictors.EndToEndNode:main',
 
             # sync test node
             'sync_test_node = perceptions.planning_stuff.SynchronizationTesterNode:main',

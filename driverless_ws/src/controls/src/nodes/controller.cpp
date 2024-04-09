@@ -187,7 +187,7 @@ namespace controls {
                         );
 
                         // can't use high res clock since need to be aligned with other nodes
-                        auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_data_stamp.nanosec) / 1000000;
+                        auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_data_stamp.sec * 1000000000 - orig_data_stamp.nanosec) / 1000000;
 
                         interfaces::msg::ControllerInfo info {};
                         info.action = action_to_msg(action);
