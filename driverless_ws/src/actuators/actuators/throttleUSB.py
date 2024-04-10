@@ -21,7 +21,7 @@ SLOPE = 34.5
 
 CMDLINE_QOS_PROFILE = QoSProfile(
     depth=1,  # Set the queue depth
-    reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_RELIABLE,  # Set the reliability policy
+    reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,  # Set the reliability policy
     durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_VOLATILE  # Set the durability policy
 )
 
@@ -30,7 +30,7 @@ class ActuatorNode(Node):
     def __init__(self):
         super().__init__('minimal_publisher')
         # self.ser = can.interface.Bus(bustype=BUSTYPE, channel=CHANNEL, bitrate=BITRATE,auto_reset=True)
-        self.ser = serial.Serial("/dev/ttyUSB1", baudrate=9600, timeout=0.1)
+        self.ser = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=0.1)
         self.subscription = self.create_subscription(
             ControlAction,
             '/control_action',  # Replace with the desired topic name
