@@ -43,6 +43,7 @@ class PredictNode(DataNode):
         self.flush_data = flush_data
         self.name = name
         self.failure_count = 0
+        self.predict_count = 0
 
         # TODO: figure out best way to time prediction appropriately
         self.predict_timer = self.create_timer(1 / PUBLISH_FPS, self.predict_callback)
@@ -64,6 +65,9 @@ class PredictNode(DataNode):
         if not self.got_all_data():
             self.get_logger().warn(f"Not got all data")
             return
+
+        # got data, start prediction 
+        self.predict_count += 1
 
         # predict cones from data (safely catch error if it occurs)
         try:
@@ -95,7 +99,7 @@ class PredictNode(DataNode):
             # display time taken to perform prediction
             t = (e - s)
             data_t = conversions.ms_since_time(self.get_clock().now(), data_time)
-            time_str = f"[Node={self.name}] Predict Time: {t * 1000:.3f}ms, Data Latency: {data_t:.3f}ms"
+            time_str = f"[Node={self.name}] Predict Time: {t * 1000:.3f}ms, Data Latency: {data_t:.3f}ms Failures: {self.failure_count}/{self.predict_count}"
             print(time_str)
         
 

@@ -6,6 +6,7 @@ from perceptions.ros.utils.PredictNode import PredictNode
 
 # for doing prediction on sensor data
 from perc22a.predictors.lidar.LidarPredictor import LidarPredictor
+from perc22a.predictors.lidar.FMSLidarPredictor import FMSLidarPredictor
 
 NODE_NAME = "lidar_node"
 
@@ -17,7 +18,7 @@ class LidarNode(PredictNode):
         return
     
     def init_predictor(self):
-        return LidarPredictor()
+        return FMSLidarPredictor()
 
 
 def main(args=None):
