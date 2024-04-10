@@ -50,6 +50,9 @@ setup(
             'yolov5_zed2_own_publish_node = perceptions.ros.predictors.YOLOv5Node:main_zed2_own_publish',
 
             'lidar_node = perceptions.ros.predictors.LidarNode:main',
+            'lidar_node_debug = perceptions.ros.predictors.LidarNode:main_debug',
+            'fms_lidar_node = perceptions.ros.predictors.LidarNode:main_fms',
+            'fms_lidar_node_debug = perceptions.ros.predictors.LidarNode:main_fms_debug',
 
             # cone node
             'cone_node = perceptions.ros.utils.ConeNode:main',

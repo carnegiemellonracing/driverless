@@ -12,24 +12,36 @@ NODE_NAME = "lidar_node"
 
 class LidarNode(PredictNode):
 
-    def __init__(self):
-        super().__init__(name=NODE_NAME,  debug_flag=False, time_flag=True)
-        
+    def __init__(self, debug=False, fms=False):
+        self.fms = fms
+
+        super().__init__(name=NODE_NAME, debug_flag=debug, time_flag=True)
         return
     
     def init_predictor(self):
-        return FMSLidarPredictor()
+        return FMSLidarPredictor() if self.fms else LidarPredictor()
 
-
-def main(args=None):
+def start_node(args, debug=False, fms=False):
     rclpy.init(args=args)
 
-    stereo_node = LidarNode()
+    lidar_node = LidarNode(debug=debug, fms=fms)
 
-    rclpy.spin(stereo_node)
+    rclpy.spin(lidar_node)
 
-    stereo_node.destroy_node()
+    lidar_node.destroy_node()
     rclpy.shutdown()
+
+def main(args=None):
+    start_node(args, debug=False, fms=False)
+
+def main_debug(args=None):
+    start_node(args, debug=True, fms=False)
+
+def main_fms(args=None):
+    start_node(args, debug=False, fms=True)
+
+def main_fms_debug(args=None):
+    start_node(args, debug=True, fms=True)
 
 
 if __name__ == "__main__":
