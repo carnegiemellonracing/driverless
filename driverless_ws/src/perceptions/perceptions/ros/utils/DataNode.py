@@ -270,6 +270,7 @@ class DataNode(Node):
         self.first_order_approximator.record_pos(pos)
 
     def vel_callback(self, msg):
+        #todo: how to account for current heading
         vel = np.array([-msg.vector.x, msg.vector.y])
         self.first_order_approximator.record_vel(vel)
 
