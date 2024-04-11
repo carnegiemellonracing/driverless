@@ -30,7 +30,7 @@ class ActuatorNode(Node):
     def __init__(self):
         super().__init__('minimal_publisher')
         # self.ser = can.interface.Bus(bustype=BUSTYPE, channel=CHANNEL, bitrate=BITRATE,auto_reset=True)
-        self.ser = serial.Serial("/dev/ttyUSB1", baudrate=9600, timeout=0.1)
+        self.ser = serial.Serial("/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10LIDBS-if00-port0", baudrate=9600, timeout=0.1)
         self.subscription = self.create_subscription(
             ControlAction,
             '/control_action',  # Replace with the desired topic name
