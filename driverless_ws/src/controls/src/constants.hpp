@@ -38,7 +38,7 @@ namespace controls {
     const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_pose_qos (rclcpp::KeepLast(1));
-    const rclcpp::QoS controller_info_qos (rclcpp::KeepLast(10));
+    const rclcpp::QoS controller_info_qos = best_effort_qos;
 
 
     // MPPI stuff

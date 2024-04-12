@@ -15,7 +15,7 @@ CMDLINE_QOS_PROFILE = QoSProfile(
 
 ACTION_DELAY = 5  # sec
 BRAKE_THROTTLE = -20  # total
-START_DELAY = 20
+START_DELAY = 5
 
 class SteeringTuningNode(Node):
 

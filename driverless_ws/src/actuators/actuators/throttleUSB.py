@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.time import Time
-from interfaces.msg import ControlAction
+from interfaces.msg import ControlAction, ActuatorsInfo
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy
 from std_msgs.msg import Int32
 import numpy as np
@@ -48,6 +48,12 @@ class ActuatorNode(Node):
         
         self.ser.reset_input_buffer()
 
+        self.info_publisher = self.create_publisher(
+            ActuatorsInfo,
+            "/actuators_info",
+            CMDLINE_QOS_PROFILE
+        )
+
         # self.even = True
         self.swangle = int(hex(ADC_BIAS)[2:], 16)
         self.torque_request = 0
@@ -88,12 +94,20 @@ class ActuatorNode(Node):
         
         self.ser.write(msg) 
 
+        info = ActuatorsInfo()
+        info.throttle_val = self.torque_request
+        info.steering_adc = self.swangle
+        info.latency_ms = -1
+
         print(f"Throttle Message Sent: {msg.hex()}, {msg}")
         if self.orig_data_stamp is not None:
             curr_time = self.get_clock().now()
             delta_nanos = curr_time.nanoseconds - self.orig_data_stamp.nanoseconds
             delta_ms = int(delta_nanos / 1e6)
+            info.latency_ms = delta_ms
             print(f"Total Latency: {delta_ms} ms")
+
+        self.info_publisher.publish(info)
 
             # steering_msg = can.Message(arbitration_id=0x134, data = [0x00ff & self.swangle, (0xff00 & self.swangle)>>8, 6,5,7,8,9,1], is_extended_id=False)
             # self.ser.send(steering_msg)
