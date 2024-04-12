@@ -64,7 +64,7 @@ namespace controls {
 
     // Cost params
 
-    constexpr float offset_1m_cost = 4.0f;
+    constexpr float offset_1m_cost = 2.0f;
     constexpr float target_speed = 5.0f;
     constexpr float no_speed_cost = 5.0f;
     constexpr float overspeed_1m_cost = 1.0f;
@@ -85,6 +85,8 @@ namespace controls {
 
     constexpr float cg_to_front = 0.775;
     constexpr float cg_to_rear = 0.775;
+    constexpr float cg_to_nose = 1.5f;
+    constexpr float whl_base = 2.0f;
     constexpr float whl_radius = 0.2286;
     constexpr float gear_ratio = 15.0f;
     constexpr float car_mass = 210.0f;
