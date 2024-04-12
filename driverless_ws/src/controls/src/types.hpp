@@ -7,7 +7,7 @@
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <geometry_msgs/msg/quaternion_stamped.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
-#include <geometry_msgs/msg/controller_info.hpp>
+#include <interfaces/msg/controller_info.hpp>
 
 #include "constants.hpp"
 

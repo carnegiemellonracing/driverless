@@ -43,6 +43,7 @@ class MidlineNode(Node):
                                                  topic="/spline",
                                                  qos_profile=RELIABLE_QOS_PROFILE)
         self.vis = Vis2D()
+        self.failure_count = 0
 
     
     def cone_callback(self, msg):
@@ -52,11 +53,16 @@ class MidlineNode(Node):
 
         orig_data_stamp = msg.orig_data_stamp
         cones = conv.msg_to_cones(msg)
+        print("num cones", len(cones))
 
+        # try:
         s_svm = time.time()
         downsampled_boundary_points = cones_to_midline(cones)
         e_svm = time.time()
-        # print(downsampled_boundary_points)
+        # except Exception as error:
+        #     self.get_logger().error(f"Exception was caught while predicting {error}")
+        #     self.failure_count += 1
+        #     return
 
         self.vis.set_cones(cones)
         if len(downsampled_boundary_points) > 0:
@@ -87,7 +93,7 @@ class MidlineNode(Node):
         data_stamp = orig_data_stamp
         data_t = Time.from_msg(orig_data_stamp)
         time_since_data = conv.ms_since_time(self.get_clock().now(), data_t)
-        print(f"Entire: {int(1000 * (e - s)):.3f}, Data Latency: {time_since_data:.3f}ms, # frames: {len(points)}")
+        print(f"Entire: {int(1000 * (e - s)):.3f}, Data Latency: {time_since_data:.3f}ms, # frames: {len(points)} Failures: {self.failure_count}")
 
 
 def main():
