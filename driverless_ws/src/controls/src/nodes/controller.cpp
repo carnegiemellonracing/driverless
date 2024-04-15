@@ -1,7 +1,6 @@
 #include <mppi/mppi.hpp>
 #include <mutex>
 #include <rclcpp/rclcpp.hpp>
-#include <rosidl_runtime_cpp/traits.hpp>
 #include <types.hpp>
 #include <constants.hpp>
 #include <interfaces/msg/control_action.hpp>
@@ -59,12 +58,6 @@ namespace controls {
                     options
                 );
 
-                m_world_quat_subscription = create_subscription<QuatMsg>(
-                    world_quat_topic_name, world_quat_qos,
-                    [this] (const QuatMsg::SharedPtr msg) { world_quat_callback(*msg); },
-                    options
-                );
-
                 m_world_twist_subscription = create_subscription<TwistMsg>(
                     world_twist_topic_name, world_twist_qos,
                     [this] (const TwistMsg::SharedPtr msg) { world_twist_callback(*msg); },
@@ -93,7 +86,7 @@ namespace controls {
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_spline(spline_msg);
+                    m_state_estimator->on_spline(spline_msg, spline_msg.orig_data_stamp);
                 }
 
                 notify_state_dirty();
@@ -105,19 +98,7 @@ namespace controls {
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_world_twist(twist_msg);
-                }
-
-                notify_state_dirty();
-            }
-
-            void ControllerNode::world_quat_callback(const QuatMsg &quat_msg) {
-                RCLCPP_DEBUG(get_logger(), "Received quat");
-
-
-                {
-                    std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_world_quat(quat_msg);
+                    m_state_estimator->on_twist(twist_msg, twist_msg.header.stamp);
                 }
 
                 notify_state_dirty();
@@ -129,7 +110,7 @@ namespace controls {
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_world_pose(pose_msg);
+                    m_state_estimator->on_pose(pose_msg);
                 }
 
                 notify_state_dirty();
@@ -155,18 +136,15 @@ namespace controls {
                         RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
 
                         // save for info publishing later, since might be changed during iteration
-                        State raw_curr_state = m_state_estimator->get_raw_state();
                         State proj_curr_state = m_state_estimator->get_projected_state();
-                        rclcpp::Time orig_data_stamp = m_state_estimator->get_orig_data_stamp();
+                        rclcpp::Time orig_spline_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
 
                         // send state to device (i.e. cuda globals)
                         // (also serves to lock state since nothing else updates gpu state)
                         {
                             std::lock_guard<std::mutex> guard {m_action_read_mut};
                             RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                            m_state_estimator->sync_to_device(
-                                m_action_read->at(action_swangle_idx), get_clock()->now()
-                            );
+                            m_state_estimator->sync_to_device(get_clock()->now());
                         }
 
 
@@ -192,11 +170,10 @@ namespace controls {
                         );
 
                         // can't use high res clock since need to be aligned with other nodes
-                        auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_data_stamp.nanoseconds()) / 1000000;
+                        auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_spline_data_stamp.nanoseconds()) / 1000000;
 
                         interfaces::msg::ControllerInfo info {};
                         info.action = action_to_msg(action);
-                        info.raw_state = state_to_msg(raw_curr_state);
                         info.proj_state = state_to_msg(proj_curr_state);
                         info.latency_ms = time_elapsed.count();
                         info.total_latency_ms = total_time_elapsed;
@@ -227,7 +204,7 @@ namespace controls {
             ActionMsg ControllerNode::action_to_msg(const Action &action) {
                 interfaces::msg::ControlAction msg;
                 
-                msg.orig_data_stamp = m_state_estimator->get_orig_data_stamp();
+                msg.orig_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
 
                 msg.swangle = action[action_swangle_idx];
                 msg.torque_fl = action[action_torque_idx] / 4;
@@ -282,11 +259,6 @@ namespace controls {
                 << "  torque_fr (Nm): " << info.action.torque_fr << "\n"
                 << "  torque_rl (Nm): " << info.action.torque_rl << "\n"
                 << "  torque_rr (Nm): " << info.action.torque_rr << "\n"
-                << "Raw State:\n"
-                << "  x (m): " << info.raw_state.x << "\n"
-                << "  y (m): " << info.raw_state.y << "\n"
-                << "  yaw (rad): " << info.raw_state.yaw << "\n"
-                << "  speed (m/s): " << info.raw_state.speed << "\n"
                 << "Projected State:\n"
                 << "  x (m): " << info.proj_state.x << "\n"
                 << "  y (m): " << info.proj_state.y << "\n"

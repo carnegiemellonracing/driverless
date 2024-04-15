@@ -7,7 +7,6 @@
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
 #include <model/two_track/codegen/minimal_state_function.h>
-#include <glm/gtx/quaternion.hpp>
 
 #include "test_node.hpp"
 
@@ -22,20 +21,26 @@ namespace controls {
                     [this] (const ActionMsg::SharedPtr msg) { on_action(*msg); })),
 
               m_spline_timer {create_wall_timer(
-                  std::chrono::duration<float, std::milli>(100),
-                    [this]{ publish_spline(); publish_quat(); publish_twist(); })},
+                  std::chrono::duration<float, std::milli>(spline_period * 1000),
+                    [this]{ publish_spline(); })},
+
+              m_sim_timer {create_wall_timer(
+                  std::chrono::duration<float, std::milli>(sim_step * 1000),
+                    [this]{ on_sim(); })},
+
+              m_gps_timer {create_wall_timer(
+                        std::chrono::duration<float, std::milli>(gps_period * 1000),
+                            [this]{ publish_twist(); })},
 
               m_spline_publisher {create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
-              m_state_publisher {create_publisher<StateMsg>(state_topic_name, state_qos)},
-              m_quat_publisher {create_publisher<QuatMsg>(world_quat_topic_name, world_quat_qos)},
               m_twist_publisher {create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
-              m_pose_publisher {create_publisher<PoseMsg>(world_pose_topic_name, world_pose_qos)},
 
               m_rng {seed} {
 
+            next_segment();
+            next_segment();
 
-            next_segment();
-            next_segment();
+            m_time = get_clock()->now();
         }
 
         void TestNode::next_segment() {
@@ -140,11 +145,8 @@ namespace controls {
             return GSL_SUCCESS;
         }
 
-        void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
-            std::cout << "\nSwangle: " << msg.swangle * (180 / M_PI) << " Torque f: " <<
-                msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl << std::endl;
-
-            ActionMsg adj_msg = msg;
+        void TestNode::on_sim() {
+            ActionMsg adj_msg = m_last_action_msg;
             adj_msg.torque_fl *= gear_ratio / 1000.;
             adj_msg.torque_fr *= gear_ratio / 1000.;
             adj_msg.torque_rl *= gear_ratio / 1000.;
@@ -162,27 +164,28 @@ namespace controls {
                 1e-4, 1e-4, 1e-4
             );
 
-            int result = gsl_odeiv2_driver_apply(driver, &m_time, m_time + controller_period, m_world_state.data());
+            double sim_time = m_time.nanoseconds() / 1.0e9;
+            m_time = get_clock()->now();
+
+            int result = gsl_odeiv2_driver_apply(driver, &sim_time, m_time.nanoseconds() / 1.0e9, m_world_state.data());
             if (result != GSL_SUCCESS) {
                 throw std::runtime_error("GSL driver failed");
             }
 
             gsl_odeiv2_driver_free(driver);
 
-            std::cout << "Publishing state" << std::endl;
-            for (float dim : m_world_state)
-            {
-                std::cout << dim << " ";
-            }
-            std::cout << std::endl;
-            
-            publish_quat();
-            publish_twist();
-
             const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
             if (distance(car_pos, m_spline_end_pos) < distance(car_pos, m_spline_mid_pos)) {
                 next_segment();
             }
+        }
+
+
+        void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
+            std::cout << "\nSwangle: " << msg.swangle * (180 / M_PI) << " Torque f: " <<
+                msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl;
+
+            m_last_action_msg = msg;
         }
 
         void TestNode::publish_spline() {
@@ -211,25 +214,7 @@ namespace controls {
             m_spline_publisher->publish(msg);
         }
 
-        void TestNode::publish_quat() {
-            // std::cout << "Publishing state (quaternions)" << std::endl;
-            // std::cout << "Time: " << m_time << std::endl;
-            
-            glm::dquat quat = glm::angleAxis(m_world_state[2], glm::dvec3 {0.0, 0.0, 1.0});
-
-            QuatMsg msg {};
-            msg.quaternion.w = quat.w;
-            msg.quaternion.x = quat.x;
-            msg.quaternion.y = quat.y;
-            msg.quaternion.z = quat.z;
-
-            m_quat_publisher->publish(msg);
-        }
-
         void TestNode::publish_twist() {
-            // std::cout << "Publishing state (twist)" << std::endl;
-            // std::cout << "Time: " << m_time << std::endl;
-
             TwistMsg msg {};
 
             const float yaw = m_world_state[2];
@@ -245,19 +230,9 @@ namespace controls {
             msg.twist.angular.y = 0.0;
             msg.twist.angular.z = yawdot;
 
+            msg.header.stamp = get_clock()->now();
+
             m_twist_publisher->publish(msg);
-        }
-
-        void TestNode::publish_pose() {
-            // std::cout << "Publishing state (pose)" << std::endl;
-            // std::cout << "Time: " << m_time << std::endl;
-
-            PoseMsg msg {};
-            msg.pose.position.x = m_world_state[0];
-            msg.pose.position.y = m_world_state[1];
-            msg.pose.position.z = 0.0;
-
-            m_pose_publisher->publish(msg);
         }
     }
 }

@@ -47,21 +47,20 @@ namespace controls {
             // can be used in-place
             __host__ __device__ static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
                 const float x = state[state_x_idx];
-                const float y = state[state_yaw_idx];
+                const float y = state[state_y_idx];
                 const float yaw = state[state_yaw_idx];
                 const float speed = state[state_speed_idx];
 
-                printf("x: %f, y: %f, yaw: %f, speed: %f\n", x, y, yaw, speed);
+                // printf("x: %f, y: %f, yaw: %f, speed: %f\n", x, y, yaw, speed);
 
                 const float swangle = action[action_swangle_idx];
                 const float torque = action[action_torque_idx] * gear_ratio;
 
-                printf("swangle: %f, torque: %f\n", swangle, torque);
+                float kinematic_swangle_ = kinematic_swangle(speed, swangle);
+                float slip_angle_ = slip_angle(kinematic_swangle_);
 
-                const float kinematic_swangle_ = kinematic_swangle(speed, swangle);
-                const float slip_angle_ = slip_angle(kinematic_swangle_);
-
-                printf("kinematic_swangle_: %f, slip_angle_: %f\n", kinematic_swangle_, slip_angle_);
+                // printf("swangle: %f, torque: %f\n", swangle, torque);
+                // printf("kinematic_swangle_: %f, slip_angle_: %f\n", kinematic_swangle_, slip_angle_);
 
                 constexpr float saturating_tire_torque = saturating_motor_torque * 0.5f * gear_ratio;
                 float torque_front, torque_rear;
@@ -82,7 +81,7 @@ namespace controls {
                         break;
                 }
 
-                printf("sat_tire_torque: %f, torque_front: %f, torque_rear: %f\n", saturating_tire_torque, torque_front, torque_rear);
+                // printf("sat_tire_torque: %f, torque_front: %f, torque_rear: %f\n", saturating_tire_torque, torque_front, torque_rear);
 
                 const float next_speed_raw = speed +
                     ((torque_front * cosf(swangle - slip_angle_) + torque_rear * cosf(slip_angle_)) / (whl_radius * car_mass)
@@ -93,20 +92,25 @@ namespace controls {
                 const float next_speed2 = next_speed * next_speed;
                 const float dist_avg_speed = speed != next_speed ?
                     2.0f/3.0f * (next_speed2 * next_speed - speed2 * speed) / (next_speed2 - speed2) : speed;
-                const float angular_speed_ = angular_speed(dist_avg_speed, kinematic_swangle_) * timestep;
+
+                kinematic_swangle_ = kinematic_swangle(dist_avg_speed, swangle);
+
+                // printf("kinematic_swangle_: %f, slip_angle_: %f\n", kinematic_swangle_, slip_angle_);
+
+                const float angular_speed_ = angular_speed(dist_avg_speed, kinematic_swangle_);
                 const float next_yaw = yaw + angular_speed_ * timestep;
 
-                printf("next_speed_raw: %f, next_speed: %f, next_speed2: %f, dist_avg_speed: %f, angular_speed_: %f, next_yaw: %f\n", next_speed_raw, next_speed, next_speed2, dist_avg_speed, angular_speed_, next_yaw);
+                // printf("next_speed_raw: %f, next_speed: %f, next_speed2: %f, dist_avg_speed: %f, angular_speed_: %f, next_yaw: %f\n", next_speed_raw, next_speed, next_speed2, dist_avg_speed, angular_speed_, next_yaw);
 
                 const float rear_to_center = (cg_to_rear + cg_to_front) / tanf(kinematic_swangle_);
                 const float next_x = angular_speed_ == 0 ?
-                    x + speed * cosf(yaw) * timestep
+                    x + dist_avg_speed * cosf(yaw) * timestep
                   : x + cg_to_rear * (cosf(next_yaw) - cosf(yaw)) + rear_to_center * (sinf(next_yaw) - sinf(yaw));
                 const float next_y = angular_speed_ == 0 ?
-                    y + speed * sinf(yaw) * timestep
+                    y + dist_avg_speed * sinf(yaw) * timestep
                   : y + cg_to_rear * (sinf(next_yaw) - sinf(yaw)) + rear_to_center * (-cosf(next_yaw) + cosf(yaw));
 
-                printf("rear_to_center: %f, next_x: %f, next_y: %f\n", rear_to_center, next_x, next_y);
+                // printf("rear_to_center: %f, next_x: %f, next_y: %f\n\n", rear_to_center, next_x, next_y);
 
                 next_state[state_x_idx] = next_x;
                 next_state[state_y_idx] = next_y;

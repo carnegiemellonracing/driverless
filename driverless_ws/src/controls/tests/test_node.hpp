@@ -34,11 +34,14 @@ namespace controls {
             static constexpr float min_straight = 10.0f;
             static constexpr float max_straight = 30.0f;
 
+            static constexpr float spline_period = 1.0f;
+            static constexpr float gps_period = 0.05f;
+            static constexpr float sim_step = 0.01f;
+
+            void on_sim();
             void on_action(const ActionMsg& msg);
             void publish_spline();
-            void publish_quat();
             void publish_twist();
-            void publish_pose();
 
             void next_segment();
             std::vector<glm::fvec2> arc_segment(float radius, glm::fvec2 start_pos, float start_heading, float end_heading);
@@ -46,17 +49,16 @@ namespace controls {
 
             rclcpp::Subscription<ActionMsg>::SharedPtr m_subscriber;
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
-            rclcpp::Publisher<StateMsg>::SharedPtr m_state_publisher;
-            rclcpp::Publisher<QuatMsg>::SharedPtr m_quat_publisher;
-            rclcpp::Publisher<PoseMsg>::SharedPtr m_pose_publisher;
             rclcpp::Publisher<TwistMsg>::SharedPtr m_twist_publisher;
 
             rclcpp::TimerBase::SharedPtr m_spline_timer;
+            rclcpp::TimerBase::SharedPtr m_gps_timer;
+            rclcpp::TimerBase::SharedPtr m_sim_timer;
 
             // thomas model state
             std::array<double, 13> m_world_state {-3, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
 
-            double m_time = 0;
+            rclcpp::Time m_time;
             std::mt19937 m_rng;
             std::normal_distribution<float> m_norm_dist {0, 1};
             std::uniform_real_distribution<float> m_uniform_dist {0, 1};
@@ -67,6 +69,7 @@ namespace controls {
             float m_spline_end_heading = 0;
             std::vector<glm::fvec2> m_segment1;
             std::vector<glm::fvec2> m_segment2;
+            ActionMsg m_last_action_msg;
         };
 
     }

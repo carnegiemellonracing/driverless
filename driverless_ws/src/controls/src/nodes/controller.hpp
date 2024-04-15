@@ -78,14 +78,6 @@ namespace controls {
             void world_twist_callback(const TwistMsg& twist_msg);
 
             /**
-             * Callback for world quaternion subscription. Forwards message to `StateEstimator::on_world_quat`, and notifies MPPI
-             * thread of the dirty state. Likely from GPS.
-             *
-             * @param quat_msg Received quaternion message
-             */
-            void world_quat_callback(const QuatMsg& quat_msg);
-
-            /**
              * Callback for world pose subscription. Forwards message to `StateEstimator::on_world_pose`, and notifies MPPI
              * thread of the dirty state. Likely from GPS.
              *

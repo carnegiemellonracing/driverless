@@ -22,10 +22,159 @@
 namespace controls {
     namespace state {
 
+        void StateProjector::print_history() const {
+            std::cout << "---- BEGIN HISTORY ---\n";
+            for (const Record& record : m_history_since_pose) {
+                switch (record.type) {
+                    case Record::Type::Action:
+                        std::cout << "Action: " << record.action[0] << ", " << record.action[1] << std::endl;
+                        break;
+
+                    case Record::Type::Speed:
+                        std::cout << "Speed: " << record.speed << std::endl;
+                        break;
+
+                    case Record::Type::Pose:
+                        std::cout << "Pose: " << record.pose.x << ", " << record.pose.y << ", " << record.pose.yaw << std::endl;
+                        break;
+
+                    default:
+                        throw new std::runtime_error("bruh. invalid record type bruh. (in print history)");
+                }
+            }
+            std::cout << "---END HISTORY---" << std::endl;
+        }
+
+        void StateProjector::record_action(Action action, rclcpp::Time time) {
+            std::cout << "Recording action " << action[0] << ", " << action[1] << " at time " << time.nanoseconds() << std::endl;
+
+            assert(m_pose_record.has_value() && time >= m_pose_record.value().time
+                && "call me marty mcfly the way im time traveling");
+
+            m_history_since_pose.insert(Record {
+                .action = action,
+                .time = time,
+                .type = Record::Type::Action
+            });
+
+            print_history();
+        }
+
+        void StateProjector::record_speed(float speed, rclcpp::Time time) {
+            std::cout << "Recording speed " << speed << " at time " << time.nanoseconds() << std::endl;
+
+            if (m_pose_record.has_value() && time < m_pose_record.value().time) {
+                if (time > m_init_speed.time) {
+                    m_init_speed = Record {
+                        .speed = speed,
+                        .time = time,
+                        .type = Record::Type::Speed
+                    };
+                }
+            } else {
+                m_history_since_pose.insert(Record {
+                    .speed = speed,
+                    .time = time,
+                    .type = Record::Type::Speed
+                });
+            }
+
+            print_history();
+        }
+
+        void StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time) {
+            std::cout << "Recording pose " << x << ", " << y << ", " << yaw << " at time " << time.nanoseconds() << std::endl;
+
+            m_pose_record = Record {
+                .pose = {
+                    .x = x,
+                    .y = y,
+                    .yaw = yaw
+                },
+                .time = time,
+                .type = Record::Type::Pose
+            };
+
+            auto record_iter = m_history_since_pose.begin();
+            for (; record_iter != m_history_since_pose.end(); ++record_iter) {
+                if (record_iter->time > time) {
+                    break;
+                }
+
+                switch (record_iter->type) {
+                    case Record::Type::Action:
+                        m_init_action = *record_iter;
+                        break;
+
+                    case Record::Type::Speed:
+                        m_init_speed = *record_iter;
+                        break;
+
+                    default:
+                        throw new std::runtime_error("bruh. invalid record type bruh. (in record pose)");
+                }
+            }
+
+            m_history_since_pose.erase(m_history_since_pose.begin(), record_iter);
+
+            print_history();
+        }
+
+        State StateProjector::project(const rclcpp::Time& time) const {
+            assert(m_pose_record.has_value() && "State projector has not recieved first pose");
+            std::cout << "Projecting to " << time.nanoseconds() << std::endl;
+
+            State state;
+            state[state_x_idx] = m_pose_record.value().pose.x;
+            state[state_y_idx] = m_pose_record.value().pose.y;
+            state[state_yaw_idx] = m_pose_record.value().pose.yaw;
+            state[state_speed_idx] = m_init_speed.speed;
+
+            const auto first_time = m_history_since_pose.empty() ? time : m_history_since_pose.begin()->time;
+            const float delta_time = (first_time.nanoseconds() - m_pose_record.value().time.nanoseconds()) / 1e9f;
+            std::cout << "delta time: " << delta_time << std::endl;
+            assert(delta_time > 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
+            ONLINE_DYNAMICS_FUNC(state.data(), m_init_action.action.data(), state.data(), delta_time);
+
+            rclcpp::Time sim_time = first_time;
+            Action last_action = m_init_action.action;
+            for (auto record_iter = m_history_since_pose.begin(); record_iter != m_history_since_pose.end(); ++record_iter) {
+                const auto next_time = std::next(record_iter) == m_history_since_pose.end() ? time : std::next(record_iter)->time;
+
+                const float delta_time = (next_time - sim_time).nanoseconds() / 1e9f;
+                assert(delta_time >= 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
+
+                switch (record_iter->type) {
+                    case Record::Type::Action:
+                        ONLINE_DYNAMICS_FUNC(state.data(), record_iter->action.data(), state.data(), delta_time);
+                        last_action = record_iter->action;
+                        break;
+
+                    case Record::Type::Speed:
+                        state[state_speed_idx] = record_iter->speed;
+                        ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
+                        break;
+
+                    default:
+                        throw new std::runtime_error("bruh. invalid record type bruh. (in simulation)");
+                }
+
+                sim_time = next_time;
+            }
+
+            return state;
+        }
+
+        bool StateProjector::is_ready() const {
+            return m_pose_record.has_value();
+        }
+
+
+        // State Estimator
+
         std::shared_ptr<StateEstimator> StateEstimator::create(std::mutex& mutex, LoggerFunc logger) {
             return std::make_shared<StateEstimator_Impl>(mutex, logger);
         }
-
 
         // StateEstimator_Impl helpers
 
@@ -128,53 +277,10 @@ namespace controls {
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
 
-        void StateEstimator_Impl::update_action_history_to_new_time() {
-            assert(m_action_history.size() >= 1);
-            assert(m_action_history.front().first.nanoseconds() <= m_orig_data_stamp.nanoseconds());
-
-            const auto first_entry_after = std::upper_bound(
-                m_action_history.begin(), m_action_history.end(),
-                std::make_pair(m_orig_data_stamp, Action {}),
-                [] (const std::pair<rclcpp::Time, Action>& pair1, const std::pair<rclcpp::Time, Action>& pair2) {
-                    return pair1.first.nanoseconds() < pair2.first.nanoseconds();
-                }
-            );
-
-            assert(first_entry_after != m_action_history.begin());
-
-            const auto first_entry_before = std::prev(first_entry_after);
-            m_action_history.erase(m_action_history.begin(), first_entry_before);
-        }
-
-        void StateEstimator_Impl::project_current_state(const rclcpp::Time& time) {
-            using namespace glm;
-
-            const uint64_t curr_nanos = time.nanoseconds() + approx_propogation_delay;
-            std::copy(m_world_state_raw.begin(), m_world_state_raw.end(), m_world_state_projected.begin());
-
-            uint64_t sim_nanos = m_orig_data_stamp.nanoseconds();
-            for (auto pair_iter = m_action_history.begin(); pair_iter != m_action_history.end(); ++pair_iter) {
-                const uint64_t next_nanos = std::next(pair_iter) != m_action_history.end() ?
-                    std::next(pair_iter)->first.nanoseconds() : curr_nanos;
-
-                const Action& action = pair_iter->second;
-
-                ONLINE_DYNAMICS_FUNC(
-                    m_world_state_projected.data(), action.data(), m_world_state_projected.data(),
-                    (next_nanos - sim_nanos) / 1e9f
-                );
-
-                sim_nanos = next_nanos;
-            }
-        }
-
-
-        void StateEstimator_Impl::on_spline(const SplineMsg& spline_msg) {
+        void StateEstimator_Impl::on_spline(const SplineMsg& spline_msg, const rclcpp::Time &time) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_logger("beginning state estimator spline processing");
-
-            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
             m_spline_frames.clear();
             m_spline_frames.reserve(spline_msg.frames.size());
@@ -186,83 +292,71 @@ namespace controls {
                 });
             }
 
-            m_logger("generating spline frame lookup texture info...");
-            gen_tex_info({m_world_state_raw[state_x_idx], m_world_state_raw[state_y_idx]});
+            if constexpr (reset_pose_on_spline) {
+                m_state_projector.record_pose(0, 0, 0, time);
+            }
 
-            m_logger("filling OpenGL buffers...");
-            fill_path_buffers({m_world_state_raw[state_x_idx], m_world_state_raw[state_y_idx]});
-
-            utils::sync_gl_and_unbind_context(m_gl_window);
-
-            m_logger("updating action history");
-            m_orig_data_stamp = spline_msg.orig_data_stamp;
-            update_action_history_to_new_time();
-
-            m_spline_ready = true;
+            m_orig_spline_data_stamp = spline_msg.orig_data_stamp;
 
             m_logger("finished state estimator spline processing");
         }
 
-        void StateEstimator_Impl::on_world_twist(const TwistMsg &twist_msg) {
+        void StateEstimator_Impl::on_twist(const TwistMsg &twist_msg, const rclcpp::Time &time) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            const float car_xdot = twist_msg.twist.linear.x * std::cos(m_gps_heading) + twist_msg.twist.linear.y * std::sin(m_gps_heading);
-            const float car_ydot = twist_msg.twist.linear.x * std::sin(m_gps_heading) - twist_msg.twist.linear.y * std::cos(m_gps_heading);
+            const float speed = std::sqrt(
+                twist_msg.twist.linear.x * twist_msg.twist.linear.x
+                + twist_msg.twist.linear.y * twist_msg.twist.linear.y);
 
-            m_world_state_raw[state_speed_idx] = glm::length(glm::fvec2(car_xdot, car_ydot));
-
-            m_world_twist_ready = true;
+            m_state_projector.record_speed(speed, time);
         }
 
-        void StateEstimator_Impl::on_world_quat(const QuatMsg &quat_msg) {
-            using namespace glm;
+        void StateEstimator_Impl::on_pose(const PoseMsg &pose_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            const fquat quat = dquat(
-                quat_msg.quaternion.w, quat_msg.quaternion.x, quat_msg.quaternion.y, quat_msg.quaternion.z
+            m_state_projector.record_pose(
+                pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.orientation.z,
+                pose_msg.header.stamp);
+        }
+
+        rclcpp::Time StateEstimator_Impl::get_orig_spline_data_stamp() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            return m_orig_spline_data_stamp;
+        }
+
+        void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            m_state_projector.record_action(action, rclcpp::Time {
+                    time.nanoseconds()
+                    + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
+                    default_clock_type
+                }
             );
-
-            const fmat3x3 rot = mat3_cast(quat);
-            const fvec3 ihatprime = rot * fvec3(1, 0, 0);
-            const float heading = std::atan2(ihatprime.y, ihatprime.x);
-
-            m_world_state_raw[state_yaw_idx] = 0;
-            m_gps_heading = heading;
-
-            m_world_yaw_ready = true;
         }
 
-        void StateEstimator_Impl::on_world_pose(const PoseMsg &pose_msg) {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            m_world_state_raw[state_x_idx] = pose_msg.pose.position.x;
-            m_world_state_raw[state_y_idx] = pose_msg.pose.position.y;
-            m_world_state_raw[state_yaw_idx] = pose_msg.pose.orientation.z;
-
-            m_world_yaw_ready = true;
-        }
-
-        rclcpp::Time StateEstimator_Impl::get_orig_data_stamp() {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            return m_orig_data_stamp;
-        }
-
-        void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& ros_time) {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            m_action_history.emplace_back(ros_time, action);
-        }
-
-        void StateEstimator_Impl::sync_to_device(float swangle, const rclcpp::Time& time) {
+        void StateEstimator_Impl::sync_to_device(const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_logger("beginning state estimator device sync");
 
             m_logger("projecting current state");
-            project_current_state(time);
+            const State state = m_state_projector.project(
+                rclcpp::Time {
+                    time.nanoseconds()
+                    + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
+                    default_clock_type
+                }
+            );
 
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
+
+            m_logger("generating spline frame lookup texture info...");
+            gen_tex_info({state[state_x_idx], state[state_y_idx]});
+
+            m_logger("filling OpenGL buffers...");
+            fill_path_buffers({state[state_x_idx], state[state_y_idx]});
 
             m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
             unmap_curv_frame_lookup();
@@ -274,6 +368,7 @@ namespace controls {
             map_curv_frame_lookup();
 
             m_logger("syncing world state to device");
+            m_synced_projected_state = state;
             sync_world_state();
 
             m_logger("syncing spline frame lookup texture info to device");
@@ -286,20 +381,13 @@ namespace controls {
         bool StateEstimator_Impl::is_ready() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            // purposefully don't check for pose; path-planning may not publish state during slow lap (world frame = car frame)
-            return m_spline_ready && m_world_twist_ready && m_world_yaw_ready;
-        }
-
-        State StateEstimator_Impl::get_raw_state() {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            return m_world_state_raw;
+            return m_state_projector.is_ready();
         }
 
         State StateEstimator_Impl::get_projected_state() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            return m_world_state_projected;
+            return m_synced_projected_state;
         }
 
         void StateEstimator_Impl::set_logger(LoggerFunc logger) {
@@ -347,7 +435,7 @@ namespace controls {
 
         void StateEstimator_Impl::sync_world_state() {
             CUDA_CALL(cudaMemcpyToSymbolAsync(
-                cuda_globals::curr_state, &m_world_state_raw, state_dims * sizeof(float)
+                cuda_globals::curr_state, m_synced_projected_state.data(), state_dims * sizeof(float)
             ));
         }
 

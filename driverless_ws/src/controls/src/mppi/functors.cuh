@@ -61,10 +61,9 @@ namespace controls {
             );
 
             const float distance_cost = offset_1m_cost * offset * offset;
+            const float swangle_cost = swangle_rad_cost * fabsf(action[action_swangle_idx]);
 
-            const float torque_change_cost = torque_100N_per_sec_cost * fabsf(action[action_torque_idx] - last_action[action_torque_idx]) / controller_period / 100;
-
-            return speed_cost + distance_cost + torque_change_cost;
+            return speed_cost + distance_cost + swangle_cost;
         }
 
         // Functors for Brownian Generation
@@ -225,6 +224,7 @@ namespace controls {
 
                     assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
                     model(x_curr, u_ij, x_curr, controller_period);
+                    // printf("j: %i, x: %f, y: %f, yaw: %f, speed: %f\n", j, x_curr[state_x_idx], x_curr[state_yaw_idx], x_curr[state_yaw_idx], x_curr[state_speed_idx]);
                     paranoid_assert(!any_nan(x_curr, state_dims) && "State was nan after model step");
 
 #ifdef DISPLAY

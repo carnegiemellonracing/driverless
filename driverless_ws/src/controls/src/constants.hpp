@@ -14,13 +14,15 @@ namespace controls {
     constexpr const char *world_pose_topic_name = "filter/pose";
     constexpr const char *controller_info_topic_name = "controller_info";
 
-    const rclcpp::QoS control_action_qos (rclcpp::KeepLast(10));
+    const rclcpp::QoS control_action_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS spline_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_pose_qos (rclcpp::KeepLast(1));
-    const rclcpp::QoS controller_info_qos (rclcpp::KeepLast(10));
+    const rclcpp::QoS controller_info_qos (rclcpp::KeepLast(1));
+
+    constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
 
 
     // MPPI stuff
@@ -33,7 +35,7 @@ namespace controls {
     constexpr float controller_publish_period = 1. / controller_publish_freq;
 
     /** Controller target period, in sec */
-    constexpr uint32_t num_samples = 1;
+    constexpr uint32_t num_samples = 1024 * 8;
     constexpr uint32_t num_timesteps = 96;
     constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 4;
@@ -46,11 +48,11 @@ namespace controls {
 
     // Cost params
 
-    constexpr float offset_1m_cost = 2.0f;
-    constexpr float target_speed = 3.0f;
-    constexpr float no_speed_cost = 5.0f;
+    constexpr float offset_1m_cost = 2.5f;
+    constexpr float target_speed = 7.5f;
+    constexpr float no_speed_cost = 2.5f;
     constexpr float overspeed_1m_cost = 1.0f;
-    constexpr float torque_100N_per_sec_cost = 0.0f;
+    constexpr float swangle_rad_cost = 0.0f;
 
 
     // State Estimation
@@ -60,7 +62,7 @@ namespace controls {
     constexpr float curv_frame_lookup_padding = 0; // meters
     constexpr float track_width = 5.0f;
     constexpr float car_padding = spline_frame_separation;
-    constexpr bool should_estimate_whl_speeds = false;
+    constexpr bool reset_pose_on_spline = true;
 
 
     // Car params
@@ -71,12 +73,13 @@ namespace controls {
     constexpr float gear_ratio = 15.0f;
     constexpr float car_mass = 310.0f;
     constexpr float rolling_drag = 200.0f; // N
-    constexpr float long_tractive_capability = 3.5f; // m/s^2 
+    constexpr float long_tractive_capability = 5.0f; // m/s^2
     constexpr float lat_tractive_capability = 5.0f; // m/s^2
-    constexpr float understeer_slope = 0.025f;
+    constexpr float understeer_slope = 0.0f;
     constexpr float brake_enable_speed = 1.0f;
     constexpr float saturating_motor_torque = long_tractive_capability * car_mass * whl_radius / gear_ratio;
     constexpr float approx_propogation_delay = 0.0f;  // sec
+    constexpr float approx_mppi_time = 0.02f; // sec
 
     enum class TorqueMode
     {
