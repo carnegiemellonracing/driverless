@@ -10,23 +10,67 @@
 namespace controls {
     namespace state {
 
+        class StateProjector {
+        public:
+            void record_action(Action action, rclcpp::Time time);
+            void record_speed(float speed, rclcpp::Time time);
+            void record_pose(float x, float y, float yaw, rclcpp::Time time);
+
+            State project(const rclcpp::Time& time) const;
+            bool is_ready() const;
+
+        private:
+            struct Record {
+                enum class Type {
+                    Action,
+                    Speed,
+                    Pose
+                };
+
+                union {
+                    Action action;
+                    float speed;
+
+                    struct {
+                        float x;
+                        float y;
+                        float yaw;
+                    } pose;
+                };
+
+                rclcpp::Time time;
+                Type type;
+            };
+
+            void print_history() const;
+
+            Record m_init_action { .action {}, .time = rclcpp::Time(0UL, default_clock_type), .type = Record::Type::Action};
+            Record m_init_speed { .speed = 0, .time = rclcpp::Time(0UL, default_clock_type), .type = Record::Type::Speed};
+            std::optional<Record> m_pose_record = std::nullopt;
+
+            struct CompareRecordTimes {
+                bool operator() (const Record& a, const Record& b) const {
+                    return a.time < b.time;
+                }
+            };
+            std::multiset<Record, CompareRecordTimes> m_history_since_pose {};
+        };
+
         class StateEstimator_Impl : public StateEstimator {
         public:
             StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger);
 
-            void on_spline(const SplineMsg& spline_msg) override;
-            void on_world_twist(const TwistMsg& twist_msg) override;
-            void on_world_quat(const QuatMsg& quat_msg) override;
-            void on_world_pose(const PoseMsg& pose_msg) override;
+            void on_spline(const SplineMsg& spline_msg, const rclcpp::Time &time) override;
+            void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) override;
+            void on_pose(const PoseMsg& pose_msg) override;
 
-            void sync_to_device(float swangle, const rclcpp::Time &time) override;
+            void sync_to_device(const rclcpp::Time &time) override;
             bool is_ready() override;
-            State get_raw_state() override;
             State get_projected_state() override;
             void set_logger(LoggerFunc logger) override;
 
-            rclcpp::Time get_orig_data_stamp() override;
-            void record_control_action(const Action &action, const rclcpp::Time &ros_time) override;
+            rclcpp::Time get_orig_spline_data_stamp() override;
+            void record_control_action(const Action &action, const rclcpp::Time &time) override;
 
 #ifdef DISPLAY
             std::vector<glm::fvec2> get_spline_frames() override;
@@ -48,13 +92,13 @@ namespace controls {
             void gen_curv_frame_lookup_framebuffer();
             void gen_gl_path();
             void fill_path_buffers(glm::fvec2 car_pos);
-            void update_action_history_to_new_time();
-            void project_current_state(const rclcpp::Time &time);
 
             std::vector<glm::fvec2> m_spline_frames;
 
-            State m_world_state_raw = {};
-            State m_world_state_projected = {};
+            StateProjector m_state_projector;
+            State m_synced_projected_state;
+
+            rclcpp::Time m_orig_spline_data_stamp;
 
             cudaGraphicsResource_t m_curv_frame_lookup_rsc;
             cuda_globals::CurvFrameLookupTexInfo m_curv_frame_lookup_tex_info;
@@ -66,20 +110,11 @@ namespace controls {
             SDL_Window* m_gl_window;
             SDL_GLContext m_gl_context;
 
-            std::mutex& m_mutex;
             std::mutex m_gl_context_mutex;
             bool m_curv_frame_lookup_mapped = false;
 
-            bool m_spline_ready = false;
-            bool m_world_twist_ready = false;
-            bool m_world_yaw_ready = false;
-
-            float m_gps_heading;
-
             LoggerFunc m_logger;
-
-            rclcpp::Time m_orig_data_stamp;
-            std::list<std::pair<rclcpp::Time, Action>> m_action_history {{rclcpp::Time {}, Action {}}};
+            std::mutex& m_mutex;
         };
 
     }

@@ -124,11 +124,7 @@ namespace controls {
                     action = m_last_action_trajectory[i - 1];
                 }
 
-                State state_dot;
-                ONLINE_DYNAMICS_FUNC(state.data(), action.data, state_dot.data(), controller_period);
-                for (uint8_t j = 0; j < state_dims; j++) {
-                    state[j] += state_dot[j] * controller_period;
-                }
+                ONLINE_DYNAMICS_FUNC(state.data(), action.data, state.data(), controller_period);
 
                 result[i] = {state[state_x_idx], state[state_y_idx]};
 
