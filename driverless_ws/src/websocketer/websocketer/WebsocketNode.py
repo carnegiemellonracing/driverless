@@ -45,13 +45,15 @@ class WebsocketNode(Node):
 
 def main(args=None):
     LOCALHOST = ''
-    PORT = 8080
-
+    PORT = 9090
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server.bind((LOCALHOST, PORT))
     rclpy.init(args=args)
 
     while True:
         clientAddress, clientSocket = server.accept()
-        websocketer = WebsocketNode(clientAddress, clientSocket)
+        websocket_node = WebsocketNode(clientAddress, clientSocket)
         rclpy.spin(websocket_node)
         websocket_node.destroy_node()
         rclpy.shutdown()
