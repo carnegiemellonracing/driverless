@@ -22,12 +22,6 @@ namespace controls {
                   m_state_estimator {std::move(state_estimator)},
                   m_mppi_controller {std::move(mppi_controller)},
 
-                  m_action_timer {
-                      create_wall_timer(
-                          std::chrono::duration<float>(controller_publish_period),
-                          [this] { publish_action_callback(); })
-                  },
-
                   m_action_publisher {
                       create_publisher<interfaces::msg::ControlAction>(
                           control_action_topic_name,
@@ -40,10 +34,7 @@ namespace controls {
                             controller_info_topic_name,
                             controller_info_qos
                         )
-                  },
-
-                  m_action_read {std::make_unique<Action>()},
-                  m_action_write {std::make_unique<Action>()} {
+                  } {
 
                 // create a callback group that prevents state and spline callbacks from being executed concurrently
                 rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group {
@@ -73,12 +64,6 @@ namespace controls {
                 // start mppi :D
                 // this won't immediately begin publishing, since it waits for the first dirty state
                 launch_mppi().detach();
-            }
-
-            void ControllerNode::publish_action_callback() {
-                std::lock_guard<std::mutex> action_read_guard {m_action_read_mut};
-
-                publish_action(*m_action_read);
             }
 
             void ControllerNode::spline_callback(const SplineMsg& spline_msg) {
@@ -141,11 +126,8 @@ namespace controls {
 
                         // send state to device (i.e. cuda globals)
                         // (also serves to lock state since nothing else updates gpu state)
-                        {
-                            std::lock_guard<std::mutex> guard {m_action_read_mut};
-                            RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                            m_state_estimator->sync_to_device(get_clock()->now());
-                        }
+                        RCLCPP_DEBUG(get_logger(), "syncing state to device");
+                        m_state_estimator->sync_to_device(get_clock()->now());
 
 
                         // we don't need the host state anymore, so release the lock and let state callbacks proceed
@@ -153,14 +135,7 @@ namespace controls {
 
                         // run mppi, and write action to the write buffer
                         Action action = m_mppi_controller->generate_action();
-                        {
-                            std::lock_guard<std::mutex> action_guard {m_action_write_mut};
-                            *m_action_write = action;
-                        }
-
-                        // swap the read and write buffers so publish action read this action
-                        RCLCPP_DEBUG(get_logger(), "swapping action buffers");
-                        swap_action_buffers();
+                        publish_action(action);
 
                         m_state_estimator->record_control_action(action, get_clock()->now());
 
@@ -191,14 +166,6 @@ namespace controls {
 
             void ControllerNode::notify_state_dirty() {
                 m_state_cond_var.notify_all();
-            }
-
-            void ControllerNode::swap_action_buffers() {
-                std::lock(m_action_read_mut, m_action_write_mut);  // lock both using a deadlock avoidance scheme
-                std::lock_guard<std::mutex> action_read_guard {m_action_read_mut, std::adopt_lock};
-                std::lock_guard<std::mutex> action_write_guard {m_action_write_mut, std::adopt_lock};
-
-                std::swap(m_action_read, m_action_write);
             }
 
             ActionMsg ControllerNode::action_to_msg(const Action &action) {

@@ -46,8 +46,8 @@ namespace controls {
             float nose_pose[3] = {world_state[state_x_idx] + forward_x, world_state[state_y_idx] + forward_y, world_state[state_yaw_idx]};
             cuda_globals::sample_curv_state(nose_pose, curv_pose, out_out_bounds);
 
-            const float angular_accel = model::slipless::angular_accel(world_state[state_speed_idx], action[action_swangle_idx]);
-            const float abs_centripedal_accel = fabsf(angular_accel * world_state[state_speed_idx]);
+            const float centripedal_accel = model::slipless::centripedal_accel(world_state[state_speed_idx], action[action_swangle_idx]);
+            const float abs_centripedal_accel = fabsf(centripedal_accel);
 
             if (out_out_bounds 
              || abs_centripedal_accel > lat_tractive_capability) {
@@ -59,10 +59,7 @@ namespace controls {
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
             const float speed_deviation = approx_speed_along - target_speed;
-            const float speed_cost = max(
-                no_speed_cost / (target_speed * target_speed) * speed_deviation * speed_deviation,
-                speed_deviation * overspeed_1m_cost
-            );
+            const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
 
             const float distance_cost = offset_1m_cost * offset * offset;
             const float swangle_cost = swangle_rad_cost * fabsf(action[action_swangle_idx]);

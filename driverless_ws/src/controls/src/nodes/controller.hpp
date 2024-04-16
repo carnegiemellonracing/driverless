@@ -54,12 +54,6 @@ namespace controls {
         private:
 
             /**
-             * Callback for control action timer. Allowed to execute in parallel to other callbacks, and called every
-             * `controller_period`
-             */
-            void publish_action_callback();
-
-            /**
              * Callback for spline subscription. Forwards message to `StateEstimator::on_spline`, and notifies MPPI
              * thread of the dirty state.
              *
@@ -103,9 +97,6 @@ namespace controls {
             /** Notify MPPI thread that the state is dirty, and to refire if idle */
             void notify_state_dirty();
 
-            /** Swap reading action buffer and writing action buffer */
-            void swap_action_buffers();
-
             ActionMsg action_to_msg(const Action& action);
 
             static StateMsg state_to_msg(const State& state);
@@ -118,34 +109,12 @@ namespace controls {
             /** Controller instance */
             std::shared_ptr<mppi::MppiController> m_mppi_controller;
 
-            /** Timer to trigger action publishing */
-            rclcpp::TimerBase::SharedPtr m_action_timer;
-
             rclcpp::Publisher<ActionMsg>::SharedPtr m_action_publisher;
             rclcpp::Publisher<InfoMsg>::SharedPtr m_info_publisher;
             rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription;
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription;
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription;
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription;
-
-
-            // Action double buffer
-
-            /** Read side of the action double buffer. Action publisher reads the most recent action from this field. */
-            std::unique_ptr<Action> m_action_read;
-
-            /**
-             * Write side of action double buffer. MPPI writes to this action at the end of a cycle, then swaps the
-             * buffers.
-             */
-            std::unique_ptr<Action> m_action_write;
-
-            /** Mutex protecting `m_action_read` */
-            std::mutex m_action_read_mut;
-
-            /** Mutex protecting `m_action_read` */
-            std::mutex m_action_write_mut;
-
 
             /**
              * Mutex protecting `m_state_estimator`. This needs to be acquired when forwarding callbacks or waiting

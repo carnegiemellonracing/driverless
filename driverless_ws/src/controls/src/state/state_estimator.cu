@@ -46,7 +46,7 @@ namespace controls {
         }
 
         void StateProjector::record_action(Action action, rclcpp::Time time) {
-            std::cout << "Recording action " << action[0] << ", " << action[1] << " at time " << time.nanoseconds() << std::endl;
+            // std::cout << "Recording action " << action[0] << ", " << action[1] << " at time " << time.nanoseconds() << std::endl;
 
             assert(m_pose_record.has_value() && time >= m_pose_record.value().time
                 && "call me marty mcfly the way im time traveling");
@@ -57,11 +57,11 @@ namespace controls {
                 .type = Record::Type::Action
             });
 
-            print_history();
+            // print_history();
         }
 
         void StateProjector::record_speed(float speed, rclcpp::Time time) {
-            std::cout << "Recording speed " << speed << " at time " << time.nanoseconds() << std::endl;
+            // std::cout << "Recording speed " << speed << " at time " << time.nanoseconds() << std::endl;
 
             if (m_pose_record.has_value() && time < m_pose_record.value().time) {
                 if (time > m_init_speed.time) {
@@ -79,11 +79,11 @@ namespace controls {
                 });
             }
 
-            print_history();
+            // print_history();
         }
 
         void StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time) {
-            std::cout << "Recording pose " << x << ", " << y << ", " << yaw << " at time " << time.nanoseconds() << std::endl;
+            // std::cout << "Recording pose " << x << ", " << y << ", " << yaw << " at time " << time.nanoseconds() << std::endl;
 
             m_pose_record = Record {
                 .pose = {
@@ -117,12 +117,12 @@ namespace controls {
 
             m_history_since_pose.erase(m_history_since_pose.begin(), record_iter);
 
-            print_history();
+            // print_history();
         }
 
         State StateProjector::project(const rclcpp::Time& time) const {
             assert(m_pose_record.has_value() && "State projector has not recieved first pose");
-            std::cout << "Projecting to " << time.nanoseconds() << std::endl;
+            // std::cout << "Projecting to " << time.nanoseconds() << std::endl;
 
             State state;
             state[state_x_idx] = m_pose_record.value().pose.x;
@@ -132,7 +132,7 @@ namespace controls {
 
             const auto first_time = m_history_since_pose.empty() ? time : m_history_since_pose.begin()->time;
             const float delta_time = (first_time.nanoseconds() - m_pose_record.value().time.nanoseconds()) / 1e9f;
-            std::cout << "delta time: " << delta_time << std::endl;
+            // std::cout << "delta time: " << delta_time << std::endl;
             assert(delta_time > 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
             ONLINE_DYNAMICS_FUNC(state.data(), m_init_action.action.data(), state.data(), delta_time);
 

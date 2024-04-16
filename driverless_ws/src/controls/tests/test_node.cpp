@@ -45,9 +45,7 @@ namespace controls {
 
         void TestNode::next_segment() {
 
-            m_segment1 = m_segment2;
-            m_spline_mid_pos = m_spline_end_pos;
-
+            std::vector<glm::fvec2> new_seg;
             float end_heading;
             glm::fvec2 end_pos;
             switch (m_last_segment_type) {
@@ -55,21 +53,21 @@ namespace controls {
                 case SegmentType::ARC: {
                     bool is_straight = m_uniform_dist(m_rng) < straight_after_arc_prob;
                     if (is_straight) {
-                        m_segment2 = straight_segment(m_spline_end_pos, m_uniform_dist(m_rng) * (max_straight - min_straight) + min_straight, m_spline_end_heading);
+                        new_seg = straight_segment(m_spline_end_pos, m_uniform_dist(m_rng) * (max_straight - min_straight) + min_straight, m_spline_end_heading);
                         m_last_segment_type = SegmentType::STRAIGHT;
                         end_heading = m_spline_end_heading;
-                        end_pos = m_segment2.back();
+                        end_pos = new_seg.back();
 
                     } else {
                         float radius = m_uniform_dist(m_rng) * (max_radius - min_radius) + min_radius;
                         float arc_rad = (m_uniform_dist(m_rng) - 0.5f) * (max_arc_rad - min_arc_rad) * 2;
                         end_heading = m_spline_end_heading + arc_rad;
 
-                        m_segment2 = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
+                        new_seg = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
                         m_last_segment_type = SegmentType::ARC;
                         m_spline_end_heading = m_spline_end_heading + arc_rad;
 
-                        end_pos = m_segment2.back();
+                        end_pos = new_seg.back();
                     }
                     break;
                 }
@@ -79,16 +77,21 @@ namespace controls {
                     float arc_rad = (m_uniform_dist(m_rng) - 0.5f) * (max_arc_rad - min_arc_rad) * 2;
                     end_heading = m_spline_end_heading + arc_rad;
 
-                    m_segment2 = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
+                    new_seg = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
                     m_last_segment_type = SegmentType::ARC;
 
-                    end_pos = m_segment2.back();
+                    end_pos = new_seg.back();
                     break;
                 }
             }
 
             m_spline_end_heading = end_heading;
             m_spline_end_pos = end_pos;
+
+            m_segments.push_back(new_seg);
+            if (m_segments.size() > max_segs) {
+                m_segments.erase(m_segments.begin());
+            }
         }
 
         std::vector<glm::fvec2> TestNode::arc_segment(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
@@ -175,7 +178,7 @@ namespace controls {
             gsl_odeiv2_driver_free(driver);
 
             const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
-            if (distance(car_pos, m_spline_end_pos) < distance(car_pos, m_spline_mid_pos)) {
+            if (distance(car_pos, m_spline_end_pos) < new_seg_dist) {
                 next_segment();
             }
         }
@@ -202,11 +205,10 @@ namespace controls {
                 return p;
             };
 
-            for (const glm::fvec2& point : m_segment1) {
-                msg.frames.push_back(gen_point(point));
-            }
-            for (const glm::fvec2& point : m_segment2) {
-                msg.frames.push_back(gen_point(point));
+            for (const auto& segment : m_segments) {
+                for (const glm::fvec2& point : segment) {
+                    msg.frames.push_back(gen_point(point));
+                }
             }
 
             msg.orig_data_stamp = get_clock()->now();
