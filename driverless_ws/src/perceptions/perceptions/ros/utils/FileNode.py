@@ -4,6 +4,9 @@ from rclpy.node import Node
 # include DataNode for subscribing to data
 from perceptions.ros.utils.DataNode import DataNode
 
+# required datatypes in case necessary to modify
+from perc22a.data.utils.DataType import DataType
+
 # file path manipulation and creating directories
 from pathlib import Path
 import shutil
@@ -23,7 +26,7 @@ DATA_DIR = os.path.join(WS_DIR, FOLDER_NAME)
 class FileNode(DataNode):
 
     def __init__(self):
-        super().__init__(name="file_node", required_data=[])
+        super().__init__(name="file_node", required_data=[DataType.HESAI_POINTCLOUD])
 
         # create timer for saving on interval
         self.interval = 0.1
