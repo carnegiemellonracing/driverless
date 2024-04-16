@@ -98,6 +98,7 @@ class ActuatorNode(Node):
         info.throttle_val = self.torque_request
         info.steering_adc = self.swangle
         info.latency_ms = -1
+        info.header.stamp = self.get_clock().now().to_msg()
 
         print(f"Throttle Message Sent: {msg.hex()}, {msg}")
         if self.orig_data_stamp is not None:

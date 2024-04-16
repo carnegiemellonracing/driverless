@@ -93,6 +93,7 @@ class PredictNode(DataNode):
         
         data_time = self.get_earliest_data_time()
         msg.orig_data_stamp = data_time.to_msg()
+        msg.header.stamp = self.get_clock().now().to_msg()
         self.cone_publisher.publish(msg)
 
         if self.time:

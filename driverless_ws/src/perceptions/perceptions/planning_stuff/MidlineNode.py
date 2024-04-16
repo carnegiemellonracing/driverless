@@ -85,7 +85,8 @@ class MidlineNode(Node):
             return
 
         msg.frames = points
-        #TODO: add car pos to each midpoint to get global point
+        #TODO: add car pos to each midpoint to get global poin
+        msg.header.stamp = self.get_clock().now().to_msg()
         self.midline_pub.publish(msg)
 
         e = time.time()

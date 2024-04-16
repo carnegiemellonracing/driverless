@@ -194,6 +194,7 @@ namespace controls {
                         info.state = state_to_msg(curr_state);
                         info.latency_ms = time_elapsed.count();
                         info.total_latency_ms = total_time_elapsed;
+                        info.header.stamp = get_clock()->now();
 
                         std::stringstream ss;
                         publish_and_print_info(ss, info);
@@ -221,6 +222,7 @@ namespace controls {
             ActionMsg ControllerNode::action_to_msg(const Action &action) {
                 interfaces::msg::ControlAction msg;
                 
+                msg.header.stamp = get_clock()->now();
                 msg.orig_data_stamp = m_state_estimator->get_orig_data_stamp();
 
                 msg.swangle = action[action_swangle_idx];
@@ -284,6 +286,8 @@ namespace controls {
                 << "Latency (ms): " << info.latency_ms << "\n"
                 << "Total Latency (ms): " << info.total_latency_ms << "\n"
                 << std::endl;
+
+                m_info_publisher.publish(info);
             }
     }
 }

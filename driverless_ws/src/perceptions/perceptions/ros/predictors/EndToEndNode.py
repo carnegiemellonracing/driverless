@@ -116,6 +116,7 @@ class EndToEndNode(Node):
         
         msg.frames = points
         msg.orig_data_stamp = data_time.to_msg()
+        msg.header.stamp = self.get_clock().now().to_msg()
         self.midline_pub.publish(msg)
 
         # publish
