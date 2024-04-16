@@ -7,6 +7,7 @@
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <geometry_msgs/msg/quaternion_stamped.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
+#include <interfaces/msg/controller_info.hpp>
 
 #include "constants.hpp"
 
@@ -20,6 +21,7 @@ namespace controls {
     using QuatMsg = geometry_msgs::msg::QuaternionStamped;
     using PoseMsg = geometry_msgs::msg::PoseStamped;
     using StateMsg = interfaces::msg::ControlsState;
+    using InfoMsg = interfaces::msg::ControllerInfo;
 
     using LoggerFunc = std::function<void(const char*)>;
     constexpr void no_log(const char*) {};

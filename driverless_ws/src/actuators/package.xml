@@ -15,6 +15,7 @@
   <depend>rclpy</depend>
   <depend>can</depend>
   <depend>time</depend>
+  <depend>interfaces</depend>
 
   <export>
     <build_type>ament_python</build_type>

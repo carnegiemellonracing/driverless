@@ -14,8 +14,6 @@
 #include <state/state_estimator.hpp>
 #include <condition_variable>
 
-#include "../../../../build/interfaces/rosidl_generator_cpp/interfaces/msg/detail/controller_info__struct.hpp"
-
 
 namespace controls {
     namespace nodes {
@@ -111,7 +109,7 @@ namespace controls {
             ActionMsg action_to_msg(const Action& action);
 
             static StateMsg state_to_msg(const State& state);
-            static void publish_and_print_info(std::ostream &stream, interfaces::msg::ControllerInfo info);
+            static void publish_and_print_info(std::ostream& stream, InfoMsg info);
 
 
             /** State estimator instance */
@@ -124,7 +122,7 @@ namespace controls {
             rclcpp::TimerBase::SharedPtr m_action_timer;
 
             rclcpp::Publisher<ActionMsg>::SharedPtr m_action_publisher;
-            rclcpp::Publisher<interfaces::msg::ControllerInfo>::SharedPtr m_info_publisher;
+            rclcpp::Publisher<InfoMsg>::SharedPtr m_info_publisher;
             rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription;
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription;
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription;

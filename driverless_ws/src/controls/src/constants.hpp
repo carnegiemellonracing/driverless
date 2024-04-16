@@ -14,13 +14,31 @@ namespace controls {
     constexpr const char *world_pose_topic_name = "filter/pose";
     constexpr const char *controller_info_topic_name = "controller_info";
 
-    const rclcpp::QoS control_action_qos (rclcpp::KeepLast(1));
-    const rclcpp::QoS spline_qos (rclcpp::KeepLast(1));
+    static const rmw_qos_profile_t best_effort_profile = {
+        RMW_QOS_POLICY_HISTORY_KEEP_LAST,
+        1,
+        RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,
+        RMW_QOS_POLICY_DURABILITY_VOLATILE,
+        RMW_QOS_DEADLINE_DEFAULT,
+        RMW_QOS_LIFESPAN_DEFAULT,
+        RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT,
+        RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,
+        false
+    };
+    const rclcpp::QoS best_effort_qos = rclcpp::QoS(
+        rclcpp::QoSInitialization(
+          best_effort_profile.history,
+          best_effort_profile.depth
+        ),
+        best_effort_profile);
+    
+    const rclcpp::QoS control_action_qos = best_effort_qos;
+    const rclcpp::QoS spline_qos = best_effort_qos;
     const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_pose_qos (rclcpp::KeepLast(1));
-    const rclcpp::QoS controller_info_qos (rclcpp::KeepLast(1));
+    const rclcpp::QoS controller_info_qos = best_effort_qos;
 
     constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
 
@@ -31,7 +49,7 @@ namespace controls {
     constexpr double controller_freq = 50.;
     constexpr float controller_period = 1. / controller_freq;
 
-    constexpr double controller_publish_freq = 50.;
+    constexpr double controller_publish_freq = controller_freq;
     constexpr float controller_publish_period = 1. / controller_publish_freq;
 
     /** Controller target period, in sec */
@@ -39,7 +57,7 @@ namespace controls {
     constexpr uint32_t num_timesteps = 96;
     constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 4;
-    constexpr float temperature = 1.0f;
+    constexpr float temperature = 0.175f;
     constexpr unsigned long long seed = 0;
     constexpr uint32_t num_action_trajectories = action_dims * num_timesteps * num_samples;
 
@@ -48,9 +66,9 @@ namespace controls {
 
     // Cost params
 
-    constexpr float offset_1m_cost = 2.5f;
-    constexpr float target_speed = 7.5f;
-    constexpr float no_speed_cost = 2.5f;
+    constexpr float offset_1m_cost = 2.0f;
+    constexpr float target_speed = 5.0f;
+    constexpr float no_speed_cost = 5.0f;
     constexpr float overspeed_1m_cost = 1.0f;
     constexpr float swangle_rad_cost = 0.0f;
 
@@ -69,11 +87,13 @@ namespace controls {
 
     constexpr float cg_to_front = 0.775;
     constexpr float cg_to_rear = 0.775;
+    constexpr float cg_to_nose = 1.5f;
+    constexpr float whl_base = 2.0f;
     constexpr float whl_radius = 0.2286;
     constexpr float gear_ratio = 15.0f;
-    constexpr float car_mass = 310.0f;
-    constexpr float rolling_drag = 200.0f; // N
-    constexpr float long_tractive_capability = 5.0f; // m/s^2
+    constexpr float car_mass = 210.0f;
+    constexpr float rolling_drag = 135.0f; // N
+    constexpr float long_tractive_capability = 3.5f; // m/s^2 
     constexpr float lat_tractive_capability = 5.0f; // m/s^2
     constexpr float understeer_slope = 0.0f;
     constexpr float brake_enable_speed = 1.0f;

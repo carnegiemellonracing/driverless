@@ -35,6 +35,7 @@ setup(
             # util nodes
             'data_node = perceptions.ros.utils.DataNode:main',
             'sync_node = perceptions.ros.utils.SyncNode:main',
+            'file_node = perceptions.ros.utils.FileNode:main',
 
             # predictor nodes
             'yolov5_zed_node = perceptions.ros.predictors.YOLOv5Node:main_zed',
@@ -50,6 +51,9 @@ setup(
             'yolov5_zed2_own_publish_node = perceptions.ros.predictors.YOLOv5Node:main_zed2_own_publish',
 
             'lidar_node = perceptions.ros.predictors.LidarNode:main',
+            'lidar_node_debug = perceptions.ros.predictors.LidarNode:main_debug',
+            'fms_lidar_node = perceptions.ros.predictors.LidarNode:main_fms',
+            'fms_lidar_node_debug = perceptions.ros.predictors.LidarNode:main_fms_debug',
 
             # cone node
             'cone_node = perceptions.ros.utils.ConeNode:main',
@@ -63,8 +67,16 @@ setup(
             'cone_node_any = perceptions.ros.utils.ConeNode:main_any',
             'cone_node_any_debug = perceptions.ros.utils.ConeNode:main_any_debug',
 
+            # simulated cones
+            'cone_sim_node = perceptions.ros.sim.ConeSimNode:main',
+            'cone_sim_node_debug = perceptions.ros.sim.ConeSimNode:main_debug',
+
             # midline node
             'midline_node = perceptions.planning_stuff.MidlineNode:main',
+            'endtoend_node = perceptions.ros.predictors.EndToEndNode:main',
+
+            # sync test node
+            'sync_test_node = perceptions.planning_stuff.SynchronizationTesterNode:main',
         ],
     },
 )

@@ -55,8 +55,11 @@ class DataNode(Node):
         
         if own_zed == "zed" or own_zed == "both":
             self.serial_num, left_topic, xyz_topic = CAMERA_INFO["zed"]
+            print("Starting ZED")
             self.zed = ZEDSDK(serial_num=self.serial_num)
+            print("Opening ZED")
             self.zed.open()
+            print("ZED Opened")
             self.data_syncer = self.create_timer(1/PUBLISH_FPS, self.update_zed_data)
             if publish_images:
                 self.left_publisher = self.create_publisher(msg_type=Image,
@@ -69,8 +72,11 @@ class DataNode(Node):
 
         if own_zed == "zed2" or own_zed == "both":
             self.serial_num2, left_topic, xyz_topic = CAMERA_INFO["zed2"]
+            print("Starting ZED")
             self.zed2 = ZEDSDK(serial_num=self.serial_num2)
+            print("Opening ZED")
             self.zed2.open()
+            print("ZED Opened")
 
             self.data_syncer2 = self.create_timer(1/PUBLISH_FPS, self.update_zed2_data)
             if publish_images:
@@ -141,7 +147,8 @@ class DataNode(Node):
         return self.data.have_all_data()
     
     def get_earliest_data_time(self):
-        times = [self.data_times[datatype] for datatype in self.required_data]
+        # TODO: this is not exactly correct
+        times = [self.data_times[datatype] for datatype in self.required_data if datatype in self.data_times]
         return min(times, key=lambda t: t.nanoseconds)
 
     
