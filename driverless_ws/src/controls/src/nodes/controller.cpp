@@ -36,7 +36,7 @@ namespace controls {
                   },
 
                   m_info_publisher {
-                      create_publisher<interfaces::msg::ControllerInfo>(
+                      create_publisher<InfoMsg>(
                             controller_info_topic_name,
                             controller_info_qos
                         )

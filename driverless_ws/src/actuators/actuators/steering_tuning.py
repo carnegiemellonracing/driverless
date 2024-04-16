@@ -13,8 +13,9 @@ CMDLINE_QOS_PROFILE = QoSProfile(
     durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_VOLATILE  # Set the durability policy
 )
 
-ACTION_DELAY = 2  # sec
+ACTION_DELAY = 5  # sec
 BRAKE_THROTTLE = -20  # total
+START_DELAY = 5
 
 class SteeringTuningNode(Node):
 
@@ -27,7 +28,7 @@ class SteeringTuningNode(Node):
             CMDLINE_QOS_PROFILE
         )
 
-        self.swangles = [0, np.radians(10), np.radians(-10)]
+        self.swangles = [0, np.radians(15), np.radians(-15)]
         self.end_action = (0., BRAKE_THROTTLE / 2., BRAKE_THROTTLE / 2., 0., 0.)
 
     def publish(self, action):
@@ -41,6 +42,8 @@ class SteeringTuningNode(Node):
         self.publisher.publish(msg)
 
     def run(self, throttle):
+        time.sleep(START_DELAY)
+        
         for swangle in self.swangles:
             self.publish(np.array([swangle, throttle / 2, throttle / 2, 0.0, 0.0]))
             time.sleep(ACTION_DELAY)

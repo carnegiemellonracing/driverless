@@ -40,7 +40,11 @@ namespace controls {
         __device__ static float cost(const float world_state[], const float action[], const float last_action[], float start_progress, float time_since_traj_start) {
             float curv_pose[3];
             bool out_out_bounds;
-            cuda_globals::sample_curv_state(world_state, curv_pose, out_out_bounds);
+
+            float forward_x = cosf(world_state[state_yaw_idx]) * cg_to_nose;
+            float forward_y = sinf(world_state[state_yaw_idx]) * cg_to_nose;
+            float nose_pose[3] = {world_state[state_x_idx] + forward_x, world_state[state_y_idx] + forward_y, world_state[state_yaw_idx]};
+            cuda_globals::sample_curv_state(nose_pose, curv_pose, out_out_bounds);
 
             const float angular_accel = model::slipless::angular_accel(world_state[state_speed_idx], action[action_swangle_idx]);
             const float abs_centripedal_accel = fabsf(angular_accel * world_state[state_speed_idx]);

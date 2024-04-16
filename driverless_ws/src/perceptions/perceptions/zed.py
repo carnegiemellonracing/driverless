@@ -27,7 +27,7 @@ class ZEDException(Exception):
 
 class ZEDSDK():
     def __init__(self,
-                 camera_resolution=sl.RESOLUTION.VGA,
+                 camera_resolution=sl.RESOLUTION.HD720,
                  depth_mode=sl.DEPTH_MODE.NEURAL,
                  coordinate_units=sl.UNIT.METER,
                  coordinate_system=sl.COORDINATE_SYSTEM.RIGHT_HANDED_Z_UP,

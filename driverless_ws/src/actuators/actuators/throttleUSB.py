@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.time import Time
-from interfaces.msg import ControlAction
+from interfaces.msg import ControlAction, ActuatorsInfo
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy
 from std_msgs.msg import Int32
 import numpy as np
@@ -21,7 +21,7 @@ SLOPE = 34.5
 
 CMDLINE_QOS_PROFILE = QoSProfile(
     depth=1,  # Set the queue depth
-    reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_RELIABLE,  # Set the reliability policy
+    reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,  # Set the reliability policy
     durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_VOLATILE  # Set the durability policy
 )
 
@@ -30,7 +30,7 @@ class ActuatorNode(Node):
     def __init__(self):
         super().__init__('minimal_publisher')
         # self.ser = can.interface.Bus(bustype=BUSTYPE, channel=CHANNEL, bitrate=BITRATE,auto_reset=True)
-        # self.ser = serial.Serial("/dev/ttyUSB1", baudrate=9600, timeout=0.1)
+        self.ser = serial.Serial("/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10LIDBS-if00-port0", baudrate=9600, timeout=0.1)
         self.subscription = self.create_subscription(
             ControlAction,
             '/control_action',  # Replace with the desired topic name
@@ -46,13 +46,19 @@ class ActuatorNode(Node):
         timer_period = 1/TIMER_HZ  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
         
-        # self.ser.reset_input_buffer()
+        self.ser.reset_input_buffer()
+
+        self.info_publisher = self.create_publisher(
+            ActuatorsInfo,
+            "/actuators_info",
+            CMDLINE_QOS_PROFILE
+        )
 
         # self.even = True
         self.swangle = int(hex(ADC_BIAS)[2:], 16)
         self.torque_request = 0
         msg = bytearray([0, 0,0,0])
-        # self.ser.write(msg) 
+        self.ser.write(msg) 
         self.orig_data_stamp = None
         # self.accumulator = 0
 
@@ -75,25 +81,33 @@ class ActuatorNode(Node):
         #AIM recieves uint_8[8]
         data = (self.torque_request, self.swangle)
         print(data)
-        # x = bytearray()
-        # while(not x):
-        #     # x = self.ser.read(1)
-        #     if x:
-        #         print(x.hex())
-        #     continue
+        x = bytearray()
+        while(not x):
+            x = self.ser.read(1)
+            if x:
+                print(x.hex())
+            continue
         
         msg = struct.pack(">hh", data[0], data[1])
         # msg = bytearray([1,2,3,4])
         # msg = bytearray([7,7,7,7])
         
-        # self.ser.write(msg) 
+        self.ser.write(msg) 
+
+        info = ActuatorsInfo()
+        info.throttle_val = self.torque_request
+        info.steering_adc = self.swangle
+        info.latency_ms = -1
 
         print(f"Throttle Message Sent: {msg.hex()}, {msg}")
         if self.orig_data_stamp is not None:
             curr_time = self.get_clock().now()
             delta_nanos = curr_time.nanoseconds - self.orig_data_stamp.nanoseconds
             delta_ms = int(delta_nanos / 1e6)
+            info.latency_ms = delta_ms
             print(f"Total Latency: {delta_ms} ms")
+
+        self.info_publisher.publish(info)
 
             # steering_msg = can.Message(arbitration_id=0x134, data = [0x00ff & self.swangle, (0xff00 & self.swangle)>>8, 6,5,7,8,9,1], is_extended_id=False)
             # self.ser.send(steering_msg)
