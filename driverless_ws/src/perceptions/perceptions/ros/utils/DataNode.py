@@ -78,11 +78,19 @@ class DataNode(Node):
         def record_yaw(self, yaw):
             self.yaw = yaw
 
+        def got_data(self):
+            return not (np.all(self.last_pos == 0) or self.yaw == None)
+
         def get_estimated_pos_and_vel(self):
             return self.last_pos + self.accumulated_delta_pos, self.last_vel
+        
+        def get_pose_arr(self):
+            pos, _ = self.get_estimated_pos_and_vel()
+            return np.array([pos[0], pos[1], self.yaw])
+            pass
 
         def get_pose_msg(self):
-            if np.all(self.last_pos == 0) or self.yaw == None:
+            if not self.got_data():
                 return None
             
             pos = self.last_pos + self.accumulated_delta_pos
