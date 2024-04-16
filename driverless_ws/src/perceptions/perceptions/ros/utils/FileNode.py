@@ -14,7 +14,7 @@ import numpy as np
 
 # set to determine what folder to create (find in ~/driverless/driverless_ws/<FOLDER_NAME>)
 # DO NOT MAKE "src", "build", "install", or "log"
-FOLDER_NAME = "three-laps-large"
+FOLDER_NAME = "tt-4-6-lidar"
 
 # define path to data directory
 WS_DIR = Path(__file__).parents[3]
@@ -23,10 +23,10 @@ DATA_DIR = os.path.join(WS_DIR, FOLDER_NAME)
 class FileNode(DataNode):
 
     def __init__(self):
-        super().__init__(name="file_node")
+        super().__init__(name="file_node", required_data=[])
 
         # create timer for saving on interval
-        self.interval = 0.5
+        self.interval = 0.1
         self.save_timer = self.create_timer(self.interval, self.save_callback)
         self.save_instance = 0
 
