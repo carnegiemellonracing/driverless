@@ -27,7 +27,7 @@ namespace controls {
                 );
             }
 
-            __host__ __device__ static float angular_accel(const float speed, const float swangle) {
+            __host__ __device__ static float centripedal_accel(const float speed, const float swangle) {
                 if (swangle == 0) {
                     return 0;
                 }

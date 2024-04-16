@@ -33,8 +33,10 @@ namespace controls {
             static constexpr float max_arc_rad = M_PI;
             static constexpr float min_straight = 10.0f;
             static constexpr float max_straight = 30.0f;
+            static constexpr float new_seg_dist = 10.0f;
+            static constexpr uint8_t max_segs = 3;
 
-            static constexpr float spline_period = 1.0f;
+            static constexpr float spline_period = 0.2f;
             static constexpr float gps_period = 0.05f;
             static constexpr float sim_step = 0.01f;
 
@@ -65,10 +67,8 @@ namespace controls {
 
             SegmentType m_last_segment_type = SegmentType::NONE;
             glm::fvec2 m_spline_end_pos = {0, 0};
-            glm::fvec2 m_spline_mid_pos = {0, 0};
             float m_spline_end_heading = 0;
-            std::vector<glm::fvec2> m_segment1;
-            std::vector<glm::fvec2> m_segment2;
+            std::list<std::vector<glm::fvec2>> m_segments;
             ActionMsg m_last_action_msg;
         };
 
