@@ -4,6 +4,7 @@ std_msgs/Header header
 
 builtin_interfaces/Time orig_data_stamp
 
+bool has_pose
 geometry_msgs/Pose2D pose
 
 geometry_msgs/Point[] blue_cones

@@ -10,6 +10,9 @@ import perceptions.ros.utils.conversions as conversions
 # for collecting data from sensors
 from perceptions.ros.utils.DataNode import DataNode
 
+# for getting gps pose associated with each set of cones
+from perc22a.data.utils.DataType import DataType
+
 import time
 
 # rate at which to perform predictions at
@@ -82,21 +85,20 @@ class PredictNode(DataNode):
                 self.flush()
 
             return
-            
+        
+        # get the pose closest to the cone data -- necessary post flush
+        self.update_pose()
+        print(self.data[DataType.GPS_POSE])
 
         # display if necessary
         if self.debug:
             self.predictor.display()
 
         # publish message
-        msg = conversions.cones_to_msg(cones)
-
-        # get the estimated state
-        pose = self.first_order_approximator.get_pose_msg()
-        if pose is None:
-            self.get_logger().warn(f"Not got valid pose")
-            return 
-        msg.pose = pose
+        msg = conversions.cones_to_msg(
+            cones,
+            pose_arr=self.data[DataType.GPS_POSE]
+        )
         
         data_time = self.get_earliest_data_time()
         msg.orig_data_stamp = data_time.to_msg()
@@ -109,6 +111,6 @@ class PredictNode(DataNode):
             time_str = f"[Node={self.name}] Predict Time: {t * 1000:.3f}ms, Data Latency: {data_t:.3f}ms Failures: {self.failure_count}/{self.predict_count}"
             print(time_str)
         
-
+        # TODO: currently, pose does not follow same synchronziation scheme as other datatypes
         if self.flush_data:
             self.flush()

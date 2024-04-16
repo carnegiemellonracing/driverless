@@ -57,7 +57,7 @@ class DataNode(Node):
             # self.counter = 0
 
         def record_pos(self, pos):
-            print(f"first order approx. badness: {pos - (self.last_pos + self.accumulated_delta_pos)}")
+            # print(f"first order approx. badness: {pos - (self.last_pos + self.accumulated_delta_pos)}")
             # self.counter += 1
             # if (self.counter % 10 != 0):
             #     return
@@ -85,15 +85,17 @@ class DataNode(Node):
             return self.last_pos + self.accumulated_delta_pos, self.last_vel
         
         def get_pose_arr(self):
+            if not self.got_data():
+                return None
+
             pos, _ = self.get_estimated_pos_and_vel()
             return np.array([pos[0], pos[1], self.yaw])
-            pass
 
         def get_pose_msg(self):
             if not self.got_data():
                 return None
             
-            pos = self.last_pos + self.accumulated_delta_pos
+            pos,  = self.get_estimated_pos_and_vel()
 
             pose = Pose2D()
             pose.x = pos[0]
@@ -227,9 +229,6 @@ class DataNode(Node):
         # TODO: this is not exactly correct
         times = [self.data_times[datatype] for datatype in self.required_data if datatype in self.data_times]
         return min(times, key=lambda t: t.nanoseconds)
-    
-    def get_pose(self):
-        pass
 
     
     def publish_zed_data(self, left_publisher, xyz_publisher, frame_id, left_img, xyz_img):
@@ -258,12 +257,16 @@ class DataNode(Node):
     def update_zed2_data(self):
         self.update_data_time(DataType.ZED2_LEFT_COLOR)
 
-        left, right, depth, xyz = self.zed2.grab_data()
+        left, right, depth, xyz = selpose_arr = f.zed2.grab_data()
         self.data[DataType.ZED2_LEFT_COLOR] = left
         self.data[DataType.ZED2_XYZ_IMG] = xyz
         if self.publish_images:
             self.publish_zed_data(self.left2_publisher, self.xyz2_publisher, self.frame2_id, left, xyz)
             self.frame2_id += 1
+
+    def update_pose(self):
+         self.data[DataType.GPS_POSE] = self.first_order_approximator.get_pose_arr()
+         return
 
     def quat_callback(self, msg):
         quat = msg.quaternion
@@ -271,18 +274,20 @@ class DataNode(Node):
 
         yaw = np.arctan2(2*(q3*q0 +q1*q2), -1+2*(q0*q0 +q1*q1))
         self.first_order_approximator.record_yaw(yaw)
+        self.update_pose()
 
     def gnss_callback(self, msg):
         GEO_DEG_TO_M = 111320.0
         #TODO: why are these flipped
         pos = np.array([-msg.latitude, msg.longitude]) * GEO_DEG_TO_M
         self.first_order_approximator.record_pos(pos)
+        self.update_pose()
 
     def vel_callback(self, msg):
         #todo: how to account for current heading
         vel = np.array([-msg.vector.x, msg.vector.y])
         self.first_order_approximator.record_vel(vel)
-
+        self.update_pose()
     
     def left_color_callback(self, msg):
         self.update_data_time(DataType.ZED_LEFT_COLOR)

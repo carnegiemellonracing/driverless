@@ -4,7 +4,7 @@ from rclpy.time import Time
 from sensor_msgs.msg import Image, PointCloud2
 from interfaces.msg import ConeArray
 from geometry_msgs.msg import Point
-from geometry_msgs.msg import QuaternionStamped
+from geometry_msgs.msg import QuaternionStamped, Pose2D
 
 # perc22a Cone class
 from perc22a.predictors.utils.cones import Cones
@@ -75,15 +75,32 @@ def npy_to_pointcloud2(pc):
     pc_msg = rnp.msgify(PointCloud2, pc_array)
     return pc_msg
 
-def cones_to_msg(cones: Cones) -> ConeArray:
+def pose_arr_to_msg(pose_arr):
+    pose = Pose2D()
+    pose.x = pose_arr[0]
+    pose.y = pose_arr[1]
+    pose.theta = pose_arr[2]
+
+    return pose
+
+def cones_to_msg(cones: Cones, pose_arr=None) -> ConeArray:
     '''convert perc22a Cones datatype to ConeArray ROS2 msg type'''
+    # TODO: we should change the message type from ConeArray to PercOut or smthn
     
     cones_msg = ConeArray()
     blue_cones, yellow_cones, orange_cones = cones.to_numpy()
 
+    # convert cones
     cones_msg.blue_cones = _cone_to_msg_arr(blue_cones)
     cones_msg.yellow_cones = _cone_to_msg_arr(yellow_cones)
     cones_msg.orange_cones = _cone_to_msg_arr(orange_cones)
+
+    # convert pose if it exists
+    if pose_arr is not None:
+        cones_msg.has_pose = True
+        cones_msg.pose = pose_arr_to_msg(pose_arr)
+    else:
+        cones_msg.has_pose = False
     
     return cones_msg
 
