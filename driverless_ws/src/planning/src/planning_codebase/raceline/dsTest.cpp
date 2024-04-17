@@ -106,11 +106,27 @@ void testMakeSplinesVector() {
     // make a std::vector<std::pair<double,double>> with 2 different polynomials
     // one point overlap, have 7 points in total 
     std::vector<std::pair<double,double>> blue_cones = {
-        std::make_pair(400, 400),
-        std::make_pair(300, 300),
-        std::make_pair(200, 200),
-        std::make_pair(100, 100)
+        std::make_pair(0, 0),
+        std::make_pair(30, 5),
+        std::make_pair(30, 20),
+        std::make_pair(15, 30)
     };
+
+    // missed one point, still pretty sharp turn
+    // std::make_pair(-10, 0),
+    // std::make_pair(-6.667, 5.926),
+    // std::make_pair(0, 0),
+    // std::make_pair(3.334, 5.926)
+
+    // std::make_pair(0, 0),
+    // std::make_pair(10, 5),
+    // std::make_pair(20, -5),
+    // std::make_pair(30, 0)
+
+    // std::make_pair(400, 400),
+    // std::make_pair(300, 300),
+    // std::make_pair(200, 200),
+    // std::make_pair(100, 100)
 
     // std::make_pair(589, 167.513),
     // std::make_pair(455, 101.664),
