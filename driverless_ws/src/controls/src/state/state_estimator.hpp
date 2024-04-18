@@ -12,7 +12,7 @@ namespace controls {
         public:
             static std::shared_ptr<StateEstimator> create(std::mutex& mutex, LoggerFunc logger = no_log);
 
-            virtual void on_spline(const SplineMsg& spline_msg, const rclcpp::Time &time) =0;
+            virtual void on_spline(const SplineMsg& spline_msg) =0;
             virtual void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) =0;
             virtual void on_pose(const PoseMsg& pose_msg) =0;
 
