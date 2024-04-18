@@ -43,7 +43,7 @@ from interfaces.msg import SplineFrames
 from geometry_msgs.msg import Point
 
 import perceptions.ros.utils.conversions as conv
-from perc22a.svm.svm_utils import cones_to_midline
+from perc22a.svm.SVM import SVM
 from perc22a.predictors.utils.vis.Vis2D import Vis2D
 
 import time
@@ -71,6 +71,7 @@ class EndToEndNode(Node):
         
         self.predictor = self.init_predictor()
         self.merger = create_lidar_merger()
+        self.svm = SVM()
 
         self.vis = Vis2D()
 
@@ -94,7 +95,7 @@ class EndToEndNode(Node):
         self.merger.reset()
 
         # spline
-        downsampled_boundary_points = cones_to_midline(cones)
+        downsampled_boundary_points = self.svm.cones_to_midline(cones)
         points = []
         msg = SplineFrames()
 

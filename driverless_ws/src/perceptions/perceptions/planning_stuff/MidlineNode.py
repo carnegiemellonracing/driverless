@@ -10,6 +10,7 @@ from geometry_msgs.msg import Point
 
 import perceptions.ros.utils.conversions as conv
 from perc22a.svm.svm_utils import cones_to_midline
+from perc22a.svm.SVM import SVM
 from perc22a.predictors.utils.vis.Vis2D import Vis2D
 
 import numpy as np
@@ -42,6 +43,7 @@ class MidlineNode(Node):
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
                                                  topic="/spline",
                                                  qos_profile=RELIABLE_QOS_PROFILE)
+        self.svm = SVM()
         self.vis = Vis2D()
         self.failure_count = 0
 
@@ -57,7 +59,7 @@ class MidlineNode(Node):
 
         # try:
         s_svm = time.time()
-        downsampled_boundary_points = cones_to_midline(cones)
+        downsampled_boundary_points = self.svm.cones_to_midline(cones)
         e_svm = time.time()
         # except Exception as error:
         #     self.get_logger().error(f"Exception was caught while predicting {error}")
