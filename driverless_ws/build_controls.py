@@ -11,7 +11,7 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--export", action="store_true", help="export compile commands")
 
     args = parser.parse_args()
-    command = "colcon build --packages-select controls --cmake-args"
+    command = "colcon build --packages-up-to controls --cmake-args"
     if args.asserts:
         command += " -DPARANOID=ON"
     if args.debug:

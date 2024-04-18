@@ -7,7 +7,6 @@
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
 #include <model/two_track/codegen/minimal_state_function.h>
-#include <glm/gtx/quaternion.hpp>
 
 #include "test_node.hpp"
 
@@ -22,27 +21,31 @@ namespace controls {
                     [this] (const ActionMsg::SharedPtr msg) { on_action(*msg); })),
 
               m_spline_timer {create_wall_timer(
-                  std::chrono::duration<float, std::milli>(100),
-                    [this]{ publish_spline(); publish_quat(); publish_twist(); })},
+                  std::chrono::duration<float, std::milli>(spline_period * 1000),
+                    [this]{ publish_spline(); })},
+
+              m_sim_timer {create_wall_timer(
+                  std::chrono::duration<float, std::milli>(sim_step * 1000),
+                    [this]{ on_sim(); })},
+
+              m_gps_timer {create_wall_timer(
+                        std::chrono::duration<float, std::milli>(gps_period * 1000),
+                            [this]{ publish_twist(); })},
 
               m_spline_publisher {create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
-              m_state_publisher {create_publisher<StateMsg>(state_topic_name, state_qos)},
-              m_quat_publisher {create_publisher<QuatMsg>(world_quat_topic_name, world_quat_qos)},
               m_twist_publisher {create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
-              m_pose_publisher {create_publisher<PoseMsg>(world_pose_topic_name, world_pose_qos)},
 
               m_rng {seed} {
 
+            next_segment();
+            next_segment();
 
-            next_segment();
-            next_segment();
+            m_time = get_clock()->now();
         }
 
         void TestNode::next_segment() {
 
-            m_segment1 = m_segment2;
-            m_spline_mid_pos = m_spline_end_pos;
-
+            std::vector<glm::fvec2> new_seg;
             float end_heading;
             glm::fvec2 end_pos;
             switch (m_last_segment_type) {
@@ -50,21 +53,21 @@ namespace controls {
                 case SegmentType::ARC: {
                     bool is_straight = m_uniform_dist(m_rng) < straight_after_arc_prob;
                     if (is_straight) {
-                        m_segment2 = straight_segment(m_spline_end_pos, m_uniform_dist(m_rng) * (max_straight - min_straight) + min_straight, m_spline_end_heading);
+                        new_seg = straight_segment(m_spline_end_pos, m_uniform_dist(m_rng) * (max_straight - min_straight) + min_straight, m_spline_end_heading);
                         m_last_segment_type = SegmentType::STRAIGHT;
                         end_heading = m_spline_end_heading;
-                        end_pos = m_segment2.back();
+                        end_pos = new_seg.back();
 
                     } else {
                         float radius = m_uniform_dist(m_rng) * (max_radius - min_radius) + min_radius;
                         float arc_rad = (m_uniform_dist(m_rng) - 0.5f) * (max_arc_rad - min_arc_rad) * 2;
                         end_heading = m_spline_end_heading + arc_rad;
 
-                        m_segment2 = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
+                        new_seg = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
                         m_last_segment_type = SegmentType::ARC;
                         m_spline_end_heading = m_spline_end_heading + arc_rad;
 
-                        end_pos = m_segment2.back();
+                        end_pos = new_seg.back();
                     }
                     break;
                 }
@@ -74,16 +77,21 @@ namespace controls {
                     float arc_rad = (m_uniform_dist(m_rng) - 0.5f) * (max_arc_rad - min_arc_rad) * 2;
                     end_heading = m_spline_end_heading + arc_rad;
 
-                    m_segment2 = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
+                    new_seg = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
                     m_last_segment_type = SegmentType::ARC;
 
-                    end_pos = m_segment2.back();
+                    end_pos = new_seg.back();
                     break;
                 }
             }
 
             m_spline_end_heading = end_heading;
             m_spline_end_pos = end_pos;
+
+            m_segments.push_back(new_seg);
+            if (m_segments.size() > max_segs) {
+                m_segments.erase(m_segments.begin());
+            }
         }
 
         std::vector<glm::fvec2> TestNode::arc_segment(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
@@ -140,11 +148,8 @@ namespace controls {
             return GSL_SUCCESS;
         }
 
-        void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
-            std::cout << "\nSwangle: " << msg.swangle * (180 / M_PI) << " Torque f: " <<
-                msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl << std::endl;
-
-            ActionMsg adj_msg = msg;
+        void TestNode::on_sim() {
+            ActionMsg adj_msg = m_last_action_msg;
             adj_msg.torque_fl *= gear_ratio / 1000.;
             adj_msg.torque_fr *= gear_ratio / 1000.;
             adj_msg.torque_rl *= gear_ratio / 1000.;
@@ -162,27 +167,28 @@ namespace controls {
                 1e-4, 1e-4, 1e-4
             );
 
-            int result = gsl_odeiv2_driver_apply(driver, &m_time, m_time + controller_period, m_world_state.data());
+            double sim_time = m_time.nanoseconds() / 1.0e9;
+            m_time = get_clock()->now();
+
+            int result = gsl_odeiv2_driver_apply(driver, &sim_time, m_time.nanoseconds() / 1.0e9, m_world_state.data());
             if (result != GSL_SUCCESS) {
                 throw std::runtime_error("GSL driver failed");
             }
 
             gsl_odeiv2_driver_free(driver);
 
-            std::cout << "Publishing state" << std::endl;
-            for (float dim : m_world_state)
-            {
-                std::cout << dim << " ";
-            }
-            std::cout << std::endl;
-            
-            publish_quat();
-            publish_twist();
-
             const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
-            if (distance(car_pos, m_spline_end_pos) < distance(car_pos, m_spline_mid_pos)) {
+            if (distance(car_pos, m_spline_end_pos) < new_seg_dist) {
                 next_segment();
             }
+        }
+
+
+        void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
+            std::cout << "\nSwangle: " << msg.swangle * (180 / M_PI) << " Torque f: " <<
+                msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl;
+
+            m_last_action_msg = msg;
         }
 
         void TestNode::publish_spline() {
@@ -199,35 +205,18 @@ namespace controls {
                 return p;
             };
 
-            for (const glm::fvec2& point : m_segment1) {
-                msg.frames.push_back(gen_point(point));
+            for (const auto& segment : m_segments) {
+                for (const glm::fvec2& point : segment) {
+                    msg.frames.push_back(gen_point(point));
+                }
             }
-            for (const glm::fvec2& point : m_segment2) {
-                msg.frames.push_back(gen_point(point));
-            }
+
+            msg.orig_data_stamp = get_clock()->now();
 
             m_spline_publisher->publish(msg);
         }
 
-        void TestNode::publish_quat() {
-            // std::cout << "Publishing state (quaternions)" << std::endl;
-            // std::cout << "Time: " << m_time << std::endl;
-            
-            glm::dquat quat = glm::angleAxis(m_world_state[2], glm::dvec3 {0.0, 0.0, 1.0});
-
-            QuatMsg msg {};
-            msg.quaternion.w = quat.w;
-            msg.quaternion.x = quat.x;
-            msg.quaternion.y = quat.y;
-            msg.quaternion.z = quat.z;
-
-            m_quat_publisher->publish(msg);
-        }
-
         void TestNode::publish_twist() {
-            // std::cout << "Publishing state (twist)" << std::endl;
-            // std::cout << "Time: " << m_time << std::endl;
-
             TwistMsg msg {};
 
             const float yaw = m_world_state[2];
@@ -243,19 +232,9 @@ namespace controls {
             msg.twist.angular.y = 0.0;
             msg.twist.angular.z = yawdot;
 
+            msg.header.stamp = get_clock()->now();
+
             m_twist_publisher->publish(msg);
-        }
-
-        void TestNode::publish_pose() {
-            // std::cout << "Publishing state (pose)" << std::endl;
-            // std::cout << "Time: " << m_time << std::endl;
-
-            PoseMsg msg {};
-            msg.pose.position.x = m_world_state[0];
-            msg.pose.position.y = m_world_state[1];
-            msg.pose.position.z = 0.0;
-
-            m_pose_publisher->publish(msg);
         }
     }
 }

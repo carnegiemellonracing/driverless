@@ -24,9 +24,9 @@ namespace controls {
               m_cost_to_gos(num_samples * num_timesteps),
               m_log_prob_densities(num_samples * num_timesteps),
               m_rng(),
+              m_last_action {},
 #ifdef DISPLAY
               m_state_trajectories(num_samples * num_timesteps * state_dims),
-              m_last_action {},
               m_last_curr_state {},
 #endif
               m_last_action_trajectory(num_timesteps - 1),
@@ -66,7 +66,7 @@ namespace controls {
             // not actually on device, just still in a device action struct
             thrust::device_vector<DeviceAction> averaged_trajectory = reduce_actions();
 
-            DeviceAction host_action = averaged_trajectory[0];
+            DeviceAction host_action = m_last_action * action_momentum + (1 - action_momentum) * averaged_trajectory[0];
 
             Action result_action;
             std::copy(
@@ -80,8 +80,9 @@ namespace controls {
                 m_last_action_trajectory.begin()
             );
 
-#ifdef DISPLAY
             m_last_action = host_action;
+
+#ifdef DISPLAY
             CUDA_CALL(cudaMemcpyFromSymbol(
                 m_last_curr_state.data(),
                 cuda_globals::curr_state,
@@ -99,11 +100,12 @@ namespace controls {
         }
 
 #ifdef DISPLAY
-        std::vector<float> MppiController_Impl::last_state_trajectories() {
+        std::vector<float> MppiController_Impl::last_state_trajectories(uint32_t num) {
             std::lock_guard<std::mutex> guard {m_mutex};
+            const uint32_t num_floats = num * state_dims * num_timesteps;
 
-            std::vector<float> result (m_state_trajectories.size());
-            thrust::copy(m_state_trajectories.begin(), m_state_trajectories.end(), result.begin());
+            std::vector<float> result (num_floats);
+            thrust::copy(m_state_trajectories.begin(), m_state_trajectories.begin() + num_floats, result.begin());
 
             return result;
         }
@@ -124,11 +126,7 @@ namespace controls {
                     action = m_last_action_trajectory[i - 1];
                 }
 
-                State state_dot;
-                ONLINE_DYNAMICS_FUNC(state.data(), action.data, state_dot.data(), controller_period);
-                for (uint8_t j = 0; j < state_dims; j++) {
-                    state[j] += state_dot[j] * controller_period;
-                }
+                ONLINE_DYNAMICS_FUNC(state.data(), action.data, state.data(), controller_period);
 
                 result[i] = {state[state_x_idx], state[state_y_idx]};
 
@@ -202,7 +200,8 @@ namespace controls {
 #endif
                 m_cost_to_gos.data(),
                 m_log_prob_densities.data(), 
-                m_last_action_trajectory.data()
+                m_last_action_trajectory.data(),
+                m_last_action
             };
 
             thrust::for_each(indices, indices + num_samples, populate_cost);

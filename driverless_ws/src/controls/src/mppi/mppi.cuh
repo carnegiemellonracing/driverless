@@ -24,7 +24,7 @@ namespace controls {
 
 
 #ifdef DISPLAY
-            std::vector<float> last_state_trajectories() override;
+            std::vector<float> last_state_trajectories(uint32_t num) override;
 
             std::vector<glm::fvec2> last_reduced_state_trajectory() override;
 #endif
@@ -69,8 +69,9 @@ namespace controls {
              * num_timesteps x action_dims array. Best-guess action trajectory to which perturbations are added.
              */
             thrust::device_vector<DeviceAction> m_last_action_trajectory;
-#ifdef DISPLAY
             DeviceAction m_last_action;
+
+#ifdef DISPLAY
 
             /**
              * State trajectories generated from curr_state and action trajectories. Sent to display when enabled
