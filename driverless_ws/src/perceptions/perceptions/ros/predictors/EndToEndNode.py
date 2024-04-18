@@ -73,7 +73,7 @@ class EndToEndNode(Node):
         self.merger = create_lidar_merger()
         self.svm = SVM()
 
-        self.vis = Vis2D()
+        # self.vis = Vis2D()
 
         self.data = {}
         return
@@ -106,10 +106,10 @@ class EndToEndNode(Node):
             new_point.z = float(0)
             points.append(new_point)
 
-        self.vis.set_cones(cones)
-        if len(downsampled_boundary_points) > 0:
-            self.vis.set_points(downsampled_boundary_points)
-        self.vis.update()
+        # self.vis.set_cones(cones)
+        # if len(downsampled_boundary_points) > 0:
+        #     self.vis.set_points(downsampled_boundary_points)
+        # self.vis.update()
 
         if len(points) < 2:
             print(f"LESS THAN 2 FRAMES {len(cones)}")
