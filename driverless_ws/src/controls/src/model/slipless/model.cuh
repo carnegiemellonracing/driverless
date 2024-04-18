@@ -11,23 +11,56 @@ namespace controls {
              * State : R^4 [x (m), y (m), yaw (rad), speed (m/s)]
              */
 
-            __host__ __device__ static float angular_accel(const float speed, const float swangle) {
-                const float kinematic_swangle = swangle / (1 + understeer_slope * speed);
-                const float back_whl_to_center_of_rot = (cg_to_front + cg_to_rear) / tanf(kinematic_swangle);
-                return copysignf(speed / sqrtf(cg_to_rear * cg_to_rear + back_whl_to_center_of_rot * back_whl_to_center_of_rot), swangle);
+            __host__ __device__ static float kinematic_swangle(const float speed, const float swangle) {
+                return swangle / (1 + understeer_slope * speed);
             }
 
-            __host__ __device__ static void dynamics(const float state[], const float action[], float state_dot[], float timestep) {
+            __host__ __device__ static float angular_speed(const float speed, const float kinematic_swangle_) {
+                if (kinematic_swangle_ == 0) {
+                    return 0;
+                }
+
+                const float back_whl_to_center_of_rot = (cg_to_front + cg_to_rear) / tanf(kinematic_swangle_);
+                return copysignf(
+                    speed / sqrtf(cg_to_rear * cg_to_rear + back_whl_to_center_of_rot * back_whl_to_center_of_rot),
+                    kinematic_swangle_
+                );
+            }
+
+            __host__ __device__ static float centripedal_accel(const float speed, const float swangle) {
+                if (swangle == 0) {
+                    return 0;
+                }
+
+                const float kinematic_swangle_ = kinematic_swangle(speed, swangle);
+                const float back_whl_to_center_of_rot = (cg_to_front + cg_to_rear) / tanf(kinematic_swangle_);
+                return copysignf(
+                    speed * speed / sqrtf(cg_to_rear * cg_to_rear + back_whl_to_center_of_rot * back_whl_to_center_of_rot),
+                    kinematic_swangle_
+                );
+            }
+
+            __host__ __device__ static float slip_angle(const float kinematic_swangle) {
+                return atanf(cg_to_rear / (cg_to_front + cg_to_rear) * tanf(kinematic_swangle));
+            }
+
+            // can be used in-place
+            __host__ __device__ static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
+                const float x = state[state_x_idx];
+                const float y = state[state_y_idx];
                 const float yaw = state[state_yaw_idx];
                 const float speed = state[state_speed_idx];
+
+                // printf("x: %f, y: %f, yaw: %f, speed: %f\n", x, y, yaw, speed);
 
                 const float swangle = action[action_swangle_idx];
                 const float torque = action[action_torque_idx] * gear_ratio;
 
-                const float kinematic_swangle = swangle / (1 + understeer_slope * speed);
+                float kinematic_swangle_ = kinematic_swangle(speed, swangle);
+                float slip_angle_ = slip_angle(kinematic_swangle_);
 
-                const float slip_angle = atanf(cg_to_rear / (cg_to_front + cg_to_rear) * tanf(kinematic_swangle));
-                const float speed_yaw = yaw + slip_angle;
+                // printf("swangle: %f, torque: %f\n", swangle, torque);
+                // printf("kinematic_swangle_: %f, slip_angle_: %f\n", kinematic_swangle_, slip_angle_);
 
                 constexpr float saturating_tire_torque = saturating_motor_torque * 0.5f * gear_ratio;
                 float torque_front, torque_rear;
@@ -48,17 +81,41 @@ namespace controls {
                         break;
                 }
 
-                const float speed_dot =
-                    (torque_front * cosf(swangle - slip_angle) + torque_rear * cosf(slip_angle)) / (whl_radius * car_mass)
-                    - rolling_drag / car_mass;
+                // printf("sat_tire_torque: %f, torque_front: %f, torque_rear: %f\n", saturating_tire_torque, torque_front, torque_rear);
 
-                // prevent reversing, and prevent accidentally overshooting 0 speed in integration
-                const float speed_dot_adj = max(speed_dot, -max(speed, 0.0f) / timestep);
+                const float next_speed_raw = speed +
+                    ((torque_front * cosf(swangle - slip_angle_) + torque_rear * cosf(slip_angle_)) / (whl_radius * car_mass)
+                    - rolling_drag / car_mass) * timestep;
+                const float next_speed = max(0.0f, next_speed_raw);
 
-                state_dot[state_x_idx] = speed * cosf(speed_yaw);
-                state_dot[state_y_idx] = speed * sinf(speed_yaw);
-                state_dot[state_yaw_idx] = angular_accel(speed, swangle);
-                state_dot[state_speed_idx] = speed_dot_adj;
+                const float speed2 = speed * speed;
+                const float next_speed2 = next_speed * next_speed;
+                const float dist_avg_speed = speed != next_speed ?
+                    2.0f/3.0f * (next_speed2 * next_speed - speed2 * speed) / (next_speed2 - speed2) : speed;
+
+                kinematic_swangle_ = kinematic_swangle(dist_avg_speed, swangle);
+
+                // printf("kinematic_swangle_: %f, slip_angle_: %f\n", kinematic_swangle_, slip_angle_);
+
+                const float angular_speed_ = angular_speed(dist_avg_speed, kinematic_swangle_);
+                const float next_yaw = yaw + angular_speed_ * timestep;
+
+                // printf("next_speed_raw: %f, next_speed: %f, next_speed2: %f, dist_avg_speed: %f, angular_speed_: %f, next_yaw: %f\n", next_speed_raw, next_speed, next_speed2, dist_avg_speed, angular_speed_, next_yaw);
+
+                const float rear_to_center = (cg_to_rear + cg_to_front) / tanf(kinematic_swangle_);
+                const float next_x = angular_speed_ == 0 ?
+                    x + dist_avg_speed * cosf(yaw) * timestep
+                  : x + cg_to_rear * (cosf(next_yaw) - cosf(yaw)) + rear_to_center * (sinf(next_yaw) - sinf(yaw));
+                const float next_y = angular_speed_ == 0 ?
+                    y + dist_avg_speed * sinf(yaw) * timestep
+                  : y + cg_to_rear * (sinf(next_yaw) - sinf(yaw)) + rear_to_center * (-cosf(next_yaw) + cosf(yaw));
+
+                // printf("rear_to_center: %f, next_x: %f, next_y: %f\n\n", rear_to_center, next_x, next_y);
+
+                next_state[state_x_idx] = next_x;
+                next_state[state_y_idx] = next_y;
+                next_state[state_yaw_idx] = next_yaw;
+                next_state[state_speed_idx] = next_speed;
             }
         }
     }

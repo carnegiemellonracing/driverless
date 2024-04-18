@@ -1,7 +1,6 @@
 #include <mppi/mppi.hpp>
 #include <mutex>
 #include <rclcpp/rclcpp.hpp>
-#include <rosidl_runtime_cpp/traits.hpp>
 #include <types.hpp>
 #include <constants.hpp>
 #include <interfaces/msg/control_action.hpp>
@@ -23,12 +22,6 @@ namespace controls {
                   m_state_estimator {std::move(state_estimator)},
                   m_mppi_controller {std::move(mppi_controller)},
 
-                  m_action_timer {
-                      create_wall_timer(
-                          std::chrono::duration<float>(controller_publish_period),
-                          [this] { publish_action_callback(); })
-                  },
-
                   m_action_publisher {
                       create_publisher<interfaces::msg::ControlAction>(
                           control_action_topic_name,
@@ -41,10 +34,7 @@ namespace controls {
                             controller_info_topic_name,
                             controller_info_qos
                         )
-                  },
-
-                  m_action_read {std::make_unique<Action>()},
-                  m_action_write {std::make_unique<Action>()} {
+                  } {
 
                 // create a callback group that prevents state and spline callbacks from being executed concurrently
                 rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group {
@@ -56,12 +46,6 @@ namespace controls {
                 m_spline_subscription = create_subscription<SplineMsg>(
                     spline_topic_name, spline_qos,
                     [this] (const SplineMsg::SharedPtr msg) { spline_callback(*msg); },
-                    options
-                );
-
-                m_world_quat_subscription = create_subscription<QuatMsg>(
-                    world_quat_topic_name, world_quat_qos,
-                    [this] (const QuatMsg::SharedPtr msg) { world_quat_callback(*msg); },
                     options
                 );
 
@@ -82,18 +66,12 @@ namespace controls {
                 launch_mppi().detach();
             }
 
-            void ControllerNode::publish_action_callback() {
-                std::lock_guard<std::mutex> action_read_guard {m_action_read_mut};
-
-                publish_action(*m_action_read);
-            }
-
             void ControllerNode::spline_callback(const SplineMsg& spline_msg) {
                 RCLCPP_DEBUG(get_logger(), "Received spline");
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_spline(spline_msg);
+                    m_state_estimator->on_spline(spline_msg, spline_msg.orig_data_stamp);
                 }
 
                 notify_state_dirty();
@@ -105,19 +83,7 @@ namespace controls {
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_world_twist(twist_msg);
-                }
-
-                notify_state_dirty();
-            }
-
-            void ControllerNode::world_quat_callback(const QuatMsg &quat_msg) {
-                RCLCPP_DEBUG(get_logger(), "Received quat");
-
-
-                {
-                    std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_world_quat(quat_msg);
+                    m_state_estimator->on_twist(twist_msg, twist_msg.header.stamp);
                 }
 
                 notify_state_dirty();
@@ -129,7 +95,7 @@ namespace controls {
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_world_pose(pose_msg);
+                    m_state_estimator->on_pose(pose_msg);
                 }
 
                 notify_state_dirty();
@@ -155,16 +121,13 @@ namespace controls {
                         RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
 
                         // save for info publishing later, since might be changed during iteration
-                        State curr_state = m_state_estimator->get_state();
-                        builtin_interfaces::msg::Time orig_data_stamp = m_state_estimator->get_orig_data_stamp();
+                        State proj_curr_state = m_state_estimator->get_projected_state();
+                        rclcpp::Time orig_spline_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
 
                         // send state to device (i.e. cuda globals)
                         // (also serves to lock state since nothing else updates gpu state)
-                        {
-                            std::lock_guard<std::mutex> guard {m_action_read_mut};
-                            RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                            m_state_estimator->sync_to_device(m_action_read->at(action_swangle_idx));
-                        }
+                        RCLCPP_DEBUG(get_logger(), "syncing state to device");
+                        m_state_estimator->sync_to_device(get_clock()->now());
 
 
                         // we don't need the host state anymore, so release the lock and let state callbacks proceed
@@ -172,14 +135,9 @@ namespace controls {
 
                         // run mppi, and write action to the write buffer
                         Action action = m_mppi_controller->generate_action();
-                        {
-                            std::lock_guard<std::mutex> action_guard {m_action_write_mut};
-                            *m_action_write = action;
-                        }
+                        publish_action(action);
 
-                        // swap the read and write buffers so publish action read this action
-                        RCLCPP_DEBUG(get_logger(), "swapping action buffers");
-                        swap_action_buffers();
+                        m_state_estimator->record_control_action(action, get_clock()->now());
 
                         // calculate and print time elapsed
                         auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -187,11 +145,11 @@ namespace controls {
                         );
 
                         // can't use high res clock since need to be aligned with other nodes
-                        auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_data_stamp.sec * 1000000000 - orig_data_stamp.nanosec) / 1000000;
+                        auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_spline_data_stamp.nanoseconds()) / 1000000;
 
                         interfaces::msg::ControllerInfo info {};
                         info.action = action_to_msg(action);
-                        info.state = state_to_msg(curr_state);
+                        info.proj_state = state_to_msg(proj_curr_state);
                         info.latency_ms = time_elapsed.count();
                         info.total_latency_ms = total_time_elapsed;
 
@@ -210,18 +168,10 @@ namespace controls {
                 m_state_cond_var.notify_all();
             }
 
-            void ControllerNode::swap_action_buffers() {
-                std::lock(m_action_read_mut, m_action_write_mut);  // lock both using a deadlock avoidance scheme
-                std::lock_guard<std::mutex> action_read_guard {m_action_read_mut, std::adopt_lock};
-                std::lock_guard<std::mutex> action_write_guard {m_action_write_mut, std::adopt_lock};
-
-                std::swap(m_action_read, m_action_write);
-            }
-
             ActionMsg ControllerNode::action_to_msg(const Action &action) {
                 interfaces::msg::ControlAction msg;
                 
-                msg.orig_data_stamp = m_state_estimator->get_orig_data_stamp();
+                msg.orig_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
 
                 msg.swangle = action[action_swangle_idx];
                 msg.torque_fl = action[action_torque_idx] / 4;
@@ -276,12 +226,12 @@ namespace controls {
                 << "  torque_fr (Nm): " << info.action.torque_fr << "\n"
                 << "  torque_rl (Nm): " << info.action.torque_rl << "\n"
                 << "  torque_rr (Nm): " << info.action.torque_rr << "\n"
-                << "State:\n"
-                << "  x (m): " << info.state.x << "\n"
-                << "  y (m): " << info.state.y << "\n"
-                << "  yaw (rad): " << info.state.yaw << "\n"
-                << "  speed (m/s): " << info.state.speed << "\n"
-                << "Latency (ms): " << info.latency_ms << "\n"
+                << "Projected State:\n"
+                << "  x (m): " << info.proj_state.x << "\n"
+                << "  y (m): " << info.proj_state.y << "\n"
+                << "  yaw (rad): " << info.proj_state.yaw << "\n"
+                << "  speed (m/s): " << info.proj_state.speed << "\n"
+                << "MPPI Step Latency (ms): " << info.latency_ms << "\n"
                 << "Total Latency (ms): " << info.total_latency_ms << "\n"
                 << std::endl;
             }
