@@ -27,14 +27,14 @@ namespace controls {
 
             static constexpr float jitter_std = 0.00f;
             static constexpr float straight_after_arc_prob = 0.75f;
-            static constexpr float min_radius = 3.0f;
+            static constexpr float min_radius = 4.0f;
             static constexpr float max_radius = 10.0f;
             static constexpr float min_arc_rad = M_PI / 4.0f;
             static constexpr float max_arc_rad = M_PI;
             static constexpr float min_straight = 10.0f;
             static constexpr float max_straight = 30.0f;
-            static constexpr float new_seg_dist = 10.0f;
-            static constexpr uint8_t max_segs = 3;
+            static constexpr float new_seg_dist = 15.0f;
+            static constexpr uint8_t max_segs = 4;
 
             static constexpr float spline_period = 0.2f;
             static constexpr float gps_period = 0.05f;

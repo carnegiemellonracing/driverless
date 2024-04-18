@@ -12,7 +12,7 @@ namespace controls {
         __constant__ float curr_state[state_dims] = {0, 0, 0, 0};
 
 
-        constexpr float swangle_swangle_std = 0.2;
+        constexpr float swangle_swangle_std = 0.1;
         constexpr float torque_torque_std = 10;
         // NOTE:WHEN CHANGING ENSURE YOU ALSO CHANGE MAGIC MATRIX AND MAGIC NUMBER
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {

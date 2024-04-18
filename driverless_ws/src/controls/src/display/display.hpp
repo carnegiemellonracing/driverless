@@ -86,6 +86,11 @@ namespace controls {
 
             std::shared_ptr<mppi::MppiController> m_controller;
             std::shared_ptr<state::StateEstimator> m_state_estimator;
+
+            std::vector<glm::fvec2> m_spline_frames;
+            std::vector<glm::fvec2> m_last_reduced_state_trajectory;
+            std::vector<float> m_last_state_trajectories;
+            state::StateEstimator::OffsetImage m_offset_image;
         };
     }
 }
