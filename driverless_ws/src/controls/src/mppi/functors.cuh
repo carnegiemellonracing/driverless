@@ -33,38 +33,52 @@ namespace controls {
          * Calculate cost at a particular state.
          *
          * @param world_state World state of the vehicle
+         * @param action Action considered
+         * @param last_taken_action Last action actually taken by the vehicle
          * @param start_progress Progress at the start of the trajectory
          * @param time_since_traj_start Time elapsed since trjaectory start
+         * @param first whether this is the first action in the trajectory
          * @returns Cost at the given state
          */
-        __device__ static float cost(const float world_state[], const float action[], const float last_action[], float start_progress, float time_since_traj_start) {
-            float curv_pose[3];
-            bool out_out_bounds;
+        __device__ static float cost(
+            const float world_state[], const float action[], const float last_taken_action[],
+            float start_progress, float time_since_traj_start, bool first) {
+
+            float nose_curv_pose[3];
+            float cent_curv_pose[3];
+            bool nose_out_of_bounds;
+            bool cent_out_of_bounds;
 
             float forward_x = cosf(world_state[state_yaw_idx]) * cg_to_nose;
             float forward_y = sinf(world_state[state_yaw_idx]) * cg_to_nose;
             float nose_pose[3] = {world_state[state_x_idx] + forward_x, world_state[state_y_idx] + forward_y, world_state[state_yaw_idx]};
-            cuda_globals::sample_curv_state(nose_pose, curv_pose, out_out_bounds);
+            cuda_globals::sample_curv_state(nose_pose, nose_curv_pose, nose_out_of_bounds);
+            cuda_globals::sample_curv_state(world_state, cent_curv_pose, cent_out_of_bounds);
 
             const float centripedal_accel = model::slipless::centripedal_accel(world_state[state_speed_idx], action[action_swangle_idx]);
             const float abs_centripedal_accel = fabsf(centripedal_accel);
 
-            if (out_out_bounds 
+            if (nose_out_of_bounds || cent_out_of_bounds
              || abs_centripedal_accel > lat_tractive_capability) {
-                return CUDART_INF_F;
+                return out_of_bounds_cost;
             }
 
-            const float progress = curv_pose[0];
-            const float offset = curv_pose[1];
+            const float progress = cent_curv_pose[0];
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
             const float speed_deviation = approx_speed_along - target_speed;
             const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
 
-            const float distance_cost = offset_1m_cost * offset * offset;
-            const float swangle_cost = swangle_rad_cost * fabsf(action[action_swangle_idx]);
+            const float distance_cost = offset_1m_cost * fmax(
+                fabsf(nose_curv_pose[state_y_idx]), fabsf(cent_curv_pose[state_y_idx])
+            );
 
-            return speed_cost + distance_cost + swangle_cost;
+            // const float deriv_cost = first ?
+            //     fabsf(action[action_torque_idx] - last_taken_action[action_torque_idx]) / controller_period / 10 * torque_10Nps_cost
+            //   + fabsf(action[action_swangle_idx] - last_taken_action[action_swangle_idx]) / controller_period * swangle_1radps_cost
+            //   : 0;
+
+            return speed_cost + distance_cost;// + fabsf(action[action_torque_idx]) * 0.05f;// + deriv_cost;
         }
 
         // Functors for Brownian Generation
@@ -160,6 +174,7 @@ namespace controls {
 #endif
             float* cost_to_gos;
             float* log_prob_densities;
+            DeviceAction last_taken_action;
 
             const DeviceAction* action_trajectory_base;
 
@@ -170,7 +185,8 @@ namespace controls {
 #endif
                          thrust::device_ptr<float> cost_to_gos,
                          thrust::device_ptr<float> log_prob_densities,
-                         const thrust::device_ptr<DeviceAction>& action_trajectory_base)
+                         const thrust::device_ptr<DeviceAction>& action_trajectory_base,
+                         DeviceAction last_taken_action)
                     : brownians {brownians.get()},
                       sampled_action_trajectories {sampled_action_trajectories.get()},
 #ifdef DISPLAY
@@ -178,7 +194,8 @@ namespace controls {
 #endif
                       cost_to_gos {cost_to_gos.get()},
                       log_prob_densities {log_prob_densities.get()},
-                      action_trajectory_base {action_trajectory_base.get()} {}
+                      action_trajectory_base {action_trajectory_base.get()},
+                      last_taken_action {last_taken_action} {}
 
                       // i iterates over num_samples
             __device__ void operator() (uint32_t i) const {
@@ -195,7 +212,7 @@ namespace controls {
                 float init_curv_pose[3];
                 bool out_of_bounds;
                 cuda_globals::sample_curv_state(x_curr, init_curv_pose, out_of_bounds);
-                paranoid_assert(!out_of_bounds && "Initial state was out of bounds");
+                // paranoid_assert(!out_of_bounds && "Initial state was out of bounds");
 
                 // for each timestep, calculate cost and add to get cost to go
                 // iterate through time because state depends on previous state (can't parallelize)
@@ -243,8 +260,7 @@ namespace controls {
                     // REASON 2: To save a loop over timesteps, we have essentially calculated the negative cost
                     // so far and stored it in cost_to_gos. During weighting, we will add back the total cost of the
                     // entire trajectory (which is |cost_to_gos| at final timestep). Likewise with log_prob_densities
-                    const float *u_ij_last = IDX_3D(sampled_action_trajectories, dim3(num_samples, num_timesteps, action_dims), dim3(i, j == 0 ? 0 : j - 1, 0));
-                    const float c = cost(x_curr, u_ij, u_ij_last, init_curv_pose[0], controller_period * (j + 1));
+                    const float c = cost(x_curr, u_ij, last_taken_action.data, init_curv_pose[0], controller_period * (j + 1), j == 0);
                     const float d = log_prob_densities[i*num_timesteps + j];
                     j_curr -= c;
                     d_curr -= d;

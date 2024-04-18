@@ -185,7 +185,7 @@ namespace controls {
         void Display::fill_trajectories() {
             using namespace glm;
 
-            std::vector<float> states = m_controller->last_state_trajectories();
+            const auto& states = m_last_state_trajectories;
 
             for (uint32_t i = 0; i < num_samples_to_draw; i++) {
                 if (m_trajectories[i].vertex_buf.size() < num_timesteps) {
@@ -209,7 +209,7 @@ namespace controls {
         }
 
         void Display::draw_spline() {
-            auto frames = m_state_estimator->get_spline_frames();
+            const auto& frames = m_spline_frames;
 
             assert(m_spline != nullptr);
             m_spline->vertex_buf = std::vector<float>(frames.size() * 2);
@@ -222,7 +222,7 @@ namespace controls {
         }
 
         void Display::draw_best_guess() {
-            auto frames = m_controller->last_reduced_state_trajectory();
+            const auto& frames = m_last_reduced_state_trajectory;
 
             assert(m_best_guess != nullptr);
             m_best_guess->vertex_buf = std::vector<float>(frames.size() * 2);
@@ -235,8 +235,7 @@ namespace controls {
         }
 
         void Display::draw_offset_image() {
-            state::StateEstimator::OffsetImage offset_image;
-            m_state_estimator->get_offset_pixels(offset_image);
+            const auto& offset_image = m_offset_image;
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, m_offset_img_tex);
@@ -312,6 +311,11 @@ namespace controls {
                 glUniform1f(traj_shader_cam_scale_loc, m_cam_scale);
 
                 glClear(GL_COLOR_BUFFER_BIT);
+
+                m_spline_frames = m_state_estimator->get_spline_frames();
+                m_state_estimator->get_offset_pixels(m_offset_image);
+                m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();
+                m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);
 
                 draw_offset_image();
 

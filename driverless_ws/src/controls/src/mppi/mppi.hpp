@@ -16,7 +16,7 @@ namespace controls {
             virtual void set_logger(LoggerFunc logger) =0;
 
 #ifdef DISPLAY
-            virtual std::vector<float> last_state_trajectories() =0;
+            virtual std::vector<float> last_state_trajectories(uint32_t num) =0;
             virtual std::vector<glm::fvec2> last_reduced_state_trajectory() = 0;
 #endif
 

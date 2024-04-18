@@ -53,25 +53,22 @@ namespace controls {
     constexpr float controller_publish_period = 1. / controller_publish_freq;
 
     /** Controller target period, in sec */
-    constexpr uint32_t num_samples = 1024 * 16;
+    constexpr uint32_t num_samples = 1024 * 64;
     constexpr uint32_t num_timesteps = 24;
     constexpr uint8_t action_dims = 2;
     constexpr uint8_t state_dims = 4;
-    constexpr float temperature = 1.0f;
+    constexpr float temperature = 0.1f;
     constexpr unsigned long long seed = 0;
     constexpr uint32_t num_action_trajectories = action_dims * num_timesteps * num_samples;
-
     constexpr float init_action_trajectory[num_timesteps * action_dims] = {};
-
+    constexpr float action_momentum = 0.5f;
 
     // Cost params
 
-    constexpr float offset_1m_cost = 1.0f;
-    constexpr float target_speed = 5.0f;
-    // constexpr float no_speed_cost = 5.0f;
-    // constexpr float overspeed_1m_cost = 1.0f;
-    constexpr float speed_off_1mps_cost = 3.0f;
-    constexpr float swangle_rad_cost = 0.0f;
+    constexpr float offset_1m_cost = 5.0f;
+    constexpr float target_speed = 10.0f;
+    constexpr float speed_off_1mps_cost = 1.0f;
+    constexpr float out_of_bounds_cost = 100.0f;
 
 
     // State Estimation
@@ -79,7 +76,7 @@ namespace controls {
     constexpr float spline_frame_separation = 0.5f;  // meters
     constexpr uint32_t curv_frame_lookup_tex_width = 512;
     constexpr float curv_frame_lookup_padding = 0; // meters
-    constexpr float track_width = 5.0f;
+    constexpr float track_width = 30.0f;
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * track_width);
     constexpr bool reset_pose_on_spline = true;
 
@@ -92,7 +89,7 @@ namespace controls {
     constexpr float whl_base = 2.0f;
     constexpr float whl_radius = 0.2286;
     constexpr float gear_ratio = 15.0f;
-    constexpr float car_mass = 210.0f;
+    constexpr float car_mass = 310.0f;
     constexpr float rolling_drag = 0.0f; // N
     constexpr float long_tractive_capability = 3.5f; // m/s^2
     constexpr float lat_tractive_capability = 5.0f; // m/s^2
@@ -100,7 +97,7 @@ namespace controls {
     constexpr float brake_enable_speed = 1.0f;
     constexpr float saturating_motor_torque = long_tractive_capability * car_mass * whl_radius / gear_ratio;
     constexpr float approx_propogation_delay = 0.0f;  // sec
-    constexpr float approx_mppi_time = 0.02f; // sec
+    constexpr float approx_mppi_time = 0.1f; // sec
 
     enum class TorqueMode
     {

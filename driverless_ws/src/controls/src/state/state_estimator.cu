@@ -15,6 +15,18 @@
 #include "state_estimator.cuh"
 #include "state_estimator.hpp"
 
+#include <iosfwd>
+#include <iosfwd>
+#include <iosfwd>
+#include <iosfwd>
+#include <vector>
+#include <vector>
+#include <vector>
+#include <vector>
+#include <glm/common.hpp>
+#include <glm/common.hpp>
+#include <glm/common.hpp>
+#include <glm/common.hpp>
 #include <mppi/functors.cuh>
 #include <SDL2/SDL_video.h>
 
@@ -567,6 +579,12 @@ namespace controls {
                 glm::fvec2 p1 = m_spline_frames[i];
                 glm::fvec2 p2 = m_spline_frames[i + 1];
 
+                if (i == 0) {
+                    p1 = p1 - normalize(p2 - p1) * car_padding;
+                } else if (i == n - 2) {
+                    p2 = p2 + normalize(p2 - p1) * car_padding;
+                }
+
                 glm::fvec2 disp = p2 - p1;
                 float new_progress = glm::length(disp);
                 float segment_heading = std::atan2(disp.y, disp.x);
@@ -632,60 +650,60 @@ namespace controls {
                 total_progress += new_progress;
             }
 
-            // allow car to be before first frame
-            {
-                const GLuint ai = 2;
-                const GLuint bi = 0;
-                const GLuint ci = 4;
-
-                const glm::fvec2 a = {vertices[ai].world.x, vertices[ai].world.y};
-                const glm::fvec2 b = {vertices[bi].world.x, vertices[bi].world.y};
-                const glm::fvec2 c = {vertices[ci].world.x, vertices[ci].world.y};
-
-                const glm::fvec2 ac_unit = glm::normalize(c - a);
-                const glm::fvec2 ac_norm = glm::fvec2(ac_unit.y, -ac_unit.x);
-
-                glm::fvec2 bcar = car_pos - b;
-                if (glm::dot(bcar, ac_norm) < car_padding) {
-                    if (glm::dot(bcar, ac_norm) >= 0) {
-                        bcar = -ac_norm * car_padding;
-                    }
-                    const glm::fvec2 car_parallel_plane = glm::normalize(glm::fvec2(bcar.y, -bcar.x));
-                    const glm::fvec2 new_edge_center = b + bcar * (glm::length(bcar) + car_padding) / glm::length(bcar);
-
-                    const glm::fvec2 v1_world = new_edge_center - car_parallel_plane * radius;
-                    const glm::fvec2 v2_world = new_edge_center + car_parallel_plane * radius;
-
-                    const float v1_progress = glm::dot( v1_world - b, ac_norm);
-                    const float v2_progress = glm::dot(v2_world - b, ac_norm);
-
-                    const float v1_offset = glm::dot(v1_world - b, ac_unit);
-                    const float v2_offset = glm::dot(v2_world - b, ac_unit);
-
-                    const float v1_heading = vertices[bi].curv.heading;
-                    const float v2_heading = vertices[bi].curv.heading;
-
-                    Vertex v1 = {{v1_world.x, v1_world.y}, {v1_progress, v1_offset, v1_heading}};
-                    Vertex v2 = {{v2_world.x, v2_world.y}, {v2_progress, v2_offset, v2_heading}};
-                    if (glm::dot(bcar, ac_norm) > 0) {
-                        std::swap(v1, v2);
-                    }
-
-                    vertices.push_back(v1);
-                    vertices.push_back(v2);
-
-                    const GLuint v1i = vertices.size() - 2;
-                    const GLuint v2i = vertices.size() - 1;
-
-                    indices.push_back(v1i);
-                    indices.push_back(ai);
-                    indices.push_back(ci);
-
-                    indices.push_back(v1i);
-                    indices.push_back(ci);
-                    indices.push_back(v2i);
-                }
-            }
+            // // allow car to be before first frame
+            // {
+            //     const GLuint ai = 2;
+            //     const GLuint bi = 0;
+            //     const GLuint ci = 4;
+            //
+            //     const glm::fvec2 a = {vertices[ai].world.x, vertices[ai].world.y};
+            //     const glm::fvec2 b = {vertices[bi].world.x, vertices[bi].world.y};
+            //     const glm::fvec2 c = {vertices[ci].world.x, vertices[ci].world.y};
+            //
+            //     const glm::fvec2 ac_unit = glm::normalize(c - a);
+            //     const glm::fvec2 ac_norm = glm::fvec2(ac_unit.y, -ac_unit.x);
+            //
+            //     glm::fvec2 bcar = car_pos - b;
+            //     if (glm::dot(bcar, ac_norm) < car_padding) {
+            //         if (glm::dot(bcar, ac_norm) >= 0) {
+            //             bcar = -ac_norm * car_padding;
+            //         }
+            //         const glm::fvec2 car_parallel_plane = glm::normalize(glm::fvec2(bcar.y, -bcar.x));
+            //         const glm::fvec2 new_edge_center = b + bcar * (glm::length(bcar) + car_padding) / glm::length(bcar);
+            //
+            //         const glm::fvec2 v1_world = new_edge_center - car_parallel_plane * radius;
+            //         const glm::fvec2 v2_world = new_edge_center + car_parallel_plane * radius;
+            //
+            //         const float v1_progress = glm::dot( v1_world - b, ac_norm);
+            //         const float v2_progress = glm::dot(v2_world - b, ac_norm);
+            //
+            //         const float v1_offset = glm::dot(v1_world - b, ac_unit);
+            //         const float v2_offset = glm::dot(v2_world - b, ac_unit);
+            //
+            //         const float v1_heading = vertices[bi].curv.heading;
+            //         const float v2_heading = vertices[bi].curv.heading;
+            //
+            //         Vertex v1 = {{v1_world.x, v1_world.y}, {v1_progress, v1_offset, v1_heading}};
+            //         Vertex v2 = {{v2_world.x, v2_world.y}, {v2_progress, v2_offset, v2_heading}};
+            //         if (glm::dot(bcar, ac_norm) > 0) {
+            //             std::swap(v1, v2);
+            //         }
+            //
+            //         vertices.push_back(v1);
+            //         vertices.push_back(v2);
+            //
+            //         const GLuint v1i = vertices.size() - 2;
+            //         const GLuint v2i = vertices.size() - 1;
+            //
+            //         indices.push_back(v1i);
+            //         indices.push_back(ai);
+            //         indices.push_back(ci);
+            //
+            //         indices.push_back(v1i);
+            //         indices.push_back(ci);
+            //         indices.push_back(v2i);
+            //     }
+            // }
 
 
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
