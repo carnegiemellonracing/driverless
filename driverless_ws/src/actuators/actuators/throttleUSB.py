@@ -30,7 +30,7 @@ class ActuatorNode(Node):
     def __init__(self):
         super().__init__('minimal_publisher')
         # self.ser = can.interface.Bus(bustype=BUSTYPE, channel=CHANNEL, bitrate=BITRATE,auto_reset=True)
-        self.ser = serial.Serial("/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10LIDBS-if00-port0", baudrate=115200, timeout=0.1)
+        self.ser = serial.Serial("/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10LIDBS-if00-port0", baudrate=9600, timeout=0.1)
         self.subscription = self.create_subscription(
             ControlAction,
             '/control_action',  # Replace with the desired topic name
@@ -80,7 +80,7 @@ class ActuatorNode(Node):
         
         #AIM recieves uint_8[8]
         data = (self.torque_request, self.swangle)
-        print(data)
+        print(f"torque_request: {data}")
         x = bytearray()
         while(not x):
             x = self.ser.read(1)
@@ -133,7 +133,7 @@ class ActuatorNode(Node):
         #TODO: Read through CDC code and figure out what max regen request is to clamp in the negative direction
 
         self.torque_request = int(torque_percent*127 + 128)
-        print(self.torque_request) 
+        print(self.torque_request)
 
         desired_wheel_angle = np.degrees(msg.swangle) # convert from radians to degrees
         # desired_wheel_angle = msg.swangle

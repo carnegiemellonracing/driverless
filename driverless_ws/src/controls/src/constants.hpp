@@ -61,7 +61,7 @@ namespace controls {
     constexpr unsigned long long seed = 0;
     constexpr uint32_t num_action_trajectories = action_dims * num_timesteps * num_samples;
     constexpr float init_action_trajectory[num_timesteps * action_dims] = {};
-    constexpr float action_momentum = 0.5f;
+    constexpr float action_momentum = 0.0f;
 
     // Cost params
 
@@ -90,12 +90,12 @@ namespace controls {
     constexpr float whl_radius = 0.2286;
     constexpr float gear_ratio = 15.0f;
     constexpr float car_mass = 210.0f;
-    constexpr float rolling_drag = 0.0f; // N
+    constexpr float rolling_drag = 100.0f; // N
     constexpr float long_tractive_capability = 3.5f; // m/s^2
     constexpr float lat_tractive_capability = 5.0f; // m/s^2
-    constexpr float understeer_slope = 0.0f;
+    constexpr float understeer_slope = 0.05f;
     constexpr float brake_enable_speed = 1.0f;
-    constexpr float saturating_motor_torque = long_tractive_capability * car_mass * whl_radius / gear_ratio;
+    constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
     constexpr float approx_propogation_delay = 0.0f;  // sec
     constexpr float approx_mppi_time = 0.1f; // sec
 
