@@ -60,7 +60,7 @@ namespace controls {
         public:
             StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger);
 
-            void on_spline(const SplineMsg& spline_msg, const rclcpp::Time &time) override;
+            void on_spline(const SplineMsg& spline_msg) override;
             void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) override;
             void on_pose(const PoseMsg& pose_msg) override;
 

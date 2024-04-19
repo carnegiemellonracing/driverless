@@ -289,7 +289,7 @@ namespace controls {
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
 
-        void StateEstimator_Impl::on_spline(const SplineMsg& spline_msg, const rclcpp::Time &time) {
+        void StateEstimator_Impl::on_spline(const SplineMsg& spline_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_logger("beginning state estimator spline processing");
@@ -305,7 +305,7 @@ namespace controls {
             }
 
             if constexpr (reset_pose_on_spline) {
-                m_state_projector.record_pose(0, 0, 0, time);
+                m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
             }
 
             m_orig_spline_data_stamp = spline_msg.orig_data_stamp;
@@ -342,7 +342,7 @@ namespace controls {
 
             m_state_projector.record_action(action, rclcpp::Time {
                     time.nanoseconds()
-                    + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
+                    + static_cast<int64_t>(approx_propogation_delay * 1e9f),
                     default_clock_type
                 }
             );

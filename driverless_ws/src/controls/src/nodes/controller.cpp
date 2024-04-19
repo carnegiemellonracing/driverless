@@ -71,7 +71,7 @@ namespace controls {
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_spline(spline_msg, spline_msg.orig_data_stamp);
+                    m_state_estimator->on_spline(spline_msg);
                 }
 
                 notify_state_dirty();
