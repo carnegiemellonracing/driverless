@@ -44,7 +44,7 @@ class MidlineNode(Node):
                                                  topic="/spline",
                                                  qos_profile=RELIABLE_QOS_PROFILE)
         self.svm = SVM()
-        self.vis = Vis2D()
+        # self.vis = Vis2D()
         self.failure_count = 0
 
     
@@ -66,10 +66,10 @@ class MidlineNode(Node):
         #     self.failure_count += 1
         #     return
 
-        self.vis.set_cones(cones)
-        if len(downsampled_boundary_points) > 0:
-            self.vis.set_points(downsampled_boundary_points)
-        self.vis.update()
+        # self.vis.set_cones(cones)
+        # if len(downsampled_boundary_points) > 0:
+        #     self.vis.set_points(downsampled_boundary_points)
+        # self.vis.update()
 
         points = []
         msg = SplineFrames()

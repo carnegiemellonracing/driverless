@@ -12,8 +12,8 @@ import signal
 import struct
 
 BITRATE = 500000
-TIMER_HZ = 100
-MAX_TORQUE = 21 #this is completely made up
+TIMER_HZ = 20
+MAX_TORQUE = 10 #this is completely made up
 MAX_REQUEST = 255 #hypothetically real max is 255
 
 ADC_BIAS = 2212
