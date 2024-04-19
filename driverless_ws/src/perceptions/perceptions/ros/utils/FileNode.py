@@ -17,7 +17,7 @@ import numpy as np
 
 # set to determine what folder to create (find in ~/driverless/driverless_ws/<FOLDER_NAME>)
 # DO NOT MAKE "src", "build", "install", or "log"
-FOLDER_NAME = "tt-4-6-lidar"
+FOLDER_NAME = "tt-4-18-eleventh"
 
 # define path to data directory
 WS_DIR = Path(__file__).parents[3]
