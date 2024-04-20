@@ -45,6 +45,7 @@ from geometry_msgs.msg import Point
 import perceptions.ros.utils.conversions as conv
 from perc22a.svm.SVM import SVM
 from perc22a.predictors.utils.vis.Vis2D import Vis2D
+from perc22a.utils.Timer import Timer
 
 from perc22a.predictors.utils.ConeState import ConeState
 
@@ -77,6 +78,7 @@ class EndToEndNode(Node):
         self.svm = SVM()
 
         self.vis = Vis2D()
+        self.timer = Timer()
 
         self.data = {}
         return
