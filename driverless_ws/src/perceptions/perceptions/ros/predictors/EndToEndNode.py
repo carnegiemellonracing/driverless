@@ -46,6 +46,8 @@ import perceptions.ros.utils.conversions as conv
 from perc22a.svm.SVM import SVM
 from perc22a.predictors.utils.vis.Vis2D import Vis2D
 
+from perc22a.predictors.utils.ConeState import ConeState
+
 import time
 
 NODE_NAME = "end_to_end_node"
@@ -71,9 +73,10 @@ class EndToEndNode(Node):
         
         self.predictor = self.init_predictor()
         self.merger = create_lidar_merger()
+        self.cone_state = ConeState()
         self.svm = SVM()
 
-        # self.vis = Vis2D()
+        self.vis = Vis2D()
 
         self.data = {}
         return
@@ -89,10 +92,17 @@ class EndToEndNode(Node):
         # predict lidar
         cones = self.predictor.predict(self.data)
 
+        # update using cone merger
         self.merger.add(cones, PipelineType.LIDAR)
-
         cones = self.merger.merge()
         self.merger.reset()
+
+        # recolor using SVM
+        cones = self.svm.recolor(cones)
+
+        # update overall cone state
+        # TODO: should separately update cones and then return cones relevant for svm
+        cones = self.cone_state.update(cones)
 
         # spline
         downsampled_boundary_points = self.svm.cones_to_midline(cones)
@@ -106,10 +116,10 @@ class EndToEndNode(Node):
             new_point.z = float(0)
             points.append(new_point)
 
-        # self.vis.set_cones(cones)
-        # if len(downsampled_boundary_points) > 0:
-        #     self.vis.set_points(downsampled_boundary_points)
-        # self.vis.update()
+        self.vis.set_cones(cones)
+        if len(downsampled_boundary_points) > 0:
+            self.vis.set_points(downsampled_boundary_points)
+        self.vis.update()
 
         if len(points) < 2:
             print(f"LESS THAN 2 FRAMES {len(cones)}")
