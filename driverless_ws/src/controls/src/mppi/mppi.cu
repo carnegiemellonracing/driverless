@@ -126,7 +126,9 @@ namespace controls {
                     action = m_last_action_trajectory[i - 1];
                 }
 
-                ONLINE_DYNAMICS_FUNC(state.data(), action.data, state.data(), controller_period);
+                float estimated_drag;
+                CUDA_CALL(cudaMemcpyFromSymbol(&estimated_drag, cuda_globals::estimated_drag, sizeof(float)));
+                ONLINE_DYNAMICS_FUNC(state.data(), action.data, state.data(), controller_period, estimated_drag);
 
                 result[i] = {state[state_x_idx], state[state_y_idx]};
 

@@ -31,5 +31,7 @@ namespace controls {
         extern __constant__ const float action_max[action_dims];
         extern __constant__ const float action_deriv_min[action_dims];
         extern __constant__ const float action_deriv_max[action_dims];
+
+        extern __constant__ float estimated_drag;
     }
 }

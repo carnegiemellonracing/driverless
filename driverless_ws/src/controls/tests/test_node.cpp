@@ -149,7 +149,18 @@ namespace controls {
         }
 
         void TestNode::on_sim() {
-            ActionMsg adj_msg = m_last_action_msg;
+            const auto first_action_after = std::upper_bound(
+                m_actions.begin(), m_actions.end(),
+                m_time - std::chrono::duration<float>(propogation_delay),
+                [] (const rclcpp::Time& time, const ActionMsg& action) {
+                    return time < action.header.stamp;
+                }
+            );
+
+            assert(first_action_after != m_actions.begin());
+            ActionMsg adj_msg = *std::prev(first_action_after);
+            m_actions.erase(m_actions.begin(), std::prev(first_action_after));
+
             adj_msg.torque_fl *= gear_ratio / 1000.;
             adj_msg.torque_fr *= gear_ratio / 1000.;
             adj_msg.torque_rl *= gear_ratio / 1000.;
@@ -188,7 +199,7 @@ namespace controls {
             std::cout << "\nSwangle: " << msg.swangle * (180 / M_PI) << " Torque f: " <<
                 msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl;
 
-            m_last_action_msg = msg;
+            m_actions.push_back(msg);
         }
 
         void TestNode::publish_spline() {

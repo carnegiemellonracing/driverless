@@ -44,8 +44,16 @@ namespace controls {
                 return atanf(cg_to_rear / (cg_to_front + cg_to_rear) * tanf(kinematic_swangle));
             }
 
+            __host__ __device__ static float torque_only_accel1(float torque_front, float torque_rear, float swangle, float slip_angle_) {
+                return (torque_front * cosf(swangle - slip_angle_) + torque_rear * cosf(slip_angle_)) / (whl_radius * car_mass);
+            }
+
+            __host__ __device__ static float torque_only_accel2(float torque_front, float torque_rear, float swangle, float speed) {
+                return torque_only_accel1(torque_front, torque_rear, swangle, slip_angle(kinematic_swangle(speed, swangle)));
+            }
+
             // can be used in-place
-            __host__ __device__ static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
+            __host__ __device__ static void dynamics(const float state[], const float action[], float next_state[], float timestep, float estimated_drag) {
                 const float x = state[state_x_idx];
                 const float y = state[state_y_idx];
                 const float yaw = state[state_yaw_idx];
@@ -83,9 +91,10 @@ namespace controls {
 
                 // printf("sat_tire_torque: %f, torque_front: %f, torque_rear: %f\n", saturating_tire_torque, torque_front, torque_rear);
 
-                const float next_speed_raw = speed +
-                    ((torque_front * cosf(swangle - slip_angle_) + torque_rear * cosf(slip_angle_)) / (whl_radius * car_mass)
-                    - rolling_drag / car_mass) * timestep;
+                const float next_speed_raw =
+                    speed
+                    + (torque_only_accel1(torque_front, torque_rear, swangle, slip_angle_) - estimated_drag / car_mass)
+                      * timestep;
                 const float next_speed = max(0.0f, next_speed_raw);
 
                 const float speed2 = speed * speed;

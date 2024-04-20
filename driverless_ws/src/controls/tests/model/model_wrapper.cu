@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     }
 
     State statedot;
-    model::slipless::dynamics(state.data(), action.data(), statedot.data(), controller_period);
+    model::slipless::dynamics(state.data(), action.data(), statedot.data(), 0.01, 0);
 
     for (uint8_t i = 0; i < state_dims; i++) {
         std::cout << statedot[i] << " ";

@@ -83,7 +83,7 @@ namespace controls {
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_twist(twist_msg, twist_msg.header.stamp);
+                    m_state_estimator->on_twist(twist_msg);
                 }
 
                 notify_state_dirty();
@@ -120,15 +120,15 @@ namespace controls {
                         auto start_time = std::chrono::high_resolution_clock::now();
                         RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
 
-                        // save for info publishing later, since might be changed during iteration
-                        State proj_curr_state = m_state_estimator->get_projected_state();
-                        rclcpp::Time orig_spline_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
-
                         // send state to device (i.e. cuda globals)
                         // (also serves to lock state since nothing else updates gpu state)
                         RCLCPP_DEBUG(get_logger(), "syncing state to device");
                         m_state_estimator->sync_to_device(get_clock()->now());
 
+                        // save for info publishing later, since might be changed during iteration
+                        State proj_curr_state = m_state_estimator->get_projected_state();
+                        rclcpp::Time orig_spline_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
+                        float estimated_drag = m_state_estimator->get_estimated_drag();
 
                         // we don't need the host state anymore, so release the lock and let state callbacks proceed
                         state_lock.unlock();
@@ -152,6 +152,7 @@ namespace controls {
                         info.proj_state = state_to_msg(proj_curr_state);
                         info.latency_ms = time_elapsed.count();
                         info.total_latency_ms = total_time_elapsed;
+                        info.estimated_drag = estimated_drag;
 
                         std::stringstream ss;
                         publish_and_print_info(ss, info);
@@ -170,7 +171,8 @@ namespace controls {
 
             ActionMsg ControllerNode::action_to_msg(const Action &action) {
                 interfaces::msg::ControlAction msg;
-                
+
+                msg.header.stamp = get_clock()->now();
                 msg.orig_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
 
                 msg.swangle = action[action_swangle_idx];
@@ -233,6 +235,7 @@ namespace controls {
                 << "  speed (m/s): " << info.proj_state.speed << "\n"
                 << "MPPI Step Latency (ms): " << info.latency_ms << "\n"
                 << "Total Latency (ms): " << info.total_latency_ms << "\n"
+                << "Estimated Drag (N): " << info.estimated_drag << "\n"
                 << std::endl;
             }
     }

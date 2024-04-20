@@ -40,5 +40,7 @@ namespace controls {
         __constant__ const float action_deriv_max[action_dims] = {
             1.0, std::numeric_limits<float>::infinity()
         };
+
+        __constant__ float estimated_drag = best_guess_drag;
     }
 }

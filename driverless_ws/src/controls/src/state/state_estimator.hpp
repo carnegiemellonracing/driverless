@@ -13,12 +13,13 @@ namespace controls {
             static std::shared_ptr<StateEstimator> create(std::mutex& mutex, LoggerFunc logger = no_log);
 
             virtual void on_spline(const SplineMsg& spline_msg) =0;
-            virtual void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) =0;
+            virtual void on_twist(const TwistMsg& twist_msg) =0;
             virtual void on_pose(const PoseMsg& pose_msg) =0;
 
             virtual void sync_to_device(const rclcpp::Time &time) =0;
             virtual bool is_ready() =0;
             virtual State get_projected_state() =0;
+            virtual float get_estimated_drag() =0;
 
             virtual void set_logger(LoggerFunc logger) =0;
             virtual rclcpp::Time get_orig_spline_data_stamp() =0;

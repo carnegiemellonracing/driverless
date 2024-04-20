@@ -79,6 +79,7 @@ namespace controls {
     constexpr float track_width = 30.0f;
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * track_width);
     constexpr bool reset_pose_on_spline = true;
+    constexpr float adaptive_drag_window = 2.0f;
 
 
     // Car params
@@ -89,15 +90,15 @@ namespace controls {
     constexpr float whl_base = 2.0f;
     constexpr float whl_radius = 0.2286;
     constexpr float gear_ratio = 15.0f;
-    constexpr float car_mass = 210.0f;
-    constexpr float rolling_drag = 100.0f; // N
+    constexpr float car_mass = 310.f;
+    constexpr float best_guess_drag = 100.0f; // N
     constexpr float long_tractive_capability = 3.5f; // m/s^2
     constexpr float lat_tractive_capability = 5.0f; // m/s^2
     constexpr float understeer_slope = 0.05f;
     constexpr float brake_enable_speed = 1.0f;
-    constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
+    constexpr float saturating_motor_torque = long_tractive_capability * car_mass * whl_radius / gear_ratio;
     constexpr float approx_propogation_delay = 0.2f;  // sec
-    constexpr float approx_mppi_time = 0.1f; // sec
+    constexpr float approx_mppi_time = 0.05f; // sec
 
     enum class TorqueMode
     {

@@ -8,6 +8,7 @@
 #include <cuda_globals/helpers.cuh>
 #include <math_constants.h>
 #include <model/slipless/model.cuh>
+#include <thrust/device_ptr.h>
 
 #include "types.cuh"
 
@@ -25,7 +26,7 @@ namespace controls {
          */
         __device__ static void model(const float world_state[], const float action[], float world_state_out[], float timestep) {
             // used to be not a trivial function (lol). Probably optimized out anyway.
-            ONLINE_DYNAMICS_FUNC(world_state, action, world_state_out, timestep);
+            ONLINE_DYNAMICS_FUNC(world_state, action, world_state_out, timestep, cuda_globals::estimated_drag);
             paranoid_assert(!any_nan(world_state_out, state_dims) && "World state out was nan directly after dynamics call");
         }
 

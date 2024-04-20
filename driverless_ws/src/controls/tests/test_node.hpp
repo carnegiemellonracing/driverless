@@ -39,6 +39,7 @@ namespace controls {
             static constexpr float spline_period = 0.2f;
             static constexpr float gps_period = 0.05f;
             static constexpr float sim_step = 0.01f;
+            static constexpr float propogation_delay = 0.2f;
 
             void on_sim();
             void on_action(const ActionMsg& msg);
@@ -69,7 +70,7 @@ namespace controls {
             glm::fvec2 m_spline_end_pos = {0, 0};
             float m_spline_end_heading = 0;
             std::list<std::vector<glm::fvec2>> m_segments;
-            ActionMsg m_last_action_msg;
+            std::list<ActionMsg> m_actions = {ActionMsg()};
         };
 
     }

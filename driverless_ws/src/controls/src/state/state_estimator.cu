@@ -10,25 +10,13 @@
 #include <cuda_constants.cuh>
 #include <cmath>
 #include <cuda_gl_interop.h>
-
-
-#include "state_estimator.cuh"
-#include "state_estimator.hpp"
-
-#include <iosfwd>
-#include <iosfwd>
-#include <iosfwd>
-#include <iosfwd>
 #include <vector>
-#include <vector>
-#include <vector>
-#include <vector>
-#include <glm/common.hpp>
-#include <glm/common.hpp>
-#include <glm/common.hpp>
 #include <glm/common.hpp>
 #include <mppi/functors.cuh>
 #include <SDL2/SDL_video.h>
+
+#include "state_estimator.cuh"
+#include "state_estimator.hpp"
 
 
 namespace controls {
@@ -132,7 +120,7 @@ namespace controls {
             // print_history();
         }
 
-        State StateProjector::project(const rclcpp::Time& time) const {
+        State StateProjector::project(const rclcpp::Time& time, float estimated_drag) const {
             assert(m_pose_record.has_value() && "State projector has not recieved first pose");
             // std::cout << "Projecting to " << time.nanoseconds() << std::endl;
 
@@ -146,7 +134,7 @@ namespace controls {
             const float delta_time = (first_time.nanoseconds() - m_pose_record.value().time.nanoseconds()) / 1e9f;
             // std::cout << "delta time: " << delta_time << std::endl;
             assert(delta_time > 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
-            ONLINE_DYNAMICS_FUNC(state.data(), m_init_action.action.data(), state.data(), delta_time);
+            ONLINE_DYNAMICS_FUNC(state.data(), m_init_action.action.data(), state.data(), delta_time, estimated_drag);
 
             rclcpp::Time sim_time = first_time;
             Action last_action = m_init_action.action;
@@ -158,13 +146,13 @@ namespace controls {
 
                 switch (record_iter->type) {
                     case Record::Type::Action:
-                        ONLINE_DYNAMICS_FUNC(state.data(), record_iter->action.data(), state.data(), delta_time);
+                        ONLINE_DYNAMICS_FUNC(state.data(), record_iter->action.data(), state.data(), delta_time, estimated_drag);
                         last_action = record_iter->action;
                         break;
 
                     case Record::Type::Speed:
                         state[state_speed_idx] = record_iter->speed;
-                        ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
+                        ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time, estimated_drag);
                         break;
 
                     default:
@@ -187,6 +175,149 @@ namespace controls {
         std::shared_ptr<StateEstimator> StateEstimator::create(std::mutex& mutex, LoggerFunc logger) {
             return std::make_shared<StateEstimator_Impl>(mutex, logger);
         }
+
+        void AdaptiveDrag::record_speed(float speed, rclcpp::Time time) {
+            assert_valid();
+
+            if (time < m_init_action_record.time) {
+                return;
+            }
+
+            const auto iter = m_history.insert({.speed = speed, .time = time, .type = Record::Type::Speed});
+            if (time >= m_latest_speed_iter->time) {
+                m_latest_speed_iter = iter;
+            }
+
+            assert_valid();
+        }
+
+
+        void AdaptiveDrag::record_action(Action action, rclcpp::Time time) {
+            assert_valid();
+
+            if (time < m_init_action_record.time) {
+                return;
+            }
+
+            const Record record = {.action = action, .time = time, .type = Record::Type::Action};
+            m_history.insert(record);
+
+            if (time <= m_history.cbegin()->time) {
+                m_init_action_record = record;
+            }
+
+            assert_valid();
+        }
+
+        void AdaptiveDrag::clean_history() {
+            assert_valid();
+
+            decltype(m_latest_speed_iter) penult_speed_iter;
+            for (auto rev_iter = m_history.crbegin(); rev_iter != m_history.crend(); ++rev_iter) {
+                const auto iter = std::prev(rev_iter.base());
+                if (iter->type == Record::Type::Speed && iter != m_latest_speed_iter) {
+                    penult_speed_iter = iter;
+                    break;
+                }
+            }
+
+            auto iter = m_history.cbegin();
+            while (iter != m_history.cend()) {
+                if ((iter->type == Record::Type::Speed
+                     && (m_latest_speed_iter->time - iter->time).seconds() <= adaptive_drag_window)
+                    || iter == penult_speed_iter) {
+                    break;
+                }
+
+                if (iter->type == Record::Type::Action
+                    && iter->time >= m_init_action_record.time) {
+                    m_init_action_record = *iter;
+                }
+
+                m_history.erase(iter);
+                iter = m_history.begin();
+            }
+
+            assert_valid();
+        }
+
+        void AdaptiveDrag::assert_valid() const {
+            assert(!m_history.empty());
+            assert(m_history.cbegin()->type == Record::Type::Speed);
+            assert(m_history.cbegin()->time >= m_init_action_record.time);
+            assert(m_latest_speed_iter != m_history.begin()); // at least two speeds
+        }
+
+        float AdaptiveDrag::estimate_drag() {
+            // std::cout << "--------------Begin estimate drag----------\n";
+            assert_valid();
+
+            clean_history();
+
+            double accumulated_drag = 0;
+            double accumulated_accel = 0;
+            double last_recorded_speed = m_history.cbegin()->speed;
+            rclcpp::Time init_speed_time = m_history.cbegin()->time;
+            Action last_action = m_init_action_record.action;
+            // std::cout << "init speed time: " << init_speed_time.nanoseconds() << std::endl;
+            // std::cout << "init speed: " << last_recorded_speed << std::endl;
+            // std::cout << "init action: " << last_action[0] << ", " << last_action[1] << std::endl;
+
+            auto record_iter = m_history.cbegin();
+            while (record_iter != m_history.cend()) {
+                switch (record_iter->type) {
+                    case Record::Type::Speed:
+                        // std::cout << "Record - speed: " << record_iter->speed << std::endl;
+                        accumulated_drag += (accumulated_accel - (record_iter->speed - last_recorded_speed)) * car_mass;
+                        accumulated_accel = 0;
+                        last_recorded_speed = record_iter->speed;
+                        if (record_iter == m_latest_speed_iter) {
+                            goto finish;
+                        }
+                        break;
+
+                    case Record::Type::Action:
+                        // std::cout << "Record - action: " << record_iter->action[0] << ", " << record_iter->action[1] << std::endl;
+                        last_action = record_iter->action;
+                        break;
+
+                    default:
+                        throw new std::runtime_error("bruh. invalid record type bruh. (in estimate drag)");
+                }
+
+                float torque_f, torque_r;
+                switch (torque_mode) {
+                    case TorqueMode::FWD:
+                        torque_f = last_action[action_torque_idx];
+                        torque_r = 0;
+                        break;
+
+                    case TorqueMode::RWD:
+                        torque_f = 0;
+                        torque_r = last_action[action_torque_idx];
+                        break;
+
+                    case TorqueMode::AWD:
+                        torque_f = last_action[action_torque_idx] * 0.5f;
+                        torque_r = last_action[action_torque_idx] * 0.5f;
+                        break;
+                }
+                const float swangle = last_action[action_swangle_idx];
+
+                const double dt = (std::next(record_iter)->time - record_iter->time).seconds();
+                assert(dt >= 0);
+                accumulated_accel += model::slipless::torque_only_accel2(
+                    torque_f, torque_r, swangle, last_recorded_speed + accumulated_accel
+                ) * dt;
+
+                ++record_iter;
+            }
+
+            finish:
+            // std::cout << "--------------End estimate drag----------" << std::endl;
+            return accumulated_drag / (m_latest_speed_iter->time - init_speed_time).seconds();
+        }
+
 
         // StateEstimator_Impl helpers
 
@@ -226,7 +357,7 @@ namespace controls {
 
         StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger)
             : m_mutex {mutex}, m_logger {logger} {
-            std::lock_guard<std::mutex> guard {mutex};
+            std::lock_guard guard {mutex};
 
             m_logger("initializing state estimator");
 #ifdef DISPLAY
@@ -290,7 +421,7 @@ namespace controls {
         }
 
         void StateEstimator_Impl::on_spline(const SplineMsg& spline_msg) {
-            std::lock_guard<std::mutex> guard {m_mutex};
+            std::lock_guard guard {m_mutex};
 
             m_logger("beginning state estimator spline processing");
 
@@ -313,18 +444,19 @@ namespace controls {
             m_logger("finished state estimator spline processing");
         }
 
-        void StateEstimator_Impl::on_twist(const TwistMsg &twist_msg, const rclcpp::Time &time) {
-            std::lock_guard<std::mutex> guard {m_mutex};
+        void StateEstimator_Impl::on_twist(const TwistMsg &twist_msg) {
+            std::lock_guard guard {m_mutex};
 
             const float speed = std::sqrt(
                 twist_msg.twist.linear.x * twist_msg.twist.linear.x
                 + twist_msg.twist.linear.y * twist_msg.twist.linear.y);
 
-            m_state_projector.record_speed(speed, time);
+            m_state_projector.record_speed(speed, twist_msg.header.stamp);
+            m_adaptive_drag.record_speed(speed, twist_msg.header.stamp);
         }
 
         void StateEstimator_Impl::on_pose(const PoseMsg &pose_msg) {
-            std::lock_guard<std::mutex> guard {m_mutex};
+            std::lock_guard guard {m_mutex};
 
             m_state_projector.record_pose(
                 pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.orientation.z,
@@ -332,26 +464,31 @@ namespace controls {
         }
 
         rclcpp::Time StateEstimator_Impl::get_orig_spline_data_stamp() {
-            std::lock_guard<std::mutex> guard {m_mutex};
+            std::lock_guard guard {m_mutex};
 
             return m_orig_spline_data_stamp;
         }
 
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
-            std::lock_guard<std::mutex> guard {m_mutex};
+            std::lock_guard guard {m_mutex};
 
-            m_state_projector.record_action(action, rclcpp::Time {
-                    time.nanoseconds()
-                    + static_cast<int64_t>(approx_propogation_delay * 1e9f),
-                    default_clock_type
-                }
-            );
+            rclcpp::Time propogated_time {
+                time.nanoseconds()
+                + static_cast<int64_t>(approx_propogation_delay * 1e9f),
+                default_clock_type
+            };
+
+            m_state_projector.record_action(action, propogated_time);
+            m_adaptive_drag.record_action(action, propogated_time);
         }
 
         void StateEstimator_Impl::sync_to_device(const rclcpp::Time& time) {
-            std::lock_guard<std::mutex> guard {m_mutex};
+            std::lock_guard guard {m_mutex};
 
             m_logger("beginning state estimator device sync");
+
+            m_logger("estimating drag");
+            const float estimated_drag = m_adaptive_drag.estimate_drag();
 
             m_logger("projecting current state");
             const State state = m_state_projector.project(
@@ -359,8 +496,9 @@ namespace controls {
                     time.nanoseconds()
                     + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
                     default_clock_type
-                }
+                }, estimated_drag
             );
+
 
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
@@ -383,6 +521,10 @@ namespace controls {
             m_synced_projected_state = state;
             sync_world_state();
 
+            m_logger("syncing estimated drag");
+            m_synced_estimated_drag = estimated_drag;
+            sync_estimated_drag();
+
             m_logger("syncing spline frame lookup texture info to device");
             sync_tex_info();
 
@@ -391,26 +533,32 @@ namespace controls {
         }
 
         bool StateEstimator_Impl::is_ready() {
-            std::lock_guard<std::mutex> guard {m_mutex};
+            std::lock_guard guard {m_mutex};
 
             return m_state_projector.is_ready();
         }
 
         State StateEstimator_Impl::get_projected_state() {
-            std::lock_guard<std::mutex> guard {m_mutex};
+            std::lock_guard guard {m_mutex};
 
             return m_synced_projected_state;
         }
 
+        float StateEstimator_Impl::get_estimated_drag() {
+            std::lock_guard guard {m_mutex};
+
+            return m_synced_estimated_drag;
+        }
+
         void StateEstimator_Impl::set_logger(LoggerFunc logger) {
-            std::lock_guard<std::mutex> guard {m_mutex};
+            std::lock_guard guard {m_mutex};
 
             m_logger = logger;
         }
 
 #ifdef DISPLAY
         std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() {
-            std::lock_guard<std::mutex> guard {m_mutex};
+            std::lock_guard guard {m_mutex};
 
             std::vector<glm::fvec2> res (m_spline_frames.size());
             for (size_t i = 0; i < m_spline_frames.size(); i++) {
@@ -420,7 +568,7 @@ namespace controls {
         }
 
         void StateEstimator_Impl::get_offset_pixels(OffsetImage &offset_image) {
-            std::lock_guard<std::mutex> guard {m_mutex};
+            std::lock_guard guard {m_mutex};
 
             SDL_GLContext prev_context = SDL_GL_GetCurrentContext();
             SDL_Window* prev_window = SDL_GL_GetCurrentWindow();
@@ -454,6 +602,12 @@ namespace controls {
         void StateEstimator_Impl::sync_tex_info() {
             CUDA_CALL(cudaMemcpyToSymbolAsync(
                 cuda_globals::curv_frame_lookup_tex_info, &m_curv_frame_lookup_tex_info, sizeof(cuda_globals::CurvFrameLookupTexInfo)
+            ));
+        }
+
+        void StateEstimator_Impl::sync_estimated_drag() {
+            CUDA_CALL(cudaMemcpyToSymbolAsync(
+                cuda_globals::estimated_drag, &m_synced_estimated_drag, sizeof(float)
             ));
         }
 
@@ -649,62 +803,6 @@ namespace controls {
 
                 total_progress += new_progress;
             }
-
-            // // allow car to be before first frame
-            // {
-            //     const GLuint ai = 2;
-            //     const GLuint bi = 0;
-            //     const GLuint ci = 4;
-            //
-            //     const glm::fvec2 a = {vertices[ai].world.x, vertices[ai].world.y};
-            //     const glm::fvec2 b = {vertices[bi].world.x, vertices[bi].world.y};
-            //     const glm::fvec2 c = {vertices[ci].world.x, vertices[ci].world.y};
-            //
-            //     const glm::fvec2 ac_unit = glm::normalize(c - a);
-            //     const glm::fvec2 ac_norm = glm::fvec2(ac_unit.y, -ac_unit.x);
-            //
-            //     glm::fvec2 bcar = car_pos - b;
-            //     if (glm::dot(bcar, ac_norm) < car_padding) {
-            //         if (glm::dot(bcar, ac_norm) >= 0) {
-            //             bcar = -ac_norm * car_padding;
-            //         }
-            //         const glm::fvec2 car_parallel_plane = glm::normalize(glm::fvec2(bcar.y, -bcar.x));
-            //         const glm::fvec2 new_edge_center = b + bcar * (glm::length(bcar) + car_padding) / glm::length(bcar);
-            //
-            //         const glm::fvec2 v1_world = new_edge_center - car_parallel_plane * radius;
-            //         const glm::fvec2 v2_world = new_edge_center + car_parallel_plane * radius;
-            //
-            //         const float v1_progress = glm::dot( v1_world - b, ac_norm);
-            //         const float v2_progress = glm::dot(v2_world - b, ac_norm);
-            //
-            //         const float v1_offset = glm::dot(v1_world - b, ac_unit);
-            //         const float v2_offset = glm::dot(v2_world - b, ac_unit);
-            //
-            //         const float v1_heading = vertices[bi].curv.heading;
-            //         const float v2_heading = vertices[bi].curv.heading;
-            //
-            //         Vertex v1 = {{v1_world.x, v1_world.y}, {v1_progress, v1_offset, v1_heading}};
-            //         Vertex v2 = {{v2_world.x, v2_world.y}, {v2_progress, v2_offset, v2_heading}};
-            //         if (glm::dot(bcar, ac_norm) > 0) {
-            //             std::swap(v1, v2);
-            //         }
-            //
-            //         vertices.push_back(v1);
-            //         vertices.push_back(v2);
-            //
-            //         const GLuint v1i = vertices.size() - 2;
-            //         const GLuint v2i = vertices.size() - 1;
-            //
-            //         indices.push_back(v1i);
-            //         indices.push_back(ai);
-            //         indices.push_back(ci);
-            //
-            //         indices.push_back(v1i);
-            //         indices.push_back(ci);
-            //         indices.push_back(v2i);
-            //     }
-            // }
-
 
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
