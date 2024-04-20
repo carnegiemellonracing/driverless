@@ -14,13 +14,14 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 
 # ROS2 message types
 from sensor_msgs.msg import Image, PointCloud2
+from geometry_msgs.msg import TwistStamped, QuaternionStamped
 from cv_bridge import CvBridge
 from std_msgs.msg import Header
 # from interfaces.msg import DataFrame
 
 # ROS2 msg to python datatype conversions
 import perceptions.ros.utils.conversions as conv
-from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC #, DATAFRAME_TOPIC
+from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC, TWIST_TOPIC, QUAT_TOPIC  #, DATAFRAME_TOPIC
 from perceptions.topics import LEFT2_IMAGE_TOPIC, RIGHT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC, DEPTH2_IMAGE_TOPIC
 from perceptions.topics import CAMERA_INFO, CAMERA_PARAM
 from perceptions.zed import ZEDSDK
@@ -64,7 +65,12 @@ class EndToEndNode(Node):
 
     def __init__(self):
         super().__init__(NODE_NAME)
+        # Data Subscribers
         self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.twist_subscriber = self.create_subscription(TwistStamped, TWIST_TOPIC, self.twist_callback, qos_profile=RELIABLE_QOS_PROFILE)
+        self.quat_subscriber = self.create_subscription(QuaternionStamped, QUAT_TOPIC, self.quat_callback, qos_profile=RELIABLE_QOS_PROFILE)
+
+        # Publishers
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
                                                  topic="/spline",
                                                  qos_profile=BEST_EFFORT_QOS_PROFILE)
@@ -76,18 +82,30 @@ class EndToEndNode(Node):
         # self.vis = Vis2D()
 
         self.data = {}
+        self.curr_twist = None
+        self.curr_quat = None
+
+        self.dx = 0
+        self.dy = 0
+
         return
     
     def init_predictor(self):
         return LidarPredictor()
     
+    def twist_callback(self, curr_twist):
+        self.curr_twist = curr_twist
+
+    def quat_callback(self, curr_quat):
+        self.curr_quat = curr_quat
+
     def points_callback(self, msg):
         s = time.time()
         data_time = self.get_clock().now()
         self.data[DataType.HESAI_POINTCLOUD] = conv.pointcloud2_to_npy(msg)
 
         # predict lidar
-        cones = self.predictor.predict(self.data)
+        cones = self.predictor.predict(self.data, self.curr_quat, self.curr_twist)
 
         self.merger.add(cones, PipelineType.LIDAR)
 

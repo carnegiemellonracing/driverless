@@ -12,6 +12,8 @@ DEPTH2_IMAGE_TOPIC = "/zedsdk2_depth_image"
 
 # topic names for lidar data reading from Hesai lidar
 POINT_TOPIC = "/lidar_points"
+TWIST_TOPIC = "/filter/twist"
+QUAT_TOPIC = "/filter/quaternion"
 
 # topic names for publishing cones
 LIDAR_CONE_TOPIC = "/lidar_node_cones"
