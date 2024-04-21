@@ -83,7 +83,7 @@ def gps_to_motion_info(twist: TwistStamped, quat: QuaternionStamped):
 
     linear_twist = np.array([ltwist.x, ltwist.y, ltwist.z]).reshape((-1, 1))
     quat = np.array([quat.w, quat.x, quat.y, quat.z])
-    time_ns = twist.header.stamp.nanosec
+    time_ns = twist.header.stamp.sec + twist.header.stamp.nanosec / 1e9
 
     # construct motion information object
     mi = MotionInfo(linear_twist, quat, time_ns)
