@@ -86,7 +86,7 @@ def gps_to_motion_info(twist: TwistStamped, quat: QuaternionStamped):
     time_ns = twist.header.stamp.nanosec
 
     # construct motion information object
-    mi = MotionInfo()
+    mi = MotionInfo(linear_twist, quat, time_ns)
     return mi
 
 def cones_to_msg(cones: Cones) -> ConeArray:
