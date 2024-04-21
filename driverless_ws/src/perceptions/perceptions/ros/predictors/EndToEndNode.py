@@ -67,20 +67,24 @@ class EndToEndNode(Node):
 
     def __init__(self):
         super().__init__(NODE_NAME)
+
+        # data subscribers
         self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+
+        # publishers
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
                                                  topic="/spline",
                                                  qos_profile=BEST_EFFORT_QOS_PROFILE)
-        
+
+        # parts of the pipeline 
         self.predictor = self.init_predictor()
         self.merger = create_lidar_merger()
         self.cone_state = ConeState()
         self.svm = SVM()
 
+        # debugging utilities
         self.vis = Vis2D()
         self.timer = Timer()
-
-        self.data = {}
         return
     
     def init_predictor(self):
@@ -89,11 +93,13 @@ class EndToEndNode(Node):
     def points_callback(self, msg):
         s = time.time()
         data_time = self.get_clock().now()
-        self.data[DataType.HESAI_POINTCLOUD] = conv.pointcloud2_to_npy(msg)
+
+        data = {}
+        data[DataType.HESAI_POINTCLOUD] = conv.pointcloud2_to_npy(msg)
 
         # predict lidar
         self.timer.start("lidar")
-        cones = self.predictor.predict(self.data)
+        cones = self.predictor.predict(data)
         time_lidar = self.timer.end("lidar", ret=True)
 
         # update using cone merger
