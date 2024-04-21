@@ -79,7 +79,7 @@ class EndToEndNode(Node):
         self.merger = create_lidar_merger()
         self.svm = SVM()
 
-        # self.vis = Vis2D()
+        self.vis = Vis2D()
 
         self.data = {}
         self.curr_twist = None
@@ -100,6 +100,10 @@ class EndToEndNode(Node):
         self.curr_quat = curr_quat
 
     def points_callback(self, msg):
+
+        if self.curr_quat is None or self.curr_twist is None:
+            self.get_logger().warn("no quat or twist. returning")
+
         s = time.time()
         data_time = self.get_clock().now()
         self.data[DataType.HESAI_POINTCLOUD] = conv.pointcloud2_to_npy(msg)
@@ -111,6 +115,8 @@ class EndToEndNode(Node):
 
         cones = self.merger.merge()
         self.merger.reset()
+
+        cones = self.svm.recolor(cones)
 
         # spline
         downsampled_boundary_points = self.svm.cones_to_midline(cones)
@@ -124,10 +130,10 @@ class EndToEndNode(Node):
             new_point.z = float(0)
             points.append(new_point)
 
-        # self.vis.set_cones(cones)
+        self.vis.set_cones(cones)
         # if len(downsampled_boundary_points) > 0:
         #     self.vis.set_points(downsampled_boundary_points)
-        # self.vis.update()
+        self.vis.update()
 
         if len(points) < 2:
             print(f"LESS THAN 2 FRAMES {len(cones)}")
