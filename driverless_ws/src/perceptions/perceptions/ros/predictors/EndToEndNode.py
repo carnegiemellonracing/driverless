@@ -92,9 +92,12 @@ class EndToEndNode(Node):
         self.data[DataType.HESAI_POINTCLOUD] = conv.pointcloud2_to_npy(msg)
 
         # predict lidar
+        self.timer.start("lidar")
         cones = self.predictor.predict(self.data)
+        time_lidar = self.timer.end("lidar", ret=True)
 
         # update using cone merger
+        self.timer.start("merge+color+state")
         self.merger.add(cones, PipelineType.LIDAR)
         cones = self.merger.merge()
         self.merger.reset()
@@ -105,9 +108,13 @@ class EndToEndNode(Node):
         # update overall cone state
         # TODO: should separately update cones and then return cones relevant for svm
         cones = self.cone_state.update(cones)
+        time_state = self.timer.end("merge+color+state", ret=True)
 
         # spline
+        self.timer.start("spline")
         downsampled_boundary_points = self.svm.cones_to_midline(cones)
+        time_spline = self.timer.end("spline", ret=True)
+
         points = []
         msg = SplineFrames()
 
@@ -133,7 +140,10 @@ class EndToEndNode(Node):
 
         # publish
         curr_time = self.get_clock().now()
-        print(f"{len(cones):<3} cones {len(points):<3} frames {(curr_time.nanoseconds - data_time.nanoseconds) / 1000000:.3f}ms")
+        # print the timings of everything
+        print(f"{len(cones):<3} cones {len(downsampled_boundary_points):<3} frames {(curr_time.nanoseconds - data_time.nanoseconds) / 1000000:.3f}ms lidar: {time_lidar:.1f}ms merge+color+state: {time_state:.1f}ms spline: {time_spline:.1f}ms")
+
+        return
 
 
 def main(args=None):
