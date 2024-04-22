@@ -131,7 +131,7 @@ Eigen::MatrixXd  Spline::get_points(){
     return points;}
 
 Eigen::MatrixXd  Spline::get_rotated_points(){
-    return rotated_points;
+    return this->rotated_points;
 }
 
 Eigen::Matrix2d Spline::get_Q(){
@@ -159,13 +159,12 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
 
     double len = this->calculateLength();
 
-
     double first_x = this->get_rotated_points()(0,0);
-    double last_x = this->get_rotated_points()(0,this->get_rotated_points().cols());
+    double last_x = this->get_rotated_points()(0,this->get_rotated_points().cols()-1);
 
     double delta = last_x - first_x;
 
-    std::pair<double,double> boundaries = std::make_pair(first_x,last_x);
+
     int ratio = progress / len + 1;
 
 
@@ -195,7 +194,6 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
                 lower_bound = x; // lower bound is direct first undershoot (separated by delta from the upper bound)
             }    
             std::pair<double,double> boundaries = std::make_pair(lower_bound, upper_bound);
-            
         }
         //  Perform a more precise search between the two computed bounds
 
@@ -212,7 +210,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         for (double guess : guesses){
             double guess_length = arclength(this->spl_poly, first_x, guess);
             if (abs(progress - guess_length) > abs(progress - past)) //# if we did worst than before
-                break;
+                continue;
             best_guess = guess;
             best_length = guess_length;
             past = guess_length;
@@ -224,10 +222,9 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         
         Eigen::MatrixXd rotated_points(2,1);
         rotated_points(0,0)=rotated_point(0);
-        rotated_points(0,1)=rotated_point(1);
+        rotated_points(1,0)=rotated_point(1);
     
         Eigen::MatrixXd point_mat =reverse_transform(rotated_points,this->Q,this->translation_vector);
-        
         Eigen::VectorXd point (2);
         point(0)=point_mat(0);
         point(1)=point_mat(1);
@@ -332,6 +329,23 @@ Eigen::MatrixXd transform_points(rclcpp::Logger logger,Eigen::MatrixXd& points, 
     return ret;
 }
 
+// polynomial reverse_transform(polynomial poly, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector){
+//     Eigen::MatrixXd temp(points.rows(),points.cols());
+//     for(int i=0;i<temp.cols();++i){
+//         temp(0,i)=points(0,i);
+//         temp(1,i)=points(1,i);
+//     }
+
+//     Eigen::MatrixXd ret = temp*Q;
+
+//     for(int i=0;i<temp.cols();++i){
+//         temp(0,i)= points(0,i)+ get_translation_vector(0);
+//         temp(1,i)= points(1,i)+ get_translation_vector(1);
+//     }
+
+//     return ret;
+// }
+
 Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector){
     Eigen::MatrixXd temp(points.rows(),points.cols());
     for(int i=0;i<temp.cols();++i){
@@ -339,7 +353,7 @@ Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, E
         temp(1,i)=points(1,i);
     }
 
-    Eigen::MatrixXd ret = temp*Q;
+    Eigen::MatrixXd ret = temp.transpose()*Q;
 
     for(int i=0;i<temp.cols();++i){
         temp(0,i)= points(0,i)+ get_translation_vector(0);
@@ -407,7 +421,7 @@ double arclength(polynomial poly_der1, double x0,double x1){
 
     gsl_integration_qng (&F, x0, x1, 1, 1e-1, &result, &error, &neval);
     // gsl_integration_workspace_free(w); 
-
+    
     return result;
 
 }

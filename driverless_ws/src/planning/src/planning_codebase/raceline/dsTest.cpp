@@ -107,9 +107,9 @@ void testMakeSplinesVector() {
     // one point overlap, have 7 points in total 
     std::vector<std::pair<double,double>> blue_cones = {
         std::make_pair(0, 0),
-        std::make_pair(30, 5),
-        std::make_pair(30, 20),
-        std::make_pair(15, 30)
+        std::make_pair(2, 2),
+        std::make_pair(4, 2),
+        std::make_pair(6, 0)
     };
 
     // missed one point, still pretty sharp turn
@@ -161,7 +161,20 @@ void testMakeSplinesVector() {
         std::cout << "degree: " << deg << std::endl;
         std::cout << "coefficients: " << coeffs << std::endl;
         std::cout << "length: " << cumulativeLengths[i] << std::endl;
+        std::cout << "rotated points: " << splines[i].rotated_points << std::endl;
     }
+
+    std::cout << "start along \n" << std::endl;
+    std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> alongResult = splines[0].along(2);
+    std::cout << "end along \n" << std::endl;
+
+    Eigen::VectorXd alongPoint = std::get<0>(alongResult);
+    std::cout << "along points: " << alongPoint << std::endl;
+
+    // std::vector<bucket> = 
+
+    // updateSegments(bucketVector, blue_cones, yellow_cones);
+
 }
 
 

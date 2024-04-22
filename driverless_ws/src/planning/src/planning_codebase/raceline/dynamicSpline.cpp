@@ -60,6 +60,8 @@ void progressSplits(bucket* b,
     (blue or yellow cones) of perception data
     @param cones perceptions_data.bluecones or perceptions_data.yellowcones
     @return vector of splines, vector of cumulative lengths
+
+    @teststatus passed unit tests!
 */
 std::pair<std::vector<Spline>,std::vector<double>> makeSplinesVector(std::vector<std::pair<double,double>> cones) {
     Eigen::MatrixXd coneMatrix(2, cones.size());
