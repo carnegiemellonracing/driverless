@@ -52,11 +52,11 @@ NODE_NAME = "end_to_end_node"
 BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
                          history = QoSHistoryPolicy.KEEP_LAST,
                          durability = QoSDurabilityPolicy.VOLATILE,
-                         depth = 5)
+                         depth = 1)
 RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
                          history = QoSHistoryPolicy.KEEP_LAST,
                          durability = QoSDurabilityPolicy.VOLATILE,
-                         depth = 5)
+                         depth = 1)
 
 class EndToEndNode(Node):
 
