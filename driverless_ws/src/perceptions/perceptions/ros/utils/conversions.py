@@ -3,10 +3,11 @@
 from rclpy.time import Time
 from sensor_msgs.msg import Image, PointCloud2
 from interfaces.msg import ConeArray
-from geometry_msgs.msg import Point
+from geometry_msgs.msg import Point, TwistStamped, QuaternionStamped
 
 # perc22a Cone class
 from perc22a.predictors.utils.cones import Cones
+from perc22a.utils.globe.MotionInfo import MotionInfo
 
 # message to numpy conversion packages stolen from internet
 from cv_bridge import CvBridge
@@ -73,6 +74,20 @@ def npy_to_pointcloud2(pc):
 
     pc_msg = rnp.msgify(PointCloud2, pc_array)
     return pc_msg
+
+def gps_to_motion_info(twist: TwistStamped, quat: QuaternionStamped):
+
+    # unpack necessary data and store into appropriately typed and shaped vals    
+    ltwist = twist.twist.linear
+    quat = quat.quaternion
+
+    linear_twist = np.array([ltwist.x, ltwist.y, ltwist.z]).reshape((-1, 1))
+    quat = np.array([quat.w, quat.x, quat.y, quat.z])
+    time_ns = twist.header.stamp.sec + twist.header.stamp.nanosec / 1e9
+
+    # construct motion information object
+    mi = MotionInfo(linear_twist, quat, time_ns)
+    return mi
 
 def cones_to_msg(cones: Cones) -> ConeArray:
     '''convert perc22a Cones datatype to ConeArray ROS2 msg type'''
