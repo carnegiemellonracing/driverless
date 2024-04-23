@@ -96,7 +96,7 @@ namespace controls {
     constexpr float understeer_slope = 0.05f;
     constexpr float brake_enable_speed = 1.0f;
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
-    constexpr float approx_propogation_delay = 0.0f;  // sec
+    constexpr float approx_propogation_delay = 0.2f;  // sec
     constexpr float approx_mppi_time = 0.05f; // sec
 
     enum class TorqueMode
