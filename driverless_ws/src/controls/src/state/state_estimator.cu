@@ -132,7 +132,7 @@ namespace controls {
             // print_history();
         }
 
-        State StateProjector::project(const rclcpp::Time& time) const {
+        State StateProjector::project(const rclcpp::Time& time, LoggerFunc logger) const {
             assert(m_pose_record.has_value() && "State projector has not recieved first pose");
             // std::cout << "Projecting to " << time.nanoseconds() << std::endl;
 
@@ -163,6 +163,9 @@ namespace controls {
                         break;
 
                     case Record::Type::Speed:
+                        char logger_buf[70];
+                        snprintf(logger_buf, 70, "Predicted speed: %f\nActual speed: %f", state[state_speed_idx], record_iter->speed);
+                        logger(logger_buf);
                         state[state_speed_idx] = record_iter->speed;
                         ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
                         break;
@@ -359,7 +362,7 @@ namespace controls {
                     time.nanoseconds()
                     + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
                     default_clock_type
-                }
+                }, m_logger
             );
 
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
