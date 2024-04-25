@@ -16,6 +16,12 @@ namespace controls {
             void record_speed(float speed, rclcpp::Time time);
             void record_pose(float x, float y, float yaw, rclcpp::Time time);
 
+            /**@brief
+             *
+             * @pre m_pose_record.has_value()
+             * @param time
+             * @return
+             */
             State project(const rclcpp::Time& time) const;
             bool is_ready() const;
 
@@ -44,8 +50,12 @@ namespace controls {
 
             void print_history() const;
 
+            /** m_init_action and m_init_speed should occur <= m_pose_record, if m_pose_record exists */
             Record m_init_action { .action {}, .time = rclcpp::Time(0UL, default_clock_type), .type = Record::Type::Action};
+            /** direction of velocity is inferred from swangle */
             Record m_init_speed { .speed = 0, .time = rclcpp::Time(0UL, default_clock_type), .type = Record::Type::Speed};
+            /** most recent and only pose (new pose implies a new coord. frame, throw away data in old coord. frame) */
+            /** only nullopt before first pose received */
             std::optional<Record> m_pose_record = std::nullopt;
 
             struct CompareRecordTimes {
@@ -53,6 +63,11 @@ namespace controls {
                     return a.time < b.time;
                 }
             };
+            /**
+             * Invariants of m_history_since_pose:
+             * should only contain Action and Speed records
+             * time stamps of each record should be strictly after m_pose_record
+             */
             std::multiset<Record, CompareRecordTimes> m_history_since_pose {};
         };
 
@@ -62,6 +77,7 @@ namespace controls {
 
             void on_spline(const SplineMsg& spline_msg) override;
             void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) override;
+            // on_pose is not used, for future proofing
             void on_pose(const PoseMsg& pose_msg) override;
 
             void sync_to_device(const rclcpp::Time &time) override;
@@ -98,6 +114,7 @@ namespace controls {
             StateProjector m_state_projector;
             State m_synced_projected_state;
 
+            // TODO: what is this for?
             rclcpp::Time m_orig_spline_data_stamp;
 
             cudaGraphicsResource_t m_curv_frame_lookup_rsc;

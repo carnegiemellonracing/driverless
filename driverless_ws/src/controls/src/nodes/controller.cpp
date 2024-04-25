@@ -19,10 +19,12 @@ namespace controls {
                 std::shared_ptr<mppi::MppiController> mppi_controller)
                 : Node {controller_node_name},
 
+                //TODO: understand move semantics
                   m_state_estimator {std::move(state_estimator)},
                   m_mppi_controller {std::move(mppi_controller)},
 
                   m_action_publisher {
+                //TODO: <ActionMsg>
                       create_publisher<interfaces::msg::ControlAction>(
                           control_action_topic_name,
                           control_action_qos
@@ -170,7 +172,8 @@ namespace controls {
 
             ActionMsg ControllerNode::action_to_msg(const Action &action) {
                 interfaces::msg::ControlAction msg;
-                
+
+                //TODO: why not current time?
                 msg.orig_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
 
                 msg.swangle = action[action_swangle_idx];
@@ -219,6 +222,7 @@ namespace controls {
             }
 
             void ControllerNode::publish_and_print_info(std::ostream &stream, interfaces::msg::ControllerInfo info) {
+                //TODO: doesn't this only print not publish
                 stream
                 << "Action:\n"
                 << "  swangle (rad): " << info.action.swangle << "\n"
@@ -261,6 +265,7 @@ int main(int argc, char *argv[]) {
         RCLCPP_DEBUG(logger, msg.c_str());
     };
 
+    //TODO why is this not a nullptr
     state_estimator->set_logger(logger_func);
     controller->set_logger(logger_func);
 
@@ -275,6 +280,7 @@ int main(int argc, char *argv[]) {
         exec.spin();
 
         {
+            //TODO: what does guard do here
             std::lock_guard<std::mutex> guard {thread_died_mut};
 
             std::cout << "Node terminated. Exiting..." << std::endl;

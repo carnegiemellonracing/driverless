@@ -60,6 +60,7 @@ namespace controls {
         void StateProjector::record_action(Action action, rclcpp::Time time) {
             // std::cout << "Recording action " << action[0] << ", " << action[1] << " at time " << time.nanoseconds() << std::endl;
 
+            // change to assert(!m_pose_record.has_value() || time >= m_pose_record.value().time)
             assert(m_pose_record.has_value() && time >= m_pose_record.value().time
                 && "call me marty mcfly the way im time traveling");
 
@@ -132,7 +133,7 @@ namespace controls {
             // print_history();
         }
 
-        State StateProjector::project(const rclcpp::Time& time) const {
+        State StateProjector::project(const rclcpp::Time& time, LoggerFunc logger) const {
             assert(m_pose_record.has_value() && "State projector has not recieved first pose");
             // std::cout << "Projecting to " << time.nanoseconds() << std::endl;
 
@@ -146,11 +147,13 @@ namespace controls {
             const float delta_time = (first_time.nanoseconds() - m_pose_record.value().time.nanoseconds()) / 1e9f;
             // std::cout << "delta time: " << delta_time << std::endl;
             assert(delta_time > 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
+            // simulates up to first_time
             ONLINE_DYNAMICS_FUNC(state.data(), m_init_action.action.data(), state.data(), delta_time);
 
             rclcpp::Time sim_time = first_time;
             Action last_action = m_init_action.action;
             for (auto record_iter = m_history_since_pose.begin(); record_iter != m_history_since_pose.end(); ++record_iter) {
+                // checks if we're on last record
                 const auto next_time = std::next(record_iter) == m_history_since_pose.end() ? time : std::next(record_iter)->time;
 
                 const float delta_time = (next_time - sim_time).nanoseconds() / 1e9f;
@@ -163,6 +166,9 @@ namespace controls {
                         break;
 
                     case Record::Type::Speed:
+                        char log_buf[100]
+                        snprintf(log_buf, 100, "predicted_speed: %f\nactual_speed: %f\n", state[state_speed_idx], record_iter->speed);
+                        logger(log_buf);
                         state[state_speed_idx] = record_iter->speed;
                         ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
                         break;
@@ -314,6 +320,7 @@ namespace controls {
         }
 
         void StateEstimator_Impl::on_twist(const TwistMsg &twist_msg, const rclcpp::Time &time) {
+            // TODO: whats up with all these mutexes
             std::lock_guard<std::mutex> guard {m_mutex};
 
             const float speed = std::sqrt(
@@ -340,6 +347,7 @@ namespace controls {
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
+            // record actions in the future (when they are actually requested by the actuator)
             m_state_projector.record_action(action, rclcpp::Time {
                     time.nanoseconds()
                     + static_cast<int64_t>(approx_propogation_delay * 1e9f),
@@ -358,8 +366,8 @@ namespace controls {
                 rclcpp::Time {
                     time.nanoseconds()
                     + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
-                    default_clock_type
-                }
+                    default_clock_type //TODO: figure out why its this sum
+                }, m_logger
             );
 
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
@@ -446,6 +454,8 @@ namespace controls {
 #endif
 
         void StateEstimator_Impl::sync_world_state() {
+            // TODO: why can you copy to a __constant__
+
             CUDA_CALL(cudaMemcpyToSymbolAsync(
                 cuda_globals::curr_state, m_synced_projected_state.data(), state_dims * sizeof(float)
             ));

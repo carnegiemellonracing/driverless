@@ -49,6 +49,7 @@ namespace controls {
     constexpr double controller_freq = 10.;
     constexpr float controller_period = 1. / controller_freq;
 
+    // The following is UNUSED, delete on main
     constexpr double controller_publish_freq = controller_freq;
     constexpr float controller_publish_period = 1. / controller_publish_freq;
 
