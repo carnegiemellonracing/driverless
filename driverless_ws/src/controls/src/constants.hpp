@@ -65,7 +65,7 @@ namespace controls {
 
     // Cost params
 
-    constexpr float offset_1m_cost = 5.0f;
+    constexpr float offset_1m_cost = 3.0f;
     constexpr float target_speed = 3.5f;
     constexpr float speed_off_1mps_cost = 1.0f;
     constexpr float out_of_bounds_cost = 100.0f;
