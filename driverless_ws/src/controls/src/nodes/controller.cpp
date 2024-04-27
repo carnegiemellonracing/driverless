@@ -137,7 +137,7 @@ namespace controls {
                         Action action = m_mppi_controller->generate_action();
                         publish_action(action);
 
-                        m_state_estimator->record_control_action(action, get_clock()->now());
+                        m_state_estimator->record_control_action_split(action, get_clock()->now());
 
                         // calculate and print time elapsed
                         auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(

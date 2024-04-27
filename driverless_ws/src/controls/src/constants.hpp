@@ -49,9 +49,6 @@ namespace controls {
     constexpr double controller_freq = 10.;
     constexpr float controller_period = 1. / controller_freq;
 
-    constexpr double controller_publish_freq = controller_freq;
-    constexpr float controller_publish_period = 1. / controller_publish_freq;
-
     /** Controller target period, in sec */
     constexpr uint32_t num_samples = 1024 * 64;
     constexpr uint32_t num_timesteps = 16;
@@ -97,6 +94,8 @@ namespace controls {
     constexpr float brake_enable_speed = 1.0f;
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
     constexpr float approx_propogation_delay = 0.2f;  // sec
+    constexpr float approx_steering_delay = 0.05f;
+    constexpr int approx_steering_delay_controller_offset = static_cast<int>(approx_steering_delay / controller_period);
     constexpr float approx_mppi_time = 0.05f; // sec
 
     enum class TorqueMode

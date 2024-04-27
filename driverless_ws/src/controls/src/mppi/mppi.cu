@@ -66,7 +66,10 @@ namespace controls {
             // not actually on device, just still in a device action struct
             thrust::device_vector<DeviceAction> averaged_trajectory = reduce_actions();
 
-            DeviceAction host_action = m_last_action * action_momentum + (1 - action_momentum) * averaged_trajectory[0];
+            //DeviceAction host_action = m_last_action * action_momentum + (1 - action_momentum) * averaged_trajectory[0];
+            DeviceAction host_action;
+            host_action.data[0] = averaged_trajectory[0][0];
+            host_action.data[1] = averaged_trajectory[approx_steering_delay_controller_offset][1];
 
             Action result_action;
             std::copy(

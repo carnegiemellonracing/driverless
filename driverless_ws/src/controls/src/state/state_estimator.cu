@@ -72,6 +72,31 @@ namespace controls {
             // print_history();
         }
 
+        void StateProjector::record_throttle(float throttle, rclcpp::Time time) {
+
+            assert(m_pose_record.has_value() && time >= m_pose_record.value().time
+                   && "call me marty mcfly the way im time traveling");
+
+            m_history_since_pose.insert(Record {
+                    .throttle = throttle,
+                    .time = time,
+                    .type = Record::Type::Throttle
+            });
+        }
+
+        void StateProjector::record_swangle(float swangle, rclcpp::Time time) {
+
+            assert(m_pose_record.has_value() && time >= m_pose_record.value().time
+                   && "call me marty mcfly the way im time traveling");
+
+            m_history_since_pose.insert(Record {
+                    .swangle = swangle,
+                    .time = time,
+                    .type = Record::Type::Swangle
+            });
+        }
+
+
         void StateProjector::record_speed(float speed, rclcpp::Time time) {
             // std::cout << "Recording speed " << speed << " at time " << time.nanoseconds() << std::endl;
 
@@ -157,17 +182,28 @@ namespace controls {
                 assert(delta_time >= 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
 
                 switch (record_iter->type) {
-                    case Record::Type::Action:
-                        ONLINE_DYNAMICS_FUNC(state.data(), record_iter->action.data(), state.data(), delta_time);
-                        last_action = record_iter->action;
-                        break;
-
                     case Record::Type::Speed:
                         char logger_buf[70];
                         snprintf(logger_buf, 70, "Predicted speed: %f\nActual speed: %f", state[state_speed_idx], record_iter->speed);
                         logger(logger_buf);
                         state[state_speed_idx] = record_iter->speed;
                         ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
+                        break;
+
+                    case Record::Type::Throttle:
+                        last_action[0] = record_iter->throttle;
+                        ONLINE_DYNAMICS_FUNC(state.data(), last_action, state.data(), delta_time);
+                        break;
+
+                    case Record::Type::Swangle:
+                        last_action[1] = record_iter->swangle;
+                        ONLINE_DYNAMICS_FUNC(state.data(), last_action, state.data(), delta_time);
+                        break;
+
+                    case Record::Type::Action:
+                        throw new std::runtime_error("Did not record throttle and swangle separately");
+                        ONLINE_DYNAMICS_FUNC(state.data(), record_iter->action.data(), state.data(), delta_time);
+                        last_action = record_iter->action;
                         break;
 
                     default:
@@ -348,6 +384,22 @@ namespace controls {
                     + static_cast<int64_t>(approx_propogation_delay * 1e9f),
                     default_clock_type
                 }
+            );
+        }
+
+        void StateEstimator_Impl::record_control_action_split(const Action& action, const rclcpp::Time& time) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            m_state_projector.record_throttle(action[0], rclcpp::Time {
+                    time.nanoseconds()
+                    + static_cast<int64_t>(approx_propogation_delay * 1e9f),
+                    default_clock_type
+            };
+
+            m_state_projector.record_swangle(action[1], rclcpp::Time {
+                                                    time.nanoseconds()
+                                                    + static_cast<int64_t>((approx_propogation_delay + approx_steering_delay) * 1e9f),
+                                                    default_clock_type
+                                            }
             );
         }
 

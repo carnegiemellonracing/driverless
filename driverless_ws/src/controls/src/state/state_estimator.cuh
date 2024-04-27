@@ -13,6 +13,8 @@ namespace controls {
         class StateProjector {
         public:
             void record_action(Action action, rclcpp::Time time);
+            void record_throttle(float throttle, rclcpp::Time time);
+            void record_swangle(float swangle, rclcpp::Time time);
             void record_speed(float speed, rclcpp::Time time);
             void record_pose(float x, float y, float yaw, rclcpp::Time time);
 
@@ -23,6 +25,8 @@ namespace controls {
             struct Record {
                 enum class Type {
                     Action,
+                    Throttle,
+                    Swangle,
                     Speed,
                     Pose
                 };
@@ -30,6 +34,8 @@ namespace controls {
                 union {
                     Action action;
                     float speed;
+                    float throttle;
+                    float swangle;
 
                     struct {
                         float x;
@@ -71,6 +77,8 @@ namespace controls {
 
             rclcpp::Time get_orig_spline_data_stamp() override;
             void record_control_action(const Action &action, const rclcpp::Time &time) override;
+            void record_control_action_split(const Action &action, const rclcpp::Time &time) override;
+
 
 #ifdef DISPLAY
             std::vector<glm::fvec2> get_spline_frames() override;
