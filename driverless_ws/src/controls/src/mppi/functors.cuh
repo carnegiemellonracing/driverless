@@ -287,7 +287,7 @@ namespace controls {
 
         template<size_t k>
         struct DivBy {
-            __device__ size_t operator() (size_t i) const {
+            __host__ __device__ size_t operator() (size_t i) const {
                 return i / k;
             }
         };
@@ -302,54 +302,53 @@ namespace controls {
 
         // Functors for action reduction
 
-        struct ActionAverage {
-            __device__ ActionWeightTuple operator()(const ActionWeightTuple& action_weight_t0,
-                                                    const ActionWeightTuple& action_weight_t1) const
-            {
-                // log(1 + exp(log w2 - log w1)) + log w1
+        __device__ static ActionWeightTuple operator+ (
+            const ActionWeightTuple& action_weight_t0,
+            const ActionWeightTuple& action_weight_t1)
+        {
+            // log(1 + exp(log w2 - log w1)) + log w1
 
-                DeviceAction a_min, a_max;
-                float lw_min, lw_max;
-                if (action_weight_t1.log_weight >= action_weight_t0.log_weight) {
-                    a_min = action_weight_t0.action;
-                    a_max = action_weight_t1.action;
-                    lw_min = action_weight_t0.log_weight;
-                    lw_max = action_weight_t1.log_weight;
-                } else {
-                    a_min = action_weight_t1.action;
-                    a_max = action_weight_t0.action;
-                    lw_min = action_weight_t1.log_weight;
-                    lw_max = action_weight_t0.log_weight;
-                }
-
-                paranoid_assert(!isnan(lw_min) && !isnan(lw_max) && "log weight was nan in action reduce start");
-                paranoid_assert(!any_nan(a_min.data, action_dims) && !any_nan(a_max.data, action_dims) && "Action was nan in action reduce start");
-
-                paranoid_assert(lw_min <= lw_max && "Log weights were not sorted");
-
-                const bool lw_min_inf = isinf(lw_min);
-                const bool lw_max_inf = isinf(lw_max);
-
-                paranoid_assert(!(lw_min_inf && lw_max_inf && lw_min > 0 && lw_max > 0) && "Both log weights were inf and positive");
-
-                ActionWeightTuple res;
-                if (lw_max_inf && lw_max < 0) {
-                    res = {DeviceAction {}, -CUDART_INF_F};
-                } else {
-                    const float lw_min_prime = lw_min - lw_max;
-                    const float w_min_prime = expf(lw_min_prime);
-                    res = {
-                        (a_max + w_min_prime * a_min) / (1 + w_min_prime),
-                        lw_max + log1pf(w_min_prime)
-                    };
-                }
-
-                paranoid_assert(!isnan(res.log_weight) && "log weight was nan in action reduce end");
-                paranoid_assert(!any_nan(res.action.data, action_dims) && "Action was nan in action reduce end");
-
-                return res;
+            DeviceAction a_min, a_max;
+            float lw_min, lw_max;
+            if (action_weight_t1.log_weight >= action_weight_t0.log_weight) {
+                a_min = action_weight_t0.action;
+                a_max = action_weight_t1.action;
+                lw_min = action_weight_t0.log_weight;
+                lw_max = action_weight_t1.log_weight;
+            } else {
+                a_min = action_weight_t1.action;
+                a_max = action_weight_t0.action;
+                lw_min = action_weight_t1.log_weight;
+                lw_max = action_weight_t0.log_weight;
             }
-        };
+
+            paranoid_assert(!isnan(lw_min) && !isnan(lw_max) && "log weight was nan in action reduce start");
+            paranoid_assert(!any_nan(a_min.data, action_dims) && !any_nan(a_max.data, action_dims) && "Action was nan in action reduce start");
+
+            paranoid_assert(lw_min <= lw_max && "Log weights were not sorted");
+
+            const bool lw_min_inf = isinf(lw_min);
+            const bool lw_max_inf = isinf(lw_max);
+
+            paranoid_assert(!(lw_min_inf && lw_max_inf && lw_min > 0 && lw_max > 0) && "Both log weights were inf and positive");
+
+            ActionWeightTuple res;
+            if (lw_max_inf && lw_max < 0) {
+                res = {DeviceAction {}, -CUDART_INF_F};
+            } else {
+                const float lw_min_prime = lw_min - lw_max;
+                const float w_min_prime = expf(lw_min_prime);
+                res = {
+                    (a_max + w_min_prime * a_min) / (1 + w_min_prime),
+                    lw_max + log1pf(w_min_prime)
+                };
+            }
+
+            paranoid_assert(!isnan(res.log_weight) && "log weight was nan in action reduce end");
+            paranoid_assert(!any_nan(res.action.data, action_dims) && "Action was nan in action reduce end");
+
+            return res;
+        }
 
         /** 
          * Captures pointers to action trajectories and cost to gos
@@ -359,9 +358,11 @@ namespace controls {
             const float* action_trajectories;
             const float* cost_to_gos;
             const float* log_prob_densities;
+            ActionWeightTuple* action_weight_tuples;
 
-            __device__ IndexToActionWeightTuple (const float* action_trajectories, const float* cost_to_gos, const float* log_prob_densities)
-                    : action_trajectories {action_trajectories},
+            IndexToActionWeightTuple (ActionWeightTuple* action_weight_tuples, const float* action_trajectories, const float* cost_to_gos, const float* log_prob_densities)
+                    : action_weight_tuples {action_weight_tuples},
+                      action_trajectories {action_trajectories},
                       cost_to_gos {cost_to_gos},
                       log_prob_densities {log_prob_densities} {}
 
@@ -371,12 +372,14 @@ namespace controls {
              * @returns a tuple of the action indexed from the trajectories
              * and the weight of that action (strictly positive) based on its cost to go
              */
-            __device__ ActionWeightTuple operator() (const uint32_t idx) const {
-                ActionWeightTuple res {};
+            __device__ void operator() (const uint32_t idx) const {
                 // as we increment idx, we iterate over the samples first
                 const uint32_t i = idx % num_samples; // sample
                 // j should hold constant over a single reduction, it represents which timestep we are reducing over
                 const uint32_t j = idx / num_samples;  // timestep
+
+                ActionWeightTuple res {};
+
                 memcpy(&res.action.data, IDX_3D(action_trajectories,
                                                 action_trajectories_dims,
                                                 dim3(i, j, 0)), sizeof(float) * action_dims);
@@ -407,48 +410,54 @@ namespace controls {
                 res.log_weight = -1.0f / temperature * cost_to_go - log_prob_density;
                 paranoid_assert(!isnan(res.log_weight) && "log weight was nan");
 
-                return res;
+                action_weight_tuples[idx] = res;
             }
         };
 
-        struct ReduceTimestep {
-            DeviceAction* averaged_action;
-            DeviceAction* action_trajectory_base;
-
-            const float* action_trajectories;
-            const float* cost_to_gos;
-            const float* log_probability_densities;
-
-            const ActionAverage reduction_functor {};
-
-            ReduceTimestep (DeviceAction* averaged_action, DeviceAction* action_trajectory_base, const float* action_trajectories, const float* cost_to_gos, const float* log_probability_densities)
-                    : averaged_action {averaged_action},
-                      action_trajectory_base {action_trajectory_base},
-                      action_trajectories {action_trajectories},
-                      cost_to_gos {cost_to_gos},
-                      log_probability_densities {log_probability_densities}
-                      { }
-            __device__ void operator() (const uint32_t idx) {
-                // idx ranges from 0 to num_timesteps - 1
-                // idx represents a timestep
-                thrust::counting_iterator<uint32_t> indices {idx * num_samples};
-
-                // applies a unary operator - IndexToActionWeightTuple before reducing over the samples with reduction_functor
-                const ActionWeightTuple res = thrust::transform_reduce(
-                        thrust::device,
-                        indices, indices + num_samples,
-                        IndexToActionWeightTuple {action_trajectories, cost_to_gos, log_probability_densities},
-                        ActionWeightTuple { DeviceAction {}, -CUDART_INF_F }, reduction_functor);
-
-                if (res.log_weight == 0) {
-                    printf("Action at timestep %i had 0 weight. Using previous.\n", idx);
-                    averaged_action[idx] = action_trajectory_base[min(idx, num_timesteps - 2)];
-                } else {
-                    averaged_action[idx] = res.action;
-                }
-                paranoid_assert(!any_nan(averaged_action[idx].data, action_dims) && "Averaged action was nan");
+        struct ActionWeightTupleToAction {
+            __device__ DeviceAction operator() (const ActionWeightTuple& awt) const {
+                return awt.action;
             }
         };
+
+        // struct ReduceTimestep {
+        //     DeviceAction* averaged_action;
+        //     DeviceAction* action_trajectory_base;
+        //
+        //     const float* action_trajectories;
+        //     const float* cost_to_gos;
+        //     const float* log_probability_densities;
+        //
+        //     const ActionAverage reduction_functor {};
+        //
+        //     ReduceTimestep (DeviceAction* averaged_action, DeviceAction* action_trajectory_base, const float* action_trajectories, const float* cost_to_gos, const float* log_probability_densities)
+        //             : averaged_action {averaged_action},
+        //               action_trajectory_base {action_trajectory_base},
+        //               action_trajectories {action_trajectories},
+        //               cost_to_gos {cost_to_gos},
+        //               log_probability_densities {log_probability_densities}
+        //               { }
+        //     __device__ void operator() (const uint32_t idx) {
+        //         // idx ranges from 0 to num_timesteps - 1
+        //         // idx represents a timestep
+        //         thrust::counting_iterator<uint32_t> indices {idx * num_samples};
+        //
+        //         // applies a unary operator - IndexToActionWeightTuple before reducing over the samples with reduction_functor
+        //         const ActionWeightTuple res = thrust::transform_reduce(
+        //                 thrust::device,
+        //                 indices, indices + num_samples,
+        //                 IndexToActionWeightTuple {action_trajectories, cost_to_gos, log_probability_densities},
+        //                 ActionWeightTuple { DeviceAction {}, -CUDART_INF_F }, reduction_functor);
+        //
+        //         if (res.log_weight == 0) {
+        //             printf("Action at timestep %i had 0 weight. Using previous.\n", idx);
+        //             averaged_action[idx] = action_trajectory_base[min(idx, num_timesteps - 2)];
+        //         } else {
+        //             averaged_action[idx] = res.action;
+        //         }
+        //         paranoid_assert(!any_nan(averaged_action[idx].data, action_dims) && "Averaged action was nan");
+        //     }
+        // };
     }
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <math_constants.h>
 #include <types.hpp>
 #include <utils/cuda_utils.cuh>
 
