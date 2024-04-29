@@ -165,7 +165,7 @@ namespace controls {
                     case Record::Type::Speed:
                         char logger_buf[70];
                         snprintf(logger_buf, 70, "Predicted speed: %f\nActual speed: %f", state[state_speed_idx], record_iter->speed);
-                        std::cout << logger_buf << std::endl;
+                        //std::cout << logger_buf << std::endl;
                         state[state_speed_idx] = record_iter->speed;
                         ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
                         break;
