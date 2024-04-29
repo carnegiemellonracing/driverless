@@ -23,6 +23,7 @@ namespace controls {
             : m_action_trajectories(num_action_trajectories),
               m_cost_to_gos(num_samples * num_timesteps),
               m_log_prob_densities(num_samples * num_timesteps),
+              m_action_weight_tuples(num_samples * num_timesteps),
               m_rng(),
               m_last_action {},
 #ifdef DISPLAY
@@ -61,6 +62,9 @@ namespace controls {
 
             m_logger("populating cost");
             populate_cost();
+
+            m_logger("generating action weight tuples");
+            generate_action_weight_tuples();
 
             m_logger("reducing actions");
             // not actually on device, just still in a device action struct
@@ -175,16 +179,21 @@ namespace controls {
             // averaged_actions is where the weighted averages are stored
             // initialize it to 0 
             thrust::device_vector<DeviceAction> averaged_actions (num_timesteps);
+            thrust::device_vector<ActionWeightTuple> averaged_awts(num_timesteps);
+            thrust::device_vector<uint32_t> keys_out (num_timesteps);
             thrust::counting_iterator<uint32_t> indices {0};
+            auto keys = thrust::make_transform_iterator(indices, DivBy<num_samples> {});
 
             // for_each applies the ReduceTimestep functor to every idx in the range [0, num_timesteps)
-            thrust::for_each(indices, indices + num_timesteps, ReduceTimestep {
-                averaged_actions.data().get(),
-                m_last_action_trajectory.data().get(),
-                m_action_trajectories.data().get(),
-                m_cost_to_gos.data().get(),
-                m_log_prob_densities.data().get()
-            });
+            thrust::reduce_by_key(
+                keys, keys + num_samples * num_timesteps, m_action_weight_tuples.begin(),
+                keys_out.begin(), averaged_awts.begin()
+            );
+
+            thrust::transform(
+                averaged_awts.begin(), averaged_awts.end(), averaged_actions.begin(),
+                ActionWeightTupleToAction {}
+            );
 
             return averaged_actions;
         }
@@ -205,6 +214,19 @@ namespace controls {
             };
 
             thrust::for_each(indices, indices + num_samples, populate_cost);
+        }
+
+        void MppiController_Impl::generate_action_weight_tuples() {
+            thrust::counting_iterator<uint32_t> indices {0};
+
+            IndexToActionWeightTuple transform_to_tuple {
+                m_action_weight_tuples.data().get(),
+                m_action_trajectories.data().get(),
+                m_cost_to_gos.data().get(),
+                m_log_prob_densities.data().get()
+            };
+
+            thrust::for_each(indices, indices + num_timesteps * num_samples, transform_to_tuple);
         }
     }
 }

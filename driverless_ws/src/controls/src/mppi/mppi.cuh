@@ -41,6 +41,8 @@ namespace controls {
              */
             void populate_cost();
 
+            void generate_action_weight_tuples();
+
             /**
              * Retrieves action based on cost to go using reduction.
              * @returns Action
@@ -58,6 +60,8 @@ namespace controls {
              * brownian generations), then made "to-go"
              */
             thrust::device_vector<float> m_log_prob_densities;
+
+            thrust::device_vector<ActionWeightTuple> m_action_weight_tuples;
 
             /**
              * num_samples x num_timesteps array of costs to go. Used for action weighting.
