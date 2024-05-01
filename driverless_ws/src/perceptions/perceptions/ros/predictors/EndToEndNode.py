@@ -173,7 +173,7 @@ class EndToEndNode(Node):
         # done publishing spline
         curr_time = self.get_clock().now()
         # print the timings of everything
-        print(f"{len(cones):<3} cones {len(downsampled_boundary_points):<3} frames {(curr_time.nanoseconds - data_time.nanoseconds) / 1000000:.3f}ms lidar: {time_lidar:.1f}ms merge+color+state: {time_state:.1f}ms spline: {time_spline:.1f}ms cone_pub: {time_cone_pub:.1f}")
+        print(f"{len(cones):<3} cones {len(downsampled_boundary_points):<3} frames {(curr_time.nanoseconds - data_time.nanoseconds) / 1000000:.3f}ms lidar: {time_lidar:.1f}ms merge+color+state: {time_state:.1f}ms spline: {time_spline:.1f}ms cone_pub: {time_cone_pub:.1f}ms")
 
         return
 
