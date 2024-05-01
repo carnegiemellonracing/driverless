@@ -41,9 +41,9 @@ class WebsocketNode(Node):
 
     def cone_upload_callback(self, cone_msg):
         try:
-            data = rosidl_runtime_py.convert.message_to_csv(cone_msg)
+            data = rosidl_runtime_py.convert.message_to_yaml(cone_msg)
             print(data)
-            self.socket.send(cone_msg.blue_cones)
+            self.socket.send(data)
             callback_confirmation = f"Message at {cone_msg.orig_data_stamp} Uploaded!"
         except socket.error:
             print("Error!")

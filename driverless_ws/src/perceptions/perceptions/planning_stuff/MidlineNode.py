@@ -42,7 +42,7 @@ class MidlineNode(Node):
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
                                                  topic="/spline",
                                                  qos_profile=RELIABLE_QOS_PROFILE)
-        self.vis = Vis2D()
+        # self.vis = Vis2D()
 
     
     def cone_callback(self, msg):
@@ -58,10 +58,10 @@ class MidlineNode(Node):
         e_svm = time.time()
         # print(downsampled_boundary_points)
 
-        self.vis.set_cones(cones)
-        if len(downsampled_boundary_points) > 0:
-            self.vis.set_points(downsampled_boundary_points)
-        self.vis.update()
+        # self.vis.set_cones(cones)
+        # if len(downsampled_boundary_points) > 0:
+        #     self.vis.set_points(downsampled_boundary_points)
+        # self.vis.update()
 
         points = []
         msg = SplineFrames()
