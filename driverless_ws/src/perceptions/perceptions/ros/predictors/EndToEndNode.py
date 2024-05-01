@@ -15,10 +15,11 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 # ROS2 message types
 from sensor_msgs.msg import PointCloud2
 from geometry_msgs.msg import TwistStamped, QuaternionStamped
+from interfaces.msg import ConeArray
 
 # ROS2 msg to python datatype conversions
 import perceptions.ros.utils.conversions as conv
-from perceptions.topics import POINT_TOPIC, TWIST_TOPIC, QUAT_TOPIC
+from perceptions.topics import POINT_TOPIC, TWIST_TOPIC, QUAT_TOPIC, PERC_CONE_TOPIC
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
@@ -72,6 +73,9 @@ class EndToEndNode(Node):
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
                                                  topic="/spline",
                                                  qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.cone_pub = self.create_publisher(msg_type=ConeArray,
+                                              topic=PERC_CONE_TOPIC,
+                                              qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         # parts of the pipeline 
         self.predictor = self.init_predictor()
@@ -160,10 +164,16 @@ class EndToEndNode(Node):
         msg.orig_data_stamp = data_time.to_msg()
         self.midline_pub.publish(msg)
 
+        # convert cones to ConeArray ROS2 message and publish
+        self.timer.start("cone_pub")
+        cone_msg = conv.cones_to_msg(cones)
+        self.cone_pub.publish(cone_msg)
+        time_cone_pub = self.timer.end("cone_pub", ret=True)
+
         # done publishing spline
         curr_time = self.get_clock().now()
         # print the timings of everything
-        print(f"{len(cones):<3} cones {len(downsampled_boundary_points):<3} frames {(curr_time.nanoseconds - data_time.nanoseconds) / 1000000:.3f}ms lidar: {time_lidar:.1f}ms merge+color+state: {time_state:.1f}ms spline: {time_spline:.1f}ms")
+        print(f"{len(cones):<3} cones {len(downsampled_boundary_points):<3} frames {(curr_time.nanoseconds - data_time.nanoseconds) / 1000000:.3f}ms lidar: {time_lidar:.1f}ms merge+color+state: {time_state:.1f}ms spline: {time_spline:.1f}ms cone_pub: {time_cone_pub:.1f}")
 
         return
 
