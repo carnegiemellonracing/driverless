@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'test_node = websocketer_redo.TestNode:main',
+            'multi_node = websocketer_redo.MultiNode:main',
             'websocket_node = websocketer_redo.WebsocketNode:main'
         ],
     },
