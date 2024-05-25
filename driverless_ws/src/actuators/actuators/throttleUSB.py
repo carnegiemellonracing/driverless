@@ -57,7 +57,7 @@ class ActuatorNode(Node):
         # self.even = True
         self.swangle = int(hex(ADC_BIAS)[2:], 16)
         self.torque_request = 0
-        msg = bytearray([0, 0,0,0])
+        msg = bytearray([0,0,0,0,0,0])
         self.ser.write(msg) 
         self.orig_data_stamp = None
         # self.accumulator = 0
@@ -79,7 +79,9 @@ class ActuatorNode(Node):
             # self.ser.send(throttle_msg)
         
         #AIM recieves uint_8[8]
-        data = (self.torque_request, self.swangle)
+        x = 0
+        y = x.to_bytes(1, 'big')
+        data = (y, self.torque_request, self.swangle, y)
         print(f"torque_request: {data}")
         x = bytearray()
         while(not x):
@@ -88,8 +90,8 @@ class ActuatorNode(Node):
                 print(x.hex())
             continue
         
-        msg = struct.pack(">hh", data[0], data[1])
         # msg = bytearray([1,2,3,4])
+        msg = struct.pack(">chhc", data[0], data[1], data[2], data[3])
         # msg = bytearray([7,7,7,7])
         
         self.ser.write(msg) 

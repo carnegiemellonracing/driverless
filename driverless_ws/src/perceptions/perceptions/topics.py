@@ -19,6 +19,10 @@ YOLOV5_ZED_CONE_TOPIC = "/yolov5_zed_node_cones"
 YOLOV5_ZED2_CONE_TOPIC = "/yolov5_zed2_node_cones"
 PERC_CONE_TOPIC = "/perc_cones"
 
+# topic names for motion modeling
+TWIST_TOPIC = "/filter/twist"
+QUAT_TOPIC = "/filter/quaternion"
+
 #Camera info
 CAMERA_PARAM = "camera"
 ZED_STR = "zed"
