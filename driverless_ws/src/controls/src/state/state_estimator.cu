@@ -166,9 +166,9 @@ namespace controls {
                         break;
 
                     case Record::Type::Speed:
-                        char log_buf[100]
-                        snprintf(log_buf, 100, "predicted_speed: %f\nactual_speed: %f\n", state[state_speed_idx], record_iter->speed);
-                        logger(log_buf);
+                        char logger_buf[70];
+                        snprintf(logger_buf, 70, "Predicted speed: %f\nActual speed: %f", state[state_speed_idx], record_iter->speed);
+                        //std::cout << logger_buf << std::endl;
                         state[state_speed_idx] = record_iter->speed;
                         ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
                         break;
@@ -366,7 +366,11 @@ namespace controls {
                 rclcpp::Time {
                     time.nanoseconds()
                     + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
+<<<<<<< HEAD
                     default_clock_type //TODO: figure out why its this sum
+=======
+                    default_clock_type
+>>>>>>> main
                 }, m_logger
             );
 

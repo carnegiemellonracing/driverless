@@ -16,13 +16,7 @@ namespace controls {
             void record_speed(float speed, rclcpp::Time time);
             void record_pose(float x, float y, float yaw, rclcpp::Time time);
 
-            /**@brief
-             *
-             * @pre m_pose_record.has_value()
-             * @param time
-             * @return
-             */
-            State project(const rclcpp::Time& time) const;
+            State project(const rclcpp::Time& time, LoggerFunc logger) const;
             bool is_ready() const;
 
         private:
