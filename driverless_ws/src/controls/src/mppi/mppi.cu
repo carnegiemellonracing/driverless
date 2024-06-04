@@ -148,7 +148,7 @@ namespace controls {
 
             thrust::inclusive_scan_by_key(keys, keys + num_samples * num_timesteps,
                                           actions, actions,
-                                          Equal<size_t> {},
+                                          Equal<size_t> {}, //TODO: surely this can be operator==?
                                           AddActions {});
         }
 
@@ -184,7 +184,6 @@ namespace controls {
             thrust::counting_iterator<uint32_t> indices {0};
             auto keys = thrust::make_transform_iterator(indices, DivBy<num_samples> {});
 
-            // for_each applies the ReduceTimestep functor to every idx in the range [0, num_timesteps)
             thrust::reduce_by_key(
                 keys, keys + num_samples * num_timesteps, m_action_weight_tuples.begin(),
                 keys_out.begin(), averaged_awts.begin()
