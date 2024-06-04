@@ -7,15 +7,18 @@
 
 namespace controls {
     namespace mppi {
+        /// Control action
         struct DeviceAction {
             float data[action_dims];
         };
 
+        /// Control action coupled with weight for reduction
         struct ActionWeightTuple {
             DeviceAction action; // weighted average action
             float log_weight; // total weight
         };
 
+        /// Operator Overloads for Device Action
         __host__ __device__ static DeviceAction operator+ (const DeviceAction& a1, const DeviceAction& a2) {
             DeviceAction res;
             for (size_t i = 0; i < action_dims; i++) {

@@ -15,21 +15,22 @@ namespace controls {
 
 
         // device symbols
-
         extern __constant__ cudaTextureObject_t curv_frame_lookup_tex;
         extern __constant__ CurvFrameLookupTexInfo curv_frame_lookup_tex_info;
-
         extern __constant__ size_t spline_texture_elems;
 
-        extern __constant__ float curr_state[state_dims];
+        extern __constant__ float curr_state[state_dims]; ///< \f$x_0\f$
 
+        /// Cholesky factor of covariance matrix (assuming swangle and throttle are uncorrelated)
         extern __constant__ const float perturbs_incr_std[action_dims * action_dims];
 
+        /// Inverse of covariance matrix
         extern __constant__ const float perturbs_incr_var_inv[action_dims * action_dims];
 
-        extern __constant__ const float action_min[action_dims];
-        extern __constant__ const float action_max[action_dims];
-        extern __constant__ const float action_deriv_min[action_dims];
+
+        extern __constant__ const float action_min[action_dims]; ///< Minimum control action request
+        extern __constant__ const float action_max[action_dims]; ///< Maximum control action request
+        extern __constant__ const float action_deriv_min[action_dims]; ///< Min. d
         extern __constant__ const float action_deriv_max[action_dims];
     }
 }
