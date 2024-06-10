@@ -8,6 +8,7 @@
 namespace controls {
     namespace mppi {
         /// Control action
+        /// TODO: figure out difference between Action (std::array vs struct)
         struct DeviceAction {
             float data[action_dims];
         };

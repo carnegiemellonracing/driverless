@@ -62,6 +62,7 @@ namespace controls {
                     [this] (const PoseMsg::SharedPtr msg) { world_pose_callback(*msg); },
                     options
                 );
+                //TODO: m_state_mut never gets initialized? I guess default construction is alright;
 
                 // start mppi :D
                 // this won't immediately begin publishing, since it waits for the first dirty state

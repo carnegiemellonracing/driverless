@@ -142,6 +142,8 @@ namespace controls {
 #endif
 
         // Private member functions of the controller
+        // wrapper to do a prefix scan over the timesteps (middle) dimension of the n x m x q tensor
+        ///@note only works on n x m x q I think
         void prefix_scan(thrust::device_ptr<float> normal) {
             auto actions = thrust::device_pointer_cast((DeviceAction*)normal.get());
             auto keys = thrust::make_transform_iterator(thrust::make_counting_iterator(0), DivBy<num_timesteps> {});
@@ -160,6 +162,7 @@ namespace controls {
             // make the normals brownian
             thrust::counting_iterator<size_t> indices {0};
             thrust::for_each(indices, indices + num_action_trajectories, TransformStdNormal {m_action_trajectories.data()});
+            /// TODO: why the prefix scan at the end?
             prefix_scan(m_action_trajectories.data());
         }
 
@@ -175,27 +178,6 @@ namespace controls {
         }
 
 
-        thrust::device_vector<DeviceAction> MppiController_Impl::reduce_actions() {
-            // averaged_actions is where the weighted averages are stored
-            // initialize it to 0 
-            thrust::device_vector<DeviceAction> averaged_actions (num_timesteps);
-            thrust::device_vector<ActionWeightTuple> averaged_awts(num_timesteps);
-            thrust::device_vector<uint32_t> keys_out (num_timesteps);
-            thrust::counting_iterator<uint32_t> indices {0};
-            auto keys = thrust::make_transform_iterator(indices, DivBy<num_samples> {});
-
-            thrust::reduce_by_key(
-                keys, keys + num_samples * num_timesteps, m_action_weight_tuples.begin(),
-                keys_out.begin(), averaged_awts.begin()
-            );
-
-            thrust::transform(
-                averaged_awts.begin(), averaged_awts.end(), averaged_actions.begin(),
-                ActionWeightTupleToAction {}
-            );
-
-            return averaged_actions;
-        }
 
         void MppiController_Impl::populate_cost() {
             thrust::counting_iterator<uint32_t> indices {0};
@@ -211,10 +193,31 @@ namespace controls {
                 m_last_action_trajectory.data(),
                 m_last_action
             };
-
+            // populates cost for each sample trajectory
             thrust::for_each(indices, indices + num_samples, populate_cost);
         }
 
+        thrust::device_vector<DeviceAction> MppiController_Impl::reduce_actions() {
+            // averaged_actions is where the weighted averages are stored
+            // initialize it to 0
+            thrust::device_vector<DeviceAction> averaged_actions (num_timesteps);
+            thrust::device_vector<ActionWeightTuple> averaged_awts(num_timesteps);
+            thrust::device_vector<uint32_t> keys_out (num_timesteps);
+            thrust::counting_iterator<uint32_t> indices {0};
+            auto keys = thrust::make_transform_iterator(indices, DivBy<num_samples> {});
+
+            thrust::reduce_by_key(
+                    keys, keys + num_samples * num_timesteps, m_action_weight_tuples.begin(),
+                    keys_out.begin(), averaged_awts.begin()
+            );
+
+            thrust::transform(
+                    averaged_awts.begin(), averaged_awts.end(), averaged_actions.begin(),
+                    ActionWeightTupleToAction {}
+            );
+
+            return averaged_actions;
+        }
         void MppiController_Impl::generate_action_weight_tuples() {
             thrust::counting_iterator<uint32_t> indices {0};
 

@@ -30,6 +30,37 @@
 #include <mppi/functors.cuh>
 #include <SDL2/SDL_video.h>
 
+Given inertial coordinates, know how far from spline and how far along the spline
+ICP is very slow, hard to do on GPU
+Create a lookup table with input inertial coordiantes and output distance from spline and distance along spline
+Interpolation is very similar to graphics calculation
+Exploit hardware acceleration
+
+CUDA has access to texture memory
+Reason for OpenGL: Very quickly create textures
+Sacrifice: pretty far from track: not very clear
+
+Method
+Use points from path planning
+Fake cones around the spline (based on a predetermined track width - overestimate). These will be vertices
+Draw triangles between cones.
+Color the cones/vertices
+Vertices include the points given by path planning
+
+Color the vertices
+R = distance along spline;
+G = distance from spline;
+B = angle of spline; (UNSUED)
+A = 0 everywhere in bounds, -1 out of bounds
+        (0,0,0,-1) is background colour, cone has 0 A
+
+Texture: an image (in graphics terms) - mapping from 2D coordinates to RGBA/normal vector/whatever
+
+Abuse depth testing
+- Each point gets a depth (z = g)
+
+
+
 
 namespace controls {
     namespace state {
@@ -196,6 +227,14 @@ namespace controls {
 
         // StateEstimator_Impl helpers
 
+        /// GPU shader code - JIT compiled
+        /// ""functor"" run for each vertex
+        // uniform are like __constant__
+        /// center for if we are doing slam and we are far away
+        /// this is called a shader
+        /// far_frustrum is for better precision
+        /// we are not using w (homogenous coordinates)
+        /// i_world_pos is from path planning
         constexpr const char* vertex_source = R"(
             #version 330 core
             #extension GL_ARB_explicit_uniform_location : enable
@@ -216,6 +255,8 @@ namespace controls {
             }
         )";
 
+        /// Fragment shader
+        /// Renders the color for each triangle (foreground)
         constexpr const char* fragment_source = R"(
             #version 330 core
 
@@ -227,6 +268,8 @@ namespace controls {
                 FragColor = vec4(o_curv_pose, 1.0f);
             }
         )";
+
+
 
         // methods
 
@@ -374,17 +417,21 @@ namespace controls {
                 }, m_logger
             );
 
+            // enable openGL
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
             m_logger("generating spline frame lookup texture info...");
+
             gen_tex_info({state[state_x_idx], state[state_y_idx]});
 
             m_logger("filling OpenGL buffers...");
+            // takes car position, places them in the vertices
             fill_path_buffers({state[state_x_idx], state[state_y_idx]});
 
             m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
             unmap_curv_frame_lookup();
 
+            // render the lookup table
             m_logger("rendering curv frame lookup table...");
             render_curv_frame_lookup();
 
@@ -458,7 +505,7 @@ namespace controls {
 #endif
 
         void StateEstimator_Impl::sync_world_state() {
-            // TODO: why can you copy to a __constant__
+            // TODO: why can you copy to a __constant__ : constant during a kernel (can copy from host, read-only in CUDA code)
 
             CUDA_CALL(cudaMemcpyToSymbolAsync(
                 cuda_globals::curr_state, m_synced_projected_state.data(), state_dims * sizeof(float)
@@ -490,8 +537,10 @@ namespace controls {
         }
 
         void StateEstimator_Impl::render_curv_frame_lookup() {
+            // where I'm gonna render to
             glBindFramebuffer(GL_FRAMEBUFFER, m_curv_frame_lookup_fbo);
 
+            // set the background color
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glUseProgram(m_gl_path_shader);
             glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
@@ -513,6 +562,7 @@ namespace controls {
 #endif
         }
 
+        /// Create a CUDA texture that refers to the frame buffer <- this can't be referred to directly
         void StateEstimator_Impl::map_curv_frame_lookup() {
             CUDA_CALL(cudaGraphicsGLRegisterImage(&m_curv_frame_lookup_rsc, m_curv_frame_lookup_rbo, GL_RENDERBUFFER, cudaGraphicsRegisterFlagsNone));
 
@@ -540,6 +590,7 @@ namespace controls {
             ));
         }
 
+        /// you can't render to something when it is mapped. have to unmap before rendering
         void StateEstimator_Impl::unmap_curv_frame_lookup() {
             if (!m_curv_frame_lookup_mapped)
                 return;
@@ -548,6 +599,15 @@ namespace controls {
             m_curv_frame_lookup_mapped = false;
         }
 
+        /// vertex array object
+        /// vertex buffer object
+        /// element buffer object (describes the triangle indices (into the vbo))
+
+        // bind stuff to flags, act on flags, state machine
+
+        /**
+         * Creates the buffers to be used, as well as the descriptions of how the buffers are laid out.
+         */
         void StateEstimator_Impl::gen_gl_path() {
             glGenVertexArrays(1, &m_gl_path.vao);
             glGenBuffers(1, &m_gl_path.vbo);
@@ -564,6 +624,9 @@ namespace controls {
             glBindVertexArray(0);
         }
 
+        /**
+         * @brief Filling vertex data and creating the triangles
+         */
         void StateEstimator_Impl::fill_path_buffers(glm::fvec2 car_pos) {
             struct Vertex {
                 struct {
@@ -571,6 +634,7 @@ namespace controls {
                     float y;
                 } world;
 
+                //TODO: colors
                 struct {
                     float progress;
                     float offset;
@@ -663,62 +727,6 @@ namespace controls {
 
                 total_progress += new_progress;
             }
-
-            // // allow car to be before first frame
-            // {
-            //     const GLuint ai = 2;
-            //     const GLuint bi = 0;
-            //     const GLuint ci = 4;
-            //
-            //     const glm::fvec2 a = {vertices[ai].world.x, vertices[ai].world.y};
-            //     const glm::fvec2 b = {vertices[bi].world.x, vertices[bi].world.y};
-            //     const glm::fvec2 c = {vertices[ci].world.x, vertices[ci].world.y};
-            //
-            //     const glm::fvec2 ac_unit = glm::normalize(c - a);
-            //     const glm::fvec2 ac_norm = glm::fvec2(ac_unit.y, -ac_unit.x);
-            //
-            //     glm::fvec2 bcar = car_pos - b;
-            //     if (glm::dot(bcar, ac_norm) < car_padding) {
-            //         if (glm::dot(bcar, ac_norm) >= 0) {
-            //             bcar = -ac_norm * car_padding;
-            //         }
-            //         const glm::fvec2 car_parallel_plane = glm::normalize(glm::fvec2(bcar.y, -bcar.x));
-            //         const glm::fvec2 new_edge_center = b + bcar * (glm::length(bcar) + car_padding) / glm::length(bcar);
-            //
-            //         const glm::fvec2 v1_world = new_edge_center - car_parallel_plane * radius;
-            //         const glm::fvec2 v2_world = new_edge_center + car_parallel_plane * radius;
-            //
-            //         const float v1_progress = glm::dot( v1_world - b, ac_norm);
-            //         const float v2_progress = glm::dot(v2_world - b, ac_norm);
-            //
-            //         const float v1_offset = glm::dot(v1_world - b, ac_unit);
-            //         const float v2_offset = glm::dot(v2_world - b, ac_unit);
-            //
-            //         const float v1_heading = vertices[bi].curv.heading;
-            //         const float v2_heading = vertices[bi].curv.heading;
-            //
-            //         Vertex v1 = {{v1_world.x, v1_world.y}, {v1_progress, v1_offset, v1_heading}};
-            //         Vertex v2 = {{v2_world.x, v2_world.y}, {v2_progress, v2_offset, v2_heading}};
-            //         if (glm::dot(bcar, ac_norm) > 0) {
-            //             std::swap(v1, v2);
-            //         }
-            //
-            //         vertices.push_back(v1);
-            //         vertices.push_back(v2);
-            //
-            //         const GLuint v1i = vertices.size() - 2;
-            //         const GLuint v2i = vertices.size() - 1;
-            //
-            //         indices.push_back(v1i);
-            //         indices.push_back(ai);
-            //         indices.push_back(ci);
-            //
-            //         indices.push_back(v1i);
-            //         indices.push_back(ci);
-            //         indices.push_back(v2i);
-            //     }
-            // }
-
 
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);

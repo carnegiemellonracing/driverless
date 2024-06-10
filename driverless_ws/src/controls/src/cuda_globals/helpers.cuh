@@ -5,6 +5,7 @@
 
 namespace controls {
     namespace cuda_globals {
+//TODO: move to cuda_globals?
         __device__ static void sample_curv_state(const float world_pose[3], float curv_pose[3], bool& out_of_bounds) {
             const float x = world_pose[0];
             const float y = world_pose[1];

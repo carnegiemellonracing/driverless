@@ -13,12 +13,12 @@ namespace controls {
             float width;
         };
 
-
         // device symbols
-        extern __constant__ cudaTextureObject_t curv_frame_lookup_tex;
-        extern __constant__ CurvFrameLookupTexInfo curv_frame_lookup_tex_info;
-        extern __constant__ size_t spline_texture_elems;
+        extern __constant__ cudaTextureObject_t curv_frame_lookup_tex; ///< this is a pointer to the CUDA texture
+        extern __constant__ CurvFrameLookupTexInfo curv_frame_lookup_tex_info; ///< before sampling into texture, need to apply the same transformation to world pose
+        extern __constant__ size_t spline_texture_elems; ///< no fucing idea
 
+        /// State information is stored here. Written to by state_estimator and read by mppi_controller.
         extern __constant__ float curr_state[state_dims]; ///< \f$x_0\f$
 
         /// Cholesky factor of covariance matrix (assuming swangle and throttle are uncorrelated)
@@ -34,3 +34,5 @@ namespace controls {
         extern __constant__ const float action_deriv_max[action_dims];
     }
 }
+
+//TODO: consider splitting tunable parameters and storage variables YES

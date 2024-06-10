@@ -10,7 +10,6 @@ namespace controls {
 
         class StateEstimator {
         public:
-            // TODO: ask why this is not a constructor (compared to Impl)
             static std::shared_ptr<StateEstimator> create(std::mutex& mutex, LoggerFunc logger = no_log);
 
             virtual void on_spline(const SplineMsg& spline_msg) =0;
