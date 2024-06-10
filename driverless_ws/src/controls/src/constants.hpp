@@ -36,7 +36,7 @@ namespace controls {
           best_effort_profile.depth
         ),
         best_effort_profile);
-    
+
     const rclcpp::QoS control_action_qos = best_effort_qos;
     const rclcpp::QoS spline_qos = best_effort_qos;
     const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
@@ -56,8 +56,8 @@ namespace controls {
 
     constexpr uint32_t num_samples = 1024 * 64; ///< Number of trajectories sampled each controller step
     constexpr uint32_t num_timesteps = 16; ///< Number of controller steps simulated into the future
-    constexpr uint8_t action_dims = 2; ///< \f$q\f$, currently steering wheel angle and forward throttle
-    constexpr uint8_t state_dims = 4; ///< \f$p\f$, currently TODO: figure this out (x,y,yaw,speed right?)
+    constexpr uint8_t action_dims = 2; ///< \f$q\f$, @ref Action
+    constexpr uint8_t state_dims = 4; ///< \f$p\f$, @ref State
     constexpr float temperature = 1.0f; ///< Convergence speed/stability tradeoff, see LaTeX for more details
     constexpr unsigned long long seed = 0; ///< For brownian pseudo-RNG.
     /// Number of elements in the tensor containing all the sampled action trajectories.
@@ -80,7 +80,7 @@ namespace controls {
     constexpr float spline_frame_separation = 0.5f;  // meters
     constexpr uint32_t curv_frame_lookup_tex_width = 512;
     constexpr float curv_frame_lookup_padding = 0; // meters
-    constexpr float track_width = 30.0f; // TODO: FSG rules?
+    constexpr float track_width = 30.0f; // TODO: FSG rules - no we need
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * track_width);
     constexpr bool reset_pose_on_spline = true; ///< Sets pose to 0 vector for new spline (sensor POV)
 

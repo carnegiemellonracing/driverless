@@ -240,6 +240,7 @@ namespace controls {
                 // for each timestep, calculate cost and add to get cost to go
                 // iterate through time because state depends on previous state (can't parallelize)
                 for (uint32_t j = 0; j < num_timesteps; j++) {
+                    //TODO: what is u_ij?
                     float* u_ij = IDX_3D(sampled_action_trajectories, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, 0));
 
                     // VERY CURSED. We want the last action in the best guess action to be the same as the second
@@ -276,6 +277,8 @@ namespace controls {
                     );
                     memcpy(world_state, x_curr, sizeof(float) * state_dims);
 #endif
+                    // COST CALCULATION DONE HERE
+                    const float c = cost(x_curr, u_ij, last_taken_action.data, init_curv_pose[0], controller_period * (j + 1), j == 0);
                     // Converts D and J Matrices to To-Go
                     // ALSO VERY CURSED FOR 2 REASONS:
                     // REASON 1: We have decided to not lower-triangularize the cost-to-gos, but also the log prob
@@ -283,7 +286,6 @@ namespace controls {
                     // REASON 2: To save a loop over timesteps, we have essentially calculated the negative cost
                     // so far and stored it in cost_to_gos. During weighting, we will add back the total cost of the
                     // entire trajectory (which is |cost_to_gos| at final timestep). Likewise with log_prob_densities
-                    const float c = cost(x_curr, u_ij, last_taken_action.data, init_curv_pose[0], controller_period * (j + 1), j == 0);
                     const float d = log_prob_densities[i*num_timesteps + j];
                     j_curr -= c;
                     d_curr -= d;

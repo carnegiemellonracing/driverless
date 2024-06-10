@@ -12,9 +12,12 @@
 #include "constants.hpp"
 
 namespace controls {
+    /// Control action: currently steering wheel angle and forward throttle
     using Action = std::array<float, action_dims>;
+    /// Vehicle state: currently inertial x, y, yaw, speed //TODO: confirm
     using State = std::array<float, state_dims>;
 
+    /// ROS Messages
     using SplineMsg = interfaces::msg::SplineFrames;
     using TwistMsg = geometry_msgs::msg::TwistStamped;
     using ActionMsg = interfaces::msg::ControlAction;
@@ -23,13 +26,16 @@ namespace controls {
     using StateMsg = interfaces::msg::ControlsState;
     using InfoMsg = interfaces::msg::ControllerInfo;
 
+    /// Logging function type.
     using LoggerFunc = std::function<void(const char*)>;
+    /// Instance of LoggerFunc that doesn't log anything.
     constexpr void no_log(const char*) {};
 
-    class Controller {
-    public:
-        virtual Action generate_action() =0;
-
-        virtual ~Controller() =0;
-    };
+    /// TODO: DELETE
+//    class Controller {
+//    public:
+//        virtual Action generate_action() =0;
+//
+//        virtual ~Controller() =0;
+//    };
 }
