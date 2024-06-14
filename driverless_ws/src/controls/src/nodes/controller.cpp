@@ -19,7 +19,6 @@ namespace controls {
                 std::shared_ptr<mppi::MppiController> mppi_controller)
                 : Node {controller_node_name},
 
-                //TODO: understand move semantics
                   m_state_estimator {std::move(state_estimator)},
                   m_mppi_controller {std::move(mppi_controller)},
 
@@ -223,7 +222,6 @@ namespace controls {
             }
 
             void ControllerNode::publish_and_print_info(std::ostream &stream, interfaces::msg::ControllerInfo info) {
-                //TODO: doesn't this only print not publish
                 stream
                 << "Action:\n"
                 << "  swangle (rad): " << info.action.swangle << "\n"

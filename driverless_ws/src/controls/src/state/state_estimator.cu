@@ -30,37 +30,39 @@
 #include <mppi/functors.cuh>
 #include <SDL2/SDL_video.h>
 
-Given inertial coordinates, know how far from spline and how far along the spline
-ICP is very slow, hard to do on GPU
-Create a lookup table with input inertial coordiantes and output distance from spline and distance along spline
-Interpolation is very similar to graphics calculation
-Exploit hardware acceleration
-
-CUDA has access to texture memory
-Reason for OpenGL: Very quickly create textures
-Sacrifice: pretty far from track: not very clear
-
-Method
-Use points from path planning
-Fake cones around the spline (based on a predetermined track width - overestimate). These will be vertices
-Draw triangles between cones.
-Color the cones/vertices
-Vertices include the points given by path planning
-
-Color the vertices
-R = distance along spline;
-G = distance from spline;
-B = angle of spline; (UNSUED)
-A = 0 everywhere in bounds, -1 out of bounds
-        (0,0,0,-1) is background colour, cone has 0 A
-
-Texture: an image (in graphics terms) - mapping from 2D coordinates to RGBA/normal vector/whatever
-
-Abuse depth testing
-- Each point gets a depth (z = g)
-
-
-
+// Given inertial coordinates, know how far from spline and how far along the spline
+// ICP is very slow, hard to do on GPU
+// Create a lookup table with input inertial coordiantes and output distance from spline and distance along spline
+// Interpolation is very similar to graphics calculation
+// Exploit hardware acceleration
+//
+// CUDA has access to texture memory
+// Reason for OpenGL: Very quickly create textures
+// Sacrifice: pretty far from track: not very clear
+//
+// Method
+// Use points from path planning
+// Fake cones around the spline (based on a predetermined track width - overestimate). These will be vertices
+// Draw triangles between cones.
+// Color the cones/vertices
+// Vertices include the points given by path planning
+//
+// Color the vertices
+// R = distance along spline;
+// G = distance from spline;
+// B = angle of spline; (UNSUED)
+// A = 0 everywhere in bounds, -1 out of bounds
+//         (0,0,0,-1) is background colour, cone has 0 A
+//
+// Texture: an image (in graphics terms) - mapping from 2D coordinates to RGBA/normal vector/whatever
+//
+// Abuse depth testing
+// - Each point gets a depth (z = g)
+//
+//
+// Generates a spline, sends to controller, rotates, iterates
+// test_node uses thomas' model. make sure to change mass to 210
+// Don't use controls_sim
 
 namespace controls {
     namespace state {
@@ -409,11 +411,7 @@ namespace controls {
                 rclcpp::Time {
                     time.nanoseconds()
                     + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
-<<<<<<< HEAD
-                    default_clock_type //TODO: figure out why its this sum
-=======
                     default_clock_type
->>>>>>> main
                 }, m_logger
             );
 

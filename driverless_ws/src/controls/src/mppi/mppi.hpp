@@ -8,14 +8,23 @@
 
 namespace controls {
     namespace mppi {
+        /**
+         * @brief MPPI Controller!
+         * In a nutshell, given:
+         * - current inertial state in @ref cuda_globals::curr_state
+         * - a curvilinear lookup table in @ref cuda_globals::curv_frame_lookup_tex
+         * - an existing control action trajectory from the previous run of MPPI
+         * it calculates the optimal control action to minimize a cost function.
+         */
         class MppiController {
         public:
             /**
              * @brief Essentially serves as a named constructor that grants ownership of a MPPIController to the caller.
              * This is necessary because MPPIController is an abstract base class (a pointer is needed)
              *
-             * @param[in] mutex Reference to the mutex that mppi will use //TODO: who else uses it?
-             * @param[in] logger Function object of logger (string to void) //TODO: is function object correct?
+             * @param[in] mutex Reference to the mutex that mppi will use TODO: who else uses it? no idea
+             * @param[in] logger Function object of logger (string to void) TODO: is function object correct?
+             * @return Pointer to the created MPPIController
              */
             static std::shared_ptr<MppiController> create(std::mutex& mutex, LoggerFunc logger = no_log);
 
