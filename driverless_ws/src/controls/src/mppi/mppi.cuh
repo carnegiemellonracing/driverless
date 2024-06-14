@@ -20,7 +20,7 @@ namespace controls {
             /**
              * @brief Construct a new MppiController_Impl object
              *
-             * @param mutex Mutex to lock when //TODO: what is this for?
+             * @param mutex Mutex to lock when TODO: what is this for?
              * @param logger Logger function to log messages
              */
             MppiController_Impl(std::mutex& mutex, LoggerFunc logger);
@@ -87,6 +87,7 @@ namespace controls {
              * Computed over each sample trajectory in parallel (num_samples wide).
              */
             //TODO: any way to make this more atomic without compromising speed?
+         /// rollout states and populate cost
             void populate_cost();
 
             void generate_action_weight_tuples();
