@@ -19,6 +19,7 @@ namespace controls {
     constexpr const char *controller_info_topic_name = "controller_info";
 
     // TODO: what is this, why did we choose it
+    /// ask Ankit?
     static const rmw_qos_profile_t best_effort_profile = {
         RMW_QOS_POLICY_HISTORY_KEEP_LAST,
         1,
@@ -71,7 +72,8 @@ namespace controls {
     constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline
     constexpr float target_speed = 10.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
-    //TODO: vs infinity
+    /// Reason for not using infinity: reduction uses log of the cost (trading precision for representable range)
+    /// Edge case: if every trajectory goes out of bounds (comparing to itself)
     constexpr float out_of_bounds_cost = 100.0f; ///< Cost for being out of (fake) track bounds, TODO: use real bounds
 
 
@@ -80,7 +82,8 @@ namespace controls {
     constexpr float spline_frame_separation = 0.5f;  // meters
     constexpr uint32_t curv_frame_lookup_tex_width = 512;
     constexpr float curv_frame_lookup_padding = 0; // meters
-    constexpr float track_width = 30.0f; // TODO: FSG rules - no we need
+    constexpr float track_width = 30.0f; // TODO: FSG rules - no we need - less noisy output (rename to lookup_table_width)
+    /// mppi simulates a lot of shitty trajectories (naive brownian guess)
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * track_width);
     constexpr bool reset_pose_on_spline = true; ///< Sets pose to 0 vector for new spline (sensor POV)
 
