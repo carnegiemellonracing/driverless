@@ -25,7 +25,10 @@ driverless_ws/src/Model/model.dSYM/Contents/Info.plist
 driverless_ws/src/Model/model
 
 #documentation
-**/*.html
-**/*.xml
-**/latex
-**/*.jpg
+**/doxyhtml
+**/doxyxml
+**/_build
+**/_static
+**/templates
+**/images
+
