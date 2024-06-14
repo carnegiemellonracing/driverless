@@ -23,3 +23,9 @@ driverless_ws/src/Model/model.dSYM/Contents/Resources/Relocations/x86_64/model.y
 driverless_ws/src/Model/model.dSYM/Contents/Resources/DWARF/model
 driverless_ws/src/Model/model.dSYM/Contents/Info.plist
 driverless_ws/src/Model/model
+
+#documentation
+**/*.html
+**/*.xml
+**/latex
+**/*.jpg
