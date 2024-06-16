@@ -6,7 +6,7 @@ A list of important classes and functions in the library.
 .. toctree::
     :maxdepth: 2
 
-    class/controller_node
+    class/ControllerNode
     class/MppiController
     class/StateEstimator
     file/types_hpp
