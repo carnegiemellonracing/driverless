@@ -14,6 +14,18 @@ release = '1.0'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
+master_doc = 'index'
+
+# -- Epilog -----------------------------------------------------------------
+
+rst_epilog = """
+.. |Node| replace:: `Node <https://docs.ros.org/en/humble/Concepts/Basic/About-Nodes.html>`__
+.. |Path Planning| replace:: Unimplemented
+.. |twist| replace:: :doc:`twist </source/explainers/terminology>`
+.. |Actuators| replace:: Unimplemented
+"""
+
+# -- Breathe configuration ---------------------------------------------------
 import os, sys
 sys.path.append(os.fspath('../venv/lib/python3.10/site-packages'))
 extensions = ['breathe']
