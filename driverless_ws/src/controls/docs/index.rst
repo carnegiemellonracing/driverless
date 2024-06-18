@@ -40,8 +40,7 @@ Have fun and enjoy the ride!
    source/reference/api_reference
    source/reference/classlist
    source/reference/filelist
-   source/reference/namespacelist
-   source/reference/structlist
+   source/explainerslist.rst
 
 
 Indices and tables

@@ -1,5 +1,5 @@
 /**
- * @file The main controller process.
+ * @file controller.hpp The main controller process.
  *
  * --- OVERVIEW ---
  * Running `main` starts up to two tasks:
@@ -11,7 +11,7 @@
 
 #pragma once
 
-//TODO: don't need to include mppi? included in state
+//TODO: MPPI is supposedly included by state_estimator but I can't find it. Weird
 #include <state/state_estimator.hpp>
 #include <condition_variable>
 
@@ -22,7 +22,17 @@ namespace controls {
         /**
          * Controller node!
          *
-         * If you're unfamiliar with ROS2, check out @link https://docs.ros.org/en/humble/Tutorials.html @endlink.
+         * If you're unfamiliar with ROS2, check out https://docs.ros.org/en/humble/Tutorials.html.
+         *
+         * The controller hinges on the operation of two objects that it owns - the @ref state::StateEstimator "StateEstimator"
+         * and the @ref mppi::MppiController "MppiController".
+         * Both of these rely on the @rst `dynamics model <../../../_static/model.pdf>`_. @endrst
+         *
+         *  - StateEstimator: given twist and spline, esimates inertial state and a inertial to curvilinear lookup table.
+         *  - MPPIController: given inertial state and the lookup table, calculates the optimal control action to take
+         * using the @rst `MPPI Algorithm <../../../_static/mppi.pdf>`_. @rst
+         *
+         * This is how the node works:
          *
          *  - Initialization: Construction creates subscribers, publishers, and timers, then launches MPPI in a new thread.
          *
@@ -43,9 +53,11 @@ namespace controls {
          *      The action is double buffered, to minimize the delay that MPPI will have on action publishing. The
          *      timer callback is parallel with any other callbacks, so while the consistency of the publishing isn't
          *      guaranteed, it won't be delayed by MPPI or state updates.
-         *      @todo add link to double buffering, inquire about consistency of publishing
+         *      todo add link to double buffering, inquire about consistency of publishing
          *    - Controller Info: every controller step, the most recent info message is published to the `controller_info`
-         *    topic. @todo learn more. Used for debugging purposes.
+         *    topic for debugging.
+         *
+         * Code for the node can be found in *controls/src/nodes/controller.cpp*.
          */
         class ControllerNode : public rclcpp::Node {
         public:
@@ -106,7 +118,7 @@ namespace controls {
              */
             std::thread launch_mppi();
 
-            /** Notify MPPI thread that the state is dirty, and to refire if idle @TODO idle as in waiting to be notified? */
+            /** Notify MPPI thread that the state is dirty, and to refire if idle TODO idle as in waiting to be notified? */
             /// @todo: time is changing so everything is always changing. Consider max control frequency
             void notify_state_dirty();
 
