@@ -9,7 +9,7 @@
 
 
 namespace controls {
-    /// Used for @ref curandCreateGenerator
+    /// Used for curandCreateGenerator
     constexpr curandRngType_t rng_type = CURAND_RNG_PSEUDO_MTGP32;
     // outermost to innermost dimensions
     constexpr dim3 action_trajectories_dims {num_samples, num_timesteps, action_dims};

@@ -355,6 +355,7 @@ namespace controls {
                 });
             }
 
+            //TODO: I thought yaw was using swangle?
             if constexpr (reset_pose_on_spline) {
                 m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
             }

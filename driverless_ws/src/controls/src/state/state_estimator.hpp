@@ -8,11 +8,7 @@
 namespace controls {
     namespace state {
         /**
-         * @brief State Estimator!
-         * In a nutshell, given twist and spline information through ROS messages, it estimates:
-         * - the current inertial state of the vehicle (by using our model to project from stale data)
-         * - a lookup table from inertial state to curviliniear state based on the spline and OpenGL magic
-         * Then it syncs these to the GPU for the MPPI controller to use.
+         * @brief State Estimator! Provides functions for controller node to use to prepare state information for mppi.
          */
         class StateEstimator {
         public:
@@ -55,15 +51,15 @@ namespace controls {
 
             /**
              * @brief Returns whether state projection is ready. If not, the MPPI controller should wait. This should
-             * only be not ready when the state estimator is first initialized.
+             * only be not ready when the state estimator is first initialized and the controller has no spline.
              * @return True if state projection is ready, False otherwise.
              */
             virtual bool is_ready() =0;
             /**
-             * @brief Esimates and returns current state by projecting from last known twist/spline information.
-             * @return The current estimated state
+             * @brief Returns the last state that was projected. Does not actually do the projection (that is in an
+             * internal call in sync_to_device). Used for debugging pursposes.
+             * @return The most recent projected state.
              * @note Spline provides state information since car is at (0, 0) relative to a new spline.
-             * @TODO Why must this be a public function? For debugging reasons?
              */
             virtual State get_projected_state() =0;
             /**
@@ -72,9 +68,9 @@ namespace controls {
              */
             virtual void set_logger(LoggerFunc logger) =0;
             /**
-             * @brief Returns the timestamp of the last spline message received.
+             * @brief Returns the timestamp of the last spline message received. This is accurate to when the sensor
+             * (i.e. LIDAR) information was received, not when the spline was calculated.
              * @return The timestamp of the last spline message received.
-             * @TODO verify copilot isnt trolling me
              */
             virtual rclcpp::Time get_orig_spline_data_stamp() =0;
             /**

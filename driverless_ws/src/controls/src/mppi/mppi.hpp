@@ -14,6 +14,7 @@ namespace controls {
          * - current inertial state in @ref cuda_globals::curr_state
          * - a curvilinear lookup table in @ref cuda_globals::curv_frame_lookup_tex
          * - an existing control action trajectory from the previous run of MPPI
+         *
          * it calculates the optimal control action to minimize a cost function.
          */
         class MppiController {
@@ -30,9 +31,8 @@ namespace controls {
 
             /**
              * @brief Generates an action based on state and spline (both are cuda globals), returns it.
-             * Tunable parameters in @file constants.hpp and @file cuda_globals.cuh.
+             * Tunable parameters in @file constants.hpp and @file cuda_globals/cuda_globals.cuh.
              * Virtual because it should be called through its child (implementation) object rather than directly.
-             *
              * @return The optimal action calculated by MPPI given state and spline information.
              */
             virtual Action generate_action() =0;
