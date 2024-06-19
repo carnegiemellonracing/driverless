@@ -380,7 +380,15 @@ namespace controls {
 
         /** 
          * Captures pointers to action trajectories and cost to gos
-         * Produces a weight for a single action based on its cost to go
+         * Produces a weight for a single action based on its cost to go.
+         * Bundles the action and weight into an ActionWeightTuple, then stores it in the output array
+         * in a different position so as to "transpose" the matrix.
+         *
+         * @param[out] action_weight_tuples output (transposed) matrix of action-weight tuples
+         * @param[in] action_trajectories perturbed action trajectories
+         * @param[in] cost_to_gos cost to go for each action
+         * @param[in] log_prob_densities log probability densities for each action
+         * @param[in] idx index into action_weight_tuples
         */
         struct IndexToActionWeightTuple {
             const float* action_trajectories;

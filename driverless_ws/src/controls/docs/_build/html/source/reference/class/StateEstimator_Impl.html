@@ -54,16 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MppiController.html">Class mppi::MppiController</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MppiController_Impl.html">Class mppi::MppiController_Impl</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="StateEstimator.html">Class state::StateEstimator</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="StateEstimator.html#_CPPv4N8controls5state14StateEstimatorE"><code class="docutils literal notranslate"><span class="pre">StateEstimator</span></code></a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Class state::StateEstimator_Impl</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#state-projection">State Projection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#curvilinear-lookup-table-generation">Curvilinear Lookup Table Generation</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="StateProjector.html">Class controls::state::StateProjector</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="StateEstimator.html">Class state::StateEstimator</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Class state::StateEstimator_Impl</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#state-projection">State Projection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#curvilinear-lookup-table-generation">Curvilinear Lookup Table Generation</a><ul>
@@ -133,7 +124,16 @@ as “Records”.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl19StateEstimator_ImplERNSt5mutexE10LoggerFunc">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl19StateEstimator_ImplERNSt5mutexE10LoggerFunc"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl19StateEstimator_ImplERNSt5mutexE10LoggerFunc"></span><span id="controls::state::StateEstimator_Impl::StateEstimator_Impl__std::mutexR.LoggerFunc"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a87bd990d4d26a36d5b523dfe4c051ec8"></span><span class="sig-name descname"><span class="n"><span class="pre">StateEstimator_Impl</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mutex</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">mutex</span></span>, <a class="reference internal" href="../file/types_hpp.html#_CPPv4N8controls10LoggerFuncE" title="controls::LoggerFunc"><span class="n"><span class="pre">LoggerFunc</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">logger</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl19StateEstimator_ImplERNSt5mutexE10LoggerFunc" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Actual constructor, called implicitly by make_shared. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mutex</strong> – <a class="reference internal" href="StateEstimator.html#classcontrols_1_1state_1_1StateEstimator"><span class="std std-ref">StateEstimator</span></a>’s mutex </p></li>
+<li><p><strong>logger</strong> – logger function to be used </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl9on_splineERK9SplineMsg">
@@ -247,7 +247,8 @@ as “Records”.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_ImplD0Ev">
 <span id="_CPPv3N8controls5state19StateEstimator_ImplD0Ev"></span><span id="_CPPv2N8controls5state19StateEstimator_ImplD0Ev"></span><span id="controls::state::StateEstimator_Impl::~StateEstimator_Impl"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a2fc709c9c0911a0f0f5969524a855f73"></span><span class="sig-name descname"><span class="n"><span class="pre">~StateEstimator_Impl</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_ImplD0Ev" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Destructor, cleans up OpenGL resources. </p>
+</dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
@@ -255,47 +256,57 @@ as “Records”.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl12gen_tex_infoEN3glm5fvec2E">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl12gen_tex_infoEN3glm5fvec2E"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl12gen_tex_infoEN3glm5fvec2E"></span><span id="controls::state::StateEstimator_Impl::gen_tex_info__glm::fvec2"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a114daf460b0fd1e1872d89891410162d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gen_tex_info</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">fvec2</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">car_pos</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl12gen_tex_infoEN3glm5fvec2E" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Calculates scale and center transformation from world to lookup table, stores in m_curv_frame_lookup_tex_info. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl24render_curv_frame_lookupEv">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl24render_curv_frame_lookupEv"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl24render_curv_frame_lookupEv"></span><span id="controls::state::StateEstimator_Impl::render_curv_frame_lookup"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a6fecdb88eaabfc38aba249c496e3bf7d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">render_curv_frame_lookup</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl24render_curv_frame_lookupEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Render the lookup table into m_curv_frame_lookup_fbo </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl21map_curv_frame_lookupEv">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl21map_curv_frame_lookupEv"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl21map_curv_frame_lookupEv"></span><span id="controls::state::StateEstimator_Impl::map_curv_frame_lookup"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1afb2122affa4b1c0d67eccc20a5b53717"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">map_curv_frame_lookup</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl21map_curv_frame_lookupEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Maps the rendered OpenGL frame buffer to a CUDA texture (<a class="reference internal" href="../file/cuda_globals_cuh.html#namespacecontrols_1_1cuda__globals_1a3695c0ce3bc37280f3efca5f6c80ebe6"><span class="std std-ref">cuda_globals::curv_frame_lookup_tex</span></a>) Since the OpenGL frame buffer can’t be referred to by the rest of the code directly. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl23unmap_curv_frame_lookupEv">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl23unmap_curv_frame_lookupEv"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl23unmap_curv_frame_lookupEv"></span><span id="controls::state::StateEstimator_Impl::unmap_curv_frame_lookup"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1acbb92bf7bb4206b87d0fae42b22715e6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">unmap_curv_frame_lookup</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl23unmap_curv_frame_lookupEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Unmaps the frame buffer from CUDA memory, since you can’t render to something when it is mapped. Think about it like releasing a mutex. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl16sync_world_stateEv">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl16sync_world_stateEv"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl16sync_world_stateEv"></span><span id="controls::state::StateEstimator_Impl::sync_world_state"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a8e6e0e53330e41869902486a31fcf41f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sync_world_state</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl16sync_world_stateEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Syncs m_synced_projected_state to <a class="reference internal" href="../file/helpers_cuh.html#namespacecontrols_1_1cuda__globals"><span class="std std-ref">cuda_globals</span></a> so it can be accessed by MPPI </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl13sync_tex_infoEv">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl13sync_tex_infoEv"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl13sync_tex_infoEv"></span><span id="controls::state::StateEstimator_Impl::sync_tex_info"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1ae6faa6851431e4c46ff3c1204da06c73"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sync_tex_info</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl13sync_tex_infoEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Syncs m_curv_frame_lookup_tex_info to <a class="reference internal" href="../file/helpers_cuh.html#namespacecontrols_1_1cuda__globals"><span class="std std-ref">cuda_globals</span></a> so it can be accessed by MPPI. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl33gen_curv_frame_lookup_framebufferEv">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl33gen_curv_frame_lookup_framebufferEv"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl33gen_curv_frame_lookup_framebufferEv"></span><span id="controls::state::StateEstimator_Impl::gen_curv_frame_lookup_framebuffer"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1af7b82c7a94fb0694a1e9e65f03b50568"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gen_curv_frame_lookup_framebuffer</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl33gen_curv_frame_lookup_framebufferEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Creates the frame and render buffers (m_curv_frame_lookup_fbo/rbo). </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl11gen_gl_pathEv">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl11gen_gl_pathEv"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl11gen_gl_pathEv"></span><span id="controls::state::StateEstimator_Impl::gen_gl_path"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a388926f34c52e23339206a0b598ad238"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gen_gl_path</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl11gen_gl_pathEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Creates the names for the vao, vbo and ebo. Specifies how the vbo should be laid out, stores this in the vao. Lastly, binds to the ebo. </p>
+<p>Creates the buffers to be used, as well as the descriptions of how the buffers are laid out. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl17fill_path_buffersEN3glm5fvec2E">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl17fill_path_buffersEN3glm5fvec2E"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl17fill_path_buffersEN3glm5fvec2E"></span><span id="controls::state::StateEstimator_Impl::fill_path_buffers__glm::fvec2"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1afd8e5bcdaafa30840ea06d9a9a9f2c65"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fill_path_buffers</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">fvec2</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">car_pos</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl17fill_path_buffersEN3glm5fvec2E" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Fills in the vertex and element buffers with the actual vertex position information and the triples of vertex indices that represent triangles respectively. </p>
+</dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
@@ -303,22 +314,26 @@ as “Records”.</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl15m_spline_framesE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl15m_spline_framesE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl15m_spline_framesE"></span><span id="controls::state::StateEstimator_Impl::m_spline_frames__std::vector:glm::fvec2:"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a6726e21aa5e17b8c053f349ed2c17a42"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">fvec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_spline_frames</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl15m_spline_framesE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl17m_state_projectorE">
-<span id="_CPPv3N8controls5state19StateEstimator_Impl17m_state_projectorE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl17m_state_projectorE"></span><span id="controls::state::StateEstimator_Impl::m_state_projector__StateProjector"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1aadc17a71d1651223cac03814acccfc43"></span><a class="reference internal" href="StateProjector.html#_CPPv4N8controls5state14StateProjectorE" title="controls::state::StateProjector"><span class="n"><span class="pre">StateProjector</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_state_projector</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl17m_state_projectorE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl24m_synced_projected_stateE">
-<span id="_CPPv3N8controls5state19StateEstimator_Impl24m_synced_projected_stateE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl24m_synced_projected_stateE"></span><span id="controls::state::StateEstimator_Impl::m_synced_projected_state__State"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a9729825b17ef51d0b96485c605d20ca2"></span><a class="reference internal" href="../file/types_hpp.html#_CPPv4N8controls5StateE" title="controls::State"><span class="n"><span class="pre">State</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_synced_projected_state</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl24m_synced_projected_stateE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Stores the sequence of (x,y) spline points from path planning. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl24m_orig_spline_data_stampE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl24m_orig_spline_data_stampE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl24m_orig_spline_data_stampE"></span><span id="controls::state::StateEstimator_Impl::m_orig_spline_data_stamp__rclcpp::Time"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a231537df164f2ba230eb926883103471"></span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_orig_spline_data_stamp</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl24m_orig_spline_data_stampE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Stores the exact time the spline should be accurate from (i.e. when cones were identified by LIDAR) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl17m_state_projectorE">
+<span id="_CPPv3N8controls5state19StateEstimator_Impl17m_state_projectorE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl17m_state_projectorE"></span><span id="controls::state::StateEstimator_Impl::m_state_projector__StateProjector"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1aadc17a71d1651223cac03814acccfc43"></span><a class="reference internal" href="StateProjector.html#_CPPv4N8controls5state14StateProjectorE" title="controls::state::StateProjector"><span class="n"><span class="pre">StateProjector</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_state_projector</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl17m_state_projectorE" title="Link to this definition"></a><br /></dt>
+<dd><p>The owned <a class="reference internal" href="StateProjector.html#classcontrols_1_1state_1_1StateProjector"><span class="std std-ref">StateProjector</span></a> to estimate the current state. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl24m_synced_projected_stateE">
+<span id="_CPPv3N8controls5state19StateEstimator_Impl24m_synced_projected_stateE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl24m_synced_projected_stateE"></span><span id="controls::state::StateEstimator_Impl::m_synced_projected_state__State"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a9729825b17ef51d0b96485c605d20ca2"></span><a class="reference internal" href="../file/types_hpp.html#_CPPv4N8controls5StateE" title="controls::State"><span class="n"><span class="pre">State</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_synced_projected_state</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl24m_synced_projected_stateE" title="Link to this definition"></a><br /></dt>
+<dd><p>Where the most recent projected state is stored. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl23m_curv_frame_lookup_rscE">
@@ -328,57 +343,62 @@ as “Records”.</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl28m_curv_frame_lookup_tex_infoE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl28m_curv_frame_lookup_tex_infoE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl28m_curv_frame_lookup_tex_infoE"></span><span id="controls::state::StateEstimator_Impl::m_curv_frame_lookup_tex_info__cuda_globals::CurvFrameLookupTexInfo"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1ae868e0a371d36543a1abd84bc73c921d"></span><a class="reference internal" href="../file/cuda_globals_cuh.html#_CPPv4N8controls12cuda_globalsE" title="controls::cuda_globals"><span class="n"><span class="pre">cuda_globals</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="../file/cuda_globals_cuh.html#_CPPv4N8controls12cuda_globals22CurvFrameLookupTexInfoE" title="controls::cuda_globals::CurvFrameLookupTexInfo"><span class="n"><span class="pre">CurvFrameLookupTexInfo</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_curv_frame_lookup_tex_info</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl28m_curv_frame_lookup_tex_infoE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Center and scale information (transformation from IRL to rendered coordinates) </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl23m_curv_frame_lookup_fboE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl23m_curv_frame_lookup_fboE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl23m_curv_frame_lookup_fboE"></span><span id="controls::state::StateEstimator_Impl::m_curv_frame_lookup_fbo__GLuint"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a50b7805e679281c13695527dc4d5ba44"></span><span class="n"><span class="pre">GLuint</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_curv_frame_lookup_fbo</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl23m_curv_frame_lookup_fboE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Frame buffer object. Where the OpenGL shader pipeline renders to. The actual lookup table. OpenGL object, not a CUDA object. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl23m_curv_frame_lookup_rboE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl23m_curv_frame_lookup_rboE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl23m_curv_frame_lookup_rboE"></span><span id="controls::state::StateEstimator_Impl::m_curv_frame_lookup_rbo__GLuint"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a39ca12555266a4e49334adbeefc100f8"></span><span class="n"><span class="pre">GLuint</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_curv_frame_lookup_rbo</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl23m_curv_frame_lookup_rboE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Render buffer object. Render target for the fbo, used to map to CUDA memory. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl9m_gl_pathE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl9m_gl_pathE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl9m_gl_pathE"></span><span id="controls::state::StateEstimator_Impl::m_gl_path__utils::GLObj"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a94dd1d1200cbae77c54beba1f36ca505"></span><a class="reference internal" href="../file/gl_utils_hpp.html#_CPPv4N8controls5utilsE" title="controls::utils"><span class="n"><span class="pre">utils</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="../file/gl_utils_hpp.html#_CPPv4N8controls5utils5GLObjE" title="controls::utils::GLObj"><span class="n"><span class="pre">GLObj</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_gl_path</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl9m_gl_pathE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Has members vbo, vao, veo. <a class="reference internal" href="../file/gl_utils_hpp.html#structcontrols_1_1utils_1_1GLObj"><span class="std std-ref">utils::GLObj</span></a> vbo - vertex buffer object. Contiguous block of memory where all the vertices’ information is stored vao - vertex array object. A specification for how memory in the VBO is laid out, e.g. how big is a vertex. ebo - element buffer object. Memory that contains triples of indices into the VBO, representing triangles. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl16m_gl_path_shaderE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl16m_gl_path_shaderE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl16m_gl_path_shaderE"></span><span id="controls::state::StateEstimator_Impl::m_gl_path_shader__GLuint"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a4b6e5dd7921cf10491a6c0497a62f0f6"></span><span class="n"><span class="pre">GLuint</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_gl_path_shader</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl16m_gl_path_shaderE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl11m_gl_windowE">
-<span id="_CPPv3N8controls5state19StateEstimator_Impl11m_gl_windowE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl11m_gl_windowE"></span><span id="controls::state::StateEstimator_Impl::m_gl_window__SDL_WindowP"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1abecb7b92002e7080baf4fb9dec360180"></span><span class="n"><span class="pre">SDL_Window</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_gl_window</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl11m_gl_windowE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Shader program to be used. Composed of vertex and fragment shaders. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl12m_gl_contextE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl12m_gl_contextE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl12m_gl_contextE"></span><span id="controls::state::StateEstimator_Impl::m_gl_context__SDL_GLContext"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1aea3b0ec49b1c2e5f6e18c22ca9b3da43"></span><span class="n"><span class="pre">SDL_GLContext</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_gl_context</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl12m_gl_contextE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>OpenGL context, stores all the information associated with this instance. </p>
+</dd></dl>
 
 <dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl18m_gl_context_mutexE">
-<span id="_CPPv3N8controls5state19StateEstimator_Impl18m_gl_context_mutexE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl18m_gl_context_mutexE"></span><span id="controls::state::StateEstimator_Impl::m_gl_context_mutex__std::mutex"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a2437a3c386360f06148c94029145cd22"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mutex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_gl_context_mutex</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl18m_gl_context_mutexE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl11m_gl_windowE">
+<span id="_CPPv3N8controls5state19StateEstimator_Impl11m_gl_windowE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl11m_gl_windowE"></span><span id="controls::state::StateEstimator_Impl::m_gl_window__SDL_WindowP"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1abecb7b92002e7080baf4fb9dec360180"></span><span class="n"><span class="pre">SDL_Window</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_gl_window</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl11m_gl_windowE" title="Link to this definition"></a><br /></dt>
+<dd><p>OpenGL window assoicated with the context. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl26m_curv_frame_lookup_mappedE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl26m_curv_frame_lookup_mappedE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl26m_curv_frame_lookup_mappedE"></span><span id="controls::state::StateEstimator_Impl::m_curv_frame_lookup_mapped__b"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1aeb4f5fe007f51ae5392caf9b5faf4c96"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_curv_frame_lookup_mapped</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl26m_curv_frame_lookup_mappedE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Whether the frame buffer is mapped to CUDA memory or not. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl8m_loggerE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl8m_loggerE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl8m_loggerE"></span><span id="controls::state::StateEstimator_Impl::m_logger__LoggerFunc"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a4de28f77c37b1ed4791f1d512a349c13"></span><a class="reference internal" href="../file/types_hpp.html#_CPPv4N8controls10LoggerFuncE" title="controls::LoggerFunc"><span class="n"><span class="pre">LoggerFunc</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_logger</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl8m_loggerE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>The logger function to be used. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl7m_mutexE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl7m_mutexE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl7m_mutexE"></span><span id="controls::state::StateEstimator_Impl::m_mutex__std::mutexR"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1af4baea154aabaf733c0f2972bb4fc3b5"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mutex</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_mutex</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl7m_mutexE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Mutex to prevent multiple method calls from happening simultaneously. </p>
+</dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
@@ -386,12 +406,14 @@ as “Records”.</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl16shader_scale_locE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl16shader_scale_locE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl16shader_scale_locE"></span><span id="controls::state::StateEstimator_Impl::shader_scale_loc__GLint"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1a324ee0fd511c760c41c92204bd805957"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">GLint</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">shader_scale_loc</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl16shader_scale_locE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Index into where the uniform scale is stored for vertex shader to reference. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl17shader_center_locE">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl17shader_center_locE"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl17shader_center_locE"></span><span id="controls::state::StateEstimator_Impl::shader_center_loc__GLint"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1ab556bcdceac20cb17066326dd74e6212"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">GLint</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">shader_center_loc</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl17shader_center_locE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Index into where the uniform center is stored for vertex shader to reference. </p>
+</dd></dl>
 
 </div>
 </dd></dl>

@@ -370,7 +370,24 @@ Uses <a class="reference internal" href="cuda_globals_cuh.html#namespacecontrols
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi24IndexToActionWeightTupleE">
 <span id="_CPPv3N8controls4mppi24IndexToActionWeightTupleE"></span><span id="_CPPv2N8controls4mppi24IndexToActionWeightTupleE"></span><span id="controls::mppi::IndexToActionWeightTuple"></span><span class="target" id="structcontrols_1_1mppi_1_1IndexToActionWeightTuple"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IndexToActionWeightTuple</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi24IndexToActionWeightTupleE" title="Link to this definition"></a><br /></dt>
-<dd><p>Captures pointers to action trajectories and cost to gos Produces a weight for a single action based on its cost to go </p>
+<dd><p>Captures pointers to action trajectories and cost to gos Produces a weight for a single action based on its cost to go. Bundles the action and weight into an <a class="reference internal" href="types_cuh.html#structcontrols_1_1mppi_1_1ActionWeightTuple"><span class="std std-ref">ActionWeightTuple</span></a>, then stores it in the output array in a different position so as to “transpose” the matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param action_weight_tuples<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[out]</strong> output (transposed) matrix of action-weight tuples </p>
+</dd>
+<dt class="field-even">Param action_trajectories<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>[in]</strong> perturbed action trajectories </p>
+</dd>
+<dt class="field-odd">Param cost_to_gos<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[in]</strong> cost to go for each action </p>
+</dd>
+<dt class="field-even">Param log_prob_densities<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>[in]</strong> log probability densities for each action </p>
+</dd>
+<dt class="field-odd">Param idx<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[in]</strong> index into action_weight_tuples </p>
+</dd>
+</dl>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">

@@ -20,12 +20,20 @@ the direction the car is facing. Otherwise known as *path planning* frame or err
 - *curvilinear*: Coordinate frame in relation to the spline. Coordinates represent distance along spline,
 perpendicular distance from spline, angle with tangent of spline, etc. Needed for cost calculation.
 
+**rollout**: In the context of MPPI, refers to state rollout. A sequence of predicted states calculated by repeated
+application of the model on a given starting state and control action trajectory.
 
 CUDA
 ----
 **host**: The CPU
 
 **device**: The GPU
+
+``__device__``: Tag for functions to be run exclusively on the GPU.
+
+``__constant__``: Tag for symbols in device memory that are unmodified by kernels . Can still copy to and from the host.
+Read-only in CUDA code. Allows for better caching. Equivalent of ``const``. Constants for both the host and device
+should be marked ``__constant__ const``.
 
 ROS
 ---

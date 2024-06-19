@@ -52,14 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../classlist.html">Class list</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ControllerNode.html">Class ControllerNode</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="MppiController.html">Class mppi::MppiController</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Class mppi::MppiController_Impl</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls4mppi19MppiController_ImplE"><code class="docutils literal notranslate"><span class="pre">MppiController_Impl</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="MppiController.html#_CPPv4N8controls4mppi14MppiControllerE"><code class="docutils literal notranslate"><span class="pre">MppiController</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="MppiController.html">Class mppi::MppiController</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Class mppi::MppiController_Impl</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv4N8controls4mppi19MppiController_ImplE"><code class="docutils literal notranslate"><span class="pre">MppiController_Impl</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls4mppi19MppiController_Impl19MppiController_ImplERNSt5mutexE10LoggerFunc"><code class="docutils literal notranslate"><span class="pre">MppiController_Impl::MppiController_Impl()</span></code></a></li>
@@ -180,15 +173,16 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi19MppiController_Impl29generate_action_weight_tuplesEv">
 <span id="_CPPv3N8controls4mppi19MppiController_Impl29generate_action_weight_tuplesEv"></span><span id="_CPPv2N8controls4mppi19MppiController_Impl29generate_action_weight_tuplesEv"></span><span id="controls::mppi::MppiController_Impl::generate_action_weight_tuples"></span><span class="target" id="classcontrols_1_1mppi_1_1MppiController__Impl_1a954fbf7fbf1441a80a0366c853548956"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">generate_action_weight_tuples</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls4mppi19MppiController_Impl29generate_action_weight_tuplesEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Populates m_action_weight_tuples in timestep-major order with actions and their associated weights. All samples at time 0, all samples at time 1, etc. This is transposed from m_cost_to_gos (which is sample-major order) so that the reduction has good locality. Reads from the corresponding indexes in m_action_trajectories, m_cost_to_gos and m_log_prob_densities, bundles them, then places the tuple in the new position in m_action_weight_tuples. Computed over each control action/cost in parallel (num_samples * num_timesteps wide) </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi19MppiController_Impl14reduce_actionsEv">
 <span id="_CPPv3N8controls4mppi19MppiController_Impl14reduce_actionsEv"></span><span id="_CPPv2N8controls4mppi19MppiController_Impl14reduce_actionsEv"></span><span id="controls::mppi::MppiController_Impl::reduce_actions"></span><span class="target" id="classcontrols_1_1mppi_1_1MppiController__Impl_1ada53a48ad9efa5a273039e5b91acc4b9"></span><span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="../file/types_cuh.html#_CPPv4N8controls4mppi12DeviceActionE" title="controls::mppi::DeviceAction"><span class="n"><span class="pre">DeviceAction</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reduce_actions</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls4mppi19MppiController_Impl14reduce_actionsEv" title="Link to this definition"></a><br /></dt>
-<dd><p>Retrieves action based on cost to go using reduction. </p>
+<dd><p>For every timestep, reduces the samples together using a weighted average. Reads from m_action_weight_tuples. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Optimal control action based on state and spline information. </p>
+<dd class="field-odd"><p>Optimal control action trajectory based on state and spline information. </p>
 </dd>
 </dl>
 </dd></dl>
