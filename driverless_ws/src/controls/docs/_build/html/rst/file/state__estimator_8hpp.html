@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File state_estimator.hpp &mdash; driverless_controls 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            driverless_controls
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../class/controller_node.html">Class ControllerNode</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">driverless_controls</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">File state_estimator.hpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/rst/file/state__estimator_8hpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-state-estimator-hpp">
+<h1>File state_estimator.hpp<a class="headerlink" href="#file-state-estimator-hpp" title="Link to this heading"></a></h1>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv48controls">
+<span id="_CPPv38controls"></span><span id="_CPPv28controls"></span><span id="controls"></span><span class="target" id="namespacecontrols"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">controls</span></span></span><br /></dt>
+<dd><dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5stateE">
+<span id="_CPPv3N8controls5stateE"></span><span id="_CPPv2N8controls5stateE"></span><span id="controls::state"></span><span class="target" id="namespacecontrols_1_1state"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">state</span></span></span><br /></dt>
+<dd><dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimatorE">
+<span id="_CPPv3N8controls5state14StateEstimatorE"></span><span id="_CPPv2N8controls5state14StateEstimatorE"></span><span id="controls::state::StateEstimator"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StateEstimator</span></span></span><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;state_estimator.hpp&gt;</em></div>
+<p>Subclassed by <a class="reference internal" href="../namespace/namespacecontrols_1_1state.html#classcontrols_1_1state_1_1StateEstimator__Impl"><span class="std std-ref">controls::state::StateEstimator_Impl</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator9on_splineERK9SplineMsg">
+<span id="_CPPv3N8controls5state14StateEstimator9on_splineERK9SplineMsg"></span><span id="_CPPv2N8controls5state14StateEstimator9on_splineERK9SplineMsg"></span><span id="controls::state::StateEstimator::on_spline__SplineMsgCR"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1a58056ddfbbe90589d7039056cb724088"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">on_spline</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="types_8hpp.html#_CPPv4N8controls9SplineMsgE" title="controls::SplineMsg"><span class="n"><span class="pre">SplineMsg</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spline_msg</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator8on_twistERK8TwistMsgRKN6rclcpp4TimeE">
+<span id="_CPPv3N8controls5state14StateEstimator8on_twistERK8TwistMsgRKN6rclcpp4TimeE"></span><span id="_CPPv2N8controls5state14StateEstimator8on_twistERK8TwistMsgRKN6rclcpp4TimeE"></span><span id="controls::state::StateEstimator::on_twist__TwistMsgCR.rclcpp::TimeCR"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1afeb74513a3953688672cfe933510eb63"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">on_twist</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="types_8hpp.html#_CPPv4N8controls8TwistMsgE" title="controls::TwistMsg"><span class="n"><span class="pre">TwistMsg</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">twist_msg</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="../namespace/namespacerclcpp.html#_CPPv46rclcpp" title="rclcpp"><span class="n"><span class="pre">rclcpp</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">time</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator7on_poseERK7PoseMsg">
+<span id="_CPPv3N8controls5state14StateEstimator7on_poseERK7PoseMsg"></span><span id="_CPPv2N8controls5state14StateEstimator7on_poseERK7PoseMsg"></span><span id="controls::state::StateEstimator::on_pose__PoseMsgCR"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1a609f189e03263965c699d92a293b11c6"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">on_pose</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="types_8hpp.html#_CPPv4N8controls7PoseMsgE" title="controls::PoseMsg"><span class="n"><span class="pre">PoseMsg</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">pose_msg</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator14sync_to_deviceERKN6rclcpp4TimeE">
+<span id="_CPPv3N8controls5state14StateEstimator14sync_to_deviceERKN6rclcpp4TimeE"></span><span id="_CPPv2N8controls5state14StateEstimator14sync_to_deviceERKN6rclcpp4TimeE"></span><span id="controls::state::StateEstimator::sync_to_device__rclcpp::TimeCR"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1ac011e98108892711ce593ec3861883c7"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sync_to_device</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="../namespace/namespacerclcpp.html#_CPPv46rclcpp" title="rclcpp"><span class="n"><span class="pre">rclcpp</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">time</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator8is_readyEv">
+<span id="_CPPv3N8controls5state14StateEstimator8is_readyEv"></span><span id="_CPPv2N8controls5state14StateEstimator8is_readyEv"></span><span id="controls::state::StateEstimator::is_ready"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1aa0cf7078c14a49cd0b0d9a6c01f3da74"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_ready</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator19get_projected_stateEv">
+<span id="_CPPv3N8controls5state14StateEstimator19get_projected_stateEv"></span><span id="_CPPv2N8controls5state14StateEstimator19get_projected_stateEv"></span><span id="controls::state::StateEstimator::get_projected_state"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1ab4034a7d5e053e5cc6b75a1b0c40a8df"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="types_8hpp.html#_CPPv4N8controls5StateE" title="controls::State"><span class="n"><span class="pre">State</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_projected_state</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator10set_loggerE10LoggerFunc">
+<span id="_CPPv3N8controls5state14StateEstimator10set_loggerE10LoggerFunc"></span><span id="_CPPv2N8controls5state14StateEstimator10set_loggerE10LoggerFunc"></span><span id="controls::state::StateEstimator::set_logger__LoggerFunc"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1af1c15841245106d5c3e348eabd40533e"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_logger</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="types_8hpp.html#_CPPv4N8controls10LoggerFuncE" title="controls::LoggerFunc"><span class="n"><span class="pre">LoggerFunc</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">logger</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator26get_orig_spline_data_stampEv">
+<span id="_CPPv3N8controls5state14StateEstimator26get_orig_spline_data_stampEv"></span><span id="_CPPv2N8controls5state14StateEstimator26get_orig_spline_data_stampEv"></span><span id="controls::state::StateEstimator::get_orig_spline_data_stamp"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1a4c6fdde239491c5e8b93982e8bfb5934"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="../namespace/namespacerclcpp.html#_CPPv46rclcpp" title="rclcpp"><span class="n"><span class="pre">rclcpp</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_orig_spline_data_stamp</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator21record_control_actionERK6ActionRKN6rclcpp4TimeE">
+<span id="_CPPv3N8controls5state14StateEstimator21record_control_actionERK6ActionRKN6rclcpp4TimeE"></span><span id="_CPPv2N8controls5state14StateEstimator21record_control_actionERK6ActionRKN6rclcpp4TimeE"></span><span id="controls::state::StateEstimator::record_control_action__ActionCR.rclcpp::TimeCR"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1a601647e23b593c357f5cbfae2daa51a2"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">record_control_action</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="types_8hpp.html#_CPPv4N8controls6ActionE" title="controls::Action"><span class="n"><span class="pre">Action</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">action</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="../namespace/namespacerclcpp.html#_CPPv46rclcpp" title="rclcpp"><span class="n"><span class="pre">rclcpp</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">ros_time</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimatorD0Ev">
+<span id="_CPPv3N8controls5state14StateEstimatorD0Ev"></span><span id="_CPPv2N8controls5state14StateEstimatorD0Ev"></span><span id="controls::state::StateEstimator::~StateEstimator"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1adbb2678e027559bb19fbac59f0d8c0dc"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~StateEstimator</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator6createERNSt5mutexE10LoggerFunc">
+<span id="_CPPv3N8controls5state14StateEstimator6createERNSt5mutexE10LoggerFunc"></span><span id="_CPPv2N8controls5state14StateEstimator6createERNSt5mutexE10LoggerFunc"></span><span id="controls::state::StateEstimator::create__std::mutexR.LoggerFunc"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1a93940c067a432643423d103fce5c7179"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="../class/classcontrols_1_1state_1_1StateEstimator.html#_CPPv4N8controls5state14StateEstimatorE" title="controls::state::StateEstimator"><span class="n"><span class="pre">StateEstimator</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">create</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mutex</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">mutex</span></span>, <a class="reference internal" href="types_8hpp.html#_CPPv4N8controls10LoggerFuncE" title="controls::LoggerFunc"><span class="n"><span class="pre">LoggerFunc</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">logger</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="types_8hpp.html#_CPPv4N8controls6no_logEPKc" title="controls::no_log"><span class="n"><span class="pre">no_log</span></span></a><span class="sig-paren">)</span><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Yip.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

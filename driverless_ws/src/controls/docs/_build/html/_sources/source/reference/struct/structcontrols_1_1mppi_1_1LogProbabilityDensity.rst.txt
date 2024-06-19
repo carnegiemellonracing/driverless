@@ -1,0 +1,4 @@
+Struct controls::mppi::LogProbabilityDensity
+============================================
+
+.. doxygenstruct:: controls::mppi::LogProbabilityDensity

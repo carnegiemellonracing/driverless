@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File cuda_utils.cuh &mdash; driverless_controls 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="File constants.hpp" href="constants_hpp.html" />
+    <link rel="prev" title="File cuda_types.cuh" href="cuda_types_cuh.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            driverless_controls
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">driverless_controls</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api_reference.html">API Reference</a></li>
+      <li class="breadcrumb-item active">File cuda_utils.cuh</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/rst/reference/file/cuda_utils_cuh.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-cuda-utils-cuh">
+<h1>File cuda_utils.cuh<a class="headerlink" href="#file-cuda-utils-cuh" title="Link to this heading"></a></h1>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.IDX_3D">
+<span class="target" id="cuda__utils_8cuh_1a0733f899fed93f788197519e2f03d2cf"></span><span class="sig-name descname"><span class="n"><span class="pre">IDX_3D</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">tensor</span></span>, <span class="n"><span class="pre">dims</span></span>, <span class="n"><span class="pre">idx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.IDX_3D" title="Link to this definition"></a><br /></dt>
+<dd><p>indexes into a 3-dimensional tensor that is represented in memory as a single nested array. Note: 0 &lt;= idx.x &lt; dim.x </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tensor</strong> – the array to be indexed into </p></li>
+<li><p><strong>dims</strong> – (outermost, middle, innermost) dimensions </p></li>
+<li><p><strong>idx</strong> – (outermost, middle, innermost) index </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>address of the desired element </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CUDA_CALL">
+<span class="target" id="cuda__utils_8cuh_1a6694bb1be0e7de8ed06a4bdc2ea374f1"></span><span class="sig-name descname"><span class="n"><span class="pre">CUDA_CALL</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.CUDA_CALL" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.CURAND_CALL">
+<span class="target" id="cuda__utils_8cuh_1a02680eff1ab25683ec230fc4f4c41268"></span><span class="sig-name descname"><span class="n"><span class="pre">CURAND_CALL</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.CURAND_CALL" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.paranoid_assert">
+<span class="target" id="cuda__utils_8cuh_1ad2e4d853af1fd2da23a1ab8814490572"></span><span class="sig-name descname"><span class="n"><span class="pre">paranoid_assert</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.paranoid_assert" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv48controls">
+<span id="_CPPv38controls"></span><span id="_CPPv28controls"></span><span id="controls"></span><span class="target" id="namespacecontrols"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">controls</span></span></span><br /></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>these header files are part of the ROS2 standard libraries</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>these header files are generated by ROS2 from the .msg files in the interfaces package. </p>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls20curandGetErrorStringE14curandStatus_t">
+<span id="_CPPv3N8controls20curandGetErrorStringE14curandStatus_t"></span><span id="_CPPv2N8controls20curandGetErrorStringE14curandStatus_t"></span><span id="controls::curandGetErrorString__curandStatus_t"></span><span class="target" id="namespacecontrols_1abe7f6204596d06cad4c3a6e27050116e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">curandGetErrorString</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">curandStatus_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls20curandGetErrorStringE14curandStatus_t" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls11cuda_assertE11cudaError_tPKcib">
+<span id="_CPPv3N8controls11cuda_assertE11cudaError_tPKcib"></span><span id="_CPPv2N8controls11cuda_assertE11cudaError_tPKcib"></span><span id="controls::cuda_assert__cudaError_t.cCP.i.b"></span><span class="target" id="namespacecontrols_1aa890a8b85e7a30c59997b9daa2b2c878"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cuda_assert</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">cudaError_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">code</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">file</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">line</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">abort</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls11cuda_assertE11cudaError_tPKcib" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls13curand_assertE14curandStatus_tPKcib">
+<span id="_CPPv3N8controls13curand_assertE14curandStatus_tPKcib"></span><span id="_CPPv2N8controls13curand_assertE14curandStatus_tPKcib"></span><span id="controls::curand_assert__curandStatus_t.cCP.i.b"></span><span class="target" id="namespacecontrols_1a079ab2c2719467221b60698662014e2c"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">curand_assert</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">curandStatus_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">code</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">file</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">line</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">abort</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls13curand_assertE14curandStatus_tPKcib" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1adcd46b190261432611bc5bb654def032"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">__host__</span> <span class="pre">__device__</span> <span class="pre">bool</span> <span class="pre">any_nan</span> <span class="pre">(const</span> <span class="pre">float</span> <span class="pre">*vec,</span> <span class="pre">size_t</span> <span class="pre">n)</span></span></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1a6f9fcfc02deae449e300926d6f84b80a"></span><span class="sig-name descname"><span class="pre">template&lt;typename</span> <span class="pre">T&gt;</span> <span class="pre">__host__</span> <span class="pre">__device__</span> <span class="pre">T</span> <span class="pre">dot</span> <span class="pre">(const</span> <span class="pre">T</span> <span class="pre">*a,</span> <span class="pre">const</span> <span class="pre">T</span> <span class="pre">*b,</span> <span class="pre">size_t</span> <span class="pre">n)</span></span></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN8controls12print_tensorEv1T4dim3">
+<span id="_CPPv3I0EN8controls12print_tensorE1T4dim3"></span><span id="_CPPv2I0EN8controls12print_tensorE1T4dim3"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="namespacecontrols_1a521612c6852ae481e5253c116962956e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print_tensor</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN8controls12print_tensorEv1T4dim3" title="controls::print_tensor::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">tensor</span></span>, <span class="n"><span class="pre">dim3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dims</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN8controls12print_tensorEv1T4dim3" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1af1d4c7001c61dbd24d89ce752c437e9d"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">__device__</span> <span class="pre">void</span> <span class="pre">printf_vector</span> <span class="pre">(const</span> <span class="pre">float</span> <span class="pre">vec[],</span> <span class="pre">size_t</span> <span class="pre">n)</span></span></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1a3b98082c482bb8ff78f0333b6e32abfa"></span><span class="sig-name descname"><span class="pre">template&lt;typename</span> <span class="pre">T&gt;</span> <span class="pre">static</span> <span class="pre">__host__</span> <span class="pre">__device__</span> <span class="pre">T</span> <span class="pre">clamp</span> <span class="pre">(T</span> <span class="pre">n,</span> <span class="pre">T</span> <span class="pre">low,</span> <span class="pre">T</span> <span class="pre">high)</span></span></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls7radiansEf">
+<span id="_CPPv3N8controls7radiansEf"></span><span id="_CPPv2N8controls7radiansEf"></span><span id="controls::radians__floatCE"></span><span class="target" id="namespacecontrols_1a1c26bcd7a64df2b0e33ca013c82eb590"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">radians</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">degrees</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls7radiansEf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN8controls12cudaTensor3DE">
+<span id="_CPPv3I0EN8controls12cudaTensor3DE"></span><span id="_CPPv2I0EN8controls12cudaTensor3DE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="structcontrols_1_1cudaTensor3D"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cudaTensor3D</span></span></span><a class="headerlink" href="#_CPPv4I0EN8controls12cudaTensor3DE" title="Link to this definition"></a><br /></dt>
+<dd><p>3D pitched tensor </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls12cudaTensor3D11pitched_ptrE">
+<span id="_CPPv3N8controls12cudaTensor3D11pitched_ptrE"></span><span id="_CPPv2N8controls12cudaTensor3D11pitched_ptrE"></span><span id="controls::cudaTensor3D::pitched_ptr__cudaPitchedPtr"></span><span class="target" id="structcontrols_1_1cudaTensor3D_1ab63a19002e9d68e78077741f88b0585f"></span><span class="n"><span class="pre">cudaPitchedPtr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pitched_ptr</span></span></span><a class="headerlink" href="#_CPPv4N8controls12cudaTensor3D11pitched_ptrE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls12cudaTensor3D6extentE">
+<span id="_CPPv3N8controls12cudaTensor3D6extentE"></span><span id="_CPPv2N8controls12cudaTensor3D6extentE"></span><span id="controls::cudaTensor3D::extent__cudaExtent"></span><span class="target" id="structcontrols_1_1cudaTensor3D_1ab14ef2dbc066795dbddd3b59e53b7597"></span><span class="n"><span class="pre">cudaExtent</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">extent</span></span></span><a class="headerlink" href="#_CPPv4N8controls12cudaTensor3D6extentE" title="Link to this definition"></a><br /></dt>
+<dd><p>Extent in bytes. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cuda_types_cuh.html" class="btn btn-neutral float-left" title="File cuda_types.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="constants_hpp.html" class="btn btn-neutral float-right" title="File constants.hpp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Yip.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

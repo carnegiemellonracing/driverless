@@ -1,0 +1,4 @@
+Struct controls::utils::GLObj
+=============================
+
+.. doxygenstruct:: controls::utils::GLObj

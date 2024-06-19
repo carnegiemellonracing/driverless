@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; driverless_controls 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Terminology" href="source/explainers/terminology.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            driverless_controls
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="source/explainers/terminology.html">Terminology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/explainers/file_structure.html">File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/reference/api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/reference/classlist.html">Class list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/reference/filelist.html">File list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/explainerslist.html">Explainers list</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">driverless_controls</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
+<p>Welcome to the documentation for Carnegie Mellon Racing (CMR)’s driverless controls software!
+Carnegie Mellon Racing is a premier student organization at Carnegie Mellon University that designs and builds autonomous vehicles to compete in the annual Formula Student Driverless competition.
+As part of our efforts to support other FSAE teams as they embark on their driverless journeys,
+we have open-sourced our workspace at our <a class="reference external" href="https://github.com/carnegiemellonracing/driverless">GitHub</a> and documented them here.</p>
+<p>Controls is one element of our software stack, the others being <a class="reference external" href="https://carnegiemellonracing.github.io/PerceptionsLibrary22a">Perceptions</a>, Path Planning and Software Architecture.</p>
+<p>We recommend heading to <a class="reference internal" href="source/explainers/overview.html"><span class="doc">Overview</span></a> for a top-down deep dive into how the controller works.
+You can stop at any level of abstraction you prefer. While we only assume basic programming knowledge, feel free to read more into the software
+that the controller depends on, namely <a class="reference external" href="https://cplusplus.com/doc/tutorial/">C++</a>, <a class="reference external" href="https://docs.ros.org/en/humble/index.html">ROS2 Humble</a>, <a class="reference external" href="https://docs.nvidia.com/cuda/">CUDA</a>, and <a class="reference external" href="https://nvidia.github.io/cccl/thrust/">Thrust</a>.</p>
+<p>If you’re part of the team, looking to contribute or learn more about implementation details, check out <a class="reference internal" href="source/explainers/file_structure.html"><span class="doc">File Structure</span></a>
+to understand how the codebase in <code class="docutils literal notranslate"><span class="pre">driverless/driverless_ws/src/controls</span></code> is laid out.</p>
+<p>Have fun and enjoy the ride!</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="source/explainers/terminology.html">Terminology</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/terminology.html#general">General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/terminology.html#cuda">CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/terminology.html#ros">ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/terminology.html#acronyms">Acronyms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/explainers/overview.html">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/overview.html#what-is-controls">What is Controls?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/overview.html#how-does-it-work">How does it work?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/overview.html#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/overview.html#next-up">Next Up</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/explainers/file_structure.html">File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/reference/api_reference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/class/ControllerNode.html">Class ControllerNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/class/MppiController.html">Class mppi::MppiController</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/class/StateEstimator.html">Class state::StateEstimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/types_hpp.html">File types.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/types_cuh.html">File types.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/cuda_types_cuh.html">File cuda_types.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/constants_hpp.html">File constants.hpp</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/reference/classlist.html">Class list</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/class/ControllerNode.html">Class ControllerNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/class/MppiController.html">Class mppi::MppiController</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/class/MppiController_Impl.html">Class mppi::MppiController_Impl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/class/StateEstimator.html">Class state::StateEstimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/class/StateProjector.html">Class controls::state::StateProjector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/reference/filelist.html">File list</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/constants_hpp.html">File constants.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/cuda_types_cuh.html">File cuda_types.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/gl_utils_hpp.html">File gl_utils.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/helpers_cuh.html">File helpers.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/types_cuh.html">File types.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/reference/file/types_hpp.html">File types.hpp</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/explainerslist.html">Explainers list</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/file_structure.html">File Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/mppi_algorithm.html">MPPI Algorithm Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/terminology.html">Terminology</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="source/explainers/terminology.html" class="btn btn-neutral float-right" title="Terminology" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Yip.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

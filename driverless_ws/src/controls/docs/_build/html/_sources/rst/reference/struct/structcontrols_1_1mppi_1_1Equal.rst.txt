@@ -1,0 +1,4 @@
+Struct controls::mppi::Equal
+============================
+
+.. doxygenstruct:: controls::mppi::Equal

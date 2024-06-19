@@ -1,0 +1,4 @@
+File mppi.cu
+============
+
+.. doxygenfile:: mppi.cu

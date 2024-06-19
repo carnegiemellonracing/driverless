@@ -1,0 +1,4 @@
+Struct controls::mppi::PopulateCost
+===================================
+
+.. doxygenstruct:: controls::mppi::PopulateCost

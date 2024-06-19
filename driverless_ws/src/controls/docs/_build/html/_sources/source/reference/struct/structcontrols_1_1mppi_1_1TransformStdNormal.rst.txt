@@ -1,0 +1,4 @@
+Struct controls::mppi::TransformStdNormal
+=========================================
+
+.. doxygenstruct:: controls::mppi::TransformStdNormal
