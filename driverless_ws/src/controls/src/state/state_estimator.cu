@@ -30,39 +30,7 @@
 #include <mppi/functors.cuh>
 #include <SDL2/SDL_video.h>
 
-// Given inertial coordinates, know how far from spline and how far along the spline
-// ICP is very slow, hard to do on GPU
-// Create a lookup table with input inertial coordiantes and output distance from spline and distance along spline
-// Interpolation is very similar to graphics calculation
-// Exploit hardware acceleration
-//
-// CUDA has access to texture memory
-// Reason for OpenGL: Very quickly create textures
-// Sacrifice: pretty far from track: not very clear
-//
-// Method
-// Use points from path planning
-// Fake cones around the spline (based on a predetermined track width - overestimate). These will be vertices
-// Draw triangles between cones.
-// Color the cones/vertices
-// Vertices include the points given by path planning
-//
-// Color the vertices
-// R = distance along spline;
-// G = distance from spline;
-// B = angle of spline; (UNSUED)
-// A = 0 everywhere in bounds, -1 out of bounds
-//         (0,0,0,-1) is background colour, cone has 0 A
-//
-// Texture: an image (in graphics terms) - mapping from 2D coordinates to RGBA/normal vector/whatever
-//
-// Abuse depth testing
-// - Each point gets a depth (z = g)
-//
-//
-// Generates a spline, sends to controller, rotates, iterates
-// test_node uses thomas' model. make sure to change mass to 210
-// Don't use controls_sim
+
 
 namespace controls {
     namespace state {
@@ -229,14 +197,28 @@ namespace controls {
 
         // StateEstimator_Impl helpers
 
-        /// GPU shader code - JIT compiled
-        /// ""functor"" run for each vertex
-        // uniform are like __constant__
-        /// center for if we are doing slam and we are far away
-        /// this is called a shader
-        /// far_frustrum is for better precision
-        /// we are not using w (homogenous coordinates)
-        /// i_world_pos is from path planning
+
+        /**
+         * @brief GPU shader code. In a string because historically, shaders are JIT compiled.
+         * Runs in parallel for every vertex in the VBO, similar to a functor.
+         * Layouts initially specified in gen_gl_path().
+         *
+         * Transforms from vertex IRL position to clip space (rendering coordinate frame) using scale
+         * and center. For now this transformation is unneeded. However, suppose with SLAM, (x,y) from
+         * path planning are from a stationary world perspective, but we want to render to the car's vicinity.
+         *
+         * @note: the z coordinate in gl_Position is how we exploit depth testing to break ties between multiple
+         * overlapping triangles.
+         * note that i_world_pos is a vec2 so the dimensions in gl_Position check out (shader languages are built for vector math)
+         * uniform is similar to __constant__ in CUDA
+         * @note: far_frustrum is for better precision since only relative ordering matters
+         * @note: we don't use the 4th coordinate of gl_Position, but it is needed. Look up homogenous coordinates.
+         *
+         * @param[in] i_world_pos x, y from path planning
+         * @param[in] i_curv_pose progress, offset, heading
+         * @param[out] o_curv_pose same as i_curv_pose, passed along
+         * @return gl_Position
+         */
         constexpr const char* vertex_source = R"(
             #version 330 core
             #extension GL_ARB_explicit_uniform_location : enable
@@ -257,8 +239,14 @@ namespace controls {
             }
         )";
 
-        /// Fragment shader
-        /// Renders the color for each triangle (foreground)
+        /**
+         * @brief GPU shader code. "fragment shader"
+         * Runs in parallel for every pixel in the triangles.
+         * We only manually calculated o_curv_pose for the vertices,
+         * interpolation for the pixels in between happens here automatically.
+         * 4th color (1.0f) represents in bounds, compared to background which has -1.0 representing OOB
+         * @return FragColor The color of each foreground pixel
+         */
         constexpr const char* fragment_source = R"(
             #version 330 core
 
@@ -504,8 +492,6 @@ namespace controls {
 #endif
 
         void StateEstimator_Impl::sync_world_state() {
-            // TODO: why can you copy to a __constant__ : constant during a kernel (can copy from host, read-only in CUDA code)
-
             CUDA_CALL(cudaMemcpyToSymbolAsync(
                 cuda_globals::curr_state, m_synced_projected_state.data(), state_dims * sizeof(float)
             ));
@@ -536,16 +522,20 @@ namespace controls {
         }
 
         void StateEstimator_Impl::render_curv_frame_lookup() {
-            // where I'm gonna render to
+            // tells OpenGL: this is where I want to render to
             glBindFramebuffer(GL_FRAMEBUFFER, m_curv_frame_lookup_fbo);
 
-            // set the background color
+            // set the background color, clears the depth buffer
+            // (technically 2 rendering passes are done - color and depth)
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            // use a shader program
             glUseProgram(m_gl_path_shader);
+            // set the relevant scale and center uniforms (constants) in the shader program
             glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
             glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
             glBindVertexArray(m_gl_path.vao);
+            // relies on the element buffer object already being bound
             glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
 
 #ifdef DISPLAY
@@ -561,7 +551,6 @@ namespace controls {
 #endif
         }
 
-        /// Create a CUDA texture that refers to the frame buffer <- this can't be referred to directly
         void StateEstimator_Impl::map_curv_frame_lookup() {
             CUDA_CALL(cudaGraphicsGLRegisterImage(&m_curv_frame_lookup_rsc, m_curv_frame_lookup_rbo, GL_RENDERBUFFER, cudaGraphicsRegisterFlagsNone));
 
@@ -598,34 +587,37 @@ namespace controls {
             m_curv_frame_lookup_mapped = false;
         }
 
-        /// vertex array object
-        /// vertex buffer object
-        /// element buffer object (describes the triangle indices (into the vbo))
 
         // bind stuff to flags, act on flags, state machine
 
         /**
          * Creates the buffers to be used, as well as the descriptions of how the buffers are laid out.
+         * @brief Creates the names for the vao, vbo and ebo.
+         * Specifies how the vbo should be laid out, stores this in the vao.
+         * Lastly, binds to the ebo.
          */
         void StateEstimator_Impl::gen_gl_path() {
+            // Generates the names for the vao, vbo and ebo to be referenced later, such as to bind.
             glGenVertexArrays(1, &m_gl_path.vao);
             glGenBuffers(1, &m_gl_path.vbo);
             glGenBuffers(1, &m_gl_path.ebo);
 
             glBindVertexArray(m_gl_path.vao);
+            // OpenGL is a state machine, binding here means any relevant function call on a buffer will be on
+            // m_gl_path.vbo until it is unbound.
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
+            // Specifies the layout of the vertex buffer object. world_pos (2) and curv_pose (3).
             glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
             glEnableVertexAttribArray(1);
+            // vbo unbound here, ebo bound in its place.
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
 
+            // vao is unbound.
             glBindVertexArray(0);
         }
-
-        /**
-         * @brief Filling vertex data and creating the triangles
-         */
+i
         void StateEstimator_Impl::fill_path_buffers(glm::fvec2 car_pos) {
             struct Vertex {
                 struct {
@@ -633,7 +625,8 @@ namespace controls {
                     float y;
                 } world;
 
-                //TODO: colors
+                /// Curvilinear coordinates. Progress = distance along spline, offset = perpendicular distance
+                /// from spline, heading = angle relative to spline.
                 struct {
                     float progress;
                     float offset;

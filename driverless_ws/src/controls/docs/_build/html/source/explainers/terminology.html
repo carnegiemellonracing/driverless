@@ -62,6 +62,7 @@
 <li class="toctree-l2"><a class="reference internal" href="file_structure.html">File Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mppi_algorithm.html">MPPI Algorithm Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_estimation.html">State Estimation Overview</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Terminology</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#general">General</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#cuda">CUDA</a></li>
@@ -111,11 +112,17 @@ Represented as an array of (x,y,z) points. Currently, the car is always fixed to
 the direction the car is facing. Otherwise known as <em>path planning</em> frame or erroneously <em>world</em> frame.
 - <em>curvilinear</em>: Coordinate frame in relation to the spline. Coordinates represent distance along spline,
 perpendicular distance from spline, angle with tangent of spline, etc. Needed for cost calculation.</p>
+<p><strong>rollout</strong>: In the context of MPPI, refers to state rollout. A sequence of predicted states calculated by repeated
+application of the model on a given starting state and control action trajectory.</p>
 </section>
 <section id="cuda">
 <h2>CUDA<a class="headerlink" href="#cuda" title="Link to this heading"></a></h2>
 <p><strong>host</strong>: The CPU</p>
 <p><strong>device</strong>: The GPU</p>
+<p><code class="docutils literal notranslate"><span class="pre">__device__</span></code>: Tag for functions to be run exclusively on the GPU.</p>
+<p><code class="docutils literal notranslate"><span class="pre">__constant__</span></code>: Tag for symbols in device memory that are unmodified by kernels . Can still copy to and from the host.
+Read-only in CUDA code. Allows for better caching. Equivalent of <code class="docutils literal notranslate"><span class="pre">const</span></code>. Constants for both the host and device
+should be marked <code class="docutils literal notranslate"><span class="pre">__constant__</span> <span class="pre">const</span></code>.</p>
 </section>
 <section id="ros">
 <h2>ROS<a class="headerlink" href="#ros" title="Link to this heading"></a></h2>

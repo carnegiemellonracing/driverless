@@ -195,7 +195,6 @@ namespace controls {
             };
             // populates cost for each sample trajectory
             thrust::for_each(indices, indices + num_samples, populate_cost);
-        }
 
         thrust::device_vector<DeviceAction> MppiController_Impl::reduce_actions() {
             // averaged_actions is where the weighted averages are stored

@@ -6,7 +6,6 @@ namespace controls {
     namespace cuda_globals {
         __constant__ cudaTextureObject_t curv_frame_lookup_tex;
         __constant__ CurvFrameLookupTexInfo curv_frame_lookup_tex_info;
-        __constant__ size_t spline_texture_elems = 0;
 
         __constant__ float curr_state[state_dims] = {0, 0, 0, 0};
 

@@ -90,11 +90,21 @@ namespace controls {
          /// rollout states and populate cost
             void populate_cost();
 
+            /**
+             * @brief Populates m_action_weight_tuples in timestep-major order with actions and their associated weights.
+             * All samples at time 0, all samples at time 1, etc.
+             * This is transposed from m_cost_to_gos (which is sample-major order) so that the reduction has good
+             * locality.
+             * Reads from the corresponding indexes in m_action_trajectories, m_cost_to_gos and m_log_prob_densities,
+             * bundles them, then places the tuple in the new position in m_action_weight_tuples.
+             * Computed over each control action/cost in parallel (num_samples * num_timesteps wide)
+             */
             void generate_action_weight_tuples();
 
             /**
-             * Retrieves action based on cost to go using reduction.
-             * @returns Optimal control action based on state and spline information.
+             * @brief For every timestep, reduces the samples together using a weighted average.
+             * Reads from m_action_weight_tuples.
+             * @returns Optimal control action trajectory based on state and spline information.
              */
             thrust::device_vector<DeviceAction> reduce_actions();
 
