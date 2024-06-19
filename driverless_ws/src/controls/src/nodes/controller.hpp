@@ -30,7 +30,7 @@ namespace controls {
          *
          *  - StateEstimator: given twist and spline, esimates inertial state and a inertial to curvilinear lookup table.
          *  - MPPIController: given inertial state and the lookup table, calculates the optimal control action to take
-         * using the @rst `MPPI Algorithm <../../../_static/mppi.pdf>`_. @rst
+         * using the @rst `MPPI Algorithm <../../../_static/mppi.pdf>`_. @endrst
          *
          * This is how the node works:
          *
