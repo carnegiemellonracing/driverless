@@ -181,7 +181,7 @@ provides member functions for the controller node to call, but in reality is an 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator8is_readyEv">
 <span id="_CPPv3N8controls5state14StateEstimator8is_readyEv"></span><span id="_CPPv2N8controls5state14StateEstimator8is_readyEv"></span><span id="controls::state::StateEstimator::is_ready"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1aa0cf7078c14a49cd0b0d9a6c01f3da74"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_ready</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateEstimator8is_readyEv" title="Link to this definition"></a><br /></dt>
-<dd><p>Returns whether state projection is ready. If not, the MPPI controller should wait. This should only be not ready when the state estimator is first initialized. </p>
+<dd><p>Returns whether state projection is ready. If not, the MPPI controller should wait. This should only be not ready when the state estimator is first initialized and the controller has no spline. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if state projection is ready, False otherwise. </p>
@@ -192,14 +192,14 @@ provides member functions for the controller node to call, but in reality is an 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator19get_projected_stateEv">
 <span id="_CPPv3N8controls5state14StateEstimator19get_projected_stateEv"></span><span id="_CPPv2N8controls5state14StateEstimator19get_projected_stateEv"></span><span id="controls::state::StateEstimator::get_projected_state"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1ab4034a7d5e053e5cc6b75a1b0c40a8df"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="../file/types_hpp.html#_CPPv4N8controls5StateE" title="controls::State"><span class="n"><span class="pre">State</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_projected_state</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateEstimator19get_projected_stateEv" title="Link to this definition"></a><br /></dt>
-<dd><p>Esimates and returns current state by projecting from last known twist/spline information. </p>
+<dd><p>Returns the last state that was projected. Does not actually do the projection (that is in an internal call in sync_to_device). Used for debugging pursposes. </p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Spline provides state information since car is at (0, 0) relative to a new spline. &#64;TODO Why must this be a public function? For debugging reasons? </p>
+<p>Spline provides state information since car is at (0, 0) relative to a new spline. </p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The current estimated state </p>
+<dd class="field-odd"><p>The most recent projected state. </p>
 </dd>
 </dl>
 </dd></dl>
@@ -218,10 +218,10 @@ provides member functions for the controller node to call, but in reality is an 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateEstimator26get_orig_spline_data_stampEv">
 <span id="_CPPv3N8controls5state14StateEstimator26get_orig_spline_data_stampEv"></span><span id="_CPPv2N8controls5state14StateEstimator26get_orig_spline_data_stampEv"></span><span id="controls::state::StateEstimator::get_orig_spline_data_stamp"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator_1a4c6fdde239491c5e8b93982e8bfb5934"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_orig_spline_data_stamp</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateEstimator26get_orig_spline_data_stampEv" title="Link to this definition"></a><br /></dt>
-<dd><p>Returns the timestamp of the last spline message received. </p>
+<dd><p>Returns the timestamp of the last spline message received. This is accurate to when the sensor (i.e. LIDAR) information was received, not when the spline was calculated. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The timestamp of the last spline message received. &#64;TODO verify copilot isnt trolling me </p>
+<dd class="field-odd"><p>The timestamp of the last spline message received. </p>
 </dd>
 </dl>
 </dd></dl>
