@@ -27,8 +27,6 @@ driverless_ws/src/Model/model
 #documentation
 **/doxyhtml
 **/doxyxml
-**/_build
-**/_static
-**/templates
 **/images
-
+**/pdfs
+**/tag_files

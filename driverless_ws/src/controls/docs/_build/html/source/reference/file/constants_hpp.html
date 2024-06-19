@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File constants.hpp &mdash; driverless_controls 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Class list" href="../classlist.html" />
+    <link rel="prev" title="File cuda_utils.cuh" href="cuda_utils_cuh.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            driverless_controls
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/file_structure.html">File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../classlist.html">Class list</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../filelist.html">File list</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">File constants.hpp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10TorqueModeE"><code class="docutils literal notranslate"><span class="pre">controls::TorqueMode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls20controller_node_nameE"><code class="docutils literal notranslate"><span class="pre">controls::controller_node_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls25control_action_topic_nameE"><code class="docutils literal notranslate"><span class="pre">controls::control_action_topic_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls17spline_topic_nameE"><code class="docutils literal notranslate"><span class="pre">controls::spline_topic_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls16state_topic_nameE"><code class="docutils literal notranslate"><span class="pre">controls::state_topic_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls22world_twist_topic_nameE"><code class="docutils literal notranslate"><span class="pre">controls::world_twist_topic_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls21world_quat_topic_nameE"><code class="docutils literal notranslate"><span class="pre">controls::world_quat_topic_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls21world_pose_topic_nameE"><code class="docutils literal notranslate"><span class="pre">controls::world_pose_topic_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls26controller_info_topic_nameE"><code class="docutils literal notranslate"><span class="pre">controls::controller_info_topic_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls19best_effort_profileE"><code class="docutils literal notranslate"><span class="pre">controls::best_effort_profile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls15best_effort_qosE"><code class="docutils literal notranslate"><span class="pre">controls::best_effort_qos</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls18control_action_qosE"><code class="docutils literal notranslate"><span class="pre">controls::control_action_qos</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10spline_qosE"><code class="docutils literal notranslate"><span class="pre">controls::spline_qos</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls19controller_info_qosE"><code class="docutils literal notranslate"><span class="pre">controls::controller_info_qos</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls18default_clock_typeE"><code class="docutils literal notranslate"><span class="pre">controls::default_clock_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls15controller_freqE"><code class="docutils literal notranslate"><span class="pre">controls::controller_freq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls17controller_periodE"><code class="docutils literal notranslate"><span class="pre">controls::controller_period</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls11num_samplesE"><code class="docutils literal notranslate"><span class="pre">controls::num_samples</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls13num_timestepsE"><code class="docutils literal notranslate"><span class="pre">controls::num_timesteps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls11action_dimsE"><code class="docutils literal notranslate"><span class="pre">controls::action_dims</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10state_dimsE"><code class="docutils literal notranslate"><span class="pre">controls::state_dims</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls11temperatureE"><code class="docutils literal notranslate"><span class="pre">controls::temperature</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls4seedE"><code class="docutils literal notranslate"><span class="pre">controls::seed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls23num_action_trajectoriesE"><code class="docutils literal notranslate"><span class="pre">controls::num_action_trajectories</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls22init_action_trajectoryE"><code class="docutils literal notranslate"><span class="pre">controls::init_action_trajectory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls15action_momentumE"><code class="docutils literal notranslate"><span class="pre">controls::action_momentum</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls14offset_1m_costE"><code class="docutils literal notranslate"><span class="pre">controls::offset_1m_cost</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls12target_speedE"><code class="docutils literal notranslate"><span class="pre">controls::target_speed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls19speed_off_1mps_costE"><code class="docutils literal notranslate"><span class="pre">controls::speed_off_1mps_cost</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls18out_of_bounds_costE"><code class="docutils literal notranslate"><span class="pre">controls::out_of_bounds_cost</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls23spline_frame_separationE"><code class="docutils literal notranslate"><span class="pre">controls::spline_frame_separation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls27curv_frame_lookup_tex_widthE"><code class="docutils literal notranslate"><span class="pre">controls::curv_frame_lookup_tex_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls25curv_frame_lookup_paddingE"><code class="docutils literal notranslate"><span class="pre">controls::curv_frame_lookup_padding</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls11track_widthE"><code class="docutils literal notranslate"><span class="pre">controls::track_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls11car_paddingE"><code class="docutils literal notranslate"><span class="pre">controls::car_padding</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls20reset_pose_on_splineE"><code class="docutils literal notranslate"><span class="pre">controls::reset_pose_on_spline</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls11cg_to_frontE"><code class="docutils literal notranslate"><span class="pre">controls::cg_to_front</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10cg_to_rearE"><code class="docutils literal notranslate"><span class="pre">controls::cg_to_rear</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10cg_to_noseE"><code class="docutils literal notranslate"><span class="pre">controls::cg_to_nose</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls8whl_baseE"><code class="docutils literal notranslate"><span class="pre">controls::whl_base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10whl_radiusE"><code class="docutils literal notranslate"><span class="pre">controls::whl_radius</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10gear_ratioE"><code class="docutils literal notranslate"><span class="pre">controls::gear_ratio</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls8car_massE"><code class="docutils literal notranslate"><span class="pre">controls::car_mass</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls12rolling_dragE"><code class="docutils literal notranslate"><span class="pre">controls::rolling_drag</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls24long_tractive_capabilityE"><code class="docutils literal notranslate"><span class="pre">controls::long_tractive_capability</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls23lat_tractive_capabilityE"><code class="docutils literal notranslate"><span class="pre">controls::lat_tractive_capability</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls16understeer_slopeE"><code class="docutils literal notranslate"><span class="pre">controls::understeer_slope</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls18brake_enable_speedE"><code class="docutils literal notranslate"><span class="pre">controls::brake_enable_speed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls23saturating_motor_torqueE"><code class="docutils literal notranslate"><span class="pre">controls::saturating_motor_torque</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls24approx_propogation_delayE"><code class="docutils literal notranslate"><span class="pre">controls::approx_propogation_delay</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls16approx_mppi_timeE"><code class="docutils literal notranslate"><span class="pre">controls::approx_mppi_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls11torque_modeE"><code class="docutils literal notranslate"><span class="pre">controls::torque_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls11state_x_idxE"><code class="docutils literal notranslate"><span class="pre">controls::state_x_idx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls11state_y_idxE"><code class="docutils literal notranslate"><span class="pre">controls::state_y_idx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls13state_yaw_idxE"><code class="docutils literal notranslate"><span class="pre">controls::state_yaw_idx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls15state_speed_idxE"><code class="docutils literal notranslate"><span class="pre">controls::state_speed_idx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls18action_swangle_idxE"><code class="docutils literal notranslate"><span class="pre">controls::action_swangle_idx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls17action_torque_idxE"><code class="docutils literal notranslate"><span class="pre">controls::action_torque_idx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls19clear_term_sequenceE"><code class="docutils literal notranslate"><span class="pre">controls::clear_term_sequence</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_types_cuh.html">File cuda_types.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gl_utils_hpp.html">File gl_utils.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers_cuh.html">File helpers.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers list</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">driverless_controls</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api_reference.html">API Reference</a></li>
+      <li class="breadcrumb-item active">File constants.hpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/reference/file/constants_hpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-constants-hpp">
+<h1>File constants.hpp<a class="headerlink" href="#file-constants-hpp" title="Link to this heading"></a></h1>
+<p>Generates an action based on state and spline (both are cuda globals), returns it. Tunable parameters in and. </p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv48controls">
+<span id="_CPPv38controls"></span><span id="_CPPv28controls"></span><span id="controls"></span><span class="target" id="namespacecontrols"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">controls</span></span></span><a class="headerlink" href="#_CPPv48controls" title="Link to this definition"></a><br /></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>these header files are part of the ROS2 standard libraries</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>these header files are generated by ROS2 from the .msg files in the interfaces package. </p>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum-class">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls10TorqueModeE">
+<span id="_CPPv3N8controls10TorqueModeE"></span><span id="_CPPv2N8controls10TorqueModeE"></span><span class="target" id="namespacecontrols_1a0f5ef61dd6f51b56287ed1763b68cd5f"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TorqueMode</span></span></span><a class="headerlink" href="#_CPPv4N8controls10TorqueModeE" title="Link to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls10TorqueMode3AWDE">
+<span id="_CPPv3N8controls10TorqueMode3AWDE"></span><span id="_CPPv2N8controls10TorqueMode3AWDE"></span><span class="target" id="namespacecontrols_1a0f5ef61dd6f51b56287ed1763b68cd5faa76befc34ae7f1d14fd7ded43ae99946"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AWD</span></span></span><a class="headerlink" href="#_CPPv4N8controls10TorqueMode3AWDE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls10TorqueMode3FWDE">
+<span id="_CPPv3N8controls10TorqueMode3FWDE"></span><span id="_CPPv2N8controls10TorqueMode3FWDE"></span><span class="target" id="namespacecontrols_1a0f5ef61dd6f51b56287ed1763b68cd5fac9261effebe177a8679909dd7ec2552e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FWD</span></span></span><a class="headerlink" href="#_CPPv4N8controls10TorqueMode3FWDE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls10TorqueMode3RWDE">
+<span id="_CPPv3N8controls10TorqueMode3RWDE"></span><span id="_CPPv2N8controls10TorqueMode3RWDE"></span><span class="target" id="namespacecontrols_1a0f5ef61dd6f51b56287ed1763b68cd5fa862ccbc166c0cafb853d82b5634f7982"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RWD</span></span></span><a class="headerlink" href="#_CPPv4N8controls10TorqueMode3RWDE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1a436c05ed3ed5a6ffe60740bace568125"></span><span class="sig-name descname"><span class="pre">const</span> <span class="pre">rclcpp::QoS</span> <span class="pre">state_qos</span> <span class="pre">(rclcpp::KeepLast(1))</span></span></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1a734672b275177ae9fc084b36c4e78a62"></span><span class="sig-name descname"><span class="pre">const</span> <span class="pre">rclcpp::QoS</span> <span class="pre">world_twist_qos</span> <span class="pre">(rclcpp::KeepLast(1))</span></span></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1a1d676c5425c4aa48fdfe96b6b0b9edc6"></span><span class="sig-name descname"><span class="pre">const</span> <span class="pre">rclcpp::QoS</span> <span class="pre">world_quat_qos</span> <span class="pre">(rclcpp::KeepLast(1))</span></span></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1a4b213f318aa816074f6a1dfeb84d54a4"></span><span class="sig-name descname"><span class="pre">const</span> <span class="pre">rclcpp::QoS</span> <span class="pre">world_pose_qos</span> <span class="pre">(rclcpp::KeepLast(1))</span></span></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-variables">Variables</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls20controller_node_nameE">
+<span id="_CPPv3N8controls20controller_node_nameE"></span><span id="_CPPv2N8controls20controller_node_nameE"></span><span id="controls::controller_node_name__cCP"></span><span class="target" id="namespacecontrols_1a486a6f6396417bfe08320344090ba1b2"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">controller_node_name</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;controller&quot;</span></span><a class="headerlink" href="#_CPPv4N8controls20controller_node_nameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls25control_action_topic_nameE">
+<span id="_CPPv3N8controls25control_action_topic_nameE"></span><span id="_CPPv2N8controls25control_action_topic_nameE"></span><span id="controls::control_action_topic_name__cCP"></span><span class="target" id="namespacecontrols_1a924f73f5b6b7a4ff8b870ce67171dafb"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">control_action_topic_name</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;control_action&quot;</span></span><a class="headerlink" href="#_CPPv4N8controls25control_action_topic_nameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls17spline_topic_nameE">
+<span id="_CPPv3N8controls17spline_topic_nameE"></span><span id="_CPPv2N8controls17spline_topic_nameE"></span><span id="controls::spline_topic_name__cCP"></span><span class="target" id="namespacecontrols_1abab44aadf52a1a2f003b570bb265e670"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">spline_topic_name</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;spline&quot;</span></span><a class="headerlink" href="#_CPPv4N8controls17spline_topic_nameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls16state_topic_nameE">
+<span id="_CPPv3N8controls16state_topic_nameE"></span><span id="_CPPv2N8controls16state_topic_nameE"></span><span id="controls::state_topic_name__cCP"></span><span class="target" id="namespacecontrols_1a66707cba53f077e5acc9a139f93f0488"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">state_topic_name</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;state&quot;</span></span><a class="headerlink" href="#_CPPv4N8controls16state_topic_nameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls22world_twist_topic_nameE">
+<span id="_CPPv3N8controls22world_twist_topic_nameE"></span><span id="_CPPv2N8controls22world_twist_topic_nameE"></span><span id="controls::world_twist_topic_name__cCP"></span><span class="target" id="namespacecontrols_1a3f5d5f9d028192dc0cc27ecc46238096"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">world_twist_topic_name</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;filter/twist&quot;</span></span><a class="headerlink" href="#_CPPv4N8controls22world_twist_topic_nameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls21world_quat_topic_nameE">
+<span id="_CPPv3N8controls21world_quat_topic_nameE"></span><span id="_CPPv2N8controls21world_quat_topic_nameE"></span><span id="controls::world_quat_topic_name__cCP"></span><span class="target" id="namespacecontrols_1a7ff595286467a7a3c3c395efb69e926f"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">world_quat_topic_name</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;filter/quaternion&quot;</span></span><a class="headerlink" href="#_CPPv4N8controls21world_quat_topic_nameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls21world_pose_topic_nameE">
+<span id="_CPPv3N8controls21world_pose_topic_nameE"></span><span id="_CPPv2N8controls21world_pose_topic_nameE"></span><span id="controls::world_pose_topic_name__cCP"></span><span class="target" id="namespacecontrols_1a8ed8fb6ec0fbcf660b11a40226e488c4"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">world_pose_topic_name</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;filter/pose&quot;</span></span><a class="headerlink" href="#_CPPv4N8controls21world_pose_topic_nameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls26controller_info_topic_nameE">
+<span id="_CPPv3N8controls26controller_info_topic_nameE"></span><span id="_CPPv2N8controls26controller_info_topic_nameE"></span><span id="controls::controller_info_topic_name__cCP"></span><span class="target" id="namespacecontrols_1aeebbecc1fbabddd9705f6d3e8600aad1"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">controller_info_topic_name</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;controller_info&quot;</span></span><a class="headerlink" href="#_CPPv4N8controls26controller_info_topic_nameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls19best_effort_profileE">
+<span id="_CPPv3N8controls19best_effort_profileE"></span><span id="_CPPv2N8controls19best_effort_profileE"></span><span id="controls::best_effort_profile__rmw_qos_profile_tC"></span><span class="target" id="namespacecontrols_1a10abb99aa2c76f8ae8bcbd206a6eaba2"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rmw_qos_profile_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">best_effort_profile</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="n"><span class="pre">RMW_QOS_POLICY_HISTORY_KEEP_LAST</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_POLICY_DURABILITY_VOLATILE</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_DEADLINE_DEFAULT</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_LIFESPAN_DEFAULT</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N8controls19best_effort_profileE" title="Link to this definition"></a><br /></dt>
+<dd><p>ask Ankit? </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls15best_effort_qosE">
+<span id="_CPPv3N8controls15best_effort_qosE"></span><span id="_CPPv2N8controls15best_effort_qosE"></span><span id="controls::best_effort_qos__rclcpp::QoSC"></span><span class="target" id="namespacecontrols_1afa7c820bc8cee897951402f161f9e28d"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">QoS</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">best_effort_qos</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">QoS</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">QoSInitialization</span></span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv4N8controls19best_effort_profileE" title="controls::best_effort_profile"><span class="n"><span class="pre">best_effort_profile</span></span></a><span class="p"><span class="pre">.</span></span><span class="n"><span class="pre">history</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls19best_effort_profileE" title="controls::best_effort_profile"><span class="n"><span class="pre">best_effort_profile</span></span></a><span class="p"><span class="pre">.</span></span><span class="n"><span class="pre">depth</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls19best_effort_profileE" title="controls::best_effort_profile"><span class="n"><span class="pre">best_effort_profile</span></span></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N8controls15best_effort_qosE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls18control_action_qosE">
+<span id="_CPPv3N8controls18control_action_qosE"></span><span id="_CPPv2N8controls18control_action_qosE"></span><span id="controls::control_action_qos__rclcpp::QoSC"></span><span class="target" id="namespacecontrols_1a6969484b028165793f058b151fa6ba7f"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">QoS</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">control_action_qos</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls15best_effort_qosE" title="controls::best_effort_qos"><span class="n"><span class="pre">best_effort_qos</span></span></a><a class="headerlink" href="#_CPPv4N8controls18control_action_qosE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls10spline_qosE">
+<span id="_CPPv3N8controls10spline_qosE"></span><span id="_CPPv2N8controls10spline_qosE"></span><span id="controls::spline_qos__rclcpp::QoSC"></span><span class="target" id="namespacecontrols_1a7e48eb3bab20305c1a5ee94bf6640e4c"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">QoS</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">spline_qos</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls15best_effort_qosE" title="controls::best_effort_qos"><span class="n"><span class="pre">best_effort_qos</span></span></a><a class="headerlink" href="#_CPPv4N8controls10spline_qosE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls19controller_info_qosE">
+<span id="_CPPv3N8controls19controller_info_qosE"></span><span id="_CPPv2N8controls19controller_info_qosE"></span><span id="controls::controller_info_qos__rclcpp::QoSC"></span><span class="target" id="namespacecontrols_1ab6b749209f5c3cd84f164e2751db8e07"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">QoS</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">controller_info_qos</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls15best_effort_qosE" title="controls::best_effort_qos"><span class="n"><span class="pre">best_effort_qos</span></span></a><a class="headerlink" href="#_CPPv4N8controls19controller_info_qosE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls18default_clock_typeE">
+<span id="_CPPv3N8controls18default_clock_typeE"></span><span id="_CPPv2N8controls18default_clock_typeE"></span><span id="controls::default_clock_type__rcl_clock_type_t"></span><span class="target" id="namespacecontrols_1ad0f56164d08e5fe4360c70ae1ad09316"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">rcl_clock_type_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">default_clock_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">RCL_ROS_TIME</span></span><a class="headerlink" href="#_CPPv4N8controls18default_clock_typeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls15controller_freqE">
+<span id="_CPPv3N8controls15controller_freqE"></span><span id="_CPPv2N8controls15controller_freqE"></span><span id="controls::controller_freq__double"></span><span class="target" id="namespacecontrols_1a28c91b35a9cbf121458f480fa891d882"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">controller_freq</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">10.</span></span><a class="headerlink" href="#_CPPv4N8controls15controller_freqE" title="Link to this definition"></a><br /></dt>
+<dd><p>Target number of controller steps per second, in Hz. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>1 controller step outputs 1 control action </p>
+</div>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls17controller_periodE">
+<span id="_CPPv3N8controls17controller_periodE"></span><span id="_CPPv2N8controls17controller_periodE"></span><span id="controls::controller_period__float"></span><span class="target" id="namespacecontrols_1adb2bcd829a875e4020e85206abd87ed4"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">controller_period</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1.</span></span><span class="w"> </span><span class="o"><span class="pre">/</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls15controller_freqE" title="controls::controller_freq"><span class="n"><span class="pre">controller_freq</span></span></a><a class="headerlink" href="#_CPPv4N8controls17controller_periodE" title="Link to this definition"></a><br /></dt>
+<dd><p>Target duration between control actions, in sec. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls11num_samplesE">
+<span id="_CPPv3N8controls11num_samplesE"></span><span id="_CPPv2N8controls11num_samplesE"></span><span id="controls::num_samples__uint32_t"></span><span class="target" id="namespacecontrols_1af942e7d9ccddccd856df01716f1e6379"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">num_samples</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1024</span></span><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><span class="m"><span class="pre">64</span></span><a class="headerlink" href="#_CPPv4N8controls11num_samplesE" title="Link to this definition"></a><br /></dt>
+<dd><p>Number of trajectories sampled each controller step. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls13num_timestepsE">
+<span id="_CPPv3N8controls13num_timestepsE"></span><span id="_CPPv2N8controls13num_timestepsE"></span><span id="controls::num_timesteps__uint32_t"></span><span class="target" id="namespacecontrols_1adc189c6c0230911501c6a09841dbeda3"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">num_timesteps</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">16</span></span><a class="headerlink" href="#_CPPv4N8controls13num_timestepsE" title="Link to this definition"></a><br /></dt>
+<dd><p>Number of controller steps simulated into the future. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls11action_dimsE">
+<span id="_CPPv3N8controls11action_dimsE"></span><span id="_CPPv2N8controls11action_dimsE"></span><span id="controls::action_dims__uint8_t"></span><span class="target" id="namespacecontrols_1a17cfa62860105e4912d4344ada195a3e"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">action_dims</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">2</span></span><a class="headerlink" href="#_CPPv4N8controls11action_dimsE" title="Link to this definition"></a><br /></dt>
+<dd><p><span class="math notranslate nohighlight">\(q\)</span>, <a class="reference internal" href="types_hpp.html#namespacecontrols_1afbd56c7e6594de235040c70239a1df6c"><span class="std std-ref">Action</span></a></p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls10state_dimsE">
+<span id="_CPPv3N8controls10state_dimsE"></span><span id="_CPPv2N8controls10state_dimsE"></span><span id="controls::state_dims__uint8_t"></span><span class="target" id="namespacecontrols_1ab8aa87bc4d8eeef3986c916d312c66b4"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">state_dims</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">4</span></span><a class="headerlink" href="#_CPPv4N8controls10state_dimsE" title="Link to this definition"></a><br /></dt>
+<dd><p><span class="math notranslate nohighlight">\(p\)</span>, <a class="reference internal" href="types_hpp.html#namespacecontrols_1afabbf31cdb1e3511c4bc8bb82ef2a9d0"><span class="std std-ref">State</span></a></p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls11temperatureE">
+<span id="_CPPv3N8controls11temperatureE"></span><span id="_CPPv2N8controls11temperatureE"></span><span id="controls::temperature__float"></span><span class="target" id="namespacecontrols_1aebde430f0d725d5f8da69884a7db5d46"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">temperature</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1.0f</span></span><a class="headerlink" href="#_CPPv4N8controls11temperatureE" title="Link to this definition"></a><br /></dt>
+<dd><p>Convergence speed/stability tradeoff, see LaTeX for more details. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4seedE">
+<span id="_CPPv3N8controls4seedE"></span><span id="_CPPv2N8controls4seedE"></span><span id="controls::seed__unsigned-l-l"></span><span class="target" id="namespacecontrols_1ab666d2c429626ea5c8e988037bfccb32"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">seed</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N8controls4seedE" title="Link to this definition"></a><br /></dt>
+<dd><p>For brownian pseudo-RNG. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls23num_action_trajectoriesE">
+<span id="_CPPv3N8controls23num_action_trajectoriesE"></span><span id="_CPPv2N8controls23num_action_trajectoriesE"></span><span id="controls::num_action_trajectories__uint32_t"></span><span class="target" id="namespacecontrols_1a5a9b79d9d5ba0f70bf421ecb9b7c1b29"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">num_action_trajectories</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls11action_dimsE" title="controls::action_dims"><span class="n"><span class="pre">action_dims</span></span></a><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls13num_timestepsE" title="controls::num_timesteps"><span class="n"><span class="pre">num_timesteps</span></span></a><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls11num_samplesE" title="controls::num_samples"><span class="n"><span class="pre">num_samples</span></span></a><a class="headerlink" href="#_CPPv4N8controls23num_action_trajectoriesE" title="Link to this definition"></a><br /></dt>
+<dd><p>Number of elements in the tensor containing all the sampled action trajectories. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls22init_action_trajectoryE">
+<span id="_CPPv3N8controls22init_action_trajectoryE"></span><span id="_CPPv2N8controls22init_action_trajectoryE"></span><span id="controls::init_action_trajectory__floatA"></span><span class="target" id="namespacecontrols_1a75543f3c64c685c6ad47414fb05366c0"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">init_action_trajectory</span></span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#_CPPv4N8controls13num_timestepsE" title="controls::num_timesteps"><span class="n"><span class="pre">num_timesteps</span></span></a><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls11action_dimsE" title="controls::action_dims"><span class="n"><span class="pre">action_dims</span></span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N8controls22init_action_trajectoryE" title="Link to this definition"></a><br /></dt>
+<dd><p>Best guess of action trajectory when controller first starts. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls15action_momentumE">
+<span id="_CPPv3N8controls15action_momentumE"></span><span id="_CPPv2N8controls15action_momentumE"></span><span id="controls::action_momentum__float"></span><span class="target" id="namespacecontrols_1a16ad530aa56d96f08ad20a92b19ba73a"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">action_momentum</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><a class="headerlink" href="#_CPPv4N8controls15action_momentumE" title="Link to this definition"></a><br /></dt>
+<dd><p>How much of last action taken to retain in calculation of next action. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls14offset_1m_costE">
+<span id="_CPPv3N8controls14offset_1m_costE"></span><span id="_CPPv2N8controls14offset_1m_costE"></span><span id="controls::offset_1m_cost__float"></span><span class="target" id="namespacecontrols_1a68bc5adf85c0836a018d1049fdcbac7b"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">offset_1m_cost</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">5.0f</span></span><a class="headerlink" href="#_CPPv4N8controls14offset_1m_costE" title="Link to this definition"></a><br /></dt>
+<dd><p>Cost for being 1m away from midline. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls12target_speedE">
+<span id="_CPPv3N8controls12target_speedE"></span><span id="_CPPv2N8controls12target_speedE"></span><span id="controls::target_speed__float"></span><span class="target" id="namespacecontrols_1a7d6af3dae5a643910a6c10d22a84244d"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">target_speed</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">10.0f</span></span><a class="headerlink" href="#_CPPv4N8controls12target_speedE" title="Link to this definition"></a><br /></dt>
+<dd><p>Linear cost for under target speed, NO cost for above, in m/s. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls19speed_off_1mps_costE">
+<span id="_CPPv3N8controls19speed_off_1mps_costE"></span><span id="_CPPv2N8controls19speed_off_1mps_costE"></span><span id="controls::speed_off_1mps_cost__float"></span><span class="target" id="namespacecontrols_1a456d6e3b6327356ef81440af40958562"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">speed_off_1mps_cost</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1.0f</span></span><a class="headerlink" href="#_CPPv4N8controls19speed_off_1mps_costE" title="Link to this definition"></a><br /></dt>
+<dd><p>Cost for being 1m/s below target_speed </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls18out_of_bounds_costE">
+<span id="_CPPv3N8controls18out_of_bounds_costE"></span><span id="_CPPv2N8controls18out_of_bounds_costE"></span><span id="controls::out_of_bounds_cost__float"></span><span class="target" id="namespacecontrols_1ab81d5f096fbaec67df23c7ca4830678a"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">out_of_bounds_cost</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">100.0f</span></span><a class="headerlink" href="#_CPPv4N8controls18out_of_bounds_costE" title="Link to this definition"></a><br /></dt>
+<dd><p>Cost for being out of (fake) track bounds, TODO: use real bounds. </p>
+<p>Reason for not using infinity: reduction uses log of the cost (trading precision for representable range) Edge case: if every trajectory goes out of bounds (comparing to itself) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls23spline_frame_separationE">
+<span id="_CPPv3N8controls23spline_frame_separationE"></span><span id="_CPPv2N8controls23spline_frame_separationE"></span><span id="controls::spline_frame_separation__float"></span><span class="target" id="namespacecontrols_1af66eed44fc965b8202ca6d741cd3ecf0"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">spline_frame_separation</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.5f</span></span><a class="headerlink" href="#_CPPv4N8controls23spline_frame_separationE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls27curv_frame_lookup_tex_widthE">
+<span id="_CPPv3N8controls27curv_frame_lookup_tex_widthE"></span><span id="_CPPv2N8controls27curv_frame_lookup_tex_widthE"></span><span id="controls::curv_frame_lookup_tex_width__uint32_t"></span><span class="target" id="namespacecontrols_1a0cd610600ee0f64502123279a04823e9"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">curv_frame_lookup_tex_width</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">512</span></span><a class="headerlink" href="#_CPPv4N8controls27curv_frame_lookup_tex_widthE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls25curv_frame_lookup_paddingE">
+<span id="_CPPv3N8controls25curv_frame_lookup_paddingE"></span><span id="_CPPv2N8controls25curv_frame_lookup_paddingE"></span><span id="controls::curv_frame_lookup_padding__float"></span><span class="target" id="namespacecontrols_1a040de7f5cb374fe75accee86f293ea3b"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">curv_frame_lookup_padding</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N8controls25curv_frame_lookup_paddingE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls11track_widthE">
+<span id="_CPPv3N8controls11track_widthE"></span><span id="_CPPv2N8controls11track_widthE"></span><span id="controls::track_width__float"></span><span class="target" id="namespacecontrols_1a72557a640c20ae91b95411b2bff5c969"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">track_width</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">30.0f</span></span><a class="headerlink" href="#_CPPv4N8controls11track_widthE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls11car_paddingE">
+<span id="_CPPv3N8controls11car_paddingE"></span><span id="_CPPv2N8controls11car_paddingE"></span><span id="controls::car_padding__float"></span><span class="target" id="namespacecontrols_1a69a677dd5bce9fdc344030c1ff273914"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">car_padding</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">max</span></span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv4N8controls23spline_frame_separationE" title="controls::spline_frame_separation"><span class="n"><span class="pre">spline_frame_separation</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">M_SQRT2f32</span></span><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls11track_widthE" title="controls::track_width"><span class="n"><span class="pre">track_width</span></span></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N8controls11car_paddingE" title="Link to this definition"></a><br /></dt>
+<dd><p>mppi simulates a lot of shitty trajectories (naive brownian guess) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls20reset_pose_on_splineE">
+<span id="_CPPv3N8controls20reset_pose_on_splineE"></span><span id="_CPPv2N8controls20reset_pose_on_splineE"></span><span id="controls::reset_pose_on_spline__b"></span><span class="target" id="namespacecontrols_1aed78ce79de926227eac6bb5b479343c2"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reset_pose_on_spline</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><a class="headerlink" href="#_CPPv4N8controls20reset_pose_on_splineE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets pose to 0 vector for new spline (sensor POV) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls11cg_to_frontE">
+<span id="_CPPv3N8controls11cg_to_frontE"></span><span id="_CPPv2N8controls11cg_to_frontE"></span><span id="controls::cg_to_front__float"></span><span class="target" id="namespacecontrols_1a9be13be74bcec7b1f8c7d63346c93b0f"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cg_to_front</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.775</span></span><a class="headerlink" href="#_CPPv4N8controls11cg_to_frontE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls10cg_to_rearE">
+<span id="_CPPv3N8controls10cg_to_rearE"></span><span id="_CPPv2N8controls10cg_to_rearE"></span><span id="controls::cg_to_rear__float"></span><span class="target" id="namespacecontrols_1aa30d4afeb5cb2888ab38a2e92221dfce"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cg_to_rear</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.775</span></span><a class="headerlink" href="#_CPPv4N8controls10cg_to_rearE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls10cg_to_noseE">
+<span id="_CPPv3N8controls10cg_to_noseE"></span><span id="_CPPv2N8controls10cg_to_noseE"></span><span id="controls::cg_to_nose__float"></span><span class="target" id="namespacecontrols_1a2e5c8f8a5d913ca9fd62abffc5f6b072"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cg_to_nose</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1.5f</span></span><a class="headerlink" href="#_CPPv4N8controls10cg_to_noseE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls8whl_baseE">
+<span id="_CPPv3N8controls8whl_baseE"></span><span id="_CPPv2N8controls8whl_baseE"></span><span id="controls::whl_base__float"></span><span class="target" id="namespacecontrols_1a1480b8f9c1de0e07e61fa7371d359efb"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">whl_base</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">2.0f</span></span><a class="headerlink" href="#_CPPv4N8controls8whl_baseE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls10whl_radiusE">
+<span id="_CPPv3N8controls10whl_radiusE"></span><span id="_CPPv2N8controls10whl_radiusE"></span><span id="controls::whl_radius__float"></span><span class="target" id="namespacecontrols_1af4a485df82a745d6fcee40c4d6657e44"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">whl_radius</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.2286</span></span><a class="headerlink" href="#_CPPv4N8controls10whl_radiusE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls10gear_ratioE">
+<span id="_CPPv3N8controls10gear_ratioE"></span><span id="_CPPv2N8controls10gear_ratioE"></span><span id="controls::gear_ratio__float"></span><span class="target" id="namespacecontrols_1a8f5ca40e632b878e45330cf1a4418b64"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gear_ratio</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">15.0f</span></span><a class="headerlink" href="#_CPPv4N8controls10gear_ratioE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls8car_massE">
+<span id="_CPPv3N8controls8car_massE"></span><span id="_CPPv2N8controls8car_massE"></span><span id="controls::car_mass__float"></span><span class="target" id="namespacecontrols_1aa8920dfe537db605bee5f3a02c83a6f9"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">car_mass</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">210.0f</span></span><a class="headerlink" href="#_CPPv4N8controls8car_massE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls12rolling_dragE">
+<span id="_CPPv3N8controls12rolling_dragE"></span><span id="_CPPv2N8controls12rolling_dragE"></span><span id="controls::rolling_drag__float"></span><span class="target" id="namespacecontrols_1a69cf82f1355cbfa212c3624d971aa70c"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rolling_drag</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">100.0f</span></span><a class="headerlink" href="#_CPPv4N8controls12rolling_dragE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls24long_tractive_capabilityE">
+<span id="_CPPv3N8controls24long_tractive_capabilityE"></span><span id="_CPPv2N8controls24long_tractive_capabilityE"></span><span id="controls::long_tractive_capability__float"></span><span class="target" id="namespacecontrols_1ab3cd984aec3e6d9f7e5b44944e157dcb"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">long_tractive_capability</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">2.0f</span></span><a class="headerlink" href="#_CPPv4N8controls24long_tractive_capabilityE" title="Link to this definition"></a><br /></dt>
+<dd><p>Maximum forward acceleration in m/s^2. Can be an imposed limit or the actual physics limitation. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls23lat_tractive_capabilityE">
+<span id="_CPPv3N8controls23lat_tractive_capabilityE"></span><span id="_CPPv2N8controls23lat_tractive_capabilityE"></span><span id="controls::lat_tractive_capability__float"></span><span class="target" id="namespacecontrols_1a6d16fba9681bdcd38d9c0758fb030865"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">lat_tractive_capability</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">3.0f</span></span><a class="headerlink" href="#_CPPv4N8controls23lat_tractive_capabilityE" title="Link to this definition"></a><br /></dt>
+<dd><p>Maximum centripetal acceleration in m/s^2. Can be an imposed limit or the actual physics limitation. Usually slightly more than <code class="docutils literal notranslate"><span class="pre">long_tractive_capability</span></code></p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls16understeer_slopeE">
+<span id="_CPPv3N8controls16understeer_slopeE"></span><span id="_CPPv2N8controls16understeer_slopeE"></span><span id="controls::understeer_slope__float"></span><span class="target" id="namespacecontrols_1a3cc65f6a5870dd12a013c6f7dfe048ef"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">understeer_slope</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><a class="headerlink" href="#_CPPv4N8controls16understeer_slopeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls18brake_enable_speedE">
+<span id="_CPPv3N8controls18brake_enable_speedE"></span><span id="_CPPv2N8controls18brake_enable_speedE"></span><span id="controls::brake_enable_speed__float"></span><span class="target" id="namespacecontrols_1aa2a5c1075a80a6832d844757090c747f"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">brake_enable_speed</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1.0f</span></span><a class="headerlink" href="#_CPPv4N8controls18brake_enable_speedE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls23saturating_motor_torqueE">
+<span id="_CPPv3N8controls23saturating_motor_torqueE"></span><span id="_CPPv2N8controls23saturating_motor_torqueE"></span><span id="controls::saturating_motor_torque__float"></span><span class="target" id="namespacecontrols_1abff7e95d4cfce2e6df1b6952372fb254"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">saturating_motor_torque</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv4N8controls24long_tractive_capabilityE" title="controls::long_tractive_capability"><span class="n"><span class="pre">long_tractive_capability</span></span></a><span class="w"> </span><span class="o"><span class="pre">+</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls12rolling_dragE" title="controls::rolling_drag"><span class="n"><span class="pre">rolling_drag</span></span></a><span class="w"> </span><span class="o"><span class="pre">/</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls8car_massE" title="controls::car_mass"><span class="n"><span class="pre">car_mass</span></span></a><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls8car_massE" title="controls::car_mass"><span class="n"><span class="pre">car_mass</span></span></a><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls10whl_radiusE" title="controls::whl_radius"><span class="n"><span class="pre">whl_radius</span></span></a><span class="w"> </span><span class="o"><span class="pre">/</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls10gear_ratioE" title="controls::gear_ratio"><span class="n"><span class="pre">gear_ratio</span></span></a><a class="headerlink" href="#_CPPv4N8controls23saturating_motor_torqueE" title="Link to this definition"></a><br /></dt>
+<dd><p>Maximum torque request //TODO in N? </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls24approx_propogation_delayE">
+<span id="_CPPv3N8controls24approx_propogation_delayE"></span><span id="_CPPv2N8controls24approx_propogation_delayE"></span><span id="controls::approx_propogation_delay__float"></span><span class="target" id="namespacecontrols_1a0c87e7663527f8f4c647d280d82101ab"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">approx_propogation_delay</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.02f</span></span><a class="headerlink" href="#_CPPv4N8controls24approx_propogation_delayE" title="Link to this definition"></a><br /></dt>
+<dd><p>Time from MPPI control action request to physical change, in sec TODO: Re-estimate since Falcon (steering motor) replacement </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls16approx_mppi_timeE">
+<span id="_CPPv3N8controls16approx_mppi_timeE"></span><span id="_CPPv2N8controls16approx_mppi_timeE"></span><span id="controls::approx_mppi_time__float"></span><span class="target" id="namespacecontrols_1aab769ba83f3ad0d18bd19afd8b6b1e17"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">approx_mppi_time</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.02f</span></span><a class="headerlink" href="#_CPPv4N8controls16approx_mppi_timeE" title="Link to this definition"></a><br /></dt>
+<dd><p>Time from MPPI launch to control action calculation, in sec. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls11torque_modeE">
+<span id="_CPPv3N8controls11torque_modeE"></span><span id="_CPPv2N8controls11torque_modeE"></span><span id="controls::torque_mode__TorqueMode"></span><span class="target" id="namespacecontrols_1acfa88df50cbaed06d4d8ba029d729f9e"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls10TorqueModeE" title="controls::TorqueMode"><span class="n"><span class="pre">TorqueMode</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">torque_mode</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls10TorqueModeE" title="controls::TorqueMode"><span class="n"><span class="pre">TorqueMode</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N8controls10TorqueMode3FWDE" title="controls::TorqueMode::FWD"><span class="n"><span class="pre">FWD</span></span></a><a class="headerlink" href="#_CPPv4N8controls11torque_modeE" title="Link to this definition"></a><br /></dt>
+<dd><p>Because back two wheels don’t currently work. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls11state_x_idxE">
+<span id="_CPPv3N8controls11state_x_idxE"></span><span id="_CPPv2N8controls11state_x_idxE"></span><span id="controls::state_x_idx__uint8_t"></span><span class="target" id="namespacecontrols_1ae18f9f336543d5ac3f22224b8dcb15b2"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">state_x_idx</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N8controls11state_x_idxE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls11state_y_idxE">
+<span id="_CPPv3N8controls11state_y_idxE"></span><span id="_CPPv2N8controls11state_y_idxE"></span><span id="controls::state_y_idx__uint8_t"></span><span class="target" id="namespacecontrols_1a2ed622657cc60c35d14e75be7e0d260c"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">state_y_idx</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><a class="headerlink" href="#_CPPv4N8controls11state_y_idxE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls13state_yaw_idxE">
+<span id="_CPPv3N8controls13state_yaw_idxE"></span><span id="_CPPv2N8controls13state_yaw_idxE"></span><span id="controls::state_yaw_idx__uint8_t"></span><span class="target" id="namespacecontrols_1a64e224aa40892449a69c49c9291e18f2"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">state_yaw_idx</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">2</span></span><a class="headerlink" href="#_CPPv4N8controls13state_yaw_idxE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls15state_speed_idxE">
+<span id="_CPPv3N8controls15state_speed_idxE"></span><span id="_CPPv2N8controls15state_speed_idxE"></span><span id="controls::state_speed_idx__uint8_t"></span><span class="target" id="namespacecontrols_1af47d77b8e109ade94bb5fdb949fc0219"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">state_speed_idx</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">3</span></span><a class="headerlink" href="#_CPPv4N8controls15state_speed_idxE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls18action_swangle_idxE">
+<span id="_CPPv3N8controls18action_swangle_idxE"></span><span id="_CPPv2N8controls18action_swangle_idxE"></span><span id="controls::action_swangle_idx__uint8_t"></span><span class="target" id="namespacecontrols_1a16f8471d62f9ad9075b98ee835ac427f"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">action_swangle_idx</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N8controls18action_swangle_idxE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls17action_torque_idxE">
+<span id="_CPPv3N8controls17action_torque_idxE"></span><span id="_CPPv2N8controls17action_torque_idxE"></span><span id="controls::action_torque_idx__uint8_t"></span><span class="target" id="namespacecontrols_1a6bc268cc809dfeb57c5881bf711cd061"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">action_torque_idx</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><a class="headerlink" href="#_CPPv4N8controls17action_torque_idxE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls19clear_term_sequenceE">
+<span id="_CPPv3N8controls19clear_term_sequenceE"></span><span id="_CPPv2N8controls19clear_term_sequenceE"></span><span id="controls::clear_term_sequence__cCP"></span><span class="target" id="namespacecontrols_1af920055555abe72b9011b64f6de38507"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">clear_term_sequence</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;\033c&quot;</span></span><a class="headerlink" href="#_CPPv4N8controls19clear_term_sequenceE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cuda_utils_cuh.html" class="btn btn-neutral float-left" title="File cuda_utils.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../classlist.html" class="btn btn-neutral float-right" title="Class list" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Yip.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

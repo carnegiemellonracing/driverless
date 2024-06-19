@@ -1,0 +1,4 @@
+Namespace controls::nodes
+=========================
+
+.. doxygennamespace:: controls::nodes

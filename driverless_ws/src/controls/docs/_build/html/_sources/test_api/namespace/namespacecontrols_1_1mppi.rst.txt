@@ -1,0 +1,4 @@
+Namespace controls::mppi
+========================
+
+.. doxygennamespace:: controls::mppi
