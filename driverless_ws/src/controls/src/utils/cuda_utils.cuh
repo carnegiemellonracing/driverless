@@ -13,9 +13,12 @@
  * \returns address of the desired element
 */
 #define IDX_3D(tensor, dims, idx) (&tensor[idx.x * dims.y * dims.z + idx.y * dims.z + idx.z])
+/// Wrapper for CUDA API calls to do error checking
 #define CUDA_CALL(x) (cuda_assert(x, __FILE__, __LINE__))
+/// Wrapper for CURAND API calls to do error checking
 #define CURAND_CALL(x) (curand_assert(x, __FILE__, __LINE__))
 
+/// Asserts whether x is true if the PARANOID compiler flag is set (-P)
 #ifdef PARANOID
 #define paranoid_assert(x) (assert(x))
 #else
@@ -30,12 +33,14 @@ namespace controls {
      */
     template<typename T>
     struct cudaTensor3D {
+        /// @brief Pointer to the data */
         cudaPitchedPtr pitched_ptr;
 
-        /** @brief Extent in bytes */
+        //* @brief Extent in bytes */
         cudaExtent extent;
     };
 
+    /// Converts an opaque error into a human-readable string
     static const char* curandGetErrorString(curandStatus_t error)
     {
         switch (error)
@@ -83,6 +88,7 @@ namespace controls {
         return "<unknown>";
     }
 
+    /// Checks for CUDA errors and prints them to stderr
     static void cuda_assert(cudaError_t code, const char *file, int line, bool abort=true)
     {
         if (code != cudaSuccess)
@@ -92,6 +98,7 @@ namespace controls {
         }
     }
 
+    /// Checks for CURAND errors and prints them to stderr
     static void curand_assert(curandStatus_t code, const char *file, int line, bool abort=true)
     {
         if (code != CURAND_STATUS_SUCCESS)
@@ -101,6 +108,7 @@ namespace controls {
         }
     }
 
+    /// Checks for NaN values inside the input vector.
     __host__ __device__ static bool any_nan(const float* vec, size_t n) {
         for (size_t i = 0; i < n; i++) {
             if (std::isnan(vec[i])) {
@@ -110,6 +118,7 @@ namespace controls {
         return false;
     }
 
+    /// Arbitrary dot product function.
     template<typename T>
     __host__ __device__ T dot(const T* a, const T* b, size_t n) {
         T res {};
@@ -119,6 +128,7 @@ namespace controls {
         return res;
     }
 
+    /// Pretty printing function for a 3D tensor
     template<typename T>
     static void print_tensor(T tensor, dim3 dims) {
         for (uint i = 0; i < dims.x; i++) {
@@ -133,6 +143,7 @@ namespace controls {
         }
     }
 
+    /// Pretty printing function for a 1D vector
     __device__ static void printf_vector(const float vec[], size_t n) {
         printf("{ ");
         for (size_t i = 0; i < n; i++) {
@@ -141,11 +152,13 @@ namespace controls {
         printf(" }\n");
     }
 
+    /// Forces a value to be within a certain range
     template<typename T>
     __host__ __device__ static T clamp(T n, T low, T high) {
         return n > high ? high : n < low ? low : n;
     }
 
+    /// Converts degrees to radians
     constexpr float radians(float degrees) {
         return degrees * M_PI / 180;
     }

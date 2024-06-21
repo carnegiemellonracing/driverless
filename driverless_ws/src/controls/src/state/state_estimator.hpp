@@ -9,6 +9,8 @@ namespace controls {
     namespace state {
         /**
          * @brief State Estimator! Provides functions for controller node to use to prepare state information for mppi.
+         *
+         * Refer to the @rst :doc:`explainer </source/explainers/state_estimation>` @endrst for a more detailed overview.
          */
         class StateEstimator {
         public:

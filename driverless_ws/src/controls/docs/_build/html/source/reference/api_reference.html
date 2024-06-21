@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Class ControllerNode" href="class/ControllerNode.html" />
-    <link rel="prev" title="File Structure" href="../explainers/file_structure.html" /> 
+    <link rel="prev" title="Overview" href="../explainers/overview.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,25 +47,26 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../explainers/terminology.html">Terminology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../explainers/overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../explainers/file_structure.html">File Structure</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="class/ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="class/MppiController.html">Class mppi::MppiController</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class/MppiController_Impl.html">Class mppi::MppiController_Impl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="class/StateEstimator.html">Class state::StateEstimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="class/StateProjector.html">Class state::StateProjector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file/types_hpp.html">File types.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file/types_cuh.html">File types.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file/functors_cuh.html">File functors.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file/cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="file/cuda_types_cuh.html">File cuda_types.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file/cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file/constants_hpp.html">File constants.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file/cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file/helpers_cuh.html">File helpers.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file/gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="classlist.html">Class list</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filelist.html">File list</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../explainerslist.html">Explainers list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../explainerslist.html">Explainers</a></li>
 </ul>
 
         </div>
@@ -94,52 +95,24 @@
              
   <section id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
-<p>A list of important classes and functions in the library.</p>
+<p>A list of important classes and functions in the controls library.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="class/ControllerNode.html">Class ControllerNode</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="class/ControllerNode.html#_CPPv4N8controls5nodes14ControllerNodeE"><code class="docutils literal notranslate"><span class="pre">ControllerNode</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="class/MppiController.html">Class mppi::MppiController</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="class/MppiController_Impl.html">Class mppi::MppiController_Impl</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class/MppiController.html#_CPPv4N8controls4mppi14MppiControllerE"><code class="docutils literal notranslate"><span class="pre">MppiController</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="class/StateEstimator.html">Class state::StateEstimator</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="class/StateEstimator.html#_CPPv4N8controls5state14StateEstimatorE"><code class="docutils literal notranslate"><span class="pre">StateEstimator</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
-<li class="toctree-l2"><a class="reference internal" href="class/StateProjector.html">Class controls::state::StateProjector</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="file/types_hpp.html">File types.hpp</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="file/types_hpp.html#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="file/types_cuh.html">File types.cuh</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="file/types_cuh.html#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="file/functors_cuh.html">File functors.cuh</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="file/functors_cuh.html#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="file/cuda_globals_cuh.html">File cuda_globals.cuh</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="file/cuda_globals_cuh.html#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="file/cuda_types_cuh.html">File cuda_types.cuh</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="file/cuda_types_cuh.html#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="file/cuda_utils_cuh.html">File cuda_utils.cuh</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="file/cuda_utils_cuh.html#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="file/constants_hpp.html">File constants.hpp</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="file/constants_hpp.html#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="class/ControllerNode.html">Class ControllerNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="class/MppiController.html">Class mppi::MppiController</a></li>
+<li class="toctree-l1"><a class="reference internal" href="class/MppiController_Impl.html">Class mppi::MppiController_Impl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="class/StateEstimator.html">Class state::StateEstimator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="class/StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file/types_hpp.html">File types.hpp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file/types_cuh.html">File types.cuh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file/functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file/cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file/cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file/constants_hpp.html">File constants.hpp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file/cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file/helpers_cuh.html">File helpers.cuh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file/gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </div>
 </section>
@@ -148,7 +121,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../explainers/file_structure.html" class="btn btn-neutral float-left" title="File Structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../explainers/overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="class/ControllerNode.html" class="btn btn-neutral float-right" title="Class ControllerNode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

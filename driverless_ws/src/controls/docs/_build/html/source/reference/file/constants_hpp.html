@@ -22,7 +22,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Class list" href="../classlist.html" />
+    <link rel="next" title="File cuda_constants.cuh" href="cuda_constants_cuh.html" />
     <link rel="prev" title="File cuda_utils.cuh" href="cuda_utils_cuh.html" /> 
 </head>
 
@@ -47,12 +47,19 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainers/file_structure.html">File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../classlist.html">Class list</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../filelist.html">File list</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../class/ControllerNode.html">Class ControllerNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/MppiController.html">Class mppi::MppiController</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/MppiController_Impl.html">Class mppi::MppiController_Impl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator.html">Class state::StateEstimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">File constants.hpp</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10TorqueModeE"><code class="docutils literal notranslate"><span class="pre">controls::TorqueMode</span></code></a></li>
@@ -119,17 +126,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cuda_types_cuh.html">File cuda_types.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gl_utils_hpp.html">File gl_utils.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="helpers_cuh.html">File helpers.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 </ul>
 
         </div>
@@ -163,15 +164,7 @@
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv48controls">
 <span id="_CPPv38controls"></span><span id="_CPPv28controls"></span><span id="controls"></span><span class="target" id="namespacecontrols"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">controls</span></span></span><a class="headerlink" href="#_CPPv48controls" title="Link to this definition"></a><br /></dt>
-<dd><div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>these header files are part of the ROS2 standard libraries</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>these header files are generated by ROS2 from the .msg files in the interfaces package. </p>
-</div>
-<div class="breathe-sectiondef docutils container">
+<dd><div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
 <dl class="cpp enum-class">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls10TorqueModeE">
@@ -446,7 +439,8 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls10gear_ratioE">
 <span id="_CPPv3N8controls10gear_ratioE"></span><span id="_CPPv2N8controls10gear_ratioE"></span><span id="controls::gear_ratio__float"></span><span class="target" id="namespacecontrols_1a8f5ca40e632b878e45330cf1a4418b64"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gear_ratio</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">15.0f</span></span><a class="headerlink" href="#_CPPv4N8controls10gear_ratioE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>gear ratio = motor speed / wheel speed = wheel torque / motor torque </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls8car_massE">
@@ -483,7 +477,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls23saturating_motor_torqueE">
 <span id="_CPPv3N8controls23saturating_motor_torqueE"></span><span id="_CPPv2N8controls23saturating_motor_torqueE"></span><span id="controls::saturating_motor_torque__float"></span><span class="target" id="namespacecontrols_1abff7e95d4cfce2e6df1b6952372fb254"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">saturating_motor_torque</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv4N8controls24long_tractive_capabilityE" title="controls::long_tractive_capability"><span class="n"><span class="pre">long_tractive_capability</span></span></a><span class="w"> </span><span class="o"><span class="pre">+</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls12rolling_dragE" title="controls::rolling_drag"><span class="n"><span class="pre">rolling_drag</span></span></a><span class="w"> </span><span class="o"><span class="pre">/</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls8car_massE" title="controls::car_mass"><span class="n"><span class="pre">car_mass</span></span></a><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls8car_massE" title="controls::car_mass"><span class="n"><span class="pre">car_mass</span></span></a><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls10whl_radiusE" title="controls::whl_radius"><span class="n"><span class="pre">whl_radius</span></span></a><span class="w"> </span><span class="o"><span class="pre">/</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls10gear_ratioE" title="controls::gear_ratio"><span class="n"><span class="pre">gear_ratio</span></span></a><a class="headerlink" href="#_CPPv4N8controls23saturating_motor_torqueE" title="Link to this definition"></a><br /></dt>
-<dd><p>Maximum torque request //TODO in N? </p>
+<dd><p>Maximum torque request (N m) </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -549,7 +543,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="cuda_utils_cuh.html" class="btn btn-neutral float-left" title="File cuda_utils.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../classlist.html" class="btn btn-neutral float-right" title="Class list" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="cuda_constants_cuh.html" class="btn btn-neutral float-right" title="File cuda_constants.cuh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -18,8 +18,8 @@ namespace controls {
     constexpr const char *world_pose_topic_name = "filter/pose";
     constexpr const char *controller_info_topic_name = "controller_info";
 
-    // TODO: what is this, why did we choose it
-    /// ask Ankit?
+    // TODO: Ask Ankit what is this, why did we choose it
+    /// Profile for best effort communication
     static const rmw_qos_profile_t best_effort_profile = {
         RMW_QOS_POLICY_HISTORY_KEEP_LAST,
         1,
@@ -82,8 +82,9 @@ namespace controls {
     constexpr float spline_frame_separation = 0.5f;  // meters
     constexpr uint32_t curv_frame_lookup_tex_width = 512;
     constexpr float curv_frame_lookup_padding = 0; // meters
+    /// Not real track width, used for curvilinear frame lookup table generation
     constexpr float track_width = 30.0f; // TODO: FSG rules - no we need - less noisy output (rename to lookup_table_width)
-    /// mppi simulates a lot of shitty trajectories (naive brownian guess)
+    // mppi simulates a lot of shitty trajectories (naive brownian guess)
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * track_width);
     constexpr bool reset_pose_on_spline = true; ///< Sets pose to 0 vector for new spline (sensor POV)
 
@@ -109,7 +110,7 @@ namespace controls {
     /// Maximum torque request (N m)
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
     /// Time from MPPI control action request to physical change, in sec
-    /// TODO: Re-estimate since Falcon (steering motor) replacement
+    // TODO: Re-estimate since Falcon (steering motor) replacement
     constexpr float approx_propogation_delay = 0.02f;
     constexpr float approx_mppi_time = 0.02f; ///< Time from MPPI launch to control action calculation, in sec
 

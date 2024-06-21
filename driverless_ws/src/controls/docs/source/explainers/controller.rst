@@ -10,7 +10,7 @@ The controller hinges on 3 things:
 
 * A novel :doc:`state estimation <state_estimation>` pipeline.
 * Our state of the art implementation of the :doc:`MPPI algorithm <mppi_algorithm>`.
-* An efficient `dynamics model <../../_static/model.pdf>`_ that is used for both state estimation and MPPI.
+* An efficient :doc:`dynamics model </source/explainers/slipless_model>` that is used for both state estimation and MPPI.
 
 This is implemented in two objects that the node **owns** - the :doc:`StateEstimator <../reference/class/StateEstimator>` and the :doc:`MppiController <../reference/class/MppiController>`.
 

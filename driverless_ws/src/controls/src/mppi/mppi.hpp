@@ -16,6 +16,8 @@ namespace controls {
          * - an existing control action trajectory from the previous run of MPPI
          *
          * it calculates the optimal control action to minimize a cost function.
+         *
+         * Refer to the @rst :doc:`explainer </source/explainers/mppi_algorithm>` @endrst for a more detailed overview.
          */
         class MppiController {
         public:

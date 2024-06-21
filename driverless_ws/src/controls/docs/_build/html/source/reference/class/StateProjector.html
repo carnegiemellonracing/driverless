@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Class controls::state::StateProjector &mdash; driverless_controls 1.0 documentation</title>
+  <title>Class state::StateProjector &mdash; driverless_controls 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -46,17 +46,14 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainers/file_structure.html">File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../classlist.html">Class list</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MppiController.html">Class mppi::MppiController</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MppiController_Impl.html">Class mppi::MppiController_Impl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="StateEstimator.html">Class state::StateEstimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Class controls::state::StateProjector</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Class state::StateProjector</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv4N8controls5state14StateProjectorE"><code class="docutils literal notranslate"><span class="pre">StateProjector</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector13record_actionE6ActionN6rclcpp4TimeE"><code class="docutils literal notranslate"><span class="pre">StateProjector::record_action()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector12record_speedEfN6rclcpp4TimeE"><code class="docutils literal notranslate"><span class="pre">StateProjector::record_speed()</span></code></a></li>
@@ -72,10 +69,18 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../file/types_hpp.html">File types.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/types_cuh.html">File types.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/constants_hpp.html">File constants.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/helpers_cuh.html">File helpers.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../filelist.html">File list</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 </ul>
 
         </div>
@@ -93,8 +98,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../api_reference.html">API Reference</a></li>
-          <li class="breadcrumb-item"><a href="StateEstimator.html">Class state::StateEstimator</a></li>
-      <li class="breadcrumb-item active">Class controls::state::StateProjector</li>
+      <li class="breadcrumb-item active">Class state::StateProjector</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/source/reference/class/StateProjector.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -104,8 +108,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="class-controls-state-stateprojector">
-<h1>Class controls::state::StateProjector<a class="headerlink" href="#class-controls-state-stateprojector" title="Link to this heading"></a></h1>
+  <section id="class-state-stateprojector">
+<h1>Class state::StateProjector<a class="headerlink" href="#class-state-stateprojector" title="Link to this heading"></a></h1>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjectorE">
 <span id="_CPPv3N8controls5state14StateProjectorE"></span><span id="_CPPv2N8controls5state14StateProjectorE"></span><span id="controls::state::StateProjector"></span><span class="target" id="classcontrols_1_1state_1_1StateProjector"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StateProjector</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjectorE" title="Link to this definition"></a><br /></dt>
@@ -233,92 +237,12 @@
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector18CompareRecordTimesE">
 <span id="_CPPv3N8controls5state14StateProjector18CompareRecordTimesE"></span><span id="_CPPv2N8controls5state14StateProjector18CompareRecordTimesE"></span><span id="controls::state::StateProjector::CompareRecordTimes"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1CompareRecordTimes"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CompareRecordTimes</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector18CompareRecordTimesE" title="Link to this definition"></a><br /></dt>
 <dd><p>Helper binary operator for sorting records by time, needed for the multiset. </p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK8controls5state14StateProjector18CompareRecordTimesclERK6RecordRK6Record">
-<span id="_CPPv3NK8controls5state14StateProjector18CompareRecordTimesclERK6RecordRK6Record"></span><span id="_CPPv2NK8controls5state14StateProjector18CompareRecordTimesclERK6RecordRK6Record"></span><span id="controls::state::StateProjector::CompareRecordTimes::call-operator__RecordCR.RecordCRC"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1CompareRecordTimes_1a3c68b38819fb4ff022c026c8cc617d61"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">()</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector6RecordE" title="controls::state::StateProjector::Record"><span class="n"><span class="pre">Record</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector6RecordE" title="controls::state::StateProjector::Record"><span class="n"><span class="pre">Record</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8controls5state14StateProjector18CompareRecordTimesclERK6RecordRK6Record" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-</div>
 </dd></dl>
 
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6RecordE">
 <span id="_CPPv3N8controls5state14StateProjector6RecordE"></span><span id="_CPPv2N8controls5state14StateProjector6RecordE"></span><span id="controls::state::StateProjector::Record"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Record</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6RecordE" title="Link to this definition"></a><br /></dt>
 <dd><p>Historical record type. </p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
-<dl class="cpp enum-class">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record4TypeE">
-<span id="_CPPv3N8controls5state14StateProjector6Record4TypeE"></span><span id="_CPPv2N8controls5state14StateProjector6Record4TypeE"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1a26ab6b0d4ea8474398fd0a6a0b98f0d8"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Type</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record4TypeE" title="Link to this definition"></a><br /></dt>
-<dd><p><em>Values:</em></p>
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record4Type6ActionE">
-<span id="_CPPv3N8controls5state14StateProjector6Record4Type6ActionE"></span><span id="_CPPv2N8controls5state14StateProjector6Record4Type6ActionE"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1a26ab6b0d4ea8474398fd0a6a0b98f0d8a004bf6c9a40003140292e97330236c53"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Action</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record4Type6ActionE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record4Type5SpeedE">
-<span id="_CPPv3N8controls5state14StateProjector6Record4Type5SpeedE"></span><span id="_CPPv2N8controls5state14StateProjector6Record4Type5SpeedE"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1a26ab6b0d4ea8474398fd0a6a0b98f0d8a44877c6aa8e93fa5a91c9361211464fb"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Speed</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record4Type5SpeedE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp enumerator">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record4Type4PoseE">
-<span id="_CPPv3N8controls5state14StateProjector6Record4Type4PoseE"></span><span id="_CPPv2N8controls5state14StateProjector6Record4Type4PoseE"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1a26ab6b0d4ea8474398fd0a6a0b98f0d8a8109c9c9d6a2ca3bec3e006fe51a5f3e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Pose</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record4Type4PoseE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record6actionE">
-<span id="_CPPv3N8controls5state14StateProjector6Record6actionE"></span><span id="_CPPv2N8controls5state14StateProjector6Record6actionE"></span><span id="controls::state::StateProjector::Record::action__Action"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1a20425fdf6a590bc4ea0afa157fc728f3"></span><a class="reference internal" href="../file/types_hpp.html#_CPPv4N8controls6ActionE" title="controls::Action"><span class="n"><span class="pre">Action</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">action</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record6actionE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record5speedE">
-<span id="_CPPv3N8controls5state14StateProjector6Record5speedE"></span><span id="_CPPv2N8controls5state14StateProjector6Record5speedE"></span><span id="controls::state::StateProjector::Record::speed__float"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1a758c10b749de27daa2611a3a3a6631cb"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">speed</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record5speedE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record1xE">
-<span id="_CPPv3N8controls5state14StateProjector6Record1xE"></span><span id="_CPPv2N8controls5state14StateProjector6Record1xE"></span><span id="controls::state::StateProjector::Record::x__float"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1ad7fcf9c1fed503c5a4a9dd6114de24ac"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">x</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record1xE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record1yE">
-<span id="_CPPv3N8controls5state14StateProjector6Record1yE"></span><span id="_CPPv2N8controls5state14StateProjector6Record1yE"></span><span id="controls::state::StateProjector::Record::y__float"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1a90fa4b695a8828b778196b9f3735a935"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">y</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record1yE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record3yawE">
-<span id="_CPPv3N8controls5state14StateProjector6Record3yawE"></span><span id="_CPPv2N8controls5state14StateProjector6Record3yawE"></span><span id="controls::state::StateProjector::Record::yaw__float"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1adf27f0fc7cbdcf7895281630a972b3ea"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">yaw</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record3yawE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record4poseE">
-<span id="_CPPv3N8controls5state14StateProjector6Record4poseE"></span><span id="_CPPv2N8controls5state14StateProjector6Record4poseE"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1acccfb235856f2feaa8cde37539eac56d"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="../file/constants_hpp.html#_CPPv48controls" title="controls"><span class="n"><span class="pre">controls</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N8controls5state14StateProjectorE" title="controls::state::StateProjector"><span class="n"><span class="pre">StateProjector</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector6RecordE" title="controls::state::StateProjector::Record"><span class="n"><span class="pre">Record</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">[anonymous]</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">[anonymous]</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pose</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record4poseE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6RecordUt1_1E">
-<span id="_CPPv3N8controls5state14StateProjector6RecordUt1_1E"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1a2ba99bf893644f889374431654b54893"></span><span class="k"><span class="pre">union</span></span><span class="w"> </span><a class="reference internal" href="../file/constants_hpp.html#_CPPv48controls" title="controls"><span class="n"><span class="pre">controls</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N8controls5state14StateProjectorE" title="controls::state::StateProjector"><span class="n"><span class="pre">StateProjector</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector6RecordE" title="controls::state::StateProjector::Record"><span class="n"><span class="pre">Record</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">[anonymous]</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">[anonymous]</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6RecordUt1_1E" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record4timeE">
-<span id="_CPPv3N8controls5state14StateProjector6Record4timeE"></span><span id="_CPPv2N8controls5state14StateProjector6Record4timeE"></span><span id="controls::state::StateProjector::Record::time__rclcpp::Time"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1a5a14f3c1e734daa09e79a5d52078dc53"></span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">time</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record4timeE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6Record4typeE">
-<span id="_CPPv3N8controls5state14StateProjector6Record4typeE"></span><span id="_CPPv2N8controls5state14StateProjector6Record4typeE"></span><span id="controls::state::StateProjector::Record::type__Type"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record_1aca63f8f5bdf7398bfc4f756558faa293"></span><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector6Record4TypeE" title="controls::state::StateProjector::Record::Type"><span class="n"><span class="pre">Type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">type</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6Record4typeE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-</div>
 </dd></dl>
 
 </dd></dl>

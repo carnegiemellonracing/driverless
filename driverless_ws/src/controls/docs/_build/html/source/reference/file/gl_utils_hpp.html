@@ -21,8 +21,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="File helpers.cuh" href="helpers_cuh.html" />
-    <link rel="prev" title="File cuda_constants.cuh" href="cuda_constants_cuh.html" /> 
+    <link rel="next" title="Explainers" href="../../explainerslist.html" />
+    <link rel="prev" title="File helpers.cuh" href="helpers_cuh.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,18 +46,22 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainers/file_structure.html">File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../classlist.html">Class list</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../filelist.html">File list</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../class/ControllerNode.html">Class ControllerNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/MppiController.html">Class mppi::MppiController</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/MppiController_Impl.html">Class mppi::MppiController_Impl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator.html">Class state::StateEstimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cuda_types_cuh.html">File cuda_types.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers_cuh.html">File helpers.cuh</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">File gl_utils.hpp</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls5utilsE"><code class="docutils literal notranslate"><span class="pre">controls::utils</span></code></a></li>
@@ -65,12 +69,9 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="helpers_cuh.html">File helpers.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 </ul>
 
         </div>
@@ -87,7 +88,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../filelist.html">File list</a></li>
+          <li class="breadcrumb-item"><a href="../api_reference.html">API Reference</a></li>
       <li class="breadcrumb-item active">File gl_utils.hpp</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/source/reference/file/gl_utils_hpp.rst.txt" rel="nofollow"> View page source</a>
@@ -103,15 +104,7 @@
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv48controls">
 <span id="_CPPv38controls"></span><span id="_CPPv28controls"></span><span id="controls"></span><span class="target" id="namespacecontrols"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">controls</span></span></span><br /></dt>
-<dd><div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>these header files are part of the ROS2 standard libraries</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>these header files are generated by ROS2 from the .msg files in the interfaces package. </p>
-</div>
-<dl class="cpp type">
+<dd><dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5utilsE">
 <span id="_CPPv3N8controls5utilsE"></span><span id="_CPPv2N8controls5utilsE"></span><span id="controls::utils"></span><span class="target" id="namespacecontrols_1_1utils"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">utils</span></span></span><a class="headerlink" href="#_CPPv4N8controls5utilsE" title="Link to this definition"></a><br /></dt>
 <dd><div class="breathe-sectiondef docutils container">
@@ -209,8 +202,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cuda_constants_cuh.html" class="btn btn-neutral float-left" title="File cuda_constants.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="helpers_cuh.html" class="btn btn-neutral float-right" title="File helpers.cuh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="helpers_cuh.html" class="btn btn-neutral float-left" title="File helpers.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../explainerslist.html" class="btn btn-neutral float-right" title="Explainers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

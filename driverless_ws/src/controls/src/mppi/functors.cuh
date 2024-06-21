@@ -132,17 +132,14 @@ namespace controls {
         };
 
 
-        /**@brief Computes and stores log probability density from sampled perturbations and covariance for importance
-         * sampling.
-         * TODO: not likelihood?
+        /**@brief Computes and stores log probability density from sampled perturbations for the purpose of
+         * @rst :ref:`importance_sampling` @endrst.
+         * Uses the covariance matrix in @ref cuda_globals::perturbs_incr_var_inv.
          *
+         * @rst :ref:`importance_sampling` is why we need this.
          * @param[in] perturbation n x m x q perturbation matrix
          * @param[out] log_probability_densities n x m matrix to store result
          * @param[in] idx index from 0 to n x m, used for @c thrust::for_each
-         *
-         * @ref cuda_globals::perturbs_incr_var_inv
-         * TODO: link to LaTeX section on importance sampling
-         * TODO: figure out what happened to magic_constant (ugly thing with square roots and determinant of covariance)
          */
         struct LogProbabilityDensity {
             thrust::device_ptr<float> perturbation;
@@ -154,6 +151,7 @@ namespace controls {
                     : perturbation {perturbation},
                       log_probability_densities {log_probability_densities} { }
 
+            // TODO: figure out what happened to magic_constant (ugly thing with square roots and determinant of covariance)
             __device__ void operator() (size_t idx) const {
                 float perturb[action_dims];
                 memcpy(&perturb, &perturbation.get()[idx * action_dims], sizeof(float) * action_dims);
@@ -180,7 +178,7 @@ namespace controls {
         /** @brief Computes cost using the model and cost function, triangularizes both D and J
          *
          * @param[in] brownians brownian perturbation with mean 0
-         * @param[in] sampled_action_trajectories same as brownians?
+         * @param[out] sampled_action_trajectories same as brownians but doesn't have to be
          * @param[in] sampled_state_trajectories for publishing states
          * @param[out] cost_to_gos stores the negative cost so far
          * @param[in/out] log_prob_densities stores the negative log_prob_densities so far
@@ -298,7 +296,7 @@ namespace controls {
         };
 
         // TODO: why can't this just be a function
-        /// Adds two device action
+        /// Adds two device actions
         struct AddActions {
             __device__ DeviceAction operator() (const DeviceAction& a1, const DeviceAction& a2) const {
                 DeviceAction res;

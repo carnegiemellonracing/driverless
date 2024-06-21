@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Explainers list &mdash; driverless_controls 1.0 documentation</title>
+  <title>Explainers &mdash; driverless_controls 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Controller Overview" href="explainers/controller.html" />
-    <link rel="prev" title="File helpers.cuh" href="reference/file/helpers_cuh.html" /> 
+    <link rel="prev" title="File gl_utils.hpp" href="reference/file/gl_utils_hpp.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,20 +47,16 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="explainers/terminology.html">Terminology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="explainers/overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="explainers/file_structure.html">File Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/api_reference.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/classlist.html">Class list</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/filelist.html">File list</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Explainers list</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Explainers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="explainers/controller.html">Controller Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/file_structure.html">File Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html">MPPI Algorithm Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/overview.html">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/slipless_model.html">Model Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="explainers/state_estimation.html">State Estimation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html">MPPI Algorithm Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explainers/slipless_model.html">Model Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="explainers/terminology.html">Terminology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explainers/file_structure.html">File Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explainers/file_structure.html#namespaces">Namespaces</a></li>
 </ul>
 </li>
 </ul>
@@ -79,7 +75,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Explainers list</li>
+      <li class="breadcrumb-item active">Explainers</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/source/explainerslist.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -89,34 +85,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="explainers-list">
-<h1>Explainers list<a class="headerlink" href="#explainers-list" title="Link to this heading"></a></h1>
+  <section id="explainers">
+<h1>Explainers<a class="headerlink" href="#explainers" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="explainers/controller.html">Controller Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="explainers/controller.html#implementation">Implementation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="explainers/file_structure.html">File Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="explainers/mppi_algorithm.html">MPPI Algorithm Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#motivation">Motivation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#technical-primer">Technical Primer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#algorithm">Algorithm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#implementation">Implementation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#higher-order-functions">Higher Order Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#alterations">Alterations</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="explainers/overview.html">Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="explainers/overview.html#what-is-controls">What is Controls?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/overview.html#how-does-it-work">How does it work?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/overview.html#setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/overview.html#next-up">Next Up</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="explainers/slipless_model.html">Model Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="explainers/slipless_model.html#notation">Notation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="explainers/slipless_model.html#specification">Specification</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="explainers/state_estimation.html">State Estimation Overview</a><ul>
@@ -132,6 +106,21 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="explainers/mppi_algorithm.html">MPPI Algorithm Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#technical-primer">Technical Primer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#algorithm">Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#implementation">Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#importance-sampling">Importance Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#higher-order-functions">Higher Order Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explainers/mppi_algorithm.html#alterations">Alterations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="explainers/slipless_model.html">Model Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="explainers/slipless_model.html#notation">Notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explainers/slipless_model.html#specification">Specification</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="explainers/terminology.html">Terminology</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="explainers/terminology.html#general">General</a></li>
 <li class="toctree-l2"><a class="reference internal" href="explainers/terminology.html#cuda">CUDA</a></li>
@@ -139,6 +128,8 @@
 <li class="toctree-l2"><a class="reference internal" href="explainers/terminology.html#acronyms">Acronyms</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="explainers/file_structure.html">File Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="explainers/file_structure.html#namespaces">Namespaces</a></li>
 </ul>
 </div>
 </section>
@@ -147,7 +138,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="reference/file/helpers_cuh.html" class="btn btn-neutral float-left" title="File helpers.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reference/file/gl_utils_hpp.html" class="btn btn-neutral float-left" title="File gl_utils.hpp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="explainers/controller.html" class="btn btn-neutral float-right" title="Controller Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

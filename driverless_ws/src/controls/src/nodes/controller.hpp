@@ -20,44 +20,11 @@ namespace controls {
     namespace nodes {
 
         /**
-         * Controller node!
+         * Controller node! ROS node that subscribes to spline and twist, and publishes control actions and debugging
+         * information.
          *
-         * If you're unfamiliar with ROS2, check out https://docs.ros.org/en/humble/Tutorials.html.
+         * Refer to the @rst :doc:`explainer </source/explainers/controller>` @endrst for a more detailed overview.
          *
-         * The controller hinges on the operation of two objects that it owns - the @ref state::StateEstimator "StateEstimator"
-         * and the @ref mppi::MppiController "MppiController".
-         * Both of these rely on the @rst `dynamics model <../../../_static/model.pdf>`_. @endrst
-         *
-         *  - StateEstimator: given twist and spline, esimates inertial state and a inertial to curvilinear lookup table.
-         *  - MPPIController: given inertial state and the lookup table, calculates the optimal control action to take
-         * using the @rst `MPPI Algorithm <../../../_static/mppi.pdf>`_. @endrst
-         *
-         * This is how the node works:
-         *
-         *  - Initialization: Construction creates subscribers, publishers, and timers, then launches MPPI in a new thread.
-         *
-         *  - Subscribers:
-         *    - Spline: path planning spline. On receive, the state estimator is updated, and the curvilinear state
-         *      recalculated. The MPPI thread is notified that the state is dirty and to refire if idle.
-         *    - State: ditto. just twist
-         *    @TODO: double confirm this
-         *    linear velocity from twist, yaw rate from steering wheel angle, better than time-syncing
-         *    baked into model
-         *
-         *    These callbacks are mutually exclusive.
-         *
-         *  - Publishers:
-         *    - Control Action: every @ref controller_period, the most recently calculated action is published to the
-         *    `control_action` topic, which is received by the Actuators node.
-         *
-         *      The action is double buffered, to minimize the delay that MPPI will have on action publishing. The
-         *      timer callback is parallel with any other callbacks, so while the consistency of the publishing isn't
-         *      guaranteed, it won't be delayed by MPPI or state updates.
-         *      todo add link to double buffering, inquire about consistency of publishing
-         *    - Controller Info: every controller step, the most recent info message is published to the `controller_info`
-         *    topic for debugging.
-         *
-         * Code for the node can be found in *controls/src/nodes/controller.cpp*.
          */
         class ControllerNode : public rclcpp::Node {
         public:
