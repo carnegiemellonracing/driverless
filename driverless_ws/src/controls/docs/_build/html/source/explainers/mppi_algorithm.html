@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="State Estimation Overview" href="state_estimation.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="lookup_table.html" /> 
+    <link rel="prev" title="Controller Overview" href="controller.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,6 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../reference/classlist.html">Class list</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/filelist.html">File list</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../explainerslist.html">Explainers list</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file_structure.html">File Structure</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">MPPI Algorithm Overview</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#motivation">Motivation</a></li>
@@ -97,8 +98,9 @@
              
   <section id="mppi-algorithm-overview">
 <h1>MPPI Algorithm Overview<a class="headerlink" href="#mppi-algorithm-overview" title="Link to this heading"></a></h1>
-<p>The MPPI algorithm is a model predictive control algorithm that uses a stochastic optimization approach to find the
+<p>The MPPI (Model Predictive Path Integral) algorithm is a model predictive control algorithm that uses a stochastic optimization approach to find the
 optimal control action for a given task.</p>
+<p>We highly recommend reading the <a class="reference internal" href="state_estimation.html"><span class="doc">State Estimation Overview</span></a> before proceeding.</p>
 <section id="motivation">
 <h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading"></a></h2>
 <p>Because our dynamics model is not differentiable and the task is non-convex, we cannot use gradient-based optimization
@@ -121,20 +123,22 @@ highly parallelizable since each sample can be computed independently, allowing 
 </section>
 <section id="algorithm">
 <h2>Algorithm<a class="headerlink" href="#algorithm" title="Link to this heading"></a></h2>
-<p>Execute these in a continuous loop:
-1. Obtain the inertial state of the vehicle.
-2. Perturb the previous “best” action trajectory with Brownian noise repeatedly to generate <code class="docutils literal notranslate"><span class="pre">num_samples</span></code> action trajectories.
-3. For every sample, do state rollouts. Repeatedly apply the dynamics model to the state and perturbed control action to generate a sequence of states.
-4. For every sample, evaluate the cost-to-go for every state in the sequence.
-5. For every time step, compute the weighted average of the perturbed control actions over all the samples, based on the associated
-cost-to-go and the likelihood of the perturbation (see Importance Sampling). This is the optimal action trajectory.
-6. Execute the first control action in the optimal action trajectory, then store the rest of the trajectory for the next iteration.</p>
+<p>Execute these in a continuous loop:</p>
+<ol class="arabic simple">
+<li><p>Obtain the inertial state of the vehicle.</p></li>
+<li><p>Perturb the previous “best” action trajectory with Brownian noise repeatedly to generate <code class="docutils literal notranslate"><span class="pre">num_samples</span></code> action trajectories.</p></li>
+<li><p>For every sample, do state rollouts. Repeatedly apply the dynamics model to the state and perturbed control action to generate a sequence of states.</p></li>
+<li><p>For every sample, evaluate the cost-to-go for every state in the sequence.</p></li>
+<li><p>For every time step, compute the weighted average of the perturbed control actions over all the samples, based on the associated cost-to-go and the likelihood of the perturbation (see Importance Sampling). This is the optimal action trajectory.</p></li>
+<li><p>Execute the first control action in the optimal action trajectory, then store the rest of the trajectory for the next iteration of MPPI.</p></li>
+</ol>
+<p>For a more technical specification, see <a class="reference external" href="../../_static/mppi.pdf">here</a>.</p>
 </section>
 <section id="implementation">
 <h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
-<p>The controller node owns an outward facing <code class="docutils literal notranslate"><span class="pre">mppi::MPPIController</span></code>, which has one main member function <code class="docutils literal notranslate"><span class="pre">generate_function()</span></code>
+<p>The controller node owns an outward facing <a class="reference internal" href="../reference/class/MppiController.html"><span class="doc">MppiController</span></a>, which has one main member function <code class="docutils literal notranslate"><span class="pre">generate_action()</span></code>
 that outputs a control action. This is defined in <code class="docutils literal notranslate"><span class="pre">controls/src/mppi/mppi.hpp</span></code>.</p>
-<p>This however, is only an abstract base class. The actual implementation is in the derived class, :<a class="reference internal" href="../reference/class/MppiController_Impl.html"><span class="doc">MppiController_Impl</span></a>, which is
+<p>This however, is only an abstract base class. The actual implementation is in the derived class, <a class="reference internal" href="../reference/class/MppiController_Impl.html"><span class="doc">MppiController_Impl</span></a>, which is
 defined in <code class="docutils literal notranslate"><span class="pre">controls/src/mppi/mppi.cuh</span></code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -145,34 +149,33 @@ provides member functions for the controller node to call, but in reality is an 
 </div>
 <p>MPPI makes heavy usage of Thrust to conduct operations in parallel over the GPU. Copying data from the CPU to the GPU
 or vice versa is an expensive operation, so we avoid it as much as possible. The MPPIController_Impl reads in the estimated
-current inertial state and the inertial-to-curvilinear lookup table as calculated by the StateEstimator. It creates and
+current inertial state and the inertial-to-curvilinear lookup table as calculated by the StateEstimator (and already exist on the GPU). It creates and
 manipulates device vectors such as <code class="docutils literal notranslate"><span class="pre">m_action_trajectories</span></code> on the GPU,
 then copies over a single control action to the CPU to pass in a message.</p>
-<p>Thrust relies on small unary or binary functions to do maps or reductions. Since we need to capture pointers to
+<p>Thrust relies on small unary or binary functions to do <a class="reference internal" href="#hofs"><span class="std std-ref">maps or reductions</span></a>. Since we need to capture pointers to
 our device vectors, we wrap our functions in C++ functors. These functors, along with helper functions to be run on the
 GPU, such as the dynamics model, are defined in <code class="docutils literal notranslate"><span class="pre">controls/src/mppi/functors.cuh</span></code>. The main loop of
-MPPI is implemented in generate_action() of <code class="docutils literal notranslate"><span class="pre">controls/src/mppi/mppi.cu</span></code>, as shown here:</p>
-<p>&lt;insert image here&gt;</p>
+MPPI is implemented in <code class="docutils literal notranslate"><span class="pre">generate_action()</span></code> of <code class="docutils literal notranslate"><span class="pre">controls/src/mppi/mppi.cu</span></code>, as shown here:</p>
+<a class="reference internal image-reference" href="../../_images/mppi.png"><img alt="../../_images/mppi.png" class="align-center" src="../../_images/mppi.png" style="width: 100%;" /></a>
 </section>
 <section id="higher-order-functions">
-<h2>Higher Order Functions<a class="headerlink" href="#higher-order-functions" title="Link to this heading"></a></h2>
+<span id="hofs"></span><h2>Higher Order Functions<a class="headerlink" href="#higher-order-functions" title="Link to this heading"></a></h2>
 <p>Work refers to the time taken to execute all the operations of a given task by a single processor.
 Span refers to the minimum time taken to execute the task’s operations in parallel across infinite processors.</p>
-<p>&lt;insert mapping image&gt;</p>
 <p>Given a collection of elements, a map applies a unary mapping function to each element to produce a new collection of elements.
 Assuming the mapping function is O(1), the map operation has work O(n) but span O(1).</p>
-<p>&lt;insert reduce image&gt;</p>
 <p>Given a collection of elements, a reduce applies a binary reduction function to combine all the elements into a single
 accumulated value. Assuming the reduction function is O(1), the reduce operation has work O(n) but span O(log n).</p>
 </section>
 <section id="alterations">
 <h2>Alterations<a class="headerlink" href="#alterations" title="Link to this heading"></a></h2>
-<p>Consider the following alterations to our implementation:
-* State can capture more information about the vehicle
-* Control action can be more expressive to allow the algorithm to learn behaviors such as torque vectoring. Granted,
-this requires a more complex dynamics model.
-* The dynamics model can be learned from data.
-* The cost can be made to be a function of both state and control action.</p>
+<p>Consider the following alterations to our implementation:</p>
+<ul class="simple">
+<li><p>State can capture more information about the vehicle</p></li>
+<li><p>Control action can be more expressive to allow the algorithm to learn behaviors such as torque vectoring. Granted, this requires a more complex dynamics model.</p></li>
+<li><p>The dynamics model can be learned from data.</p></li>
+<li><p>The cost can be made to be a function of both state and control action.</p></li>
+</ul>
 </section>
 </section>
 
@@ -180,7 +183,7 @@ this requires a more complex dynamics model.
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="lookup_table.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="controller.html" class="btn btn-neutral float-left" title="Controller Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="state_estimation.html" class="btn btn-neutral float-right" title="State Estimation Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

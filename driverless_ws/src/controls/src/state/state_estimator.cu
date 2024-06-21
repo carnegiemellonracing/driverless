@@ -16,16 +16,7 @@
 #include "state_estimator.hpp"
 
 #include <iosfwd>
-#include <iosfwd>
-#include <iosfwd>
-#include <iosfwd>
 #include <vector>
-#include <vector>
-#include <vector>
-#include <vector>
-#include <glm/common.hpp>
-#include <glm/common.hpp>
-#include <glm/common.hpp>
 #include <glm/common.hpp>
 #include <mppi/functors.cuh>
 #include <SDL2/SDL_video.h>
@@ -551,6 +542,7 @@ namespace controls {
 #endif
         }
 
+        // Whole lotta CUDA nonsense. Tread lightly.
         void StateEstimator_Impl::map_curv_frame_lookup() {
             CUDA_CALL(cudaGraphicsGLRegisterImage(&m_curv_frame_lookup_rsc, m_curv_frame_lookup_rbo, GL_RENDERBUFFER, cudaGraphicsRegisterFlagsNone));
 

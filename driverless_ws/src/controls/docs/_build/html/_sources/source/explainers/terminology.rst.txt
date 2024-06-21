@@ -44,6 +44,13 @@ ROS
 
 Acronyms
 --------
+**MPPI**
+
 **ROS**: Robot Operating System. We are currently using ROS2 Humble_.
+
+**IMU**:
+
+**LIDAR**:
+
 
 .. _Humble: https://docs.ros.org/en/humble/index.html

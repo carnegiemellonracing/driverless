@@ -15,6 +15,9 @@ namespace controls {
                 return swangle / (1 + understeer_slope * speed);
             }
 
+            /**
+             * @brief yaw rate rate of ? uniform circular motion
+             */
             __host__ __device__ static float angular_speed(const float speed, const float kinematic_swangle_) {
                 if (kinematic_swangle_ == 0) {
                     return 0;
@@ -26,6 +29,7 @@ namespace controls {
                     kinematic_swangle_
                 );
             }
+
 
             __host__ __device__ static float centripedal_accel(const float speed, const float swangle) {
                 if (swangle == 0) {
@@ -83,6 +87,7 @@ namespace controls {
 
                 // printf("sat_tire_torque: %f, torque_front: %f, torque_rear: %f\n", saturating_tire_torque, torque_front, torque_rear);
 
+                /// direction of the forces has to do with the actual swangle
                 const float next_speed_raw = speed +
                     ((torque_front * cosf(swangle - slip_angle_) + torque_rear * cosf(slip_angle_)) / (whl_radius * car_mass)
                     - rolling_drag / car_mass) * timestep;
