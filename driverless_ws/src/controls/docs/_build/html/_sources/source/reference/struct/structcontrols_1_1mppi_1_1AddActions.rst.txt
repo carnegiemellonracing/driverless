@@ -1,4 +1,0 @@
-Struct controls::mppi::AddActions
-=================================
-
-.. doxygenstruct:: controls::mppi::AddActions

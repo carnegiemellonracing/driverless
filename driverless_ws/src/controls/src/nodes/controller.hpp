@@ -61,10 +61,9 @@ namespace controls {
 
             /**
              * Callback for world pose subscription. Forwards message to `StateEstimator::on_world_pose`, and notifies MPPI
-             * thread of the dirty state. Likely from GPS.
+             * thread of the dirty state. Likely from GPS. Currently unused.
              *
              * @param pose_msg Received pose message
-             * @TODO: pretty sure this is unused
              */
             void world_pose_callback(const PoseMsg& pose_msg);
 
@@ -85,8 +84,8 @@ namespace controls {
              */
             std::thread launch_mppi();
 
-            /** Notify MPPI thread that the state is dirty, and to refire if idle TODO idle as in waiting to be notified? */
-            /// @todo: time is changing so everything is always changing. Consider max control frequency
+            /** Notify MPPI thread that the state is dirty, and to refire if waiting. */
+            // todo: time is changing so everything is always changing so state is always dirty. Consider max control frequency instead.
             void notify_state_dirty();
 
             /// Converts MPPI control action output to a ROS2 message. Affected by drive mode (FWD, RWD, AWD).
@@ -97,7 +96,7 @@ namespace controls {
             /// @param[in] state Vehicle state.
             static StateMsg state_to_msg(const State& state);
 
-            ///TODO: doesn't this only print not publish
+            //TODO: change the name to print_info or add publishing into it
             /** Prints the information in a InfoMsg to the given stream (usually the console).
              * @param[in] stream Stream to print to
              * @param[in] info Info message to print

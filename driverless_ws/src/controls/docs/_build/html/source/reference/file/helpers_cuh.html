@@ -47,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../class/ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/MppiController.html">Class mppi::MppiController</a></li>
@@ -54,12 +55,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator.html">Class state::StateEstimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slipless_model.html">File model.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">File helpers.cuh</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a><ul>
@@ -71,7 +73,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -112,7 +114,17 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
 <span class="target" id="namespacecontrols_1_1cuda__globals_1aea8153497ab7cc7067bdd0b2b895d636"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">__device__</span> <span class="pre">void</span> <span class="pre">sample_curv_state</span> <span class="pre">(const</span> <span class="pre">float</span> <span class="pre">world_pose[3],</span> <span class="pre">float</span> <span class="pre">curv_pose[3],</span> <span class="pre">bool</span> <span class="pre">&amp;out_of_bounds)</span></span></dt>
-<dd></dd></dl>
+<dd><p>Sample the lookup table with a inertial pose to get the corresponding curvilinear pose. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world_pose</strong> – <strong>[in]</strong> [x, y, yaw] in world frame </p></li>
+<li><p><strong>curv_pose</strong> – <strong>[out]</strong> [progress, offset, heading] in curvilinear frame </p></li>
+<li><p><strong>out_of_bounds</strong> – <strong>[out]</strong> true if the world pose is out of bounds of the lookup table. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 </dd></dl>

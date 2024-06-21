@@ -9,7 +9,7 @@ namespace controls {
     namespace state {
         /**
          * @brief State Estimator! Provides functions for controller node to use to prepare state information for mppi.
-         *
+         * Implemnentation is in @ref StateEstimator_Impl.
          * Refer to the @rst :doc:`explainer </source/explainers/state_estimation>` @endrst for a more detailed overview.
          */
         class StateEstimator {
@@ -17,8 +17,8 @@ namespace controls {
          /**
           * @brief Essentially serves as a named constructor that grants ownership of a StateEstimator to the caller.
           * This is necessary because StateEstimator is an abstract base class (a pointer is needed)
-          * @param[in] mutex Reference to the mutex that state estimator will use TODO: who else uses it? prevents any public function from being called concurrently - enabling same CUDA context (undefined)
-          * @param[in] logger Function object of logger (string to void) TODO: is function object correct?
+          * @param[in] mutex Reference to the mutex that state estimator will use. Prevents any public function from being called concurrently, which would cause undefined behavior of enabling the same CUDA context.
+          * @param[in] logger Function object of logger (string to void)
           * @return Pointer to the created StateEstimator
           */
          static std::shared_ptr<StateEstimator> create(std::mutex& mutex, LoggerFunc logger = no_log);
@@ -35,12 +35,13 @@ namespace controls {
              * @brief Callback for spline messages. Updates the state estimator with the new spline. Used for both
              * state projection and curvilinear state lookup table generation.
              * @param spline_msg The spline message
+             * @note Time does not need to be passed in since that is encoded in the spline message (@c spline_orig_data_stamp), and is inaccessible to the caller anyway.
              */
             virtual void on_spline(const SplineMsg& spline_msg) =0;
          /**
           * @brief Callback for twist messages. Updates the state estimator with the new twist. Used for state projection.
           * @param twist_msg The spline message
-          * @param time @TODO why does this need to be passed in?
+          * @param time The time the twist is accurate to.
           */
          virtual void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) =0;
 

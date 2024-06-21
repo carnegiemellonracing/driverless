@@ -47,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MppiController.html">Class mppi::MppiController</a></li>
@@ -95,18 +96,19 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/slipless_model.html">File model.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/types_hpp.html">File types.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/types_cuh.html">File types.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../file/functors_cuh.html">File functors.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../file/constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/helpers_cuh.html">File helpers.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -159,6 +161,10 @@
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5state19StateEstimator_Impl9on_splineERK9SplineMsg">
 <span id="_CPPv3N8controls5state19StateEstimator_Impl9on_splineERK9SplineMsg"></span><span id="_CPPv2N8controls5state19StateEstimator_Impl9on_splineERK9SplineMsg"></span><span id="controls::state::StateEstimator_Impl::on_spline__SplineMsgCR"></span><span class="target" id="classcontrols_1_1state_1_1StateEstimator__Impl_1aa59900704f8a0393ea518ed290dbbda0"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">on_spline</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="../file/types_hpp.html#_CPPv4N8controls9SplineMsgE" title="controls::SplineMsg"><span class="n"><span class="pre">SplineMsg</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">spline_msg</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N8controls5state19StateEstimator_Impl9on_splineERK9SplineMsg" title="Link to this definition"></a><br /></dt>
 <dd><p>Callback for spline messages. Updates the state estimator with the new spline. Used for both state projection and curvilinear state lookup table generation. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Time does not need to be passed in since that is encoded in the spline message (<code class="docutils literal notranslate"><span class="pre">spline_orig_data_stamp</span></code>), and is inaccessible to the caller anyway. </p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>spline_msg</strong> – The spline message </p>
@@ -174,7 +180,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>twist_msg</strong> – The spline message </p></li>
-<li><p><strong>time</strong> – &#64;TODO why does this need to be passed in? </p></li>
+<li><p><strong>time</strong> – The time the twist is accurate to. </p></li>
 </ul>
 </dd>
 </dl>

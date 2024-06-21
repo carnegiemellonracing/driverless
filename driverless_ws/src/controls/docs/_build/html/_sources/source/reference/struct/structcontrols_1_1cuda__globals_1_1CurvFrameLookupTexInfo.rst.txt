@@ -1,4 +1,0 @@
-Struct controls::cuda_globals::CurvFrameLookupTexInfo
-=====================================================
-
-.. doxygenstruct:: controls::cuda_globals::CurvFrameLookupTexInfo

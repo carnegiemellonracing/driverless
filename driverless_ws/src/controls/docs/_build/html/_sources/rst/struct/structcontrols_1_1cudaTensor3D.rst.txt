@@ -1,4 +1,0 @@
-Struct controls::cudaTensor3D
-=============================
-
-.. doxygenstruct:: controls::cudaTensor3D

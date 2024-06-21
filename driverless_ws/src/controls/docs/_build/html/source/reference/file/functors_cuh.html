@@ -21,8 +21,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="File cuda_globals.cuh" href="cuda_globals_cuh.html" />
-    <link rel="prev" title="File types.cuh" href="types_cuh.html" /> 
+    <link rel="next" title="File model.cuh" href="slipless_model.html" />
+    <link rel="prev" title="Class state::StateProjector" href="../class/StateProjector.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../class/ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/MppiController.html">Class mppi::MppiController</a></li>
@@ -54,18 +55,25 @@
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator.html">Class state::StateEstimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">File functors.cuh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls4mppiE"><code class="docutils literal notranslate"><span class="pre">controls::mppi</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="slipless_model.html">File model.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">File functors.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="helpers_cuh.html">File helpers.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -97,14 +105,356 @@
 <h1>File functors.cuh<a class="headerlink" href="#file-functors-cuh" title="Link to this heading"></a></h1>
 <p>Functors for MPPI control algorithm. </p>
 <p>Functors are classes whose instances can be called like functions (by overloading operator()). They can be passed parameters both initially during construction and when called. MPPI uses functors because Thrust requires “functions” that only take in one parameter (e.g. an index). We pass in other parameters that the functions need (e.g. pointers to memory structures) during construction. </p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv48controls">
+<span id="_CPPv38controls"></span><span id="_CPPv28controls"></span><span id="controls"></span><span class="target" id="namespacecontrols"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">controls</span></span></span><br /></dt>
+<dd><dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppiE">
+<span id="_CPPv3N8controls4mppiE"></span><span id="_CPPv2N8controls4mppiE"></span><span id="controls::mppi"></span><span class="target" id="namespacecontrols_1_1mppi"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mppi</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppiE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1mppi_1a7c6cb9d22973b9bd34ff70979e006aee"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">__device__</span> <span class="pre">void</span> <span class="pre">model</span> <span class="pre">(const</span> <span class="pre">float</span> <span class="pre">world_state[],</span> <span class="pre">const</span> <span class="pre">float</span> <span class="pre">action[],</span> <span class="pre">float</span> <span class="pre">world_state_out[],</span> <span class="pre">float</span> <span class="pre">timestep)</span></span></dt>
+<dd><p>Advances curvilinear state one timestep according to action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world_state</strong> – <strong>[in]</strong> world state of the vehicle </p></li>
+<li><p><strong>action</strong> – <strong>[in]</strong> Action taken </p></li>
+<li><p><strong>world_state_out</strong> – <strong>[out]</strong> Returned next state </p></li>
+<li><p><strong>timestep</strong> – <strong>[in]</strong> Timestep </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1mppi_1a5f84a14d1c278a0fe1434ba593ab25ff"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">__device__</span> <span class="pre">float</span> <span class="pre">cost</span> <span class="pre">(const</span> <span class="pre">float</span> <span class="pre">world_state[],</span> <span class="pre">const</span> <span class="pre">float</span> <span class="pre">action[],</span> <span class="pre">const</span> <span class="pre">float</span> <span class="pre">last_taken_action[],</span> <span class="pre">float</span> <span class="pre">start_progress,</span> <span class="pre">float</span> <span class="pre">time_since_traj_start,</span> <span class="pre">bool</span> <span class="pre">first)</span></span></dt>
+<dd><p>Calculate cost at a particular state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world_state</strong> – World state of the vehicle </p></li>
+<li><p><strong>action</strong> – Action considered </p></li>
+<li><p><strong>last_taken_action</strong> – Last action actually taken by the vehicle </p></li>
+<li><p><strong>start_progress</strong> – Progress at the start of the trajectory </p></li>
+<li><p><strong>time_since_traj_start</strong> – Time elapsed since trjaectory start </p></li>
+<li><p><strong>first</strong> – whether this is the first action in the trajectory </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Cost at the given state </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1mppi_1ad0b2578e1b43bf89fdd51993b5735efd"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">__device__</span> <span class="pre">ActionWeightTuple</span> <span class="pre">operator+</span> <span class="pre">(const</span> <span class="pre">ActionWeightTuple</span> <span class="pre">&amp;action_weight_t0,</span> <span class="pre">const</span> <span class="pre">ActionWeightTuple</span> <span class="pre">&amp;action_weight_t1)</span></span></dt>
+<dd><p>Adds two ActionWeightTuples whilst checking/clamping to reasonable bounds. </p>
+</dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi18TransformStdNormalE">
+<span id="_CPPv3N8controls4mppi18TransformStdNormalE"></span><span id="_CPPv2N8controls4mppi18TransformStdNormalE"></span><span id="controls::mppi::TransformStdNormal"></span><span class="target" id="structcontrols_1_1mppi_1_1TransformStdNormal"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TransformStdNormal</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi18TransformStdNormalE" title="Link to this definition"></a><br /></dt>
+<dd><p>Modifies a disturbance tensor from standard normal to brownian in-place, keeping within reasonable bounds. </p>
+<p>
+Uses <a class="reference internal" href="cuda_globals_cuh.html#namespacecontrols_1_1cuda__globals_1a96c7bba58cf39dbd6207a4d8991125b7"><span class="std std-ref">cuda_globals::perturbs_incr_std</span></a> for variance information. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param std_normals<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[in]</strong> Standard normal disturbance tensor generated by cuRAND, size is <code class="docutils literal notranslate"><span class="pre">num_action_trajectories</span></code></p>
+</dd>
+<dt class="field-even">Param idx<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>[in]</strong> index into <code class="docutils literal notranslate"><span class="pre">std_normals</span></code>, used by thrust::for_each</p>
+</dd>
+</dl>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi18TransformStdNormal18TransformStdNormalEN6thrust10device_ptrIfEE">
+<span id="_CPPv3N8controls4mppi18TransformStdNormal18TransformStdNormalEN6thrust10device_ptrIfEE"></span><span id="_CPPv2N8controls4mppi18TransformStdNormal18TransformStdNormalEN6thrust10device_ptrIfEE"></span><span id="controls::mppi::TransformStdNormal::TransformStdNormal__thrust::device_ptr:float:"></span><span class="target" id="structcontrols_1_1mppi_1_1TransformStdNormal_1a6dfa1fb67537921c86c86bfccd41c7b9"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TransformStdNormal</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">std_normals</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls4mppi18TransformStdNormal18TransformStdNormalEN6thrust10device_ptrIfEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="structcontrols_1_1mppi_1_1TransformStdNormal_1ae5bcfccc07f82ec443436c15af98e492"></span><span class="sig-name descname"><span class="pre">inline</span> <span class="pre">__device__</span> <span class="pre">void</span> <span class="pre">operator()</span> <span class="pre">(size_t</span> <span class="pre">idx)</span> <span class="pre">const</span></span></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi18TransformStdNormal11std_normalsE">
+<span id="_CPPv3N8controls4mppi18TransformStdNormal11std_normalsE"></span><span id="_CPPv2N8controls4mppi18TransformStdNormal11std_normalsE"></span><span id="controls::mppi::TransformStdNormal::std_normals__thrust::device_ptr:float:"></span><span class="target" id="structcontrols_1_1mppi_1_1TransformStdNormal_1a7bb039acfe9db3e7ff46e0997d5257cf"></span><span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">std_normals</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi18TransformStdNormal11std_normalsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi18TransformStdNormal15m_sqrt_timestepE">
+<span id="_CPPv3N8controls4mppi18TransformStdNormal15m_sqrt_timestepE"></span><span id="_CPPv2N8controls4mppi18TransformStdNormal15m_sqrt_timestepE"></span><span id="controls::mppi::TransformStdNormal::m_sqrt_timestep__float"></span><span class="target" id="structcontrols_1_1mppi_1_1TransformStdNormal_1a480160942d3ced41573498c27c6cf0fb"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_sqrt_timestep</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">sqrt</span></span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="constants_hpp.html#_CPPv4N8controls17controller_periodE" title="controls::controller_period"><span class="n"><span class="pre">controller_period</span></span></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N8controls4mppi18TransformStdNormal15m_sqrt_timestepE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi21LogProbabilityDensityE">
+<span id="_CPPv3N8controls4mppi21LogProbabilityDensityE"></span><span id="_CPPv2N8controls4mppi21LogProbabilityDensityE"></span><span id="controls::mppi::LogProbabilityDensity"></span><span class="target" id="structcontrols_1_1mppi_1_1LogProbabilityDensity"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LogProbabilityDensity</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi21LogProbabilityDensityE" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes and stores log probability density from sampled perturbations for the sake of. </p>
+<p><span> <a class="reference internal" href="../../explainers/mppi_algorithm.html#importance-sampling"><span class="std std-ref">Importance Sampling</span></a> </span>. Uses the covariance matrix in <a class="reference internal" href="cuda_globals_cuh.html#namespacecontrols_1_1cuda__globals_1acdd906c3a1c0c9c98b2c7dcf36edf21c"><span class="std std-ref">cuda_globals::perturbs_incr_var_inv</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param perturbation<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[in]</strong> n x m x q perturbation matrix </p>
+</dd>
+<dt class="field-even">Param log_probability_densities<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>[out]</strong> n x m matrix to store result </p>
+</dd>
+<dt class="field-odd">Param idx<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[in]</strong> index from 0 to n x m, used for <code class="docutils literal notranslate"><span class="pre">thrust::for_each</span></code></p>
+</dd>
+</dl>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi21LogProbabilityDensity21LogProbabilityDensityEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEE">
+<span id="_CPPv3N8controls4mppi21LogProbabilityDensity21LogProbabilityDensityEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEE"></span><span id="_CPPv2N8controls4mppi21LogProbabilityDensity21LogProbabilityDensityEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEE"></span><span id="controls::mppi::LogProbabilityDensity::LogProbabilityDensity__thrust::device_ptr:float:.thrust::device_ptr:float:"></span><span class="target" id="structcontrols_1_1mppi_1_1LogProbabilityDensity_1ade3341787db2c8c3ed666cca3314ce6d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LogProbabilityDensity</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">perturbation</span></span>, <span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">log_probability_densities</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls4mppi21LogProbabilityDensity21LogProbabilityDensityEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="structcontrols_1_1mppi_1_1LogProbabilityDensity_1a89827c44cdc4f69d3a3919e4c0547576"></span><span class="sig-name descname"><span class="pre">inline</span> <span class="pre">__device__</span> <span class="pre">void</span> <span class="pre">operator()</span> <span class="pre">(size_t</span> <span class="pre">idx)</span> <span class="pre">const</span></span></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi21LogProbabilityDensity12perturbationE">
+<span id="_CPPv3N8controls4mppi21LogProbabilityDensity12perturbationE"></span><span id="_CPPv2N8controls4mppi21LogProbabilityDensity12perturbationE"></span><span id="controls::mppi::LogProbabilityDensity::perturbation__thrust::device_ptr:float:"></span><span class="target" id="structcontrols_1_1mppi_1_1LogProbabilityDensity_1aedca90373e4dfde181d12a953260f471"></span><span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">perturbation</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi21LogProbabilityDensity12perturbationE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi21LogProbabilityDensity25log_probability_densitiesE">
+<span id="_CPPv3N8controls4mppi21LogProbabilityDensity25log_probability_densitiesE"></span><span id="_CPPv2N8controls4mppi21LogProbabilityDensity25log_probability_densitiesE"></span><span id="controls::mppi::LogProbabilityDensity::log_probability_densities__thrust::device_ptr:float:"></span><span class="target" id="structcontrols_1_1mppi_1_1LogProbabilityDensity_1a900e816c24ad152ecd9eeec02a835ae3"></span><span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">log_probability_densities</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi21LogProbabilityDensity25log_probability_densitiesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi12PopulateCostE">
+<span id="_CPPv3N8controls4mppi12PopulateCostE"></span><span id="_CPPv2N8controls4mppi12PopulateCostE"></span><span id="controls::mppi::PopulateCost"></span><span class="target" id="structcontrols_1_1mppi_1_1PopulateCost"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PopulateCost</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi12PopulateCostE" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes cost using the model and cost function, triangularizes both D and J. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Param brownians<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[in]</strong> brownian perturbation with mean 0 </p>
+</dd>
+<dt class="field-even">Param sampled_action_trajectories<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>[out]</strong> same as brownians but doesn’t have to be </p>
+</dd>
+<dt class="field-odd">Param sampled_state_trajectories<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[in]</strong> for publishing states </p>
+</dd>
+<dt class="field-even">Param cost_to_gos<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>[out]</strong> stores the negative cost so far </p>
+</dd>
+<dt class="field-odd">Param [in/out]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>log_prob_densities stores the negative log_prob_densities so far </p>
+</dd>
+<dt class="field-even">Param action_trajectory_base<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>[in]</strong> current best guess of optimal action trajectory, from previous iteration of mppi. </p>
+</dd>
+<dt class="field-odd">Param i<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[in]</strong> index over timesteps </p>
+</dd>
+</dl>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi12PopulateCost12PopulateCostEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEERKN6thrust10device_ptrI12DeviceActionEE12DeviceAction">
+<span id="_CPPv3N8controls4mppi12PopulateCost12PopulateCostEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEERKN6thrust10device_ptrI12DeviceActionEE12DeviceAction"></span><span id="_CPPv2N8controls4mppi12PopulateCost12PopulateCostEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEERKN6thrust10device_ptrI12DeviceActionEE12DeviceAction"></span><span id="controls::mppi::PopulateCost::PopulateCost__thrust::device_ptr:float:.thrust::device_ptr:float:.thrust::device_ptr:float:.thrust::device_ptr:float:.thrust::device_ptr:DeviceAction:CR.DeviceAction"></span><span class="target" id="structcontrols_1_1mppi_1_1PopulateCost_1a1892605cce65f1d8bfdd51294109578c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PopulateCost</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">brownians</span></span>, <span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">sampled_action_trajectories</span></span>, <span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cost_to_gos</span></span>, <span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">log_prob_densities</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="types_cuh.html#_CPPv4N8controls4mppi12DeviceActionE" title="controls::mppi::DeviceAction"><span class="n"><span class="pre">DeviceAction</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">action_trajectory_base</span></span>, <a class="reference internal" href="types_cuh.html#_CPPv4N8controls4mppi12DeviceActionE" title="controls::mppi::DeviceAction"><span class="n"><span class="pre">DeviceAction</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">last_taken_action</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls4mppi12PopulateCost12PopulateCostEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEERKN6thrust10device_ptrI12DeviceActionEE12DeviceAction" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="structcontrols_1_1mppi_1_1PopulateCost_1a6ee6586e8970a891cc24b74c9ac9780d"></span><span class="sig-name descname"><span class="pre">inline</span> <span class="pre">__device__</span> <span class="pre">void</span> <span class="pre">operator()</span> <span class="pre">(uint32_t</span> <span class="pre">i)</span> <span class="pre">const</span></span></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi12PopulateCost9browniansE">
+<span id="_CPPv3N8controls4mppi12PopulateCost9browniansE"></span><span id="_CPPv2N8controls4mppi12PopulateCost9browniansE"></span><span id="controls::mppi::PopulateCost::brownians__floatP"></span><span class="target" id="structcontrols_1_1mppi_1_1PopulateCost_1af2b8f9daa519f805d495226a19531f86"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">brownians</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi12PopulateCost9browniansE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi12PopulateCost27sampled_action_trajectoriesE">
+<span id="_CPPv3N8controls4mppi12PopulateCost27sampled_action_trajectoriesE"></span><span id="_CPPv2N8controls4mppi12PopulateCost27sampled_action_trajectoriesE"></span><span id="controls::mppi::PopulateCost::sampled_action_trajectories__floatP"></span><span class="target" id="structcontrols_1_1mppi_1_1PopulateCost_1a526980a484ca60da75e0c1638907ed81"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">sampled_action_trajectories</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi12PopulateCost27sampled_action_trajectoriesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi12PopulateCost11cost_to_gosE">
+<span id="_CPPv3N8controls4mppi12PopulateCost11cost_to_gosE"></span><span id="_CPPv2N8controls4mppi12PopulateCost11cost_to_gosE"></span><span id="controls::mppi::PopulateCost::cost_to_gos__floatP"></span><span class="target" id="structcontrols_1_1mppi_1_1PopulateCost_1a3162721ad5f28b0b2d82f8a3593b560f"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cost_to_gos</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi12PopulateCost11cost_to_gosE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi12PopulateCost18log_prob_densitiesE">
+<span id="_CPPv3N8controls4mppi12PopulateCost18log_prob_densitiesE"></span><span id="_CPPv2N8controls4mppi12PopulateCost18log_prob_densitiesE"></span><span id="controls::mppi::PopulateCost::log_prob_densities__floatP"></span><span class="target" id="structcontrols_1_1mppi_1_1PopulateCost_1aae609ae21cc9c38c00e90d7cf21ab28f"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">log_prob_densities</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi12PopulateCost18log_prob_densitiesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi12PopulateCost17last_taken_actionE">
+<span id="_CPPv3N8controls4mppi12PopulateCost17last_taken_actionE"></span><span id="_CPPv2N8controls4mppi12PopulateCost17last_taken_actionE"></span><span id="controls::mppi::PopulateCost::last_taken_action__DeviceAction"></span><span class="target" id="structcontrols_1_1mppi_1_1PopulateCost_1a2ab035145b4f137e0964a7c95d37f6eb"></span><a class="reference internal" href="types_cuh.html#_CPPv4N8controls4mppi12DeviceActionE" title="controls::mppi::DeviceAction"><span class="n"><span class="pre">DeviceAction</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">last_taken_action</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi12PopulateCost17last_taken_actionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi12PopulateCost22action_trajectory_baseE">
+<span id="_CPPv3N8controls4mppi12PopulateCost22action_trajectory_baseE"></span><span id="_CPPv2N8controls4mppi12PopulateCost22action_trajectory_baseE"></span><span id="controls::mppi::PopulateCost::action_trajectory_base__DeviceActionCP"></span><span class="target" id="structcontrols_1_1mppi_1_1PopulateCost_1a94d288a393c4046eb3e3b8886bd65d61"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="types_cuh.html#_CPPv4N8controls4mppi12DeviceActionE" title="controls::mppi::DeviceAction"><span class="n"><span class="pre">DeviceAction</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">action_trajectory_base</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi12PopulateCost22action_trajectory_baseE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi10AddActionsE">
+<span id="_CPPv3N8controls4mppi10AddActionsE"></span><span id="_CPPv2N8controls4mppi10AddActionsE"></span><span id="controls::mppi::AddActions"></span><span class="target" id="structcontrols_1_1mppi_1_1AddActions"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AddActions</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi10AddActionsE" title="Link to this definition"></a><br /></dt>
+<dd><p>Adds two device actions. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="structcontrols_1_1mppi_1_1AddActions_1a53acf5be12b69cd499de35097f337d33"></span><span class="sig-name descname"><span class="pre">inline</span> <span class="pre">__device__</span> <span class="pre">DeviceAction</span> <span class="pre">operator()</span> <span class="pre">(const</span> <span class="pre">DeviceAction</span> <span class="pre">&amp;a1,</span> <span class="pre">const</span> <span class="pre">DeviceAction</span> <span class="pre">&amp;a2)</span> <span class="pre">const</span></span></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I_6size_tEN8controls4mppi5DivByE">
+<span id="_CPPv3I_6size_tEN8controls4mppi5DivByE"></span><span id="_CPPv2I_6size_tEN8controls4mppi5DivByE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">k</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="structcontrols_1_1mppi_1_1DivBy"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DivBy</span></span></span><a class="headerlink" href="#_CPPv4I_6size_tEN8controls4mppi5DivByE" title="Link to this definition"></a><br /></dt>
+<dd><p>Unary function to divide by the template parameter. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="structcontrols_1_1mppi_1_1DivBy_1a9ca90804ce797a8b265a62502ffe38ce"></span><span class="sig-name descname"><span class="pre">inline</span> <span class="pre">__host__</span> <span class="pre">__device__</span> <span class="pre">size_t</span> <span class="pre">operator()</span> <span class="pre">(size_t</span> <span class="pre">i)</span> <span class="pre">const</span></span></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN8controls4mppi5EqualE">
+<span id="_CPPv3I0EN8controls4mppi5EqualE"></span><span id="_CPPv2I0EN8controls4mppi5EqualE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="structcontrols_1_1mppi_1_1Equal"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Equal</span></span></span><a class="headerlink" href="#_CPPv4I0EN8controls4mppi5EqualE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="structcontrols_1_1mppi_1_1Equal_1ab104c68758e1f1130a1451f04db446f6"></span><span class="sig-name descname"><span class="pre">inline</span> <span class="pre">__device__</span> <span class="pre">bool</span> <span class="pre">operator()</span> <span class="pre">(T</span> <span class="pre">a,</span> <span class="pre">T</span> <span class="pre">b)</span></span></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi24IndexToActionWeightTupleE">
+<span id="_CPPv3N8controls4mppi24IndexToActionWeightTupleE"></span><span id="_CPPv2N8controls4mppi24IndexToActionWeightTupleE"></span><span id="controls::mppi::IndexToActionWeightTuple"></span><span class="target" id="structcontrols_1_1mppi_1_1IndexToActionWeightTuple"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IndexToActionWeightTuple</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi24IndexToActionWeightTupleE" title="Link to this definition"></a><br /></dt>
+<dd><p>Captures pointers to action trajectories and cost to gos Produces a weight for a single action based on its cost to go. Bundles the action and weight into an <a class="reference internal" href="types_cuh.html#structcontrols_1_1mppi_1_1ActionWeightTuple"><span class="std std-ref">ActionWeightTuple</span></a>, then stores it in the output array in a different position so as to “transpose” the matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param action_weight_tuples<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[out]</strong> output (transposed) matrix of action-weight tuples </p>
+</dd>
+<dt class="field-even">Param action_trajectories<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>[in]</strong> perturbed action trajectories </p>
+</dd>
+<dt class="field-odd">Param cost_to_gos<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[in]</strong> cost to go for each action </p>
+</dd>
+<dt class="field-even">Param log_prob_densities<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>[in]</strong> log probability densities for each action </p>
+</dd>
+<dt class="field-odd">Param idx<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>[in]</strong> index into action_weight_tuples </p>
+</dd>
+</dl>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi24IndexToActionWeightTuple24IndexToActionWeightTupleEP17ActionWeightTuplePKfPKfPKf">
+<span id="_CPPv3N8controls4mppi24IndexToActionWeightTuple24IndexToActionWeightTupleEP17ActionWeightTuplePKfPKfPKf"></span><span id="_CPPv2N8controls4mppi24IndexToActionWeightTuple24IndexToActionWeightTupleEP17ActionWeightTuplePKfPKfPKf"></span><span id="controls::mppi::IndexToActionWeightTuple::IndexToActionWeightTuple__ActionWeightTupleP.floatCP.floatCP.floatCP"></span><span class="target" id="structcontrols_1_1mppi_1_1IndexToActionWeightTuple_1a086fc2378039b05acda6a0bfd990daf2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IndexToActionWeightTuple</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="types_cuh.html#_CPPv4N8controls4mppi17ActionWeightTupleE" title="controls::mppi::ActionWeightTuple"><span class="n"><span class="pre">ActionWeightTuple</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">action_weight_tuples</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">action_trajectories</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">cost_to_gos</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">log_prob_densities</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls4mppi24IndexToActionWeightTuple24IndexToActionWeightTupleEP17ActionWeightTuplePKfPKfPKf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="structcontrols_1_1mppi_1_1IndexToActionWeightTuple_1abb636260cc225e33ae7d5fad6bfe851d"></span><span class="sig-name descname"><span class="pre">inline</span> <span class="pre">__device__</span> <span class="pre">void</span> <span class="pre">operator()</span> <span class="pre">(const</span> <span class="pre">uint32_t</span> <span class="pre">idx)</span> <span class="pre">const</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>idx</strong> – refers to the index for the timesteps x samples matrix (transposed from normal to make the reduction work) </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a tuple of the action indexed from the trajectories and the weight of that action (strictly positive) based on its cost to go </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi24IndexToActionWeightTuple19action_trajectoriesE">
+<span id="_CPPv3N8controls4mppi24IndexToActionWeightTuple19action_trajectoriesE"></span><span id="_CPPv2N8controls4mppi24IndexToActionWeightTuple19action_trajectoriesE"></span><span id="controls::mppi::IndexToActionWeightTuple::action_trajectories__floatCP"></span><span class="target" id="structcontrols_1_1mppi_1_1IndexToActionWeightTuple_1a91b4419731ddb7780d4fc124d7b3bb1a"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">action_trajectories</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi24IndexToActionWeightTuple19action_trajectoriesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi24IndexToActionWeightTuple11cost_to_gosE">
+<span id="_CPPv3N8controls4mppi24IndexToActionWeightTuple11cost_to_gosE"></span><span id="_CPPv2N8controls4mppi24IndexToActionWeightTuple11cost_to_gosE"></span><span id="controls::mppi::IndexToActionWeightTuple::cost_to_gos__floatCP"></span><span class="target" id="structcontrols_1_1mppi_1_1IndexToActionWeightTuple_1a4c988a4149bb513894dc7895bd17136e"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">cost_to_gos</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi24IndexToActionWeightTuple11cost_to_gosE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi24IndexToActionWeightTuple18log_prob_densitiesE">
+<span id="_CPPv3N8controls4mppi24IndexToActionWeightTuple18log_prob_densitiesE"></span><span id="_CPPv2N8controls4mppi24IndexToActionWeightTuple18log_prob_densitiesE"></span><span id="controls::mppi::IndexToActionWeightTuple::log_prob_densities__floatCP"></span><span class="target" id="structcontrols_1_1mppi_1_1IndexToActionWeightTuple_1a8a277de0b5991de9110c33bf0bba9c7b"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">log_prob_densities</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi24IndexToActionWeightTuple18log_prob_densitiesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi24IndexToActionWeightTuple20action_weight_tuplesE">
+<span id="_CPPv3N8controls4mppi24IndexToActionWeightTuple20action_weight_tuplesE"></span><span id="_CPPv2N8controls4mppi24IndexToActionWeightTuple20action_weight_tuplesE"></span><span id="controls::mppi::IndexToActionWeightTuple::action_weight_tuples__ActionWeightTupleP"></span><span class="target" id="structcontrols_1_1mppi_1_1IndexToActionWeightTuple_1a2950d84be0a34fe802ea7e746dfec163"></span><a class="reference internal" href="types_cuh.html#_CPPv4N8controls4mppi17ActionWeightTupleE" title="controls::mppi::ActionWeightTuple"><span class="n"><span class="pre">ActionWeightTuple</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">action_weight_tuples</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi24IndexToActionWeightTuple20action_weight_tuplesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi25ActionWeightTupleToActionE">
+<span id="_CPPv3N8controls4mppi25ActionWeightTupleToActionE"></span><span id="_CPPv2N8controls4mppi25ActionWeightTupleToActionE"></span><span id="controls::mppi::ActionWeightTupleToAction"></span><span class="target" id="structcontrols_1_1mppi_1_1ActionWeightTupleToAction"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ActionWeightTupleToAction</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi25ActionWeightTupleToActionE" title="Link to this definition"></a><br /></dt>
+<dd><p>Extracts the action inside an <a class="reference internal" href="types_cuh.html#structcontrols_1_1mppi_1_1ActionWeightTuple"><span class="std std-ref">ActionWeightTuple</span></a>. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="target" id="structcontrols_1_1mppi_1_1ActionWeightTupleToAction_1a83ff12ea7a15fe467de93d4026841ba0"></span><span class="sig-name descname"><span class="pre">inline</span> <span class="pre">__device__</span> <span class="pre">DeviceAction</span> <span class="pre">operator()</span> <span class="pre">(const</span> <span class="pre">ActionWeightTuple</span> <span class="pre">&amp;awt)</span> <span class="pre">const</span></span></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="types_cuh.html" class="btn btn-neutral float-left" title="File types.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cuda_globals_cuh.html" class="btn btn-neutral float-right" title="File cuda_globals.cuh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../class/StateProjector.html" class="btn btn-neutral float-left" title="Class state::StateProjector" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="slipless_model.html" class="btn btn-neutral float-right" title="File model.cuh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

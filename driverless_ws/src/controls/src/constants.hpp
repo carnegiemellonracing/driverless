@@ -50,15 +50,14 @@ namespace controls {
 
 
     // MPPI stuff
-    ///@note 1 controller step outputs 1 control action
 
-    constexpr double controller_freq = 10.; ///< Target number of controller steps per second, in Hz
+    constexpr double controller_freq = 10.; ///< Target number of controller steps per second, in Hz. 1 controller step outputs 1 control action.
     constexpr float controller_period = 1. / controller_freq; ///< Target duration between control actions, in sec
 
     constexpr uint32_t num_samples = 1024 * 64; ///< Number of trajectories sampled each controller step
     constexpr uint32_t num_timesteps = 16; ///< Number of controller steps simulated into the future
-    constexpr uint8_t action_dims = 2; ///< \f$q\f$, @ref Action
-    constexpr uint8_t state_dims = 4; ///< \f$p\f$, @ref State
+    constexpr uint8_t action_dims = 2; ///< \f$q\f$, dimensions of @ref Action
+    constexpr uint8_t state_dims = 4; ///< \f$p\f$, dimensions of @ref State
     constexpr float temperature = 1.0f; ///< Convergence speed/stability tradeoff, see LaTeX for more details
     constexpr unsigned long long seed = 0; ///< For brownian pseudo-RNG.
     /// Number of elements in the tensor containing all the sampled action trajectories.
@@ -72,9 +71,10 @@ namespace controls {
     constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline
     constexpr float target_speed = 10.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
-    /// Reason for not using infinity: reduction uses log of the cost (trading precision for representable range)
-    /// Edge case: if every trajectory goes out of bounds (comparing to itself)
-    constexpr float out_of_bounds_cost = 100.0f; ///< Cost for being out of (fake) track bounds, TODO: use real bounds
+    /// Reason for not using infinity: reduction uses log of the cost (trading precision for representable range).
+    /// This covers the edge case where every trajectory goes out of bounds, allowing us to still extract useful information.
+    constexpr float out_of_bounds_cost = 100.0f; ///< Cost for being out of (fake) track bound as defined by @ref track_width.
+    // TODO: use real bounds
 
 
     // State Estimation
@@ -85,6 +85,7 @@ namespace controls {
     /// Not real track width, used for curvilinear frame lookup table generation
     constexpr float track_width = 30.0f; // TODO: FSG rules - no we need - less noisy output (rename to lookup_table_width)
     // mppi simulates a lot of shitty trajectories (naive brownian guess)
+    /// Represents space the car occupies, used to calculate the size of the curvilinear lookup table.
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * track_width);
     constexpr bool reset_pose_on_spline = true; ///< Sets pose to 0 vector for new spline (sensor POV)
 
@@ -94,18 +95,18 @@ namespace controls {
     constexpr float cg_to_front = 0.775;
     constexpr float cg_to_rear = 0.775;
     constexpr float cg_to_nose = 1.5f;
-    constexpr float whl_base = 2.0f;
+    //constexpr float whl_base = 2.0f;
     constexpr float whl_radius = 0.2286;
     /// gear ratio = motor speed / wheel speed = wheel torque / motor torque
     constexpr float gear_ratio = 15.0f;
     constexpr float car_mass = 210.0f;
-    constexpr float rolling_drag = 100.0f; // N
+    constexpr float rolling_drag = 100.0f; /// Total drag forces on the car (rolling friction + air drag) in N
     /// Maximum forward acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
     constexpr float long_tractive_capability = 2.0f;
     /// Maximum centripetal acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
     /// Usually slightly more than @c long_tractive_capability
     constexpr float lat_tractive_capability = 3.0f;
-    constexpr float understeer_slope = 0.0f;
+    constexpr float understeer_slope = 0.0f; ///< How much car understeers as speed increases. See @rst :doc:`/source/explainers/slipless_model` @endrst.
     constexpr float brake_enable_speed = 1.0f;
     /// Maximum torque request (N m)
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;

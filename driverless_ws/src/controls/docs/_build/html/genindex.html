@@ -44,8 +44,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="source/explainers/overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/reference/api_reference.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/explainerslist.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/reference/api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/explainers/terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -84,7 +85,7 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/reference/file/constants_hpp.html#_CPPv48controls">controls (C++ type)</a>, <a href="source/reference/file/cuda_constants_cuh.html#_CPPv48controls">[1]</a>, <a href="source/reference/file/cuda_globals_cuh.html#_CPPv48controls">[2]</a>, <a href="source/reference/file/cuda_utils_cuh.html#_CPPv48controls">[3]</a>, <a href="source/reference/file/gl_utils_hpp.html#_CPPv48controls">[4]</a>, <a href="source/reference/file/helpers_cuh.html#_CPPv48controls">[5]</a>, <a href="source/reference/file/types_cuh.html#_CPPv48controls">[6]</a>, <a href="source/reference/file/types_hpp.html#_CPPv48controls">[7]</a>
+      <li><a href="source/reference/file/constants_hpp.html#_CPPv48controls">controls (C++ type)</a>, <a href="source/reference/file/cuda_constants_cuh.html#_CPPv48controls">[1]</a>, <a href="source/reference/file/cuda_globals_cuh.html#_CPPv48controls">[2]</a>, <a href="source/reference/file/cuda_utils_cuh.html#_CPPv48controls">[3]</a>, <a href="source/reference/file/functors_cuh.html#_CPPv48controls">[4]</a>, <a href="source/reference/file/gl_utils_hpp.html#_CPPv48controls">[5]</a>, <a href="source/reference/file/helpers_cuh.html#_CPPv48controls">[6]</a>, <a href="source/reference/file/slipless_model.html#_CPPv48controls">[7]</a>, <a href="source/reference/file/types_cuh.html#_CPPv48controls">[8]</a>, <a href="source/reference/file/types_hpp.html#_CPPv48controls">[9]</a>
 </li>
       <li><a href="source/reference/file/types_hpp.html#_CPPv4N8controls6ActionE">controls::Action (C++ type)</a>
 </li>
@@ -176,9 +177,11 @@
 </li>
       <li><a href="source/reference/file/constants_hpp.html#_CPPv4N8controls24long_tractive_capabilityE">controls::long_tractive_capability (C++ member)</a>
 </li>
-      <li><a href="source/reference/file/cuda_constants_cuh.html#_CPPv4N8controls24max_spline_texture_elemsE">controls::max_spline_texture_elems (C++ member)</a>
+      <li><a href="source/reference/file/slipless_model.html#_CPPv4N8controls5modelE">controls::model (C++ type)</a>
 </li>
-      <li><a href="source/reference/file/types_cuh.html#_CPPv4N8controls4mppiE">controls::mppi (C++ type)</a>
+      <li><a href="source/reference/file/slipless_model.html#_CPPv4N8controls5model8sliplessE">controls::model::slipless (C++ type)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppiE">controls::mppi (C++ type)</a>, <a href="source/reference/file/types_cuh.html#_CPPv4N8controls4mppiE">[1]</a>
 </li>
       <li><a href="source/reference/file/types_cuh.html#_CPPv4N8controls4mppi17ActionWeightTupleE">controls::mppi::ActionWeightTuple (C++ struct)</a>
 </li>
@@ -186,9 +189,37 @@
 </li>
       <li><a href="source/reference/file/types_cuh.html#_CPPv4N8controls4mppi17ActionWeightTuple10log_weightE">controls::mppi::ActionWeightTuple::log_weight (C++ member)</a>
 </li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi25ActionWeightTupleToActionE">controls::mppi::ActionWeightTupleToAction (C++ struct)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi10AddActionsE">controls::mppi::AddActions (C++ struct)</a>
+</li>
       <li><a href="source/reference/file/types_cuh.html#_CPPv4N8controls4mppi12DeviceActionE">controls::mppi::DeviceAction (C++ struct)</a>
 </li>
       <li><a href="source/reference/file/types_cuh.html#_CPPv4N8controls4mppi12DeviceAction4dataE">controls::mppi::DeviceAction::data (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4I_6size_tEN8controls4mppi5DivByE">controls::mppi::DivBy (C++ struct)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4I0EN8controls4mppi5EqualE">controls::mppi::Equal (C++ struct)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi24IndexToActionWeightTupleE">controls::mppi::IndexToActionWeightTuple (C++ struct)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi24IndexToActionWeightTuple19action_trajectoriesE">controls::mppi::IndexToActionWeightTuple::action_trajectories (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi24IndexToActionWeightTuple20action_weight_tuplesE">controls::mppi::IndexToActionWeightTuple::action_weight_tuples (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi24IndexToActionWeightTuple11cost_to_gosE">controls::mppi::IndexToActionWeightTuple::cost_to_gos (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi24IndexToActionWeightTuple24IndexToActionWeightTupleEP17ActionWeightTuplePKfPKfPKf">controls::mppi::IndexToActionWeightTuple::IndexToActionWeightTuple (C++ function)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi24IndexToActionWeightTuple18log_prob_densitiesE">controls::mppi::IndexToActionWeightTuple::log_prob_densities (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi21LogProbabilityDensityE">controls::mppi::LogProbabilityDensity (C++ struct)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi21LogProbabilityDensity25log_probability_densitiesE">controls::mppi::LogProbabilityDensity::log_probability_densities (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi21LogProbabilityDensity21LogProbabilityDensityEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEE">controls::mppi::LogProbabilityDensity::LogProbabilityDensity (C++ function)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi21LogProbabilityDensity12perturbationE">controls::mppi::LogProbabilityDensity::perturbation (C++ member)</a>
 </li>
       <li><a href="source/reference/class/MppiController.html#_CPPv4N8controls4mppi14MppiControllerE">controls::mppi::MppiController (C++ class)</a>
 </li>
@@ -216,6 +247,8 @@
 </li>
       <li><a href="source/reference/class/MppiController_Impl.html#_CPPv4N8controls4mppi19MppiController_Impl8m_loggerE">controls::mppi::MppiController_Impl::m_logger (C++ member)</a>
 </li>
+      <li><a href="source/reference/class/MppiController_Impl.html#_CPPv4N8controls4mppi19MppiController_Impl7m_mutexE">controls::mppi::MppiController_Impl::m_mutex (C++ member)</a>
+</li>
       <li><a href="source/reference/class/MppiController_Impl.html#_CPPv4N8controls4mppi19MppiController_Impl5m_rngE">controls::mppi::MppiController_Impl::m_rng (C++ member)</a>
 </li>
       <li><a href="source/reference/class/MppiController_Impl.html#_CPPv4N8controls4mppi19MppiController_Impl19MppiController_ImplERNSt5mutexE10LoggerFunc">controls::mppi::MppiController_Impl::MppiController_Impl (C++ function)</a>
@@ -223,6 +256,30 @@
       <li><a href="source/reference/class/MppiController_Impl.html#_CPPv4N8controls4mppi19MppiController_Impl13populate_costEv">controls::mppi::MppiController_Impl::populate_cost (C++ function)</a>
 </li>
       <li><a href="source/reference/class/MppiController_Impl.html#_CPPv4N8controls4mppi19MppiController_Impl14reduce_actionsEv">controls::mppi::MppiController_Impl::reduce_actions (C++ function)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi12PopulateCostE">controls::mppi::PopulateCost (C++ struct)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi12PopulateCost22action_trajectory_baseE">controls::mppi::PopulateCost::action_trajectory_base (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi12PopulateCost9browniansE">controls::mppi::PopulateCost::brownians (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi12PopulateCost11cost_to_gosE">controls::mppi::PopulateCost::cost_to_gos (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi12PopulateCost17last_taken_actionE">controls::mppi::PopulateCost::last_taken_action (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi12PopulateCost18log_prob_densitiesE">controls::mppi::PopulateCost::log_prob_densities (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi12PopulateCost12PopulateCostEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEEN6thrust10device_ptrIfEERKN6thrust10device_ptrI12DeviceActionEE12DeviceAction">controls::mppi::PopulateCost::PopulateCost (C++ function)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi12PopulateCost27sampled_action_trajectoriesE">controls::mppi::PopulateCost::sampled_action_trajectories (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi18TransformStdNormalE">controls::mppi::TransformStdNormal (C++ struct)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi18TransformStdNormal15m_sqrt_timestepE">controls::mppi::TransformStdNormal::m_sqrt_timestep (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi18TransformStdNormal11std_normalsE">controls::mppi::TransformStdNormal::std_normals (C++ member)</a>
+</li>
+      <li><a href="source/reference/file/functors_cuh.html#_CPPv4N8controls4mppi18TransformStdNormal18TransformStdNormalEN6thrust10device_ptrIfEE">controls::mppi::TransformStdNormal::TransformStdNormal (C++ function)</a>
 </li>
       <li><a href="source/reference/file/types_hpp.html#_CPPv4N8controls6no_logEPKc">controls::no_log (C++ function)</a>
 </li>
@@ -262,6 +319,8 @@
 </li>
       <li><a href="source/reference/class/ControllerNode.html#_CPPv4N8controls5nodes14ControllerNode15spline_callbackERK9SplineMsg">controls::nodes::ControllerNode::spline_callback (C++ function)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/reference/class/ControllerNode.html#_CPPv4N8controls5nodes14ControllerNode12state_to_msgERK5State">controls::nodes::ControllerNode::state_to_msg (C++ function)</a>
 </li>
       <li><a href="source/reference/class/ControllerNode.html#_CPPv4N8controls5nodes14ControllerNode19world_pose_callbackERK7PoseMsg">controls::nodes::ControllerNode::world_pose_callback (C++ function)</a>
@@ -290,8 +349,6 @@
 </li>
       <li><a href="source/reference/file/constants_hpp.html#_CPPv4N8controls12rolling_dragE">controls::rolling_drag (C++ member)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/reference/file/constants_hpp.html#_CPPv4N8controls23saturating_motor_torqueE">controls::saturating_motor_torque (C++ member)</a>
 </li>
       <li><a href="source/reference/file/constants_hpp.html#_CPPv4N8controls4seedE">controls::seed (C++ member)</a>
@@ -485,8 +542,6 @@
       <li><a href="source/reference/file/gl_utils_hpp.html#_CPPv4N8controls5utils16print_shader_logE6GLuint">controls::utils::print_shader_log (C++ function)</a>
 </li>
       <li><a href="source/reference/file/gl_utils_hpp.html#_CPPv4N8controls5utils26sync_gl_and_unbind_contextEP10SDL_Window">controls::utils::sync_gl_and_unbind_context (C++ function)</a>
-</li>
-      <li><a href="source/reference/file/constants_hpp.html#_CPPv4N8controls8whl_baseE">controls::whl_base (C++ member)</a>
 </li>
       <li><a href="source/reference/file/constants_hpp.html#_CPPv4N8controls10whl_radiusE">controls::whl_radius (C++ member)</a>
 </li>

@@ -1,4 +1,0 @@
-Class controls::state::StateEstimator
-=====================================
-
-.. doxygenclass:: controls::state::StateEstimator

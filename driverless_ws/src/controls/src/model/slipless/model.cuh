@@ -1,24 +1,39 @@
-#pragma once
+/**
+ * @file model.cuh
+ * @brief Slipless dynamics model for MPPI and state estimation.
+ *
+ * For more information, see the @rst :doc:`overview </source/explainers/slipless_model>`. @endrst
+ */
 
+#pragma once
 #include <constants.hpp>
 #include <utils/cuda_utils.cuh>
 
 namespace controls {
     namespace model {
         namespace slipless {
-            ///@note The model is used on both the
 
-            /**
+
+            /*
              * Action : R^2 [swangle (rad), torque (N x m)]
              * State : R^4 [x (m), y (m), yaw (rad), speed (m/s)]
              */
 
+            /**
+             * @brief Calculate the kinematic swangle (adjusted for understeering), used for determining center/radius of rotation.
+             * @param[in] speed Speed of the car in m/s.
+             * @param[in] swangle Steering angle in radians.
+             * @return Kinematic steering angle in radians.
+             */
             __host__ __device__ static float kinematic_swangle(const float speed, const float swangle) {
                 return swangle / (1 + understeer_slope * speed);
             }
 
             /**
-             * @brief yaw rate rate of ? uniform circular motion
+             * @brief Calculates angular speed. Since we assume uniform circular motion, this is the same as yaw rate.
+             * @param[in] speed Speed of the car in m/s.
+             * @param[in] kinematic_swangle_ Kinematic steering angle in radians.
+             * @return Angular speed in rad/s.
              */
             __host__ __device__ static float angular_speed(const float speed, const float kinematic_swangle_) {
                 if (kinematic_swangle_ == 0) {
@@ -33,7 +48,12 @@ namespace controls {
                 );
             }
 
-
+            /**
+             * @brief Calculate centripedal acceleration. This is the acceleration towards the center of the turning circle.
+             * @param[in] speed Speed of the car in m/s.
+             * @param[in] swangle Steering angle in radians.
+             * @return Centripedal acceleration in m/s^2.
+             */
             __host__ __device__ static float centripedal_accel(const float speed, const float swangle) {
                 if (swangle == 0) {
                     return 0;
@@ -48,13 +68,23 @@ namespace controls {
                 );
             }
 
-            /// angle between the direction the car is pointing (heading) and the direction the car is moving (trajectory)
-            /// does not necessarily imply car is slipping.
+            /**
+             * @brief Calculate slip angle. This is the angle between the direction the car is pointing (heading) and the direction the car is moving (trajectory).
+             * It does not necessarily imply the car is slipping.
+             * @param[in] kinematic_swangle Kinematic steering angle in radians.
+             * @return Slip angle in radians.
+             */
             __host__ __device__ static float slip_angle(const float kinematic_swangle) {
                 return atanf(cg_to_rear / (cg_to_front + cg_to_rear) * tanf(kinematic_swangle));
             }
 
-            // can be used in-place
+            /**
+             * @brief Slipless dynamics model. This is the core function that calculates the next state given the current state and action. Can be used in-place (i.e. next_state = state).
+             * @param[in] state Current state of the car.
+             * @param[in] action Action to take.
+             * @param[out] next_state Next state of the car.
+             * @param[in] timestep Model time step in seconds.
+             */
             __host__ __device__ static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
                 const float x = state[state_x_idx];
                 const float y = state[state_y_idx];

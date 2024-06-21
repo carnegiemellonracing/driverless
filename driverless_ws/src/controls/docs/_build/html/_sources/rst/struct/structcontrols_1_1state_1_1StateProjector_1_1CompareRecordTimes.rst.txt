@@ -1,4 +1,0 @@
-Struct controls::state::StateProjector::CompareRecordTimes
-==========================================================
-
-.. doxygenstruct:: controls::state::StateProjector::CompareRecordTimes

@@ -5,7 +5,13 @@
 
 namespace controls {
     namespace cuda_globals {
-//TODO: move to cuda_globals?
+    //TODO: move to cuda_globals?
+        /**
+         * @brief Sample the lookup table with a inertial pose to get the corresponding curvilinear pose
+         * @param[in] world_pose [x, y, yaw] in world frame
+         * @param[out] curv_pose [progress, offset, heading] in curvilinear frame
+         * @param[out] out_of_bounds true if the world pose is out of bounds of the lookup table.
+         */
         __device__ static void sample_curv_state(const float world_pose[3], float curv_pose[3], bool& out_of_bounds) {
             const float x = world_pose[0];
             const float y = world_pose[1];

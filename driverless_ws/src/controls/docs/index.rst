@@ -31,18 +31,20 @@ to understand how the codebase in ``driverless/driverless_ws/src/controls`` is l
 
 Have fun and enjoy the ride!
 
+.. image:: images/car.*
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    source/explainers/overview
-   source/reference/api_reference
    source/explainerslist.rst
+   source/reference/api_reference
+   source/explainers/terminology
 
+============
+Sponsors
+============
+None of this would have been possible without our amazing sponsors!
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. image:: images/sponsors.*

@@ -1,4 +1,0 @@
-Struct controls::mppi::DeviceAction
-===================================
-
-.. doxygenstruct:: controls::mppi::DeviceAction

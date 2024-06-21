@@ -12,12 +12,13 @@ A list of important classes and functions in the controls library.
     class/StateEstimator
     class/StateEstimator_Impl
     class/StateProjector
+    file/functors_cuh
+    file/slipless_model.rst
+    file/constants_hpp
     file/types_hpp
     file/types_cuh
-    file/functors_cuh
     file/cuda_globals_cuh
     file/cuda_utils_cuh
-    file/constants_hpp
     file/cuda_constants_cuh
     file/helpers_cuh
     file/gl_utils_hpp

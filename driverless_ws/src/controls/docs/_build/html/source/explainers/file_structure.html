@@ -21,7 +21,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="Terminology" href="terminology.html" /> 
+    <link rel="next" title="API Reference" href="../reference/api_reference.html" />
+    <link rel="prev" title="Model Overview" href="slipless_model.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,17 +47,17 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/api_reference.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../explainerslist.html">Explainers</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_estimation.html">State Estimation Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mppi_algorithm.html">MPPI Algorithm Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="slipless_model.html">Model Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="terminology.html">Terminology</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">File Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#namespaces">Namespaces</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -210,6 +211,7 @@
 <p><strong>nodes</strong>: Code concerning the overall controller ROS node.</p>
 <p><strong>mppi</strong>: Code concerning MPPI, including helper functors.</p>
 <p><strong>state</strong>: Code concerning state estimation.</p>
+<p><strong>model</strong>: Code concerning the dynamics model. Currently only the inner namespace <cite>slipless</cite> is used.</p>
 <p><strong>cuda_globals</strong>: Code concerning anything on GPU global memory. CUDA code only.</p>
 <p><strong>utils</strong>: Miscellaneous utilities.</p>
 </section>
@@ -218,7 +220,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="terminology.html" class="btn btn-neutral float-left" title="Terminology" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="slipless_model.html" class="btn btn-neutral float-left" title="Model Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../reference/api_reference.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

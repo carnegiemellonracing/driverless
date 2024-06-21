@@ -1,4 +1,0 @@
-Struct controls::mppi::DivBy
-============================
-
-.. doxygenstruct:: controls::mppi::DivBy
