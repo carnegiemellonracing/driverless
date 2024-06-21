@@ -21,7 +21,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="MPPI Algorithm Overview" href="mppi_algorithm.html" /> 
+    <link rel="prev" title="Model Overview" href="slipless_model.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,6 +56,7 @@
 <li class="toctree-l2"><a class="reference internal" href="file_structure.html">File Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mppi_algorithm.html">MPPI Algorithm Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slipless_model.html">Model Overview</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">State Estimation Overview</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#state-projection">State Projection</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
@@ -137,6 +138,7 @@ the records before the most recent spline/pose, retaining only the most recent a
 2. Project to the next record using the most recent speed and action, together with the car’s dynamics model
 3. Update either the most recent speed or action depending if the next record is a speed or action record.
 Repeat until we reach the current time.</p>
+<p>We do this all on the CPU, copying over only the current projected state to the GPU for the controller to use.</p>
 <img alt="../../_images/projection.png" src="../../_images/projection.png" />
 </section>
 </section>
@@ -214,7 +216,7 @@ in <code class="docutils literal notranslate"><span class="pre">m_history_since_
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="mppi_algorithm.html" class="btn btn-neutral float-left" title="MPPI Algorithm Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="slipless_model.html" class="btn btn-neutral float-left" title="Model Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
