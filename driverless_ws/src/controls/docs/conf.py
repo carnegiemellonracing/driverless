@@ -20,9 +20,9 @@ master_doc = 'index'
 
 rst_epilog = """
 .. |Node| replace:: `Node <https://docs.ros.org/en/humble/Concepts/Basic/About-Nodes.html>`__
-.. |Path Planning| replace:: Unimplemented
+.. |Path Planning| replace:: Path Planning
 .. |twist| replace:: :doc:`twist </source/explainers/terminology>`
-.. |Actuators| replace:: Unimplemented
+.. |Actuators| replace:: Actuators
 """
 
 # -- Breathe configuration ---------------------------------------------------

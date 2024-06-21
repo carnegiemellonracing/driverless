@@ -12,21 +12,21 @@ e.g. throttle and steering wheel angle.
 How does it work?
 -----------------
 
-Controls is a custom ROS2 package that contains the controller |Node|.
+Controls is our custom ROS2 package that contains the controller |Node|.
 
 It subscribes to the following topics:
 
-* *spline*: An array of points in space calculated from |Path Planning|.
-* *filter/twist*: 6-dimensional :doc:`twist </source/explainers/terminology>` information from the IMU built into our Movella MTi-680G GPS.
+* ``spline``: An array of points in space calculated from |Path Planning|.
+* ``filter/twist``: 6-dimensional :doc:`twist </source/explainers/terminology>` information from the IMU built into our Movella MTi-680G GPS.
 
-It publishes to the following topic:
+It publishes to the following topics:
 
-* *control_action*: The calculated optimal control action to be sent to the |Actuators| node.
-* *controller_info*: Information about the controller, for debugging purposes.
+* ``control_action``: The calculated optimal control action to be sent to the |Actuators| node.
+* ``controller_info``: Information about the controller, for debugging purposes.
 
 Setup
 -----------------
-To build the controls package, run the following command from inside the *driverless/driverless_ws* directory:
+To build the controls package, run the following command from inside the ``driverless/driverless_ws`` directory:
 
 .. code-block:: bash
 
@@ -41,6 +41,4 @@ To run the controller node, run:
 Next Up
 -------
 
-To learn more about the controller, visit :doc:`here </source/reference/class/ControllerNode>`.
-
-To take a look at the code, check out *driverless_ws/src/controls/nodes/controller.cpp*.
+To learn more about the controller, visit :doc:`here </source/explainers/controller>` for a detailed overview.

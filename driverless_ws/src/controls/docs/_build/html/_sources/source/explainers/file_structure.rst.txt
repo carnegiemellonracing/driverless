@@ -3,3 +3,56 @@ File Structure
 ==============
 
 An explanation of the file structure of the controls repository.
+
+.. list-table:: File Structure of ``controls/src``
+   :widths: 25 25 50
+   :header-rows: 1
+
+   * - Folder
+     - File Name
+     - Description
+   * - nodes
+     - controller.hpp
+     - Description of `file1`
+   * -
+     - controller.cpp
+     - Description of `file2`
+   * - mppi
+     - mppi.hpp
+     - Description of `file3`
+   * -
+     - mppi.cuh
+     - Description of `file4`
+   * -
+     - mppi.cu
+     - Description of `file6`
+   * -
+     - functors.cuh
+     - Description of `file7`
+   * -
+     - types.cuh
+     - Description of `file8`
+   * - state
+     - state_estimator.hpp
+     - Description of `file9`
+   * -
+     - state_estimator.cuh
+     - Description of `file10`
+   * -
+     - state_estimator.cu
+     - Description of `file11`
+
+.. list-table:: File Structure of controls/
+   :widths: 25 75
+   :header-rows: 1
+
+   * - File Name
+     - Description
+   * - `file1`
+     - Description of `file1`
+   * - `file2`
+     - Description of `file2`
+   * - `file3`
+     - Description of `file3`
+   * - `file4`
+     - Description of `file4`

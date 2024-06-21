@@ -117,6 +117,7 @@ namespace controls {
                         while (!m_state_estimator->is_ready()) {
                             m_state_cond_var.wait(state_lock);
                         }
+                        // state_lock acquired.
 
                         // record time to estimate speed
                         auto start_time = std::chrono::high_resolution_clock::now();
@@ -139,6 +140,8 @@ namespace controls {
                         Action action = m_mppi_controller->generate_action();
                         publish_action(action);
 
+                        // this can happen concurrently with another state estimator callback, but the internal lock
+                        // protects it.
                         m_state_estimator->record_control_action(action, get_clock()->now());
 
                         // calculate and print time elapsed

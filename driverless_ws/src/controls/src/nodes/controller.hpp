@@ -152,8 +152,8 @@ namespace controls {
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
 
             /**
-             * Mutex protecting `m_state_estimator`. This needs to be acquired when forwarding callbacks or waiting
-             * on `m_state_cond_var`
+             * Mutex protecting `m_state_estimator`. This needs to be acquired when forwarding callbacks to the
+             * state estimator or waiting on `m_state_cond_var`
              */
             std::mutex m_state_mut;
 

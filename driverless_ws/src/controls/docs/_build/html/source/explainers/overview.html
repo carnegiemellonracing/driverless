@@ -59,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../reference/classlist.html">Class list</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/filelist.html">File list</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../explainerslist.html">Explainers list</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file_structure.html">File Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mppi_algorithm.html">MPPI Algorithm Overview</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Overview</a><ul>
@@ -68,6 +69,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#next-up">Next Up</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="state_estimation.html">State Estimation Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="terminology.html">Terminology</a></li>
 </ul>
 </li>
@@ -107,21 +109,21 @@ e.g. throttle and steering wheel angle.</p>
 </section>
 <section id="how-does-it-work">
 <h2>How does it work?<a class="headerlink" href="#how-does-it-work" title="Link to this heading"></a></h2>
-<p>Controls is a custom ROS2 package that contains the controller <a class="reference external" href="https://docs.ros.org/en/humble/Concepts/Basic/About-Nodes.html">Node</a>.</p>
+<p>Controls is our custom ROS2 package that contains the controller <a class="reference external" href="https://docs.ros.org/en/humble/Concepts/Basic/About-Nodes.html">Node</a>.</p>
 <p>It subscribes to the following topics:</p>
 <ul class="simple">
-<li><p><em>spline</em>: An array of points in space calculated from Unimplemented.</p></li>
-<li><p><em>filter/twist</em>: 6-dimensional <a class="reference internal" href="terminology.html"><span class="doc">twist</span></a> information from the IMU built into our Movella MTi-680G GPS.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spline</span></code>: An array of points in space calculated from Path Planning.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filter/twist</span></code>: 6-dimensional <a class="reference internal" href="terminology.html"><span class="doc">twist</span></a> information from the IMU built into our Movella MTi-680G GPS.</p></li>
 </ul>
-<p>It publishes to the following topic:</p>
+<p>It publishes to the following topics:</p>
 <ul class="simple">
-<li><p><em>control_action</em>: The calculated optimal control action to be sent to the Unimplemented node.</p></li>
-<li><p><em>controller_info</em>: Information about the controller, for debugging purposes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">control_action</span></code>: The calculated optimal control action to be sent to the Actuators node.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">controller_info</span></code>: Information about the controller, for debugging purposes.</p></li>
 </ul>
 </section>
 <section id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
-<p>To build the controls package, run the following command from inside the <em>driverless/driverless_ws</em> directory:</p>
+<p>To build the controls package, run the following command from inside the <code class="docutils literal notranslate"><span class="pre">driverless/driverless_ws</span></code> directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./build-controls.py
 </pre></div>
 </div>
@@ -132,8 +134,7 @@ e.g. throttle and steering wheel angle.</p>
 </section>
 <section id="next-up">
 <h2>Next Up<a class="headerlink" href="#next-up" title="Link to this heading"></a></h2>
-<p>To learn more about the controller, visit <a class="reference internal" href="../reference/class/ControllerNode.html"><span class="doc">here</span></a>.</p>
-<p>To take a look at the code, check out <em>driverless_ws/src/controls/nodes/controller.cpp</em>.</p>
+<p>To learn more about the controller, visit <a class="reference internal" href="controller.html"><span class="doc">here</span></a> for a detailed overview.</p>
 </section>
 </section>
 

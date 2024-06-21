@@ -12,8 +12,6 @@ namespace controls {
 
         class StateProjector {
         public:
-            /// @brief Record an action into the history
-
             /**
              * @brief Record an action into the history
              * @param[in] action The action to be recorded
