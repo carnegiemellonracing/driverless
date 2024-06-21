@@ -13,34 +13,35 @@ An explanation of the file structure of the controls repository.
      - Description
    * - nodes
      - controller.hpp
-     - Description of `file1`
+     - Definition of ``ControllerNode`` class, main ROS node.
    * -
      - controller.cpp
-     - Description of `file2`
+     - Implementation of ``ControllerNode`` class. Main function that spins the node.
    * - mppi
      - mppi.hpp
-     - Description of `file3`
+     - Definition of abstract class ``MppiController``. ROS2 interface for MPPI.
    * -
      - mppi.cuh
-     - Description of `file4`
+     - Definition of ``MppiController_Impl`` class, where MPPI is implemented.
    * -
      - mppi.cu
-     - Description of `file6`
+     - Implementation of ``MppiController_Impl`` class.
    * -
      - functors.cuh
-     - Description of `file7`
+     - Helper functors (C++ function objects) to be used in Thrust higher-order functions in MPPI.
    * -
      - types.cuh
-     - Description of `file8`
+     - Definition of types used in MPPI.
    * - state
      - state_estimator.hpp
-     - Description of `file9`
+     - Definition of abstract class ``StateEstimator``. ROS2 interface for state estimation.
    * -
      - state_estimator.cuh
-     - Description of `file10`
+     - Definition of ``StateEstimator_Impl`` class, where state estimation is implemented.
    * -
      - state_estimator.cu
-     - Description of `file11`
+     - Implementation of ``StateEstimator_Impl`` class.
+
 
 .. list-table:: File Structure of controls/
    :widths: 25 75

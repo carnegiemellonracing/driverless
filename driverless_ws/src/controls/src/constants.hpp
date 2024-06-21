@@ -95,6 +95,7 @@ namespace controls {
     constexpr float cg_to_nose = 1.5f;
     constexpr float whl_base = 2.0f;
     constexpr float whl_radius = 0.2286;
+    /// gear ratio = motor speed / wheel speed = wheel torque / motor torque
     constexpr float gear_ratio = 15.0f;
     constexpr float car_mass = 210.0f;
     constexpr float rolling_drag = 100.0f; // N
@@ -105,7 +106,7 @@ namespace controls {
     constexpr float lat_tractive_capability = 3.0f;
     constexpr float understeer_slope = 0.0f;
     constexpr float brake_enable_speed = 1.0f;
-    /// Maximum torque request //TODO in N?
+    /// Maximum torque request (N m)
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
     /// Time from MPPI control action request to physical change, in sec
     /// TODO: Re-estimate since Falcon (steering motor) replacement

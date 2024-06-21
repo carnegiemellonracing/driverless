@@ -6,6 +6,8 @@
 namespace controls {
     namespace model {
         namespace slipless {
+            ///@note The model is used on both the
+
             /**
              * Action : R^2 [swangle (rad), torque (N x m)]
              * State : R^4 [x (m), y (m), yaw (rad), speed (m/s)]
@@ -24,6 +26,7 @@ namespace controls {
                 }
 
                 const float back_whl_to_center_of_rot = (cg_to_front + cg_to_rear) / tanf(kinematic_swangle_);
+                // speed / radius of rotation
                 return copysignf(
                     speed / sqrtf(cg_to_rear * cg_to_rear + back_whl_to_center_of_rot * back_whl_to_center_of_rot),
                     kinematic_swangle_
@@ -37,6 +40,7 @@ namespace controls {
                 }
 
                 const float kinematic_swangle_ = kinematic_swangle(speed, swangle);
+                // also equal to angular_speed * speed
                 const float back_whl_to_center_of_rot = (cg_to_front + cg_to_rear) / tanf(kinematic_swangle_);
                 return copysignf(
                     speed * speed / sqrtf(cg_to_rear * cg_to_rear + back_whl_to_center_of_rot * back_whl_to_center_of_rot),
@@ -44,6 +48,8 @@ namespace controls {
                 );
             }
 
+            /// angle between the direction the car is pointing (heading) and the direction the car is moving (trajectory)
+            /// does not necessarily imply car is slipping.
             __host__ __device__ static float slip_angle(const float kinematic_swangle) {
                 return atanf(cg_to_rear / (cg_to_front + cg_to_rear) * tanf(kinematic_swangle));
             }
@@ -58,6 +64,7 @@ namespace controls {
                 // printf("x: %f, y: %f, yaw: %f, speed: %f\n", x, y, yaw, speed);
 
                 const float swangle = action[action_swangle_idx];
+                // wheel torque
                 const float torque = action[action_torque_idx] * gear_ratio;
 
                 float kinematic_swangle_ = kinematic_swangle(speed, swangle);
@@ -66,6 +73,7 @@ namespace controls {
                 // printf("swangle: %f, torque: %f\n", swangle, torque);
                 // printf("kinematic_swangle_: %f, slip_angle_: %f\n", kinematic_swangle_, slip_angle_);
 
+                /// factor of 0.5 to split between front and rear
                 constexpr float saturating_tire_torque = saturating_motor_torque * 0.5f * gear_ratio;
                 float torque_front, torque_rear;
                 switch (torque_mode) {
@@ -91,6 +99,7 @@ namespace controls {
                 const float next_speed_raw = speed +
                     ((torque_front * cosf(swangle - slip_angle_) + torque_rear * cosf(slip_angle_)) / (whl_radius * car_mass)
                     - rolling_drag / car_mass) * timestep;
+                // car can't go backwards, negative torque is regenerative braking
                 const float next_speed = max(0.0f, next_speed_raw);
 
                 const float speed2 = speed * speed;
@@ -108,6 +117,7 @@ namespace controls {
                 // printf("next_speed_raw: %f, next_speed: %f, next_speed2: %f, dist_avg_speed: %f, angular_speed_: %f, next_yaw: %f\n", next_speed_raw, next_speed, next_speed2, dist_avg_speed, angular_speed_, next_yaw);
 
                 const float rear_to_center = (cg_to_rear + cg_to_front) / tanf(kinematic_swangle_);
+                // either traveling straight or turning in circular motion
                 const float next_x = angular_speed_ == 0 ?
                     x + dist_avg_speed * cosf(yaw) * timestep
                   : x + cg_to_rear * (cosf(next_yaw) - cosf(yaw)) + rear_to_center * (sinf(next_yaw) - sinf(yaw));

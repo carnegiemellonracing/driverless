@@ -22,7 +22,7 @@ We use the following terms to describe the MPPI algorithm:
 * State: The state of the vehicle. We define this to be x, y, yaw and speed.
 * Control Action: The control action to be executed by the vehicle. We define this to be steering wheel angle and wheel throttle.
 * Action Trajectory: An array of control actions, representing a temporal sequence of control actions to be executed every ``controller_period``.
-* Dynamics Model: A model that predicts the derivative of state with respect to time, given the current state and control action.
+* Dynamics Model: A model that future state after a given time, given the current state and control action.
 * Cost Function: A function that evaluates the quality of a given state. The goal is to minimize this function.
 * Cost-to-go: The total cost of being in a given state and all the states that follow it.
 * Controller Period: The time interval between control actions.

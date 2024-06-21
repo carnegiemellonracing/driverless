@@ -41,7 +41,7 @@ An explanation of the file structure of the controls repository.
    * -
      - state_estimator.cu
      - Implementation of ``StateEstimator_Impl`` class.
-   * -
+
 
 .. list-table:: File Structure of controls/
    :widths: 25 75

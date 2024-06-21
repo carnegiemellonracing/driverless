@@ -51,6 +51,8 @@ To project to the current time, we:
 3. Update either the most recent speed or action depending if the next record is a speed or action record.
 Repeat until we reach the current time.
 
+We do this all on the CPU, copying over only the current projected state to the GPU for the controller to use.
+
 .. image:: /images/projection.*
 
 Curvilinear Lookup Table Generation

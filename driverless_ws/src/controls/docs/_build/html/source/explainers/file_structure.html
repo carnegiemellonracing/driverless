@@ -57,6 +57,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">File Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mppi_algorithm.html">MPPI Algorithm Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slipless_model.html">Model Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_estimation.html">State Estimation Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="terminology.html">Terminology</a></li>
 </ul>
@@ -106,43 +107,43 @@
 <tbody>
 <tr class="row-even"><td><p>nodes</p></td>
 <td><p>controller.hpp</p></td>
-<td><p>Description of <cite>file1</cite></p></td>
+<td><p>Definition of <code class="docutils literal notranslate"><span class="pre">ControllerNode</span></code> class, main ROS node.</p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p>controller.cpp</p></td>
-<td><p>Description of <cite>file2</cite></p></td>
+<td><p>Implementation of <code class="docutils literal notranslate"><span class="pre">ControllerNode</span></code> class. Main function that spins the node.</p></td>
 </tr>
 <tr class="row-even"><td><p>mppi</p></td>
 <td><p>mppi.hpp</p></td>
-<td><p>Description of <cite>file3</cite></p></td>
+<td><p>Definition of abstract class <code class="docutils literal notranslate"><span class="pre">MppiController</span></code>. ROS2 interface for MPPI.</p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p>mppi.cuh</p></td>
-<td><p>Description of <cite>file4</cite></p></td>
+<td><p>Definition of <code class="docutils literal notranslate"><span class="pre">MppiController_Impl</span></code> class, where MPPI is implemented.</p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p>mppi.cu</p></td>
-<td><p>Description of <cite>file6</cite></p></td>
+<td><p>Implementation of <code class="docutils literal notranslate"><span class="pre">MppiController_Impl</span></code> class.</p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p>functors.cuh</p></td>
-<td><p>Description of <cite>file7</cite></p></td>
+<td><p>Helper functors (C++ function objects) to be used in Thrust higher-order functions in MPPI.</p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p>types.cuh</p></td>
-<td><p>Description of <cite>file8</cite></p></td>
+<td><p>Definition of types used in MPPI.</p></td>
 </tr>
 <tr class="row-odd"><td><p>state</p></td>
 <td><p>state_estimator.hpp</p></td>
-<td><p>Description of <cite>file9</cite></p></td>
+<td><p>Definition of abstract class <code class="docutils literal notranslate"><span class="pre">StateEstimator</span></code>. ROS2 interface for state estimation.</p></td>
 </tr>
 <tr class="row-even"><td></td>
 <td><p>state_estimator.cuh</p></td>
-<td><p>Description of <cite>file10</cite></p></td>
+<td><p>Definition of <code class="docutils literal notranslate"><span class="pre">StateEstimator_Impl</span></code> class, where state estimation is implemented.</p></td>
 </tr>
 <tr class="row-odd"><td></td>
 <td><p>state_estimator.cu</p></td>
-<td><p>Description of <cite>file11</cite></p></td>
+<td><p>Implementation of <code class="docutils literal notranslate"><span class="pre">StateEstimator_Impl</span></code> class.</p></td>
 </tr>
 </tbody>
 </table>
