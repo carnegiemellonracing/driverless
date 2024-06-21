@@ -5,6 +5,8 @@ MPPI Algorithm Overview
 The MPPI (Model Predictive Path Integral) algorithm is a model predictive control algorithm that uses a stochastic optimization approach to find the
 optimal control action for a given task.
 
+Our algorithm is based off the paper *Model Predictive Path Integral Control using Covariance Variable Importance Sampling* by Williams et al.
+
 We highly recommend reading the :doc:`State Estimation Overview <state_estimation>` before proceeding.
 
 Motivation

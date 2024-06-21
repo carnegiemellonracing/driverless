@@ -21,7 +21,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Explainers" href="../../explainerslist.html" />
+    <link rel="next" title="Terminology" href="../../explainers/terminology.html" />
     <link rel="prev" title="File helpers.cuh" href="helpers_cuh.html" /> 
 </head>
 
@@ -47,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../class/ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/MppiController.html">Class mppi::MppiController</a></li>
@@ -54,12 +55,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator.html">Class state::StateEstimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slipless_model.html">File model.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="helpers_cuh.html">File helpers.cuh</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">File gl_utils.hpp</a><ul>
@@ -71,7 +73,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -112,22 +114,66 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5utils21create_sdl2_gl_windowEPKcii6Uint32P13SDL_GLContext">
 <span id="_CPPv3N8controls5utils21create_sdl2_gl_windowEPKcii6Uint32P13SDL_GLContext"></span><span id="_CPPv2N8controls5utils21create_sdl2_gl_windowEPKcii6Uint32P13SDL_GLContext"></span><span id="controls::utils::create_sdl2_gl_window__cCP.i.i.Uint32.SDL_GLContextP"></span><span class="target" id="namespacecontrols_1_1utils_1ab62f5b71451b00bbc5f7ba7ba9e5c620"></span><span class="n"><span class="pre">SDL_Window</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">create_sdl2_gl_window</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">title</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">width</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">height</span></span>, <span class="n"><span class="pre">Uint32</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">additional_flags</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span>, <span class="n"><span class="pre">SDL_GLContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">gl_context</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5utils21create_sdl2_gl_windowEPKcii6Uint32P13SDL_GLContext" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Creates an SDL2 window with OpenGL context. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> – The title of the window. </p></li>
+<li><p><strong>width</strong> – The width of the window. </p></li>
+<li><p><strong>height</strong> – The height of the window. </p></li>
+<li><p><strong>additional_flags</strong> – Additional flags for the SDL window. </p></li>
+<li><p><strong>gl_context</strong> – <strong>[out]</strong> Pointer to an SDL_GLContext to store the created context. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Throws<span class="colon">:</span></dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">runtime_error</span></span></span> – if there is an error during window or context creation. </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pointer to the created SDL_Window. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5utils17print_program_logE6GLuint">
 <span id="_CPPv3N8controls5utils17print_program_logE6GLuint"></span><span id="_CPPv2N8controls5utils17print_program_logE6GLuint"></span><span id="controls::utils::print_program_log__GLuint"></span><span class="target" id="namespacecontrols_1_1utils_1afa8921d43606028552130474cbd2985b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print_program_log</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">GLuint</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">program</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5utils17print_program_logE6GLuint" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Prints the log of a GLSL program. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>program</strong> – The OpenGL program ID. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5utils16print_shader_logE6GLuint">
 <span id="_CPPv3N8controls5utils16print_shader_logE6GLuint"></span><span id="_CPPv2N8controls5utils16print_shader_logE6GLuint"></span><span id="controls::utils::print_shader_log__GLuint"></span><span class="target" id="namespacecontrols_1_1utils_1a70cc746a9575ce7de5296a2a3b476c30"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print_shader_log</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">GLuint</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">shader</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5utils16print_shader_logE6GLuint" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Prints the log of a GLSL shader. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>shader</strong> – The OpenGL shader ID. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5utils17gl_debug_callbackE6GLenum6GLenum6GLuint6GLenum7GLsizeiPK6GLcharPKv">
 <span id="_CPPv3N8controls5utils17gl_debug_callbackE6GLenum6GLenum6GLuint6GLenum7GLsizeiPK6GLcharPKv"></span><span id="_CPPv2N8controls5utils17gl_debug_callbackE6GLenum6GLenum6GLuint6GLenum7GLsizeiPK6GLcharPKv"></span><span id="controls::utils::gl_debug_callback__GLenum.GLenum.GLuint.GLenum.GLsizei.GLcharCP.voidCP"></span><span class="target" id="namespacecontrols_1_1utils_1a3a600a27a41422421132c6f4907ed48a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gl_debug_callback</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">GLenum</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">source</span></span>, <span class="n"><span class="pre">GLenum</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">type</span></span>, <span class="n"><span class="pre">GLuint</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">id</span></span>, <span class="n"><span class="pre">GLenum</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">severity</span></span>, <span class="n"><span class="pre">GLsizei</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">length</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">GLchar</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">message</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">userParam</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5utils17gl_debug_callbackE6GLenum6GLenum6GLuint6GLenum7GLsizeiPK6GLcharPKv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Callback function for OpenGL debug messages. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – The source of the debug message. </p></li>
+<li><p><strong>type</strong> – The type of the debug message. </p></li>
+<li><p><strong>id</strong> – The ID of the debug message. </p></li>
+<li><p><strong>severity</strong> – The severity of the debug message. </p></li>
+<li><p><strong>length</strong> – The length of the debug message. </p></li>
+<li><p><strong>message</strong> – The debug message string. </p></li>
+<li><p><strong>userParam</strong> – User-defined parameter. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5utils14compile_shaderEPKcPKc">
@@ -140,8 +186,11 @@
 <li><p><strong>fragment_source</strong> – fragment shader code </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the compound shader program to be used. </p>
+<dt class="field-even">Throws<span class="colon">:</span></dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">runtime_error</span></span></span> – if there is an error during shader compilation or program linking. </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the compound shader program ID to be used. </p>
 </dd>
 </dl>
 </dd></dl>
@@ -149,13 +198,16 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5utils25make_gl_current_or_exceptEP10SDL_Window13SDL_GLContext">
 <span id="_CPPv3N8controls5utils25make_gl_current_or_exceptEP10SDL_Window13SDL_GLContext"></span><span id="_CPPv2N8controls5utils25make_gl_current_or_exceptEP10SDL_Window13SDL_GLContext"></span><span id="controls::utils::make_gl_current_or_except__SDL_WindowP.SDL_GLContext"></span><span class="target" id="namespacecontrols_1_1utils_1a4bd2ea1f5878805029c980bde93972ba"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">make_gl_current_or_except</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">SDL_Window</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">window</span></span>, <span class="n"><span class="pre">SDL_GLContext</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">gl_context</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5utils25make_gl_current_or_exceptEP10SDL_Window13SDL_GLContext" title="Link to this definition"></a><br /></dt>
-<dd><p>Enable OpenGL. </p>
+<dd><p>Makes the OpenGL context current for the specified window or throws an exception. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>window</strong> – </p></li>
-<li><p><strong>gl_context</strong> – </p></li>
+<li><p><strong>window</strong> – The SDL window. </p></li>
+<li><p><strong>gl_context</strong> – The OpenGL context. </p></li>
 </ul>
+</dd>
+<dt class="field-even">Throws<span class="colon">:</span></dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">runtime_error</span></span></span> – if there is an error making the context current. </p>
 </dd>
 </dl>
 </dd></dl>
@@ -163,7 +215,13 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5utils26sync_gl_and_unbind_contextEP10SDL_Window">
 <span id="_CPPv3N8controls5utils26sync_gl_and_unbind_contextEP10SDL_Window"></span><span id="_CPPv2N8controls5utils26sync_gl_and_unbind_contextEP10SDL_Window"></span><span id="controls::utils::sync_gl_and_unbind_context__SDL_WindowP"></span><span class="target" id="namespacecontrols_1_1utils_1a132b9170d4925782124fa74503a37580"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sync_gl_and_unbind_context</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">SDL_Window</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">window</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5utils26sync_gl_and_unbind_contextEP10SDL_Window" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Synchronizes with the OpenGL commands and unbinds the context from the current thread. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>window</strong> – The SDL window. </p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <dl class="cpp struct">
@@ -171,23 +229,26 @@
 <span id="_CPPv3N8controls5utils5GLObjE"></span><span id="_CPPv2N8controls5utils5GLObjE"></span><span id="controls::utils::GLObj"></span><span class="target" id="structcontrols_1_1utils_1_1GLObj"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GLObj</span></span></span><a class="headerlink" href="#_CPPv4N8controls5utils5GLObjE" title="Link to this definition"></a><br /></dt>
 <dd><div class="docutils container">
 <em>#include &lt;gl_utils.hpp&gt;</em></div>
-<p>Stores the names of the vao, vbo, ebo. Once the names are generated by gen_gl_path(), they can be used as identifiers for other OpenGL functions </p>
+<p>Stores the names of the vao, vbo, ebo. Once the names are generated by gen_gl_path(), they can be used as identifiers for other OpenGL functions. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5utils5GLObj3vaoE">
 <span id="_CPPv3N8controls5utils5GLObj3vaoE"></span><span id="_CPPv2N8controls5utils5GLObj3vaoE"></span><span id="controls::utils::GLObj::vao__GLuint"></span><span class="target" id="structcontrols_1_1utils_1_1GLObj_1ac56c8aa5de8b3806ed5757a3c9384e26"></span><span class="n"><span class="pre">GLuint</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vao</span></span></span><a class="headerlink" href="#_CPPv4N8controls5utils5GLObj3vaoE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Vertex Array Object. Specifies how the VBO is laid out, e.g. how big is a vertex. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5utils5GLObj3vboE">
 <span id="_CPPv3N8controls5utils5GLObj3vboE"></span><span id="_CPPv2N8controls5utils5GLObj3vboE"></span><span id="controls::utils::GLObj::vbo__GLuint"></span><span class="target" id="structcontrols_1_1utils_1_1GLObj_1a1214cb0f82c2051a63852389b2e57974"></span><span class="n"><span class="pre">GLuint</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vbo</span></span></span><a class="headerlink" href="#_CPPv4N8controls5utils5GLObj3vboE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Vertex Buffer Object. Contiguous block of memory where all the vertices’ information is stored. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls5utils5GLObj3eboE">
 <span id="_CPPv3N8controls5utils5GLObj3eboE"></span><span id="_CPPv2N8controls5utils5GLObj3eboE"></span><span id="controls::utils::GLObj::ebo__GLuint"></span><span class="target" id="structcontrols_1_1utils_1_1GLObj_1ae3bc140b533e8de1fdf709cc6e6e942d"></span><span class="n"><span class="pre">GLuint</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ebo</span></span></span><a class="headerlink" href="#_CPPv4N8controls5utils5GLObj3eboE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Element Buffer Object. Memory that contains triples of indices into the VBO, representing triangles. </p>
+</dd></dl>
 
 </div>
 </dd></dl>
@@ -203,7 +264,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="helpers_cuh.html" class="btn btn-neutral float-left" title="File helpers.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../../explainerslist.html" class="btn btn-neutral float-right" title="Explainers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../../explainers/terminology.html" class="btn btn-neutral float-right" title="Terminology" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -98,6 +98,8 @@ Namespaces roughly correspond to the file structure
 
 **state**: Code concerning state estimation.
 
+**model**: Code concerning the dynamics model. Currently only the inner namespace `slipless` is used.
+
 **cuda_globals**: Code concerning anything on GPU global memory. CUDA code only.
 
 **utils**: Miscellaneous utilities.

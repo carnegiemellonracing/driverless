@@ -1,4 +1,0 @@
-File gl_utils.cpp
-=================
-
-.. doxygenfile:: gl_utils.cpp

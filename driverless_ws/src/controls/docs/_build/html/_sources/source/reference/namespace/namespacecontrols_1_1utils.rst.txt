@@ -1,4 +1,0 @@
-Namespace controls::utils
-=========================
-
-.. doxygennamespace:: controls::utils

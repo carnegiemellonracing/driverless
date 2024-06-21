@@ -1,4 +1,0 @@
-Namespace controls::cuda_globals
-================================
-
-.. doxygennamespace:: controls::cuda_globals

@@ -71,7 +71,7 @@ Specification
 .. note::
 
     The :math:`x` axis points forward and the :math:`y` axis points to the right. The car starts facing the positive x direction.
-    A positive yaw angle means the car is turning clockwise.
+    A positive yaw or steering angle means the car is turning clockwise.
 
 We use a modified bicycle model that introduces a couple of assumptions:
 

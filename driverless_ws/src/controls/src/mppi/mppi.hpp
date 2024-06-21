@@ -17,7 +17,10 @@ namespace controls {
          *
          * it calculates the optimal control action to minimize a cost function.
          *
+         * Implementation is in @ref MppiController_Impl.
+         *
          * Refer to the @rst :doc:`explainer </source/explainers/mppi_algorithm>` @endrst for a more detailed overview.
+         *
          */
         class MppiController {
         public:
@@ -25,8 +28,8 @@ namespace controls {
              * @brief Essentially serves as a named constructor that grants ownership of a MPPIController to the caller.
              * This is necessary because MPPIController is an abstract base class (a pointer is needed)
              *
-             * @param[in] mutex Reference to the mutex that mppi will use TODO: who else uses it? no idea
-             * @param[in] logger Function object of logger (string to void) TODO: is function object correct?
+             * @param[in] mutex Reference to the mutex that mppi will use
+             * @param[in] logger Function object of logger (string to void)
              * @return Pointer to the created MPPIController
              */
             static std::shared_ptr<MppiController> create(std::mutex& mutex, LoggerFunc logger = no_log);

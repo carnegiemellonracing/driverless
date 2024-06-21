@@ -20,7 +20,7 @@ namespace controls {
             /**
              * @brief Construct a new MppiController_Impl object
              *
-             * @param mutex Mutex to lock when TODO: what is this for?
+             * @param mutex Mutex to prevent multiple simultaneous Thrust calls (generate_action and display)
              * @param logger Logger function to log messages
              */
             MppiController_Impl(std::mutex& mutex, LoggerFunc logger);
@@ -44,11 +44,10 @@ namespace controls {
             ~MppiController_Impl() override;
 
         private:
-            /// @note placing the member variables first to help with understanding what each member function interacts with.
-            // TODO: weigh in: n x m or num_samples x num_timesteps
+            // placing the member variables first to help with understanding what each member function interacts with.
 
             /// num_timesteps x action_dims device tensor. Best-guess action trajectory to which perturbations are added.
-            /// @note The only device tensor that is retained between each call to generate_action.
+            /// The only device tensor that is retained between each call to generate_action.
             thrust::device_vector<DeviceAction> m_last_action_trajectory;
             /// num_samples x num_timesteps x actions_dims (num_action_trajectories) device tensor.
             /// Used to store brownians, perturbed actions, and action trajectories at different points in the algorithm.
@@ -125,6 +124,7 @@ namespace controls {
             /// Logger for debugging. Can be attached to ROS or echo to std::cerr
             LoggerFunc m_logger;
 
+            /// Mutex to prevent multiple simultaneous Thrust calls (generate_action and display)
             std::mutex& m_mutex;
         };
     }

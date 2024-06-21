@@ -1,4 +1,0 @@
-Class controls::nodes::ControllerNode
-=====================================
-
-.. doxygenclass:: controls::nodes::ControllerNode

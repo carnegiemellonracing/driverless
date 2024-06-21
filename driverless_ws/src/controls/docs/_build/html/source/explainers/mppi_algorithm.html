@@ -48,7 +48,6 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/api_reference.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../explainerslist.html">Explainers</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="controller.html">Controller Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="state_estimation.html">State Estimation Overview</a></li>
@@ -63,11 +62,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="slipless_model.html">Model Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="terminology.html">Terminology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file_structure.html">File Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file_structure.html#namespaces">Namespaces</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -99,6 +99,7 @@
 <h1>MPPI Algorithm Overview<a class="headerlink" href="#mppi-algorithm-overview" title="Link to this heading"></a></h1>
 <p>The MPPI (Model Predictive Path Integral) algorithm is a model predictive control algorithm that uses a stochastic optimization approach to find the
 optimal control action for a given task.</p>
+<p>Our algorithm is based off the paper <em>Model Predictive Path Integral Control using Covariance Variable Importance Sampling</em> by Williams et al.</p>
 <p>We highly recommend reading the <a class="reference internal" href="state_estimation.html"><span class="doc">State Estimation Overview</span></a> before proceeding.</p>
 <section id="motivation">
 <h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading"></a></h2>

@@ -22,8 +22,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="File cuda_constants.cuh" href="cuda_constants_cuh.html" />
-    <link rel="prev" title="File cuda_utils.cuh" href="cuda_utils_cuh.html" /> 
+    <link rel="next" title="File types.hpp" href="types_hpp.html" />
+    <link rel="prev" title="File model.cuh" href="slipless_model.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,6 +48,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../class/ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/MppiController.html">Class mppi::MppiController</a></li>
@@ -55,11 +56,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator.html">Class state::StateEstimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateProjector.html">Class state::StateProjector</a></li>
-<li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
-<li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slipless_model.html">File model.cuh</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">File constants.hpp</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10TorqueModeE"><code class="docutils literal notranslate"><span class="pre">controls::TorqueMode</span></code></a></li>
@@ -101,7 +99,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls11cg_to_frontE"><code class="docutils literal notranslate"><span class="pre">controls::cg_to_front</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10cg_to_rearE"><code class="docutils literal notranslate"><span class="pre">controls::cg_to_rear</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10cg_to_noseE"><code class="docutils literal notranslate"><span class="pre">controls::cg_to_nose</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls8whl_baseE"><code class="docutils literal notranslate"><span class="pre">controls::whl_base</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10whl_radiusE"><code class="docutils literal notranslate"><span class="pre">controls::whl_radius</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls10gear_ratioE"><code class="docutils literal notranslate"><span class="pre">controls::gear_ratio</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls8car_massE"><code class="docutils literal notranslate"><span class="pre">controls::car_mass</span></code></a></li>
@@ -125,12 +122,16 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="helpers_cuh.html">File helpers.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -256,7 +257,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls19best_effort_profileE">
 <span id="_CPPv3N8controls19best_effort_profileE"></span><span id="_CPPv2N8controls19best_effort_profileE"></span><span id="controls::best_effort_profile__rmw_qos_profile_tC"></span><span class="target" id="namespacecontrols_1a10abb99aa2c76f8ae8bcbd206a6eaba2"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rmw_qos_profile_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">best_effort_profile</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="n"><span class="pre">RMW_QOS_POLICY_HISTORY_KEEP_LAST</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_POLICY_DURABILITY_VOLATILE</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_DEADLINE_DEFAULT</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_LIFESPAN_DEFAULT</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N8controls19best_effort_profileE" title="Link to this definition"></a><br /></dt>
-<dd><p>ask Ankit? </p>
+<dd><p>Profile for best effort communication. </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -287,11 +288,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls15controller_freqE">
 <span id="_CPPv3N8controls15controller_freqE"></span><span id="_CPPv2N8controls15controller_freqE"></span><span id="controls::controller_freq__double"></span><span class="target" id="namespacecontrols_1a28c91b35a9cbf121458f480fa891d882"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">controller_freq</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">10.</span></span><a class="headerlink" href="#_CPPv4N8controls15controller_freqE" title="Link to this definition"></a><br /></dt>
-<dd><p>Target number of controller steps per second, in Hz. </p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>1 controller step outputs 1 control action </p>
-</div>
+<dd><p>Target number of controller steps per second, in Hz. 1 controller step outputs 1 control action. </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -315,13 +312,13 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls11action_dimsE">
 <span id="_CPPv3N8controls11action_dimsE"></span><span id="_CPPv2N8controls11action_dimsE"></span><span id="controls::action_dims__uint8_t"></span><span class="target" id="namespacecontrols_1a17cfa62860105e4912d4344ada195a3e"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">action_dims</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">2</span></span><a class="headerlink" href="#_CPPv4N8controls11action_dimsE" title="Link to this definition"></a><br /></dt>
-<dd><p><span class="math notranslate nohighlight">\(q\)</span>, <a class="reference internal" href="types_hpp.html#namespacecontrols_1afbd56c7e6594de235040c70239a1df6c"><span class="std std-ref">Action</span></a></p>
+<dd><p><span class="math notranslate nohighlight">\(q\)</span>, dimensions of <a class="reference internal" href="types_hpp.html#namespacecontrols_1afbd56c7e6594de235040c70239a1df6c"><span class="std std-ref">Action</span></a></p>
 </dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls10state_dimsE">
 <span id="_CPPv3N8controls10state_dimsE"></span><span id="_CPPv2N8controls10state_dimsE"></span><span id="controls::state_dims__uint8_t"></span><span class="target" id="namespacecontrols_1ab8aa87bc4d8eeef3986c916d312c66b4"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">state_dims</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">4</span></span><a class="headerlink" href="#_CPPv4N8controls10state_dimsE" title="Link to this definition"></a><br /></dt>
-<dd><p><span class="math notranslate nohighlight">\(p\)</span>, <a class="reference internal" href="types_hpp.html#namespacecontrols_1afabbf31cdb1e3511c4bc8bb82ef2a9d0"><span class="std std-ref">State</span></a></p>
+<dd><p><span class="math notranslate nohighlight">\(p\)</span>, dimensions of <a class="reference internal" href="types_hpp.html#namespacecontrols_1afabbf31cdb1e3511c4bc8bb82ef2a9d0"><span class="std std-ref">State</span></a></p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -375,8 +372,8 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls18out_of_bounds_costE">
 <span id="_CPPv3N8controls18out_of_bounds_costE"></span><span id="_CPPv2N8controls18out_of_bounds_costE"></span><span id="controls::out_of_bounds_cost__float"></span><span class="target" id="namespacecontrols_1ab81d5f096fbaec67df23c7ca4830678a"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">out_of_bounds_cost</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">100.0f</span></span><a class="headerlink" href="#_CPPv4N8controls18out_of_bounds_costE" title="Link to this definition"></a><br /></dt>
-<dd><p>Cost for being out of (fake) track bounds, TODO: use real bounds. </p>
-<p>Reason for not using infinity: reduction uses log of the cost (trading precision for representable range) Edge case: if every trajectory goes out of bounds (comparing to itself) </p>
+<dd><p>Cost for being out of (fake) track bound as defined by <a class="reference internal" href="#namespacecontrols_1a72557a640c20ae91b95411b2bff5c969"><span class="std std-ref">track_width</span></a>. </p>
+<p>Reason for not using infinity: reduction uses log of the cost (trading precision for representable range). This covers the edge case where every trajectory goes out of bounds, allowing us to still extract useful information. </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -397,12 +394,13 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls11track_widthE">
 <span id="_CPPv3N8controls11track_widthE"></span><span id="_CPPv2N8controls11track_widthE"></span><span id="controls::track_width__float"></span><span class="target" id="namespacecontrols_1a72557a640c20ae91b95411b2bff5c969"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">track_width</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">30.0f</span></span><a class="headerlink" href="#_CPPv4N8controls11track_widthE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Not real track width, used for curvilinear frame lookup table generation. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls11car_paddingE">
 <span id="_CPPv3N8controls11car_paddingE"></span><span id="_CPPv2N8controls11car_paddingE"></span><span id="controls::car_padding__float"></span><span class="target" id="namespacecontrols_1a69a677dd5bce9fdc344030c1ff273914"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">car_padding</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">max</span></span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv4N8controls23spline_frame_separationE" title="controls::spline_frame_separation"><span class="n"><span class="pre">spline_frame_separation</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">M_SQRT2f32</span></span><span class="w"> </span><span class="o"><span class="pre">*</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls11track_widthE" title="controls::track_width"><span class="n"><span class="pre">track_width</span></span></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N8controls11car_paddingE" title="Link to this definition"></a><br /></dt>
-<dd><p>mppi simulates a lot of shitty trajectories (naive brownian guess) </p>
+<dd><p>Represents space the car occupies, used to calculate the size of the curvilinear lookup table. </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -424,11 +422,6 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls10cg_to_noseE">
 <span id="_CPPv3N8controls10cg_to_noseE"></span><span id="_CPPv2N8controls10cg_to_noseE"></span><span id="controls::cg_to_nose__float"></span><span class="target" id="namespacecontrols_1a2e5c8f8a5d913ca9fd62abffc5f6b072"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cg_to_nose</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1.5f</span></span><a class="headerlink" href="#_CPPv4N8controls10cg_to_noseE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls8whl_baseE">
-<span id="_CPPv3N8controls8whl_baseE"></span><span id="_CPPv2N8controls8whl_baseE"></span><span id="controls::whl_base__float"></span><span class="target" id="namespacecontrols_1a1480b8f9c1de0e07e61fa7371d359efb"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">whl_base</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">2.0f</span></span><a class="headerlink" href="#_CPPv4N8controls8whl_baseE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
@@ -456,6 +449,7 @@
 <dt class="sig sig-object cpp" id="_CPPv4N8controls24long_tractive_capabilityE">
 <span id="_CPPv3N8controls24long_tractive_capabilityE"></span><span id="_CPPv2N8controls24long_tractive_capabilityE"></span><span id="controls::long_tractive_capability__float"></span><span class="target" id="namespacecontrols_1ab3cd984aec3e6d9f7e5b44944e157dcb"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">long_tractive_capability</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">2.0f</span></span><a class="headerlink" href="#_CPPv4N8controls24long_tractive_capabilityE" title="Link to this definition"></a><br /></dt>
 <dd><p>Maximum forward acceleration in m/s^2. Can be an imposed limit or the actual physics limitation. </p>
+<p>Total drag forces on the car (rolling friction + air drag) in N </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -467,7 +461,9 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls16understeer_slopeE">
 <span id="_CPPv3N8controls16understeer_slopeE"></span><span id="_CPPv2N8controls16understeer_slopeE"></span><span id="controls::understeer_slope__float"></span><span class="target" id="namespacecontrols_1a3cc65f6a5870dd12a013c6f7dfe048ef"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">understeer_slope</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><a class="headerlink" href="#_CPPv4N8controls16understeer_slopeE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>How much car understeers as speed increases. See. </p>
+<p><span> <a class="reference internal" href="../../explainers/slipless_model.html"><span class="doc">Model Overview</span></a> </span>. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls18brake_enable_speedE">
@@ -483,7 +479,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls24approx_propogation_delayE">
 <span id="_CPPv3N8controls24approx_propogation_delayE"></span><span id="_CPPv2N8controls24approx_propogation_delayE"></span><span id="controls::approx_propogation_delay__float"></span><span class="target" id="namespacecontrols_1a0c87e7663527f8f4c647d280d82101ab"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">approx_propogation_delay</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.02f</span></span><a class="headerlink" href="#_CPPv4N8controls24approx_propogation_delayE" title="Link to this definition"></a><br /></dt>
-<dd><p>Time from MPPI control action request to physical change, in sec TODO: Re-estimate since Falcon (steering motor) replacement </p>
+<dd><p>Time from MPPI control action request to physical change, in sec. </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -542,8 +538,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cuda_utils_cuh.html" class="btn btn-neutral float-left" title="File cuda_utils.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cuda_constants_cuh.html" class="btn btn-neutral float-right" title="File cuda_constants.cuh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="slipless_model.html" class="btn btn-neutral float-left" title="File model.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="types_hpp.html" class="btn btn-neutral float-right" title="File types.hpp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

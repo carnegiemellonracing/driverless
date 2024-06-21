@@ -1,4 +1,0 @@
-Class controls::mppi::MppiController
-====================================
-
-.. doxygenclass:: controls::mppi::MppiController

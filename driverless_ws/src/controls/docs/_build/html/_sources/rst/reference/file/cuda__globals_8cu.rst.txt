@@ -1,4 +1,0 @@
-File cuda_globals.cu
-====================
-
-.. doxygenfile:: cuda_globals.cu

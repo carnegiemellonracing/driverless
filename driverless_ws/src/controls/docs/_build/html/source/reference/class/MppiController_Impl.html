@@ -47,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MppiController.html">Class mppi::MppiController</a></li>
@@ -66,6 +67,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls4mppi19MppiController_Impl13m_last_actionE"><code class="docutils literal notranslate"><span class="pre">MppiController_Impl::m_last_action</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls4mppi19MppiController_Impl5m_rngE"><code class="docutils literal notranslate"><span class="pre">MppiController_Impl::m_rng</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls4mppi19MppiController_Impl8m_loggerE"><code class="docutils literal notranslate"><span class="pre">MppiController_Impl::m_logger</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls4mppi19MppiController_Impl7m_mutexE"><code class="docutils literal notranslate"><span class="pre">MppiController_Impl::m_mutex</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -73,18 +75,19 @@
 <li class="toctree-l2"><a class="reference internal" href="StateEstimator.html">Class state::StateEstimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/slipless_model.html">File model.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/types_hpp.html">File types.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/types_cuh.html">File types.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../file/functors_cuh.html">File functors.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../file/constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/helpers_cuh.html">File helpers.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -116,7 +119,7 @@
 <h1>Class mppi::MppiController_Impl<a class="headerlink" href="#class-mppi-mppicontroller-impl" title="Link to this heading"></a></h1>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi19MppiController_ImplE">
-<span id="_CPPv3N8controls4mppi19MppiController_ImplE"></span><span id="_CPPv2N8controls4mppi19MppiController_ImplE"></span><span id="controls::mppi::MppiController_Impl"></span><span class="target" id="classcontrols_1_1mppi_1_1MppiController__Impl"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MppiController_Impl</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="../file/constants_hpp.html#_CPPv48controls" title="controls"><span class="n"><span class="pre">controls</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="../file/types_cuh.html#_CPPv4N8controls4mppiE" title="controls::mppi"><span class="n"><span class="pre">mppi</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="MppiController.html#_CPPv4N8controls4mppi14MppiControllerE" title="controls::mppi::MppiController"><span class="n"><span class="pre">MppiController</span></span></a><a class="headerlink" href="#_CPPv4N8controls4mppi19MppiController_ImplE" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3N8controls4mppi19MppiController_ImplE"></span><span id="_CPPv2N8controls4mppi19MppiController_ImplE"></span><span id="controls::mppi::MppiController_Impl"></span><span class="target" id="classcontrols_1_1mppi_1_1MppiController__Impl"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MppiController_Impl</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="../file/constants_hpp.html#_CPPv48controls" title="controls"><span class="n"><span class="pre">controls</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="../file/functors_cuh.html#_CPPv4N8controls4mppiE" title="controls::mppi"><span class="n"><span class="pre">mppi</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="MppiController.html#_CPPv4N8controls4mppi14MppiControllerE" title="controls::mppi::MppiController"><span class="n"><span class="pre">MppiController</span></span></a><a class="headerlink" href="#_CPPv4N8controls4mppi19MppiController_ImplE" title="Link to this definition"></a><br /></dt>
 <dd><div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -126,7 +129,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mutex</strong> – Mutex to lock when TODO: what is this for? </p></li>
+<li><p><strong>mutex</strong> – Mutex to prevent multiple simultaneous Thrust calls (generate_action and display) </p></li>
 <li><p><strong>logger</strong> – Logger function to log messages </p></li>
 </ul>
 </dd>
@@ -178,14 +181,7 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi19MppiController_Impl24m_last_action_trajectoryE">
 <span id="_CPPv3N8controls4mppi19MppiController_Impl24m_last_action_trajectoryE"></span><span id="_CPPv2N8controls4mppi19MppiController_Impl24m_last_action_trajectoryE"></span><span id="controls::mppi::MppiController_Impl::m_last_action_trajectory__thrust::device_vector:DeviceAction:"></span><span class="target" id="classcontrols_1_1mppi_1_1MppiController__Impl_1a9fe1c209de0dd2cd1ac14f2caba9ab9a"></span><span class="n"><span class="pre">thrust</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">device_vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="../file/types_cuh.html#_CPPv4N8controls4mppi12DeviceActionE" title="controls::mppi::DeviceAction"><span class="n"><span class="pre">DeviceAction</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_last_action_trajectory</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi19MppiController_Impl24m_last_action_trajectoryE" title="Link to this definition"></a><br /></dt>
-<dd><div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>placing the member variables first to help with understanding what each member function interacts with. num_timesteps x action_dims device tensor. Best-guess action trajectory to which perturbations are added. </p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The only device tensor that is retained between each call to generate_action. </p>
-</div>
+<dd><p>num_timesteps x action_dims device tensor. Best-guess action trajectory to which perturbations are added. The only device tensor that is retained between each call to generate_action. </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -228,6 +224,12 @@
 <dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi19MppiController_Impl8m_loggerE">
 <span id="_CPPv3N8controls4mppi19MppiController_Impl8m_loggerE"></span><span id="_CPPv2N8controls4mppi19MppiController_Impl8m_loggerE"></span><span id="controls::mppi::MppiController_Impl::m_logger__LoggerFunc"></span><span class="target" id="classcontrols_1_1mppi_1_1MppiController__Impl_1a37bbeafbb7c5a601ddde68466a59e120"></span><a class="reference internal" href="../file/types_hpp.html#_CPPv4N8controls10LoggerFuncE" title="controls::LoggerFunc"><span class="n"><span class="pre">LoggerFunc</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_logger</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi19MppiController_Impl8m_loggerE" title="Link to this definition"></a><br /></dt>
 <dd><p>Logger for debugging. Can be attached to ROS or echo to std::cerr. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls4mppi19MppiController_Impl7m_mutexE">
+<span id="_CPPv3N8controls4mppi19MppiController_Impl7m_mutexE"></span><span id="_CPPv2N8controls4mppi19MppiController_Impl7m_mutexE"></span><span id="controls::mppi::MppiController_Impl::m_mutex__std::mutexR"></span><span class="target" id="classcontrols_1_1mppi_1_1MppiController__Impl_1a9971d47a963bc8cb5a5c339f653efbce"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mutex</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_mutex</span></span></span><a class="headerlink" href="#_CPPv4N8controls4mppi19MppiController_Impl7m_mutexE" title="Link to this definition"></a><br /></dt>
+<dd><p>Mutex to prevent multiple simultaneous Thrust calls (generate_action and display) </p>
 </dd></dl>
 
 </div>

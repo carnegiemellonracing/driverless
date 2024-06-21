@@ -1,4 +1,0 @@
-Namespace controls::state
-=========================
-
-.. doxygennamespace:: controls::state

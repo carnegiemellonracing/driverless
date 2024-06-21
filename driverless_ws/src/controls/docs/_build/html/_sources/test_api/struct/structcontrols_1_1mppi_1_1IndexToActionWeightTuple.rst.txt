@@ -1,4 +1,0 @@
-Struct controls::mppi::IndexToActionWeightTuple
-===============================================
-
-.. doxygenstruct:: controls::mppi::IndexToActionWeightTuple

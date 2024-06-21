@@ -21,7 +21,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="File constants.hpp" href="constants_hpp.html" />
+    <link rel="next" title="File cuda_constants.cuh" href="cuda_constants_cuh.html" />
     <link rel="prev" title="File cuda_globals.cuh" href="cuda_globals_cuh.html" /> 
 </head>
 
@@ -47,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../class/ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/MppiController.html">Class mppi::MppiController</a></li>
@@ -54,9 +55,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator.html">Class state::StateEstimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slipless_model.html">File model.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">File cuda_utils.cuh</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a><ul>
@@ -70,13 +73,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="helpers_cuh.html">File helpers.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -141,7 +143,8 @@
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.paranoid_assert">
 <span class="target" id="cuda__utils_8cuh_1ad2e4d853af1fd2da23a1ab8814490572"></span><span class="sig-name descname"><span class="n"><span class="pre">paranoid_assert</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">x</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.paranoid_assert" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Asserts whether x is true if the PARANOID compiler flag is set (-P) </p>
+</dd></dl>
 
 </div>
 <dl class="cpp type">
@@ -152,47 +155,56 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls20curandGetErrorStringE14curandStatus_t">
 <span id="_CPPv3N8controls20curandGetErrorStringE14curandStatus_t"></span><span id="_CPPv2N8controls20curandGetErrorStringE14curandStatus_t"></span><span id="controls::curandGetErrorString__curandStatus_t"></span><span class="target" id="namespacecontrols_1abe7f6204596d06cad4c3a6e27050116e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">curandGetErrorString</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">curandStatus_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls20curandGetErrorStringE14curandStatus_t" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Converts an opaque error into a human-readable string. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls11cuda_assertE11cudaError_tPKcib">
 <span id="_CPPv3N8controls11cuda_assertE11cudaError_tPKcib"></span><span id="_CPPv2N8controls11cuda_assertE11cudaError_tPKcib"></span><span id="controls::cuda_assert__cudaError_t.cCP.i.b"></span><span class="target" id="namespacecontrols_1aa890a8b85e7a30c59997b9daa2b2c878"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cuda_assert</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">cudaError_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">code</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">file</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">line</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">abort</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls11cuda_assertE11cudaError_tPKcib" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Checks for CUDA errors and prints them to stderr. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls13curand_assertE14curandStatus_tPKcib">
 <span id="_CPPv3N8controls13curand_assertE14curandStatus_tPKcib"></span><span id="_CPPv2N8controls13curand_assertE14curandStatus_tPKcib"></span><span id="controls::curand_assert__curandStatus_t.cCP.i.b"></span><span class="target" id="namespacecontrols_1a079ab2c2719467221b60698662014e2c"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">curand_assert</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">curandStatus_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">code</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">file</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">line</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">abort</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls13curand_assertE14curandStatus_tPKcib" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Checks for CURAND errors and prints them to stderr. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
 <span class="target" id="namespacecontrols_1adcd46b190261432611bc5bb654def032"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">__host__</span> <span class="pre">__device__</span> <span class="pre">bool</span> <span class="pre">any_nan</span> <span class="pre">(const</span> <span class="pre">float</span> <span class="pre">*vec,</span> <span class="pre">size_t</span> <span class="pre">n)</span></span></dt>
-<dd></dd></dl>
+<dd><p>Checks for NaN values inside the input vector. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
 <span class="target" id="namespacecontrols_1a6f9fcfc02deae449e300926d6f84b80a"></span><span class="sig-name descname"><span class="pre">template&lt;typename</span> <span class="pre">T&gt;</span> <span class="pre">__host__</span> <span class="pre">__device__</span> <span class="pre">T</span> <span class="pre">dot</span> <span class="pre">(const</span> <span class="pre">T</span> <span class="pre">*a,</span> <span class="pre">const</span> <span class="pre">T</span> <span class="pre">*b,</span> <span class="pre">size_t</span> <span class="pre">n)</span></span></dt>
-<dd></dd></dl>
+<dd><p>Arbitrary dot product function. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I0EN8controls12print_tensorEv1T4dim3">
 <span id="_CPPv3I0EN8controls12print_tensorE1T4dim3"></span><span id="_CPPv2I0EN8controls12print_tensorE1T4dim3"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="namespacecontrols_1a521612c6852ae481e5253c116962956e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print_tensor</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN8controls12print_tensorEv1T4dim3" title="controls::print_tensor::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">tensor</span></span>, <span class="n"><span class="pre">dim3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dims</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN8controls12print_tensorEv1T4dim3" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Pretty printing function for a 3D tensor. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
 <span class="target" id="namespacecontrols_1af1d4c7001c61dbd24d89ce752c437e9d"></span><span class="sig-name descname"><span class="pre">static</span> <span class="pre">__device__</span> <span class="pre">void</span> <span class="pre">printf_vector</span> <span class="pre">(const</span> <span class="pre">float</span> <span class="pre">vec[],</span> <span class="pre">size_t</span> <span class="pre">n)</span></span></dt>
-<dd></dd></dl>
+<dd><p>Pretty printing function for a 1D vector. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
 <span class="target" id="namespacecontrols_1a3b98082c482bb8ff78f0333b6e32abfa"></span><span class="sig-name descname"><span class="pre">template&lt;typename</span> <span class="pre">T&gt;</span> <span class="pre">static</span> <span class="pre">__host__</span> <span class="pre">__device__</span> <span class="pre">T</span> <span class="pre">clamp</span> <span class="pre">(T</span> <span class="pre">n,</span> <span class="pre">T</span> <span class="pre">low,</span> <span class="pre">T</span> <span class="pre">high)</span></span></dt>
-<dd></dd></dl>
+<dd><p>Forces a value to be within a certain range. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls7radiansEf">
 <span id="_CPPv3N8controls7radiansEf"></span><span id="_CPPv2N8controls7radiansEf"></span><span id="controls::radians__floatCE"></span><span class="target" id="namespacecontrols_1a1c26bcd7a64df2b0e33ca013c82eb590"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">radians</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">degrees</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls7radiansEf" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Converts degrees to radians. </p>
+</dd></dl>
 
 </div>
 <dl class="cpp struct">
@@ -204,13 +216,13 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls12cudaTensor3D11pitched_ptrE">
 <span id="_CPPv3N8controls12cudaTensor3D11pitched_ptrE"></span><span id="_CPPv2N8controls12cudaTensor3D11pitched_ptrE"></span><span id="controls::cudaTensor3D::pitched_ptr__cudaPitchedPtr"></span><span class="target" id="structcontrols_1_1cudaTensor3D_1ab63a19002e9d68e78077741f88b0585f"></span><span class="n"><span class="pre">cudaPitchedPtr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pitched_ptr</span></span></span><a class="headerlink" href="#_CPPv4N8controls12cudaTensor3D11pitched_ptrE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Pointer to the data */. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls12cudaTensor3D6extentE">
 <span id="_CPPv3N8controls12cudaTensor3D6extentE"></span><span id="_CPPv2N8controls12cudaTensor3D6extentE"></span><span id="controls::cudaTensor3D::extent__cudaExtent"></span><span class="target" id="structcontrols_1_1cudaTensor3D_1ab14ef2dbc066795dbddd3b59e53b7597"></span><span class="n"><span class="pre">cudaExtent</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">extent</span></span></span><a class="headerlink" href="#_CPPv4N8controls12cudaTensor3D6extentE" title="Link to this definition"></a><br /></dt>
-<dd><p>Extent in bytes. </p>
-</dd></dl>
+<dd></dd></dl>
 
 </div>
 </dd></dl>
@@ -224,7 +236,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="cuda_globals_cuh.html" class="btn btn-neutral float-left" title="File cuda_globals.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="constants_hpp.html" class="btn btn-neutral float-right" title="File constants.hpp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="cuda_constants_cuh.html" class="btn btn-neutral float-right" title="File cuda_constants.cuh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

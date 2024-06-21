@@ -1,4 +1,0 @@
-Struct controls::state::StateProjector::Record
-==============================================
-
-.. doxygenstruct:: controls::state::StateProjector::Record

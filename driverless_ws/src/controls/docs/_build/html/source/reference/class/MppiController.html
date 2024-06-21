@@ -47,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Class mppi::MppiController</a><ul>
@@ -60,18 +61,19 @@
 <li class="toctree-l2"><a class="reference internal" href="StateEstimator.html">Class state::StateEstimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/slipless_model.html">File model.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/types_hpp.html">File types.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/types_cuh.html">File types.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../file/functors_cuh.html">File functors.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../file/constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/helpers_cuh.html">File helpers.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../file/gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -112,6 +114,7 @@
 </ul>
 </p>
 <p>it calculates the optimal control action to minimize a cost function.</p>
+<p>Implementation is in <a class="reference internal" href="MppiController_Impl.html#classcontrols_1_1mppi_1_1MppiController__Impl"><span class="std std-ref">MppiController_Impl</span></a>.</p>
 <p>Refer to the<span> <a class="reference internal" href="../../explainers/mppi_algorithm.html"><span class="doc">explainer</span></a> </span> for a more detailed overview. </p>
 <p>Subclassed by <a class="reference internal" href="MppiController_Impl.html#classcontrols_1_1mppi_1_1MppiController__Impl"><span class="std std-ref">controls::mppi::MppiController_Impl</span></a></p>
 <div class="breathe-sectiondef docutils container">
@@ -123,8 +126,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mutex</strong> – <strong>[in]</strong> Reference to the mutex that mppi will use TODO: who else uses it? no idea </p></li>
-<li><p><strong>logger</strong> – <strong>[in]</strong> Function object of logger (string to void) TODO: is function object correct? </p></li>
+<li><p><strong>mutex</strong> – <strong>[in]</strong> Reference to the mutex that mppi will use </p></li>
+<li><p><strong>logger</strong> – <strong>[in]</strong> Function object of logger (string to void) </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

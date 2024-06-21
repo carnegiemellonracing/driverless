@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="File helpers.cuh" href="helpers_cuh.html" />
-    <link rel="prev" title="File constants.hpp" href="constants_hpp.html" /> 
+    <link rel="prev" title="File cuda_utils.cuh" href="cuda_utils_cuh.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,6 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../class/ControllerNode.html">Class ControllerNode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/MppiController.html">Class mppi::MppiController</a></li>
@@ -54,17 +55,17 @@
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator.html">Class state::StateEstimator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../class/StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slipless_model.html">File model.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
 <li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">File cuda_constants.cuh</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls8rng_typeE"><code class="docutils literal notranslate"><span class="pre">controls::rng_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls24action_trajectories_dimsE"><code class="docutils literal notranslate"><span class="pre">controls::action_trajectories_dims</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls24max_spline_texture_elemsE"><code class="docutils literal notranslate"><span class="pre">controls::max_spline_texture_elems</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -73,7 +74,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gl_utils_hpp.html">File gl_utils.hpp</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
 </ul>
 
         </div>
@@ -125,13 +126,8 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8controls24action_trajectories_dimsE">
 <span id="_CPPv3N8controls24action_trajectories_dimsE"></span><span id="_CPPv2N8controls24action_trajectories_dimsE"></span><span id="controls::action_trajectories_dims__dim3"></span><span class="target" id="namespacecontrols_1a7326a805f22ac4ead0d8536724719322"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">dim3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">action_trajectories_dims</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="constants_hpp.html#_CPPv4N8controls11num_samplesE" title="controls::num_samples"><span class="n"><span class="pre">num_samples</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="constants_hpp.html#_CPPv4N8controls13num_timestepsE" title="controls::num_timesteps"><span class="n"><span class="pre">num_timesteps</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="constants_hpp.html#_CPPv4N8controls11action_dimsE" title="controls::action_dims"><span class="n"><span class="pre">action_dims</span></span></a><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N8controls24action_trajectories_dimsE" title="Link to this definition"></a><br /></dt>
-<dd><p>outermost to innermost dimensions </p>
+<dd><p>Dimensions of MPPI’s <code class="docutils literal notranslate"><span class="pre">m_action_trajectories</span></code>, outermost to innermost dimensions. </p>
 </dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8controls24max_spline_texture_elemsE">
-<span id="_CPPv3N8controls24max_spline_texture_elemsE"></span><span id="_CPPv2N8controls24max_spline_texture_elemsE"></span><span id="controls::max_spline_texture_elems__s"></span><span class="target" id="namespacecontrols_1a6f723e8c491748db76d5e694b254eb4d"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">max_spline_texture_elems</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1ULL</span></span><span class="w"> </span><span class="o"><span class="pre">&lt;&lt;</span></span><span class="w"> </span><span class="m"><span class="pre">12</span></span><a class="headerlink" href="#_CPPv4N8controls24max_spline_texture_elemsE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
 
 </div>
 </dd></dl>
@@ -142,7 +138,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="constants_hpp.html" class="btn btn-neutral float-left" title="File constants.hpp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cuda_utils_cuh.html" class="btn btn-neutral float-left" title="File cuda_utils.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="helpers_cuh.html" class="btn btn-neutral float-right" title="File helpers.cuh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
