@@ -35,7 +35,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 breathe_projects = {"driverless_controls": "doxyxml/"}
 breathe_default_project = "driverless_controls"
-breathe_default_members = ('members', 'protected-members', 'private-members', 'undoc-members')
+breathe_default_members = ('members', 'protected-members', 'private-members', 'undoc_members')
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

@@ -24,9 +24,10 @@ Controls is one element of our software stack, the others being `Perceptions`_, 
 We recommend heading to :doc:`Overview <source/explainers/overview>` for a top-down deep dive into how the controller works.
 You can stop at any level of abstraction you prefer. While we only assume basic programming knowledge, feel free to read more into the software
 that the controller depends on, namely `C++`_, `ROS2 Humble`_, `CUDA`_, and `Thrust`_.
+We also provide a cheat sheet of common :doc:`Terminology </source/explainers/terminology>`.
 
 If you're part of the team, looking to contribute or learn more about implementation details, check out :doc:`File Structure <source/explainers/file_structure>`
-to understand how the codebase in ``driverless/driverless_ws/src/controls`` is laid out.
+to understand how the codebase in ``driverless/driverless_ws/src/controls`` is laid out, then refer to the :doc:`API Reference <source/reference/api_reference>`
 
 Have fun and enjoy the ride!
 
@@ -34,12 +35,8 @@ Have fun and enjoy the ride!
    :maxdepth: 2
    :caption: Contents:
 
-   source/explainers/terminology
    source/explainers/overview
-   source/explainers/file_structure
    source/reference/api_reference
-   source/reference/classlist
-   source/reference/filelist
    source/explainerslist.rst
 
 

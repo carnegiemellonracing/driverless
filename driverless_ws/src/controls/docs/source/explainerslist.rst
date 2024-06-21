@@ -1,8 +1,12 @@
-Explainers list
+Explainers
 ===============
 
 .. toctree::
-   :glob:
 
-   explainers/*
+   explainers/controller
+   explainers/state_estimation
+   explainers/mppi_algorithm
+   explainers/slipless_model
+   explainers/terminology
+   explainers/file_structure
 

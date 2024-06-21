@@ -22,7 +22,7 @@ We use the following terms to describe the MPPI algorithm:
 * State: The state of the vehicle. We define this to be x, y, yaw and speed.
 * Control Action: The control action to be executed by the vehicle. We define this to be steering wheel angle and wheel throttle.
 * Action Trajectory: An array of control actions, representing a temporal sequence of control actions to be executed every ``controller_period``.
-* Dynamics Model: A model that predicts the derivative of state with respect to time, given the current state and control action.
+* Dynamics Model: A model that future state after a given time, given the current state and control action.
 * Cost Function: A function that evaluates the quality of a given state. The goal is to minimize this function.
 * Cost-to-go: The total cost of being in a given state and all the states that follow it.
 * Controller Period: The time interval between control actions.
@@ -36,7 +36,8 @@ Execute these in a continuous loop:
 2. Perturb the previous "best" action trajectory with Brownian noise repeatedly to generate ``num_samples`` action trajectories.
 3. For every sample, do state rollouts. Repeatedly apply the dynamics model to the state and perturbed control action to generate a sequence of states.
 4. For every sample, evaluate the cost-to-go for every state in the sequence.
-5. For every time step, compute the weighted average of the perturbed control actions over all the samples, based on the associated cost-to-go and the likelihood of the perturbation (see Importance Sampling). This is the optimal action trajectory.
+5. For every time step, compute the weighted average of the perturbed control actions over all the samples, based on the associated cost-to-go and the likelihood of the perturbation (see :ref:`importance_sampling`). This is the optimal action trajectory.
+
 6. Execute the first control action in the optimal action trajectory, then store the rest of the trajectory for the next iteration of MPPI.
 
 For a more technical specification, see `here <../../_static/mppi.pdf>`_.
@@ -69,6 +70,21 @@ MPPI is implemented in ``generate_action()`` of ``controls/src/mppi/mppi.cu``, a
 .. image:: /images/mppi.*
     :width: 100%
     :align: center
+
+.. _importance_sampling:
+
+Importance Sampling
+-------------------
+
+The MPPI algorithm uses importance sampling to calculate weights for each control action.
+
+The weight for a control action :math:`u` is given by :math:`e^{-\frac{1}{\lambda}J - D}` where :math:`J` is the associated
+cost-to-go, and :math:`D` is the natural log of the probability density of the associated sampled perturbation, where the
+probability distribution is the multivariate normal distribution. The parameter :math:`\lambda` is a temperature parameter
+that can be tuned to balance model convergence and noise.
+
+Multiplying by the exponent of the negative log is equivalent to dividing by the probability density. More unlikely samples
+are given higher weight, since they explore the search space more.
 
 .. _hofs:
 
