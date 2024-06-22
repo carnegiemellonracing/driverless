@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'driverless_controls'
+project = 'CMR Driverless Controls'
 copyright = '2024, Anthony Yip'
 author = 'Anthony Yip'
 release = '1.0'
@@ -33,8 +33,8 @@ extensions = ['breathe']
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-breathe_projects = {"driverless_controls": "doxyxml/"}
-breathe_default_project = "driverless_controls"
+breathe_projects = {"CMR Driverless Controls": "doxyxml/"}
+breathe_default_project = "CMR Driverless Controls"
 breathe_default_members = ('members', 'protected-members', 'private-members', 'undoc_members')
 
 # -- Options for HTML output -------------------------------------------------
