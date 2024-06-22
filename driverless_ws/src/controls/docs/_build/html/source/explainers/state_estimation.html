@@ -60,6 +60,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#id2">Algorithm</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="mppi_algorithm.html">MPPI Algorithm Overview</a></li>
@@ -167,6 +168,12 @@ While CUDA has access to texture memory, OpenGL can create textures very quickly
 <h3>Algorithm<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <img alt="../../_images/spline1.png" src="../../_images/spline1.png" />
 <p>Given a sequence of (x, y) spline points from path planning,</p>
+<figure class="align-default" id="id3">
+<img alt="../../_images/spline2.png" src="../../_images/spline2.png" />
+<figcaption>
+<p><span class="caption-text">The colors here are for illustrative purposes only. The actual colors are calculated as described below.</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 <p>Create “fake boundary points” around the spline based on a predetermined track width. This track width is a large
 overestimate, so that we can still get meaningful cost data from trajectories that go out-of-bounds. These fake
 points together with the spline points are our vertices. Assign them a color using:
@@ -185,9 +192,11 @@ Besides x, y, and color, each vertex also initially gets a depth equal to the di
 This helps to break ties automatically.</p>
 <p>Finally, we create a CUDA texture object to point to the rendered lookup table sitting in texture memory. This
 texture object is then synced to CUDA global memory, which is used by the controller to look up curvilinear state during
-cost calculation.
-Implementation
-————–</p>
+cost calculation.</p>
+</section>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
 <p>The controller node owns an outward facing <code class="docutils literal notranslate"><span class="pre">state::stateEstimator</span></code>, which has callbacks <code class="docutils literal notranslate"><span class="pre">on_spline()</span></code> and <code class="docutils literal notranslate"><span class="pre">on_twist()</span></code>
 in response to ROS messages, <code class="docutils literal notranslate"><span class="pre">record_control_action()</span></code> to record control actions taken, and <code class="docutils literal notranslate"><span class="pre">sync_to_device()</span></code> to
 execute the above 2 algorithms and sync the results to the GPU for MPPI. This is defined in <code class="docutils literal notranslate"><span class="pre">controls/src/state/state_estimator.hpp</span></code>.</p>
@@ -205,7 +214,6 @@ provides member functions for the controller node to call, but in reality is an 
 in <code class="docutils literal notranslate"><span class="pre">m_history_since_pose</span></code> and a member function <code class="docutils literal notranslate"><span class="pre">project()</span></code> that executes the algorithm above.</p>
 <p>The lookup table is generated directly in the <code class="docutils literal notranslate"><span class="pre">sync_to_device()</span></code> member function of <code class="docutils literal notranslate"><span class="pre">StateEstimator_Impl</span></code>.</p>
 <p>All code is in <code class="docutils literal notranslate"><span class="pre">controls/src/state/state_estimator.cu</span></code>.</p>
-</section>
 </section>
 </section>
 

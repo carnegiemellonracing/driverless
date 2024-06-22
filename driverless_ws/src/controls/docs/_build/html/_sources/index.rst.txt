@@ -4,7 +4,8 @@
    contain the root `toctree` directive.
 .. todo fill out links to other documentation
 
-.. _Perceptions: https://carnegiemellonracing.github.io/PerceptionsLibrary22a
+.. _Perceptions: https://cmr.red/perceptions-docs
+.. _Path Planning: https://cmr.red/planning-docs
 .. _C++: https://cplusplus.com/doc/tutorial/
 .. _ROS2 Humble: https://docs.ros.org/en/humble/index.html
 .. _CUDA: https://docs.nvidia.com/cuda/
@@ -19,7 +20,7 @@ Carnegie Mellon Racing is a premier student organization at Carnegie Mellon Univ
 As part of our efforts to support other FSAE teams as they embark on their driverless journeys,
 we have open-sourced our workspace at our `GitHub <https://github.com/carnegiemellonracing/driverless>`_ and documented them here.
 
-Controls is one element of our software stack, the others being `Perceptions`_, Path Planning and Software Architecture.
+Controls is one element of our software stack, coming in after `Perceptions`_ and `Path Planning`_.
 
 We recommend heading to :doc:`Overview <source/explainers/overview>` for a top-down deep dive into how the controller works.
 You can stop at any level of abstraction you prefer. While we only assume basic programming knowledge, feel free to read more into the software
@@ -42,9 +43,3 @@ Have fun and enjoy the ride!
    source/reference/api_reference
    source/explainers/terminology
 
-============
-Sponsors
-============
-None of this would have been possible without our amazing sponsors!
-
-.. image:: images/sponsors.*
