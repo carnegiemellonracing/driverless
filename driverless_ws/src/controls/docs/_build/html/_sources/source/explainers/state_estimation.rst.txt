@@ -89,7 +89,7 @@ Algorithm
 
 Given a sequence of (x, y) spline points from path planning,
 
-.. image:: /images/spline_frame_lookup/spline2.*
+.. figure:: /images/spline_frame_lookup/spline2.*
 
     The colors here are for illustrative purposes only. The actual colors are calculated as described below.
 
@@ -117,6 +117,7 @@ This helps to break ties automatically.
 Finally, we create a CUDA texture object to point to the rendered lookup table sitting in texture memory. This
 texture object is then synced to CUDA global memory, which is used by the controller to look up curvilinear state during
 cost calculation.
+
 Implementation
 --------------
 
