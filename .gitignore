@@ -1,7 +1,8 @@
 *
 
 !.gitignore
-!**/_build/
-!**/_build/**
+!driverless_ws/src/controls/docs/_build/*
+!driverless_ws/src/controls/docs/_build/**
+
 
 

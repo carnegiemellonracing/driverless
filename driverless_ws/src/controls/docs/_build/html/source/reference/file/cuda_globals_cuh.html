@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File cuda_globals.cuh &mdash; CMR Driverless Controls 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="File cuda_utils.cuh" href="cuda_utils_cuh.html" />
+    <link rel="prev" title="File types.cuh" href="types_cuh.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            CMR Driverless Controls
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../class/ControllerNode.html">Class ControllerNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/MppiController.html">Class mppi::MppiController</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/MppiController_Impl.html">Class mppi::MppiController_Impl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator.html">Class state::StateEstimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../class/StateProjector.html">Class state::StateProjector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slipless_model.html">File model.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants_hpp.html">File constants.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types_hpp.html">File types.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types_cuh.html">File types.cuh</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">File cuda_globals.cuh</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv48controls"><code class="docutils literal notranslate"><span class="pre">controls</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls12cuda_globalsE"><code class="docutils literal notranslate"><span class="pre">controls::cuda_globals</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers_cuh.html">File helpers.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gl_utils_hpp.html">File gl_utils.hpp</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CMR Driverless Controls</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api_reference.html">API Reference</a></li>
+      <li class="breadcrumb-item active">File cuda_globals.cuh</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/reference/file/cuda_globals_cuh.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-cuda-globals-cuh">
+<h1>File cuda_globals.cuh<a class="headerlink" href="#file-cuda-globals-cuh" title="Link to this heading"></a></h1>
+<p>
+Virtual because it should be called through its child (implementation) object rather than directly. </p>
+<dl class="field-list simple">
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The optimal action calculated by MPPI given sensor information</p>
+</dd>
+<dt class="field-even">return<span class="colon">:</span></dt>
+<dd class="field-even"><p>The optimal action calculated by MPPI given state and spline information. </p>
+</dd>
+</dl>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv48controls">
+<span id="_CPPv38controls"></span><span id="_CPPv28controls"></span><span id="controls"></span><span class="target" id="namespacecontrols"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">controls</span></span></span><br /></dt>
+<dd><dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls12cuda_globalsE">
+<span id="_CPPv3N8controls12cuda_globalsE"></span><span id="_CPPv2N8controls12cuda_globalsE"></span><span id="controls::cuda_globals"></span><span class="target" id="namespacecontrols_1_1cuda__globals"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cuda_globals</span></span></span><a class="headerlink" href="#_CPPv4N8controls12cuda_globalsE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-variables">Variables</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1cuda__globals_1a3695c0ce3bc37280f3efca5f6c80ebe6"></span><span class="sig-name descname"><span class="pre">__constant__</span> <span class="pre">cudaTextureObject_t</span> <span class="pre">curv_frame_lookup_tex</span></span></dt>
+<dd><p>this is a pointer to the CUDA texture </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1cuda__globals_1a4a2b17d08de991350239d4832a3df49a"></span><span class="sig-name descname"><span class="pre">__constant__</span> <span class="pre">CurvFrameLookupTexInfo</span> <span class="pre">curv_frame_lookup_tex_info</span></span></dt>
+<dd><p>before sampling into texture, need to apply the same transformation to world pose </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1cuda__globals_1a92cc6e0f82235d4364fe6a9b757b291d"></span><span class="sig-name descname"><span class="pre">__constant__</span> <span class="pre">float</span> <span class="pre">curr_state</span> <span class="pre">[state_dims]</span></span></dt>
+<dd><p>State information is stored here. Written to by state_estimator and read by mppi_controller. </p>
+<p><span class="math notranslate nohighlight">\(x_0\)</span></p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1cuda__globals_1a96c7bba58cf39dbd6207a4d8991125b7"></span><span class="sig-name descname"><span class="pre">__constant__</span> <span class="pre">const</span> <span class="pre">float</span> <span class="pre">perturbs_incr_std</span> <span class="pre">[action_dims</span> <span class="pre">*action_dims]</span></span></dt>
+<dd><p>Cholesky factor of covariance matrix (assuming swangle and throttle are uncorrelated) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1cuda__globals_1acdd906c3a1c0c9c98b2c7dcf36edf21c"></span><span class="sig-name descname"><span class="pre">__constant__</span> <span class="pre">const</span> <span class="pre">float</span> <span class="pre">perturbs_incr_var_inv</span> <span class="pre">[action_dims</span> <span class="pre">*action_dims]</span></span></dt>
+<dd><p>Inverse of covariance matrix. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1cuda__globals_1a7bc107dde926bfdf08de90b29685dc27"></span><span class="sig-name descname"><span class="pre">__constant__</span> <span class="pre">const</span> <span class="pre">float</span> <span class="pre">action_min</span> <span class="pre">[action_dims]</span></span></dt>
+<dd><p>Minimum control action request. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1cuda__globals_1a760e9b3dedb65a0ef867a9a5ce4d5273"></span><span class="sig-name descname"><span class="pre">__constant__</span> <span class="pre">const</span> <span class="pre">float</span> <span class="pre">action_max</span> <span class="pre">[action_dims]</span></span></dt>
+<dd><p>Maximum control action request. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1cuda__globals_1a212653f9de0984430ada2b461c99ff4c"></span><span class="sig-name descname"><span class="pre">__constant__</span> <span class="pre">const</span> <span class="pre">float</span> <span class="pre">action_deriv_min</span> <span class="pre">[action_dims]</span></span></dt>
+<dd><p>Minimum perturbation to control action. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="namespacecontrols_1_1cuda__globals_1ab340bb3595dbdabe438e9bd23a56a1a7"></span><span class="sig-name descname"><span class="pre">__constant__</span> <span class="pre">const</span> <span class="pre">float</span> <span class="pre">action_deriv_max</span> <span class="pre">[action_dims]</span></span></dt>
+<dd><p>Maximum perturbation to control action. </p>
+</dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls12cuda_globals22CurvFrameLookupTexInfoE">
+<span id="_CPPv3N8controls12cuda_globals22CurvFrameLookupTexInfoE"></span><span id="_CPPv2N8controls12cuda_globals22CurvFrameLookupTexInfoE"></span><span id="controls::cuda_globals::CurvFrameLookupTexInfo"></span><span class="target" id="structcontrols_1_1cuda__globals_1_1CurvFrameLookupTexInfo"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CurvFrameLookupTexInfo</span></span></span><a class="headerlink" href="#_CPPv4N8controls12cuda_globals22CurvFrameLookupTexInfoE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls12cuda_globals22CurvFrameLookupTexInfo7xcenterE">
+<span id="_CPPv3N8controls12cuda_globals22CurvFrameLookupTexInfo7xcenterE"></span><span id="_CPPv2N8controls12cuda_globals22CurvFrameLookupTexInfo7xcenterE"></span><span id="controls::cuda_globals::CurvFrameLookupTexInfo::xcenter__float"></span><span class="target" id="structcontrols_1_1cuda__globals_1_1CurvFrameLookupTexInfo_1a3a485d67e052dab75ad947e2f6182080"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">xcenter</span></span></span><a class="headerlink" href="#_CPPv4N8controls12cuda_globals22CurvFrameLookupTexInfo7xcenterE" title="Link to this definition"></a><br /></dt>
+<dd><p>x-coordinate of the center of the lookup texture </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls12cuda_globals22CurvFrameLookupTexInfo7ycenterE">
+<span id="_CPPv3N8controls12cuda_globals22CurvFrameLookupTexInfo7ycenterE"></span><span id="_CPPv2N8controls12cuda_globals22CurvFrameLookupTexInfo7ycenterE"></span><span id="controls::cuda_globals::CurvFrameLookupTexInfo::ycenter__float"></span><span class="target" id="structcontrols_1_1cuda__globals_1_1CurvFrameLookupTexInfo_1a4edbb0351ea017b2d9b61da2f09d6baa"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ycenter</span></span></span><a class="headerlink" href="#_CPPv4N8controls12cuda_globals22CurvFrameLookupTexInfo7ycenterE" title="Link to this definition"></a><br /></dt>
+<dd><p>y-coordinate of the center of the lookup texture </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls12cuda_globals22CurvFrameLookupTexInfo5widthE">
+<span id="_CPPv3N8controls12cuda_globals22CurvFrameLookupTexInfo5widthE"></span><span id="_CPPv2N8controls12cuda_globals22CurvFrameLookupTexInfo5widthE"></span><span id="controls::cuda_globals::CurvFrameLookupTexInfo::width__float"></span><span class="target" id="structcontrols_1_1cuda__globals_1_1CurvFrameLookupTexInfo_1ad939f142a7ed966a3a5bf74e563e1b2d"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">width</span></span></span><a class="headerlink" href="#_CPPv4N8controls12cuda_globals22CurvFrameLookupTexInfo5widthE" title="Link to this definition"></a><br /></dt>
+<dd><p>scale factor for lookup texture </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="types_cuh.html" class="btn btn-neutral float-left" title="File types.cuh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cuda_utils_cuh.html" class="btn btn-neutral float-right" title="File cuda_utils.cuh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Yip.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

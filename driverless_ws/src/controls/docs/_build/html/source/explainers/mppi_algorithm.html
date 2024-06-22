@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MPPI Algorithm Overview &mdash; CMR Driverless Controls 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Model Overview" href="slipless_model.html" />
+    <link rel="prev" title="State Estimation Overview" href="state_estimation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            CMR Driverless Controls
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../explainerslist.html">Explainers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_estimation.html">State Estimation Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MPPI Algorithm Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#technical-primer">Technical Primer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#algorithm">Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#importance-sampling">Importance Sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#higher-order-functions">Higher Order Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#alterations">Alterations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="slipless_model.html">Model Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html#namespaces">Namespaces</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">CMR Driverless Controls</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../explainerslist.html">Explainers</a></li>
+      <li class="breadcrumb-item active">MPPI Algorithm Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source/explainers/mppi_algorithm.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mppi-algorithm-overview">
+<h1>MPPI Algorithm Overview<a class="headerlink" href="#mppi-algorithm-overview" title="Link to this heading"></a></h1>
+<p>The MPPI (Model Predictive Path Integral) algorithm is a model predictive control algorithm that uses a stochastic optimization approach to find the
+optimal control action for a given task.</p>
+<p>Our algorithm is based off the paper <em>Model Predictive Path Integral Control using Covariance Variable Importance Sampling</em> by Williams et al.</p>
+<p>We highly recommend reading the <a class="reference internal" href="state_estimation.html"><span class="doc">State Estimation Overview</span></a> before proceeding.</p>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading"></a></h2>
+<p>Because our dynamics model is not differentiable and the task is non-convex, we cannot use gradient-based optimization
+methods. We chose MPPI on the recommendation of our advisor due to its speed and simplicity. Furthermore, MPPI is
+highly parallelizable since each sample can be computed independently, allowing us to exploit our onboard GPU.</p>
+</section>
+<section id="technical-primer">
+<h2>Technical Primer<a class="headerlink" href="#technical-primer" title="Link to this heading"></a></h2>
+<p>We use the following terms to describe the MPPI algorithm:</p>
+<ul class="simple">
+<li><p>State: The state of the vehicle. We define this to be x, y, yaw and speed.</p></li>
+<li><p>Control Action: The control action to be executed by the vehicle. We define this to be steering wheel angle and wheel throttle.</p></li>
+<li><p>Action Trajectory: An array of control actions, representing a temporal sequence of control actions to be executed every <code class="docutils literal notranslate"><span class="pre">controller_period</span></code>.</p></li>
+<li><p>Dynamics Model: A model that future state after a given time, given the current state and control action.</p></li>
+<li><p>Cost Function: A function that evaluates the quality of a given state. The goal is to minimize this function.</p></li>
+<li><p>Cost-to-go: The total cost of being in a given state and all the states that follow it.</p></li>
+<li><p>Controller Period: The time interval between control actions.</p></li>
+<li><p>Perturbation: Brownian noise centered at 0 that we add to a base action trajectory to generate a sample.</p></li>
+</ul>
+</section>
+<section id="algorithm">
+<h2>Algorithm<a class="headerlink" href="#algorithm" title="Link to this heading"></a></h2>
+<p>Execute these in a continuous loop:</p>
+<ol class="arabic simple">
+<li><p>Obtain the inertial state of the vehicle.</p></li>
+<li><p>Perturb the previous “best” action trajectory with Brownian noise repeatedly to generate <code class="docutils literal notranslate"><span class="pre">num_samples</span></code> action trajectories.</p></li>
+<li><p>For every sample, do state rollouts. Repeatedly apply the dynamics model to the state and perturbed control action to generate a sequence of states.</p></li>
+<li><p>For every sample, evaluate the cost-to-go for every state in the sequence.</p></li>
+<li><p>For every time step, compute the weighted average of the perturbed control actions over all the samples, based on the associated cost-to-go and the likelihood of the perturbation (see <a class="reference internal" href="#importance-sampling"><span class="std std-ref">Importance Sampling</span></a>). This is the optimal action trajectory.</p></li>
+<li><p>Execute the first control action in the optimal action trajectory, then store the rest of the trajectory for the next iteration of MPPI.</p></li>
+</ol>
+<p>For a more technical specification, see <a class="reference external" href="../../_static/mppi.pdf">here</a>.</p>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>The controller node owns an outward facing <a class="reference internal" href="../reference/class/MppiController.html"><span class="doc">MppiController</span></a>, which has one main member function <code class="docutils literal notranslate"><span class="pre">generate_action()</span></code>
+that outputs a control action. This is defined in <code class="docutils literal notranslate"><span class="pre">controls/src/mppi/mppi.hpp</span></code>.</p>
+<p>This however, is only an abstract base class. The actual implementation is in the derived class, <a class="reference internal" href="../reference/class/MppiController_Impl.html"><span class="doc">MppiController_Impl</span></a>, which is
+defined in <code class="docutils literal notranslate"><span class="pre">controls/src/mppi/mppi.cuh</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Why 2 classes?</p>
+<p>MPPIController_Impl needs to call Thrust functions, so the class must be defined in a .cuh file with code in the corresponding .cu file. However, ROS is CPU-bound, so it
+can only interface with CPU-only classes in .hpp files. Thus, MPPIController is an abstract base class that
+provides member functions for the controller node to call, but in reality is an instance of MPPIController_Impl.</p>
+</div>
+<p>MPPI makes heavy usage of Thrust to conduct operations in parallel over the GPU. Copying data from the CPU to the GPU
+or vice versa is an expensive operation, so we avoid it as much as possible. The MPPIController_Impl reads in the estimated
+current inertial state and the inertial-to-curvilinear lookup table as calculated by the StateEstimator (and already exist on the GPU). It creates and
+manipulates device vectors such as <code class="docutils literal notranslate"><span class="pre">m_action_trajectories</span></code> on the GPU,
+then copies over a single control action to the CPU to pass in a message.</p>
+<p>Thrust relies on small unary or binary functions to do <a class="reference internal" href="#hofs"><span class="std std-ref">maps or reductions</span></a>. Since we need to capture pointers to
+our device vectors, we wrap our functions in C++ functors. These functors, along with helper functions to be run on the
+GPU, such as the dynamics model, are defined in <code class="docutils literal notranslate"><span class="pre">controls/src/mppi/functors.cuh</span></code>. The main loop of
+MPPI is implemented in <code class="docutils literal notranslate"><span class="pre">generate_action()</span></code> of <code class="docutils literal notranslate"><span class="pre">controls/src/mppi/mppi.cu</span></code>, as shown here:</p>
+<a class="reference internal image-reference" href="../../_images/mppi.png"><img alt="../../_images/mppi.png" class="align-center" src="../../_images/mppi.png" style="width: 100%;" /></a>
+</section>
+<section id="importance-sampling">
+<span id="id1"></span><h2>Importance Sampling<a class="headerlink" href="#importance-sampling" title="Link to this heading"></a></h2>
+<p>The MPPI algorithm uses importance sampling to calculate weights for each control action.</p>
+<p>The weight for a control action <span class="math notranslate nohighlight">\(u\)</span> is given by <span class="math notranslate nohighlight">\(e^{-\frac{1}{\lambda}J - D}\)</span> where <span class="math notranslate nohighlight">\(J\)</span> is the associated
+cost-to-go, and <span class="math notranslate nohighlight">\(D\)</span> is the natural log of the probability density of the associated sampled perturbation, where the
+probability distribution is the multivariate normal distribution. The parameter <span class="math notranslate nohighlight">\(\lambda\)</span> is a temperature parameter
+that can be tuned to balance model convergence and noise.</p>
+<p>Multiplying by the exponent of the negative log is equivalent to dividing by the probability density. More unlikely samples
+are given higher weight, since they explore the search space more.</p>
+</section>
+<section id="higher-order-functions">
+<span id="hofs"></span><h2>Higher Order Functions<a class="headerlink" href="#higher-order-functions" title="Link to this heading"></a></h2>
+<p>Work refers to the time taken to execute all the operations of a given task by a single processor.
+Span refers to the minimum time taken to execute the task’s operations in parallel across infinite processors.</p>
+<p>Given a collection of elements, a map applies a unary mapping function to each element to produce a new collection of elements.
+Assuming the mapping function is O(1), the map operation has work O(n) but span O(1).</p>
+<p>Given a collection of elements, a reduce applies a binary reduction function to combine all the elements into a single
+accumulated value. Assuming the reduction function is O(1), the reduce operation has work O(n) but span O(log n).</p>
+</section>
+<section id="alterations">
+<h2>Alterations<a class="headerlink" href="#alterations" title="Link to this heading"></a></h2>
+<p>Consider the following alterations to our implementation:</p>
+<ul class="simple">
+<li><p>State can capture more information about the vehicle</p></li>
+<li><p>Control action can be more expressive to allow the algorithm to learn behaviors such as torque vectoring. Granted, this requires a more complex dynamics model.</p></li>
+<li><p>The dynamics model can be learned from data.</p></li>
+<li><p>The cost can be made to be a function of both state and control action.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="state_estimation.html" class="btn btn-neutral float-left" title="State Estimation Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="slipless_model.html" class="btn btn-neutral float-right" title="Model Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Yip.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
