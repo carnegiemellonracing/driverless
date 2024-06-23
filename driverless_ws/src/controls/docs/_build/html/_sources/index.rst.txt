@@ -42,4 +42,5 @@ Have fun and enjoy the ride!
    source/explainerslist.rst
    source/reference/api_reference
    source/explainers/terminology
+   source/explainers/more
 
