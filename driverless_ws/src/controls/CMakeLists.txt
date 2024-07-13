@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16.3)
 project(controls CXX CUDA C)
 
 set(CUDA_ARCH 75)
@@ -103,6 +103,27 @@ install(
         DESTINATION lib/${PROJECT_NAME}
 )
 
+
+# ****** Controller Component *****
+
+ament_auto_add_executable(controller_component
+  src/nodes/controller_component.cpp
+)
+
+ament_auto_add_executable(controller_component_st
+  src/nodes/controller_component_st.cpp
+)
+
+ament_auto_add_executable(controller_component_mt
+  src/nodes/controller_component_mt.cpp
+)
+
+rclcpp_components_register_nodes(controller_component "ControllerComponent")
+
+install (TARGETS controller_component
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
 
 # ***** Shared options *****
 
