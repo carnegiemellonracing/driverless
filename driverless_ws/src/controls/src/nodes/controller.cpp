@@ -15,8 +15,66 @@
 namespace controls {
     namespace nodes {
             ControllerNode::ControllerNode(
-                std::shared_ptr<state::StateEstimator> state_estimator,
-                std::shared_ptr<mppi::MppiController> mppi_controller)
+                const rclcpp::NodeOptions& node_opts
+            ) : Node(controller_node_name) {}
+            ControllerNode::ControllerNode(
+                std::shared_ptr<controls::state::StateEstimator> state_estimator,
+                std::shared_ptr<controls::mppi::MppiController> mppi_controller
+                )
+                : Node {controller_node_name},
+
+                  m_state_estimator {std::move(state_estimator)},
+                  m_mppi_controller {std::move(mppi_controller)},
+
+                  m_action_publisher {
+                      create_publisher<interfaces::msg::ControlAction>(
+                          control_action_topic_name,
+                          control_action_qos
+                        )
+                  },
+
+                  m_info_publisher {
+                      create_publisher<InfoMsg>(
+                            controller_info_topic_name,
+                            controller_info_qos
+                        )
+                  } {
+
+                // create a callback group that prevents state and spline callbacks from being executed concurrently
+                rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group {
+                    create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};
+
+                rclcpp::SubscriptionOptions options {};
+                options.callback_group = state_estimation_callback_group;
+
+                m_spline_subscription = create_subscription<SplineMsg>(
+                    spline_topic_name, spline_qos,
+                    [this] (const SplineMsg::SharedPtr msg) { spline_callback(*msg); },
+                    options
+                );
+
+                m_world_twist_subscription = create_subscription<TwistMsg>(
+                    world_twist_topic_name, world_twist_qos,
+                    [this] (const TwistMsg::SharedPtr msg) { world_twist_callback(*msg); },
+                    options
+                );
+
+                m_world_pose_subscription = create_subscription<PoseMsg>(
+                    world_pose_topic_name, world_pose_qos,
+                    [this] (const PoseMsg::SharedPtr msg) { world_pose_callback(*msg); },
+                    options
+                );
+
+                // start mppi :D
+                // this won't immediately begin publishing, since it waits for the first dirty state
+                launch_mppi().detach();
+            }
+
+            ControllerNode::ControllerNode(
+                std::shared_ptr<controls::state::StateEstimator> state_estimator,
+                std::shared_ptr<controls::mppi::MppiController> mppi_controller,
+                const rclcpp::NodeOptions& node_opts
+                )
                 : Node {controller_node_name},
 
                   m_state_estimator {std::move(state_estimator)},
@@ -238,81 +296,9 @@ namespace controls {
     }
 }
 
+#include "rclcpp_components/register_node_macro.hpp"
 
-int main(int argc, char *argv[]) {
-    using namespace controls;
-    
-    std::mutex mppi_mutex;
-    std::mutex state_mutex;
-
-    // create resources
-    std::shared_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create(state_mutex);
-    std::shared_ptr<mppi::MppiController> controller = mppi::MppiController::create(mppi_mutex);
-
-    rclcpp::init(argc, argv);
-    std::cout << "rclcpp initialized" << std::endl;
-
-    // instantiate node
-    const auto node = std::make_shared<nodes::ControllerNode>(state_estimator, controller);
-    std::cout << "controller node created" << std::endl;
-
-    rclcpp::Logger logger = node->get_logger();
-    LoggerFunc logger_func = [logger](const std::string& msg) {
-        RCLCPP_DEBUG(logger, msg.c_str());
-    };
-
-    state_estimator->set_logger(logger_func);
-    controller->set_logger(logger_func);
-
-    // create a condition variable to notify main thread when either display or node dies
-    std::mutex thread_died_mut;
-    std::condition_variable thread_died_cond;
-    bool thread_died = false;
-
-    std::thread node_thread {[&] {
-        rclcpp::executors::MultiThreadedExecutor exec;
-        exec.add_node(node);
-        exec.spin();
-
-        {
-            std::lock_guard<std::mutex> guard {thread_died_mut};
-
-            std::cout << "Node terminated. Exiting..." << std::endl;
-            thread_died = true;
-            thread_died_cond.notify_all();
-        }
-    }};
-
-    std::cout << "controller node thread launched" << std::endl;
-
-
-#ifdef DISPLAY
-    display::Display display {controller, state_estimator};
-    std::cout << "display created" << std::endl;
-
-    std::thread display_thread {[&] {
-        display.run();
-
-        {
-            std::lock_guard<std::mutex> guard {thread_died_mut};
-
-            std::cout << "Display thread closed. Exiting.." << std::endl;
-            thread_died = true;
-            thread_died_cond.notify_all();
-        }
-    }};
-    std::cout << "display thread launched" << std::endl;
-#endif
-
-    // wait for a thread to die
-    {
-        std::unique_lock<std::mutex> guard {thread_died_mut};
-        if (!thread_died) {
-            thread_died_cond.wait(guard);
-        }
-    }
-
-    std::cout << "Shutting down" << std::endl;
-    rclcpp::shutdown();
-    return 0;
-}
+// Register the component with class_loader.
+// This acts as a sort of entry point, allowing the component to be discoverable when its library
+// is being loaded into a running process.
+RCLCPP_COMPONENTS_REGISTER_NODE(controls::nodes::ControllerNode)

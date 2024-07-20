@@ -21,6 +21,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(interfaces REQUIRED)
 find_package(glm REQUIRED)
@@ -94,36 +95,68 @@ install(
 
 # ****** Controller *****
 
-add_executable(controller src/nodes/controller.cpp)
-target_link_libraries(controller controls_lib)
-ament_target_dependencies(controller rclcpp interfaces builtin_interfaces)
-
-install(
-        TARGETS controller
-        DESTINATION lib/${PROJECT_NAME}
+# add_executable(controller src/nodes/controller.cpp)
+add_library(controller SHARED
+  src/nodes/controller.cpp
 )
+# target_link_libraries(controller controls_lib)
+ament_target_dependencies(controller rclcpp rclcpp_components interfaces builtin_interfaces)
+rclcpp_components_register_nodes(controller "controls::nodes::ControllerNode")
+
+
+# install(
+#         TARGETS controller
+#         DESTINATION lib/${PROJECT_NAME}
+# )
 
 
 # ****** Controller Component *****
 
-ament_auto_add_executable(controller_component
+# add_executable(controller_component
+#   src/nodes/controller_component.cpp
+# )
+add_library(controller_component SHARED
   src/nodes/controller_component.cpp
 )
+ament_target_dependencies(controller_component rclcpp rclcpp_components std_msgs interfaces)
+rclcpp_components_register_nodes(controller_component "controller::ControllerComponent")
 
-ament_auto_add_executable(controller_component_st
-  src/nodes/controller_component_st.cpp
+# add_executable(controller_component_st
+#   src/nodes/controller_component_st.cpp
+# )
+# ament_target_dependencies(controller_component_st rclcpp rclcpp_components std_msgs interfaces)
+
+# install(
+#       TARGETS controller_component controller_component_st
+#       DESTINATION lib/${PROJECT_NAME}
+#   )
+
+# add_executable(controller_component_mt
+#   src/nodes/controller_component_mt.cpp
+# )
+# ament_target_dependencies(controller_component_mt rclcpp std_msgs interfaces)
+
+# install(DIRECTORY
+#   launch
+#   DESTINATION share/${PROJECT_NAME}
+# )
+
+add_executable(controller_executor
+  src/nodes/controller_executor.cpp
+)
+target_link_libraries(controller_executor controller_component controller controls_lib)
+ament_target_dependencies(controller_executor rclcpp rclcpp_components interfaces builtin_interfaces)
+
+install (
+  TARGETS controller_executor
+  DESTINATION lib/${PROJECT_NAME}
 )
 
-ament_auto_add_executable(controller_component_mt
-  src/nodes/controller_component_mt.cpp
-)
 
-rclcpp_components_register_nodes(controller_component "ControllerComponent")
-
-install (TARGETS controller_component
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin)
+# install (TARGETS controller_component
+#   ARCHIVE DESTINATION lib
+#   LIBRARY DESTINATION lib
+#   RUNTIME DESTINATION bin)
 
 # ***** Shared options *****
 
@@ -131,7 +164,6 @@ set_target_properties(controls_lib controller PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON
         CUDA_ARCHITECTURES ${CUDA_ARCH}
 )
-
 
 if(BUILD_TESTING)
   add_executable(controls_test_node tests/test_node.cpp)

@@ -39,6 +39,11 @@ namespace controls {
         class ControllerNode : public rclcpp::Node {
         public:
 
+            ControllerNode (
+                const rclcpp::NodeOptions& node_opts
+            );
+
+
             /**
              * Construct the controller node. Launches MPPI in a new (detached) thread.
              *
@@ -48,6 +53,11 @@ namespace controls {
             ControllerNode (
                 std::shared_ptr<state::StateEstimator> state_estimator,
                 std::shared_ptr<mppi::MppiController> mppi_controller
+            );
+            ControllerNode (
+                std::shared_ptr<state::StateEstimator> state_estimator,
+                std::shared_ptr<mppi::MppiController> mppi_controller,
+                const rclcpp::NodeOptions& node_opts
             );
 
 

@@ -10,13 +10,18 @@ def generate_launch_description():
         name='controls_container',
         namespace='',
         package='controls',
-        executable='controller_component_mt',
+        executable='controller_component_st',
         composable_node_descriptions=[
             ComposableNode(
                 package='controls',
-                plugin='ControlsComponent',
-                name='controls_component'
-            )
+                plugin='controls::ControllerComponent',
+                name='controller_component'
+            ),
+            ComposableNode(
+                package='controls',
+                plugin='controls::ControllerComponent',
+                name='controller_component2'
+            ),
         ],
         output='screen',
     )

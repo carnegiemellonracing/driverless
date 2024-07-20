@@ -11,6 +11,7 @@
 
   <depend>std_msgs</depend>
   <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
   <depend>libglm-dev</depend>
   <depend>interfaces</depend>
   <depend>visualization_msgs</depend>
