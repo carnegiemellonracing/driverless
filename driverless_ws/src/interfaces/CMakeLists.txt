@@ -53,6 +53,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ControlsState.msg"
   "msg/ControllerInfo.msg"
   "msg/ActuatorsInfo.msg"
+  "msg/SyncedLidarOdom.msg"
   DEPENDENCIES geometry_msgs sensor_msgs std_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 

@@ -33,3 +33,6 @@ CAMERA_INFO = {
     ZED_STR: (15080, LEFT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC), 
     ZED2_STR: (27680008, LEFT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC)
 } # TODO: need serial numbers
+
+# topic name for synced camera/lidar and odometry data
+SYNCED_DATA_TOPIC = "/synced_data"
