@@ -15,7 +15,7 @@ import time
 class SyncNode(Node):
     def __init__(self):
         super().__init__('sync_node')
-        
+
         # Define your topic names
         zed_topic = LEFT_IMAGE_TOPIC
         zed2_topic = LEFT2_IMAGE_TOPIC
@@ -37,7 +37,7 @@ class SyncNode(Node):
         # xyz2_sub = Subscriber(self, Image, zed_xyz2_topic)
 
         self.lidar_sub = Subscriber(self, PointCloud2, lidar_topic)
-    
+
         self.gnss_sub = Subscriber(self, NavSatFix, gnss_topic)
         self.imu_linear_velocity_sub = Subscriber(self, TwistStamped, imu_linear_velocity_topic)
         self.imu_orientation_sub = Subscriber(self, QuaternionStamped, imu_orientation_topic)
@@ -51,15 +51,15 @@ class SyncNode(Node):
                                             self.gnss_sub,
                                             self.imu_linear_velocity_sub,
                                             self.imu_orientation_sub
-                                            ], 
-                                            queue_size=queue_size, slop=2)
+                                            ],
+                                            queue_size=queue_size, slop=120587230)
         self.synced_sub.registerCallback(self.sync_callback)
 
         # Create a publisher for your DataFrame message
         self.synced_pub = self.create_publisher(SyncedLidarOdom, '/synced_data', 5)
         self.get_logger().info('Init sync_node complete')
 
-    def sync_callback(self, 
+    def sync_callback(self,
                         point_cloud_msg,
                         gnss_msg,
                         linvelocity_msg,
@@ -76,8 +76,8 @@ class SyncNode(Node):
         # synced_msg.left2_color = image2_msg
         # synced_msg.xyz_image = xyz_msg
         # synced_msg.xyz2_image = xyz2_msg
-        # synced_msg.point_cloud = point_cloud_msg
-        
+        synced_msg.point_cloud = point_cloud_msg
+
         synced_msg.gps_data = gnss_msg
         synced_msg.velocity = linvelocity_msg
         synced_msg.orientation = orientation_msg
