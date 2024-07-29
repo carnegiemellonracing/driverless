@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     std::thread node_thread {[&] {
         rclcpp::executors::MultiThreadedExecutor exec;
         exec.add_node(node);
-        // exec.add_node(node2);
+        exec.add_node(node2);
         exec.spin();
 
         {

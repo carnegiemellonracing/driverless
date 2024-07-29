@@ -103,6 +103,11 @@ add_library(controller SHARED
 ament_target_dependencies(controller rclcpp rclcpp_components interfaces builtin_interfaces)
 rclcpp_components_register_nodes(controller "controls::nodes::ControllerNode")
 
+install(
+  TARGETS controller
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 
 # install(
 #         TARGETS controller
@@ -144,7 +149,7 @@ rclcpp_components_register_nodes(controller_component "controller::ControllerCom
 add_executable(controller_executor
   src/nodes/controller_executor.cpp
 )
-target_link_libraries(controller_executor controller_component controller controls_lib)
+target_link_libraries(controller_executor controller controls_lib)
 ament_target_dependencies(controller_executor rclcpp rclcpp_components interfaces builtin_interfaces)
 
 install (
