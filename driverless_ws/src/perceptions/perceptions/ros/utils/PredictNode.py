@@ -4,11 +4,12 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 
 # for converting predictor output to cone message type
-from interfaces.msg import ConeArray
+from interfaces.msg import ConeArrayWithOdom, ConeArray
 import perceptions.ros.utils.conversions as conversions
 
 # for collecting data from sensors
 from perceptions.ros.utils.DataNode import DataNode
+from perc22a.data.utils.DataType import DataType
 
 import time
 
@@ -51,22 +52,23 @@ class PredictNode(DataNode):
         # initialize published cone topic based on name
         self.cone_topic = f"/{name}_cones"
         self.qos_profile = BEST_EFFORT_QOS_PROFILE
-        self.cone_publisher = self.create_publisher(ConeArray, self.cone_topic, self.qos_profile)
-        
+        self.cone_publisher = self.create_publisher(ConeArrayWithOdom, self.cone_topic,
+                                                        self.qos_profile)
+
         # create predictor, any subclass of PredictNode needs to fill this component
         self.predictor = self.init_predictor()
 
         return
-    
+
     def init_predictor(self):
         raise RuntimeError("[PredictNode] init_predictor() function not overwritten. Must return Predictor.")
 
     def predict_callback(self):
         if not self.got_all_data():
-            self.get_logger().warn(f"Not got all data")
+            self.get_logger().warn(f"Not got all data (predict callback)")
             return
 
-        # got data, start prediction 
+        # got data, start prediction
         self.predict_count += 1
 
         # predict cones from data (safely catch error if it occurs)
@@ -82,7 +84,7 @@ class PredictNode(DataNode):
                 self.flush()
 
             return
-            
+
 
         # display if necessary
         if self.debug:
@@ -90,10 +92,16 @@ class PredictNode(DataNode):
 
         # publish message
         msg = conversions.cones_to_msg(cones)
-        
+
         data_time = self.get_earliest_data_time()
         msg.orig_data_stamp = data_time.to_msg()
-        self.cone_publisher.publish(msg)
+        entire_msg = ConeArrayWithOdom()
+        entire_msg.cone_array = msg
+        entire_msg.gps_data = self.data[DataType.GPS_POSE]
+        entire_msg.velocity = self.data[DataType.VELOCITY]
+        entire_msg.orientation = self.data[DataType.ORIENTATION]
+
+        self.cone_publisher.publish(entire_msg)
 
         if self.time:
             # display time taken to perform prediction
@@ -101,7 +109,7 @@ class PredictNode(DataNode):
             data_t = conversions.ms_since_time(self.get_clock().now(), data_time)
             time_str = f"[Node={self.name}] Predict Time: {t * 1000:.3f}ms, Data Latency: {data_t:.3f}ms Failures: {self.failure_count}/{self.predict_count}"
             print(time_str)
-        
+
 
         if self.flush_data:
             self.flush()

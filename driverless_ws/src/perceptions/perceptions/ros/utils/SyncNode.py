@@ -4,11 +4,12 @@ import rclpy
 from rclpy.node import Node
 from perceptions.topics import LEFT_IMAGE_TOPIC, LEFT2_IMAGE_TOPIC
 from perceptions.topics import XYZ_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC
-from perceptions.topics import POINT_TOPIC
+from perceptions.topics import POINT_TOPIC_ADJ
+from perceptions.topics import GPS_TOPIC, TWIST_TOPIC, QUAT_TOPIC
 from sensor_msgs.msg import Image, PointCloud2, Imu, NavSatFix
 from geometry_msgs.msg import TwistStamped, QuaternionStamped
 from message_filters import ApproximateTimeSynchronizer, Subscriber
-from interfaces.msg import SyncedLidarOdom
+from interfaces.msg import SyncedLidarOdom, PointCloud2TimeAdj
 
 import time
 
@@ -22,11 +23,11 @@ class SyncNode(Node):
         zed_xyz_topic = XYZ_IMAGE_TOPIC
         zed_xyz2_topic = XYZ2_IMAGE_TOPIC
 
-        lidar_topic = POINT_TOPIC
+        lidar_topic = POINT_TOPIC_ADJ
 
-        gnss_topic = '/gnss'
-        imu_linear_velocity_topic = '/filter/twist'
-        imu_orientation_topic = '/filter/quaternion'
+        gnss_topic = GPS_TOPIC
+        imu_linear_velocity_topic = TWIST_TOPIC
+        imu_orientation_topic = QUAT_TOPIC
 
         self.get_logger().info('Starting sync_node')
 
@@ -36,7 +37,7 @@ class SyncNode(Node):
         # xyz_sub  = Subscriber(self, Image, zed_xyz_topic)
         # xyz2_sub = Subscriber(self, Image, zed_xyz2_topic)
 
-        self.lidar_sub = Subscriber(self, PointCloud2, lidar_topic)
+        self.lidar_sub = Subscriber(self, PointCloud2TimeAdj, lidar_topic)
 
         self.gnss_sub = Subscriber(self, NavSatFix, gnss_topic)
         self.imu_linear_velocity_sub = Subscriber(self, TwistStamped, imu_linear_velocity_topic)
@@ -52,7 +53,7 @@ class SyncNode(Node):
                                             self.imu_linear_velocity_sub,
                                             self.imu_orientation_sub
                                             ],
-                                            queue_size=queue_size, slop=120587230)
+                                            queue_size=queue_size, slop=0.03) #50hz is highest freq
         self.synced_sub.registerCallback(self.sync_callback)
 
         # Create a publisher for your DataFrame message
@@ -76,7 +77,7 @@ class SyncNode(Node):
         # synced_msg.left2_color = image2_msg
         # synced_msg.xyz_image = xyz_msg
         # synced_msg.xyz2_image = xyz2_msg
-        synced_msg.point_cloud = point_cloud_msg
+        synced_msg.point_cloud = point_cloud_msg.point_cloud
 
         synced_msg.gps_data = gnss_msg
         synced_msg.velocity = linvelocity_msg

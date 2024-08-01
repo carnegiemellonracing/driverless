@@ -12,6 +12,7 @@ DEPTH2_IMAGE_TOPIC = "/zedsdk2_depth_image"
 
 # topic names for lidar data reading from Hesai lidar
 POINT_TOPIC = "/lidar_points"
+POINT_TOPIC_ADJ = "/lidar_points_adj"
 
 # topic names for publishing cones
 LIDAR_CONE_TOPIC = "/lidar_node_cones"
@@ -22,6 +23,7 @@ PERC_CONE_TOPIC = "/perc_cones"
 # topic names for motion modeling
 TWIST_TOPIC = "/filter/twist"
 QUAT_TOPIC = "/filter/quaternion"
+GPS_TOPIC = "/gnss"
 
 #Camera info
 CAMERA_PARAM = "camera"
@@ -30,7 +32,7 @@ ZED2_STR = "zed2"
 
 # map cameras to their topics and serials numbers
 CAMERA_INFO = {
-    ZED_STR: (15080, LEFT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC), 
+    ZED_STR: (15080, LEFT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC),
     ZED2_STR: (27680008, LEFT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC)
 } # TODO: need serial numbers
 

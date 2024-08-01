@@ -8,4 +8,4 @@ sensor_msgs/PointCloud2 point_cloud
 sensor_msgs/NavSatFix gps_data
 geometry_msgs/TwistStamped velocity
 geometry_msgs/QuaternionStamped orientation
- 
+

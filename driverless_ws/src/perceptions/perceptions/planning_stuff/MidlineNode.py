@@ -1,4 +1,3 @@
-
 import rclpy
 from rclpy.node import Node
 from rclpy.time import Time
@@ -47,30 +46,26 @@ class MidlineNode(Node):
         # self.vis = Vis2D()
         self.failure_count = 0
 
-    
+
     def cone_callback(self, msg):
-        # print("Recieiving cone callback in midline")
 
         s = time.time()
 
         orig_data_stamp = msg.orig_data_stamp
+
+        # parse cones from message received by cone_sub into cones variable
         cones = conv.msg_to_cones(msg)
         print("num cones", len(cones))
 
-        # try:
+
+        # svm generates decision boundary (midline) from cones
         s_svm = time.time()
         downsampled_boundary_points = self.svm.cones_to_midline(cones)
         e_svm = time.time()
-        # except Exception as error:
-        #     self.get_logger().error(f"Exception was caught while predicting {error}")
-        #     self.failure_count += 1
-        #     return
 
-        # self.vis.set_cones(cones)
-        # if len(downsampled_boundary_points) > 0:
-        #     self.vis.set_points(downsampled_boundary_points)
-        # self.vis.update()
 
+        # parse the elements in downsampled_boundary_points into Point types
+        # points form midline_spline published by midline_pub
         points = []
         msg = SplineFrames()
         msg.orig_data_stamp = orig_data_stamp
@@ -87,7 +82,6 @@ class MidlineNode(Node):
             return
 
         msg.frames = points
-        #TODO: add car pos to each midpoint to get global point
         self.midline_pub.publish(msg)
 
         e = time.time()
