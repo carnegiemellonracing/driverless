@@ -10,6 +10,7 @@ import time
 class TimeAdjustNode(Node):
     def __init__(self):
         super().__init__('time_adjust_node')
+        self.get_logger().info("Starting time_adjust_node")
 
         lidar_topic = POINT_TOPIC
         gnss_topic = GPS_TOPIC
@@ -36,6 +37,7 @@ class TimeAdjustNode(Node):
                                 10)
         self.gnss_subscriber
         self.lidar_subscriber
+        self.get_logger().info("Init time_adjust_node complete")
 
     def gnss_callback(self, msg):
         if not self.got_first_gnss:
@@ -53,7 +55,7 @@ class TimeAdjustNode(Node):
             self.got_first_lidar = True
 
         if self.got_first_gnss and self.got_first_gnss and (not self.got_diff):
-                self.diff_sec = self.first_gnss_sec - self.first_lidar_sec + 1
+                self.diff_sec = self.first_gnss_sec - self.first_lidar_sec
                 # if self.first_lidar_nanosec > self.first_gnss_nanosec:
                 #     self.diff_sec = self.diff_sec - 1
 
@@ -63,7 +65,7 @@ class TimeAdjustNode(Node):
             new_msg = PointCloud2TimeAdj()
             new_msg.point_cloud = msg
             new_msg.header.stamp.sec = msg.header.stamp.sec + self.diff_sec
-            new_msg.header.stamp.nanosec = msg.header.stamp.nanosec
+            new_msg.header.stamp.nanosec = msg.header.stamp.nanosec + 880000000
             self.lidar_publisher.publish(new_msg)
 
 

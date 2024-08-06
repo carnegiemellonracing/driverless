@@ -53,7 +53,7 @@ class SyncNode(Node):
                                             self.imu_linear_velocity_sub,
                                             self.imu_orientation_sub
                                             ],
-                                            queue_size=queue_size, slop=0.03) #50hz is highest freq
+                                            queue_size=queue_size, slop=0.02) #50hz is highest freq
         self.synced_sub.registerCallback(self.sync_callback)
 
         # Create a publisher for your DataFrame message
