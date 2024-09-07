@@ -116,17 +116,20 @@ if(BUILD_TESTING)
   add_executable(controls_test_node tests/test_node.cpp)
   target_link_libraries(controls_test_node controls_lib GSL::gsl)
 
+  add_executable(controls_echo_node tests/echo_node.cpp)
+
   add_executable(model_wrapper tests/model/model_wrapper.cu)
   target_link_libraries(model_wrapper controls_lib)
 
   add_executable(null_gps_spoofer tests/null_gps_spoofer.cpp)
   target_link_libraries(null_gps_spoofer controls_lib)
 
+  ament_target_dependencies(controls_echo_node rclcpp glm interfaces std_msgs)
   ament_target_dependencies(controls_test_node rclcpp glm interfaces std_msgs)
   ament_target_dependencies(null_gps_spoofer rclcpp glm interfaces std_msgs)
 
   install(
-      TARGETS controls_test_node null_gps_spoofer
+      TARGETS controls_test_node null_gps_spoofer controls_echo_node
       DESTINATION lib/${PROJECT_NAME}
   )
 endif()

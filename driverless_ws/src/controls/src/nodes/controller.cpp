@@ -163,8 +163,9 @@ namespace controls {
                         std::string info_str = ss.str();
 
                         m_info_publisher->publish(info);
+                        std::cout << "IMADEACHANGE!" << std::endl;
                         std::cout << clear_term_sequence << info_str << std::flush;
-                        RCLCPP_DEBUG_STREAM(get_logger(), "mppi step complete. info:\n" << info_str);
+                        RCLCPP_INFO_STREAM(get_logger(), "mppi step complete. info:\n" << info_str);
                     }
                 }};
             }
