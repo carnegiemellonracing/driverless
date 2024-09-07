@@ -507,6 +507,7 @@ std::vector<double> get_curvature_raceline(std::vector<double> progress,std::vec
 }
 
 /** replicating the searchSorted function from numpy
+ * since target is just 1 value, we can use a binary search to find the index of the target
  * @param arr: a sorted vector of doubles
  * @param target: the value to search for
 */
@@ -541,7 +542,9 @@ int searchSorted (std::vector<double> arr, double target) {
 std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
                                         std::vector<double> cumulated_lengths, int precision = 20) {
     int index = searchSorted(cumulated_lengths, progress);
+
     Spline curr = splines[index];
+
     double delta = 0;
     
     if (index == 0) {
@@ -550,8 +553,8 @@ std::pair<double, double> interpolate_raceline(double progress, std::vector<Spli
         delta = progress - cumulated_lengths[index-1];
     }
 
-    std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> result =
+    std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> result = 
         curr.along(delta, 0, precision);
-    Eigen::VectorXd point = std::get<0>(result);
-    return std::make_pair(point(0), point(1));
+    
+    return result.first;
 }

@@ -101,7 +101,7 @@ void updateSegments(std::vector<bucket> bucketVector,
     // init bucket
     bucket currBucket;
     currBucket.startProgress = 0;
-    currBucket.startProgress = 0;
+    currBucket.endProgress = 0;
     currBucket.sumCurvature = 0;
     
     // loop through progress and use get curvature on each progress
