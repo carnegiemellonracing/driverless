@@ -120,6 +120,7 @@ if(BUILD_TESTING)
 
   add_executable(model_wrapper tests/model/model_wrapper.cu)
   target_link_libraries(model_wrapper controls_lib)
+  set_target_properties(model_wrapper PROPERTIES CUDA_ARCHITECTURES ${CUDA_ARCH})
 
   add_executable(null_gps_spoofer tests/null_gps_spoofer.cpp)
   target_link_libraries(null_gps_spoofer controls_lib)

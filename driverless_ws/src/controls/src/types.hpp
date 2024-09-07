@@ -23,7 +23,7 @@ namespace controls {
     ///@TODO: why not use std_msgs/Header for our custom messages?
     ///@TODO: related: builtin_interfaces/Time vs Time stamp - should standardize right?
     using TwistMsg = geometry_msgs::msg::TwistStamped; ///< 3D linear velocity, 3D angular velocity, timestamp
-    //using QuatMsg = geometry_msgs::msg::QuaternionStamped; ///< @TODO: don't see this anywhere, delete (encompassed by Pose)?
+    using QuatMsg = geometry_msgs::msg::QuaternionStamped; ///< @TODO: don't see this anywhere, delete (encompassed by Pose)?
     using PoseMsg = geometry_msgs::msg::PoseStamped; ///< 3D position, 3D orientation, timestamp
     using SplineMsg = interfaces::msg::SplineFrames; ///< Array of 3D splint points, timestamp
     using ActionMsg = interfaces::msg::ControlAction; ///< 4 wheel torques, steering angle, timestamp

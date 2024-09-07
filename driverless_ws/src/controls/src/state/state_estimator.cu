@@ -609,7 +609,7 @@ namespace controls {
             // vao is unbound.
             glBindVertexArray(0);
         }
-i
+
         void StateEstimator_Impl::fill_path_buffers(glm::fvec2 car_pos) {
             struct Vertex {
                 struct {
