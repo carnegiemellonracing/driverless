@@ -495,3 +495,25 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
     return std::make_pair(splines, cumsum);
 }
 
+/** @brief function to make vector of splines from std::vector<std::pair<double,double>> 
+    (blue or yellow cones) of perception data
+    @param cones perceptions_data.bluecones or perceptions_data.yellowcones
+    @return vector of splines, vector of cumulative lengths
+*/
+std::pair<std::vector<Spline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> cones) {
+    Eigen::MatrixXd matrix(2, cones.size());
+    for(int i = 0; i < cones.size(); i++){
+        assert(i < coneMatrix.cols());
+        coneMatrix(0, i) = cones[i].first;
+        coneMatrix(1, i) = cones[i].second;
+    }
+
+    std::cout << coneMatrix << std::endl;
+
+    /*@TODO: how to make a dummy logger?*/
+    auto dummy_logger = rclcpp::get_logger("du");
+    std::pair<std::vector<Spline>,std::vector<double>> res = raceline_gen(dummy_logger, coneMatrix, std::rand(), 4, false);
+
+    return res;
+}
+

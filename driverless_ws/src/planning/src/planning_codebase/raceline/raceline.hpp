@@ -120,6 +120,6 @@ double arclength(polynomial poly, double x0,double x1);
 
 std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id =std::rand(), int points_per_spline = prefered_degree+1,bool loop = true);
 
-std::pair<std::vector<Spline>,std::vector<double>> makeSplinesVector(std::vector<std::pair<double,double>> points);
+std::pair<std::vector<Spline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points);
 
 #endif
