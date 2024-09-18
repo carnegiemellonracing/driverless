@@ -1,6 +1,3 @@
-#include "raceline.hpp"
-#include "../midline/generator.hpp"
-
 /**
  * Chunks represent segments of the track where all points have similar curvature. 
  */
