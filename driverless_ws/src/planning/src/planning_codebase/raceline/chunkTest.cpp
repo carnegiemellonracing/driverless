@@ -125,7 +125,7 @@ void testMakeSplinesVector() {
     // std::make_pair(-2.56, -3.346)
 
     // pass these 7 points into makeSplinesVector
-    std::pair<std::vector<Spline>,std::vector<double>> slVectors = makeSplinesVector(blue_cones);
+    std::pair<std::vector<Spline>,std::vector<double>> slVectors = make_splines_vector(blue_cones);
 
     // should return a vector of 2 splines, each splines should have one of the polynomials
     std::vector<Spline> splines = slVectors.first;

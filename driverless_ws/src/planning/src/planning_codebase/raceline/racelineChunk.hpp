@@ -42,8 +42,8 @@ class Chunk
          * @param yellowRaceline Vectors of splines and cumulative lengths for yellow
          *                       cones.
          */
-        void generateConePoints(std::pair<std::vector<Spline::Spline>,std::vector<double>> blueRaceline,
-                                std::pair<std::vector<Spline::Spline>,std::vector<double>> yellowRaceline);
+        void generateConePoints(std::pair<std::vector<Spline>,std::vector<double>> blueRaceline,
+                                std::pair<std::vector<Spline>,std::vector<double>> yellowRaceline);
 }
 
 /** 
