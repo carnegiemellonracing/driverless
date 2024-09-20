@@ -22,8 +22,11 @@
   ament_target_dependencies(planning_export interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
 
 
-  add_executable(midpoint_test src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
-  ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
+  # add_executable(midpoint_test src/nodes/midpoint.cpp src/planning_codebase/midline/generator.cpp src/planning_codebase/raceline/raceline.cpp)
+  # ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
+
+  add_executable(chunk_test src/planning_codebase/raceline/chunkTest.cpp src/planning_codebase/raceline/racelineChunk.cpp src/planning_codebase/raceline/raceline.cpp src/planning_codebase/midline/generator.cpp)
+  ament_target_dependencies(chunk_test interfaces rclcpp std_msgs geometry_msgs Eigen3)
 
   ament_export_targets(planning_exportTargets HAS_LIBRARY_TARGET)
   ament_export_dependencies(interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
