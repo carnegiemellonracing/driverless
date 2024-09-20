@@ -2,7 +2,7 @@
 #include <vector>
 // #include "matplotlib-cpp/matplotlibcpp.h"
 #include <iostream>
-#include "dynamicSpline.hpp"
+#include "racelineChunk.hpp"
 #include <cassert>
 
 namespace plt = matplotlibcpp;

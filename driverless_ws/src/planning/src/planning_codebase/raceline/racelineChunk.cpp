@@ -9,7 +9,7 @@
  */
 Chunk::Chunk() {
     startProgress = 0;
-    endProgress; = 0;
+    endProgress = 0;
     sumCurvature = 0;
     avgCurvature = 0;
 }
@@ -17,7 +17,7 @@ Chunk::Chunk() {
 /** 
  * Calculate curvature running average.
  */
-double Chunk::calcRunningAvgCurv() {
+double Chunk::calcRunningAvgCurvature() {
     return sumCurvature / (endProgress - startProgress);
 }
 
@@ -33,7 +33,7 @@ double Chunk::calcRunningAvgCurv() {
  */
 bool Chunk::checkStopChunk(double newCurvature) {
     double sigDiff = 1; // TODO: tunable param
-    double avgCurve = calcRunningAvgCurv();
+    double avgCurve = calcRunningAvgCurvature();
     if (abs(avgCurve - newCurvature) >= sigDiff && 
             (endProgress - startProgress) < 15) {
         return true;
@@ -89,8 +89,8 @@ std::vector<Chunk> generateChunks(std::vector<std::pair<double,double>> blueCone
     std::vector<Chunk> chunkVector;
 
     // make splines for track boundaries
-    std::pair<std::vector<Spline>,std::vector<double>> blue = makeSplinesVector(blueCones);
-    std::pair<std::vector<Spline>,std::vector<double>> yellow = makeSplinesVector(yellowCones);
+    std::pair<std::vector<Spline>,std::vector<double>> blue = make_splines_vector(blueCones);
+    std::pair<std::vector<Spline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
 
     std::vector<Spline> racetrackSplines = blue.first;
     std::vector<double> cumulativeLen = blue.second;
@@ -118,7 +118,7 @@ std::vector<Chunk> generateChunks(std::vector<std::pair<double,double>> blueCone
             // if we need to stop current chunk, create a new chunk and update
             // previous chunk & add it to the chunk vector
             chunk.generateConePoints(blue, yellow); // fill in the current bucket's blue and yellow points vectors
-            chunk.avgCurvature = calcRunningAvgCurv(chunk);
+            chunk.avgCurvature = chunk.calcRunningAvgCurvature();
             chunkVector.push_back(chunk);
             Chunk chunk;
             chunk.startProgress = currPercentProgress;

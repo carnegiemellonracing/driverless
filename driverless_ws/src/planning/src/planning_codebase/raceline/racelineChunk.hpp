@@ -1,3 +1,5 @@
+#include <vector>
+
 /**
  * Chunks represent segments of the track where all points have similar curvature. 
  */
@@ -17,7 +19,7 @@ class Chunk
         /** 
          * Calculate curvature running average.
          */
-        double calcRunningAvgCurv();
+        double calcRunningAvgCurvature();
 
         /** 
          * Checks if given chunk should be terminated, i.e. running average of
