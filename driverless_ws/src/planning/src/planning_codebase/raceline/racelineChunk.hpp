@@ -1,4 +1,5 @@
 #include <vector>
+#include "raceline.hpp"
 
 /**
  * Chunks represent segments of the track where all points have similar curvature. 

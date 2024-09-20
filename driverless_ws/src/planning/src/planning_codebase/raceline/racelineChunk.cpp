@@ -1,7 +1,6 @@
 #include "racelineChunk.hpp"
 
 #include <math.h>
-#include "raceline.hpp"
 #include "../midline/generator.hpp"
 
 /**
