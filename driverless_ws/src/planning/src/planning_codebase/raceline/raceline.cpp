@@ -516,3 +516,124 @@ std::pair<std::vector<Spline>,std::vector<double>> make_splines_vector(std::vect
     return res;
 }
 
+/**
+ * Finds the indices at which new_vals should be injected into old_vals to maintain sorted order,
+ * and clamps the largest possible index to old_vals.size() - 1.
+ * 
+ * This function is a combination of torch.searchsorted and torch.clampmax, using old_vals.size() - 1 as 
+ * the max.
+ * 
+ * @param old_vals The original array.
+ * @param new_vals The new values to inject into the original array.
+ * 
+ * @return The indices at which new values should be injected to maintain sorted order.
+ */
+std::vector<int> inject_clamped(std::vector<double> old_vals, std::vector<double> new_vals) {
+    std::vector<int> indices;
+
+    int old_idx = 0;
+    int new_idx = 0;
+    int old_len = old_vals.size();
+    int new_len = new_vals.size();
+
+    while (new_idx < new_len){
+        if (old_idx >= old_len){
+            indices.push_back(old_len-1); // deal with new vals that are greater than all vals in old_vals
+            new_idx++;
+        }
+        else if (new_vals[new_idx] <= old_vals[old_idx]){
+            indices.push_back(old_idx);
+            new_idx++;
+        }
+        old_idx++;
+    } 
+
+    return indices;
+}
+
+/**
+ * Returns the curvature of the raceline at a given progress.
+ * 
+ * @param progress A sorted vector of progresses along the raceline.
+ * @param splines A vector of splines that make up the raceline.
+ * @param cumulated_lengths A vector of the cumulated lengths of the splines.
+ * 
+ * @return The curvature at the given progress.
+ */
+std::vector<double> get_curvature_raceline(std::vector<double> progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths) {
+    // indices of splines that progress should be on 
+    std::vector<int> indices = inject_clamped(cumulated_lengths, progress);
+
+    std::vector<double> curvatures;
+    for (int i = 0; i < progress.size(); i++){
+        int min_x = progress[i];
+        int index = indices[i];
+        if (index > 0){
+            min_x -= cumulated_lengths[index-1];
+        }
+        
+        double curvature = get_curvature(
+            splines[index].get_first_der(),
+            splines[index].get_second_der(),
+            min_x
+        );
+
+        curvatures.push_back(curvature);
+    }
+
+    return curvatures;
+}
+
+/** 
+ * Replicates the searchSorted function from numpy.
+ * 
+ * @param arr A sorted vector of doubles.
+ * @param target The value to search for.
+ * 
+ * @return Returns the index of target.
+ */
+int searchSorted (std::vector<double> arr, double target) {
+    int left = 0;
+    int right = arr.size() - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) {
+            return mid;
+        }
+        if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return right;
+}
+
+/** 
+ * Returns the x-y point on the raceline at a given progress. 
+ * 
+ * @param progress A single progress along the raceline.
+ * @param splines A vector of splines that make up the raceline.
+ * @param cumulated_lengths A vector of the cumulated lengths of the splines.
+ * @param precision A number of points used to get approximation for a specific spline.
+ * 
+ * @return A tuple representing point on the raceline at the given progress.
+ */
+std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
+                                               std::vector<double> cumulated_lengths, int precision = 20) {
+    int index = searchSorted(cumulated_lengths, progress);
+    Spline curr = splines[index];
+    double delta = 0;
+    
+    if (index == 0) {
+        delta = progress;
+    } else {
+        delta = progress - cumulated_lengths[index-1];
+    }
+
+    std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> result =
+        curr.along(delta, 0, precision);
+    Eigen::VectorXd point = std::get<0>(result);
+    return std::make_pair(point(0), point(1));
+}
+

@@ -122,4 +122,8 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
 std::pair<std::vector<Spline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points);
 
+std::vector<double> get_curvature_raceline(std::vector<double> progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths);
+
+std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths, int precision = 20);
+
 #endif
