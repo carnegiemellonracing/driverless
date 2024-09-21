@@ -30,6 +30,8 @@ polynomial poly_mult(polynomial a,polynomial b);
 
 double poly_eval(polynomial a,double x);
 
+double get_curvature(polynomial poly_der_1, polynomial poly_der_2, double min_x);
+
 class Spline
 {
 public:
