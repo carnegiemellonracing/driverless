@@ -1,11 +1,8 @@
 #include <math.h>
 #include <vector>
-// #include "matplotlib-cpp/matplotlibcpp.h"
 #include <iostream>
 #include "racelineChunk.hpp"
 #include <cassert>
-
-namespace plt = matplotlibcpp;
 
 // angle to rads?
 double ator(int a){
@@ -150,32 +147,10 @@ void testMakeSplinesVector() {
 
 
 int main() {
-    // translate these
-    // plt.scatter(yellow_cones[:, 0], yellow_cones[:, 1], c="orange"),
-    // plt.scatter(blue_cones[:, 0], blue_cones[:, 1], c="blue")
-
-    // ax = plt.gca()
-    // ax.set_aspect("equal", adjustable="box")
-
-    // plt.show() 
     
     std::cout << "Hello, world!" << std::endl;
 
-    testMakeSplinesVector();
-
-    // int n = 5000; // number of data points
-    // std::vector<double> x(n), y(n);
-    // for(int i=0; i<n; ++i) {
-    //     double t = 2*M_PI*i/n;
-    //     x.at(i) = 16*sin(t)*sin(t)*sin(t);
-    //     y.at(i) = 13*cos(t) - 5*cos(2*t) - 2*cos(3*t) - cos(4*t);
-    // }
-
-    // plt::plot(x, y, "r-", x, [](double d) { return 12.5+abs(sin(d)); }, "k-");
-
-
-    // // show plots
-    // plt::show();
+    // testMakeSplinesVector();
     
     return 0;
 }
