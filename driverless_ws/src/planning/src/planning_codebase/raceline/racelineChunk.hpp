@@ -44,7 +44,7 @@ class Chunk
          */
         void generateConePoints(std::pair<std::vector<Spline>,std::vector<double>> blueRaceline,
                                 std::pair<std::vector<Spline>,std::vector<double>> yellowRaceline);
-}
+};
 
 /** 
  * Generates a vector of raceline chunks based on track boundaries.
