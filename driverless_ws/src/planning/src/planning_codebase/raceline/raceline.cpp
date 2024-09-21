@@ -627,7 +627,7 @@ int searchSorted (std::vector<double> arr, double target) {
  * @return A tuple representing point on the raceline at the given progress.
  */
 std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
-                                               std::vector<double> cumulated_lengths, int precision = 20) {
+                                               std::vector<double> cumulated_lengths, int precision) {
     int index = searchSorted(cumulated_lengths, progress);
     Spline curr = splines[index];
     double delta = 0;
