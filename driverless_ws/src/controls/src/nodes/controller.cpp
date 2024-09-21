@@ -16,12 +16,13 @@ namespace controls {
     namespace nodes {
             ControllerNode::ControllerNode(
                 const rclcpp::NodeOptions& node_opts
-            ) : Node(controller_node_name) {}
+            ) : Node(controller_node_name, rclcpp::NodeOptions().use_intra_process_comms(true)) {}
+            
             ControllerNode::ControllerNode(
                 std::shared_ptr<controls::state::StateEstimator> state_estimator,
                 std::shared_ptr<controls::mppi::MppiController> mppi_controller
                 )
-                : Node {controller_node_name},
+                : Node {controller_node_name, rclcpp::NodeOptions().use_intra_process_comms(true)},
 
                   m_state_estimator {std::move(state_estimator)},
                   m_mppi_controller {std::move(mppi_controller)},

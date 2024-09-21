@@ -7,7 +7,7 @@ namespace controller {
     {
     public:
         ControllerComponent()
-            : Node("controller_component")
+            : Node("controller_component", rclcpp::NodeOptions().use_intra_process_comms(true))
         {
             // Create a subscriber to listen to the "controls action" topic
             subscription_ = create_subscription<interfaces::msg::ControlAction>(
@@ -16,7 +16,7 @@ namespace controller {
         }
 
         ControllerComponent(const rclcpp::NodeOptions &options)
-            : Node("controller_component")
+            : Node("controller_component", rclcpp::NodeOptions().use_intra_process_comms(true))
         {
             // Create a subscriber to listen to the "controls action" topic
             subscription_ = create_subscription<interfaces::msg::ControlAction>(
