@@ -18,6 +18,8 @@ if(NOT CMAKE_CUDA_STANDARD)
   set(CMAKE_CUDA_STANDARD 17)
 endif()
 
+set(CMAKE_PREFIX_PATH "~/driverless/driverless_ws/install/interfaces/share/interfaces/cmake")
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
