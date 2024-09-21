@@ -23,7 +23,6 @@
 #include <SDL2/SDL_video.h>
 
 
-
 namespace controls {
     namespace state {
 
@@ -343,33 +342,49 @@ namespace controls {
 
             m_logger("finished state estimator spline processing");
         }
-
+        
 
         void StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            cone_msg.blue_cones
-            cone_msg.yellow_cones
+            m_logger("beginning state estimator cone processing");
+    
+            m_left_cone_positions.clear();
+            m_left_cone_positions.reserve(cone_msg.blue_cones.size());
+            m_right_cone_positions.clear();
+            m_right_cone_positions.reserve(cone_msg.blue_cones.size());
 
-            m_logger("beginning state estimator spline processing");
+            for (const auto& cone_point : cone_msg.blue_cones) {
+                // TODO when perceptions gets their shit together
+                float cone_y = static_cast<float>(cone_point.y);
+                float cone_x = static_cast<float>(cone_point.x);
+                float distance = cone_y * cone_y + cone_x * cone_x;
+                m_left_cone_positions.push_back(
+                    std::make_pair(
+                        distance,
+                        glm::fvec2(cone_y, cone_x)
+                    )
+                );
+            }
 
-            m_left_cone_positions3.clear();
-            m_spline_frames.reserve(spline_msg.frames.size());
-
-            for (const auto& frame : spline_msg.frames) {
-                m_spline_frames.push_back({
-                    static_cast<float>(frame.y),
-                    static_cast<float>(frame.x)
-                });
+            for (const auto& cone_point : cone_msg.yellow_cones) {
+                float cone_y = static_cast<float>(cone_point.y);
+                float cone_x = static_cast<float>(cone_point.x);
+                float distance = cone_y * cone_y + cone_x * cone_x;
+                m_right_cone_positions.push_back(
+                    std::make_pair(
+                        distance,
+                        glm::fvec2(cone_y,cone_x) 
+                    )
+                    // TODO when perceptions gets their shit together
+                );
             }
 
             if constexpr (reset_pose_on_spline) {
-                m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
+                m_state_projector.record_pose(0, 0, 0, cone_msg.orig_data_stamp);
             }
-
-            m_orig_spline_data_stamp = spline_msg.orig_data_stamp;
-
-            m_logger("finished state estimator spline processing");
+            
+            m_logger("finished state estimator cone processing");
         }
 
         void StateEstimator_Impl::on_twist(const TwistMsg &twist_msg, const rclcpp::Time &time) {
@@ -660,22 +675,22 @@ namespace controls {
             const size_t num_right_cones = m_right_cone_positions.size();
 
             std::stringstream ss;
-            ss << "# splines: " << num_splines << "# Left cones: " << num_left_cones << "# Right cones: " << num_right_cones << "\n"
-            m_logger(ss.str())
+            ss << "# splines: " << num_splines << "# Left cones: " << num_left_cones << "# Right cones: " << num_right_cones << "\n";
+            m_logger(ss.str());
 
             std::vector<Vertex> vertices;
             std::vector<GLuint> indices;
 
             float total_progress = 0; //TODO delete
 
-            std::sort(m_left_cones.begin(), m_left_cones.end());
-            std::sort(m_right_cones.begin(), m_right_cones.end());
+            std::sort(m_left_cone_positions.begin(), m_left_cone_positions.end());
+            std::sort(m_right_cone_positions.begin(), m_right_cone_positions.end());
 
             for (size_t i = 0; i < std::min(num_left_cones, num_right_cones) - 1; ++i) {
                 glm::fvec2 l1 = m_left_cone_positions[i].second;
                 glm::fvec2 l2 = m_left_cone_positions[i + 1].second;
                 glm::fvec2 r1 = m_right_cone_positions[i].second;
-                glm::fvec2 r2 = m_right_cone_positions[i + 1].second
+                glm::fvec2 r2 = m_right_cone_positions[i + 1].second;
 
                 vertices.push_back({{l1.x, l1.y}, {10.0f, 0.0f, 1.0f}});
                 vertices.push_back({{l2.x, l2.y}, {10.0f, 0.0f, 1.0f}});
