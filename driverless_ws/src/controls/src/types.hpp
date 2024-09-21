@@ -10,6 +10,7 @@
 #include <interfaces/msg/control_action.hpp>
 #include <interfaces/msg/controls_state.hpp>
 #include <interfaces/msg/controller_info.hpp>
+#include <interfaces/msg/cone_array.hpp>
 
 #include "constants.hpp"
 
@@ -29,6 +30,7 @@ namespace controls {
     using ActionMsg = interfaces::msg::ControlAction; ///< 4 wheel torques, steering angle, timestamp
     using StateMsg = interfaces::msg::ControlsState; ///< p=4 dimensional state: x, y, yaw, speed. Derived from twist and pose.
     using InfoMsg = interfaces::msg::ControllerInfo; ///< State, control action, latency info
+    using ConeMsg = interfaces::msg::ConeArray; /// Array of coloured cone positions
 
     /// Logging function type.
     using LoggerFunc = std::function<void(const char*)>;

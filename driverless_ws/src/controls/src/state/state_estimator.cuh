@@ -117,6 +117,7 @@ namespace controls {
             StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger);
 
             void on_spline(const SplineMsg& spline_msg) override;
+            void on_cone(const ConeMsg& cone_msg) override;
             void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) override;
             // on_pose is not used, for future proofing
             void on_pose(const PoseMsg& pose_msg) override;
@@ -193,6 +194,8 @@ namespace controls {
 
             /// Stores the sequence of (x,y) spline points from path planning.
             std::vector<glm::fvec2> m_spline_frames;
+            std::vector<std::pair<float, glm::fvec2>> m_left_cone_positions;
+            std::vector<std::pair<float, glm::fvec2>> m_right_cone_positions;
             /// Stores the exact time the spline should be accurate from (i.e. when cones were identified by LIDAR)
             rclcpp::Time m_orig_spline_data_stamp;
 

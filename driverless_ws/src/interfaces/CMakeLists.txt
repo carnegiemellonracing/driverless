@@ -48,6 +48,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Spline.msg"
   "msg/SplineList.msg"
   "msg/SplineFrames.msg"
+        "msg/ConeArray.msg"
   "msg/ControlAction.msg"
   "msg/ConeArray.msg"
   "msg/ControlsState.msg"

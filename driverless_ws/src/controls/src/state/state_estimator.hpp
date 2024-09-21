@@ -38,6 +38,9 @@ namespace controls {
              * @note Time does not need to be passed in since that is encoded in the spline message (@c spline_orig_data_stamp), and is inaccessible to the caller anyway.
              */
             virtual void on_spline(const SplineMsg& spline_msg) =0;
+
+            virtual void on_cone(const ConeMsg& cone_msg) =0;
+
          /**
           * @brief Callback for twist messages. Updates the state estimator with the new twist. Used for state projection.
           * @param twist_msg The spline message
