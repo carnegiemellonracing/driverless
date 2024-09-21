@@ -50,6 +50,12 @@ namespace controls {
                     options
                 );
 
+                m_cone_subscription = create_subscription<ConeMsg>(
+                    cone_topic_name, cone_qos,
+                    [this] (const ConeMsg::SharedPtr msg) { cone_callback(*msg); },
+                    options
+                );
+
                 m_world_twist_subscription = create_subscription<TwistMsg>(
                     world_twist_topic_name, world_twist_qos,
                     [this] (const TwistMsg::SharedPtr msg) { world_twist_callback(*msg); },
@@ -76,6 +82,16 @@ namespace controls {
                     m_state_estimator->on_spline(spline_msg);
                 }
 
+                notify_state_dirty();
+            }
+
+            void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
+                RCLCPP_DEBUG(get_logger(), "Received cones");
+
+                {
+                    std::lock_guard<std::mutex> guard {m_state_mut};
+                    m_state_estimator->on_cone(cone_msg);
+                }
                 notify_state_dirty();
             }
 

@@ -80,9 +80,11 @@ namespace controls {
             const float speed_deviation = approx_speed_along - target_speed;
             const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
 
-            const float distance_cost = offset_1m_cost * fmax(
-                fabsf(nose_curv_pose[state_y_idx]), fabsf(cent_curv_pose[state_y_idx])
-            );
+            const float distance_cost = 0; // track bounds
+
+            //offset_1m_cost * fmax(
+            //    fabsf(nose_curv_pose[state_y_idx]), fabsf(cent_curv_pose[state_y_idx])
+            //);
 
             //TODO: delete?
             // const float deriv_cost = first ?

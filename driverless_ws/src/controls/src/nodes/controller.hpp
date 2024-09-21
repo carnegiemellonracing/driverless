@@ -51,6 +51,8 @@ namespace controls {
              */
             void spline_callback(const SplineMsg& spline_msg);
 
+            void cone_callback(const ConeMsg& cone_msg);
+
             /**
              * Callback for world twist subscription. Forwards message to `StateEstimator::on_world_twist`, and notifies MPPI
              * thread of the dirty state. Likely from GPS.
@@ -116,6 +118,8 @@ namespace controls {
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription; ///< Subscribes to intertial twist
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription; ///< Subscribes to intertial quaternion
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
+            rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;
+            // ConeArray = /lidar_node_cones
 
             /**
              * Mutex protecting `m_state_estimator`. This needs to be acquired when forwarding callbacks to the

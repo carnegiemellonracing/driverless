@@ -17,6 +17,7 @@ namespace controls {
     constexpr const char *world_quat_topic_name = "filter/quaternion";
     constexpr const char *world_pose_topic_name = "filter/pose";
     constexpr const char *controller_info_topic_name = "controller_info";
+    constexpr const char *cone_topic_name = "perc_cones";
 
     // TODO: Ask Ankit what is this, why did we choose it
     /// Profile for best effort communication
@@ -39,7 +40,8 @@ namespace controls {
         best_effort_profile);
 
     const rclcpp::QoS control_action_qos = best_effort_qos;
-    const rclcpp::QoS spline_qos = best_effort_qos;
+    const rclcpp::QoS spline_qos = best_effort_qos; // Can't keep last because it could they could come not in order
+    const rclcpp::QoS cone_qos = best_effort_qos;
     const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1));
