@@ -63,10 +63,8 @@ void Chunk::generateConePoints(std::pair<std::vector<Spline>,std::vector<double>
         double progressBlue_m = (percent*totalBlueLength)/100;
         double progressYellow_m = (percent*totalYellowLength)/100;
       
-        std::pair<double, double> xyBlue = interpolate_raceline(progressBlue_m, blueRaceline.first, 
-                                                        blueRaceline.second, 20);
-        std::pair<double, double> xyYellow = interpolate_raceline(progressYellow_m, yellowRaceline.first, 
-                                                        yellowRaceline.second, 20);
+        std::pair<double, double> xyBlue = interpolate_raceline(progressBlue_m, blueRaceline.first, blueRaceline.second);
+        std::pair<double, double> xyYellow = interpolate_raceline(progressYellow_m, yellowRaceline.first, yellowRaceline.second);
 
         bluePoints.push_back(xyBlue);
         yellowPoints.push_back(xyYellow);

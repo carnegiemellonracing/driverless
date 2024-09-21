@@ -1,5 +1,7 @@
 #include "raceline.hpp"
+
 #include <eigen3/Eigen/Dense>
+#include "frenetEigen.hpp"
 // #include "random.h"
 
 polynomial poly(int deg = 3){
