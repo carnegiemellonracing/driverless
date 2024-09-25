@@ -449,9 +449,16 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
         // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
         Eigen::MatrixXd group(2, points_per_spline);
+
+        std::cout << "res rows:" << res.rows() << std::endl;
+        std::cout << "res cols:" << res.cols() << std::endl;
+
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
+                std::cout << "res row col:" << (j, i*shift + k) << std::endl;
                 group(j, k) = res(j, i*shift + k); // ERROR index out of bound error
+                // res is matrix we pass in
+                // 
                 if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
             }
         }
