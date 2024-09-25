@@ -151,6 +151,8 @@ int main() {
     std::cout << "Hello, world!" << std::endl;
 
     // testMakeSplinesVector();
+
+    generateChunks(blue_cones, yellow_cones);
     
     return 0;
 }
