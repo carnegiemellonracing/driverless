@@ -452,13 +452,9 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
                 group(j, k) = res(j, i*shift + k); // ERROR index out of bound error
-                std::cout << "before logging" << std::endl;
                 if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
-                std::cout << "after logging" << std::endl;
             }
         }
-
-        std::cout << "finished logging" << std::endl;
 
 
         Eigen::Matrix2d Q  = rotation_matrix_gen(logger,group);
