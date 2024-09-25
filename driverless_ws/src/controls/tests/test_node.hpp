@@ -25,6 +25,9 @@ namespace controls {
                 ARC
             };
 
+            /// Spline points, left cone points, right cone points
+            using SplineAndCones = std::tuple<std::vector<glm::fvec2>, std::vector<glm::fvec2>, std::vector<glm::fvec2>>;
+
             static constexpr float jitter_std = 0.00f;
             static constexpr float straight_after_arc_prob = 0.75f;
             static constexpr float min_radius = 4.0f;
@@ -39,6 +42,8 @@ namespace controls {
             static constexpr float spline_period = 0.2f;
             static constexpr float gps_period = 0.05f;
             static constexpr float sim_step = 0.01f;
+            static constexpr float track_width = 4.0f;
+
 
             void on_sim();
             void on_action(const ActionMsg& msg);
@@ -49,9 +54,13 @@ namespace controls {
             std::vector<glm::fvec2> arc_segment(float radius, glm::fvec2 start_pos, float start_heading, float end_heading);
             std::vector<glm::fvec2> straight_segment(glm::fvec2 start, float length, float heading);
 
+            SplineAndCones straight_segment_with_cones(glm::fvec2 start, float length, float heading);
+            SplineAndCones arc_segment_with_cones(float radius, glm::fvec2 start_pos, float start_heading, float end_heading);
+
             rclcpp::Subscription<ActionMsg>::SharedPtr m_subscriber;
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
             rclcpp::Publisher<TwistMsg>::SharedPtr m_twist_publisher;
+            rclcpp::Publisher<ConeMsg>::SharedPtr m_cone_publisher;
 
             rclcpp::TimerBase::SharedPtr m_spline_timer;
             rclcpp::TimerBase::SharedPtr m_gps_timer;
@@ -69,6 +78,8 @@ namespace controls {
             glm::fvec2 m_spline_end_pos = {0, 0};
             float m_spline_end_heading = 0;
             std::list<std::vector<glm::fvec2>> m_segments;
+            std::list<std::vector<glm::fvec2>> m_left_cones;
+            std::list<std::vector<glm::fvec2>> m_right_cones;
             ActionMsg m_last_action_msg;
         };
 

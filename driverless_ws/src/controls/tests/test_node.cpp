@@ -13,6 +13,7 @@
 
 namespace controls {
     namespace tests {
+
         TestNode::TestNode(uint32_t seed)
             : Node{"test_node"},
 
@@ -35,6 +36,8 @@ namespace controls {
               m_spline_publisher {create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
               m_twist_publisher {create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
 
+              m_cone_publisher {create_publisher<ConeMsg>(cone_topic_name, spline_qos)},
+
               m_rng {seed} {
 
             next_segment();
@@ -45,7 +48,7 @@ namespace controls {
 
         void TestNode::next_segment() {
 
-            std::vector<glm::fvec2> new_seg;
+            std::vector<glm::fvec2> new_seg, left_cone_seg, right_cone_seg;
             float end_heading;
             glm::fvec2 end_pos;
             switch (m_last_segment_type) {
@@ -53,17 +56,19 @@ namespace controls {
                 case SegmentType::ARC: {
                     bool is_straight = m_uniform_dist(m_rng) < straight_after_arc_prob;
                     if (is_straight) {
-                        new_seg = straight_segment(m_spline_end_pos, m_uniform_dist(m_rng) * (max_straight - min_straight) + min_straight, m_spline_end_heading);
+                        // new_seg = straight_segment(m_spline_end_pos, m_uniform_dist(m_rng) * (max_straight - min_straight) + min_straight, m_spline_end_heading);
+                        std::tie(new_seg, left_cone_seg, right_cone_seg) = straight_segment_with_cones(m_spline_end_pos, m_uniform_dist(m_rng) * (max_straight - min_straight) + min_straight, m_spline_end_heading);
                         m_last_segment_type = SegmentType::STRAIGHT;
                         end_heading = m_spline_end_heading;
                         end_pos = new_seg.back();
 
                     } else {
                         float radius = m_uniform_dist(m_rng) * (max_radius - min_radius) + min_radius;
-                        float arc_rad = (m_uniform_dist(m_rng) - 0.5f) * (max_arc_rad - min_arc_rad) * 2;
+                        float arc_rad = (m_uniform_dist(m_rng) - 0.5f) * (max_arc_rad - min_arc_rad) * 2; // seems like max is max - min and min is (min - max) TODO: test and fix accordingly
                         end_heading = m_spline_end_heading + arc_rad;
 
-                        new_seg = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
+                        // new_seg = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
+                        std::tie(new_seg, left_cone_seg, right_cone_seg) = arc_segment_with_cones(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
                         m_last_segment_type = SegmentType::ARC;
                         m_spline_end_heading = m_spline_end_heading + arc_rad;
 
@@ -77,7 +82,8 @@ namespace controls {
                     float arc_rad = (m_uniform_dist(m_rng) - 0.5f) * (max_arc_rad - min_arc_rad) * 2;
                     end_heading = m_spline_end_heading + arc_rad;
 
-                    new_seg = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
+                    // new_seg = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
+                    std::tie(new_seg, left_cone_seg, right_cone_seg) = arc_segment_with_cones(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
                     m_last_segment_type = SegmentType::ARC;
 
                     end_pos = new_seg.back();
@@ -89,11 +95,17 @@ namespace controls {
             m_spline_end_pos = end_pos;
 
             m_segments.push_back(new_seg);
+            m_left_cones.push_back(left_cone_seg);
+            m_right_cones.push_back(right_cone_seg);
             if (m_segments.size() > max_segs) {
                 m_segments.erase(m_segments.begin());
+                m_left_cones.erase(m_left_cones.begin());
+                m_right_cones.erase(m_right_cones.begin());
             }
         }
 
+        /// @note start_pos is always going to equal m_spline_end_pos (makes sense). They can be decoupled when we think
+        /// about generating a larger track at once
         std::vector<glm::fvec2> TestNode::arc_segment(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
             std::vector<glm::fvec2> result;
 
@@ -102,6 +114,7 @@ namespace controls {
                 start_heading + M_PI_2 : start_heading - M_PI_2;
 
             glm::fvec2 center = m_spline_end_pos + radius * glm::fvec2 {glm::cos(center_heading), glm::sin(center_heading)};
+            // Angle form the center to the starting point
             float start_angle = std::atan2(start_pos.y - center.y, start_pos.x - center.x);
 
             const uint32_t steps = glm::abs(radius * arc_rad / spline_frame_separation);
@@ -113,6 +126,58 @@ namespace controls {
             return result;
         }
 
+        TestNode::SplineAndCones TestNode::arc_segment_with_cones(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
+            std::vector<glm::fvec2> spline, left_cones, right_cones;
+
+            float arc_rad = end_heading - start_heading;
+            bool counter_clockwise = arc_rad > 0;
+            float center_heading = counter_clockwise ?
+                start_heading + M_PI_2 : start_heading - M_PI_2;
+
+            glm::fvec2 center = m_spline_end_pos + radius * glm::fvec2 {glm::cos(center_heading), glm::sin(center_heading)};
+            // Angle form the center to the starting point
+            float start_angle = std::atan2(start_pos.y - center.y, start_pos.x - center.x);
+
+            const uint32_t steps = glm::abs(radius * arc_rad / spline_frame_separation);
+            const float step_rad = arc_rad / steps;
+
+            float left_dist, right_dist;
+            if (counter_clockwise)
+            {
+                 left_dist = radius - track_width / 2;
+                 right_dist = radius + track_width / 2;
+            }
+            else
+            {
+                left_dist = radius + track_width / 2;
+                right_dist = radius - track_width / 2;
+            }
+
+            for (uint32_t i = 1; i <= steps; i++) {
+                float angle = start_angle + i * step_rad;
+                glm::fvec2 outgoing_vector = glm::fvec2 {glm::cos(angle), glm::sin(angle)};
+                spline.push_back(center + radius * outgoing_vector);
+                left_cones.push_back(center + left_dist * outgoing_vector);
+                right_cones.push_back(center + right_dist * outgoing_vector);
+
+            }
+            return make_tuple(spline, left_cones, right_cones);
+        }
+
+        /**
+         * Generate a sequence of positions along a straight line.
+         *
+         * Given a position, a length, and a heading, generate a sequence of
+         * positions along a straight line, starting at the given position,
+         * going in the direction of the given heading, and continuing for the
+         * given length.
+         *
+         * @param start The starting position of the line segment.
+         * @param length The length of the line segment.
+         * @param heading The direction of the line segment, in radians.
+         *
+         * @return A vector of positions, equally spaced along the line segment.
+         */
         std::vector<glm::fvec2> TestNode::straight_segment(glm::fvec2 start, float length, float heading) {
             std::vector<glm::fvec2> result;
             const uint32_t steps = length / spline_frame_separation;
@@ -121,6 +186,22 @@ namespace controls {
             }
             return result;
         }
+
+
+
+        TestNode::SplineAndCones TestNode::straight_segment_with_cones(glm::fvec2 start, float length, float heading) {
+            std::vector<glm::fvec2> result = straight_segment(start, length, heading);
+            std::vector<glm::fvec2> left, right;
+            constexpr float cone_dist = track_width / 2;
+            for (const glm::fvec2& point : result) {
+                // TODO: verify the integrity of this math
+                left.push_back(point - glm::fvec2 {glm::sin(glm::radians(90 - glm::degrees(heading))) * cone_dist, glm::cos(glm::radians(90 - glm::degrees(heading))) * cone_dist});
+                right.push_back(point + glm::fvec2 {glm::sin(glm::radians(90 - glm::degrees(heading))) * cone_dist, glm::cos(glm::radians(90 - glm::degrees(heading))) * cone_dist});
+            }
+            return std::make_tuple(result, left, right);
+        }
+
+
 
         int model_func(double t, const double state[], double dstatedt[], void* params) {
             const double yaw = state[2];
@@ -193,10 +274,12 @@ namespace controls {
 
         void TestNode::publish_spline() {
             SplineMsg msg {};
+            ConeMsg cone_msg {};
 
             const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
             const float car_heading = m_world_state[2];
 
+            // transformation from world to car frame
             auto gen_point = [&car_pos, car_heading](const glm::fvec2& point) {
                 geometry_msgs::msg::Point p;
                 glm::fvec2 rel_point = point - car_pos;
@@ -211,10 +294,26 @@ namespace controls {
                 }
             }
 
-            msg.orig_data_stamp = get_clock()->now();
+            for (const auto& cone_seg: m_left_cones) {
+                for (const glm::fvec2& point : cone_seg) {
+                    cone_msg.blue_cones.push_back(gen_point(point));
+                }
+            }
+
+            for (const auto& cone_seg: m_right_cones) {
+                for (const glm::fvec2& point : cone_seg) {
+                    cone_msg.yellow_cones.push_back(gen_point(point));
+                }
+            }
+
+            auto curr_time = get_clock()->now();
+            msg.orig_data_stamp = curr_time;
+            cone_msg.orig_data_stamp = curr_time;
 
             m_spline_publisher->publish(msg);
+            m_cone_publisher->publish(cone_msg);
         }
+
 
         void TestNode::publish_twist() {
             TwistMsg msg {};
