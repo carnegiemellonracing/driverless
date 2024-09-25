@@ -86,8 +86,10 @@ std::vector<Chunk> generateChunks(std::vector<std::pair<double,double>> blueCone
     std::vector<Chunk> chunkVector;
 
     // make splines for track boundaries
+    std::cout << "before make spline vector" << std::endl;
     std::pair<std::vector<Spline>,std::vector<double>> blue = make_splines_vector(blueCones);
     std::pair<std::vector<Spline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
+    std::cout << "after make spline vector" << std::endl;
 
     std::vector<Spline> racetrackSplines = blue.first;
     std::vector<double> cumulativeLen = blue.second;
