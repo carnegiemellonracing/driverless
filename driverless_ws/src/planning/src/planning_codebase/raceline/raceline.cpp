@@ -451,8 +451,10 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         Eigen::MatrixXd group(2, points_per_spline);
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
+                std::cout << "before logging" << std::endl;
                 group(j, k) = res(j, i*shift + k);
                 if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
+                std::cout << "after logging" << std::endl;
             }
         }
 
