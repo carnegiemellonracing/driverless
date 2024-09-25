@@ -81,14 +81,15 @@ namespace controls {
 
     // State Estimation
 
+    /// Controls the granularity of the spline frame lookup table
     constexpr float spline_frame_separation = 0.5f;  // meters
     constexpr uint32_t curv_frame_lookup_tex_width = 512;
     constexpr float curv_frame_lookup_padding = 0; // meters
     /// Not real track width, used for curvilinear frame lookup table generation
-    constexpr float track_width = 30.0f; // TODO: FSG rules - no we need - less noisy output (rename to lookup_table_width)
+    constexpr float lookup_table_width = 30.0f; // TODO: FSG rules - no we need - less noisy output (rename to lookup_table_width)
     // mppi simulates a lot of shitty trajectories (naive brownian guess)
     /// Represents space the car occupies, used to calculate the size of the curvilinear lookup table.
-    constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * track_width);
+    constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * lookup_table_width);
     constexpr bool reset_pose_on_spline = true; ///< Sets pose to 0 vector for new spline (sensor POV)
 
 
