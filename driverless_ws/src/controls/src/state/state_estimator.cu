@@ -676,15 +676,17 @@ namespace controls {
 
             std::stringstream ss;
             ss << "# splines: " << num_splines << "# Left cones: " << num_left_cones << "# Right cones: " << num_right_cones << "\n";
-            m_logger(ss.str());
+            m_logger(ss.str().c_str());
 
             std::vector<Vertex> vertices;
             std::vector<GLuint> indices;
 
-            float total_progress = 0; //TODO delete
+            auto cmp = [](const std::pair<float, glm::fvec2>& a, const std::pair<float, glm::fvec2>& b) {
+                return a.first < b.first;
+            };
 
-            std::sort(m_left_cone_positions.begin(), m_left_cone_positions.end());
-            std::sort(m_right_cone_positions.begin(), m_right_cone_positions.end());
+            std::sort(m_left_cone_positions.begin(), m_left_cone_positions.end(), cmp);
+            std::sort(m_right_cone_positions.begin(), m_right_cone_positions.end(), cmp);
 
             for (size_t i = 0; i < std::min(num_left_cones, num_right_cones) - 1; ++i) {
                 glm::fvec2 l1 = m_left_cone_positions[i].second;
