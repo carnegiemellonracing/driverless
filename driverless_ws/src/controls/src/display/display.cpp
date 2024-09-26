@@ -136,6 +136,8 @@ namespace controls {
 
         void Display::init_spline() {
             m_spline = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_trajectory_shader_program);
+            m_left_cones = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 4, m_trajectory_shader_program);
+            m_right_cones = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 4, m_trajectory_shader_program);
         }
 
         void Display::init_best_guess() {
@@ -219,6 +221,26 @@ namespace controls {
             }
 
             m_spline->draw();
+        }
+
+        void Display::draw_cones()
+        {
+            assert(m_left_cones != nullptr);
+            assert(m_right_cones != nullptr);
+            m_left_cones->vertex_buf = std::vector<float>(m_left_cone_frames.size() * 2);
+            for (size_t i = 0; i < m_left_cone_frames.size(); i++) {
+                m_left_cones->vertex_buf[2 * i] = m_left_cone_frames[i].x;
+                m_left_cones->vertex_buf[2 * i + 1] = m_left_cone_frames[i].y;
+            }
+
+            m_right_cones->vertex_buf = std::vector<float>(m_right_cone_frames.size() * 2);
+            for (size_t i = 0; i < m_right_cone_frames.size(); i++) {
+                m_right_cones->vertex_buf[2 * i] = m_right_cone_frames[i].x;
+                m_right_cones->vertex_buf[2 * i + 1] = m_right_cone_frames[i].y;
+            }
+
+            m_left_cones->draw();
+            m_right_cones->draw();
         }
 
         void Display::draw_best_guess() {
@@ -313,6 +335,8 @@ namespace controls {
                 glClear(GL_COLOR_BUFFER_BIT);
 
                 m_spline_frames = m_state_estimator->get_spline_frames();
+                m_left_cone_frames = m_state_estimator->get_left_cone_frames();
+                m_right_cone_frames = m_state_estimator->get_right_cone_frames();
                 m_state_estimator->get_offset_pixels(m_offset_image);
                 m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();
                 m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);

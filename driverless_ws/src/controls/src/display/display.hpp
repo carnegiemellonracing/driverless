@@ -65,6 +65,7 @@ namespace controls {
             void draw_trajectories();
 
             void draw_spline();
+            void draw_cones();
             void draw_best_guess();
 
             void draw_offset_image();
@@ -79,6 +80,8 @@ namespace controls {
 
             std::vector<Trajectory> m_trajectories;
             std::unique_ptr<Trajectory> m_spline = nullptr;
+			std::unique_ptr<Trajectory> m_left_cones = nullptr;
+			std::unique_ptr<Trajectory> m_right_cones = nullptr;
             std::unique_ptr<Trajectory> m_best_guess = nullptr;
 
             utils::GLObj m_offset_img_obj;
@@ -88,6 +91,8 @@ namespace controls {
             std::shared_ptr<state::StateEstimator> m_state_estimator;
 
             std::vector<glm::fvec2> m_spline_frames;
+            std::vector<glm::fvec2> m_left_cone_frames;
+            std::vector<glm::fvec2> m_right_cone_frames;
             std::vector<glm::fvec2> m_last_reduced_state_trajectory;
             std::vector<float> m_last_state_trajectories;
             state::StateEstimator::OffsetImage m_offset_image;
