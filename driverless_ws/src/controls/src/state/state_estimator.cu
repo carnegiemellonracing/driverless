@@ -352,7 +352,7 @@ namespace controls {
             m_left_cone_positions.clear();
             m_left_cone_positions.reserve(cone_msg.blue_cones.size());
             m_right_cone_positions.clear();
-            m_right_cone_positions.reserve(cone_msg.blue_cones.size());
+            m_right_cone_positions.reserve(cone_msg.yellow_cones.size());
 
             for (const auto& cone_point : cone_msg.blue_cones) {
                 // TODO when perceptions gets their shit together
@@ -499,6 +499,28 @@ namespace controls {
             return res;
         }
 
+        std::vector<glm::fvec2> StateEstimator_Impl::get_left_cone_frames() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            std::vector<glm::fvec2> res (m_left_cone_positions.size());
+            for (size_t i = 0; i < m_left_cone_positions.size(); i++) {
+                res[i] = {m_left_cone_positions.at(i).second.x, m_left_cone_positions.at(i).second.y};
+            }
+            return res;
+        }
+
+        std::vector<glm::fvec2> StateEstimator_Impl::get_right_cone_frames() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            std::vector<glm::fvec2> res (m_right_cone_positions.size());
+            for (size_t i = 0; i < m_right_cone_positions.size(); i++) {
+                res[i] = {m_right_cone_positions.at(i).second.x, m_right_cone_positions.at(i).second.y};
+            }
+            return res;
+        }
+
+
+
         void StateEstimator_Impl::get_offset_pixels(OffsetImage &offset_image) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
@@ -570,7 +592,7 @@ namespace controls {
 
             glBindVertexArray(m_gl_path.vao);
             // relies on the element buffer object already being bound
-            glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
+            glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
 
 #ifdef DISPLAY
             glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
@@ -676,7 +698,7 @@ namespace controls {
 
             std::stringstream ss;
             ss << "# splines: " << num_splines << "# Left cones: " << num_left_cones << "# Right cones: " << num_right_cones << "\n";
-            m_logger(ss.str().c_str());
+            RCLCPP_WARN(m_logger, ss.str().c_str());
 
             std::vector<Vertex> vertices;
             std::vector<GLuint> indices;
@@ -688,11 +710,14 @@ namespace controls {
             std::sort(m_left_cone_positions.begin(), m_left_cone_positions.end(), cmp);
             std::sort(m_right_cone_positions.begin(), m_right_cone_positions.end(), cmp);
 
+            m_num_triangles = 0;
             for (size_t i = 0; i < std::min(num_left_cones, num_right_cones) - 1; ++i) {
-                glm::fvec2 l1 = m_left_cone_positions[i].second;
-                glm::fvec2 l2 = m_left_cone_positions[i + 1].second;
-                glm::fvec2 r1 = m_right_cone_positions[i].second;
-                glm::fvec2 r2 = m_right_cone_positions[i + 1].second;
+                std::cout << "BEGIN" << std::endl;
+                glm::fvec2 l1 = m_left_cone_positions.at(i).second;
+                glm::fvec2 l2 = m_left_cone_positions.at(i + 1).second;
+                glm::fvec2 r1 = m_right_cone_positions.at(i).second;
+                glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
+                std::cout << "END" << std::endl;
 
                 vertices.push_back({{l1.x, l1.y}, {10.0f, 0.0f, 1.0f}});
                 vertices.push_back({{l2.x, l2.y}, {10.0f, 0.0f, 1.0f}});
@@ -711,6 +736,8 @@ namespace controls {
                 indices.push_back(r1i);
                 indices.push_back(r2i);
                 indices.push_back(l2i);
+
+                m_num_triangles += 2;
 
             }
 

@@ -96,6 +96,8 @@ namespace controls {
             };
 
             virtual std::vector<glm::fvec2> get_spline_frames() =0;
+            virtual std::vector<glm::fvec2> get_left_cone_frames() =0;
+            virtual std::vector<glm::fvec2> get_right_cone_frames() =0;
             virtual void get_offset_pixels(OffsetImage& offset_image) =0;
 #endif
 
