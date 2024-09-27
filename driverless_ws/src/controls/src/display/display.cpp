@@ -136,8 +136,8 @@ namespace controls {
 
         void Display::init_spline() {
             m_spline = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_trajectory_shader_program);
-            m_left_cones = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 4, m_trajectory_shader_program);
-            m_right_cones = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 4, m_trajectory_shader_program);
+            m_left_cones = std::make_unique<Trajectory>(glm::fvec4 {0.0f, 0.0f, 1.0f, 1.0f}, 3, m_trajectory_shader_program);
+            m_right_cones = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 0.0f, 1.0f}, 3, m_trajectory_shader_program);
         }
 
         void Display::init_best_guess() {
@@ -227,16 +227,19 @@ namespace controls {
         {
             assert(m_left_cones != nullptr);
             assert(m_right_cones != nullptr);
-            m_left_cones->vertex_buf = std::vector<float>(m_left_cone_frames.size() * 2);
-            for (size_t i = 0; i < m_left_cone_frames.size(); i++) {
-                m_left_cones->vertex_buf[2 * i] = m_left_cone_frames[i].x;
-                m_left_cones->vertex_buf[2 * i + 1] = m_left_cone_frames[i].y;
+
+            const auto& left_cone_frames = m_left_cone_frames;
+            const auto& right_cone_frames = m_right_cone_frames;
+            m_left_cones->vertex_buf = std::vector<float>(left_cone_frames.size() * 2);
+            for (size_t i = 0; i < left_cone_frames.size(); i++) {
+                m_left_cones->vertex_buf[2 * i] = left_cone_frames[i].x;
+                m_left_cones->vertex_buf[2 * i + 1] = left_cone_frames[i].y;
             }
 
-            m_right_cones->vertex_buf = std::vector<float>(m_right_cone_frames.size() * 2);
-            for (size_t i = 0; i < m_right_cone_frames.size(); i++) {
-                m_right_cones->vertex_buf[2 * i] = m_right_cone_frames[i].x;
-                m_right_cones->vertex_buf[2 * i + 1] = m_right_cone_frames[i].y;
+            m_right_cones->vertex_buf = std::vector<float>(right_cone_frames.size() * 2);
+            for (size_t i = 0; i < right_cone_frames.size(); i++) {
+                m_right_cones->vertex_buf[2 * i] = right_cone_frames[i].x;
+                m_right_cones->vertex_buf[2 * i + 1] = right_cone_frames[i].y;
             }
 
             m_left_cones->draw();
@@ -337,6 +340,11 @@ namespace controls {
                 m_spline_frames = m_state_estimator->get_spline_frames();
                 m_left_cone_frames = m_state_estimator->get_left_cone_frames();
                 m_right_cone_frames = m_state_estimator->get_right_cone_frames();
+
+                if (m_spline_frames.size() != m_left_cone_frames.size() || m_spline_frames.size() != m_right_cone_frames.size())
+                {
+                    throw std::runtime_error("m_spline_frames.size() != m_left_cone_frames.size() || m_spline_frames.size() != m_right_cone_frames.size()");
+                }
                 m_state_estimator->get_offset_pixels(m_offset_image);
                 m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();
                 m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);
@@ -347,6 +355,7 @@ namespace controls {
                 draw_trajectories();
 
                 draw_spline();
+                draw_cones();
                 draw_best_guess();
 
                 SDL_GL_SwapWindow(window);

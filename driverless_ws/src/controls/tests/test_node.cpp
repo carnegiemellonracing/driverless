@@ -91,6 +91,9 @@ namespace controls {
                 }
             }
 
+            if (new_seg.size() != left_cone_seg.size() || new_seg.size() != right_cone_seg.size()) {
+                throw std::runtime_error("new_seg.size() != left_cone_seg.size() || new_seg.size() != right_cone_seg.size()");
+            }
             m_spline_end_heading = end_heading;
             m_spline_end_pos = end_pos;
 
@@ -190,15 +193,20 @@ namespace controls {
 
 
         TestNode::SplineAndCones TestNode::straight_segment_with_cones(glm::fvec2 start, float length, float heading) {
-            std::vector<glm::fvec2> result = straight_segment(start, length, heading);
-            std::vector<glm::fvec2> left, right;
+            std::vector<glm::fvec2> spline, left, right;
             constexpr float cone_dist = track_width / 2;
-            for (const glm::fvec2& point : result) {
-                // TODO: verify the integrity of this math
-                left.push_back(point - glm::fvec2 {glm::sin(glm::radians(90 - glm::degrees(heading))) * cone_dist, glm::cos(glm::radians(90 - glm::degrees(heading))) * cone_dist});
-                right.push_back(point + glm::fvec2 {glm::sin(glm::radians(90 - glm::degrees(heading))) * cone_dist, glm::cos(glm::radians(90 - glm::degrees(heading))) * cone_dist});
+            glm::fvec2 left_diff {glm::cos(heading + M_PI_2), glm::sin(heading + M_PI_2)};
+            glm::fvec2 right_diff {glm::cos(heading - M_PI_2), glm::sin(heading - M_PI_2)};
+            glm::fvec2 left_start = start + cone_dist * left_diff;
+            glm::fvec2 right_start = start + cone_dist * right_diff;
+            const uint32_t steps = length / spline_frame_separation;
+            for (uint32_t i = 1; i <= steps; i++) {
+                glm::fvec2 step = i * spline_frame_separation * glm::fvec2 {glm::cos(heading), glm::sin(heading)};
+                spline.push_back(start + step);
+                left.push_back(left_start + step);
+                right.push_back(right_start + step);
             }
-            return std::make_tuple(result, left, right);
+            return std::make_tuple(spline, left, right);
         }
 
 

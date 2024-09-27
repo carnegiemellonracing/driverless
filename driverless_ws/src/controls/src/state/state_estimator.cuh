@@ -126,6 +126,7 @@ namespace controls {
             bool is_ready() override;
             State get_projected_state() override;
             void set_logger(LoggerFunc logger) override;
+            void set_logger_obj(rclcpp::Logger logger) override;
 
             rclcpp::Time get_orig_spline_data_stamp() override;
             void record_control_action(const Action &action, const rclcpp::Time &time) override;
@@ -235,6 +236,7 @@ namespace controls {
             bool m_curv_frame_lookup_mapped = false;
 
             LoggerFunc m_logger; ///< The logger function to be used.
+            rclcpp::Logger m_logger_obj; ///< Logger object (belonging to the node)
             std::mutex& m_mutex; ///< Mutex to prevent multiple method calls from happening simultaneously
         };
 
