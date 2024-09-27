@@ -286,6 +286,7 @@ int main(int argc, char *argv[]) {
 
     //TODO why is this not a nullptr
     state_estimator->set_logger(logger_func);
+    state_estimator->set_logger_obj(logger);
     controller->set_logger(logger_func);
 
     // create a condition variable to notify main thread when either display or node dies

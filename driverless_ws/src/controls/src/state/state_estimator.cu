@@ -18,6 +18,7 @@
 #include <iosfwd>
 #include <vector>
 #include <sstream>
+#include <rclcpp/rclcpp.hpp>
 #include <glm/common.hpp>
 #include <mppi/functors.cuh>
 #include <SDL2/SDL_video.h>
@@ -255,7 +256,7 @@ namespace controls {
         // methods
 
         StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger)
-            : m_mutex {mutex}, m_logger {logger} {
+            : m_mutex {mutex}, m_logger {logger}, m_logger_obj {rclcpp::get_logger("")} {
             std::lock_guard<std::mutex> guard {mutex};
 
             m_logger("initializing state estimator");
@@ -334,9 +335,9 @@ namespace controls {
                 });
             }
 
-            if constexpr (reset_pose_on_spline) {
-                m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
-            }
+            // if constexpr (reset_pose_on_spline) {
+            //     m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
+            // } I want the state to be dirtied only by the cones, so disable this for the splines
 
             m_orig_spline_data_stamp = spline_msg.orig_data_stamp;
 
@@ -348,7 +349,7 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_logger("beginning state estimator cone processing");
-    
+
             m_left_cone_positions.clear();
             m_left_cone_positions.reserve(cone_msg.blue_cones.size());
             m_right_cone_positions.clear();
@@ -487,6 +488,13 @@ namespace controls {
 
             m_logger = logger;
         }
+
+        void StateEstimator_Impl::set_logger_obj(rclcpp::Logger logger)
+        {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            m_logger_obj = logger;
+        }
+
 
 #ifdef DISPLAY
         std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() {
@@ -698,7 +706,7 @@ namespace controls {
 
             std::stringstream ss;
             ss << "# splines: " << num_splines << "# Left cones: " << num_left_cones << "# Right cones: " << num_right_cones << "\n";
-            RCLCPP_WARN(m_logger, ss.str().c_str());
+            RCLCPP_WARN(m_logger_obj, ss.str().c_str());
 
             std::vector<Vertex> vertices;
             std::vector<GLuint> indices;
@@ -712,12 +720,10 @@ namespace controls {
 
             m_num_triangles = 0;
             for (size_t i = 0; i < std::min(num_left_cones, num_right_cones) - 1; ++i) {
-                std::cout << "BEGIN" << std::endl;
                 glm::fvec2 l1 = m_left_cone_positions.at(i).second;
                 glm::fvec2 l2 = m_left_cone_positions.at(i + 1).second;
                 glm::fvec2 r1 = m_right_cone_positions.at(i).second;
                 glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
-                std::cout << "END" << std::endl;
 
                 vertices.push_back({{l1.x, l1.y}, {10.0f, 0.0f, 1.0f}});
                 vertices.push_back({{l2.x, l2.y}, {10.0f, 0.0f, 1.0f}});

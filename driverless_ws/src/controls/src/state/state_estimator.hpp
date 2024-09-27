@@ -73,6 +73,13 @@ namespace controls {
              * @param logger The logger function to be used.
              */
             virtual void set_logger(LoggerFunc logger) =0;
+
+
+         /**
+          * Attaches the node's logger object to the state estimator.
+          * @param logger The logger object to be bound.
+          */
+         virtual void set_logger_obj(rclcpp::Logger logger) =0;
             /**
              * @brief Returns the timestamp of the last spline message received. This is accurate to when the sensor
              * (i.e. LIDAR) information was received, not when the spline was calculated.
