@@ -450,12 +450,14 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
         Eigen::MatrixXd group(2, points_per_spline);
 
-        std::cout << "res rows:" << res.rows() << std::endl;
-        std::cout << "res cols:" << res.cols() << std::endl;
+        std::cout << "res number of rows:" << res.rows() << std::endl;
+        std::cout << "res number of cols:" << res.cols() << std::endl;
 
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
-                std::cout << "res row col:" << (j, i*shift + k) << std::endl;
+                std::cout << "res curr row col:" << j << std::endl;
+                std::cout << "res curr col:" << i*shift + k << std::endl;
+
                 group(j, k) = res(j, i*shift + k); // ERROR index out of bound error
                 // res is matrix we pass in
                 // 
