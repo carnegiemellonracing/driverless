@@ -341,10 +341,10 @@ namespace controls {
                 m_left_cone_frames = m_state_estimator->get_left_cone_frames();
                 m_right_cone_frames = m_state_estimator->get_right_cone_frames();
 
-                if (m_spline_frames.size() != m_left_cone_frames.size() || m_spline_frames.size() != m_right_cone_frames.size())
-                {
-                    throw std::runtime_error("m_spline_frames.size() != m_left_cone_frames.size() || m_spline_frames.size() != m_right_cone_frames.size()");
-                }
+                // if (m_spline_frames.size() != m_left_cone_frames.size() || m_spline_frames.size() != m_right_cone_frames.size())
+                // {
+                //     throw std::runtime_error("m_spline_frames.size() != m_left_cone_frames.size() || m_spline_frames.size() != m_right_cone_frames.size()");
+                // }
                 m_state_estimator->get_offset_pixels(m_offset_image);
                 m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();
                 m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);

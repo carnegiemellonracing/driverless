@@ -703,6 +703,7 @@ namespace controls {
             const size_t num_splines = m_spline_frames.size();
             const size_t num_left_cones = m_left_cone_positions.size();
             const size_t num_right_cones = m_right_cone_positions.size();
+            const size_t min_cones = std::min(num_left_cones, num_right_cones);
 
             std::stringstream ss;
             ss << "# splines: " << num_splines << "# Left cones: " << num_left_cones << "# Right cones: " << num_right_cones << "\n";
@@ -719,32 +720,36 @@ namespace controls {
             std::sort(m_right_cone_positions.begin(), m_right_cone_positions.end(), cmp);
 
             m_num_triangles = 0;
-            for (size_t i = 0; i < std::min(num_left_cones, num_right_cones) - 1; ++i) {
-                glm::fvec2 l1 = m_left_cone_positions.at(i).second;
-                glm::fvec2 l2 = m_left_cone_positions.at(i + 1).second;
-                glm::fvec2 r1 = m_right_cone_positions.at(i).second;
-                glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
+            if (min_cones >= 2) {
+                for (size_t i = 0; i < min_cones - 1; ++i) {
+                    glm::fvec2 l1 = m_left_cone_positions.at(i).second;
+                    glm::fvec2 l2 = m_left_cone_positions.at(i + 1).second;
+                    glm::fvec2 r1 = m_right_cone_positions.at(i).second;
+                    glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
 
-                vertices.push_back({{l1.x, l1.y}, {10.0f, 0.0f, 1.0f}});
-                vertices.push_back({{l2.x, l2.y}, {10.0f, 0.0f, 1.0f}});
-                vertices.push_back({{r1.x, r1.y}, {10.0f, 0.0f, 1.0f}});
-                vertices.push_back({{r2.x, r2.y}, {10.0f, 0.0f, 1.0f}});
+                    vertices.push_back({{l1.x, l1.y}, {10.0f, 0.0f, 1.0f}});
+                    vertices.push_back({{l2.x, l2.y}, {10.0f, 0.0f, 1.0f}});
+                    vertices.push_back({{r1.x, r1.y}, {10.0f, 0.0f, 1.0f}});
+                    vertices.push_back({{r2.x, r2.y}, {10.0f, 0.0f, 1.0f}});
 
-                const GLuint l1i = i * 4;
-                const GLuint l2i = i * 4 + 1;
-                const GLuint r1i = i * 4 + 2;
-                const GLuint r2i = i * 4 + 3;
+                    const GLuint l1i = i * 4;
+                    const GLuint l2i = i * 4 + 1;
+                    const GLuint r1i = i * 4 + 2;
+                    const GLuint r2i = i * 4 + 3;
 
-                indices.push_back(l1i);
-                indices.push_back(l2i);
-                indices.push_back(r1i);
+                    indices.push_back(l1i);
+                    indices.push_back(l2i);
+                    indices.push_back(r1i);
 
-                indices.push_back(r1i);
-                indices.push_back(r2i);
-                indices.push_back(l2i);
+                    indices.push_back(r1i);
+                    indices.push_back(r2i);
+                    indices.push_back(l2i);
 
-                m_num_triangles += 2;
+                    m_num_triangles += 2;
 
+                }
+            } else {
+                RCLCPP_WARN(m_logger_obj, "WHY DO I HAVE SO FEW CONES :(");
             }
 
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
