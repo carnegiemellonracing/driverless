@@ -420,7 +420,8 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
     // Eigen::MatrixXd points=res;
 
-    //TODO: make sure that the group numbers are being calculated properly
+    // TODO: make sure that the group numbers are being calculated properly
+    // [2, 3, 4, 3, 5, 3, 5, ]
 
     int shift = points_per_spline-1; //3
     int group_numbers;
@@ -436,9 +437,9 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         else group_numbers = n/3;
         // RCLCPP_INFO(logger, "group numbers is %d\n", group_numbers);
     }
-    std::vector<std::vector<int>> groups;
 
-    
+    // std::vector<std::vector<int>> groups; not used anywhere else 
+
     std::vector<double> lengths;
     std::vector<double> cumsum;
     // lengths.resize(group_numbers);
@@ -455,7 +456,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
-                std::cout << "res curr row col:" << j << std::endl;
+                std::cout << "res curr row:" << j << std::endl;
                 std::cout << "res curr col:" << i*shift + k << std::endl;
 
                 group(j, k) = res(j, i*shift + k); // ERROR index out of bound error
