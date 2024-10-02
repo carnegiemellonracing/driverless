@@ -69,6 +69,7 @@ namespace controls {
             void draw_best_guess();
 
             void draw_offset_image();
+            void draw_triangles();
 
             void update_loop(SDL_Window* window);
 
