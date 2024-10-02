@@ -527,6 +527,19 @@ namespace controls {
             return res;
         }
 
+        std::vector<float> StateEstimator_Impl::get_vertices() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            return m_vertices;
+        }
+
+        // std::vector<GLuint> StateEstimator_Impl::get_indices() {
+        //     std::lock_guard<std::mutex> guard {m_mutex};
+
+        //     return m_indices;
+        // }
+
+
 
 
         void StateEstimator_Impl::get_offset_pixels(OffsetImage &offset_image) {
@@ -683,7 +696,8 @@ namespace controls {
             glBindVertexArray(0);
         }
 
-        // THIS IS WHERE I EDIT
+        /**
+        // Track bounds version
         void StateEstimator_Impl::fill_path_buffers(glm::fvec2 car_pos) {
             struct Vertex {
                 struct {
@@ -711,13 +725,14 @@ namespace controls {
 
             std::vector<Vertex> vertices;
             std::vector<GLuint> indices;
+            std::vector<float> vertices_display;
 
             auto cmp = [](const std::pair<float, glm::fvec2>& a, const std::pair<float, glm::fvec2>& b) {
                 return a.first < b.first;
             };
 
-            std::sort(m_left_cone_positions.begin(), m_left_cone_positions.end(), cmp);
-            std::sort(m_right_cone_positions.begin(), m_right_cone_positions.end(), cmp);
+            // std::sort(m_left_cone_positions.begin(), m_left_cone_positions.end(), cmp);
+            // std::sort(m_right_cone_positions.begin(), m_right_cone_positions.end(), cmp);
 
             m_num_triangles = 0;
             if (min_cones >= 2) {
@@ -727,10 +742,10 @@ namespace controls {
                     glm::fvec2 r1 = m_right_cone_positions.at(i).second;
                     glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
 
-                    vertices.push_back({{l1.x, l1.y}, {10.0f, 0.0f, 1.0f}});
-                    vertices.push_back({{l2.x, l2.y}, {10.0f, 0.0f, 1.0f}});
-                    vertices.push_back({{r1.x, r1.y}, {10.0f, 0.0f, 1.0f}});
-                    vertices.push_back({{r2.x, r2.y}, {10.0f, 0.0f, 1.0f}});
+                    vertices.push_back({{l1.x, l1.y}, {10.0f * i, 0.0f, 1.0f}});
+                    vertices.push_back({{l2.x, l2.y}, {10.0f * (i + 1), 0.0f, 1.0f}});
+                    vertices.push_back({{r1.x, r1.y}, {10.0f * i, 0.0f, 1.0f}});
+                    vertices.push_back({{r2.x, r2.y}, {10.0f * (i + 1), 0.0f, 1.0f}});
 
                     const GLuint l1i = i * 4;
                     const GLuint l2i = i * 4 + 1;
@@ -745,11 +760,137 @@ namespace controls {
                     indices.push_back(r2i);
                     indices.push_back(l2i);
 
+                    vertices_display.push_back(l1.x);
+                    vertices_display.push_back(l1.y);
+                    vertices_display.push_back(l2.x);
+                    vertices_display.push_back(l2.y);
+                    
+                    vertices_display.push_back(r1.x);
+                    vertices_display.push_back(r1.y);
+
+                    vertices_display.push_back(r1.x);
+                    vertices_display.push_back(r1.y);
+                    vertices_display.push_back(r2.x);
+                    vertices_display.push_back(r2.y);
+                    vertices_display.push_back(l2.x);
+                    vertices_display.push_back(l2.y);
                     m_num_triangles += 2;
 
                 }
             } else {
                 RCLCPP_WARN(m_logger_obj, "WHY DO I HAVE SO FEW CONES :(");
+            }
+
+            m_vertices = vertices_display;
+            m_triangles = indices;
+            
+            glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
+        }
+        */
+        
+        // Offset from spline version
+        void StateEstimator_Impl::fill_path_buffers(glm::fvec2 car_pos) {
+            struct Vertex {
+                struct {
+                    float x;
+                    float y;
+                } world;
+
+                struct {
+                    float progress;
+                    float offset;
+                    float heading;
+                } curv;
+            };
+
+            const float radius = lookup_table_width * 0.5f;
+            const size_t n = m_spline_frames.size();
+
+            if (n < 2) {
+                throw std::runtime_error("less than 2 spline frames! (bruh andrew and/or deep)");
+            }
+
+            std::vector<Vertex> vertices;
+            std::vector<GLuint> indices;
+
+            float total_progress = 0;
+            for (size_t i = 0; i < n - 1; i++) {
+                glm::fvec2 p1 = m_spline_frames[i];
+                glm::fvec2 p2 = m_spline_frames[i + 1];
+
+                if (i == 0) {
+                    p1 = p1 - normalize(p2 - p1) * car_padding;
+                } else if (i == n - 2) {
+                    p2 = p2 + normalize(p2 - p1) * car_padding;
+                }
+
+                glm::fvec2 disp = p2 - p1;
+                float new_progress = glm::length(disp);
+                float segment_heading = std::atan2(disp.y, disp.x);
+
+
+                glm::fvec2 prev = i == 0 ? p1 : m_spline_frames[i - 1];
+                float secant_heading = std::atan2(p2.y - prev.y, p2.x - prev.x);
+
+                glm::fvec2 dir = glm::normalize(disp);
+                glm::fvec2 normal = glm::fvec2(-dir.y, dir.x);
+
+                glm::fvec2 low1 = p1 - normal * radius;
+                glm::fvec2 low2 = p2 - normal * radius;
+                glm::fvec2 high1 = p1 + normal * radius;
+                glm::fvec2 high2 = p2 + normal * radius;
+
+                if (i == 0) {
+                    vertices.push_back({{p1.x, p1.y}, {total_progress, 0.0f, segment_heading}});
+                }
+                vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, secant_heading}});
+
+                vertices.push_back({{low1.x, low1.y}, {total_progress, -radius, segment_heading}});
+                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, -radius, segment_heading}});
+                vertices.push_back({{high1.x, high1.y}, {total_progress, radius, segment_heading}});
+                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, radius, segment_heading}});
+
+                const GLuint p1i = i == 0 ? 0 : (i - 1) * 5 + 1;
+                const GLuint p2i = i * 5 + 1;
+                const GLuint l1i = i * 5 + 2;
+                const GLuint l2i = i * 5 + 3;
+                const GLuint h1i = i * 5 + 4;
+                const GLuint h2i = i * 5 + 5;
+
+                indices.push_back(p1i);
+                indices.push_back(p2i);
+                indices.push_back(h2i);
+
+                indices.push_back(h1i);
+                indices.push_back(p1i);
+                indices.push_back(h2i);
+
+                indices.push_back(l1i);
+                indices.push_back(l2i);
+                indices.push_back(p2i);
+
+                indices.push_back(p1i);
+                indices.push_back(l1i);
+                indices.push_back(p2i);
+
+                if (i > 0) {
+                    const GLuint lpi = (i - 1) * 5 + 3;
+                    const GLuint hpi = (i - 1) * 5 + 5;
+
+                    indices.push_back(hpi);
+                    indices.push_back(p1i);
+                    indices.push_back(h1i);
+
+                    indices.push_back(lpi);
+                    indices.push_back(l1i);
+                    indices.push_back(p1i);
+                }
+
+                total_progress += new_progress;
             }
 
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);

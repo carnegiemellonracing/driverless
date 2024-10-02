@@ -135,6 +135,8 @@ namespace controls {
             std::vector<glm::fvec2> get_spline_frames() override;
             std::vector<glm::fvec2> get_left_cone_frames() override;
             std::vector<glm::fvec2> get_right_cone_frames() override;
+            std::vector<float> get_vertices() override;
+            // std::vector<glm::fvec2> get_normals() override;
             void get_offset_pixels(OffsetImage& offset_image) override;
 #endif
 
@@ -199,6 +201,9 @@ namespace controls {
             std::vector<glm::fvec2> m_spline_frames;
             std::vector<std::pair<float, glm::fvec2>> m_left_cone_positions;
             std::vector<std::pair<float, glm::fvec2>> m_right_cone_positions;
+            std::vector<float> m_vertices;
+            std::vector<GLuint> m_triangles;
+
             int m_num_triangles;
             /// Stores the exact time the spline should be accurate from (i.e. when cones were identified by LIDAR)
             rclcpp::Time m_orig_spline_data_stamp;

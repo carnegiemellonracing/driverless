@@ -143,6 +143,7 @@ namespace controls {
         void Display::init_best_guess() {
             m_best_guess = std::make_unique<Trajectory>(glm::fvec4 {0.0f, 1.0f, 0.0f, 1.0f}, 5, m_trajectory_shader_program);
         }
+        
 
         void Display::init_img() {
             constexpr float vertices[] = {
@@ -260,6 +261,8 @@ namespace controls {
         }
 
         void Display::draw_offset_image() {
+            // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
             const auto& offset_image = m_offset_image;
 
             glActiveTexture(GL_TEXTURE0);
@@ -279,6 +282,25 @@ namespace controls {
             glBindVertexArray(m_offset_img_obj.vao);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
             glBindVertexArray(0);
+
+            // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
+        void Display::draw_triangles() {
+            std::vector<float> triangle_vertices = m_state_estimator->get_vertices();
+            unsigned int VAO;
+            unsigned int VBO;
+            glGenBuffers(1,&VBO);
+            glGenVertexArrays(1,&VAO);
+            // glUniform4f(color_loc, color.x, color.y, color.z, color.w);
+            // glLineWidth(thickness);
+            glUseProgram(m_img_shader_program);
+            glBindVertexArray(VAO);
+
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * triangle_vertices.size(), triangle_vertices.data(), GL_DYNAMIC_DRAW);
+
+            assert(triangle_vertices.size() % 3 == 0);
+            glDrawArrays(GL_TRIANGLES, 0, triangle_vertices.size() / 3);
         }
 
         void Display::run() {
@@ -357,6 +379,7 @@ namespace controls {
                 draw_spline();
                 draw_cones();
                 draw_best_guess();
+                // draw_triangles();
 
                 SDL_GL_SwapWindow(window);
 
