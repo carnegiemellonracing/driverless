@@ -441,7 +441,9 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
     // for loop through group numbers
     // extra points if mod 3 != 1, in this case we take last 4 points and make spline and change the start point
-    // by going back by 2 if mod3 = 0, go back by 1 if mod3 = 1
+    // by going back by 2 if mod3 = 0, go back by 0 if mod3 = 1, go back by 1 if mod3 = 2
+
+    //If there are is leftover, 
 
     // std::vector<std::vector<int>> groups; not used anywhere else 
 
@@ -459,14 +461,28 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         std::cout << "res number of rows:" << res.rows() << std::endl;
         std::cout << "res number of cols:" << res.cols() << std::endl;
 
+        // if last group, set flag to (0, 1, or 2) depending on mod3 as stated above
+        flag = 0
+        last_group = false;
+
+        if (i == (group_number - 1)) {
+            last_group = true;
+
+            if n % 3 == 0 {
+                flag = 2;
+            } else if (n % 3 == 1){
+                flag = 0;
+            } else {
+                flag = 1;
+            }
+        }
+
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
                 std::cout << "res curr row:" << j << std::endl;
                 std::cout << "res curr col:" << i*shift + k << std::endl;
 
-                group(j, k) = res(j, i*shift + k); // ERROR index out of bound error
-                // res is matrix we pass in
-                // 
+                group(j, k) = res(j, i*shift + k - flag); // ERROR index out of bound error
                 if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
             }
         }
@@ -502,6 +518,8 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         // Spline spline = Spline(interpolation_poly, first_der, second_der, path_id,i);
         Spline spline = Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
         splines.emplace_back(spline);
+
+        // TODO if last group, then shave off overlaping points from the spline (in points and rotated point), then get length
 
         // lengths.push_back(spline.calculateLength());
         if (i == 0) {
