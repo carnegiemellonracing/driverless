@@ -434,9 +434,14 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
     }
     else{
         if (n < 4) group_numbers = 0; // NEED TO MODIFY TO 1 AND DEAL WITH FEWER THAN 4 POINTS
-        else group_numbers = n/3;
-        // RCLCPP_INFO(logger, "group numbers is %d\n", group_numbers);
+        else group_numbers = ((n-2)/3) + 1;
+
+        RCLCPP_INFO(logger, "group numbers is %d\n", group_numbers);
     }
+
+    // for loop through group numbers
+    // extra points if mod 3 != 1, in this case we take last 4 points and make spline and change the start point
+    // by going back by 2 if mod3 = 0, go back by 1 if mod3 = 1
 
     // std::vector<std::vector<int>> groups; not used anywhere else 
 
