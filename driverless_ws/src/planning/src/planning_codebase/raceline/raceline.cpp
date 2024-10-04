@@ -324,7 +324,7 @@ Eigen::MatrixXd transform_points(rclcpp::Logger logger,Eigen::MatrixXd& points, 
     // RCLCPP_INFO(logger, "q.trans");
     // RCLCPP_INFO(logger, "first point is (%f, %f)\n", trans(0, 0), trans(0, 1));
     // RCLCPP_INFO(logger, "second point is (%f, %f)\n", trans(1, 0), trans(1, 1));
-    Eigen::MatrixXd ret = Q.transpose() * temp;  
+    Eigen::MatrixXd ret = trans * temp;  
     // RCLCPP_INFO(logger, "return");
     // RCLCPP_INFO(logger, "first point is (%f, %f)\n", ret(0, 0), ret(0, 1));
     // RCLCPP_INFO(logger, "second point is (%f, %f)\n", ret(1, 0), ret(1, 1));
@@ -453,6 +453,8 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
     RCLCPP_INFO(logger, "points:%d, group numbers: %d\n",n,group_numbers);
 
+    int flag = 0;
+
     for(int i=0; i<group_numbers; i++){
 
         // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
@@ -462,19 +464,8 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         std::cout << "res number of cols:" << res.cols() << std::endl;
 
         // if last group, set flag to (0, 1, or 2) depending on mod3 as stated above
-        flag = 0
-        last_group = false;
-
         if (i == (group_number - 1)) {
-            last_group = true;
-
-            if n % 3 == 0 {
-                flag = 2;
-            } else if (n % 3 == 1){
-                flag = 0;
-            } else {
-                flag = 1;
-            }
+            flag =  n - 1 % 3;
         }
 
         for(int k = 0; k < group.cols(); k++) {
@@ -511,6 +502,11 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         polynomial interpolation_poly = lagrange_gen(rotated_points);
         polynomial first_der = polyder(interpolation_poly);
         polynomial second_der = polyder(first_der);
+
+
+        // shave off overlapping points from the spline if last group for og matrix and rotated matrix
+        group = group.block(0, flag, 2, group.cols());
+        rotated_points = rotated_points.block(0, flag, 2, group.cols());
         
         // Spline* spline = new Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
 
