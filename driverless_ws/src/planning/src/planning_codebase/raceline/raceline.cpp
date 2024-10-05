@@ -466,14 +466,14 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         // if last group, set flag to (0, 1, or 2) depending on mod3 as stated above
         if (i == (group_numbers - 1)) {
             std::cout << "LAST GROUP" << std::endl;
-            flag =  n - 1 % 3;
+            flag =  (n - 1) % 3;
         }
 
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
                 std::cout << "Curr row:" << j << std::endl;
                 std::cout << "Curr col:" << i*shift + k - flag << std::endl;
-                std::cout << "Curr col:" << flag << std::endl;
+                std::cout << "Curr flag:" << flag << std::endl;
 
                 group(j, k) = res(j, i*shift + k - flag); // ERROR index out of bound error
                 if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
