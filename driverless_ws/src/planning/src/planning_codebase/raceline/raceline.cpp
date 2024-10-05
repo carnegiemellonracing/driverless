@@ -464,7 +464,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         std::cout << "res number of cols:" << res.cols() << std::endl;
 
         // if last group, set flag to (0, 1, or 2) depending on mod3 as stated above
-        if (i == (group_number - 1)) {
+        if (i == (group_numbers - 1)) {
             flag =  n - 1 % 3;
         }
 
