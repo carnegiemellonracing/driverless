@@ -466,7 +466,8 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         // if last group, set flag to (0, 1, or 2) depending on mod3 as stated above
         if (i == (group_numbers - 1)) {
             std::cout << "LAST GROUP" << std::endl;
-            flag =  (n - 1) % 3;
+            // flag =  (n - 1) % 3;
+            flag = points_per_spline - (n - i*shift)
         }
 
         for(int k = 0; k < group.cols(); k++) {
