@@ -414,6 +414,9 @@ double arclength(polynomial poly_der1, double x0,double x1){
 
 std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){
 
+    std::cout << "Number of rows:" << res.rows() << std::endl;
+    std::cout << "Number of cols:" << res.cols() << std::endl;
+    
     int n = res.cols();
 
     std::vector<Spline> splines;
@@ -460,18 +463,17 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
         Eigen::MatrixXd group(2, points_per_spline);
 
-        std::cout << "res number of rows:" << res.rows() << std::endl;
-        std::cout << "res number of cols:" << res.cols() << std::endl;
-
         // if last group, set flag to (0, 1, or 2) depending on mod3 as stated above
         if (i == (group_numbers - 1)) {
+            std::cout << "LAST GROUP" << std::endl;
             flag =  n - 1 % 3;
         }
 
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
-                std::cout << "res curr row:" << j << std::endl;
-                std::cout << "res curr col:" << i*shift + k << std::endl;
+                std::cout << "Curr row:" << j << std::endl;
+                std::cout << "Curr col:" << i*shift + k - flag << std::endl;
+                std::cout << "Curr col:" << flag << std::endl;
 
                 group(j, k) = res(j, i*shift + k - flag); // ERROR index out of bound error
                 if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
