@@ -1,4 +1,4 @@
-#ifndef GLM_FORCE_QUAT_DATA_WXYZ
+    #ifndef GLM_FORCE_QUAT_DATA_WXYZ
 #define GLM_FORCE_QUAT_DATA_WXYZ
 #endif
 
@@ -613,7 +613,8 @@ namespace controls {
 
             glBindVertexArray(m_gl_path.vao);
             // relies on the element buffer object already being bound
-            glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, m_num_triangles);
+            // glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
 
 #ifdef DISPLAY
             glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
@@ -735,57 +736,59 @@ namespace controls {
             // std::sort(m_right_cone_positions.begin(), m_right_cone_positions.end(), cmp);
 
             m_num_triangles = 0;
+            float progress_step = 1.f / min_cones;
+
             if (min_cones >= 2) {
 
-                for (size_t i = 0; i < min_cones - 1; ++i) {
-                    
+                for (size_t i = 0; i < min_cones; ++i) {
                     glm::fvec2 l1 = m_left_cone_positions.at(i).second;
-                    glm::fvec2 l2 = m_left_cone_positions.at(i + 1).second;
+                    // glm::fvec2 l2 = m_left_cone_positions.at(i + 1).second;
                     glm::fvec2 r1 = m_right_cone_positions.at(i).second;
-                    glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
+                    // glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
 
-                    vertices.push_back({{l1.x, l1.y}, {0.5f, 0.0f, 0.0f}});
-                    vertices.push_back({{l2.x, l2.y}, {1.f, 0.0f, 0.0f}});
-                    vertices.push_back({{r1.x, r1.y}, {0.f, 0.5f, 0.0f}});
-                    vertices.push_back({{r2.x, r2.y}, {0.f, 1.0f, 0.0f}});
+                    vertices.push_back({{l1.x, l1.y}, {progress_step * i, 0.3f, 0.0f}});
+                    vertices.push_back({{r1.x, r1.y}, {progress_step * i, 0.0f, 0.3f}});
+
                 // vertices.push_back({{l1.x, l1.y}, {10.0f * i, 0.0f, 1.0f}});
                     // vertices.push_back({{l2.x, l2.y}, {10.0f * (i + 1), 0.0f, 1.0f}});
                     // vertices.push_back({{r1.x, r1.y}, {10.0f * i, 0.0f, 1.0f}});
                     // vertices.push_back({{r2.x, r2.y}, {10.0f * (i + 1), 0.0f, 1.0f}});
 
-                    const GLuint l1i = i * 4;
-                    const GLuint l2i = i * 4 + 1;
-                    const GLuint r1i = i * 4 + 2;
-                    const GLuint r2i = i * 4 + 3;
+                    // const GLuint l1i = i * 4;
+                    // const GLuint l2i = i * 4 + 1;
+                    // const GLuint r1i = i * 4 + 2;
+                    // const GLuint r2i = i * 4 + 3;
 
-                    indices.push_back(l1i);
-                    indices.push_back(l2i);
-                    indices.push_back(r1i);
 
-                    indices.push_back(r1i);
-                    indices.push_back(r2i);
-                    indices.push_back(l2i);
+                    // indices.push_back(l1i);
+                    // indices.push_back(l2i);
+                    // indices.push_back(r1i);
 
-                    vertices_display.push_back(l1.x);
-                    vertices_display.push_back(l1.y);
-                    vertices_display.push_back(l2.x);
-                    vertices_display.push_back(l2.y);
+                    // indices.push_back(r1i);
+                    // indices.push_back(r2i);
+                    // indices.push_back(l2i);
+
+                    // vertices_display.push_back(l1.x);
+                    // vertices_display.push_back(l1.y);
+                    // vertices_display.push_back(l2.x);
+                    // vertices_display.push_back(l2.y);
                     
-                    vertices_display.push_back(r1.x);
-                    vertices_display.push_back(r1.y);
+                    // vertices_display.push_back(r1.x);
+                    // vertices_display.push_back(r1.y);
 
-                    vertices_display.push_back(r1.x);
-                    vertices_display.push_back(r1.y);
-                    vertices_display.push_back(r2.x);
-                    vertices_display.push_back(r2.y);
-                    vertices_display.push_back(l2.x);
-                    vertices_display.push_back(l2.y);
+                    // vertices_display.push_back(r1.x);
+                    // vertices_display.push_back(r1.y);
+                    // vertices_display.push_back(r2.x);
+                    // vertices_display.push_back(r2.y);
+                    // vertices_display.push_back(l2.x);
+                    // vertices_display.push_back(l2.y);
                     m_num_triangles += 2;
-
                 }
             } else {
                 RCLCPP_WARN(m_logger_obj, "WHY DO I HAVE SO FEW CONES :(");
             }
+
+            m_num_triangles -= 2;
 
             m_vertices = vertices_display;
             m_triangles = indices;
@@ -793,8 +796,8 @@ namespace controls {
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
+            // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
+            // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
         }
         
         
