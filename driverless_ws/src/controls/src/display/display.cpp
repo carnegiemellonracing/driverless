@@ -78,7 +78,7 @@ namespace controls {
 
             void main()
             {
-               FragColor = vec4(0.0f, 0.0f, abs(texture(img, texCoord).x), 0.0f);
+               FragColor = texture(img, texCoord);
             }
         )";
 
@@ -268,9 +268,9 @@ namespace controls {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, m_offset_img_tex);
             glTexImage2D(
-                GL_TEXTURE_2D, 0, GL_R32F,
+                GL_TEXTURE_2D, 0, GL_RGBA,
                 offset_image.pix_width, offset_image.pix_height,
-                0, GL_RED, GL_FLOAT, offset_image.pixels.data()
+                0, GL_RGBA, GL_FLOAT, offset_image.pixels.data()
             );
 
             glUseProgram(m_img_shader_program);

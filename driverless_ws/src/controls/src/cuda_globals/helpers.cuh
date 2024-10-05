@@ -34,7 +34,7 @@ namespace controls {
             // }
             // __syncthreads();
 
-            out_of_bounds = parallel_pose.w < 0;
+            out_of_bounds = parallel_pose.w < 0.5f;
         }
     }
 }
