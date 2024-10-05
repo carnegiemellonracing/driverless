@@ -80,7 +80,8 @@ namespace controls {
             const float speed_deviation = approx_speed_along - target_speed;
             const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
 
-            const float distance_cost = 0; // track bounds
+            //const float distance_cost = 0; // track bounds
+            const float progress_cost = progress_cost_multiplier * (1.0f - progress);
 
             //offset_1m_cost * fmax(
             //    fabsf(nose_curv_pose[state_y_idx]), fabsf(cent_curv_pose[state_y_idx])
@@ -92,7 +93,7 @@ namespace controls {
             //   + fabsf(action[action_swangle_idx] - last_taken_action[action_swangle_idx]) / controller_period * swangle_1radps_cost
             //   : 0;
 
-            return speed_cost + distance_cost;// + fabsf(action[action_torque_idx]) * 0.05f;// + deriv_cost;
+            return progress_cost;// + fabsf(action[action_torque_idx]) * 0.05f;// + deriv_cost;
         }
 
         // Functors for Brownian Generation
