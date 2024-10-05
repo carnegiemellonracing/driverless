@@ -480,6 +480,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
             }
         }
 
+        std::cout << "Exited inner loop" << std::endl;
 
         Eigen::Matrix2d Q  = rotation_matrix_gen(logger,group);
         Eigen::VectorXd translation_vector = get_translation_vector(group);
