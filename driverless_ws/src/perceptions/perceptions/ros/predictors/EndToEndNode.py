@@ -126,7 +126,7 @@ class EndToEndNode(Node):
         self.data = {}
         left_points = transform_left_lidar(conv.pointcloud2_to_npy(msg1))
         right_points = transform_right_lidar(conv.pointcloud2_to_npy(msg2))
-        points = np.vstack((left_points[:int((2/3)*len(left_points))], right_points))
+        points = np.vstack((left_points, right_points))
         self.data[DataType.HESAI_POINTCLOUD] = points
         
         mi = conv.gps_to_motion_info(self.curr_twist, self.curr_quat)

@@ -42,7 +42,7 @@ class LidarVisNode(Node):
                 
     def points_callback(self, msg):
         pc = conv.pointcloud2_to_npy(msg)
-        points = pc[::10, :3] # downsample points
+        points = pc[:, :3] # downsample points
         # points = points[np.any(points != 0, axis=1)]
 
         tf_mat_left = np.array([[   0.76604444,    -0.64278764,    0.        ,  -0.18901      ],
@@ -64,7 +64,7 @@ class LidarVisNode(Node):
 
     def points_callback2(self, msg):
         pc = conv.pointcloud2_to_npy(msg)
-        points = pc[::10, :3]
+        points = pc[:, :3]
         # points = points[np.any(points != 0, axis=1)]
 
         tf_mat_right = np.array([[  0.76604444,  0.64278764,   0.        , -0.16541      ],
