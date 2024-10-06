@@ -117,6 +117,7 @@ if(BUILD_TESTING)
   target_link_libraries(controls_test_node controls_lib GSL::gsl)
 
   add_executable(controls_echo_node tests/echo_node.cpp)
+  add_executable(sysid_node src/sysid/sysid_node.cpp)
 
   add_executable(model_wrapper tests/model/model_wrapper.cu)
   target_link_libraries(model_wrapper controls_lib)
@@ -126,11 +127,12 @@ if(BUILD_TESTING)
   target_link_libraries(null_gps_spoofer controls_lib)
 
   ament_target_dependencies(controls_echo_node rclcpp glm interfaces std_msgs)
+  ament_target_dependencies(sysid_node rclcpp glm interfaces std_msgs)
   ament_target_dependencies(controls_test_node rclcpp glm interfaces std_msgs)
   ament_target_dependencies(null_gps_spoofer rclcpp glm interfaces std_msgs)
 
   install(
-      TARGETS controls_test_node null_gps_spoofer controls_echo_node
+      TARGETS controls_test_node null_gps_spoofer controls_echo_node sysid_node
       DESTINATION lib/${PROJECT_NAME}
   )
 endif()
