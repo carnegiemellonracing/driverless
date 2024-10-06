@@ -297,6 +297,8 @@ namespace controls {
 
             m_logger("beginning state estimator spline processing");
 
+
+
             m_spline_frames.clear();
             m_spline_frames.reserve(spline_msg.frames.size());
 
@@ -311,7 +313,8 @@ namespace controls {
                 m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
             }
 
-            m_orig_spline_data_stamp = spline_msg.orig_data_stamp;
+            m_orig_spline_data_stamp = spline_msg.header.stamp;
+
 
             m_logger("finished state estimator spline processing");
         }
@@ -351,12 +354,13 @@ namespace controls {
             );
         }
 
-        void StateEstimator_Impl::sync_to_device(const rclcpp::Time& time) {
+        std::vector<std::chrono::milliseconds> StateEstimator_Impl::sync_to_device(const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_logger("beginning state estimator device sync");
 
             m_logger("projecting current state");
+            auto t1 = std::chrono::high_resolution_clock::now();
             const State state = m_state_projector.project(
                 rclcpp::Time {
                     time.nanoseconds()
@@ -364,6 +368,7 @@ namespace controls {
                     default_clock_type
                 }, m_logger
             );
+            auto t2 = std::chrono::high_resolution_clock::now();
 
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
@@ -385,12 +390,15 @@ namespace controls {
             m_logger("syncing world state to device");
             m_synced_projected_state = state;
             sync_world_state();
+            auto t3 = std::chrono::high_resolution_clock::now();
 
             m_logger("syncing spline frame lookup texture info to device");
             sync_tex_info();
 
             utils::sync_gl_and_unbind_context(m_gl_window);
             m_logger("finished state estimator device sync");
+            return std::vector {std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1), 
+            std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2)};
         }
 
         bool StateEstimator_Impl::is_ready() {

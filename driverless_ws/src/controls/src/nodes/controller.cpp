@@ -11,6 +11,7 @@
 #endif
 
 #include "controller.hpp"
+#include <sstream>
 
 namespace controls {
     namespace nodes {
@@ -68,13 +69,28 @@ namespace controls {
 
             void ControllerNode::spline_callback(const SplineMsg& spline_msg) {
                 RCLCPP_DEBUG(get_logger(), "Received spline");
+                rclcpp::Time rcl_orig_time (spline_msg.orig_data_stamp);
+                rclcpp::Time rcl_header_time (spline_msg.header.stamp);
+                rclcpp::Time rcl_now_time (get_clock()->now());
 
-                {
-                    std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_spline(spline_msg);
+                std::stringstream ss;
+                ss << "DIFFERENCE IN TIMES --- \norig_stamp: " << rcl_orig_time.nanoseconds() <<
+                "\nheader_stamp: " << rcl_header_time.nanoseconds() << 
+                "\nnumerical diff: " << (rcl_orig_time.nanoseconds() - rcl_header_time.nanoseconds()) / 1e9 <<
+                "\ncurrent time: " << rcl_now_time.nanoseconds() << 
+                "\nnumerical diff 2: " << (rcl_now_time.nanoseconds() - rcl_header_time.nanoseconds()) / 1e9 << std::endl;
+
+                RCLCPP_WARN(get_logger(), ss.str());
+
+                if (rcl_now_time.nanoseconds() - rcl_header_time.nanoseconds() <= 1e9) {
+
+                    {
+                        std::lock_guard<std::mutex> guard {m_state_mut};
+                        m_state_estimator->on_spline(spline_msg);
+                    }
+
+                    notify_state_dirty();
                 }
-
-                notify_state_dirty();
             }
 
             void ControllerNode::world_twist_callback(const TwistMsg &twist_msg) {
@@ -127,22 +143,32 @@ namespace controls {
                         // send state to device (i.e. cuda globals)
                         // (also serves to lock state since nothing else updates gpu state)
                         RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                        m_state_estimator->sync_to_device(get_clock()->now());
-
+                        auto duration_vec = m_state_estimator->sync_to_device(get_clock()->now());
+                        auto post_sync_time = std::chrono::high_resolution_clock::now();
 
                         // we don't need the host state anymore, so release the lock and let state callbacks proceed
                         state_lock.unlock();
 
                         // run mppi, and write action to the write buffer
+                        auto t1 = std::chrono::high_resolution_clock::now();
                         Action action = m_mppi_controller->generate_action();
+                        auto t2 = std::chrono::high_resolution_clock::now();
                         publish_action(action);
 
                         m_state_estimator->record_control_action(action, get_clock()->now());
 
                         // calculate and print time elapsed
+                        auto finish_time = std::chrono::high_resolution_clock::now();
                         auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-                            std::chrono::high_resolution_clock::now() - start_time
+                             finish_time - start_time
                         );
+                        std::vector<std::chrono::milliseconds> latency_vec {
+                            std::chrono::duration_cast<std::chrono::milliseconds>(post_sync_time - start_time),
+                            std::chrono::duration_cast<std::chrono::milliseconds>(t2 - post_sync_time),
+                            std::chrono::duration_cast<std::chrono::milliseconds>(finish_time - t2)
+                        };
+                        
+                        
 
                         // can't use high res clock since need to be aligned with other nodes
                         auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_spline_data_stamp.nanoseconds()) / 1000000;
@@ -150,7 +176,13 @@ namespace controls {
                         interfaces::msg::ControllerInfo info {};
                         info.action = action_to_msg(action);
                         info.proj_state = state_to_msg(proj_curr_state);
+                        info.projection_latency_ms = duration_vec[0].count();
+                        info.render_latency_ms = duration_vec[1].count();
+                        info.mppi_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)).count();
                         info.latency_ms = time_elapsed.count();
+                        info.latency1_ms = latency_vec[0].count();
+                        info.latency2_ms = latency_vec[1].count();
+                        info.latency3_ms = latency_vec[2].count();
                         info.total_latency_ms = total_time_elapsed;
 
                         std::stringstream ss;
@@ -232,6 +264,12 @@ namespace controls {
                 << "  yaw (rad): " << info.proj_state.yaw << "\n"
                 << "  speed (m/s): " << info.proj_state.speed << "\n"
                 << "MPPI Step Latency (ms): " << info.latency_ms << "\n"
+                << "Phase 1 (ms): " << info.latency1_ms << "\n"
+                << "Phase 2 (ms): " << info.latency2_ms << "\n"
+                << "Phase 3 (ms): " << info.latency3_ms << "\n"
+                << "Projection Latency (ms): " << info.projection_latency_ms << "\n"
+                << "Render Latency (ms): " << info.render_latency_ms << "\n"
+                << "MPPI Algo Latency (ms): " << info.mppi_latency_ms << "\n"
                 << "Total Latency (ms): " << info.total_latency_ms << "\n"
                 << std::endl;
             }
