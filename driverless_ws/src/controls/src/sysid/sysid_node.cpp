@@ -33,6 +33,8 @@ namespace controls {
                 control_action_topic_name, control_action_qos
             );
 
+            m_time = get_clock()->now();
+
         }
 
         void SysIdNode::on_twist(const TwistMsg& msg) {
@@ -158,6 +160,77 @@ namespace controls {
                 m_next_action_msg.torque_rl, m_next_action_msg.torque_rr, m_next_action_msg.orig_data_stamp.nanosec);
             std::invoke(actions[m_selected_test % 6], this);
             m_counter++;
+
+
+        }
+
+        int model_func(double t, const double state[], double dstatedt[], void* params) {
+            const double yaw = state[2];
+            const double x_world_dot = state[3] * cos(yaw) - state[4] * sin(yaw);
+            const double y_world_dot = state[3] * sin(yaw) + state[4] * cos(yaw);
+            const double yaw_dot = state[5];
+
+            double minimal_state[10];
+            memcpy(minimal_state, &state[3], sizeof(double) * 10);
+
+            auto action_msg = *(ActionMsg*)params;
+            double action[5] = {
+                action_msg.swangle, action_msg.torque_fl, action_msg.torque_fr, action_msg.torque_rl, action_msg.torque_rr
+            };
+
+            double minimal_state_dot[10];
+
+            minimal_state_function(minimal_state, action, minimal_state_dot);
+
+            dstatedt[0] = x_world_dot;
+            dstatedt[1] = y_world_dot;
+            dstatedt[2] = yaw_dot;
+            memcpy(&dstatedt[3], minimal_state_dot, sizeof(minimal_state_dot));
+
+            return GSL_SUCCESS;
+        }
+
+        /**
+         * Simulates the car using the last received action and updates the current
+         * world state. If the car has reached the end of the current segment of the
+         * spline, it moves on to the next segment.
+         */
+        void SysIdNode::sim(ActionMsg adj_msg) {
+            ActionMsg adj_msg = m_last_action_msg;
+            adj_msg.torque_fl *= gear_ratio / 1000.;
+            adj_msg.torque_fr *= gear_ratio / 1000.;
+            adj_msg.torque_rl *= gear_ratio / 1000.;
+            adj_msg.torque_rr *= gear_ratio / 1000.;
+
+            gsl_odeiv2_system system {};
+            system.function = model_func;
+            system.dimension = 13;
+            system.jacobian = nullptr;
+            system.params = (void*)&adj_msg;
+
+            gsl_odeiv2_driver* driver = gsl_odeiv2_driver_alloc_y_new(
+                &system,
+                gsl_odeiv2_step_rkf45,
+                1e-4, 1e-4, 1e-4
+            );
+
+            double sim_time = m_time.nanoseconds() / 1.0e9;
+            m_time = get_clock()->now();
+
+            int result = gsl_odeiv2_driver_apply(driver, &sim_time, m_time.nanoseconds() / 1.0e9, m_world_state.data());
+            if (result != GSL_SUCCESS) {
+                throw std::runtime_error("GSL driver failed");
+            }
+
+            gsl_odeiv2_driver_free(driver);
+        }
+
+        void SysIdDisplay::run() {
+            SDL_Window* window = utils::create_sdl2_gl_window("SYSID Display", width, height);
+            init_gl(window);
+            init_img();
+
+            update_loop(window);
         }
 
     }
@@ -194,7 +267,7 @@ int main(int argc, char* argv[]) {
 
     rclcpp::init(0, nullptr);
     rclcpp::spin(std::make_shared<SysIdNode>(test_number));
-    
+
     display::Display display{};
     std::cout << "display created" << std::endl;
 
