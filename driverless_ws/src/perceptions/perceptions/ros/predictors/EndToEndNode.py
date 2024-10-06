@@ -34,7 +34,7 @@ from perc22a.mergers.merger_factory import \
     create_all_merger, \
     create_any_merger
 
-from interfaces.msg import SplineFrames
+from interfaces.msg import SplineFrames, EndToEndDebug
 from geometry_msgs.msg import Point
 
 import perceptions.ros.utils.conversions as conv
@@ -73,6 +73,10 @@ class EndToEndNode(Node):
                                                  topic="/spline",
                                                  qos_profile=BEST_EFFORT_QOS_PROFILE)
 
+        self.endToEndDebug_pub = self.create_publisher(msg_type= EndToEndDebug,
+                                                 topic="/endToEndDebug",
+                                                 qos_profile=BEST_EFFORT_QOS_PROFILE)
+
         # parts of the pipeline 
         self.predictor = self.init_predictor()
         self.merger = create_lidar_merger()
@@ -109,6 +113,8 @@ class EndToEndNode(Node):
         # convert pointcloud message into numpy array and get MotionInfo
         data = {}
         data[DataType.HESAI_POINTCLOUD] = conv.pointcloud2_to_npy(msg)
+        # data[DataType.HESAI_POINTCLOUD] = data[DataType.HESAI_POINTCLOUD][::3]
+        print("we have ", len(data[DataType.HESAI_POINTCLOUD]), " points")
 
         mi = conv.gps_to_motion_info(self.curr_twist, self.curr_quat)
 
@@ -138,7 +144,8 @@ class EndToEndNode(Node):
 
         # convert spline points to ROS2 SplineFrame message
         points = []
-        msg = SplineFrames()
+        new_msg = SplineFrames()
+        debugMSG = EndToEndDebug()
 
         for np_point in downsampled_boundary_points:
             new_point = Point()
@@ -156,12 +163,26 @@ class EndToEndNode(Node):
             print(f"LESS THAN 2 FRAMES {len(cones)}")
             return
         
-        msg.frames = points
-        msg.orig_data_stamp = data_time.to_msg()
-        self.midline_pub.publish(msg)
+        new_msg.frames = points
+        new_msg.header.stamp = msg.header.stamp
+        new_msg.orig_data_stamp = data_time.to_msg()
+        self.midline_pub.publish(new_msg)
+
+
 
         # done publishing spline
         curr_time = self.get_clock().now()
+
+        #Publish Debug Message
+        debugMSG.points.data = len(data[DataType.HESAI_POINTCLOUD])
+        debugMSG.cones.data = len(cones)
+        debugMSG.frames.data = len(downsampled_boundary_points)
+        debugMSG.overall_time.data = (curr_time.nanoseconds - data_time.nanoseconds) / 1000000
+        debugMSG.lidar_time.data = time_lidar
+        debugMSG.merge_color_state_time.data = time_state
+        debugMSG.spline_time.data = time_spline
+        self.endToEndDebug_pub.publish(debugMSG)
+
         # print the timings of everything
         print(f"{len(cones):<3} cones {len(downsampled_boundary_points):<3} frames {(curr_time.nanoseconds - data_time.nanoseconds) / 1000000:.3f}ms lidar: {time_lidar:.1f}ms merge+color+state: {time_state:.1f}ms spline: {time_spline:.1f}ms")
 
