@@ -3,6 +3,8 @@
 #include <types.hpp>
 #include <glm/glm.hpp>
 #include <builtin_interfaces/msg/time.hpp>
+#include <chrono>
+#include <vector>
 
 
 namespace controls {
@@ -16,7 +18,7 @@ namespace controls {
             virtual void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) =0;
             virtual void on_pose(const PoseMsg& pose_msg) =0;
 
-            virtual void sync_to_device(const rclcpp::Time &time) =0;
+            virtual std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) =0;
             virtual bool is_ready() =0;
             virtual State get_projected_state() =0;
 

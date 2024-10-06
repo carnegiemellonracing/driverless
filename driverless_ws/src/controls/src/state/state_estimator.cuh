@@ -64,7 +64,7 @@ namespace controls {
             void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) override;
             void on_pose(const PoseMsg& pose_msg) override;
 
-            void sync_to_device(const rclcpp::Time &time) override;
+            std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) override;
             bool is_ready() override;
             State get_projected_state() override;
             void set_logger(LoggerFunc logger) override;
