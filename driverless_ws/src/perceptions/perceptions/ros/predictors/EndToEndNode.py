@@ -113,6 +113,8 @@ class EndToEndNode(Node):
         self.curr_quat = curr_quat
     
     def dual_points_callback(self, msg1, msg2):
+        print("hello")
+        self.get_logger().warn(f"Dual Lidar Callbacked")
 
         # if doesn't have GPS data, return
         if self.curr_twist is None or self.curr_quat is None:
