@@ -487,6 +487,8 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         Eigen::VectorXd translation_vector = get_translation_vector(group);
         Eigen::MatrixXd rotated_points = transform_points(logger,group,Q,translation_vector);
 
+        std::cout << "Checkpoint 1" << std::endl;
+
 
         // RCLCPP_INFO(logger, "rotation matrix\n");
         // RCLCPP_INFO(logger, "first point is (%f, %f)\n", Q(0, 0), Q(0, 1));
@@ -507,10 +509,14 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         polynomial first_der = polyder(interpolation_poly);
         polynomial second_der = polyder(first_der);
 
+        std::cout << "Checkpoint 2" << std::endl;
+
 
         // shave off overlapping points from the spline if last group for og matrix and rotated matrix
         group = group.block(0, flag, 2, group.cols());
         rotated_points = rotated_points.block(0, flag, 2, group.cols());
+
+        std::cout << "Checkpoint 3" << std::endl;
         
         // Spline* spline = new Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
 
@@ -518,6 +524,8 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         // Spline spline = Spline(interpolation_poly, first_der, second_der, path_id,i);
         Spline spline = Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
         splines.emplace_back(spline);
+
+        std::cout << "Checkpoint 4" << std::endl;
 
         // TODO if last group, then shave off overlaping points from the spline (in points and rotated point), then get length
 
