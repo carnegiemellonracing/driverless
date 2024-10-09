@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <types.hpp>
 #include <constants.hpp>
 #include <cmath>
@@ -13,102 +15,115 @@
 
 namespace controls {
     namespace tests {
+        /// Add a heading to the current heading, clampiing to within [0, 2pi).
+        static constexpr float add_heading(float current, float diff) {
+            float result = current + diff;
+            if (result < 0.0) {
+                result += M_PI_2;
+            }
+            if (result > 2.0 * M_PI_2) {
+                result -= M_PI_2;
+            }
+            return result;
+        }
 
-        TestNode::TestNode(uint32_t seed)
+        TestNode::TestNode(const std::string &track_specification, float lookahead)
             : Node{"test_node"},
 
-              m_subscriber (create_subscription<ActionMsg>(
-                    control_action_topic_name, control_action_qos,
-                    [this] (const ActionMsg::SharedPtr msg) { on_action(*msg); })),
+              // ROS stuff
+              m_subscriber(create_subscription<ActionMsg>(
+                  control_action_topic_name, control_action_qos,
+                  [this](const ActionMsg::SharedPtr msg)
+                  { on_action(*msg); })),
 
-              m_spline_timer {create_wall_timer(
+              m_track_timer{create_wall_timer(
                   std::chrono::duration<float, std::milli>(spline_period * 1000),
-                    [this]{ publish_spline(); })},
+                  [this]
+                  { publish_track(); })},
 
-              m_sim_timer {create_wall_timer(
+              m_sim_timer{create_wall_timer(
                   std::chrono::duration<float, std::milli>(sim_step * 1000),
-                    [this]{ on_sim(); })},
+                  [this]
+                  { on_sim(); })},
 
-              m_gps_timer {create_wall_timer(
-                        std::chrono::duration<float, std::milli>(gps_period * 1000),
-                            [this]{ publish_twist(); })},
+              m_gps_timer{create_wall_timer(
+                  std::chrono::duration<float, std::milli>(gps_period * 1000),
+                  [this]
+                  { publish_twist(); })},
 
-              m_spline_publisher {create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
-              m_twist_publisher {create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
-
+              m_spline_publisher{create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
+              m_twist_publisher{create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
               m_cone_publisher {create_publisher<ConeMsg>(cone_topic_name, spline_qos)},
 
-              m_rng {seed} {
+              m_all_segments{parse_segments_specification(track_specification)},
 
-            next_segment();
-            next_segment();
+
+
+              m_lookahead{lookahead},
+              m_lookahead_squared {lookahead * lookahead}
+        {
+            glm::fvec2 curr_pos {0.0f, 0.0f};
+            float curr_heading = 0.0f;
+            for (const auto& seg : m_all_segments) {
+                if (seg.type == SegmentType::ARC) {
+                    float next_heading = add_heading(curr_heading, seg.heading_change);
+                    const auto& [spline, left_cones, cones] = arc_segment_with_cones(seg.radius, curr_pos, curr_heading, next_heading);
+                    m_all_left_cones.insert(m_all_left_cones.end(), left_cones.begin(), left_cones.end());
+                    m_all_right_cones.insert(m_all_right_cones.end(), cones.begin(), cones.end());
+                    m_all_spline.insert(m_all_spline.end(), spline.begin(), spline.end());
+                    curr_pos = spline.back();
+                    curr_heading = next_heading;
+                } else if (seg.type == SegmentType::STRAIGHT) {
+                    const auto& [spline, left, right] = straight_segment_with_cones(curr_pos, seg.length, curr_heading);
+                    m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
+                    m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
+                    m_all_spline.insert(m_all_spline.end(), spline.begin(), spline.end());
+                    curr_pos = spline.back();
+                }
+            }
+            // Update visible indexes
+            update_visible_indices();
 
             m_time = get_clock()->now();
         }
 
-        void TestNode::next_segment() {
-
-            std::vector<glm::fvec2> new_seg, left_cone_seg, right_cone_seg;
-            float end_heading;
-            glm::fvec2 end_pos;
-            switch (m_last_segment_type) {
-                case SegmentType::NONE:
-                case SegmentType::ARC: {
-                    bool is_straight = m_uniform_dist(m_rng) < straight_after_arc_prob;
-                    if (is_straight) {
-                        // new_seg = straight_segment(m_spline_end_pos, m_uniform_dist(m_rng) * (max_straight - min_straight) + min_straight, m_spline_end_heading);
-                        std::tie(new_seg, left_cone_seg, right_cone_seg) = straight_segment_with_cones(m_spline_end_pos, m_uniform_dist(m_rng) * (max_straight - min_straight) + min_straight, m_spline_end_heading);
-                        m_last_segment_type = SegmentType::STRAIGHT;
-                        end_heading = m_spline_end_heading;
-                        end_pos = new_seg.back();
-
-                    } else {
-                        float radius = m_uniform_dist(m_rng) * (max_radius - min_radius) + min_radius;
-                        float arc_rad = (m_uniform_dist(m_rng) - 0.5f) * (max_arc_rad - min_arc_rad) * 2; // seems like max is max - min and min is (min - max) TODO: test and fix accordingly
-                        end_heading = m_spline_end_heading + arc_rad;
-
-                        // new_seg = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
-                        std::tie(new_seg, left_cone_seg, right_cone_seg) = arc_segment_with_cones(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
-                        m_last_segment_type = SegmentType::ARC;
-                        m_spline_end_heading = m_spline_end_heading + arc_rad;
-
-                        end_pos = new_seg.back();
-                    }
-                    break;
-                }
-
-                case SegmentType::STRAIGHT: {
-                    float radius = m_uniform_dist(m_rng) * (max_radius - min_radius) + min_radius;
-                    float arc_rad = (m_uniform_dist(m_rng) - 0.5f) * (max_arc_rad - min_arc_rad) * 2;
-                    end_heading = m_spline_end_heading + arc_rad;
-
-                    // new_seg = arc_segment(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
-                    std::tie(new_seg, left_cone_seg, right_cone_seg) = arc_segment_with_cones(radius, m_spline_end_pos, m_spline_end_heading, end_heading);
-                    m_last_segment_type = SegmentType::ARC;
-
-                    end_pos = new_seg.back();
-                    break;
-                }
-            }
-
-            if (new_seg.size() != left_cone_seg.size() || new_seg.size() != right_cone_seg.size()) {
-                throw std::runtime_error("new_seg.size() != left_cone_seg.size() || new_seg.size() != right_cone_seg.size()");
-            }
-            m_spline_end_heading = end_heading;
-            m_spline_end_pos = end_pos;
-
-            m_segments.push_back(new_seg);
-            m_left_cones.push_back(left_cone_seg);
-            m_right_cones.push_back(right_cone_seg);
-            if (m_segments.size() > max_segs) {
-                m_segments.erase(m_segments.begin());
-                m_left_cones.erase(m_left_cones.begin());
-                m_right_cones.erase(m_right_cones.begin());
-            }
+        static constexpr float get_squared_distance(glm::fvec2 point1, glm::fvec2 point2) {
+            return (point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y);
         }
 
-        /// @note start_pos is always going to equal m_spline_end_pos (makes sense). They can be decoupled when we think
-        /// about generating a larger track at once
+        void TestNode::update_visible_indices() {
+            auto [left_closest, left_furthest] = m_visible_left_idx;
+            auto [right_closest, right_furthest] = m_visible_right_idx;
+            glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
+
+            while (get_squared_distance(m_all_left_cones.at(left_closest), curr_pos) >= m_lookahead_squared) {
+                left_closest = (left_closest + 1) % m_all_left_cones.size();
+            }
+
+            while (get_squared_distance(m_all_right_cones.at(right_closest), curr_pos) >= m_lookahead_squared) {
+                right_closest = (right_closest + 1) % m_all_right_cones.size();
+            }
+
+            while (get_squared_distance(m_all_right_cones.at(right_furthest), curr_pos) < m_lookahead_squared) {
+                right_furthest = (right_furthest + 1) % m_all_right_cones.size();
+                if (right_furthest == right_closest) {
+                    break;
+                }
+            }
+        
+            while (get_squared_distance(m_all_left_cones.at(left_furthest), curr_pos) < m_lookahead_squared) {
+                left_furthest = (left_furthest + 1) % m_all_left_cones.size();
+                if (left_furthest == left_closest) {
+                    break;
+                }
+            }
+
+            m_visible_left_idx = {left_closest, left_furthest};
+            m_visible_right_idx = {right_closest, right_furthest};
+        }
+
+        
+
         std::vector<glm::fvec2> TestNode::arc_segment(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
             std::vector<glm::fvec2> result;
 
@@ -117,7 +132,6 @@ namespace controls {
                 start_heading + M_PI_2 : start_heading - M_PI_2;
 
             glm::fvec2 center = m_spline_end_pos + radius * glm::fvec2 {glm::cos(center_heading), glm::sin(center_heading)};
-            // Angle form the center to the starting point
             float start_angle = std::atan2(start_pos.y - center.y, start_pos.x - center.x);
 
             const uint32_t steps = glm::abs(radius * arc_rad / spline_frame_separation);
@@ -128,6 +142,7 @@ namespace controls {
             }
             return result;
         }
+
 
         TestNode::SplineAndCones TestNode::arc_segment_with_cones(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
             std::vector<glm::fvec2> spline, left_cones, right_cones;
@@ -210,7 +225,6 @@ namespace controls {
         }
 
 
-
         int model_func(double t, const double state[], double dstatedt[], void* params) {
             const double yaw = state[2];
             const double x_world_dot = state[3] * cos(yaw) - state[4] * sin(yaw);
@@ -267,9 +281,7 @@ namespace controls {
             gsl_odeiv2_driver_free(driver);
 
             const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
-            if (distance(car_pos, m_spline_end_pos) < new_seg_dist) {
-                next_segment();
-            }
+            update_visible_indices();
         }
 
 
@@ -280,8 +292,8 @@ namespace controls {
             m_last_action_msg = msg;
         }
 
-        void TestNode::publish_spline() {
-            SplineMsg msg {};
+        void TestNode::publish_track() {
+            SplineMsg spline_msg {};
             ConeMsg cone_msg {};
 
             const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
@@ -296,32 +308,50 @@ namespace controls {
                 return p;
             };
 
-            for (const auto& segment : m_segments) {
-                for (const glm::fvec2& point : segment) {
-                    msg.frames.push_back(gen_point(point));
+        
+            for (const glm::fvec2& point : m_all_spline) {
+                spline_msg.frames.push_back(gen_point(point));
+            }
+
+            auto [closest_left, furthest_left] = m_visible_left_idx;
+            auto [closest_right, furthest_right] = m_visible_right_idx;
+
+            while (closest_left != furthest_left) {
+                cone_msg.blue_cones.push_back(gen_point(m_all_left_cones.at(closest_left)));
+                closest_left++;
+                if (closest_left == m_all_left_cones.size()) {
+                    closest_left = 0;
                 }
             }
 
-            for (const auto& cone_seg: m_left_cones) {
-                for (const glm::fvec2& point : cone_seg) {
-                    cone_msg.blue_cones.push_back(gen_point(point));
+            while (furthest_right != closest_right) {
+                cone_msg.yellow_cones.push_back(gen_point(m_all_right_cones.at(furthest_right)));
+                furthest_right++;
+                if (furthest_right == m_all_right_cones.size()) {
+                    furthest_right = 0;
                 }
             }
 
-            for (const auto& cone_seg: m_right_cones) {
-                for (const glm::fvec2& point : cone_seg) {
-                    cone_msg.yellow_cones.push_back(gen_point(point));
-                }
+            // for display only
+            for (const glm::fvec2& point : m_all_left_cones) {
+                cone_msg.orange_cones.push_back(gen_point(point));
             }
 
+            for (const glm::fvec2& point : m_all_right_cones) {
+                cone_msg.unknown_color_cones.push_back(gen_point(point));
+            }
+    
+        
             auto curr_time = get_clock()->now();
-            msg.orig_data_stamp = curr_time;
+            spline_msg.header.stamp = curr_time;
+            cone_msg.header.stamp = curr_time;
+            spline_msg.orig_data_stamp = curr_time;
             cone_msg.orig_data_stamp = curr_time;
 
-            m_spline_publisher->publish(msg);
+            m_spline_publisher->publish(spline_msg);
             m_cone_publisher->publish(cone_msg);
         }
-
+ 
 
         void TestNode::publish_twist() {
             TwistMsg msg {};
@@ -343,22 +373,77 @@ namespace controls {
 
             m_twist_publisher->publish(msg);
         }
+        std::deque<Segment> TestNode::parse_segments_specification(std::string track_specifications_path)
+        {
+            std::deque<Segment> segments;
+            std::ifstream spec_file(track_specifications_path);
+            if (spec_file.is_open())
+            {
+                std::string line;
+                while (std::getline(spec_file, line, ','))
+                {
+                    std::istringstream segment_stream(line);
+                    char segment_type;
+                    segment_stream >> segment_type;
+                    
+                    Segment segment;
+                    
+                    if (segment_type == 's')
+                    {
+                        float length;
+                        segment_stream.ignore(1);
+                        segment_stream >> length;
+                        
+                        segment.type = SegmentType::STRAIGHT;
+                        segment.length = length;
+                        segments.push_back(segment);
+                    }
+                    else if (segment_type == 'a')
+                    {
+                        float radius, heading_change;
+                        segment_stream.ignore(1);
+                        segment_stream >> radius;
+
+                        segment_stream.ignore(1);
+                        segment_stream >> heading_change;
+                        
+                        segment.type = SegmentType::ARC;
+                        segment.radius = radius;
+                        segment.heading_change = heading_change;
+                        segments.push_back(segment);
+                    }
+                    else
+                    {
+                        // throw some error here for erroneous file format
+                    }
+                }
+            }
+
+            spec_file.close();
+            
+            return segments;
+        }
     }
 }
 
-int main(int argc, char* argv[]){
-    uint32_t seed;
-    if (argc == 1) {
-        std::cout << "No seed given, using default 0" << std::endl;
-        seed = 0;
-    } else {
-        seed = strtol(argv[1], nullptr, 10);
-        std::cout << "Using seed " << seed << std::endl;
-    }
+static constexpr float default_lookahead = 8.0f;
 
+int main(int argc, char* argv[]){
+    // if (argc == 1) {
+    //     std::cout << "specify track specification" << std::endl;
+    //     return 1;
+    // }
+    // std::string track_specification = argv[1];
+    // float look_ahead = default_lookahead;
+    // if (argc == 3) {
+    //     look_ahead = std::stof(argv[2]);
+    // }
+    std::string track_specification = "track1";
+    float look_ahead = 10.0f;
+        
     rclcpp::init(argc, argv);
 
-    rclcpp::spin(std::make_shared<controls::tests::TestNode>(seed));
+    rclcpp::spin(std::make_shared<controls::tests::TestNode>(track_specification, look_ahead));
 
     rclcpp::shutdown();
     return 0;
