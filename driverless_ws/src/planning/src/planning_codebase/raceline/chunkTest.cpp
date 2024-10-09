@@ -152,7 +152,11 @@ int main() {
 
     // testMakeSplinesVector();
 
-    generateChunks(blue_cones, yellow_cones);
+    std::vector<Chunk> chunks = generateChunks(blue_cones, yellow_cones);
+    
+    std::cout << "CHUNK" << std::endl;
+    std::cout << chunks[0].bluePoints << std::endl;
+    std::cout << chunks[0].yellowPoints << std::endl;
     
     return 0;
 }
