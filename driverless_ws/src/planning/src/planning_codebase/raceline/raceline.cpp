@@ -464,6 +464,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         Eigen::MatrixXd group(2, points_per_spline);
 
         // if last group, set flag to (0, 1, or 2) depending on mod3 as stated above
+        // @TODO make remaining points wrap around the front of the track to close the loop
         if (i == (group_numbers - 1)) {
             std::cout << "LAST GROUP" << std::endl;
             // flag =  (n - 1) % 3;
