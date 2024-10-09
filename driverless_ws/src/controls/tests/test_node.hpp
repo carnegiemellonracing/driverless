@@ -5,7 +5,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <random>
 #include <vector>
-#include <vector>
+#include <deque>
 #include <glm/common.hpp>
 #include <glm/common.hpp>
 #include <glm/common.hpp>
@@ -13,17 +13,39 @@
 
 namespace controls {
     namespace tests {
+        enum class SegmentType {
+                NONE,
+                STRAIGHT,
+                ARC};
+        struct StraightSegment {
+            SegmentType type;
+            float length;
+        };
+        struct ArcSegment {
+            SegmentType type;
+            float radius;
+            float heading_change;
+        };
+        
+        struct Segment {
+            SegmentType type;
+            union {
+                float length;
+                struct {
+                    float radius;
+                    float heading_change;
+                };
+            };
+        };
+
 
         class TestNode : public rclcpp::Node {
         public:
-            TestNode (uint32_t seed);
+            /// Constructor reads in the track specification, populates the vector of all segments and cones
+            TestNode (const std::string& track_specification, float lookahead);
+            
 
         private:
-            enum class SegmentType {
-                NONE,
-                STRAIGHT,
-                ARC
-            };
 
             /// Spline points, left cone points, right cone points
             using SplineAndCones = std::tuple<std::vector<glm::fvec2>, std::vector<glm::fvec2>, std::vector<glm::fvec2>>;
@@ -43,11 +65,12 @@ namespace controls {
             static constexpr float gps_period = 0.05f;
             static constexpr float sim_step = 0.01f;
             static constexpr float track_width = 4.0f;
+            
 
 
             void on_sim();
             void on_action(const ActionMsg& msg);
-            void publish_spline();
+            void publish_track();
             void publish_twist();
 
             void next_segment();
@@ -57,16 +80,29 @@ namespace controls {
             SplineAndCones straight_segment_with_cones(glm::fvec2 start, float length, float heading);
             SplineAndCones arc_segment_with_cones(float radius, glm::fvec2 start_pos, float start_heading, float end_heading);
 
+            std::deque<Segment> parse_segments_specification(std::string track_specifications_path);
+            void update_visible_indices();
+            
+
             rclcpp::Subscription<ActionMsg>::SharedPtr m_subscriber;
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
             rclcpp::Publisher<TwistMsg>::SharedPtr m_twist_publisher;
             rclcpp::Publisher<ConeMsg>::SharedPtr m_cone_publisher;
 
-            rclcpp::TimerBase::SharedPtr m_spline_timer;
+            rclcpp::TimerBase::SharedPtr m_track_timer;
             rclcpp::TimerBase::SharedPtr m_gps_timer;
             rclcpp::TimerBase::SharedPtr m_sim_timer;
 
-            // thomas model state
+            std::deque<Segment> m_all_segments;
+            std::vector<glm::fvec2> m_all_left_cones;
+            std::vector<glm::fvec2> m_all_right_cones;
+            std::vector<glm::fvec2> m_all_spline;
+            std::pair<size_t, size_t> m_visible_left_idx;
+            std::pair<size_t, size_t> m_visible_right_idx;
+            const float m_lookahead;
+            const float m_lookahead_squared;
+
+            /// Stores the current state of the car (in Thomas model coordinates)
             std::array<double, 13> m_world_state {-3, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
 
             rclcpp::Time m_time;
@@ -77,9 +113,6 @@ namespace controls {
             SegmentType m_last_segment_type = SegmentType::NONE;
             glm::fvec2 m_spline_end_pos = {0, 0};
             float m_spline_end_heading = 0;
-            std::list<std::vector<glm::fvec2>> m_segments;
-            std::list<std::vector<glm::fvec2>> m_left_cones;
-            std::list<std::vector<glm::fvec2>> m_right_cones;
             ActionMsg m_last_action_msg;
         };
 
