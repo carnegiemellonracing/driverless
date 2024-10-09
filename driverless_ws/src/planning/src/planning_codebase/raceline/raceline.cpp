@@ -414,8 +414,8 @@ double arclength(polynomial poly_der1, double x0,double x1){
 
 std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){
 
-    std::cout << "Number of rows:" << res.rows() << std::endl;
-    std::cout << "Number of cols:" << res.cols() << std::endl;
+    //std::cout << "Number of rows:" << res.rows() << std::endl;
+    //std::cout << "Number of cols:" << res.cols() << std::endl;
     
     int n = res.cols();
 
@@ -466,29 +466,29 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         // if last group, set flag to (0, 1, or 2) depending on mod3 as stated above
         // @TODO make remaining points wrap around the front of the track to close the loop
         if (i == (group_numbers - 1)) {
-            std::cout << "LAST GROUP" << std::endl;
+            //std::cout << "LAST GROUP" << std::endl;
             // flag =  (n - 1) % 3;
             flag = points_per_spline - (n - i*shift);
         }
 
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
-                std::cout << "Curr row:" << j << std::endl;
-                std::cout << "Curr col:" << i*shift + k - flag << std::endl;
-                std::cout << "Curr flag:" << flag << std::endl;
+                //std::cout << "Curr row:" << j << std::endl;
+                //std::cout << "Curr col:" << i*shift + k - flag << std::endl;
+                //std::cout << "Curr flag:" << flag << std::endl;
 
                 group(j, k) = res(j, i*shift + k - flag); // ERROR index out of bound error
                 if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
             }
         }
 
-        std::cout << "Exited inner loop" << std::endl;
+        //std::cout << "Exited inner loop" << std::endl;
 
         Eigen::Matrix2d Q  = rotation_matrix_gen(logger,group);
         Eigen::VectorXd translation_vector = get_translation_vector(group);
         Eigen::MatrixXd rotated_points = transform_points(logger,group,Q,translation_vector);
 
-        std::cout << "Checkpoint 1" << std::endl;
+        //std::cout << "Checkpoint 1" << std::endl;
 
 
         // RCLCPP_INFO(logger, "rotation matrix\n");
@@ -510,17 +510,17 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         polynomial first_der = polyder(interpolation_poly);
         polynomial second_der = polyder(first_der);
 
-        std::cout << "Checkpoint 2" << std::endl;
+        //std::cout << "Checkpoint 2" << std::endl;
 
-        std::cout << group.rows() << group.cols()  << flag << std::endl;
-        std::cout << rotated_points.rows() << rotated_points.cols() << flag << std::endl;
+        //std::cout << group.rows() << group.cols()  << flag << std::endl;
+        //std::cout << rotated_points.rows() << rotated_points.cols() << flag << std::endl;
         // shave off overlapping points from the spline if last group for og matrix and rotated matrix
         // group = group.block(0, flag, 2, group.cols());
         group = group.block(0, flag, 2, group.cols()-flag);
-        std::cout << "Checkpoint 2.5" << std::endl;
+        //std::cout << "Checkpoint 2.5" << std::endl;
         rotated_points = rotated_points.block(0, flag, 2, rotated_points.cols()-flag);
 
-        std::cout << "Checkpoint 3" << std::endl;
+        //std::cout << "Checkpoint 3" << std::endl;
         
         // Spline* spline = new Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
 
@@ -529,7 +529,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         Spline spline = Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
         splines.emplace_back(spline);
 
-        std::cout << "Checkpoint 4" << std::endl;
+        //std::cout << "Checkpoint 4" << std::endl;
 
         // TODO if last group, then shave off overlaping points from the spline (in points and rotated point), then get length
 
@@ -561,7 +561,7 @@ std::pair<std::vector<Spline>,std::vector<double>> make_splines_vector(std::vect
         pointMatrix(1, i) = points[i].second;
     }
 
-    std::cout << pointMatrix << std::endl;
+    //std::cout << pointMatrix << std::endl;
 
     auto dummy_logger = rclcpp::get_logger("du");
     std::pair<std::vector<Spline>,std::vector<double>> res = raceline_gen(dummy_logger, pointMatrix, std::rand(), 4, false);
