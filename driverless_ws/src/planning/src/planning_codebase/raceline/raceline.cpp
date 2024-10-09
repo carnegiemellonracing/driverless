@@ -512,6 +512,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         std::cout << "Checkpoint 2" << std::endl;
 
         std::cout << group.rows() << group.cols() << std::endl;
+        std::cout << rotated_points.rows() << rotated_points.cols() << std::endl;
         // shave off overlapping points from the spline if last group for og matrix and rotated matrix
         // group = group.block(0, flag, 2, group.cols());
         group = group.block(0, 1, 2, group.cols()-1);
