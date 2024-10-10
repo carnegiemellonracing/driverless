@@ -51,7 +51,7 @@ namespace controls {
                 );
 
                 m_cone_subscription = create_subscription<ConeMsg>(
-                    cone_topic_name, cone_qos,
+                    cone_topic_name, spline_qos, //was cone_qos but that didn't exist, publisher uses spline_qos
                     [this] (const ConeMsg::SharedPtr msg) { cone_callback(*msg); },
                     options
                 );

@@ -13,11 +13,11 @@ namespace controls {
     constexpr const char *control_action_topic_name = "control_action";
     constexpr const char *spline_topic_name = "spline";
     constexpr const char *state_topic_name = "state";
+    constexpr const char *cone_topic_name = "cone"; //Is this right? didn't exist before
     constexpr const char *world_twist_topic_name = "filter/twist";
     constexpr const char *world_quat_topic_name = "filter/quaternion";
     constexpr const char *world_pose_topic_name = "filter/pose";
     constexpr const char *controller_info_topic_name = "controller_info";
-    constexpr const char *cone_topic_name = "perc_cones";
 
     // TODO: Ask Ankit what is this, why did we choose it
     /// Profile for best effort communication
@@ -40,8 +40,7 @@ namespace controls {
         best_effort_profile);
 
     const rclcpp::QoS control_action_qos = best_effort_qos;
-    const rclcpp::QoS spline_qos = best_effort_qos; // Can't keep last because it could they could come not in order
-    const rclcpp::QoS cone_qos = best_effort_qos;
+    const rclcpp::QoS spline_qos = best_effort_qos;
     const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1));
@@ -73,6 +72,7 @@ namespace controls {
     constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline
     constexpr float target_speed = 10.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
+    constexpr float progress_cost_multiplier = 10.0f;
     /// Reason for not using infinity: reduction uses log of the cost (trading precision for representable range).
     /// This covers the edge case where every trajectory goes out of bounds, allowing us to still extract useful information.
     constexpr float out_of_bounds_cost = 100.0f; ///< Cost for being out of (fake) track bound as defined by @ref track_width.
@@ -81,15 +81,14 @@ namespace controls {
 
     // State Estimation
 
-    /// Controls the granularity of the spline frame lookup table
     constexpr float spline_frame_separation = 0.5f;  // meters
     constexpr uint32_t curv_frame_lookup_tex_width = 512;
     constexpr float curv_frame_lookup_padding = 0; // meters
     /// Not real track width, used for curvilinear frame lookup table generation
-    constexpr float lookup_table_width = 30.0f; // TODO: FSG rules - no we need - less noisy output (rename to lookup_table_width)
+    constexpr float track_width = 30.0f; // TODO: FSG rules - no we need - less noisy output (rename to lookup_table_width)
     // mppi simulates a lot of shitty trajectories (naive brownian guess)
     /// Represents space the car occupies, used to calculate the size of the curvilinear lookup table.
-    constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * lookup_table_width);
+    constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * track_width);
     constexpr bool reset_pose_on_spline = true; ///< Sets pose to 0 vector for new spline (sensor POV)
 
 
