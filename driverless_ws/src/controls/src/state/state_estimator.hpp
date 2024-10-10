@@ -105,6 +105,8 @@ namespace controls {
             virtual std::vector<glm::fvec2> get_spline_frames() =0;
             virtual std::vector<glm::fvec2> get_all_left_cone_points() =0;
             virtual std::vector<glm::fvec2> get_all_right_cone_points() =0;
+            virtual std::vector<glm::fvec2> get_left_cone_points() = 0;
+            virtual std::vector<glm::fvec2> get_right_cone_points() = 0;
             virtual std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> get_all_cone_points() =0;
             virtual std::vector<float> get_vertices() =0;
             // virtual std::vector<GLuint> get_indices()=0;
