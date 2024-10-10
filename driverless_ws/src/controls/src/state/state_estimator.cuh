@@ -135,6 +135,8 @@ namespace controls {
             std::vector<glm::fvec2> get_spline_frames() override;
             std::vector<glm::fvec2> get_all_left_cone_points() override;
             std::vector<glm::fvec2> get_all_right_cone_points() override;
+            std::vector<glm::fvec2> get_left_cone_points() override;
+            std::vector<glm::fvec2> get_right_cone_points() override;
             std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> get_all_cone_points() override;
             std::vector<float> get_vertices() override;
             // std::vector<glm::fvec2> get_normals() override;
@@ -200,10 +202,13 @@ namespace controls {
 
             /// Stores the sequence of (x,y) spline points from path planning.
             std::vector<glm::fvec2> m_spline_frames;
-            std::vector<glm::fvec2> m_left_cone_points;
-            std::vector<glm::fvec2> m_right_cone_points;
+
             std::vector<glm::fvec2> m_all_left_cone_points;
             std::vector<glm::fvec2> m_all_right_cone_points;
+
+            std::vector<glm::fvec2> m_left_cone_points;
+            std::vector<glm::fvec2> m_right_cone_points;
+
             std::vector<float> m_vertices;
             std::vector<GLuint> m_triangles;
 

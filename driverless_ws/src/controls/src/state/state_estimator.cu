@@ -371,8 +371,8 @@ namespace controls {
             m_left_cone_points.clear();
             m_right_cone_points.clear();
 
-            m_left_cone_points = process_ros_points(cone_msg.blue_cones);
-            m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
+            m_left_cone_points = process_ros_points(cone_msg.orange_cones);
+            m_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
             std::cout << "Here 1\n";
 
 #ifdef DISPLAY
@@ -519,7 +519,6 @@ namespace controls {
 
         std::vector<glm::fvec2> StateEstimator_Impl::get_all_left_cone_points() {
             std::lock_guard<std::mutex> guard {m_mutex};        
-
             return m_all_left_cone_points;
         }
 
@@ -528,6 +527,18 @@ namespace controls {
             
             return m_all_right_cone_points;
         }
+
+        std::vector<glm::fvec2> StateEstimator_Impl::get_left_cone_points() {
+            std::lock_guard<std::mutex> guard {m_mutex};        
+            return m_left_cone_points;
+        }
+
+        std::vector<glm::fvec2> StateEstimator_Impl::get_right_cone_points() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            
+            return m_right_cone_points;
+        }
+
 
         std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> StateEstimator_Impl::get_all_cone_points() {
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -743,50 +754,14 @@ namespace controls {
 
             if (min_cones >= 2) {
 
-                for (size_t i = 0; i < min_cones - 1; ++i) {
-                    
+
+                for (size_t i = 0; i < min_cones; ++i) {
                     glm::fvec2 l1 = m_left_cone_points.at(i);
-                    glm::fvec2 l2 = m_left_cone_points.at(i + 1);
                     glm::fvec2 r1 = m_right_cone_points.at(i);
-                    glm::fvec2 r2 = m_right_cone_points.at(i + 1);
+                    // glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
 
-                    vertices.push_back({{l1.x, l1.y}, {0.5f, 0.0f, 0.0f}});
-                    vertices.push_back({{l2.x, l2.y}, {1.f, 0.0f, 0.0f}});
-                    vertices.push_back({{r1.x, r1.y}, {0.f, 0.5f, 0.0f}});
-                    vertices.push_back({{r2.x, r2.y}, {0.f, 1.0f, 0.0f}});
-                    // vertices.push_back({{l1.x, l1.y}, {10.0f * i, 0.0f, 1.0f}});
-                    // vertices.push_back({{l2.x, l2.y}, {10.0f * (i + 1), 0.0f, 1.0f}});
-                    // vertices.push_back({{r1.x, r1.y}, {10.0f * i, 0.0f, 1.0f}});
-                    // vertices.push_back({{r2.x, r2.y}, {10.0f * (i + 1), 0.0f, 1.0f}});
-
-                    // const GLuint l1i = i * 4;
-                    // const GLuint l2i = i * 4 + 1;
-                    // const GLuint r1i = i * 4 + 2;
-                    // const GLuint r2i = i * 4 + 3;
-
-
-                    // indices.push_back(l1i);
-                    // indices.push_back(l2i);
-                    // indices.push_back(r1i);
-
-                    // indices.push_back(r1i);
-                    // indices.push_back(r2i);
-                    // indices.push_back(l2i);
-
-                    // vertices_display.push_back(l1.x);
-                    // vertices_display.push_back(l1.y);
-                    // vertices_display.push_back(l2.x);
-                    // vertices_display.push_back(l2.y);
-                    
-                    // vertices_display.push_back(r1.x);
-                    // vertices_display.push_back(r1.y);
-
-                    // vertices_display.push_back(r1.x);
-                    // vertices_display.push_back(r1.y);
-                    // vertices_display.push_back(r2.x);
-                    // vertices_display.push_back(r2.y);
-                    // vertices_display.push_back(l2.x);
-                    // vertices_display.push_back(l2.y);
+                    vertices.push_back({{l1.x, l1.y}, {progress_step * i, 0.3f, 0.0f}});
+                    vertices.push_back({{r1.x, r1.y}, {progress_step * i, 0.0f, 0.3f}});
                     m_num_triangles += 2;
                 }
             } else {
@@ -801,8 +776,6 @@ namespace controls {
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
 
-            // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
-            // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
         }
         
         

@@ -83,6 +83,8 @@ namespace controls {
             std::unique_ptr<Trajectory> m_spline = nullptr;
 			std::unique_ptr<Trajectory> m_left_cone_trajectory = nullptr;
 			std::unique_ptr<Trajectory> m_right_cone_trajectory = nullptr;
+            std::unique_ptr<Trajectory> m_left_cone_trajectory_visible = nullptr;
+            std::unique_ptr<Trajectory> m_right_cone_trajectory_visible = nullptr;
             std::unique_ptr<Trajectory> m_best_guess = nullptr;
 
             utils::GLObj m_offset_img_obj;
@@ -94,6 +96,9 @@ namespace controls {
             std::vector<glm::fvec2> m_spline_frames;
             std::vector<glm::fvec2> m_all_left_cone_points;
             std::vector<glm::fvec2> m_all_right_cone_points;
+            std::vector<glm::fvec2> m_left_cone_points;
+            std::vector<glm::fvec2> m_right_cone_points;
+            
             std::vector<glm::fvec2> m_last_reduced_state_trajectory;
             std::vector<float> m_last_state_trajectories;
             state::StateEstimator::OffsetImage m_offset_image;
