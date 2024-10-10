@@ -136,8 +136,8 @@ namespace controls {
 
         void Display::init_spline() {
             m_spline = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_trajectory_shader_program);
-            m_left_cones = std::make_unique<Trajectory>(glm::fvec4 {0.0f, 0.0f, 1.0f, 1.0f}, 3, m_trajectory_shader_program);
-            m_right_cones = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 0.0f, 1.0f}, 3, m_trajectory_shader_program);
+            m_left_cone_trajectory = std::make_unique<Trajectory>(glm::fvec4 {0.0f, 0.0f, 1.0f, 1.0f}, 3, m_trajectory_shader_program);
+            m_right_cone_trajectory = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 0.0f, 1.0f}, 3, m_trajectory_shader_program);
         }
 
         void Display::init_best_guess() {
@@ -226,25 +226,25 @@ namespace controls {
 
         void Display::draw_cones()
         {
-            assert(m_left_cones != nullptr);
-            assert(m_right_cones != nullptr);
+            assert(m_left_cone_trajectory != nullptr);
+            assert(m_right_cone_trajectory != nullptr);
 
-            const auto& left_cone_frames = m_left_cone_frames;
-            const auto& right_cone_frames = m_right_cone_frames;
-            m_left_cones->vertex_buf = std::vector<float>(left_cone_frames.size() * 2);
-            for (size_t i = 0; i < left_cone_frames.size(); i++) {
-                m_left_cones->vertex_buf[2 * i] = left_cone_frames[i].x;
-                m_left_cones->vertex_buf[2 * i + 1] = left_cone_frames[i].y;
+            const auto& left_cone_points = m_all_left_cone_points;
+            const auto& right_cone_points = m_all_right_cone_points;
+            m_left_cone_trajectory->vertex_buf = std::vector<float>(left_cone_points.size() * 2);
+            for (size_t i = 0; i < left_cone_points.size(); i++) {
+                m_left_cone_trajectory->vertex_buf[2 * i] = left_cone_points[i].x;
+                m_left_cone_trajectory->vertex_buf[2 * i + 1] = left_cone_points[i].y;
             }
 
-            m_right_cones->vertex_buf = std::vector<float>(right_cone_frames.size() * 2);
-            for (size_t i = 0; i < right_cone_frames.size(); i++) {
-                m_right_cones->vertex_buf[2 * i] = right_cone_frames[i].x;
-                m_right_cones->vertex_buf[2 * i + 1] = right_cone_frames[i].y;
+            m_right_cone_trajectory->vertex_buf = std::vector<float>(right_cone_points.size() * 2);
+            for (size_t i = 0; i < right_cone_points.size(); i++) {
+                m_right_cone_trajectory->vertex_buf[2 * i] = right_cone_points[i].x;
+                m_right_cone_trajectory->vertex_buf[2 * i + 1] = right_cone_points[i].y;
             }
 
-            m_left_cones->draw();
-            m_right_cones->draw();
+            m_left_cone_trajectory->draw();
+            m_right_cone_trajectory->draw();
         }
 
         void Display::draw_best_guess() {
@@ -360,12 +360,12 @@ namespace controls {
                 glClear(GL_COLOR_BUFFER_BIT);
 
                 m_spline_frames = m_state_estimator->get_spline_frames();
-                m_left_cone_frames = m_state_estimator->get_left_cone_frames();
-                m_right_cone_frames = m_state_estimator->get_right_cone_frames();
+                m_all_left_cone_points = m_state_estimator->get_all_left_cone_points();
+                m_all_right_cone_points = m_state_estimator->get_all_right_cone_points();
 
-                // if (m_spline_frames.size() != m_left_cone_frames.size() || m_spline_frames.size() != m_right_cone_frames.size())
+                // if (m_spline_frames.size() != m_left_cone_points.size() || m_spline_frames.size() != m_right_cone_points.size())
                 // {
-                //     throw std::runtime_error("m_spline_frames.size() != m_left_cone_frames.size() || m_spline_frames.size() != m_right_cone_frames.size()");
+                //     throw std::runtime_error("m_spline_frames.size() != m_left_cone_points.size() || m_spline_frames.size() != m_right_cone_points.size()");
                 // }
                 m_state_estimator->get_offset_pixels(m_offset_image);
                 m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();

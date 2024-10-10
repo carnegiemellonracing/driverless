@@ -67,9 +67,9 @@ namespace controls {
             for (const auto& seg : m_all_segments) {
                 if (seg.type == SegmentType::ARC) {
                     float next_heading = add_heading(curr_heading, seg.heading_change);
-                    const auto& [spline, left_cones, cones] = arc_segment_with_cones(seg.radius, curr_pos, curr_heading, next_heading);
-                    m_all_left_cones.insert(m_all_left_cones.end(), left_cones.begin(), left_cones.end());
-                    m_all_right_cones.insert(m_all_right_cones.end(), cones.begin(), cones.end());
+                    const auto& [spline, left, right] = arc_segment_with_cones(seg.radius, curr_pos, curr_heading, next_heading);
+                    m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
+                    m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
                     m_all_spline.insert(m_all_spline.end(), spline.begin(), spline.end());
                     curr_pos = spline.back();
                     curr_heading = next_heading;
@@ -143,18 +143,28 @@ namespace controls {
             return result;
         }
 
+        static constexpr float arc_rad_adjusted(float arc_rad) {
+            if (arc_rad < - M_PI) {
+                return arc_rad + 2 * M_PI;
+            }    
+            if (arc_rad > M_PI) {
+                return arc_rad - 2 * M_PI;
+            }
+            return arc_rad;
+        }
 
         TestNode::SplineAndCones TestNode::arc_segment_with_cones(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
             std::vector<glm::fvec2> spline, left_cones, right_cones;
 
-            float arc_rad = end_heading - start_heading;
+            float arc_rad = arc_rad_adjusted(end_heading - start_heading);
             bool counter_clockwise = arc_rad > 0;
+            // Angle form the starting_point to center 
             float center_heading = counter_clockwise ?
-                start_heading + M_PI_2 : start_heading - M_PI_2;
+                arc_rad_adjusted(start_heading + M_PI_2) : arc_rad_adjusted(start_heading - M_PI_2);
 
-            glm::fvec2 center = m_spline_end_pos + radius * glm::fvec2 {glm::cos(center_heading), glm::sin(center_heading)};
+            glm::fvec2 center = start_pos + radius * glm::fvec2 {glm::cos(center_heading), glm::sin(center_heading)};
             // Angle form the center to the starting point
-            float start_angle = std::atan2(start_pos.y - center.y, start_pos.x - center.x);
+            float start_angle = arc_rad_adjusted(std::atan2(start_pos.y - center.y, start_pos.x - center.x));
 
             const uint32_t steps = glm::abs(radius * arc_rad / spline_frame_separation);
             const float step_rad = arc_rad / steps;
@@ -172,7 +182,7 @@ namespace controls {
             }
 
             for (uint32_t i = 1; i <= steps; i++) {
-                float angle = start_angle + i * step_rad;
+                float angle = arc_rad_adjusted(start_angle + i * step_rad);
                 glm::fvec2 outgoing_vector = glm::fvec2 {glm::cos(angle), glm::sin(angle)};
                 spline.push_back(center + radius * outgoing_vector);
                 left_cones.push_back(center + left_dist * outgoing_vector);
