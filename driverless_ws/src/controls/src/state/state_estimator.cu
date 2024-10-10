@@ -343,6 +343,24 @@ namespace controls {
 
             m_logger("finished state estimator spline processing");
         }
+
+        std::vector<glm::fvec2> process_ros_points(std::vector<geometry_msgs::msg::Point, 
+                std::allocator<geometry_msgs::msg::Point>> points) {
+
+            assert(points.size() > 0);  
+
+            std::vector<glm::fvec2> processed_points;
+            processed_points.reserve(points.size());
+            for (const auto& point : points) {
+                // Swap the dimensions because of perceptions
+                float cone_y = static_cast<float>(point.y);
+                float cone_x = static_cast<float>(point.x);
+                processed_points.push_back(
+                    glm::fvec2(cone_y, cone_x));
+            }
+            assert(processed_points.size() == points.size());
+            return processed_points;
+        }
         
 
         void StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
@@ -350,40 +368,32 @@ namespace controls {
 
             m_logger("beginning state estimator cone processing");
 
-            m_left_cone_positions.clear();
-            m_left_cone_positions.reserve(cone_msg.blue_cones.size());
-            m_right_cone_positions.clear();
-            m_right_cone_positions.reserve(cone_msg.yellow_cones.size());
+            m_left_cone_points.clear();
+            m_right_cone_points.clear();
 
-            for (const auto& cone_point : cone_msg.blue_cones) {
-                // TODO when perceptions gets their shit together
-                float cone_y = static_cast<float>(cone_point.y);
-                float cone_x = static_cast<float>(cone_point.x);
-                float distance = cone_y * cone_y + cone_x * cone_x;
-                m_left_cone_positions.push_back(
-                    std::make_pair(
-                        distance,
-                        glm::fvec2(cone_y, cone_x)
-                    )
-                );
-            }
+            m_left_cone_points = process_ros_points(cone_msg.blue_cones);
+            m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
+            std::cout << "Here 1\n";
 
-            for (const auto& cone_point : cone_msg.yellow_cones) {
-                float cone_y = static_cast<float>(cone_point.y);
-                float cone_x = static_cast<float>(cone_point.x);
-                float distance = cone_y * cone_y + cone_x * cone_x;
-                m_right_cone_positions.push_back(
-                    std::make_pair(
-                        distance,
-                        glm::fvec2(cone_y,cone_x) 
-                    )
-                    // TODO when perceptions gets their shit together
-                );
-            }
+#ifdef DISPLAY
+            m_all_left_cone_points.clear();
+            m_all_right_cone_points.clear();
+
+            m_all_left_cone_points = process_ros_points(cone_msg.orange_cones);
+            m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
+
+            std::cout << "Here 2\n";
+
+            assert(m_all_left_cone_points.size() > 0);
+            assert(m_all_left_cone_points.size() == m_all_right_cone_points.size());
+#endif
 
             if constexpr (reset_pose_on_spline) {
+                // TODO: correct orig_data_stamp
                 m_state_projector.record_pose(0, 0, 0, cone_msg.orig_data_stamp);
             }
+
+            std::cout << "Here 3\n";
             
             m_logger("finished state estimator cone processing");
         }
@@ -507,24 +517,24 @@ namespace controls {
             return res;
         }
 
-        std::vector<glm::fvec2> StateEstimator_Impl::get_left_cone_frames() {
-            std::lock_guard<std::mutex> guard {m_mutex};
+        std::vector<glm::fvec2> StateEstimator_Impl::get_all_left_cone_points() {
+            std::lock_guard<std::mutex> guard {m_mutex};        
 
-            std::vector<glm::fvec2> res (m_left_cone_positions.size());
-            for (size_t i = 0; i < m_left_cone_positions.size(); i++) {
-                res[i] = {m_left_cone_positions.at(i).second.x, m_left_cone_positions.at(i).second.y};
-            }
-            return res;
+            return m_all_left_cone_points;
         }
 
-        std::vector<glm::fvec2> StateEstimator_Impl::get_right_cone_frames() {
+        std::vector<glm::fvec2> StateEstimator_Impl::get_all_right_cone_points() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            
+            return m_all_right_cone_points;
+        }
+
+        std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> StateEstimator_Impl::get_all_cone_points() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            std::vector<glm::fvec2> res (m_right_cone_positions.size());
-            for (size_t i = 0; i < m_right_cone_positions.size(); i++) {
-                res[i] = {m_right_cone_positions.at(i).second.x, m_right_cone_positions.at(i).second.y};
-            }
-            return res;
+            assert(m_all_left_cone_points.size() > 0);
+
+            return std::make_pair(m_all_left_cone_points, m_all_right_cone_points);
         }
 
         std::vector<float> StateEstimator_Impl::get_vertices() {
@@ -715,8 +725,8 @@ namespace controls {
             };
 
             const size_t num_splines = m_spline_frames.size();
-            const size_t num_left_cones = m_left_cone_positions.size();
-            const size_t num_right_cones = m_right_cone_positions.size();
+            const size_t num_left_cones = m_left_cone_points.size();
+            const size_t num_right_cones = m_right_cone_points.size();
             const size_t min_cones = std::min(num_left_cones, num_right_cones);
 
             std::stringstream ss;
@@ -727,28 +737,21 @@ namespace controls {
             std::vector<GLuint> indices;
             std::vector<float> vertices_display;
 
-            auto cmp = [](const std::pair<float, glm::fvec2>& a, const std::pair<float, glm::fvec2>& b) {
-                return a.first < b.first;
-            };
-
-            // std::sort(m_left_cone_positions.begin(), m_left_cone_positions.end(), cmp);
-            // std::sort(m_right_cone_positions.begin(), m_right_cone_positions.end(), cmp);
-
             m_num_triangles = 0;
             if (min_cones >= 2) {
 
                 for (size_t i = 0; i < min_cones - 1; ++i) {
                     
-                    glm::fvec2 l1 = m_left_cone_positions.at(i).second;
-                    glm::fvec2 l2 = m_left_cone_positions.at(i + 1).second;
-                    glm::fvec2 r1 = m_right_cone_positions.at(i).second;
-                    glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
+                    glm::fvec2 l1 = m_left_cone_points.at(i);
+                    glm::fvec2 l2 = m_left_cone_points.at(i + 1);
+                    glm::fvec2 r1 = m_right_cone_points.at(i);
+                    glm::fvec2 r2 = m_right_cone_points.at(i + 1);
 
                     vertices.push_back({{l1.x, l1.y}, {0.5f, 0.0f, 0.0f}});
                     vertices.push_back({{l2.x, l2.y}, {1.f, 0.0f, 0.0f}});
                     vertices.push_back({{r1.x, r1.y}, {0.f, 0.5f, 0.0f}});
                     vertices.push_back({{r2.x, r2.y}, {0.f, 1.0f, 0.0f}});
-                // vertices.push_back({{l1.x, l1.y}, {10.0f * i, 0.0f, 1.0f}});
+                    // vertices.push_back({{l1.x, l1.y}, {10.0f * i, 0.0f, 1.0f}});
                     // vertices.push_back({{l2.x, l2.y}, {10.0f * (i + 1), 0.0f, 1.0f}});
                     // vertices.push_back({{r1.x, r1.y}, {10.0f * i, 0.0f, 1.0f}});
                     // vertices.push_back({{r2.x, r2.y}, {10.0f * (i + 1), 0.0f, 1.0f}});
