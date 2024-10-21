@@ -85,7 +85,7 @@ namespace controls {
     constexpr uint32_t curv_frame_lookup_tex_width = 512;
     constexpr float curv_frame_lookup_padding = 0; // meters
     /// Not real track width, used for curvilinear frame lookup table generation
-    constexpr float track_width = 30.0f; // TODO: FSG rules - no we need - less noisy output (rename to lookup_table_width)
+    constexpr float fake_track_width = 10.0f;
     // mppi simulates a lot of shitty trajectories (naive brownian guess)
     /// Represents space the car occupies, used to calculate the size of the curvilinear lookup table.
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * track_width);
