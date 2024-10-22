@@ -13,7 +13,7 @@ namespace controls {
     constexpr const char *control_action_topic_name = "control_action";
     constexpr const char *spline_topic_name = "spline";
     constexpr const char *state_topic_name = "state";
-    constexpr const char *cone_topic_name = "cone"; //Is this right? didn't exist before
+    constexpr const char *cone_topic_name = "perc_cones"; //Is this right? didn't exist before
     constexpr const char *world_twist_topic_name = "filter/twist";
     constexpr const char *world_quat_topic_name = "filter/quaternion";
     constexpr const char *world_pose_topic_name = "filter/pose";
@@ -88,7 +88,7 @@ namespace controls {
     constexpr float fake_track_width = 10.0f;
     // mppi simulates a lot of shitty trajectories (naive brownian guess)
     /// Represents space the car occupies, used to calculate the size of the curvilinear lookup table.
-    constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * track_width);
+    constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * fake_track_width);
     constexpr bool reset_pose_on_spline = true; ///< Sets pose to 0 vector for new spline (sensor POV)
 
 

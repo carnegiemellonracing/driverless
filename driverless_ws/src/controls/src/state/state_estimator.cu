@@ -261,7 +261,7 @@ namespace controls {
             layout (location = 0) in vec2 i_world_pos;
             layout (location = 1) in vec3 i_curv_pose;
 
-            out vec2 o_curv_pose
+            out vec2 o_curv_pose;
 
             layout (location = 0) uniform float scale;
             layout (location = 1) uniform vec2 center;
@@ -323,6 +323,7 @@ namespace controls {
             m_logger("generating state estimator gl buffers");
             gen_curv_frame_lookup_framebuffer();
             gen_gl_path(m_gl_path);
+            gen_fake_track();
 
             glFinish();
             utils::make_gl_current_or_except(m_gl_window, nullptr);
@@ -515,9 +516,9 @@ namespace controls {
             gen_tex_info({state[state_x_idx], state[state_y_idx]});
 
             m_logger("filling OpenGL buffers...");
-            // takes car position, places them in the vertices
-            fill_path_buffers_cones({state[state_x_idx], state[state_y_idx]});
-            fill_path_buffers_spline({state[state_x_idx], state[state_y_idx]});
+            
+            fill_path_buffers_cones();
+            fill_path_buffers_spline();
 
             m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
             unmap_curv_frame_lookup();
@@ -671,7 +672,7 @@ namespace controls {
 
         void StateEstimator_Impl::render_fake_track() {
             glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClearColor(0.4f, 0.3f, 0.6f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
@@ -684,6 +685,17 @@ namespace controls {
 
             glBindVertexArray(m_fake_track_path.vao);
             glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
+
+#ifdef DISPLAY
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fake_track_fbo);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+            glBlitFramebuffer(
+                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+            SDL_GL_SwapWindow(m_gl_window);
+#endif
         }
 
         void StateEstimator_Impl::render_curv_frame_lookup() {
@@ -704,17 +716,7 @@ namespace controls {
             glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, m_num_triangles);
 
-#ifdef DISPLAY
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-            glBlitFramebuffer(
-                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                GL_COLOR_BUFFER_BIT, GL_NEAREST
-            );
 
-            SDL_GL_SwapWindow(m_gl_window);
-#endif
         }
 
         // Whole lotta CUDA nonsense. Tread lightly.
@@ -919,10 +921,10 @@ namespace controls {
                 }
                 vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, 0.0f}});
 
-                vertices.push_back({{low1.x, low1.y}, {total_progress, 0.0f, 0.0f}});
-                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, 0.0f, 0.0f}});
-                vertices.push_back({{high1.x, high1.y}, {total_progress, 0.0f, 0.0f}});
-                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, 0.0f, 0.0f}});
+                vertices.push_back({{low1.x, low1.y}, {total_progress, 1.0f, 0.0f}});
+                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, 1.0f, 0.0f}});
+                vertices.push_back({{high1.x, high1.y}, {total_progress, 0.0f, 1.0f}});
+                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, 0.0f, 1.0f}});
 
                 const GLuint p1i = i == 0 ? 0 : (i - 1) * 5 + 1;
                 const GLuint p2i = i * 5 + 1;
