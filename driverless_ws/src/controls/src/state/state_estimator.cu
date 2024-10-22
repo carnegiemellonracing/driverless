@@ -261,7 +261,7 @@ namespace controls {
             layout (location = 0) in vec2 i_world_pos;
             layout (location = 1) in vec3 i_curv_pose;
 
-            out vec2 o_curv_pose;
+            out vec2 o_world_pose;
 
             layout (location = 0) uniform float scale;
             layout (location = 1) uniform vec2 center;
@@ -269,7 +269,7 @@ namespace controls {
             const float far_frustum = 10.0f;
 
             void main() {
-                o_curv_pose = scale * (i_world_pos - center);
+                o_world_pose = scale * (i_world_pos - center);
                 gl_Position = vec4(scale * (i_world_pos - center), abs(i_curv_pose.y) / far_frustum, 1.0);
             }
         )";
@@ -284,7 +284,7 @@ namespace controls {
             uniform sampler2D fake_track_texture;
 
             void main() {
-                FragColor = texture(fake_track_texture, o_world_pose);
+                FragColor = texture(fake_track_texture, o_world_pose / 2.0 + 0.5); // convert from normalized device coordinates to texture coordinates
             }
         )";
 
@@ -962,7 +962,7 @@ namespace controls {
                     indices.push_back(p1i);
                 }
 
-                total_progress += new_progress;
+                total_progress += new_progress / 10.f;
             }
 
             glBindBuffer(GL_ARRAY_BUFFER, m_fake_track_path.vbo);
