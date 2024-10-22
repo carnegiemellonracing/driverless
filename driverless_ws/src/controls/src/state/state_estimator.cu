@@ -211,7 +211,7 @@ namespace controls {
          * @param[out] o_curv_pose same as i_curv_pose, passed along
          * @return gl_Position
          */
-        constexpr const char* vertex_source = R"(
+        constexpr const char* vertex_source_fake_track = R"(
             #version 330 core
             #extension GL_ARB_explicit_uniform_location : enable
 
@@ -239,7 +239,7 @@ namespace controls {
          * 4th color (1.0f) represents in bounds, compared to background which has -1.0 representing OOB
          * @return FragColor The color of each foreground pixel
          */
-        constexpr const char* fragment_source = R"(
+        constexpr const char* fragment_source_fake_track = R"(
             #version 330 core
 
             in vec3 o_curv_pose;
@@ -251,7 +251,42 @@ namespace controls {
             }
         )";
 
+        // TODO: I think abs(i_curv_pose.y) is not needed, and hence i_curv_pose is not needed, because glLineStrip
+        // means there will be no overlapping triangles
+        // besides cones don't have offset information
+        constexpr const char *vertex_source = R"(
+            #version 330 core
+            #extension GL_ARB_explicit_uniform_location : enable
 
+            layout (location = 0) in vec2 i_world_pos;
+            layout (location = 1) in vec3 i_curv_pose;
+
+            out vec2 o_curv_pose
+
+            layout (location = 0) uniform float scale;
+            layout (location = 1) uniform vec2 center;
+
+            const float far_frustum = 10.0f;
+
+            void main() {
+                o_curv_pose = scale * (i_world_pos - center);
+                gl_Position = vec4(scale * (i_world_pos - center), abs(i_curv_pose.y) / far_frustum, 1.0);
+            }
+        )";
+
+        constexpr const char *fragment_source = R"(
+            #version 330 core
+
+            in vec2 o_world_pose;
+
+            out vec4 FragColor;
+
+            uniform sampler2D fake_track_texture;
+
+            void main() {
+                FragColor = texture(fake_track_texture, o_world_pose);
+            }
+        )";
 
         // methods
 
@@ -277,13 +312,11 @@ namespace controls {
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
             m_logger("compiling state estimator shaders");
+            
+            m_fake_track_shader_program = utils::compile_shader(vertex_source_fake_track, fragment_source_fake_track);
             m_gl_path_shader = utils::compile_shader(vertex_source, fragment_source);
 
             m_logger("setting state estimator gl properties");
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-            glEnable(GL_DEPTH_TEST);
-            glDepthFunc(GL_LESS);
 
             glViewport(0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width);
 
@@ -483,13 +516,16 @@ namespace controls {
 
             m_logger("filling OpenGL buffers...");
             // takes car position, places them in the vertices
-            fill_path_buffers({state[state_x_idx], state[state_y_idx]});
+            fill_path_buffers_cones({state[state_x_idx], state[state_y_idx]});
+            fill_path_buffers_spline({state[state_x_idx], state[state_y_idx]});
 
             m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
             unmap_curv_frame_lookup();
 
             // render the lookup table
             m_logger("rendering curv frame lookup table...");
+
+            render_fake_track();
             render_curv_frame_lookup();
 
             m_logger("mapping OpenGL curv frame texture back to CUDA");
@@ -633,13 +669,31 @@ namespace controls {
             m_curv_frame_lookup_tex_info.width = std::max(xmax - xmin, ymax - ymin) + car_padding * 2;
         }
 
+        void StateEstimator_Impl::render_fake_track() {
+            glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glEnable(GL_DEPTH_TEST);
+            glDepthFunc(GL_LESS);
+
+            // use a shader program
+            glUseProgram(m_fake_track_shader_program);
+            // set the relevant scale and center uniforms (constants) in the shader program
+            glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
+            glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
+
+            glBindVertexArray(m_fake_track_path.vao);
+            glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
+        }
+
         void StateEstimator_Impl::render_curv_frame_lookup() {
             // tells OpenGL: this is where I want to render to
             glBindFramebuffer(GL_FRAMEBUFFER, m_curv_frame_lookup_fbo);
 
             // set the background color, clears the depth buffer
             // (technically 2 rendering passes are done - color and depth)
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // TODO: remove depth buffer
             // use a shader program
             glUseProgram(m_gl_path_shader);
             // set the relevant scale and center uniforms (constants) in the shader program
@@ -647,9 +701,8 @@ namespace controls {
             glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
             glBindVertexArray(m_gl_path.vao);
-            // relies on the element buffer object already being bound
+            glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, m_num_triangles);
-            // glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
 
 #ifdef DISPLAY
             glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
@@ -711,7 +764,7 @@ namespace controls {
          * Lastly, binds to the ebo.
          */
         void StateEstimator_Impl::gen_gl_path(utils::GLObj &gl_path) {
-            // Generates the names for the vao, vbo and ebo to be referenced later, such as to bind.
+            // Generates the vao, vbo and ebo to be bound later.
             glGenVertexArrays(1, &gl_path.vao);
             glGenBuffers(1, &gl_path.vbo);
             glGenBuffers(1, &gl_path.ebo);
@@ -728,13 +781,14 @@ namespace controls {
             // vbo unbound here, ebo bound in its place.
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gl_path.ebo);
 
-            // vao is unbound.
+            // vao is unbound, saving the settings.
             glBindVertexArray(0);
         }
 
         
         // Track bounds version
-        void StateEstimator_Impl::fill_path_buffers(glm::fvec2 car_pos) {
+        void StateEstimator_Impl::fill_path_buffers_cones() {
+            // TODO: move outside and make a private type?
             struct Vertex {
                 struct {
                     float x;
@@ -763,13 +817,6 @@ namespace controls {
             std::vector<GLuint> indices;
             std::vector<float> vertices_display;
 
-            auto cmp = [](const std::pair<float, glm::fvec2>& a, const std::pair<float, glm::fvec2>& b) {
-                return a.first < b.first;
-            };
-
-            // std::sort(m_left_cone_positions.begin(), m_left_cone_positions.end(), cmp);
-            // std::sort(m_right_cone_positions.begin(), m_right_cone_positions.end(), cmp);
-
             m_num_triangles = 0;
             float progress_step = 1.f / min_cones;
 
@@ -781,42 +828,8 @@ namespace controls {
                     glm::fvec2 r1 = m_right_cone_positions.at(i).second;
                     // glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
 
-                    vertices.push_back({{l1.x, l1.y}, {progress_step * i, 0.3f, 0.0f}});
-                    vertices.push_back({{r1.x, r1.y}, {progress_step * i, 0.0f, 0.3f}});
-
-                // vertices.push_back({{l1.x, l1.y}, {10.0f * i, 0.0f, 1.0f}});
-                    // vertices.push_back({{l2.x, l2.y}, {10.0f * (i + 1), 0.0f, 1.0f}});
-                    // vertices.push_back({{r1.x, r1.y}, {10.0f * i, 0.0f, 1.0f}});
-                    // vertices.push_back({{r2.x, r2.y}, {10.0f * (i + 1), 0.0f, 1.0f}});
-
-                    // const GLuint l1i = i * 4;
-                    // const GLuint l2i = i * 4 + 1;
-                    // const GLuint r1i = i * 4 + 2;
-                    // const GLuint r2i = i * 4 + 3;
-
-
-                    // indices.push_back(l1i);
-                    // indices.push_back(l2i);
-                    // indices.push_back(r1i);
-
-                    // indices.push_back(r1i);
-                    // indices.push_back(r2i);
-                    // indices.push_back(l2i);
-
-                    // vertices_display.push_back(l1.x);
-                    // vertices_display.push_back(l1.y);
-                    // vertices_display.push_back(l2.x);
-                    // vertices_display.push_back(l2.y);
-                    
-                    // vertices_display.push_back(r1.x);
-                    // vertices_display.push_back(r1.y);
-
-                    // vertices_display.push_back(r1.x);
-                    // vertices_display.push_back(r1.y);
-                    // vertices_display.push_back(r2.x);
-                    // vertices_display.push_back(r2.y);
-                    // vertices_display.push_back(l2.x);
-                    // vertices_display.push_back(l2.y);
+                    vertices.push_back({{l1.x, l1.y}, {0, 0.3f, 0.0f}});
+                    vertices.push_back({{r1.x, r1.y}, {0, 0.0f, 0.3f}});
                     m_num_triangles += 2;
                 }
             } else {
@@ -831,8 +844,6 @@ namespace controls {
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
 
-            // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
-            // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
         }
         
         
@@ -841,7 +852,7 @@ namespace controls {
          * Given spline frames, fills a framebuffer object with the fake track corresponding to the spline. Used for track progress.
          * The framebuffer object will be used as a texture object to be sampled from the state estimator.
          */
-        void StateEstimator_Impl::fill_path_buffers_spline(glm::fvec2 car_pos) {
+        void StateEstimator_Impl::fill_path_buffers_spline() {
             struct Vertex {
                 struct {
                     float x;
@@ -892,15 +903,26 @@ namespace controls {
                 glm::fvec2 high1 = p1 + normal * radius;
                 glm::fvec2 high2 = p2 + normal * radius;
 
-                if (i == 0) {
-                    vertices.push_back({{p1.x, p1.y}, {total_progress, 0.0f, segment_heading}});
-                }
-                vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, secant_heading}});
+                // if (i == 0) {
+                //     vertices.push_back({{p1.x, p1.y}, {total_progress, 0.0f, segment_heading}});
+                // }
+                // vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, secant_heading}});
 
-                vertices.push_back({{low1.x, low1.y}, {total_progress, -radius, segment_heading}});
-                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, -radius, segment_heading}});
-                vertices.push_back({{high1.x, high1.y}, {total_progress, radius, segment_heading}});
-                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, radius, segment_heading}});
+                // vertices.push_back({{low1.x, low1.y}, {total_progress, -radius, segment_heading}});
+                // vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, -radius, segment_heading}});
+                // vertices.push_back({{high1.x, high1.y}, {total_progress, radius, segment_heading}});
+                // vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, radius, segment_heading}});
+
+                if (i == 0)
+                {
+                    vertices.push_back({{p1.x, p1.y}, {total_progress, 0.0f, 0.0f}});
+                }
+                vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, 0.0f}});
+
+                vertices.push_back({{low1.x, low1.y}, {total_progress, 0.0f, 0.0f}});
+                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, 0.0f, 0.0f}});
+                vertices.push_back({{high1.x, high1.y}, {total_progress, 0.0f, 0.0f}});
+                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, 0.0f, 0.0f}});
 
                 const GLuint p1i = i == 0 ? 0 : (i - 1) * 5 + 1;
                 const GLuint p2i = i * 5 + 1;
