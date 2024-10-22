@@ -155,6 +155,7 @@ namespace controls {
             /// in m_curv_frame_lookup_tex_info.
             void gen_tex_info(glm::fvec2 car_pos);
 
+            void render_fake_track();
             /**
              * Render the lookup table into m_curv_frame_lookup_fbo
              */
@@ -197,8 +198,8 @@ namespace controls {
              * @brief Fills in the vertex and element buffers with the actual vertex position information
              * and the triples of vertex indices that represent triangles respectively.
              */
-            void fill_path_buffers(glm::fvec2 car_pos);
-            void fill_path_buffers_spline(glm::fvec2 car_pos);
+            void fill_path_buffers_cones();
+            void fill_path_buffers_spline();
 
             /// Stores the sequence of (x,y) spline points from path planning.
             std::vector<glm::fvec2> m_spline_frames;
@@ -236,6 +237,7 @@ namespace controls {
             GLuint m_fake_track_fbo;
             GLuint m_fake_track_texture_color;
             utils::GLObj m_fake_track_path;
+            GLuint m_fake_track_shader_program; 
 
             /**
              * Has members vbo, vao, veo. @ref utils::GLObj
