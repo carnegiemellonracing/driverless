@@ -86,7 +86,7 @@ std::vector<Chunk>* generateChunks(std::vector<std::pair<double,double>> blueCon
 
     // create chunk vector that stores chunks
     //TODO: use new keyword to create vector in heap not stack
-    std::vector<Chunk>* chunkVector = new std::vector<Chunk>();
+    std::vector<Chunk*>* chunkVector = new std::vector<Chunk>();
 
     // make splines for track boundaries
     std::pair<std::vector<Spline>,std::vector<double>> blue = make_splines_vector(blueCones);
