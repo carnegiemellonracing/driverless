@@ -81,7 +81,7 @@ void Chunk::generateConePoints(std::pair<std::vector<Spline>,std::vector<double>
  */
 
 //TODO: should be returning by reference not value
-std::vector<Chunk>* generateChunks(std::vector<std::pair<double,double>> blueCones,
+std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCones,
                                   std::vector<std::pair<double,double>> yellowCones) {
 
     // create chunk vector that stores chunks
