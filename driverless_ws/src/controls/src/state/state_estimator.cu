@@ -360,7 +360,7 @@ namespace controls {
             // generate texture
             glGenTextures(1, &m_fake_track_texture_color);
             glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
-            // TODO: verify this is the correct width and parameters
+
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width, 0, GL_RGBA, GL_FLOAT, NULL);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -425,7 +425,7 @@ namespace controls {
             m_right_cone_positions.reserve(cone_msg.yellow_cones.size());
 
             for (const auto& cone_point : cone_msg.blue_cones) {
-                // TODO when perceptions gets their shit together
+                // we swap these around because 
                 float cone_y = static_cast<float>(cone_point.y);
                 float cone_x = static_cast<float>(cone_point.x);
                 float distance = cone_y * cone_y + cone_x * cone_x;
@@ -446,13 +446,10 @@ namespace controls {
                         distance,
                         glm::fvec2(cone_y,cone_x) 
                     )
-                    // TODO when perceptions gets their shit together
                 );
             }
 
-            if constexpr (reset_pose_on_spline) {
-                m_state_projector.record_pose(0, 0, 0, cone_msg.orig_data_stamp);
-            }
+            if constexpr (reset_pose_on_spline) { m_state_projector.record_pose(0, 0, 0, cone_msg.orig_data_stamp); }
             
             m_logger("finished state estimator cone processing");
         }
