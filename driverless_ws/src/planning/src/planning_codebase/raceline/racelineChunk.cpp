@@ -31,10 +31,10 @@ double Chunk::calcRunningAvgCurvature() {
  *         include given curvature point, false otherwise.
  */
 bool Chunk::checkStopChunk(double newCurvature) {
-    double sigDiff = 1; // TODO: tunable param
+    double sigDiff = 1; // TODO: tunable param, move to top of file and use macros
     double avgCurve = calcRunningAvgCurvature();
-    if (abs(avgCurve - newCurvature) >= sigDiff && 
-            (endProgress - startProgress) < 15) {
+    if (abs(avgCurve - newCurvature) >= sigDiff ||
+            (endProgress - startProgress) > 15) {
         return true;
     }
     return false;
@@ -79,11 +79,14 @@ void Chunk::generateConePoints(std::pair<std::vector<Spline>,std::vector<double>
  * 
  * @return Vector of raceline chunks.
  */
-std::vector<Chunk> generateChunks(std::vector<std::pair<double,double>> blueCones,
+
+//TODO: should be returning by reference not value
+std::vector<Chunk>* generateChunks(std::vector<std::pair<double,double>> blueCones,
                                   std::vector<std::pair<double,double>> yellowCones) {
 
     // create chunk vector that stores chunks
-    std::vector<Chunk> chunkVector;
+    //TODO: use new keyword to create vector in heap not stack
+    std::vector<Chunk>* chunkVector = new std::vector<Chunk>();
 
     // make splines for track boundaries
     std::pair<std::vector<Spline>,std::vector<double>> blue = make_splines_vector(blueCones);
@@ -93,7 +96,7 @@ std::vector<Chunk> generateChunks(std::vector<std::pair<double,double>> blueCone
     std::vector<double> cumulativeLen = blue.second;
 
     // create a chunk
-    Chunk chunk;
+    Chunk* chunk = new Chunk();
     
     // loop through progress and sample curvature at each progress point
     int increment = 1; // TODO: tunable param
@@ -101,26 +104,27 @@ std::vector<Chunk> generateChunks(std::vector<std::pair<double,double>> blueCone
     int totalBlueLength = cumulativeLen[cumulativeLen.size()-1];
     
     for (int currPercentProgress = 0; currPercentProgress <= totalProgress; currPercentProgress += increment) {
-        double currProgress = (currPercentProgress*totalBlueLength)/100; // progress in meters
+        double currProgress = (currPercentProgress*totalBlueLength)/totalProgress; // progress in meters
         std::vector<double> currProgressVec;
         currProgressVec.push_back(currProgress);
         double curvature = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen)[0];
         // compare curvature to avgCurvature of the curr bucket
-        chunk.endProgress = currPercentProgress;
-        if (!chunk.checkStopChunk(curvature)) {
+        chunk->endProgress = currPercentProgress;
+        if (!chunk->checkStopChunk(curvature)) {
             // if curvature belongs in current chunk, updated sumCurvature
-            chunk.sumCurvature += curvature;
+            chunk->sumCurvature += curvature;
         }
         else { 
             // if we need to stop current chunk, create a new chunk and update
             // previous chunk & add it to the chunk vector
-            chunk.generateConePoints(blue, yellow); // fill in the current bucket's blue and yellow points vectors
-            chunk.avgCurvature = chunk.calcRunningAvgCurvature();
-            chunkVector.push_back(chunk);
-            Chunk chunk;
-            chunk.startProgress = currPercentProgress;
-            chunk.endProgress = currPercentProgress;
-            chunk.sumCurvature = curvature;
+            chunk->generateConePoints(blue, yellow); // fill in the current bucket's blue and yellow points vectors
+            chunk->avgCurvature = chunk->calcRunningAvgCurvature();
+            //TODO: look into emplace_back
+            chunkVector->emplace_back(chunk);
+            Chunk* chunk = new Chunk(); 
+            chunk->startProgress = currPercentProgress;
+            chunk->endProgress = currPercentProgress;
+            chunk->sumCurvature = curvature;
         }
     }
 

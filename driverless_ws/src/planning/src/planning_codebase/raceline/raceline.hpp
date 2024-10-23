@@ -10,6 +10,8 @@
 #ifndef RACELINE
 #define RACELINE
 
+// TODO make separate file for poly things here and in frenet
+
 const int prefered_degree = 3,overlap = 0;
 struct polynomial
 {

@@ -673,7 +673,7 @@ int searchSorted (std::vector<double> arr, double target) {
  */
 std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
                                                std::vector<double> cumulated_lengths, int precision) {
-    int index = searchSorted(cumulated_lengths, progress);
+    int index = searchSorted(cumulated_lengths, progress); //TODO: use std::binary_search
     Spline curr = splines[index];
     double delta = 0;
     
