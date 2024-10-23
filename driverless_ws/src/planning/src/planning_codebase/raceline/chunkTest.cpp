@@ -153,10 +153,13 @@ int main() {
     // testMakeSplinesVector();
 
     std::vector<Chunk*> chunks = *(generateChunks(blue_cones, yellow_cones));
+
+    std::pair<double, double> xyBlue = chunks[0]->bluePoints
+    std::pair<double, double> xyYellow = chunks[0]->yellowPoints
     
     std::cout << "CHUNK" << std::endl;
-    std::cout << chunks[0]->bluePoints << std::endl;
-    std::cout << chunks[0]->yellowPoints << std::endl;
+    std::cout << chunks[0]->avgCurvature << std::endl;
+    std::cout << xyBlue << std::endl;
     
     return 0;
 }
