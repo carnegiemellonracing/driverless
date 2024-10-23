@@ -164,6 +164,7 @@ class EndToEndNode(Node):
 
         # spline
         self.timer.start("spline")
+
         downsampled_boundary_points = self.svm.cones_to_midline(cones)
         time_spline = self.timer.end("spline", ret=True)
 
@@ -190,7 +191,10 @@ class EndToEndNode(Node):
         msg.frames = points
         msg.orig_data_stamp = data_time.to_msg()
         self.midline_pub.publish(msg)
-        self.cones_pub.publish(self.cones_to_msg(cones, data_time))
+        cone_msg = self.cones_to_msg(cones, data_time)
+        self.cones_pub.publish(cone_msg)
+        assert(len(cone_msg.yellow_cones) != 0)
+
 
         # done publishing spline
         curr_time = self.get_clock().now()
