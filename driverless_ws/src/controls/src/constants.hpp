@@ -72,7 +72,7 @@ namespace controls {
     constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline
     constexpr float target_speed = 10.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
-    constexpr float progress_cost_multiplier = 10.0f;
+    constexpr float progress_cost_multiplier = 20.0f;
     /// Reason for not using infinity: reduction uses log of the cost (trading precision for representable range).
     /// This covers the edge case where every trajectory goes out of bounds, allowing us to still extract useful information.
     constexpr float out_of_bounds_cost = 100.0f; ///< Cost for being out of (fake) track bound as defined by @ref track_width.
