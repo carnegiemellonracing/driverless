@@ -890,7 +890,9 @@ namespace controls {
                 }
 
                 glm::fvec2 disp = p2 - p1;
-                float new_progress = glm::length(disp);
+                float new_progress = glm::length(disp) / 100.0f; // TODO: figure out a way to normalize without some arbitrary magic number
+                // 1. go through the vector and divide based on total progress
+                // 2. set total progress to be a member variable, then use that as a uniform, thus passing it into the fragment shader
                 float segment_heading = std::atan2(disp.y, disp.x);
 
 
@@ -904,16 +906,6 @@ namespace controls {
                 glm::fvec2 low2 = p2 - normal * radius;
                 glm::fvec2 high1 = p1 + normal * radius;
                 glm::fvec2 high2 = p2 + normal * radius;
-
-                // if (i == 0) {
-                //     vertices.push_back({{p1.x, p1.y}, {total_progress, 0.0f, segment_heading}});
-                // }
-                // vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, secant_heading}});
-
-                // vertices.push_back({{low1.x, low1.y}, {total_progress, -radius, segment_heading}});
-                // vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, -radius, segment_heading}});
-                // vertices.push_back({{high1.x, high1.y}, {total_progress, radius, segment_heading}});
-                // vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, radius, segment_heading}});
 
                 if (i == 0)
                 {
@@ -962,7 +954,7 @@ namespace controls {
                     indices.push_back(p1i);
                 }
 
-                total_progress += new_progress / 10.f;
+                total_progress += new_progress;
             }
 
             glBindBuffer(GL_ARRAY_BUFFER, m_fake_track_path.vbo);
