@@ -669,7 +669,7 @@ namespace controls {
 
         void StateEstimator_Impl::render_fake_track() {
             glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
-            glClearColor(0.4f, 0.3f, 0.6f, 1.0f);
+            glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
