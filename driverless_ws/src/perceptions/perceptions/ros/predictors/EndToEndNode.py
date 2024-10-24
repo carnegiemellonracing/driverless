@@ -35,6 +35,7 @@ from perc22a.mergers.merger_factory import \
     create_any_merger
 
 from interfaces.msg import SplineFrames
+from interfaces.msg import ConeArray
 from geometry_msgs.msg import Point
 
 import perceptions.ros.utils.conversions as conv
@@ -73,6 +74,10 @@ class EndToEndNode(Node):
                                                  topic="/spline",
                                                  qos_profile=BEST_EFFORT_QOS_PROFILE)
 
+        self.cones_pub = self.create_publisher(msg_type=ConeArray,
+                                             topic="/perc_cones",
+                                             qos_profile=BEST_EFFORT_QOS_PROFILE)
+
         # parts of the pipeline 
         self.predictor = self.init_predictor()
         self.merger = create_lidar_merger()
@@ -96,6 +101,32 @@ class EndToEndNode(Node):
 
     def quat_callback(self, curr_quat):
         self.curr_quat = curr_quat
+
+    """
+    class Cones:
+    def __init__(self):
+        self.blue_cones = []
+        self.yellow_cones = []
+        self.orange_cones = []
+    """
+    def cones_to_msg(self, cones, timestamp):
+        msg = ConeArray()
+        msg.header.stamp = timestamp.to_msg()
+        msg.orig_data_stamp = timestamp.to_msg()
+        for blue_cone in cones.blue_cones:
+            point = Point()
+            point.x = float(blue_cone[0])
+            point.y = float(blue_cone[1])
+            point.z = float(0)
+            msg.blue_cones.append(point)
+        for yellow_cone in cones.yellow_cones:
+            point = Point()
+            point.x = float(yellow_cone[0])
+            point.y = float(yellow_cone[1])
+            point.z = float(0)
+            msg.yellow_cones.append(point)
+        return msg
+    
     
     def points_callback(self, msg):
         # if doesn't have GPS data, return
@@ -133,6 +164,7 @@ class EndToEndNode(Node):
 
         # spline
         self.timer.start("spline")
+
         downsampled_boundary_points = self.svm.cones_to_midline(cones)
         time_spline = self.timer.end("spline", ret=True)
 
@@ -159,6 +191,10 @@ class EndToEndNode(Node):
         msg.frames = points
         msg.orig_data_stamp = data_time.to_msg()
         self.midline_pub.publish(msg)
+        cone_msg = self.cones_to_msg(cones, data_time)
+        self.cones_pub.publish(cone_msg)
+        assert(len(cone_msg.yellow_cones) != 0)
+
 
         # done publishing spline
         curr_time = self.get_clock().now()
