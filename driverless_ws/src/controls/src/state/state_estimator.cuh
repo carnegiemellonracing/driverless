@@ -158,6 +158,7 @@ namespace controls {
             /// in m_curv_frame_lookup_tex_info.
             void gen_tex_info(glm::fvec2 car_pos);
 
+            void render_fake_track();
             /**
              * Render the lookup table into m_curv_frame_lookup_fbo
              */
@@ -186,19 +187,22 @@ namespace controls {
              */
             void gen_curv_frame_lookup_framebuffer();
 
+            void gen_fake_track();
+
             /**
              * Creates the buffers to be used, as well as the descriptions of how the buffers are laid out.
              * @brief Creates the names for the vao, vbo and ebo.
              * Specifies how the vbo should be laid out, stores this in the vao.
              * Lastly, binds to the ebo.
              */
-            void gen_gl_path();
+            void gen_gl_path(utils::GLObj &gl_path);
 
             /**
              * @brief Fills in the vertex and element buffers with the actual vertex position information
              * and the triples of vertex indices that represent triangles respectively.
              */
-            void fill_path_buffers(glm::fvec2 car_pos);
+            void fill_path_buffers_cones();
+            void fill_path_buffers_spline();
 
             /// Stores the sequence of (x,y) spline points from path planning.
             std::vector<glm::fvec2> m_spline_frames;
@@ -221,14 +225,27 @@ namespace controls {
             /// Where the most recent projected state is stored.
             State m_synced_projected_state;
 
+            ///// -----OPENGL OBJECTS----- /////
+
             cudaGraphicsResource_t m_curv_frame_lookup_rsc;
             /// Center and scale information (transformation from IRL to rendered coordinates)
-            cuda_globals::CurvFrameLookupTexInfo m_curv_frame_lookup_tex_info;
+            cuda_globals::CurvFrameLookupTexInfo m_curv_frame_lookup_tex_info;            
             /// Frame buffer object. Where the OpenGL shader pipeline renders to. The actual lookup table.
             /// OpenGL object, not a CUDA object.
             GLuint m_curv_frame_lookup_fbo;
+            /**
+             * TODO:
+             * 1. Make the fbo complete
+             * 2. Check for completeness
+             * 3. Delete the framebuffer after use
+             */
             /// Render buffer object. Render target for the fbo, used to map to CUDA memory
             GLuint m_curv_frame_lookup_rbo;
+
+            GLuint m_fake_track_fbo;
+            GLuint m_fake_track_texture_color;
+            utils::GLObj m_fake_track_path;
+            GLuint m_fake_track_shader_program; 
 
             /**
              * Has members vbo, vao, veo. @ref utils::GLObj
