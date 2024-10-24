@@ -138,8 +138,11 @@ class ConeNode(Node):
         msg = conv.cones_to_msg(merged_cones)
 
         data_time = self.flush_and_get_data_times()
-        msg.orig_data_stamp = data_time.to_msg()
-
+        # msg.orig_data_stamp = data_time.to_msg()
+        original_time_stamp = data_time.to_msg()
+        msg.header.stamp.sec = original_time_stamp.sec
+        msg.header.stamp.nanosec = original_time_stamp.nanosec
+        
         self.cone_publisher.publish(msg)
 
         data_t = conv.ms_since_time(self.get_clock().now(), data_time)

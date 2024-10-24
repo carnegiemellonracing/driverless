@@ -2,6 +2,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
+from rclpy.time import Time
 
 # ROS2 message types
 from sensor_msgs.msg import Image, PointCloud2
@@ -142,6 +143,11 @@ class DataNode(Node):
         self.data_times[datatype] = self.get_clock().now()
         return
 
+    def update_data_time_pointcloud(self, datatype, time_header):
+        n = time_header.stamp.sec * 10**9 + time_header.stamp.nanosec
+        self.data_times[datatype] = Time(nanoseconds=n)
+        return
+    
     def got_all_data(self):
         # returns whether data node has all pieces of data
         return self.data.have_all_data()
@@ -246,7 +252,7 @@ class DataNode(Node):
             cv2.imshow("depth", self.data[DataType.ZED_DEPTH_IMG])
 
     def points_callback(self, msg):
-        self.update_data_time(DataType.HESAI_POINTCLOUD)
+        self.update_data_time_pointcloud(DataType.HESAI_POINTCLOUD, msg.header)
 
         self.data[DataType.HESAI_POINTCLOUD] = conv.pointcloud2_to_npy(msg)
 
