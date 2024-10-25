@@ -133,6 +133,11 @@ namespace controls {
 
             std::thread ControllerNode::launch_mppi() {
                 return std::thread {[this] {
+#ifdef DATA
+                    float total_spline_error = 0;
+                    float total_throttle_error = 0;
+                    size_t num_iterations = 0;
+#endif
                     while (true) {
                         std::unique_lock<std::mutex> state_lock {m_state_mut};
 
@@ -176,6 +181,12 @@ namespace controls {
                         ss << "Mean Torque Error: " << diff_statistics.mean_throttle << std::endl;
                         ss << "Max Swangle Error: " << diff_statistics.max_swangle << std::endl;
                         ss << "Max Torque Error: " << diff_statistics.max_throttle << std::endl;
+                        total_spline_error += diff_statistics.mean_swangle;
+                        total_throttle_error += diff_statistics.mean_throttle;
+                        num_iterations += 1;
+                        ss << "Rolling Swangle Error: " << total_spline_error / num_iterations << std::endl;
+                        ss << "Rolling Torque Error: " << total_throttle_error / num_iterations << std::endl;
+                        ss << "Iteration #: " << num_iterations << std::endl;
                         error_str = ss.str();
 #endif
 
