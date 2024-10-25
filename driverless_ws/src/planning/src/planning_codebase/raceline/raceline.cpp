@@ -678,7 +678,7 @@ std::pair<double, double> interpolate_raceline(double progress, std::vector<Spli
     std::cout << "searchsorted" << std::endl;
     std::cout << index << std::endl;
     std::cout << splines.size() << std::endl;
-    Spline curr = splines[index];
+    Spline curr = splines[index + 1]; // +1 because otherwise if less than first spline lenght, returns 0
     double delta = 0;
     std::cout << "get curr and delta" << std::endl;
     
