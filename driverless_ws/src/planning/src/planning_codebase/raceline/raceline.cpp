@@ -677,11 +677,16 @@ std::pair<double, double> interpolate_raceline(double progress, std::vector<Spli
     std::cout << "searchsorted" << std::endl;
     Spline curr = splines[index];
     double delta = 0;
+    std::cout << "get curr and delta" << std::endl;
     
     if (index == 0) {
+        std::cout << "if1" << std::endl;
         delta = progress;
+        std::cout << "if" << std::endl;
     } else {
+        std::cout << "else1" << std::endl;
         delta = progress - cumulated_lengths[index-1];
+        std::cout << "else" << std::endl;
     }
     std::cout << "before curr along" << std::endl;
     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> result =
