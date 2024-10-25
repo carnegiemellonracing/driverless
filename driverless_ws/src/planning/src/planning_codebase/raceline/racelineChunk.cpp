@@ -125,9 +125,12 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             std::cout << "new chunk" << std::endl;
 
             chunk->generateConePoints(blue, yellow); // fill in the current bucket's blue and yellow points vectors
+            std::cout << "new chunk 1" << std::endl;
             chunk->avgCurvature = chunk->calcRunningAvgCurvature();
+            std::cout << "new chunk 2" << std::endl;
             //TODO: look into emplace_back
             chunkVector->emplace_back(chunk);
+            std::cout << "new chunk 3" << std::endl;
             Chunk* chunk = new Chunk(); 
             std::cout << "created new chunk in loop" << std::endl;
             chunk->startProgress = currPercentProgress;
