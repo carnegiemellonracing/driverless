@@ -112,10 +112,12 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         currProgressVec.push_back(currProgress);
         double curvature = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen)[0];
         // compare curvature to avgCurvature of the curr bucket
+        std::cout << "after curvature" << std::endl;
         chunk->endProgress = currPercentProgress;
         if (!chunk->checkStopChunk(curvature)) {
             // if curvature belongs in current chunk, updated sumCurvature
             chunk->sumCurvature += curvature;
+            std::cout << "not created new chunk in loop" << std::endl;
         }
         else { 
             // if we need to stop current chunk, create a new chunk and update
