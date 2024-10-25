@@ -88,6 +88,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     //TODO: use new keyword to create vector in heap not stack
     std::vector<Chunk*>* chunkVector = new std::vector<Chunk*>();
 
+    std::cout << "init chunck vector" << std::endl;
+
     // make splines for track boundaries
     std::pair<std::vector<Spline>,std::vector<double>> blue = make_splines_vector(blueCones);
     std::pair<std::vector<Spline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
@@ -97,6 +99,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     // create a chunk
     Chunk* chunk = new Chunk();
+    std::cout << "created new chunk" << std::endl;
     
     // loop through progress and sample curvature at each progress point
     int increment = 1; // TODO: tunable param
@@ -122,6 +125,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             //TODO: look into emplace_back
             chunkVector->emplace_back(chunk);
             Chunk* chunk = new Chunk(); 
+            std::cout << "created new chunk in loop" << std::endl;
             chunk->startProgress = currPercentProgress;
             chunk->endProgress = currPercentProgress;
             chunk->sumCurvature = curvature;
