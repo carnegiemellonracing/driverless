@@ -162,6 +162,22 @@ namespace controls {
                         // run mppi, and write action to the write buffer
                         Action action = m_mppi_controller->generate_action();
                         publish_action(action);
+                        std::string error_str;
+#ifdef DATA_COLLECTION
+                        std::vector<Action> percentage_diff_trajectory = m_mppi_controller->m_percentage_diff_trajectory;
+                        auto diff_statistics = m_mppi_controller->m_diff_statistics;
+                        // create debugging string
+                        std::stringstream ss;
+                        ss << "Percentage Difference between Guess and Result: \n";
+                        for (const auto& action : percentage_diff_trajectory) {
+                            ss << "[" << action[0] << ", " << action[1] << "], ";
+                        }
+                        ss << "\nMean Swangle Error: " << diff_statistics.mean_swangle << std::endl;
+                        ss << "Mean Torque Error: " << diff_statistics.mean_torque << std::endl;
+                        ss << "Max Swangle Error: " << diff_statistics.max_swangle << std::endl;
+                        ss << "Max Torque Error: " << diff_statistics.max_torque << std::endl;
+                        error_str = ss.str();
+#endif
 
                         // this can happen concurrently with another state estimator callback, but the internal lock
                         // protects it.
@@ -181,14 +197,8 @@ namespace controls {
                         info.latency_ms = time_elapsed.count();
                         info.total_latency_ms = total_time_elapsed;
 
-                        std::stringstream ss;
-                        publish_and_print_info(ss, info);
-                        std::string info_str = ss.str();
+                        publish_and_print_info(info, error_str);
 
-                        m_info_publisher->publish(info);
-                        std::cout << "IMADEACHANGE!" << std::endl;
-                        std::cout << clear_term_sequence << info_str << std::flush;
-                        RCLCPP_INFO_STREAM(get_logger(), "mppi step complete. info:\n" << info_str);
                     }
                 }};
             }
@@ -248,8 +258,11 @@ namespace controls {
                 return msg;
             }
 
-            void ControllerNode::publish_and_print_info(std::ostream &stream, interfaces::msg::ControllerInfo info) {
-                stream
+            void ControllerNode::publish_and_print_info(interfaces::msg::ControllerInfo info, const std::string& additional_info) {
+                m_info_publisher->publish(info);
+                std::stringstream ss;
+
+                ss
                 << "Action:\n"
                 << "  swangle (rad): " << info.action.swangle << "\n"
                 << "  torque_fl (Nm): " << info.action.torque_fl << "\n"
@@ -263,7 +276,14 @@ namespace controls {
                 << "  speed (m/s): " << info.proj_state.speed << "\n"
                 << "MPPI Step Latency (ms): " << info.latency_ms << "\n"
                 << "Total Latency (ms): " << info.total_latency_ms << "\n"
+                << additional_info
                 << std::endl;
+
+                std::string info_str = ss.str();
+
+                std::cout << clear_term_sequence << info_str << std::flush;
+                RCLCPP_INFO_STREAM(get_logger(), "mppi step complete. info:\n"
+                                                     << info_str);
             }
     }
 }

@@ -103,7 +103,7 @@ namespace controls {
              * @param[in] stream Stream to print to
              * @param[in] info Info message to print
              */
-            static void publish_and_print_info(std::ostream& stream, InfoMsg info);
+            void publish_and_print_info(InfoMsg info, const std::string& additional_info = "");
 
 
             /** State estimator instance */

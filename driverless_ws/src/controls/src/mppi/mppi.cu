@@ -67,9 +67,9 @@ namespace controls {
             generate_action_weight_tuples();
 
             m_logger("reducing actions");
-            // not actually on device, just still in a device action struct
             thrust::device_vector<DeviceAction> averaged_trajectory = reduce_actions();
 
+            // not actually on device, just still in a device action struct
             DeviceAction host_action = m_last_action * action_momentum + (1 - action_momentum) * averaged_trajectory[0];
 
             Action result_action;
@@ -77,6 +77,35 @@ namespace controls {
                 std::begin(host_action.data), std::end(host_action.data),
                 result_action.begin()
             );
+
+#ifdef DATA_COLLECTION
+            // we want to compare the first num_timesteps - 1 elements of averaged_trajectory and m_last_action_trajectory
+            thrust::device_vector<Action> diff(num_timesteps - 1);
+            thrust::transform(averaged_trajectory.begin(), averaged_trajectory.end() - 1, m_last_action_trajectory.begin(), diff.begin(), SquaredError {});
+
+            thrust::host_vector<Action> host_diff = diff;
+
+            m_percentage_diff_trajectory.assign(host_vector.begin(), host_vector.end());
+            float sum_swangle = 0;
+            float sum_throttle = 0;
+            float max_swangle = 0;
+            float max_throttle = 0;
+            for (int i = 0; i < m_percentage_diff_trajectory.size(); i++) {
+                sum_swangle += m_percentage_diff_trajectory[i].data[0];
+                sum_throttle += m_percentage_diff_trajectory[i].data[1];
+                if (m_percentage_diff_trajectory[i].data[0] > max_swangle) {
+                    max_swangle = m_percentage_diff_trajectory[i].data[0];
+                }
+                if (m_percentage_diff_trajectory[i].data[1] > max_throttle) {
+                    max_throttle = m_percentage_diff_trajectory[i].data[1];
+                }
+            }
+            m_diff_statistics.mean_swangle = sum_swangle / m_percentage_diff_trajectory.size();
+            m_diff_statistics.mean_throttle = sum_throttle / m_percentage_diff_trajectory.size();
+            m_diff_statistics.max_swangle = max_swangle;
+            m_diff_statistics.max_throttle = max_throttle;
+#endif
+
 
             thrust::copy(
                 averaged_trajectory.begin() + 1,
