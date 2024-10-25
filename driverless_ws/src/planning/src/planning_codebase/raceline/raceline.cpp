@@ -198,6 +198,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
             
         }
         //  Perform a more precise search between the two computed bounds
+        std::cout << "IN ALONG" << std::endl;
 
         std::vector<double> guesses;
         guesses.resize(precision+1);
