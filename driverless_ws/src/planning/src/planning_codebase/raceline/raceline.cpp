@@ -682,10 +682,11 @@ std::pair<double, double> interpolate_raceline(double progress, std::vector<Spli
     } else {
         delta = progress - cumulated_lengths[index-1];
     }
-
+    std::cout << "before curr along" << std::endl;
     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> result =
         curr.along(delta, 0, precision);
     Eigen::VectorXd point = std::get<0>(result);
+    std::cout << "after point" << std::endl;
     return std::make_pair(point(0), point(1));
 }
 
