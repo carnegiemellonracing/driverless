@@ -122,6 +122,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         else { 
             // if we need to stop current chunk, create a new chunk and update
             // previous chunk & add it to the chunk vector
+            std::cout << "new chunk" << std::endl;
+
             chunk->generateConePoints(blue, yellow); // fill in the current bucket's blue and yellow points vectors
             chunk->avgCurvature = chunk->calcRunningAvgCurvature();
             //TODO: look into emplace_back
