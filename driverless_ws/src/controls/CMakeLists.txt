@@ -85,6 +85,8 @@ target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
         --use_fast_math --expt-relaxed-constexpr
         >)
 
+target_compile_definitions(controls_lib PRIVATE DATA)
+
 ament_export_targets(controls_libExport HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp std_msgs interfaces glm builtin_interfaces)
 
@@ -101,6 +103,7 @@ install(
 add_executable(controller src/nodes/controller.cpp)
 target_link_libraries(controller controls_lib)
 ament_target_dependencies(controller rclcpp interfaces builtin_interfaces)
+target_compile_definitions(controller PRIVATE DATA)
 
 install(
         TARGETS controller
