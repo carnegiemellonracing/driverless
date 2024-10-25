@@ -675,6 +675,8 @@ std::pair<double, double> interpolate_raceline(double progress, std::vector<Spli
                                                std::vector<double> cumulated_lengths, int precision) {
     int index = searchSorted(cumulated_lengths, progress); //TODO: use std::binary_search
     std::cout << "searchsorted" << std::endl;
+    std::cout << index << std::endl;
+    std::cout << splines.size() << std::endl;
     Spline curr = splines[index];
     double delta = 0;
     std::cout << "get curr and delta" << std::endl;
