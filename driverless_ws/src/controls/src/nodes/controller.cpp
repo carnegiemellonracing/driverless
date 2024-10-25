@@ -140,7 +140,7 @@ namespace controls {
                         Action action = m_mppi_controller->generate_action();
                         publish_action(action);
                         std::string error_str;
-#ifdef DATA_COLLECTION
+#ifdef DATA
                         std::vector<Action> percentage_diff_trajectory = m_mppi_controller->m_percentage_diff_trajectory;
                         auto diff_statistics = m_mppi_controller->m_diff_statistics;
                         // create debugging string
@@ -150,9 +150,9 @@ namespace controls {
                             ss << "[" << action[0] << ", " << action[1] << "], ";
                         }
                         ss << "\nMean Swangle Error: " << diff_statistics.mean_swangle << std::endl;
-                        ss << "Mean Torque Error: " << diff_statistics.mean_torque << std::endl;
+                        ss << "Mean Torque Error: " << diff_statistics.mean_throttle << std::endl;
                         ss << "Max Swangle Error: " << diff_statistics.max_swangle << std::endl;
-                        ss << "Max Torque Error: " << diff_statistics.max_torque << std::endl;
+                        ss << "Max Torque Error: " << diff_statistics.max_throttle << std::endl;
                         error_str = ss.str();
 #endif
 

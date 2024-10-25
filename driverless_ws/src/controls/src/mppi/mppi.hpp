@@ -47,9 +47,9 @@ namespace controls {
             virtual std::vector<float> last_state_trajectories(uint32_t num) =0;
             virtual std::vector<glm::fvec2> last_reduced_state_trajectory() = 0;
 #endif
-#ifdef DATA_COLLECTION 
+#ifdef DATA 
 
-            virtual std::vector<Action> m_percentage_diff_trajectory;
+            std::vector<Action> m_percentage_diff_trajectory;
 
             struct DiffStatistics {
                 float mean_swangle;
