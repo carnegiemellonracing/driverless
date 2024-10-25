@@ -23,7 +23,8 @@
 
 
 namespace controls {
-    namespace mppi {
+    namespace mppi
+    {
         //TODO: wrap this in a namespace, then "using functors" in mppi.cu
 
         /**
@@ -469,6 +470,19 @@ namespace controls {
         struct ActionWeightTupleToAction {
             __device__ DeviceAction operator() (const ActionWeightTuple& awt) const {
                 return awt.action;
+            }
+        };
+
+        struct SquaredError
+        {
+            __device__ Action operator()(const DeviceAction &x, const DeviceAction &y) const
+            {
+                Action result;
+                for (size_t i = 0; i < action_dims; i++) {
+                    float percentage_diff = (x.data[i] - y.data[i]) / (cuda_globals::action_max[i] * 2);
+                    result[i] = percentage_diff * percentage_diff;
+                }
+                return result;
             }
         };
     }

@@ -119,6 +119,8 @@ namespace controls {
             State m_last_curr_state;
 #endif
 
+
+
             /// Pseudo random generator used to generate brownian perturbations.
             curandGenerator_t m_rng;
             /// Logger for debugging. Can be attached to ROS or echo to std::cerr
