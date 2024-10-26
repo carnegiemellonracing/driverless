@@ -189,7 +189,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
             }
             else if (shoot >= progress){ // equality not very important
                 while (shoot >= progress){
-                    std::cout << "," << std::endl;
+                    std::cout << ", " << shoot << " " << progress << std::endl;
                     upper_bound = x;
                     // # remove approximately one splien length to shoot
                     shoot = arclength(this->spl_poly,first_x,x - delta);
