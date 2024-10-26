@@ -162,12 +162,19 @@ int main() {
     //     std::cout << "FIRST CHUNK IS NULL" << std::endl;
     // }
 
-    double xBlue = chunks[0]->bluePoints[0].first;
+    // double xBlue = chunks[0]->bluePoints[0].first;
     // std::pair<double, double> xyYellow = chunks[0]->yellowPoints
     
-    std::cout << "CHUNK" << std::endl;
-    std::cout << chunks[0]->avgCurvature << std::endl;
-    std::cout << xBlue << std::endl;
+    // std::cout << "CHUNK" << std::endl;
+    // std::cout << chunks[0]->avgCurvature << std::endl;
+    // std::cout << xBlue << std::endl;
+
+    for (int i  = 0; i < chunks.size(), i++) {
+        std::cout << "CHUNK " << i << std::endl;
+        for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
+            std::cout << "(" << chunks[i]->bluePoints[j].first << ", " << chunks[i]->bluePoints[j].second << ")" << std::endl;
+        }
+    }
     
     return 0;
 }
