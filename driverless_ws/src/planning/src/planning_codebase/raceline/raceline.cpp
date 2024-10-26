@@ -198,13 +198,15 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
             
         }
         //  Perform a more precise search between the two computed bounds
-        std::cout << "IN ALONG" << std::endl;
+        std::cout << "SPLINE ALONG 2" << std::endl;
 
         std::vector<double> guesses;
         guesses.resize(precision+1);
         for(int i=0;i<=precision;i++){
             guesses[i] = (boundaries.first*i + boundaries.second*(precision-i))/precision;
         }
+
+        std::cout << "SPLINE ALONG 3" << std::endl;
 
         //  Evaluate progress along the (extrapolated) spline
         //  As arclength is expensive and cannot take multiple points
@@ -220,12 +222,16 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         }
         Eigen::VectorXd rotated_point(2);
         rotated_point(0)=best_guess;
+
+        std::cout << "SPLINE ALONG 4" << std::endl;
         
         rotated_point(1)=poly_eval(this->spl_poly,best_guess);
         
         Eigen::MatrixXd rotated_points(2,1);
         rotated_points(0,0)=rotated_point(0);
         rotated_points(0,1)=rotated_point(1);
+
+        std::cout << "SPLINE ALONG 5" << std::endl;
     
         Eigen::MatrixXd point_mat =reverse_transform(rotated_points,this->Q,this->translation_vector);
         
@@ -234,6 +240,8 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         point(1)=point_mat(1);
 
         ret = std::make_tuple(point,best_length,rotated_point,best_guess);
+
+        std::cout << "SPLINE ALONG 6" << std::endl;
 
         return ret;
 }
