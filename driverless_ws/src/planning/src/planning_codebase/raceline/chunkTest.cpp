@@ -138,9 +138,9 @@ void testMakeSplinesVector() {
         polynomial poly = splines[i].get_SplPoly();
         int deg = poly.deg;
         Eigen::VectorXd coeffs = poly.nums;
-        std::cout << "degree: " << deg << std::endl;
-        std::cout << "coefficients: " << coeffs << std::endl;
-        std::cout << "length: " << cumulativeLengths[i] << std::endl;
+        // std::cout << "degree: " << deg << std::endl;
+        // std::cout << "coefficients: " << coeffs << std::endl;
+        // std::cout << "length: " << cumulativeLengths[i] << std::endl;
     }
 }
 
@@ -148,7 +148,7 @@ void testMakeSplinesVector() {
 
 int main() {
     
-    std::cout << "Hello, world!" << std::endl;
+    // std::cout << "Hello, world!" << std::endl;
 
     // testMakeSplinesVector();
 
@@ -170,12 +170,18 @@ int main() {
     // std::cout << xBlue << std::endl;
 
     for (int i  = 0; i < chunks.size(); i++) {
-        std::cout << "CHUNK " << i << std::endl;
-        std::cout << "start, end: " << chunks[i]->startProgress << ", " << chunks[i]->endProgress << std::endl;
-        std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
+        std::cout << "#" << std::endl;
+        // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
+        // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
         for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
-            std::cout << "(" << chunks[i]->bluePoints[j].first << ", " << chunks[i]->bluePoints[j].second << ")" << std::endl;
+            std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
         }
+        // std::cout << "CHUNK " << i << std::endl;
+        // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
+        // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
+        // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
+        //     std::cout << "(" << chunks[i]->bluePoints[j].first << ", " << chunks[i]->bluePoints[j].second << ")" << std::endl;
+        // }
     }
     
     return 0;

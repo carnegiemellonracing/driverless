@@ -63,14 +63,14 @@ void Chunk::generateConePoints(std::pair<std::vector<Spline>,std::vector<double>
         double progressBlue_m = (percent*totalBlueLength)/100;
         double progressYellow_m = (percent*totalYellowLength)/100;
       
-        std::cout << "before interpolate" << std::endl;
+        // std::cout << "before interpolate" << std::endl;
         std::pair<double, double> xyBlue = interpolate_raceline(progressBlue_m, blueRaceline.first, blueRaceline.second);
         std::pair<double, double> xyYellow = interpolate_raceline(progressYellow_m, yellowRaceline.first, yellowRaceline.second);
 
-        std::cout << "after interpolate" << std::endl;
+        // std::cout << "after interpolate" << std::endl;
         bluePoints.push_back(xyBlue);
         yellowPoints.push_back(xyYellow);
-        std::cout << "after pushback" << std::endl;
+        // std::cout << "after pushback" << std::endl;
     }
 }
 
@@ -91,7 +91,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     //TODO: use new keyword to create vector in heap not stack
     std::vector<Chunk*>* chunkVector = new std::vector<Chunk*>();
 
-    std::cout << "init chunck vector" << std::endl;
+    // // std::cout << "init chunck vector" << std::endl;
 
     // make splines for track boundaries
     std::pair<std::vector<Spline>,std::vector<double>> blue = make_splines_vector(blueCones);
@@ -102,7 +102,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     // create a chunk
     Chunk* chunk = new Chunk();
-    std::cout << "created new chunk" << std::endl;
+    // // std::cout << "created new chunk" << std::endl;
     
     // loop through progress and sample curvature at each progress point
     int increment = 1; // TODO: tunable param
@@ -115,26 +115,26 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         currProgressVec.push_back(currProgress);
         double curvature = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen)[0];
         // compare curvature to avgCurvature of the curr bucket
-        std::cout << "after curvature" << std::endl;
+        // // std::cout << "after curvature" << std::endl;
         chunk->endProgress = currPercentProgress;
         if (!chunk->checkStopChunk(curvature)) {
             // if curvature belongs in current chunk, updated sumCurvature
             chunk->sumCurvature += curvature;
-            std::cout << "not created new chunk in loop" << std::endl;
+            // std::cout << "not created new chunk in loop" << std::endl;
         }
         else { 
             // if we need to stop current chunk, create a new chunk and update
             // previous chunk & add it to the chunk vector
-            std::cout << "new chunk" << std::endl;
+            // std::cout << "new chunk" << std::endl;
             chunk->generateConePoints(blue, yellow); // fill in the current bucket's blue and yellow points vectors
-            std::cout << "new chunk 1" << std::endl;
+            // std::cout << "new chunk 1" << std::endl;
             chunk->avgCurvature = chunk->calcRunningAvgCurvature();
-            std::cout << "new chunk 2" << std::endl;
+            // std::cout << "new chunk 2" << std::endl;
             //TODO: look into emplace_back
             chunkVector->emplace_back(chunk);
-            std::cout << "new chunk 3" << std::endl;
+            // std::cout << "new chunk 3" << std::endl;
             chunk = new Chunk(); 
-            std::cout << "created new chunk in loop" << std::endl;
+            // std::cout << "created new chunk in loop" << std::endl;
             chunk->startProgress = currPercentProgress;
             chunk->endProgress = currPercentProgress;
             chunk->sumCurvature = curvature;

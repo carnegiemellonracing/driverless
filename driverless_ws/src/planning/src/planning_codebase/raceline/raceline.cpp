@@ -163,7 +163,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
     double first_x = this->get_rotated_points()(0,0);
     double last_x = this->get_rotated_points()(0,this->get_rotated_points().cols()-1);
 
-    std::cout << "SPLINE ALONG 1" << std::endl;
+    //std::cout << "SPLINE ALONG 1" << std::endl;
 
     double delta = last_x - first_x;
 
@@ -179,7 +179,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
 
             if (shoot < progress){
                 while (shoot < progress){
-                    std::cout << "." << std::endl;
+                    //std::cout << "." << std::endl;
                     lower_bound = x;
                     //  add approximately one spline length to shoot
                     shoot = arclength(this->spl_poly,first_x,x+delta);
@@ -189,7 +189,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
             }
             else if (shoot >= progress){ // equality not very important
                 while (shoot >= progress){
-                    std::cout << ", " << shoot << " " << progress << std::endl;
+                    //std::cout << ", " << shoot << " " << progress << std::endl;
                     upper_bound = x;
                     // # remove approximately one splien length to shoot
                     shoot = arclength(this->spl_poly,first_x,x - delta);
@@ -201,7 +201,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
             
         }
         //  Perform a more precise search between the two computed bounds
-        std::cout << "SPLINE ALONG 2" << std::endl;
+        //std::cout << "SPLINE ALONG 2" << std::endl;
 
         std::vector<double> guesses;
         guesses.resize(precision+1);
@@ -209,7 +209,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
             guesses[i] = (boundaries.first*i + boundaries.second*(precision-i))/precision;
         }
 
-        std::cout << "SPLINE ALONG 3" << std::endl;
+        //std::cout << "SPLINE ALONG 3" << std::endl;
 
         //  Evaluate progress along the (extrapolated) spline
         //  As arclength is expensive and cannot take multiple points
@@ -226,19 +226,19 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         Eigen::VectorXd rotated_point(2);
         rotated_point(0)=best_guess;
 
-        std::cout << "SPLINE ALONG 4" << std::endl;
+        //std::cout << "SPLINE ALONG 4" << std::endl;
         
         rotated_point(1)=poly_eval(this->spl_poly,best_guess);
 
-        std::cout << "SPLINE ALONG 4.1" << std::endl;
+        //std::cout << "SPLINE ALONG 4.1" << std::endl;
         
         Eigen::MatrixXd rotated_points(2,2);
-        std::cout << "SPLINE ALONG 4.2" << std::endl;
+        //std::cout << "SPLINE ALONG 4.2" << std::endl;
         rotated_points(0,0)=rotated_point(0);
-        std::cout << "SPLINE ALONG 4.3" << std::endl;
+        //std::cout << "SPLINE ALONG 4.3" << std::endl;
         rotated_points(0,1)=rotated_point(1);
 
-        std::cout << "SPLINE ALONG 5" << std::endl;
+        //std::cout << "SPLINE ALONG 5" << std::endl;
     
         Eigen::MatrixXd point_mat =reverse_transform(rotated_points,this->Q,this->translation_vector);
         
@@ -248,7 +248,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
 
         ret = std::make_tuple(point,best_length,rotated_point,best_guess);
 
-        std::cout << "SPLINE ALONG 6" << std::endl;
+        //std::cout << "SPLINE ALONG 6" << std::endl;
 
         return ret;
 }
@@ -430,8 +430,8 @@ double arclength(polynomial poly_der1, double x0,double x1){
 
 std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){
 
-    //std::cout << "Number of rows:" << res.rows() << std::endl;
-    //std::cout << "Number of cols:" << res.cols() << std::endl;
+    ////std::cout << "Number of rows:" << res.rows() << std::endl;
+    ////std::cout << "Number of cols:" << res.cols() << std::endl;
     
     int n = res.cols();
 
@@ -482,29 +482,29 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         // if last group, set flag to (0, 1, or 2) depending on mod3 as stated above
         // @TODO make remaining points wrap around the front of the track to close the loop
         if (i == (group_numbers - 1)) {
-            //std::cout << "LAST GROUP" << std::endl;
+            ////std::cout << "LAST GROUP" << std::endl;
             // flag =  (n - 1) % 3;
             flag = points_per_spline - (n - i*shift);
         }
 
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < 2; j++) {
-                //std::cout << "Curr row:" << j << std::endl;
-                //std::cout << "Curr col:" << i*shift + k - flag << std::endl;
-                //std::cout << "Curr flag:" << flag << std::endl;
+                ////std::cout << "Curr row:" << j << std::endl;
+                ////std::cout << "Curr col:" << i*shift + k - flag << std::endl;
+                ////std::cout << "Curr flag:" << flag << std::endl;
 
                 group(j, k) = res(j, i*shift + k - flag); // ERROR index out of bound error
                 if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
             }
         }
 
-        //std::cout << "Exited inner loop" << std::endl;
+        ////std::cout << "Exited inner loop" << std::endl;
 
         Eigen::Matrix2d Q  = rotation_matrix_gen(logger,group);
         Eigen::VectorXd translation_vector = get_translation_vector(group);
         Eigen::MatrixXd rotated_points = transform_points(logger,group,Q,translation_vector);
 
-        //std::cout << "Checkpoint 1" << std::endl;
+        ////std::cout << "Checkpoint 1" << std::endl;
 
 
         // RCLCPP_INFO(logger, "rotation matrix\n");
@@ -526,17 +526,17 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         polynomial first_der = polyder(interpolation_poly);
         polynomial second_der = polyder(first_der);
 
-        //std::cout << "Checkpoint 2" << std::endl;
+        ////std::cout << "Checkpoint 2" << std::endl;
 
-        //std::cout << group.rows() << group.cols()  << flag << std::endl;
-        //std::cout << rotated_points.rows() << rotated_points.cols() << flag << std::endl;
+        ////std::cout << group.rows() << group.cols()  << flag << std::endl;
+        ////std::cout << rotated_points.rows() << rotated_points.cols() << flag << std::endl;
         // shave off overlapping points from the spline if last group for og matrix and rotated matrix
         // group = group.block(0, flag, 2, group.cols());
         group = group.block(0, flag, 2, group.cols()-flag);
-        //std::cout << "Checkpoint 2.5" << std::endl;
+        ////std::cout << "Checkpoint 2.5" << std::endl;
         rotated_points = rotated_points.block(0, flag, 2, rotated_points.cols()-flag);
 
-        //std::cout << "Checkpoint 3" << std::endl;
+        ////std::cout << "Checkpoint 3" << std::endl;
         
         // Spline* spline = new Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
 
@@ -545,7 +545,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         Spline spline = Spline(interpolation_poly,group,rotated_points,Q,translation_vector,first_der,second_der,path_id,i);
         splines.emplace_back(spline);
 
-        //std::cout << "Checkpoint 4" << std::endl;
+        ////std::cout << "Checkpoint 4" << std::endl;
 
         // TODO if last group, then shave off overlaping points from the spline (in points and rotated point), then get length
 
@@ -577,7 +577,7 @@ std::pair<std::vector<Spline>,std::vector<double>> make_splines_vector(std::vect
         pointMatrix(1, i) = points[i].second;
     }
 
-    //std::cout << pointMatrix << std::endl;
+    ////std::cout << pointMatrix << std::endl;
 
     auto dummy_logger = rclcpp::get_logger("du");
     std::pair<std::vector<Spline>,std::vector<double>> res = raceline_gen(dummy_logger, pointMatrix, std::rand(), 4, false);
@@ -689,29 +689,29 @@ int searchSorted (std::vector<double> arr, double target) {
  */
 std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
                                                std::vector<double> cumulated_lengths, int precision) {
-    std::cout << cumulated_lengths.size() << std::endl;
+    //std::cout << cumulated_lengths.size() << std::endl;
     int index = searchSorted(cumulated_lengths, progress); //TODO: use std::binary_search
-    std::cout << "searchsorted" << std::endl;
-    std::cout << index << std::endl;
-    std::cout << splines.size() << std::endl;
+    //std::cout << "searchsorted" << std::endl;
+    //std::cout << index << std::endl;
+    //std::cout << splines.size() << std::endl;
     Spline curr = splines[index + 1]; // +1 because otherwise if less than first spline lenght, returns 0
     double delta = 0;
-    std::cout << "get curr and delta" << std::endl;
+    //std::cout << "get curr and delta" << std::endl;
     
     if (index == 0) {
-        std::cout << "if1" << std::endl;
+        //std::cout << "if1" << std::endl;
         delta = progress;
-        std::cout << "if" << std::endl;
+        //std::cout << "if" << std::endl;
     } else {
-        std::cout << "else1" << std::endl;
+        //std::cout << "else1" << std::endl;
         delta = progress - cumulated_lengths[index-1];
-        std::cout << "else" << std::endl;
+        //std::cout << "else" << std::endl;
     }
-    std::cout << "before curr along" << std::endl;
+    //std::cout << "before curr along" << std::endl;
     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> result =
         curr.along(delta, 0, precision);
     Eigen::VectorXd point = std::get<0>(result);
-    std::cout << "after point" << std::endl;
+    //std::cout << "after point" << std::endl;
     return std::make_pair(point(0), point(1));
 }
 
