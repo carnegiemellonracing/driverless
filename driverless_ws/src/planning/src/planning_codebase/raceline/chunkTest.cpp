@@ -169,7 +169,7 @@ int main() {
     // std::cout << chunks[0]->avgCurvature << std::endl;
     // std::cout << xBlue << std::endl;
 
-    for (int i  = 0; i < chunks.size(), i++) {
+    for (int i  = 0; i < chunks.size(); i++) {
         std::cout << "CHUNK " << i << std::endl;
         for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
             std::cout << "(" << chunks[i]->bluePoints[j].first << ", " << chunks[i]->bluePoints[j].second << ")" << std::endl;
