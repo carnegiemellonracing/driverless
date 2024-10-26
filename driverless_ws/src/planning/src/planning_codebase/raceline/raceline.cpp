@@ -193,6 +193,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
                     upper_bound = x;
                     // # remove approximately one splien length to shoot
                     shoot = arclength(this->spl_poly,first_x,x - delta);
+                    x -= delta;
                 }
                 lower_bound = x; // lower bound is direct first undershoot (separated by delta from the upper bound)
             }    
