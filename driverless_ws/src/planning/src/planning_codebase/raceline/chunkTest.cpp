@@ -152,15 +152,15 @@ int main() {
 
     // testMakeSplinesVector();
 
-    std::vector<Chunk*>* chunks = generateChunks(blue_cones, yellow_cones);
+    std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
-    if (chunks == nullptr) {
-        std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
-    }
+    // if (chunks == nullptr) {
+    //     std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
+    // }
 
-    if ((*chunks)[0] == nullptr) {
-        std::cout << "FIRST CHUNK IS NULL" << std::endl;
-    }
+    // if ((*chunks)[0] == nullptr) {
+    //     std::cout << "FIRST CHUNK IS NULL" << std::endl;
+    // }
 
     double xBlue = chunks[0]->bluePoints[0].first;
     // std::pair<double, double> xyYellow = chunks[0]->yellowPoints
