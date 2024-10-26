@@ -9,7 +9,7 @@
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
 #include <model/two_track/codegen/minimal_state_function.h>
-
+#include <filesystem>
 #include "test_node.hpp"
 
 
@@ -387,6 +387,12 @@ namespace controls {
         {
             std::deque<Segment> segments;
             std::ifstream spec_file(track_specifications_path);
+            std::string filename = "/home/controls_copy/driverless/driverless_ws/src/controls/tests/track1";
+            if (std::filesystem::exists(filename)) {
+                std::cout << "File exists.\n";
+            } else {
+                std::cout << "File does not exist.\n";
+            }
             if (spec_file.is_open())
             {
                 std::string line;
@@ -448,7 +454,7 @@ int main(int argc, char* argv[]){
     // if (argc == 3) {
     //     look_ahead = std::stof(argv[2]);
     // }
-    std::string track_specification = "track1";
+    std::string track_specification = "/home/controls_copy/driverless/driverless_ws/src/controls/tests/track1";
     float look_ahead = 10.0f;
         
     rclcpp::init(argc, argv);
