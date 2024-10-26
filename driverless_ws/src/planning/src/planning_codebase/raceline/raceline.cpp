@@ -308,8 +308,8 @@ Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts)
     ret(0,1)=-1*sin;
     ret(1,1)=cos;
 
-    // RCLCPP_INFO(logger, "(sin,cos),(%f, %f)\n", sin,cos);
-    // RCLCPP_INFO(logger, "(diff,norm),(%f, %f),%f\n", diff(0),diff(1),norm);
+    // //RCLCPP_INFO(logger, "(sin,cos),(%f, %f)\n", sin,cos);
+    // //RCLCPP_INFO(logger, "(diff,norm),(%f, %f),%f\n", diff(0),diff(1),norm);
     return ret;
 }
 
@@ -322,28 +322,28 @@ Eigen::VectorXd get_translation_vector(Eigen::MatrixXd& group){
 
 Eigen::MatrixXd transform_points(rclcpp::Logger logger,Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector){
     Eigen::MatrixXd temp(points.rows(),points.cols());
-        // RCLCPP_INFO(logger, "transform points:rotation");
-        // RCLCPP_INFO(logger, "first point is (%f, %f)\n", Q(0, 0), Q(0, 1));
-        // RCLCPP_INFO(logger, "second point is (%f, %f)\n", Q(1, 0), Q(1, 1));
+        // //RCLCPP_INFO(logger, "transform points:rotation");
+        // //RCLCPP_INFO(logger, "first point is (%f, %f)\n", Q(0, 0), Q(0, 1));
+        // //RCLCPP_INFO(logger, "second point is (%f, %f)\n", Q(1, 0), Q(1, 1));
     
     for(int i=0;i<temp.cols();++i){
         temp(0,i)=points(0,i)-get_translation_vector(0);
         temp(1,i)=points(1,i)-get_translation_vector(1);
     }
 
-    // RCLCPP_INFO(logger, "temp");
-    // RCLCPP_INFO(logger, "first point is (%f, %f)\n", temp(0, 0), temp(0, 1));
-    // RCLCPP_INFO(logger, "second point is (%f, %f)\n", temp(1, 0),temp(1, 1));
+    // //RCLCPP_INFO(logger, "temp");
+    // //RCLCPP_INFO(logger, "first point is (%f, %f)\n", temp(0, 0), temp(0, 1));
+    // //RCLCPP_INFO(logger, "second point is (%f, %f)\n", temp(1, 0),temp(1, 1));
 
 
     Eigen::Matrix2d trans = Q.transpose(); 
-    // RCLCPP_INFO(logger, "q.trans");
-    // RCLCPP_INFO(logger, "first point is (%f, %f)\n", trans(0, 0), trans(0, 1));
-    // RCLCPP_INFO(logger, "second point is (%f, %f)\n", trans(1, 0), trans(1, 1));
+    // //RCLCPP_INFO(logger, "q.trans");
+    // //RCLCPP_INFO(logger, "first point is (%f, %f)\n", trans(0, 0), trans(0, 1));
+    // //RCLCPP_INFO(logger, "second point is (%f, %f)\n", trans(1, 0), trans(1, 1));
     Eigen::MatrixXd ret = trans * temp;  
-    // RCLCPP_INFO(logger, "return");
-    // RCLCPP_INFO(logger, "first point is (%f, %f)\n", ret(0, 0), ret(0, 1));
-    // RCLCPP_INFO(logger, "second point is (%f, %f)\n", ret(1, 0), ret(1, 1));
+    // //RCLCPP_INFO(logger, "return");
+    // //RCLCPP_INFO(logger, "first point is (%f, %f)\n", ret(0, 0), ret(0, 1));
+    // //RCLCPP_INFO(logger, "second point is (%f, %f)\n", ret(1, 0), ret(1, 1));
     
     return ret;
 }
@@ -455,7 +455,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         if (n < 4) group_numbers = 0; // NEED TO MODIFY TO 1 AND DEAL WITH FEWER THAN 4 POINTS
         else group_numbers = ((n-2)/3) + 1;
 
-        RCLCPP_INFO(logger, "group numbers is %d\n", group_numbers);
+        //RCLCPP_INFO(logger, "group numbers is %d\n", group_numbers);
     }
 
     // for loop through group numbers
@@ -470,7 +470,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
     std::vector<double> cumsum;
     // lengths.resize(group_numbers);
 
-    RCLCPP_INFO(logger, "points:%d, group numbers: %d\n",n,group_numbers);
+    //RCLCPP_INFO(logger, "points:%d, group numbers: %d\n",n,group_numbers);
 
     int flag = 0;
 
@@ -494,7 +494,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
                 ////std::cout << "Curr flag:" << flag << std::endl;
 
                 group(j, k) = res(j, i*shift + k - flag); // ERROR index out of bound error
-                if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
+                if (j==1) //RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
             }
         }
 
@@ -507,19 +507,19 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         ////std::cout << "Checkpoint 1" << std::endl;
 
 
-        // RCLCPP_INFO(logger, "rotation matrix\n");
-        // RCLCPP_INFO(logger, "first point is (%f, %f)\n", Q(0, 0), Q(0, 1));
-        // RCLCPP_INFO(logger, "second point is (%f, %f)\n", Q(1, 0), Q(1, 1));
+        // //RCLCPP_INFO(logger, "rotation matrix\n");
+        // //RCLCPP_INFO(logger, "first point is (%f, %f)\n", Q(0, 0), Q(0, 1));
+        // //RCLCPP_INFO(logger, "second point is (%f, %f)\n", Q(1, 0), Q(1, 1));
 
-        // RCLCPP_INFO(logger, "Translation vector");
-        // RCLCPP_INFO(logger, "(%f, %f)\n", translation_vector(0, 0), translation_vector(0, 1));
+        // //RCLCPP_INFO(logger, "Translation vector");
+        // //RCLCPP_INFO(logger, "(%f, %f)\n", translation_vector(0, 0), translation_vector(0, 1));
 
-        // RCLCPP_INFO(logger, "rotated_points");
+        // //RCLCPP_INFO(logger, "rotated_points");
         // for (int i = 0; i < rotated_points.cols(); i++) {
-        //     RCLCPP_INFO(logger, "point %d is (%f, %f)\n", i, rotated_points(0, i), rotated_points(1, i));
+        //     //RCLCPP_INFO(logger, "point %d is (%f, %f)\n", i, rotated_points(0, i), rotated_points(1, i));
 
         // }
-        // RCLCPP_INFO(logger, "second point is (%f, %f)\n", rotated_points(0, 1), rotated_points(1, 1));
+        // //RCLCPP_INFO(logger, "second point is (%f, %f)\n", rotated_points(0, 1), rotated_points(1, 1));
 
 
         polynomial interpolation_poly = lagrange_gen(rotated_points);
@@ -551,11 +551,11 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 
         // lengths.push_back(spline.calculateLength());
         if (i == 0) {
-            RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
-            // RCLCPP_INFO(logger, "spline derivative is %f + %fx + %fx^2 + %fx^3\n", spline.first_der.nums(0), spline.first_der.nums(1), spline.first_der.nums(2), spline.first_der.nums(3));
+            //RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
+            // //RCLCPP_INFO(logger, "spline derivative is %f + %fx + %fx^2 + %fx^3\n", spline.first_der.nums(0), spline.first_der.nums(1), spline.first_der.nums(2), spline.first_der.nums(3));
             cumsum.push_back(splines[0].calculateLength());
         } else {
-            RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
+            //RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
             cumsum.push_back(cumsum.back()+splines[0].calculateLength());
         }
 
