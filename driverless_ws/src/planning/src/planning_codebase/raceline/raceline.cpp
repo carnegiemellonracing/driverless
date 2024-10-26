@@ -163,12 +163,12 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
     double first_x = this->get_rotated_points()(0,0);
     double last_x = this->get_rotated_points()(0,this->get_rotated_points().cols());
 
+    std::cout << "SPLINE ALONG 1" << std::endl;
+
     double delta = last_x - first_x;
 
     std::pair<double,double> boundaries = std::make_pair(first_x,last_x);
     int ratio = progress / len + 1;
-
-
 
         if (ratio >= 2){
             double x = first_x + delta*ratio;
