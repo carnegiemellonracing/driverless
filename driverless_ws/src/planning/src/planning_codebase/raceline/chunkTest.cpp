@@ -171,6 +171,8 @@ int main() {
 
     for (int i  = 0; i < chunks.size(); i++) {
         std::cout << "CHUNK " << i << std::endl;
+        std::cout << "start, end: " << chunk[i]->startProgress << ", " << chunk[i]->endProgress << std::endl;
+        std::cout << "average curvature: " << chunk[i]->avgCurvature << std::endl;
         for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
             std::cout << "(" << chunks[i]->bluePoints[j].first << ", " << chunks[i]->bluePoints[j].second << ")" << std::endl;
         }
