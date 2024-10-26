@@ -494,7 +494,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
                 ////std::cout << "Curr flag:" << flag << std::endl;
 
                 group(j, k) = res(j, i*shift + k - flag); // ERROR index out of bound error
-                if (j==1) //RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
+                // if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
             }
         }
 
