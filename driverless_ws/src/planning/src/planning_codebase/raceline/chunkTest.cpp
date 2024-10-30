@@ -3,6 +3,7 @@
 #include <iostream>
 #include "racelineChunk.hpp"
 #include <cassert>
+#include <fstream>
 
 // angle to rads?
 double ator(int a){
@@ -169,20 +170,33 @@ int main() {
     // std::cout << chunks[0]->avgCurvature << std::endl;
     // std::cout << xBlue << std::endl;
 
+    ofstream Blue("blue_points.txt");
+    ofstream Yellow("yellow_points.txt");
+
     for (int i  = 0; i < chunks.size(); i++) {
         // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
         // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
+
         for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
-            std::cout << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
+            Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
         }
+
+        for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
+            Yellow << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
+        }
+
         // std::cout << "CHUNK " << i << std::endl;
         // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
         // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
         // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
         //     std::cout << "(" << chunks[i]->bluePoints[j].first << ", " << chunks[i]->bluePoints[j].second << ")" << std::endl;
         // }
-        std::cout << "#" << std::endl;
+        Blue << "#";
+        Yellow << "#";
     }
+
+    Blue.close();
+    Yellow.close();
     
     return 0;
 }
