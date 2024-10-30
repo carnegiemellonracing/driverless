@@ -170,7 +170,6 @@ int main() {
     // std::cout << xBlue << std::endl;
 
     for (int i  = 0; i < chunks.size(); i++) {
-        std::cout << "#" << std::endl;
         // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
         // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
         for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
@@ -182,6 +181,7 @@ int main() {
         // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
         //     std::cout << "(" << chunks[i]->bluePoints[j].first << ", " << chunks[i]->bluePoints[j].second << ")" << std::endl;
         // }
+        std::cout << "#" << std::endl;
     }
     
     return 0;
