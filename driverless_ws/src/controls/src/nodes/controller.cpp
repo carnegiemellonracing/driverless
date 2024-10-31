@@ -87,6 +87,13 @@ namespace controls {
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
                 RCLCPP_DEBUG(get_logger(), "Received cones");
+                std::stringstream ss;
+                ss << "Length of blue cones: " << cone_msg.blue_cones.size() << std::endl;
+                ss << "Length of yellow cones: " << cone_msg.yellow_cones.size() << std::endl;
+                ss << "Length of orange cones: " << cone_msg.orange_cones.size() << std::endl;
+                ss << "Length of unknown color cones: " << cone_msg.unknown_color_cones.size() << std::endl;
+                RCLCPP_WARN(get_logger(), ss.str().c_str());
+                RCLCPP_WARN(get_logger(), "Received cones");
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};

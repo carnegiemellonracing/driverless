@@ -440,8 +440,8 @@ namespace controls {
             m_left_cone_points.clear();
             m_right_cone_points.clear();
 
-            m_left_cone_points = process_ros_points(cone_msg.orange_cones);
-            m_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
+            m_left_cone_points = process_ros_points(cone_msg.blue_cones);
+            m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
             std::cout << "Here 1\n";
 
 #ifdef DISPLAY

@@ -377,14 +377,15 @@ namespace controls {
                 m_state_estimator->get_offset_pixels(m_offset_image);
                 m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();
                 m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);
-
-                m_left_cone_trajectory_visible->vertex_buf = std::vector<float>(m_left_cone_points.size() * 2);
+                
+                // m_*_cone_trajectory_visible and m_*_cone_trajectory seem to have same functionality?
+                m_left_cone_trajectory->vertex_buf = std::vector<float>(m_left_cone_points.size() * 2);
                 for (size_t i = 0; i < m_left_cone_points.size(); i++) {
                     m_left_cone_trajectory->vertex_buf[2 * i] = m_left_cone_points[i].x;
                     m_left_cone_trajectory->vertex_buf[2 * i + 1] = m_left_cone_points[i].y;
                 }
 
-                m_right_cone_trajectory_visible->vertex_buf = std::vector<float>(m_right_cone_points.size() * 2);
+                m_right_cone_trajectory->vertex_buf = std::vector<float>(m_right_cone_points.size() * 2);
                 for (size_t i = 0; i < m_right_cone_points.size(); i++) {
                     m_right_cone_trajectory->vertex_buf[2 * i] = m_right_cone_points[i].x;
                     m_right_cone_trajectory->vertex_buf[2 * i + 1] = m_right_cone_points[i].y;
@@ -398,8 +399,8 @@ namespace controls {
                 draw_spline();
                 draw_cones();
                 draw_best_guess();
-                m_left_cone_trajectory_visible->draw();
-                m_right_cone_trajectory_visible->draw();
+                m_left_cone_trajectory->draw();
+                m_right_cone_trajectory->draw();
 
                 SDL_GL_SwapWindow(window);
 
