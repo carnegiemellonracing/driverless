@@ -18,11 +18,11 @@ namespace controls {
         /// Add a heading to the current heading, clampiing to within [0, 2pi).
         static constexpr float add_heading(float current, float diff) {
             float result = current + diff;
-            if (result < 0.0) {
-                result += M_PI_2;
+            if (result < 0.0f) {
+                result += 2.0f * M_PI;
             }
-            if (result > 2.0 * M_PI_2) {
-                result -= M_PI_2;
+            if (result >= 2.0f * M_PI) {
+                result -= 2.0f * M_PI;
             }
             return result;
         }
@@ -334,13 +334,31 @@ namespace controls {
                 }
             }
 
-            while (furthest_right != closest_right) {
-                cone_msg.yellow_cones.push_back(gen_point(m_all_right_cones.at(furthest_right)));
-                furthest_right++;
-                if (furthest_right == m_all_right_cones.size()) {
-                    furthest_right = 0;
+            while (closest_right != furthest_right) {
+                cone_msg.yellow_cones.push_back(gen_point(m_all_right_cones.at(closest_right)));
+                closest_right++;
+                if (closest_right == m_all_right_cones.size()) {
+                    closest_right = 0;
                 }
             }
+            // while (closest_left != furthest_left)
+            // {
+            //     cone_msg.blue_cones.push_back(gen_point(m_all_left_cones.at(closest_left)));
+            //     closest_left++;
+            //     if (closest_left == m_all_left_cones.size())
+            //     {
+            //         closest_left = 0;
+            //     }
+            // }
+            // while (furthest_right != closest_right)
+            // {
+            //     cone_msg.yellow_cones.push_back(gen_point(m_all_right_cones.at(furthest_right)));
+            //     furthest_right++;
+            //     if (furthest_right == m_all_right_cones.size())
+            //     {
+            //         furthest_right = 0;
+            //     }
+            // }
 
             // for display only
             for (const glm::fvec2& point : m_all_left_cones) {
@@ -387,12 +405,6 @@ namespace controls {
         {
             std::deque<Segment> segments;
             std::ifstream spec_file(track_specifications_path);
-            std::string filename = "/home/controls_copy/driverless/driverless_ws/src/controls/tests/track1";
-            if (std::filesystem::exists(filename)) {
-                std::cout << "File exists.\n";
-            } else {
-                std::cout << "File does not exist.\n";
-            }
             if (spec_file.is_open())
             {
                 std::string line;
@@ -416,16 +428,17 @@ namespace controls {
                     }
                     else if (segment_type == 'a')
                     {
-                        float radius, heading_change;
+                        float radius, heading_change_deg;
                         segment_stream.ignore(1);
                         segment_stream >> radius;
 
                         segment_stream.ignore(1);
-                        segment_stream >> heading_change;
+                        segment_stream >> heading_change_deg;
                         
                         segment.type = SegmentType::ARC;
                         segment.radius = radius;
-                        segment.heading_change = heading_change;
+                        segment.heading_change = (heading_change_deg * M_PI) / 180.0f;
+                        // std::cout << segment.heading_change << std::endl;
                         segments.push_back(segment);
                     }
                     else
@@ -442,24 +455,32 @@ namespace controls {
     }
 }
 
-static constexpr float default_lookahead = 8.0f;
+static constexpr float default_lookahead = 4.0f;
 
 int main(int argc, char* argv[]){
-    // if (argc == 1) {
-    //     std::cout << "specify track specification" << std::endl;
-    //     return 1;
-    // }
-    // std::string track_specification = argv[1];
-    // float look_ahead = default_lookahead;
-    // if (argc == 3) {
-    //     look_ahead = std::stof(argv[2]);
-    // }
-    std::string track_specification = "/home/controls_copy/driverless/driverless_ws/src/controls/tests/track1";
-    float look_ahead = 10.0f;
-        
+    if (argc == 1) {
+        std::cout << "Specify track specification." << std::endl;
+        return 1;
+    }
+
+    std::string track_specification = argv[1];
+    float look_ahead = default_lookahead;
+    if (argc == 3) {
+        look_ahead = std::stof(argv[2]);
+    }
+
+    std::string track_spec_full_path = "/home/controls_copy/driverless/driverless_ws/src/controls/tests/" + track_specification;
+    std::cout << "track_spec_full_path: " << track_spec_full_path << std::endl;
+
+    if (!std::filesystem::exists(track_spec_full_path)) {
+        std::cout << "File with those track specs does not exist. Did you remember to put it in src/controls/tests/ ?\n";
+    } else {
+        std::cout << "Track specs exist\n";
+    }
+
     rclcpp::init(argc, argv);
 
-    rclcpp::spin(std::make_shared<controls::tests::TestNode>(track_specification, look_ahead));
+    rclcpp::spin(std::make_shared<controls::tests::TestNode>(track_spec_full_path, look_ahead));
 
     rclcpp::shutdown();
     return 0;
