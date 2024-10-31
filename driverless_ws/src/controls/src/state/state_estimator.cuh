@@ -201,6 +201,25 @@ namespace controls {
             void fill_path_buffers_cones();
             void fill_path_buffers_spline();
 
+            struct Vertex {
+                struct {
+                    float x;
+                    float y;
+                } world;
+
+                /// Curvilinear coordinates. Progress = distance along spline, offset = perpendicular distance
+                /// from spline, heading = angle relative to spline.
+                struct {
+                    float progress;
+                    float offset;
+                    float heading;
+                } curv;
+            };
+            
+            void build_triangle_vertices();
+
+
+
             /// Stores the sequence of (x,y) spline points from path planning.
             std::vector<glm::fvec2> m_spline_frames;
             std::vector<std::pair<float, glm::fvec2>> m_left_cone_positions;
