@@ -1,0 +1,13 @@
+1.) Create ROS2 node in python
+- look at the website
+- just follow the instructions completely until you're able to read and publish messages
+
+What does the ROS node do?
+- subscribe to topics from a rosbag
+
+2.) copy a rosbag from dale onto your laptop
+3.) mount the rosbag from your laptop into the docker container
+- use vscode extension
+
+
+
