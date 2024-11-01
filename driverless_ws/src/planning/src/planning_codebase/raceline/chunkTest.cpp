@@ -170,8 +170,8 @@ int main() {
     // std::cout << chunks[0]->avgCurvature << std::endl;
     // std::cout << xBlue << std::endl;
 
-    ofstream Blue("blue_points.txt");
-    ofstream Yellow("yellow_points.txt");
+    std::ofstream Blue("blue_points.txt");
+    std::ofstream Yellow("yellow_points.txt");
 
     for (int i  = 0; i < chunks.size(); i++) {
         // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
