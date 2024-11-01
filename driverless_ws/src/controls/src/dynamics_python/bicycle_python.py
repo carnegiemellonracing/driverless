@@ -44,6 +44,18 @@ def tire_model(slip_ratio, slip_angle, load, forces):
     else:
         forces[1] = load * post_saturation_force_y * np.sign(slip_angle)
 
+"""           
+[0] X_world m
+[1] Y_world m
+[2] Yaw_World rad
+[3] X_dot_Car m/s
+[4] Y_dot_Car m/s
+[5] Yaw_Rate rad/s
+[6] Pitch Moment Nm
+[7] Downforce N
+[8] Front Wheel Speed rad/s
+[9] rear Wheel Speed rad/s
+"""
 def dynamics(state, action):
     yaw_world = state[2]
     x_dot_car = state[3]
