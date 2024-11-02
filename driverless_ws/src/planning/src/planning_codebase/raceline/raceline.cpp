@@ -170,38 +170,38 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
     std::pair<double,double> boundaries = std::make_pair(first_x,last_x);
     int ratio = progress / len + 1;
 
-        if (ratio >= 2){
-            double x = first_x + delta*ratio;
-            double shoot = arclength(this->spl_poly,first_x,x);
-            
-            double lower_bound = first_x + delta * (ratio - 1);
-            double upper_bound =  first_x + delta * ratio;
+    if (ratio >= 2){
+        double x = first_x + delta*ratio;
+        double shoot = arclength(this->spl_poly,first_x,x);
+        
+        double lower_bound = first_x + delta * (ratio - 1);
+        double upper_bound =  first_x + delta * ratio;
 
-            if (shoot < progress){
-                while (shoot < progress){
-                    //std::cout << "." << std::endl;
-                    lower_bound = x;
-                    //  add approximately one spline length to shoot
-                    shoot = arclength(this->spl_poly,first_x,x+delta);
-                    x=x+delta;
-                }
-                upper_bound = x; // upper bound is direct first overshoot (separated by delta from the lower bound)
+        if (shoot < progress){
+            while (shoot < progress){
+                // std::cout << "." << std::endl;
+                lower_bound = x;
+                //  add approximately one spline length to shoot
+                shoot = arclength(this->spl_poly,first_x,x+delta);
+                x=x+delta;
             }
-            else if (shoot >= progress){ // equality not very important
-                while (shoot >= progress){
-                    //std::cout << ", " << shoot << " " << progress << std::endl;
-                    upper_bound = x;
-                    // # remove approximately one splien length to shoot
-                    shoot = arclength(this->spl_poly,first_x,x - delta);
-                    x -= delta;
-                }
-                lower_bound = x; // lower bound is direct first undershoot (separated by delta from the upper bound)
-            }    
-            std::pair<double,double> boundaries = std::make_pair(lower_bound, upper_bound);
-            
+            upper_bound = x; // upper bound is direct first overshoot (separated by delta from the lower bound)
         }
-        //  Perform a more precise search between the two computed bounds
-        //std::cout << "SPLINE ALONG 2" << std::endl;
+        else if (shoot >= progress){ // equality not very important
+            while (shoot >= progress){
+                //std::cout << ", " << shoot << " " << progress << std::endl;
+                upper_bound = x;
+                // # remove approximately one splien length to shoot
+                shoot = arclength(this->spl_poly,first_x,x - delta);
+                x -= delta;
+            }
+            lower_bound = x; // lower bound is direct first undershoot (separated by delta from the upper bound)
+        }    
+        std::pair<double,double> boundaries = std::make_pair(lower_bound, upper_bound);
+        
+    }
+    //  Perform a more precise search between the two computed bounds
+    //std::cout << "SPLINE ALONG 2" << std::endl;
 
         std::vector<double> guesses;
         guesses.resize(precision+1);
@@ -225,10 +225,12 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         }
         Eigen::VectorXd rotated_point(2);
         rotated_point(0)=best_guess;
+        std::cout << "best guess: " << best_guess << std::endl;
 
         //std::cout << "SPLINE ALONG 4" << std::endl;
         
         rotated_point(1)=poly_eval(this->spl_poly,best_guess);
+        std::cout << "rotated points: " << rotated_point(1) << std::endl;
 
         //std::cout << "SPLINE ALONG 4.1" << std::endl;
         
@@ -665,7 +667,7 @@ int searchSorted (std::vector<double> arr, double target) {
     int right = arr.size() - 1;
     while (left <= right) {
         int mid = left + (right - left) / 2;
-        if (arr[mid] == target) {
+        if (arr[mid] == target) { // TODO what about duplicates
             return mid;
         }
         if (arr[mid] < target) {
@@ -689,7 +691,7 @@ int searchSorted (std::vector<double> arr, double target) {
  */
 std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
                                                std::vector<double> cumulated_lengths, int precision) {
-    //std::cout << cumulated_lengths.size() << std::endl;
+    std::cout << "progress: " << progress << std::endl;
     int index = searchSorted(cumulated_lengths, progress); //TODO: use std::binary_search
     //std::cout << "searchsorted" << std::endl;
     //std::cout << index << std::endl;
