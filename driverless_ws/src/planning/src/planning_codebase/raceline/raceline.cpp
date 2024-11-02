@@ -210,10 +210,10 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         }
 
 
-        std::cout << "number of guesses: " << guesses.size() << std::endl;
-        for (double guess : guesses){
-            std::cout << guess << std::endl;
-        }
+        // std::cout << "number of guesses: " << guesses.size() << std::endl;
+        // for (double guess : guesses){
+        //     std::cout << guess << std::endl;
+        // }
 
         //std::cout << "SPLINE ALONG 3" << std::endl;
 
@@ -223,11 +223,11 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         double past = -1, best_guess = -1, best_length = -1;
         int i = 0;
         for (double guess : guesses){
-            std::cout << "guess " << i << ": "<< guess << std::endl;
-            std::cout << "first x " << i << ": "<< first_x << std::endl;
-            std::cout << "poly " << i << ": "<< this->spl_poly.nums << std::endl;
+            // std::cout << "guess " << i << ": "<< guess << std::endl;
+            // std::cout << "first x " << i << ": "<< first_x << std::endl;
+            // std::cout << "poly " << i << ": "<< this->spl_poly.nums << std::endl;
             double guess_length = arclength(this->first_der, first_x, guess);
-            std::cout << "guess length " << i << ": "<< guess_length << std::endl;
+            // std::cout << "guess length " << i << ": "<< guess_length << std::endl;
             if (abs(progress - guess_length) > abs(progress - past)) //# if we did worst than before
                 break;
             best_guess = guess;
@@ -259,6 +259,8 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         Eigen::VectorXd point (2);
         point(0)=point_mat(0);
         point(1)=point_mat(1);
+
+        std::cout << "point: " << point << std::endl;
 
         ret = std::make_tuple(point,best_length,rotated_point,best_guess);
 
