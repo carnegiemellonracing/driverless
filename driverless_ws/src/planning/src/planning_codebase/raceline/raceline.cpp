@@ -232,7 +232,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
 
         //std::cout << "SPLINE ALONG 4.1" << std::endl;
         
-        Eigen::MatrixXd rotated_points(1,2);
+        Eigen::MatrixXd rotated_points(2,2);
         //std::cout << "SPLINE ALONG 4.2" << std::endl;
         rotated_points(0,0)=rotated_point(0);
         //std::cout << "SPLINE ALONG 4.3" << std::endl;
