@@ -216,14 +216,16 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         //  As arclength is expensive and cannot take multiple points
         //  at the same time, it is faster to use a for loop
         double past = -1, best_guess = -1, best_length = -1;
+        int i = 0;
         for (double guess : guesses){
-            std::cout << "guess: " << guess << std::endl;
+            std::cout << "guess " << i << ": "<< guess << std::endl;
             double guess_length = arclength(this->spl_poly, first_x, guess);
             if (abs(progress - guess_length) > abs(progress - past)) //# if we did worst than before
                 break;
             best_guess = guess;
             best_length = guess_length;
             past = guess_length;
+            i++;
         }
         Eigen::VectorXd rotated_point(2);
         rotated_point(0)=best_guess;
