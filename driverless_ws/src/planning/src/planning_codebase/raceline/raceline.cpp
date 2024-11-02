@@ -209,8 +209,13 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
             guesses[i] = (boundaries.first*i + boundaries.second*(precision-i))/precision;
         }
 
-        //std::cout << "SPLINE ALONG 3" << std::endl;
+
         std::cout << "number of guesses: " << guesses.size() << std::endl;
+        for (double guess : guesses){
+            std::cout << guess << std::endl;
+        }
+
+        //std::cout << "SPLINE ALONG 3" << std::endl;
 
         //  Evaluate progress along the (extrapolated) spline
         //  As arclength is expensive and cannot take multiple points
