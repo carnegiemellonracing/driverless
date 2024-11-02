@@ -431,7 +431,7 @@ double arclength(polynomial poly_der1, double x0,double x1){
     gsl_function F;
     F.function = &arclength_f;
     F.params = &poly_der1;
-    std::cout << "deriv: " << poly_der1.nums << std::endl;
+    // std::cout << "deriv: " << poly_der1.nums << std::endl;
 
     double result, error;
     size_t neval;
