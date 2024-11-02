@@ -151,7 +151,11 @@ int Spline::get_sort_index(){
 
 
 
-
+/**
+ * @TODO: fix reverse transform
+ * @TODO: even though guesses make sense, final interpolated points are still all the same
+ * @TODO: update get_curvature_raceline to use interpolation
+ */
 std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double progress, double point_index, int precision){
     
     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> ret;
@@ -210,17 +214,17 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         }
 
 
-        std::cout << "number of guesses: " << guesses.size() << std::endl;
-        for (double guess : guesses){
-            std::cout << guess << std::endl;
-        }
+        // std::cout << "number of guesses: " << guesses.size() << std::endl;
+        // for (double guess : guesses){
+        //     std::cout << guess << std::endl;
+        // }
 
         //std::cout << "SPLINE ALONG 3" << std::endl;
 
         //  Evaluate progress along the (extrapolated) spline
         //  As arclength is expensive and cannot take multiple points
         //  at the same time, it is faster to use a for loop
-        double past = -1, best_guess = -1, best_length = -1;
+        double past = 0, best_guess = 0, best_length = 0;
         int i = 0;
         for (double guess : guesses){
             // std::cout << "guess " << i << ": "<< guess << std::endl;
