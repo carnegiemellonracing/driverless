@@ -284,7 +284,7 @@ namespace controls {
             uniform sampler2D fake_track_texture;
 
             void main() {
-                FragColor = vec4(1.0); //texture(fake_track_texture, o_world_pose / 2.0 + 0.5); // convert from normalized device coordinates to texture coordinates
+                FragColor = texture(fake_track_texture, o_world_pose / 2.0 + 0.5); // convert from normalized device coordinates to texture coordinates
             }
         )";
 
@@ -514,8 +514,8 @@ namespace controls {
 
             m_logger("filling OpenGL buffers...");
             
-            fill_path_buffers_cones();
-            // build_triangle_vertices();
+            //fill_path_buffers_cones();
+            build_triangle_vertices();
             fill_path_buffers_spline();
 
             m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
@@ -712,8 +712,8 @@ namespace controls {
 
             glBindVertexArray(m_gl_path.vao);
             glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
-            // glDrawArrays(GL_TRIANGLE_STRIP, 0, m_num_triangles);
-            glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
+            glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
+            // glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
 
 
         }
@@ -850,7 +850,7 @@ namespace controls {
             const size_t num_left_cones = m_left_cone_positions.size();
             const size_t num_right_cones = m_right_cone_positions.size();
             m_num_triangles = 0;
-            std::vector<GLuint> indices;
+            std::vector<StateEstimator_Impl::Vertex> indices;
             std::vector<StateEstimator_Impl::Vertex> vertices;
             //vertices.reserve(num_left_cones + num_right_cones);
             for (size_t i = 0; i < num_left_cones; ++i) {
@@ -863,7 +863,7 @@ namespace controls {
             }
             //size_t start = 0;
             float distance2;
-            const size_t max_distance = 20; //MAKE THIS A REAL CONSTANT SOMEWHERE ELSE
+            const size_t max_distance = 25; //MAKE THIS A REAL CONSTANT SOMEWHERE ELSE
             size_t start = 0;
             std::vector<GLuint> temp;
             for(size_t i = 0; i < num_left_cones; ++i){
@@ -876,65 +876,59 @@ namespace controls {
                     if(distance2 < max_distance)
                     {
                         temp.push_back(j);
-                        start = j;
-                    }
-                    else{
-                        break;
+                        // start = j;
                     }
                 }
                 if(temp.size() > 1){
                     for(size_t k = 0; k < temp.size()-1; ++k){
-                        indices.push_back(i);
-                        indices.push_back(temp.at(k)+ num_left_cones);
-                        indices.push_back(temp.at(k+1) + num_left_cones);
+                        indices.push_back(vertices.at(i));
+                        indices.push_back(vertices.at(temp.at(k)+ num_left_cones));
+                        indices.push_back(vertices.at(temp.at(k+1) + num_left_cones));
                         m_num_triangles += 1;
                     }
                 }
             }
-            // start = 0;
-            // for(size_t i = 0; i < num_right_cones; ++i){
-            //     glm::fvec2 r1 = m_right_cone_positions.at(i).second;
-            //     distance2 = 0;
-            //     temp.clear();
-            //     for(size_t j = start; j < num_left_cones; j++){
-            //         glm::fvec2 l1 = m_left_cone_positions.at(j).second;
-            //         distance2 = (l1.x - r1.x)*(l1.x - r1.x) + (l1.y - r1.y)*(l1.y - r1.y);
-            //         if(distance2 < max_distance)
-            //         {
-            //             temp.push_back(j);
-            //             start = j;
-            //         }
-            //         else{
-            //             break;
-            //         }
-            //     }
-            //     if(temp.size() > 1){
-            //         for(size_t k = 0; k < temp.size()-1; ++k){
-            //             indices.push_back(i + num_left_cones);
-            //             indices.push_back(temp.at(k));
-            //             indices.push_back(temp.at(k+1));
-            //             m_num_triangles += 1;
-            //         }
-            //     }
+            start = 0;
+            for(size_t i = 0; i < num_right_cones; ++i){
+                glm::fvec2 r1 = m_right_cone_positions.at(i).second;
+                distance2 = 0;
+                temp.clear();
+                for(size_t j = start; j < num_left_cones; j++){
+                    glm::fvec2 l1 = m_left_cone_positions.at(j).second;
+                    distance2 = (l1.x - r1.x)*(l1.x - r1.x) + (l1.y - r1.y)*(l1.y - r1.y);
+                    if(distance2 < max_distance)
+                    {
+                        temp.push_back(j);
+                        // start = j;
+                    }
+                }
+                if(temp.size() > 1){
+                    for(size_t k = 0; k < temp.size()-1; ++k){
+                        indices.push_back(vertices.at(i + num_left_cones));
+                        indices.push_back(vertices.at(temp.at(k)));
+                        indices.push_back(vertices.at(temp.at(k+1)));
+                        m_num_triangles += 1;
+                    }
+                }
 
-            // }
+            }
             std::stringstream ss;
             ss << "Start of right at: " << num_left_cones;
-            for(size_t i = 0; i < vertices.size(); i++){
-                ss << "Index: " << i << " Point x: " << vertices.at(i).world.x << "Point y: "<< vertices.at(i).world.y << "\n";
+            for(size_t i = 0; i < indices.size(); i++){
+                ss << "Index: " << i << " Point x: " << indices.at(i).world.x << "Point y: "<< indices.at(i).world.y << "\n";
             }
-            if(indices.size() > 2) {
-                for(size_t i = 0; i < indices.size()-2; i += 3){
-                    ss << "Index: " << indices.at(i) << " 2: " << indices.at(i+1) << " 3: " << indices.at(i+2) <<"------";
-                }
-            }
+            // if(indices.size() > 2) {
+            //     for(size_t i = 0; i < indices.size()-2; i += 3){
+            //         ss << "Index: " << indices.at(i) << " 2: " << indices.at(i+1) << " 3: " << indices.at(i+2) <<"------";
+            //     }
+            // }
     
             RCLCPP_WARN(m_logger_obj, ss.str().c_str());
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(StateEstimator_Impl::Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(StateEstimator_Impl::Vertex) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
+            // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
+            // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
 
         }
         
