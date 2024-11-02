@@ -172,7 +172,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
 
     if (ratio >= 2){
         double x = first_x + delta*ratio;
-        double shoot = arclength(this->spl_poly,first_x,x);
+        double shoot = arclength(this->first_der,first_x,x);
         
         double lower_bound = first_x + delta * (ratio - 1);
         double upper_bound =  first_x + delta * ratio;
@@ -182,7 +182,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
                 // std::cout << "." << std::endl;
                 lower_bound = x;
                 //  add approximately one spline length to shoot
-                shoot = arclength(this->spl_poly,first_x,x+delta);
+                shoot = arclength(this->first_der,first_x,x+delta);
                 x=x+delta;
             }
             upper_bound = x; // upper bound is direct first overshoot (separated by delta from the lower bound)
@@ -192,7 +192,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
                 //std::cout << ", " << shoot << " " << progress << std::endl;
                 upper_bound = x;
                 // # remove approximately one splien length to shoot
-                shoot = arclength(this->spl_poly,first_x,x - delta);
+                shoot = arclength(this->first_der,first_x,x - delta);
                 x -= delta;
             }
             lower_bound = x; // lower bound is direct first undershoot (separated by delta from the upper bound)
@@ -226,7 +226,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
             std::cout << "guess " << i << ": "<< guess << std::endl;
             std::cout << "first x " << i << ": "<< first_x << std::endl;
             std::cout << "poly " << i << ": "<< this->spl_poly.nums << std::endl;
-            double guess_length = arclength(this->spl_poly, first_x, guess);
+            double guess_length = arclength(this->first_der, first_x, guess);
             std::cout << "guess length " << i << ": "<< guess_length << std::endl;
             if (abs(progress - guess_length) > abs(progress - past)) //# if we did worst than before
                 break;
