@@ -33,6 +33,9 @@ namespace controls {
              */
             virtual void sync_to_device(const rclcpp::Time &time) =0;
 
+            virtual void generate_lookup_table() =0;
+            virtual void hardcode_state(State state) =0;
+
             /**
              * @brief Callback for spline messages. Updates the state estimator with the new spline. Used for both
              * state projection and curvilinear state lookup table generation.
@@ -95,6 +98,8 @@ namespace controls {
              */
             virtual void record_control_action(const Action &action, const rclcpp::Time &ros_time) =0;
 
+            virtual std::vector<glm::fvec2> get_spline_frames() = 0;
+
 #ifdef DISPLAY
             struct OffsetImage {
                 std::vector<float> pixels;
@@ -104,7 +109,6 @@ namespace controls {
                 float world_width;
             };
 
-            virtual std::vector<glm::fvec2> get_spline_frames() =0;
             virtual std::vector<glm::fvec2> get_all_left_cone_points() =0;
             virtual std::vector<glm::fvec2> get_all_right_cone_points() =0;
             virtual std::vector<glm::fvec2> get_left_cone_points() = 0;

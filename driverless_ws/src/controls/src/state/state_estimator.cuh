@@ -123,6 +123,8 @@ namespace controls {
             void on_pose(const PoseMsg& pose_msg) override;
 
             void sync_to_device(const rclcpp::Time &time) override;
+            void hardcode_state(State state) override;
+            void generate_lookup_table() override;
             bool is_ready() override;
             State get_projected_state() override;
             void set_logger(LoggerFunc logger) override;
@@ -131,8 +133,9 @@ namespace controls {
             rclcpp::Time get_orig_spline_data_stamp() override;
             void record_control_action(const Action &action, const rclcpp::Time &time) override;
 
-#ifdef DISPLAY
             std::vector<glm::fvec2> get_spline_frames() override;
+
+#ifdef DISPLAY
             std::vector<glm::fvec2> get_all_left_cone_points() override;
             std::vector<glm::fvec2> get_all_right_cone_points() override;
             std::vector<glm::fvec2> get_left_cone_points() override;

@@ -5,50 +5,48 @@
 #include <constants.hpp>
 #include <interfaces/msg/control_action.hpp>
 #include <state/state_estimator.hpp>
-
-#ifdef DISPLAY
+#include <iostream>
+#include <fstream>
 #include <display/display.hpp>
-#endif
 
 #include "controller.hpp"
 
 namespace controls {
     namespace nodes {
-            ControllerNode::ControllerNode(
-                std::shared_ptr<state::StateEstimator> state_estimator,
-                std::shared_ptr<mppi::MppiController> mppi_controller)
-                : Node {controller_node_name},
+        ControllerNode::ControllerNode(
+            std::shared_ptr<state::StateEstimator> state_estimator,
+            std::shared_ptr<mppi::MppiController> mppi_controller)
+            : Node{controller_node_name},
 
-                  m_state_estimator {std::move(state_estimator)},
-                  m_mppi_controller {std::move(mppi_controller)},
+              m_state_estimator{std::move(state_estimator)},
+              m_mppi_controller{std::move(mppi_controller)},
 
-                  m_action_publisher {
-                //TODO: <ActionMsg>
-                      create_publisher<interfaces::msg::ControlAction>(
-                          control_action_topic_name,
-                          control_action_qos
-                        )
-                  },
+              m_action_publisher{
+                  // TODO: <ActionMsg>
+                  create_publisher<interfaces::msg::ControlAction>(
+                      control_action_topic_name,
+                      control_action_qos)},
 
-                  m_info_publisher {
-                      create_publisher<InfoMsg>(
-                            controller_info_topic_name,
-                            controller_info_qos
-                        )
-                  } {
+              m_info_publisher{
+                  create_publisher<InfoMsg>(
+                      controller_info_topic_name,
+                      controller_info_qos)
+              },
 
-                // create a callback group that prevents state and spline callbacks from being executed concurrently
-                rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group {
-                    create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};
+              m_data_trajectory_log {"data_log.txt", std::ios::out}
+        {
+            // create a callback group that prevents state and spline callbacks from being executed concurrently
+            rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group{
+                create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};
 
-                rclcpp::SubscriptionOptions options {};
-                options.callback_group = state_estimation_callback_group;
+            rclcpp::SubscriptionOptions options{};
+            options.callback_group = state_estimation_callback_group;
 
-                m_spline_subscription = create_subscription<SplineMsg>(
-                    spline_topic_name, spline_qos,
-                    [this] (const SplineMsg::SharedPtr msg) { spline_callback(*msg); },
-                    options
-                );
+            m_spline_subscription = create_subscription<SplineMsg>(
+                spline_topic_name, spline_qos,
+                [this](const SplineMsg::SharedPtr msg)
+                { spline_callback(*msg); },
+                options);
 
                 m_cone_subscription = create_subscription<ConeMsg>(
                     cone_topic_name, spline_qos, //was cone_qos but that didn't exist, publisher uses spline_qos
@@ -62,17 +60,17 @@ namespace controls {
                     options
                 );
 
-                m_world_pose_subscription = create_subscription<PoseMsg>(
-                    world_pose_topic_name, world_pose_qos,
-                    [this] (const PoseMsg::SharedPtr msg) { world_pose_callback(*msg); },
-                    options
-                );
-                //TODO: m_state_mut never gets initialized? I guess default construction is alright;
+            m_world_pose_subscription = create_subscription<PoseMsg>(
+                world_pose_topic_name, world_pose_qos,
+                [this](const PoseMsg::SharedPtr msg)
+                { world_pose_callback(*msg); },
+                options);
+            // TODO: m_state_mut never gets initialized? I guess default construction is alright;
 
-                // start mppi :D
-                // this won't immediately begin publishing, since it waits for the first dirty state
-                launch_mppi().detach();
-            }
+            // start mppi :D
+            // this won't immediately begin publishing, since it waits for the first dirty state
+            launch_mppi().detach();
+        }
 
             void ControllerNode::spline_callback(const SplineMsg& spline_msg) {
                 RCLCPP_DEBUG(get_logger(), "Received spline");
@@ -169,11 +167,27 @@ namespace controls {
                         publish_action(action);
                         std::string error_str;
 #ifdef DATA
+                        std::stringstream parameters_ss;
+                        parameters_ss << "Swangle range: " << 19 * M_PI / 180 * 2 << "\nThrottle range: " << saturating_motor_torque * 2 << "\n";
+                        RCLCPP_WARN_ONCE(get_logger(), parameters_ss.str().c_str());
+
                         std::vector<Action> percentage_diff_trajectory = m_mppi_controller->m_percentage_diff_trajectory;
+                        std ::vector<Action> averaged_trajectory = m_mppi_controller->m_averaged_trajectory;
+                        std::vector<Action> last_action_trajectory = m_mppi_controller->m_last_action_trajectory_logging;
                         auto diff_statistics = m_mppi_controller->m_diff_statistics;
+
                         // create debugging string
                         std::stringstream ss;
-                        ss << "Percentage Difference between Guess and Result: \n";
+                        ss << "Last action_trajectory (MPPI Input/Guess): \n";
+                        for (const auto &action : last_action_trajectory)
+                        {
+                            ss << "[" << action[0] << ", " << action[1] << "], ";
+                        }
+                        ss << "\nAveraged Trajectory (MPPI Output): \n";
+                        for (const auto& action : averaged_trajectory) {
+                            ss << "[" << action[0]<< ", " << action[1] << "], ";
+                        }
+                        ss << "\nPercentage Difference between Guess and Result: \n";
                         for (const auto& action : percentage_diff_trajectory) {
                             ss << "[" << action[0] << ", " << action[1] << "], ";
                         }
@@ -188,6 +202,34 @@ namespace controls {
                         ss << "Rolling Torque Error: " << total_throttle_error / num_iterations << std::endl;
                         ss << "Iteration #: " << num_iterations << std::endl;
                         error_str = ss.str();
+
+                        // writing to logging file for NN
+                        // write the state
+                        m_data_trajectory_log << "Current State: ";
+                        for (int i = 0; i < state_dims; i++) {
+                            m_data_trajectory_log << proj_curr_state[i] << ", ";
+                        }
+                        m_data_trajectory_log << "\nSpline: ";
+                        // write the spline ???
+                        std::vector<glm::fvec2> frames = m_state_estimator->get_spline_frames();
+                        for (int i = 0; i < frames.size(); i++)
+                        {
+                            m_data_trajectory_log << "[" << frames[i].x << ", " << frames[i].y << "], ";
+                        }
+                        m_data_trajectory_log << "\nLast Action Trajectory: ";
+                        // write the guess trajectory
+                        for (const auto &action : last_action_trajectory)
+                        {
+                            m_data_trajectory_log << "[" << action[0] << ", " << action[1] << "], ";
+                        }
+                        m_data_trajectory_log << "\nResult Trajectory: ";
+                        // write the result trajectory
+                        for (const auto &action : averaged_trajectory)
+                        {
+                            m_data_trajectory_log << "[" << action[0] << ", " << action[1] << "], ";
+                        }
+                        m_data_trajectory_log << "\n";
+
 #endif
 
                         // this can happen concurrently with another state estimator callback, but the internal lock

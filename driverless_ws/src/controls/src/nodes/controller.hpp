@@ -133,6 +133,8 @@ namespace controls {
              * @see std::condition_variable
              */
             std::condition_variable m_state_cond_var;
+
+            std::fstream m_data_trajectory_log;
         };
     }
 }

@@ -312,7 +312,7 @@ namespace controls {
             }
         };
 
-        // Note: Thrust needs a functor (similar to std::hash), so we can't use a standalone function
+        /// Note: Thrust needs a functor (similar to std::hash), so we can't use a standalone function
         /// Adds two device actions
         struct AddActions {
             __device__ DeviceAction operator() (const DeviceAction& a1, const DeviceAction& a2) const {
@@ -473,6 +473,25 @@ namespace controls {
             }
         };
 
+        struct AbsoluteError
+        {
+            __device__ Action operator()(const DeviceAction &x, const DeviceAction &y) const
+            {
+                Action result;
+                for (size_t i = 0; i < action_dims; i++)
+                {
+                    float percentage_diff = (x.data[i] - y.data[i]) / (cuda_globals::action_max[i] * 2);
+                    if (percentage_diff > 0) {
+                        result[i] = percentage_diff;
+                    }
+                    else {
+                        result[i] = -percentage_diff;
+                    }
+                }
+                return result;
+            }
+        };
+
         struct SquaredError
         {
             __device__ Action operator()(const DeviceAction &x, const DeviceAction &y) const
@@ -481,6 +500,22 @@ namespace controls {
                 for (size_t i = 0; i < action_dims; i++) {
                     float percentage_diff = (x.data[i] - y.data[i]) / (cuda_globals::action_max[i] * 2);
                     result[i] = percentage_diff * percentage_diff;
+                }
+                return result;
+            }
+        };
+
+        struct GeometricSquaredError
+        {
+            __device__ Action operator()(const DeviceAction &x, const DeviceAction &y) const
+            {
+                Action result;
+                float a_1 = 1.0/3.0;
+                float r = 2.0/3.0;
+                for (size_t i = 0; i < action_dims; i++) {
+                    float percentage_diff = (x.data[i] - y.data[i]) / (cuda_globals::action_max[i] * 2);
+                    result[i] = a_1 * percentage_diff * percentage_diff;
+                    a_1 *= r;
                 }
                 return result;
             }

@@ -41,6 +41,7 @@ namespace controls {
              * @return The optimal action calculated by MPPI given state and spline information.
              */
             virtual Action generate_action() =0;
+            virtual void hardcode_last_action_trajectory(std::vector<Action> actions) =0;
             virtual void set_logger(LoggerFunc logger) =0;
 
 #ifdef DISPLAY
@@ -48,8 +49,9 @@ namespace controls {
             virtual std::vector<glm::fvec2> last_reduced_state_trajectory() = 0;
 #endif
 #ifdef DATA 
-
+            std::vector<Action> m_last_action_trajectory_logging;
             std::vector<Action> m_percentage_diff_trajectory;
+            std::vector<Action> m_averaged_trajectory;
 
             struct DiffStatistics {
                 float mean_swangle;

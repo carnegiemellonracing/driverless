@@ -28,6 +28,8 @@
 #include <model/two_track/codegen/minimal_state_function.h>
 #include <filesystem>
 #include "test_node.hpp"
+#include <cstdlib>
+
 //#include <utils/general_utils.hpp>
 
 namespace controls {
@@ -626,19 +628,22 @@ std::string trim(const std::string &str) {
 
 int main(int argc, char* argv[]){
 
+    std::string default_config_path = "sim1.conf";
+    std::string config_file_path;
     if (argc < 2) {
-        std::cout << "Perhaps you didn't pass in the simulation config file path." << std::endl;
-        return 1;
+        std::cout << "Perhaps you didn't pass in the simulation config file name, using default" << std::endl;
+        config_file_path = default_config_path;
     } else {
         std::cout << "Simulation config file passed." << std::endl;
+        config_file_path = argv[1];
     }
     
-    std::string config_file_path = argv[1];
-    std::string config_file_base_path = "/home/controls_copy/driverless/driverless_ws/src/controls/tests/sim_configs/";
+    std::string config_file_base_path = std::string {getenv("HOME")} + "/driverless/driverless_ws/src/controls/tests/sim_configs/";
     std::string config_file_full_path = config_file_base_path + config_file_path;
     
     std::map<std::string, std::string> config_dict;
-    
+
+    std::cout << "Looking for " << config_file_full_path << std::endl;
     if (std::filesystem::exists(config_file_full_path)) {
         std::cout << "Simulation config file found.\n";
     } else {

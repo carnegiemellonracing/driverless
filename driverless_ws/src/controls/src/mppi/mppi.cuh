@@ -32,6 +32,8 @@ namespace controls {
              * @return The optimal action calculated by MPPI given sensor information
              */
             Action generate_action() override;
+            void hardcode_last_action_trajectory(std::vector<Action> actions) override;
+
             void set_logger(LoggerFunc logger) override;
 
 
