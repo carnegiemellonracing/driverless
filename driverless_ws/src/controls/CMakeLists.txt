@@ -43,11 +43,21 @@ if (DISPLAY)
   add_compile_options(-DDISPLAY)
 endif()
 
-# add_compile_options(-DSLIPLESS)
-
 if (PARANOID)
   add_compile_options(-DPARANOID)
 endif()
+
+# if (DATA)
+#   add_compile_options(-DDATA)
+#   add_executable(offline_controller src/data_generation/offline_controller.cpp)
+#   target_link_libraries(offline_controller controls_lib)
+#   ament_target_dependencies(offline_controller rclcpp interfaces builtin_interfaces)
+#   target_compile_definitions(offline_controller PRIVATE DATA)
+  # set_target_properties(controls_lib controller offline_controller PROPERTIES
+  #         CUDA_SEPARABLE_COMPILATION ON
+  #         CUDA_ARCHITECTURES ${CUDA_ARCH}
+  # )
+# endif()
 
 
 # **** Controls Lib *****
@@ -85,8 +95,6 @@ target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
         --use_fast_math --expt-relaxed-constexpr
         >)
 
-target_compile_definitions(controls_lib PRIVATE DATA)
-
 ament_export_targets(controls_libExport HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp std_msgs interfaces glm builtin_interfaces)
 
@@ -103,7 +111,6 @@ install(
 add_executable(controller src/nodes/controller.cpp)
 target_link_libraries(controller controls_lib)
 ament_target_dependencies(controller rclcpp interfaces builtin_interfaces)
-target_compile_definitions(controller PRIVATE DATA)
 
 install(
         TARGETS controller

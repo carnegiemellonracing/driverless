@@ -513,6 +513,48 @@ namespace controls {
             );
         }
 
+        void StateEstimator_Impl::hardcode_state(State state) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            m_synced_projected_state = state;
+        }
+
+        // Used only for the offline controller
+        void StateEstimator_Impl::generate_lookup_table() {
+            State state = m_synced_projected_state;
+
+            // enable openGL
+            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
+
+            m_logger("generating spline frame lookup texture info...");
+
+            gen_tex_info({state[state_x_idx], state[state_y_idx]});
+
+            m_logger("filling OpenGL buffers...");
+            // takes car position, places them in the vertices
+            fill_path_buffers_cones();
+            fill_path_buffers_spline();
+
+            m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
+            unmap_curv_frame_lookup();
+
+            // render the lookup table
+            m_logger("rendering curv frame lookup table...");
+            render_fake_track();
+            render_curv_frame_lookup();
+
+            m_logger("mapping OpenGL curv frame texture back to CUDA");
+            map_curv_frame_lookup();
+
+            m_logger("syncing world state to device");
+            m_synced_projected_state = state;
+            sync_world_state();
+
+            m_logger("syncing spline frame lookup texture info to device");
+            sync_tex_info();
+
+            utils::sync_gl_and_unbind_context(m_gl_window);
+        }
+
         void StateEstimator_Impl::sync_to_device(const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
@@ -586,18 +628,19 @@ namespace controls {
             m_logger_obj = logger;
         }
 
+        std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames()
+        {
+            std::lock_guard<std::mutex> guard{m_mutex};
 
-#ifdef DISPLAY
-        std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            std::vector<glm::fvec2> res (m_spline_frames.size());
-            for (size_t i = 0; i < m_spline_frames.size(); i++) {
+            std::vector<glm::fvec2> res(m_spline_frames.size());
+            for (size_t i = 0; i < m_spline_frames.size(); i++)
+            {
                 res[i] = {m_spline_frames[i].x, m_spline_frames[i].y};
             }
             return res;
         }
 
+#ifdef DISPLAY
         std::vector<glm::fvec2> StateEstimator_Impl::get_all_left_cone_points() {
             std::lock_guard<std::mutex> guard {m_mutex};        
             return m_all_left_cone_points;

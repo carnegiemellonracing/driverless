@@ -50,6 +50,17 @@ namespace controls {
             CURAND_CALL(curandDestroyGenerator(m_rng));
         }
 
+        void MppiController_Impl::hardcode_last_action_trajectory(std::vector<Action> actions) {
+            if (m_last_action_trajectory.size() != actions.size()) {
+                throw std::runtime_error("Last action trajectory size does not match actions size");
+            }
+            for (size_t i = 0; i < m_last_action_trajectory.size(); i++) {
+                Action action = actions[i];
+                m_last_action_trajectory[i] = DeviceAction {action[0], action[1]};
+            }
+        };
+
+
         Action MppiController_Impl::generate_action() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
@@ -81,9 +92,9 @@ namespace controls {
 #ifdef DATA
             // we want to compare the first num_timesteps - 1 elements of averaged_trajectory and m_last_action_trajectory
             thrust::device_vector<Action> diff(num_timesteps - 1);
-            thrust::transform(averaged_trajectory.begin(), averaged_trajectory.end() - 1, m_last_action_trajectory.begin(), diff.begin(), SquaredError {});
+            thrust::transform(averaged_trajectory.begin(), averaged_trajectory.end() - 1, m_last_action_trajectory.begin(), diff.begin(), AbsoluteError {});
 
-            thrust::host_vector<Action> host_diff = diff;
+            thrust::host_vector<Action> host_diff = diff;                       
 
             m_percentage_diff_trajectory.assign(host_diff.begin(), host_diff.end());
             float sum_swangle = 0;
@@ -104,14 +115,25 @@ namespace controls {
             m_diff_statistics.mean_throttle = sum_throttle / m_percentage_diff_trajectory.size();
             m_diff_statistics.max_swangle = max_swangle;
             m_diff_statistics.max_throttle = max_throttle;
+
+            m_averaged_trajectory.clear();
+            m_averaged_trajectory.reserve(averaged_trajectory.size());
+            for (const DeviceAction& device_action : averaged_trajectory) {
+                m_averaged_trajectory.push_back(Action {device_action.data[0], device_action.data[1]});
+            }
+            m_last_action_trajectory_logging.clear();
+            m_last_action_trajectory_logging.reserve(m_last_action_trajectory.size());
+            for (const DeviceAction &device_action : m_last_action_trajectory)
+            {
+                m_last_action_trajectory_logging.push_back(Action{device_action.data[0], device_action.data[1]});
+            }
+
 #endif
 
-
-            thrust::copy(
-                averaged_trajectory.begin() + 1,
-                averaged_trajectory.end(),
-                m_last_action_trajectory.begin()
-            );
+                thrust::copy(
+                    averaged_trajectory.begin() + 1,
+                    averaged_trajectory.end(),
+                    m_last_action_trajectory.begin());
 
             m_last_action = host_action;
 
