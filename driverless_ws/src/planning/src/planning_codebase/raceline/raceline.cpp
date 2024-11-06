@@ -250,21 +250,22 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
 
         //std::cout << "SPLINE ALONG 4.1" << std::endl;
         
-        Eigen::MatrixXd rotated_points(2,2);
+        Eigen::MatrixXd rotated_points(2,1);
         //std::cout << "SPLINE ALONG 4.2" << std::endl;
         rotated_points(0,0)=rotated_point(0);
         //std::cout << "SPLINE ALONG 4.3" << std::endl;
-        rotated_points(0,1)=rotated_point(1);
+        rotated_points(1,0)=rotated_point(1);
 
         //std::cout << "SPLINE ALONG 5" << std::endl;
     
         Eigen::MatrixXd point_mat =reverse_transform(rotated_points,this->Q,this->translation_vector);
-        
+        std::cout << "SPLINE ALONG 5" << std::endl;
+
         Eigen::VectorXd point (2);
         point(0)=point_mat(0);
         point(1)=point_mat(1);
 
-        std::cout << "point: " << point << std::endl;
+        std::cout << "point mat: \n" << point_mat << std::endl ;
 
         ret = std::make_tuple(point,best_length,rotated_point,best_guess);
 
@@ -368,18 +369,20 @@ Eigen::MatrixXd transform_points(rclcpp::Logger logger,Eigen::MatrixXd& points, 
     return ret;
 }
 
+// TODO: use eigen functions instead of for loops
 Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector){
-    Eigen::MatrixXd temp(points.rows(),points.cols());
+    std::cout << Q << std::endl;
+    Eigen::MatrixXd temp(points.rows(),points.cols()); // TODO: is it necessary to copy points here? pass by value
     for(int i=0;i<temp.cols();++i){
         temp(0,i)=points(0,i);
         temp(1,i)=points(1,i);
     }
 
-    Eigen::MatrixXd ret = temp*Q;
+    Eigen::MatrixXd ret = Q.transpose()*temp;
 
-    for(int i=0;i<temp.cols();++i){
-        temp(0,i)= points(0,i)+ get_translation_vector(0);
-        temp(1,i)= points(1,i)+ get_translation_vector(1);
+    for(int i=0;i<ret.cols();++i){
+        ret(0,i) += get_translation_vector(0);
+        ret(1,i) += get_translation_vector(1);
     }
 
     return ret;
