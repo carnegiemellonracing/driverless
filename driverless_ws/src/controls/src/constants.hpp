@@ -90,7 +90,8 @@ namespace controls {
     /// Represents space the car occupies, used to calculate the size of the curvilinear lookup table.
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * fake_track_width);
     constexpr bool reset_pose_on_spline = true; ///< Sets pose to 0 vector for new spline (sensor POV)
-
+     // triangle threshold is the max distance between cones on opposing sides that we will use for triangle drawing
+    constexpr float triangle_threshold_squared = 25.0f;
 
     // Car params
 
