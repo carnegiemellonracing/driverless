@@ -201,8 +201,9 @@ int main() {
     // Yellow.close();
 
     for (int i = 0; i < chunks[0]->bluePoints.size(); i++) {
-        std::cout << chunks[0]->bluePoints[0].first << "," << chunks[0]->bluePoints[0].second << std::endl;
+        std::cout << chunks[0]->bluePoints[i].first << "," << chunks[0]->bluePoints[i].second << std::endl;
     }
+    
     
     return 0;
 }
