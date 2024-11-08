@@ -233,7 +233,9 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
             // std::cout << "first x " << i << ": "<< first_x << std::endl;
             // std::cout << "poly " << i << ": "<< this->spl_poly.nums << std::endl;
             double guess_length = arclength(this->first_der, first_x, guess);
+            std::cout << "progress " << progress << std::endl;
             std::cout << "guess length " << i << ": "<< guess_length << std::endl;
+            std::cout << "past " << past << std::endl;
             if (abs(progress - guess_length) > abs(progress - past)) //# if we did worst than before
                 break;
             best_guess = guess;
