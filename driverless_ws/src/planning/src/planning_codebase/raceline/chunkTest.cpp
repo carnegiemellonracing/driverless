@@ -100,17 +100,17 @@ double ftom(int a){
 // };
 
 std::vector<std::pair<double,double>> yellow_cones = {
-    std::make_pair(0, 0),
-    std::make_pair(20, 0),
-    std::make_pair(40, 40),
-    std::make_pair(60, 40)
+    std::make_pair(0, 20),
+    std::make_pair(20, 20),
+    std::make_pair(40, 60),
+    std::make_pair(60, 60)
 };
 
 std::vector<std::pair<double,double>> blue_cones = {
-    std::make_pair(0, 0),
-    std::make_pair(20, 0),
-    std::make_pair(40, 40),
-    std::make_pair(60, 40)
+    std::make_pair(0, 20),
+    std::make_pair(20, 20),
+    std::make_pair(40, 60),
+    std::make_pair(60, 60)
 };
 
 void testMakeSplinesVector() {
