@@ -215,10 +215,10 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         }
 
 
-        std::cout << "number of guesses: " << guesses.size() << std::endl;
-        for (double guess : guesses){
-            std::cout << guess << std::endl;
-        }
+        // std::cout << "number of guesses: " << guesses.size() << std::endl;
+        // for (double guess : guesses){
+        //     std::cout << guess << std::endl;
+        // }
 
         //std::cout << "SPLINE ALONG 3" << std::endl;
 
@@ -386,7 +386,7 @@ Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, E
         ret(1,i) += get_translation_vector(1);
     }
 
-    return ret;
+    return temp;
 }
 
 polynomial lagrange_gen(Eigen::MatrixXd& points){
