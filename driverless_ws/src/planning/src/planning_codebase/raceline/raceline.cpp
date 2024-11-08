@@ -52,6 +52,9 @@ polynomial poly_mult(polynomial a,polynomial b){
 }
 
 double poly_eval(polynomial a, double x){
+    std::cout << "poly eval" << std::endl;
+    std::cout << a.nums << std::endl;
+    std::cout << x << std::endl;
     double result = 0;
     double xval = 1.0;
     for(int i = 0; i <= a.deg; i++){
