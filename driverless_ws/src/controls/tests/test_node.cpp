@@ -1,3 +1,12 @@
+/**
+ * To-do list
+ * 1. Add noise to cone positions
+ * 2. Add a flag to merge cones that are really close together
+ * 4. Add timing
+ * 3. (When C++ SVM is ready, integrate Husain's code)
+ */
+
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -6,25 +15,27 @@
 #include <cmath>
 #include <geometry_msgs/msg/point.hpp>
 #include <glm/glm.hpp>
+
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
 #include <model/two_track/codegen/minimal_state_function.h>
 #include <filesystem>
 #include "test_node.hpp"
 
-
 namespace controls {
     namespace tests {
-        /// Add a heading to the current heading, clampiing to within [0, 2pi).
-        static constexpr float add_heading(float current, float diff) {
-            float result = current + diff;
-            if (result < 0.0f) {
-                result += 2.0f * M_PI;
+        /// @brief Clamp some heading/angle value to the range [0, 2pi)
+        static constexpr float arc_rad_adjusted(float arc_rad)
+        {
+            while (arc_rad < 0.0f)
+            {
+                arc_rad += 2.0f * M_PI;
             }
-            if (result >= 2.0f * M_PI) {
-                result -= 2.0f * M_PI;
+            while (arc_rad >= 2.0f * M_PI)
+            {
+                arc_rad -= 2.0f * M_PI;
             }
-            return result;
+            return arc_rad;
         }
 
         TestNode::TestNode(const std::string &track_specification, float lookahead)
@@ -66,7 +77,7 @@ namespace controls {
             float curr_heading = 0.0f;
             for (const auto& seg : m_all_segments) {
                 if (seg.type == SegmentType::ARC) {
-                    float next_heading = add_heading(curr_heading, seg.heading_change);
+                    float next_heading = arc_rad_adjusted(curr_heading + seg.heading_change);
                     const auto& [spline, left, right] = arc_segment_with_cones(seg.radius, curr_pos, curr_heading, next_heading);
                     m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
                     m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
@@ -91,12 +102,43 @@ namespace controls {
             return (point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y);
         }
 
+        static size_t find_closest_point(const std::vector<glm::fvec2>& points, glm::fvec2 position, float lookahead_squared, size_t prev_closest) {
+            while (get_squared_distance(points.at(prev_closest), position) >= lookahead_squared) {
+                prev_closest = (prev_closest + 1) % points.size();
+            }
+            return prev_closest;
+        }
+
+        static size_t find_furthest_point(const std::vector<glm::fvec2>& points, glm::fvec2 position, float lookahead_squared, size_t prev_furthest, size_t prev_closest) {
+            while (get_squared_distance(points.at(prev_furthest), position) < lookahead_squared) {
+                prev_furthest = (prev_furthest + 1) % points.size();
+                if (prev_furthest == prev_closest) {
+                    break;
+                }
+            }
+            return prev_furthest;
+        }
+
         void TestNode::update_visible_indices() {
-            auto [left_closest, left_furthest] = m_visible_left_idx;
-            auto [right_closest, right_furthest] = m_visible_right_idx;
+            auto [left_closest, left_furthest, right_closest, right_furthest, spline_closest, spline_furthest] = m_visible_indices;
+
             glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
 
-            while (get_squared_distance(m_all_left_cones.at(left_closest), curr_pos) >= m_lookahead_squared) {
+            // TODO: make this more modular
+            left_closest = find_closest_point(m_all_left_cones, curr_pos, m_lookahead_squared, left_closest);
+            right_closest = find_closest_point(m_all_right_cones, curr_pos, m_lookahead_squared, right_closest);
+            spline_closest = find_closest_point(m_all_spline, curr_pos, m_lookahead_squared, spline_closest);
+
+            right_furthest = find_furthest_point(m_all_right_cones, curr_pos, m_lookahead_squared, right_furthest, right_closest);
+            left_furthest = find_furthest_point(m_all_left_cones, curr_pos, m_lookahead_squared, left_furthest, left_closest);
+            spline_furthest = find_furthest_point(m_all_spline, curr_pos, m_lookahead_squared, spline_furthest, spline_closest);
+            m_visible_indices = {left_closest, left_furthest, right_closest, right_furthest, spline_closest, spline_furthest};
+        }
+
+        /**
+         *
+         *
+         *             while (get_squared_distance(m_all_left_cones.at(left_closest), curr_pos) >= m_lookahead_squared) {
                 left_closest = (left_closest + 1) % m_all_left_cones.size();
             }
 
@@ -110,7 +152,7 @@ namespace controls {
                     break;
                 }
             }
-        
+
             while (get_squared_distance(m_all_left_cones.at(left_furthest), curr_pos) < m_lookahead_squared) {
                 left_furthest = (left_furthest + 1) % m_all_left_cones.size();
                 if (left_furthest == left_closest) {
@@ -118,11 +160,16 @@ namespace controls {
                 }
             }
 
-            m_visible_left_idx = {left_closest, left_furthest};
-            m_visible_right_idx = {right_closest, right_furthest};
-        }
-
-        
+            while (get_squared_distance(m_all_spline.at(spline_closest), curr_pos) >= m_lookahead_squared) {
+                spline_closest = (spline_closest + 1) % m_all_spline.size();
+            }
+            while (get_squared_distance(m_all_spline.at(spline_furthest), curr_pos) < m_lookahead_squared) {
+                spline_furthest = (spline_furthest + 1) % m_all_spline.size();
+                if (spline_furthest == spline_closest) {
+                    break;
+                }
+            }
+         */
 
         std::vector<glm::fvec2> TestNode::arc_segment(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
             std::vector<glm::fvec2> result;
@@ -143,15 +190,7 @@ namespace controls {
             return result;
         }
 
-        static constexpr float arc_rad_adjusted(float arc_rad) {
-            if (arc_rad < - M_PI) {
-                return arc_rad + 2 * M_PI;
-            }    
-            if (arc_rad > M_PI) {
-                return arc_rad - 2 * M_PI;
-            }
-            return arc_rad;
-        }
+
 
         TestNode::SplineAndCones TestNode::arc_segment_with_cones(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
             std::vector<glm::fvec2> spline, left_cones, right_cones;
@@ -301,6 +340,22 @@ namespace controls {
 
             m_last_action_msg = msg;
         }
+        /**
+         * Fills output vector (some field of a ROS message) with the points in input vector starting at start and ending at end
+         */
+        static void fill_points(std::vector<geometry_msgs::msg::Point> & output, const std::vector<glm::fvec2> &input, size_t start, size_t end,
+                                 const std::function<geometry_msgs::msg::Point(const glm::fvec2&)> &gen_point)
+        {
+            while (start != end)
+            {
+                output.push_back(gen_point(input.at(start)));
+                start++;
+                if (start == input.size())
+                {
+                    start = 0;
+                }
+            }
+        }
 
         void TestNode::publish_track() {
             SplineMsg spline_msg {};
@@ -318,47 +373,11 @@ namespace controls {
                 return p;
             };
 
-        
-            for (const glm::fvec2& point : m_all_spline) {
-                spline_msg.frames.push_back(gen_point(point));
-            }
+            auto [left_closest, left_furthest, right_closest, right_furthest, spline_closest, spline_furthest] = m_visible_indices;
 
-            auto [closest_left, furthest_left] = m_visible_left_idx;
-            auto [closest_right, furthest_right] = m_visible_right_idx;
-
-            while (closest_left != furthest_left) {
-                cone_msg.blue_cones.push_back(gen_point(m_all_left_cones.at(closest_left)));
-                closest_left++;
-                if (closest_left == m_all_left_cones.size()) {
-                    closest_left = 0;
-                }
-            }
-
-            while (closest_right != furthest_right) {
-                cone_msg.yellow_cones.push_back(gen_point(m_all_right_cones.at(closest_right)));
-                closest_right++;
-                if (closest_right == m_all_right_cones.size()) {
-                    closest_right = 0;
-                }
-            }
-            // while (closest_left != furthest_left)
-            // {
-            //     cone_msg.blue_cones.push_back(gen_point(m_all_left_cones.at(closest_left)));
-            //     closest_left++;
-            //     if (closest_left == m_all_left_cones.size())
-            //     {
-            //         closest_left = 0;
-            //     }
-            // }
-            // while (furthest_right != closest_right)
-            // {
-            //     cone_msg.yellow_cones.push_back(gen_point(m_all_right_cones.at(furthest_right)));
-            //     furthest_right++;
-            //     if (furthest_right == m_all_right_cones.size())
-            //     {
-            //         furthest_right = 0;
-            //     }
-            // }
+            fill_points(cone_msg.blue_cones, m_all_left_cones, left_closest, left_furthest, gen_point);
+            fill_points(cone_msg.yellow_cones, m_all_right_cones, right_closest, right_furthest, gen_point);
+            fill_points(spline_msg.frames, m_all_spline, spline_closest, spline_furthest, gen_point);
 
             // for display only
             for (const glm::fvec2& point : m_all_left_cones) {
@@ -437,7 +456,7 @@ namespace controls {
                         
                         segment.type = SegmentType::ARC;
                         segment.radius = radius;
-                        segment.heading_change = (heading_change_deg * M_PI) / 180.0f;
+                        segment.heading_change = heading_change_deg;
                         // std::cout << segment.heading_change << std::endl;
                         segments.push_back(segment);
                     }
@@ -455,7 +474,7 @@ namespace controls {
     }
 }
 
-static constexpr float default_lookahead = 4.0f;
+static constexpr float default_lookahead = 8.0f;
 
 int main(int argc, char* argv[]){
     if (argc == 1) {
