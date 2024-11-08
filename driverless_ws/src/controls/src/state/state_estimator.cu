@@ -514,8 +514,7 @@ namespace controls {
 
             m_logger("filling OpenGL buffers...");
             
-            //fill_path_buffers_cones();
-            build_triangle_vertices();
+            fill_path_buffers_cones();
             fill_path_buffers_spline();
 
             m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
@@ -786,67 +785,8 @@ namespace controls {
             glBindVertexArray(0);
         }
 
-        // struct Vertex {
-        //     struct {
-        //         float x;
-        //         float y;
-        //     } world;
-
-        //     /// Curvilinear coordinates. Progress = distance along spline, offset = perpendicular distance
-        //     /// from spline, heading = angle relative to spline.
-        //     struct {
-        //         float progress;
-        //         float offset;
-        //         float heading;
-        //     } curv;
-        // };
         // Track bounds version
-        void StateEstimator_Impl::fill_path_buffers_cones() {
-            // TODO: move outside and make a private type?
-
-
-            const size_t num_splines = m_spline_frames.size();
-            const size_t num_left_cones = m_left_cone_positions.size();
-            const size_t num_right_cones = m_right_cone_positions.size();
-            const size_t min_cones = std::min(num_left_cones, num_right_cones);
-
-            std::stringstream ss;
-            ss << "# splines: " << num_splines << "# Left cones: " << num_left_cones << "# Right cones: " << num_right_cones << "\n";
-            RCLCPP_WARN(m_logger_obj, ss.str().c_str());
-
-            std::vector<StateEstimator_Impl::Vertex> vertices;
-            std::vector<GLuint> indices;
-            std::vector<float> vertices_display;
-
-            m_num_triangles = 0;
-            float progress_step = 1.f / min_cones;
-
-            if (min_cones >= 2) {
-
-                for (size_t i = 0; i < min_cones; ++i) {
-                    glm::fvec2 l1 = m_left_cone_positions.at(i).second;
-                    // glm::fvec2 l2 = m_left_cone_positions.at(i + 1).second;
-                    glm::fvec2 r1 = m_right_cone_positions.at(i).second;
-                    // glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
-
-                    vertices.push_back({{l1.x, l1.y}, {0, 0.3f, 0.0f}});
-                    vertices.push_back({{r1.x, r1.y}, {0, 0.0f, 0.3f}});
-                    m_num_triangles += 2;
-                }
-            } else {
-                RCLCPP_WARN(m_logger_obj, "WHY DO I HAVE SO FEW CONES :(");
-            }
-
-            m_num_triangles -= 2;
-
-            m_vertices = vertices_display;
-            m_triangles = indices;
-            
-            glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(StateEstimator_Impl::Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
-
-        }
-        void StateEstimator_Impl::build_triangle_vertices(){
+        void StateEstimator_Impl::fill_path_buffers_cones(){
             const size_t num_left_cones = m_left_cone_positions.size();
             const size_t num_right_cones = m_right_cone_positions.size();
             m_num_triangles = 0;
@@ -863,7 +803,6 @@ namespace controls {
             }
             //size_t start = 0;
             float distance2;
-            const size_t max_distance = 25; //MAKE THIS A REAL CONSTANT SOMEWHERE ELSE
             size_t start = 0;
             std::vector<GLuint> temp;
             for(size_t i = 0; i < num_left_cones; ++i){
@@ -873,7 +812,7 @@ namespace controls {
                 for(size_t j = start; j < num_right_cones; ++j){
                     glm::fvec2 r1 = m_right_cone_positions.at(j).second;
                     distance2 = (l1.x - r1.x)*(l1.x - r1.x) + (l1.y - r1.y)*(l1.y - r1.y);
-                    if(distance2 < max_distance)
+                    if(distance2 < triangle_threshold_squared)
                     {
                         temp.push_back(j);
                         // start = j;
@@ -896,7 +835,7 @@ namespace controls {
                 for(size_t j = start; j < num_left_cones; j++){
                     glm::fvec2 l1 = m_left_cone_positions.at(j).second;
                     distance2 = (l1.x - r1.x)*(l1.x - r1.x) + (l1.y - r1.y)*(l1.y - r1.y);
-                    if(distance2 < max_distance)
+                    if(distance2 < triangle_threshold_squared)
                     {
                         temp.push_back(j);
                         // start = j;
@@ -923,7 +862,7 @@ namespace controls {
             //     }
             // }
     
-            RCLCPP_WARN(m_logger_obj, ss.str().c_str());
+            RCLCPP_DEBUG(m_logger_obj, ss.str().c_str());
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(StateEstimator_Impl::Vertex) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
 
