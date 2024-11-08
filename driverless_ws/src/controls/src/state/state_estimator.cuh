@@ -215,10 +215,7 @@ namespace controls {
                     float heading;
                 } curv;
             };
-            
-            void build_triangle_vertices();
-
-
+        
 
             /// Stores the sequence of (x,y) spline points from path planning.
             std::vector<glm::fvec2> m_spline_frames;
