@@ -258,7 +258,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
 
         //std::cout << "SPLINE ALONG 5" << std::endl;
     
-        Eigen::MatrixXd point_mat =reverse_transform(rotated_points,this->Q,this->translation_vector);
+        Eigen::MatrixXd point_mat = reverse_transform(rotated_points,this->Q,this->translation_vector);
         // std::cout << "SPLINE ALONG 5" << std::endl;
 
         Eigen::VectorXd point (2);
@@ -385,7 +385,7 @@ Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, E
         ret(1,i) += get_translation_vector(1);
     }
 
-    return ret;
+    return temp;
 }
 
 polynomial lagrange_gen(Eigen::MatrixXd& points){
