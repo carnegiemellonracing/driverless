@@ -378,7 +378,7 @@ Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, E
         temp(1,i)=points(1,i);
     }
 
-    Eigen::MatrixXd ret = Q.transpose()*temp;
+    Eigen::MatrixXd ret = Q*temp;
 
     for(int i=0;i<ret.cols();++i){
         ret(0,i) += get_translation_vector(0);
