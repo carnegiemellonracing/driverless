@@ -371,7 +371,7 @@ Eigen::MatrixXd transform_points(rclcpp::Logger logger,Eigen::MatrixXd& points, 
 
 // TODO: use eigen functions instead of for loops
 Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector){
-    std::cout << Q << std::endl;
+    //std::cout << Q << std::endl;
     Eigen::MatrixXd temp(points.rows(),points.cols()); // TODO: is it necessary to copy points here? pass by value
     for(int i=0;i<temp.cols();++i){
         temp(0,i)=points(0,i);
@@ -713,7 +713,7 @@ int searchSorted (std::vector<double> arr, double target) {
  */
 std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
                                                std::vector<double> cumulated_lengths, int precision) {
-    std::cout << "progress: " << progress << std::endl;
+    // std::cout << "progress: " << progress << std::endl;
     int index = searchSorted(cumulated_lengths, progress); //TODO: use std::binary_search
     //std::cout << "searchsorted" << std::endl;
     //std::cout << index << std::endl;
