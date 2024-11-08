@@ -82,7 +82,6 @@ namespace controls {
 
             std::deque<Segment> parse_segments_specification(std::string track_specifications_path);
             void update_visible_indices();
-            
 
             rclcpp::Subscription<ActionMsg>::SharedPtr m_subscriber;
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
@@ -97,8 +96,17 @@ namespace controls {
             std::vector<glm::fvec2> m_all_left_cones;
             std::vector<glm::fvec2> m_all_right_cones;
             std::vector<glm::fvec2> m_all_spline;
-            std::pair<size_t, size_t> m_visible_left_idx;
-            std::pair<size_t, size_t> m_visible_right_idx;
+
+            struct Visibility {
+                size_t left_start_idx;
+                size_t left_end_idx;
+                size_t right_start_idx;
+                size_t right_end_idx;
+                size_t spline_start_idx;
+                size_t spline_end_idx;
+            };
+            Visibility m_visible_indices; ///< The indices of m_all_left_cones, m_all_right_cones, and m_all_spline that are visible to the car.
+
             const float m_lookahead;
             const float m_lookahead_squared;
 
