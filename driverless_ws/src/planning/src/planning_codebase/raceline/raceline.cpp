@@ -214,10 +214,10 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         }
 
 
-        // std::cout << "number of guesses: " << guesses.size() << std::endl;
-        // for (double guess : guesses){
-        //     std::cout << guess << std::endl;
-        // }
+        std::cout << "number of guesses: " << guesses.size() << std::endl;
+        for (double guess : guesses){
+            std::cout << guess << std::endl;
+        }
 
         //std::cout << "SPLINE ALONG 3" << std::endl;
 
