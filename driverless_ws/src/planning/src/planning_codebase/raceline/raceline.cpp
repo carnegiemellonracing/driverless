@@ -392,7 +392,7 @@ Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, E
         ret(1,i) += get_translation_vector(1);
     }
 
-    return temp;
+    return ret;
 }
 
 polynomial lagrange_gen(Eigen::MatrixXd& points){
