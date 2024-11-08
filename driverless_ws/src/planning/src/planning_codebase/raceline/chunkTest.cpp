@@ -202,7 +202,7 @@ int main() {
 
     for (int j = 0; j < chunks.size(); j++) {
         for (int i = 0; i < chunks[j]->bluePoints.size(); i++) {
-            std::cout << chunks[j]->bluePoints[i].first << "," << chunks[j]->bluePoints[i].second << std::endl;
+            std::cout << "(" << chunks[j]->bluePoints[i].first << "," << chunks[j]->bluePoints[i].second << ")" << std::endl;
         }
     }    
     
