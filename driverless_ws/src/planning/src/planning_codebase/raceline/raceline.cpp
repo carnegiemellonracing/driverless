@@ -224,7 +224,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         //  Evaluate progress along the (extrapolated) spline
         //  As arclength is expensive and cannot take multiple points
         //  at the same time, it is faster to use a for loop
-        double past = 0, best_guess = 0, best_length = 0;
+        double past = 0.1, best_guess = 0.1, best_length = 0;
         int i = 0;
         for (double guess : guesses){
             // std::cout << "guess " << i << ": "<< guess << std::endl;
