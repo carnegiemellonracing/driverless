@@ -165,6 +165,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
 
 
     double first_x = this->get_rotated_points()(0,0);
+    std::cout << "first x: " << first_x << std::endl;
     double last_x = this->get_rotated_points()(0,this->get_rotated_points().cols()-1);
 
     //std::cout << "SPLINE ALONG 1" << std::endl;
