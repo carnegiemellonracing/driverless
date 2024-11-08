@@ -176,6 +176,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
 
     if (ratio >= 2){
         double x = first_x + delta*ratio;
+        std::cout << "hello x: " << x << std::endl;
         double shoot = arclength(this->first_der,first_x,x);
         
         double lower_bound = first_x + delta * (ratio - 1);
