@@ -1,4 +1,4 @@
-    #ifndef GLM_FORCE_QUAT_DATA_WXYZ
+#ifndef GLM_FORCE_QUAT_DATA_WXYZ
 #define GLM_FORCE_QUAT_DATA_WXYZ
 #endif
 
@@ -735,7 +735,8 @@ namespace controls {
 
             glBindVertexArray(m_gl_path.vao);
             glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, m_num_triangles);
+            glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
+            // glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
 
 
         }
@@ -808,67 +809,91 @@ namespace controls {
             glBindVertexArray(0);
         }
 
-        
         // Track bounds version
-        void StateEstimator_Impl::fill_path_buffers_cones() {
-            // TODO: move outside and make a private type?
-            struct Vertex {
-                struct {
-                    float x;
-                    float y;
-                } world;
-
-                /// Curvilinear coordinates. Progress = distance along spline, offset = perpendicular distance
-                /// from spline, heading = angle relative to spline.
-                struct {
-                    float progress;
-                    float offset;
-                    float heading;
-                } curv;
-            };
-
-            const size_t num_splines = m_spline_frames.size();
-            const size_t num_left_cones = m_left_cone_points.size();
-            const size_t num_right_cones = m_right_cone_points.size();
-            const size_t min_cones = std::min(num_left_cones, num_right_cones);
-
-            std::stringstream ss;
-            ss << "# splines: " << num_splines << "# Left cones: " << num_left_cones << "# Right cones: " << num_right_cones << "\n";
-            RCLCPP_WARN(m_logger_obj, ss.str().c_str());
-
-            std::vector<Vertex> vertices;
-            std::vector<GLuint> indices;
-            std::vector<float> vertices_display;
-
+        void StateEstimator_Impl::fill_path_buffers_cones(){
+            const size_t num_left_cones = m_left_cone_positions.size();
+            const size_t num_right_cones = m_right_cone_positions.size();
             m_num_triangles = 0;
-            float progress_step = 1.f / min_cones;
-
-            if (min_cones >= 2) {
-
-
-                for (size_t i = 0; i < min_cones; ++i) {
-                    glm::fvec2 l1 = m_left_cone_points.at(i);
-                    glm::fvec2 r1 = m_right_cone_points.at(i);
-                    // glm::fvec2 r2 = m_right_cone_positions.at(i + 1).second;
-
-                    vertices.push_back({{l1.x, l1.y}, {0, 0.3f, 0.0f}});
-                    vertices.push_back({{r1.x, r1.y}, {0, 0.0f, 0.3f}});
-                    m_num_triangles += 2;
-                }
-            } else {
-                RCLCPP_WARN(m_logger_obj, "WHY DO I HAVE SO FEW CONES :(");
+            std::vector<StateEstimator_Impl::Vertex> indices;
+            std::vector<StateEstimator_Impl::Vertex> vertices;
+            //vertices.reserve(num_left_cones + num_right_cones);
+            for (size_t i = 0; i < num_left_cones; ++i) {
+                    glm::fvec2 l1 = m_left_cone_positions.at(i).second;
+                    vertices.push_back({{l1.x, l1.y}, {0.0f, 0.3f, 0.0f}});
             }
+            for (size_t i = 0; i < num_right_cones; ++i) {
+                    glm::fvec2 r1 = m_right_cone_positions.at(i).second;
+                    vertices.push_back({{r1.x, r1.y}, {0.0f, 0.3f, 0.0f}});
+            }
+            //size_t start = 0;
+            float distance2;
+            size_t start = 0;
+            std::vector<GLuint> temp;
+            for(size_t i = 0; i < num_left_cones; ++i){
+                glm::fvec2 l1 = m_left_cone_positions.at(i).second;
+                distance2 = 0;
+                temp.clear();
+                for(size_t j = start; j < num_right_cones; ++j){
+                    glm::fvec2 r1 = m_right_cone_positions.at(j).second;
+                    distance2 = (l1.x - r1.x)*(l1.x - r1.x) + (l1.y - r1.y)*(l1.y - r1.y);
+                    if(distance2 < triangle_threshold_squared)
+                    {
+                        temp.push_back(j);
+                        // start = j;
+                    }
+                }
+                if(temp.size() > 1){
+                    for(size_t k = 0; k < temp.size()-1; ++k){
+                        indices.push_back(vertices.at(i));
+                        indices.push_back(vertices.at(temp.at(k)+ num_left_cones));
+                        indices.push_back(vertices.at(temp.at(k+1) + num_left_cones));
+                        m_num_triangles += 1;
+                    }
+                }
+            }
+            start = 0;
+            for(size_t i = 0; i < num_right_cones; ++i){
+                glm::fvec2 r1 = m_right_cone_positions.at(i).second;
+                distance2 = 0;
+                temp.clear();
+                for(size_t j = start; j < num_left_cones; j++){
+                    glm::fvec2 l1 = m_left_cone_positions.at(j).second;
+                    distance2 = (l1.x - r1.x)*(l1.x - r1.x) + (l1.y - r1.y)*(l1.y - r1.y);
+                    if(distance2 < triangle_threshold_squared)
+                    {
+                        temp.push_back(j);
+                        // start = j;
+                    }
+                }
+                if(temp.size() > 1){
+                    for(size_t k = 0; k < temp.size()-1; ++k){
+                        indices.push_back(vertices.at(i + num_left_cones));
+                        indices.push_back(vertices.at(temp.at(k)));
+                        indices.push_back(vertices.at(temp.at(k+1)));
+                        m_num_triangles += 1;
+                    }
+                }
 
-            m_num_triangles -= 2;
-
-            m_vertices = vertices_display;
-            m_triangles = indices;
-            
+            }
+            std::stringstream ss;
+            ss << "Start of right at: " << num_left_cones;
+            for(size_t i = 0; i < indices.size(); i++){
+                ss << "Index: " << i << " Point x: " << indices.at(i).world.x << "Point y: "<< indices.at(i).world.y << "\n";
+            }
+            // if(indices.size() > 2) {
+            //     for(size_t i = 0; i < indices.size()-2; i += 3){
+            //         ss << "Index: " << indices.at(i) << " 2: " << indices.at(i+1) << " 3: " << indices.at(i+2) <<"------";
+            //     }
+            // }
+    
+            RCLCPP_DEBUG(m_logger_obj, ss.str().c_str());
             glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(StateEstimator_Impl::Vertex) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
+
+            // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
+            // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
 
         }
-        
         
         // Offset from spline version
         /**
