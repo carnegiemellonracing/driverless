@@ -43,6 +43,7 @@ namespace controls {
                 Trajectory(glm::fvec4 color, float thickness, GLuint program);
 
                 void draw();
+                void draw_points();
 
                 std::vector<float> vertex_buf;
 
@@ -83,6 +84,8 @@ namespace controls {
             std::unique_ptr<Trajectory> m_spline = nullptr;
 			std::unique_ptr<Trajectory> m_left_cone_trajectory = nullptr;
 			std::unique_ptr<Trajectory> m_right_cone_trajectory = nullptr;
+            std::unique_ptr<Trajectory> m_left_cone_trajectory_points = nullptr;
+			std::unique_ptr<Trajectory> m_right_cone_trajectory_points = nullptr;
             std::unique_ptr<Trajectory> m_left_cone_trajectory_visible = nullptr;
             std::unique_ptr<Trajectory> m_right_cone_trajectory_visible = nullptr;
             std::unique_ptr<Trajectory> m_best_guess = nullptr;
