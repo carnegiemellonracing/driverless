@@ -193,8 +193,8 @@ int main() {
             Yellow << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
         }
 
-        Blue << "#";
-        Yellow << "#";
+        Blue << "#" << std::endl;
+        Yellow << "#" << std::endl;
     }
 
     Blue.close();
