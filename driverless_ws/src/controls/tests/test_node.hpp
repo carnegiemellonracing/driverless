@@ -42,7 +42,7 @@ namespace controls {
         class TestNode : public rclcpp::Node {
         public:
             /// Constructor reads in the track specification, populates the vector of all segments and cones
-            TestNode (const std::string& track_specification, float lookahead);
+            TestNode (const std::string& track_specification, const std::string& log_path, float lookahead);
             
 
         private:
@@ -82,6 +82,7 @@ namespace controls {
 
             std::deque<Segment> parse_segments_specification(std::string track_specifications_path);
             void update_visible_indices();
+            void update_track_time();
 
             rclcpp::Subscription<ActionMsg>::SharedPtr m_subscriber;
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
@@ -124,6 +125,16 @@ namespace controls {
             Visibility m_initial_visible_indices;
             float m_spline_end_heading = 0;
             ActionMsg m_last_action_msg;
+
+            /// For lap tracking
+            std::vector<glm::fvec2> m_start_line;
+            std::vector<glm::fvec2> m_end_line;
+            bool m_seen_start = false;
+            bool m_is_loop = false;
+            rclcpp::Time m_start_time;
+            rclcpp::Time m_end_time;
+            size_t m_lap_count = 1;
+            std::string m_log_path;
         };
 
     }
