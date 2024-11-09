@@ -44,7 +44,7 @@ namespace controls {
             return arc_rad;
         }
 
-        TestNode::TestNode(const std::string &track_specification, float lookahead)
+        TestNode::TestNode(const std::string &track_specification, const std::string &log_path, float lookahead)
             : Node{"test_node"},
 
               // ROS stuff
@@ -103,6 +103,33 @@ namespace controls {
             update_visible_indices();
 
             m_time = get_clock()->now();
+
+            // timing track stuff
+            m_start_line.push_back(m_all_left_cones[0]);
+            m_start_line.push_back(m_all_right_cones[0]);
+            m_end_line.push_back(m_all_left_cones.back());
+            m_end_line.push_back(m_all_right_cones.back());
+            m_log_path = log_path;
+            update_track_time();
+        }
+        float distanceToLine(glm::fvec2 point, std::vector<glm::fvec2> line) {
+            glm::fvec2 s_l = line[0];
+            glm::fvec2 s_r = line[1];
+
+            float m = point.x;
+            float n = point.y;
+            float A = s_r.y - s_l.y;
+            float B = s_l.x - s_r.x;
+            float C = s_r.x * s_l.y - s_r.y * s_l.x;
+
+            // Perpendicular distance from point (m, n) to the line
+            float numerator = std::abs(A * m + B * n + C);
+            float denominator = std::sqrt(A * A + B * B);
+
+            return numerator / denominator;
+        }
+        static bool is_within_line(glm::fvec2 point, std::vector<glm::fvec2> line, float err) {
+            return distanceToLine(point, line) < err;
         }
 
         static constexpr float get_squared_distance(glm::fvec2 point1, glm::fvec2 point2) {
@@ -140,6 +167,61 @@ namespace controls {
             left_furthest = find_furthest_point(m_all_left_cones, curr_pos, m_lookahead_squared, left_furthest, left_closest);
             spline_furthest = find_furthest_point(m_all_spline, curr_pos, m_lookahead_squared, spline_furthest, spline_closest);
             m_visible_indices = {left_closest, left_furthest, right_closest, right_furthest, spline_closest, spline_furthest};
+        }
+
+        void TestNode::update_track_time(){
+            glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
+            bool within_start = false;
+            bool within_end = false;
+            
+            if (!m_is_loop) {
+                within_start = is_within_line(curr_pos, m_start_line, 0.5f);
+                within_end = is_within_line(curr_pos, m_end_line, 0.5f);
+            } else {
+                within_start = is_within_line(curr_pos, m_start_line, 0.5f);
+            }
+            //std::cout << "ONE sx: " << m_start_line[0].x << " sy: " << m_start_line[0].y << "\n";
+            //std::cout << "TWO sx: " << m_start_line[1].x << " sy: " << m_start_line[1].x << "\n";
+
+            //std::cout << "ONE sx: " << m_end_line[0].x << " sy: " << m_end_line[0].y << "\n";
+            //std::cout << "TWO sx: " << m_end_line[1].x << " sy: " << m_end_line[1].x << "\n";
+
+            bool m_is_loop = m_is_loop || within_start && within_end;
+            std::cout << "Track is loop? " << m_is_loop << "\n";
+            std::ofstream outputFile(m_log_path, std::ios::app);
+            if (!m_is_loop) { //track is not a loop
+                if (within_start && !m_seen_start) {
+                    m_seen_start = true;
+                    m_start_time = get_clock()->now();
+                } else if (within_end && m_seen_start) {
+                    m_end_time = get_clock()->now();
+                    rclcpp::Duration elapsed = m_end_time - m_start_time;
+                    if (outputFile) {
+                        outputFile << "Lap:" << m_lap_count << ":" << elapsed.seconds() << std::endl;
+                    }
+                }
+            } else { //track is a loop
+                if (within_start && !m_seen_start) { // at the start of loop
+                    m_seen_start = true;
+                    m_start_time = get_clock()->now();
+                } else if (within_start && m_seen_start) { // completed a lap
+                    m_end_time = get_clock()->now();
+                    rclcpp::Duration elapsed = m_end_time - m_start_time;
+
+                    if (elapsed.seconds() > 2.0f){
+                        if (outputFile) {
+                            outputFile << "Lap:" << m_lap_count++ <<":" << elapsed.seconds() << std::endl;
+
+                            std::cout<< "Lap:" << m_lap_count++ <<":" << elapsed.seconds() << "\n";
+                            std::cout<<"FILE FOUND\n";
+                        }
+                        else {
+                            std::cout<< "Lap:" << m_lap_count++ <<":" << elapsed.seconds() << "\n";
+                        }
+                    }
+                    m_seen_start = false;
+                }
+            }
         }
 
 
@@ -301,7 +383,7 @@ namespace controls {
 
             gsl_odeiv2_driver_free(driver);
             update_visible_indices();
-
+            update_track_time();
             // float x_diff = (m_world_state[0] - m_finish_line.x);
             // float y_diff = (m_world_state[1] - m_finish_line.y);
             // if (x_diff * x_diff + y_diff * y_diff < ) {
@@ -348,6 +430,7 @@ namespace controls {
             }
         }
 
+        
         void TestNode::publish_track() {
             SplineMsg spline_msg {};
             ConeMsg cone_msg {};
@@ -483,6 +566,11 @@ int main(int argc, char* argv[]){
         look_ahead = std::stof(argv[2]);
     }
 
+    std::string track_lap_log_path;
+    if (argc == 4) {
+        track_lap_log_path = argv[3];
+    }
+
     std::string track_spec_full_path = "/home/controls_copy/driverless/driverless_ws/src/controls/tests/" + track_specification;
     std::cout << "track_spec_full_path: " << track_spec_full_path << std::endl;
 
@@ -492,9 +580,15 @@ int main(int argc, char* argv[]){
         std::cout << "Track specs exist\n";
     }
 
+    if (!std::filesystem::exists(track_lap_log_path)) {
+        std::cout << "File named with that output name does not exist.\n";
+    } else {
+        std::cout << "Path for logs exists.\n";
+    }
+
     rclcpp::init(argc, argv);
 
-    rclcpp::spin(std::make_shared<controls::tests::TestNode>(track_spec_full_path, look_ahead));
+    rclcpp::spin(std::make_shared<controls::tests::TestNode>(track_spec_full_path, track_lap_log_path, look_ahead));
 
     rclcpp::shutdown();
     return 0;
