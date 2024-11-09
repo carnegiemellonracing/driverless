@@ -120,6 +120,8 @@ namespace controls {
 
             SegmentType m_last_segment_type = SegmentType::NONE;
             glm::fvec2 m_spline_end_pos = {0, 0};
+            glm::fvec2 m_finish_line;
+            Visibility m_initial_visible_indices;
             float m_spline_end_heading = 0;
             ActionMsg m_last_action_msg;
         };

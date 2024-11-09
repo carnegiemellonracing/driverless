@@ -1,3 +1,12 @@
+/**
+ * To-Do list:
+ * - Add drawing of small triangles corresponding to cones
+ * - Automatic zoom-out/pan
+ * - car boundary
+ * 
+ */
+
+
 #ifndef GLM_FORCE_QUAT_DATA_WXYZ
 #define GLM_FORCE_QUAT_DATA_WXYZ
 #endif
@@ -811,35 +820,32 @@ namespace controls {
 
         // Track bounds version
         void StateEstimator_Impl::fill_path_buffers_cones(){
-            const size_t num_left_cones = m_left_cone_positions.size();
-            const size_t num_right_cones = m_right_cone_positions.size();
+            const size_t num_left_cones = m_left_cone_points.size();
+            const size_t num_right_cones = m_right_cone_points.size();
             m_num_triangles = 0;
             std::vector<StateEstimator_Impl::Vertex> indices;
             std::vector<StateEstimator_Impl::Vertex> vertices;
             //vertices.reserve(num_left_cones + num_right_cones);
             for (size_t i = 0; i < num_left_cones; ++i) {
-                    glm::fvec2 l1 = m_left_cone_positions.at(i).second;
+                    glm::fvec2 l1 = m_left_cone_points.at(i);
                     vertices.push_back({{l1.x, l1.y}, {0.0f, 0.3f, 0.0f}});
             }
             for (size_t i = 0; i < num_right_cones; ++i) {
-                    glm::fvec2 r1 = m_right_cone_positions.at(i).second;
+                    glm::fvec2 r1 = m_right_cone_points.at(i);
                     vertices.push_back({{r1.x, r1.y}, {0.0f, 0.3f, 0.0f}});
             }
-            //size_t start = 0;
             float distance2;
-            size_t start = 0;
             std::vector<GLuint> temp;
             for(size_t i = 0; i < num_left_cones; ++i){
-                glm::fvec2 l1 = m_left_cone_positions.at(i).second;
+                glm::fvec2 l1 = m_left_cone_points.at(i);
                 distance2 = 0;
                 temp.clear();
-                for(size_t j = start; j < num_right_cones; ++j){
-                    glm::fvec2 r1 = m_right_cone_positions.at(j).second;
+                for(size_t j = 0; j < num_right_cones; ++j){
+                    glm::fvec2 r1 = m_right_cone_points.at(j);
                     distance2 = (l1.x - r1.x)*(l1.x - r1.x) + (l1.y - r1.y)*(l1.y - r1.y);
                     if(distance2 < triangle_threshold_squared)
                     {
                         temp.push_back(j);
-                        // start = j;
                     }
                 }
                 if(temp.size() > 1){
@@ -851,18 +857,16 @@ namespace controls {
                     }
                 }
             }
-            start = 0;
             for(size_t i = 0; i < num_right_cones; ++i){
-                glm::fvec2 r1 = m_right_cone_positions.at(i).second;
+                glm::fvec2 r1 = m_right_cone_points.at(i);
                 distance2 = 0;
                 temp.clear();
-                for(size_t j = start; j < num_left_cones; j++){
-                    glm::fvec2 l1 = m_left_cone_positions.at(j).second;
+                for(size_t j = 0; j < num_left_cones; j++){
+                    glm::fvec2 l1 = m_left_cone_points.at(j);
                     distance2 = (l1.x - r1.x)*(l1.x - r1.x) + (l1.y - r1.y)*(l1.y - r1.y);
                     if(distance2 < triangle_threshold_squared)
                     {
                         temp.push_back(j);
-                        // start = j;
                     }
                 }
                 if(temp.size() > 1){
@@ -875,6 +879,8 @@ namespace controls {
                 }
 
             }
+            // TODO: decide whether we are going to keep using glDrawArrays or try to fix glDrawElements
+
             std::stringstream ss;
             ss << "Start of right at: " << num_left_cones;
             for(size_t i = 0; i < indices.size(); i++){
