@@ -3,6 +3,11 @@
 #include <math.h>
 #include "../midline/generator.hpp"
 
+
+// tunable params for chunks
+#define CHUNK_LEN_THRESH 15;
+#define CHUNK_CURVE_THRESH 1;
+
 /**
  * Constructor for chunks.
  */
@@ -31,10 +36,9 @@ double Chunk::calcRunningAvgCurvature() {
  *         include given curvature point, false otherwise.
  */
 bool Chunk::checkStopChunk(double newCurvature) {
-    double sigDiff = 1; // TODO: tunable param, move to top of file and use macros
     double avgCurve = calcRunningAvgCurvature();
-    if (abs(avgCurve - newCurvature) >= sigDiff ||
-            (endProgress - startProgress) > 15) {
+    if (abs(avgCurve - newCurvature) >= CHUNK_CURVE_THRESH ||
+            (endProgress - startProgress) > CHUNK_LEN_THRESH) {
         return true;
     }
     return false;

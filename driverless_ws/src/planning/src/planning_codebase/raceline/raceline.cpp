@@ -601,12 +601,17 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
  * @return Vector of splines, vector of their cumulative lengths. 
  */
 std::pair<std::vector<Spline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points) {
+    // Eigen::MatrixXd pointMatrix(2, points.size() + 1);
     Eigen::MatrixXd pointMatrix(2, points.size());
     for(int i = 0; i < points.size(); i++){
         assert(i < pointMatrix.cols());
         pointMatrix(0, i) = points[i].first;
         pointMatrix(1, i) = points[i].second;
     }
+    // add first point again at the end to make cycle with splines
+    // uncomment with cycle tests
+    // pointMatrix(0, points.size()) = points[0].first;
+    // pointMatrix(1, points.size()) = points[0].second;
 
     ////std::cout << pointMatrix << std::endl;
 
