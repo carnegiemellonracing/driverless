@@ -26,7 +26,7 @@
 #include <model/two_track/codegen/minimal_state_function.h>
 #include <filesystem>
 #include "test_node.hpp"
-#include <utils/general_utils.hpp>
+//#include <utils/general_utils.hpp>
 
 namespace controls {
     namespace tests {
@@ -483,7 +483,7 @@ int main(int argc, char* argv[]){
         look_ahead = std::stof(argv[2]);
     }
 
-    std::string track_spec_full_path = "/home/controls_copy/driverless/driverless_ws/src/controls/tests/" + track_specification;
+    std::string track_spec_full_path = "/home/perceptions/driverless/driverless_ws/src/controls/tests/" + track_specification;
     std::cout << "track_spec_full_path: " << track_spec_full_path << std::endl;
 
     if (!std::filesystem::exists(track_spec_full_path)) {
