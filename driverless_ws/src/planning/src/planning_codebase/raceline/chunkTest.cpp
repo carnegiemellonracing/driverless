@@ -178,33 +178,33 @@ int main() {
     // }
 
     // outputting chunks
-    std::ofstream Blue("blue_points.txt");
-    std::ofstream Yellow("yellow_points.txt");
+    // std::ofstream Blue("blue_points.txt");
+    // std::ofstream Yellow("yellow_points.txt");
 
     for (int i  = 0; i < chunks.size(); i++) {
         // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
         // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
 
         for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
-            Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+            std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
         }
 
-        for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
-            Yellow << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
-        }
+        // for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
+        //     Yellow << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
+        // }
 
-        Blue << "#" << std::endl;
-        Yellow << "#" << std::endl;
+        std::cout << "#" << std::endl;
+        // Yellow << "#" << std::endl;
     }
 
-    Blue.close();
-    Yellow.close();
+    // Blue.close();
+    // Yellow.close();
 
-    for (int j = 0; j < chunks.size(); j++) {
-        for (int i = 0; i < chunks[j]->bluePoints.size(); i++) {
-            std::cout << "(" << chunks[j]->bluePoints[i].first << "," << chunks[j]->bluePoints[i].second << ")" << std::endl;
-        }
-    }    
+    // for (int j = 0; j < chunks.size(); j++) {
+    //     for (int i = 0; i < chunks[j]->bluePoints.size(); i++) {
+    //         std::cout << "(" << chunks[j]->bluePoints[i].first << "," << chunks[j]->bluePoints[i].second << ")" << std::endl;
+    //     }
+    // }    
     
     return 0;
 }

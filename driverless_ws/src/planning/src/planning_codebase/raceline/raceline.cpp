@@ -272,7 +272,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         point(0)=point_mat(0);
         point(1)=point_mat(1);
 
-        std::cout << "point mat: \n" << point_mat << std::endl ;
+        // std::cout << "point mat: \n" << point_mat << std::endl ;
 
         ret = std::make_tuple(point,best_length,rotated_point,best_guess);
 
