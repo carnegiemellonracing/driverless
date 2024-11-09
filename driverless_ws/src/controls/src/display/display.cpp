@@ -110,6 +110,18 @@ namespace controls {
             assert(vertex_buf.size() % 2 == 0);
             glDrawArrays(GL_LINE_STRIP, 0, vertex_buf.size() / 2);
         }
+        void Display::Trajectory::draw_points() {
+            glUniform4f(color_loc, color.x, color.y, color.z, color.w);
+            //glLineWidth(thickness);
+
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertex_buf.size(), vertex_buf.data(), GL_DYNAMIC_DRAW);
+
+            glBindVertexArray(VAO);
+
+            assert(vertex_buf.size() % 2 == 0);
+            glDrawArrays(GL_TRIANGLES, 0, vertex_buf.size()/2);
+        }
 
         Display::Display(
             std::shared_ptr<mppi::MppiController> controller,
@@ -140,6 +152,8 @@ namespace controls {
             m_right_cone_trajectory = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 0.0f, 1.0f}, 3, m_trajectory_shader_program);
             m_left_cone_trajectory_visible = std::make_unique<Trajectory>(glm::fvec4 {252.0f, 15.0f, 192.0f, 1.0f}, 3, m_trajectory_shader_program);
             m_right_cone_trajectory_visible = std::make_unique<Trajectory>(glm::fvec4 {50.0f, 205.0f, 5.0f, 1.0f}, 3, m_trajectory_shader_program);
+            m_left_cone_trajectory_points = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 3, m_trajectory_shader_program);
+            m_right_cone_trajectory_points = std::make_unique<Trajectory>(glm::fvec4 {50.0f, 205.0f, 5.0f, 1.0f}, 3, m_trajectory_shader_program);
         }
 
         void Display::init_best_guess() {
@@ -228,27 +242,52 @@ namespace controls {
 
         void Display::draw_cones()
         {
+            const float radius = .25;
+            const float sqr3b2 = .866;
             assert(m_left_cone_trajectory != nullptr);
             assert(m_right_cone_trajectory != nullptr);
+            assert(m_left_cone_trajectory_points != nullptr);
+            assert(m_right_cone_trajectory_points != nullptr);
 
             const auto& left_cone_points = m_all_left_cone_points;
             const auto& right_cone_points = m_all_right_cone_points;
             m_left_cone_trajectory->vertex_buf = std::vector<float>(left_cone_points.size() * 2);
+            m_left_cone_trajectory_points->vertex_buf = std::vector<float>(left_cone_points.size()*6);
             for (size_t i = 0; i < left_cone_points.size(); i++) {
+                //Draw trajectory line
                 m_left_cone_trajectory->vertex_buf[2 * i] = left_cone_points[i].x;
                 m_left_cone_trajectory->vertex_buf[2 * i + 1] = left_cone_points[i].y;
+                //Draw cone triangle points
+                m_left_cone_trajectory_points->vertex_buf[6*i] = left_cone_points[i].x-radius*sqr3b2;
+                m_left_cone_trajectory_points->vertex_buf[6*i+1] = left_cone_points[i].y-radius/2;
+                m_left_cone_trajectory_points->vertex_buf[6*i+2] = left_cone_points[i].x+radius*sqr3b2;
+                m_left_cone_trajectory_points->vertex_buf[6*i+3] = left_cone_points[i].y-radius/2;
+                m_left_cone_trajectory_points->vertex_buf[6*i+4] = left_cone_points[i].x;
+                m_left_cone_trajectory_points->vertex_buf[6*i+5] = left_cone_points[i].y+radius;
+                
+
             }
 
             m_right_cone_trajectory->vertex_buf = std::vector<float>(right_cone_points.size() * 2);
+            m_right_cone_trajectory_points->vertex_buf = std::vector<float>(right_cone_points.size()*6);
             for (size_t i = 0; i < right_cone_points.size(); i++) {
+                // Draw trajectory line
                 m_right_cone_trajectory->vertex_buf[2 * i] = right_cone_points[i].x;
                 m_right_cone_trajectory->vertex_buf[2 * i + 1] = right_cone_points[i].y;
+                // Draw cone triangle points
+                m_right_cone_trajectory_points->vertex_buf[6*i] = right_cone_points[i].x-radius*sqr3b2;
+                m_right_cone_trajectory_points->vertex_buf[6*i+1] = right_cone_points[i].y-radius/2;
+                m_right_cone_trajectory_points->vertex_buf[6*i+2] = right_cone_points[i].x+radius*sqr3b2;
+                m_right_cone_trajectory_points->vertex_buf[6*i+3] = right_cone_points[i].y-radius/2;
+                m_right_cone_trajectory_points->vertex_buf[6*i+4] = right_cone_points[i].x;
+                m_right_cone_trajectory_points->vertex_buf[6*i+5] = right_cone_points[i].y+radius;
             }
+
 
             m_left_cone_trajectory->draw();
             m_right_cone_trajectory->draw();
-            m_left_cone_trajectory_visible->draw();
-            m_right_cone_trajectory_visible->draw();
+            m_left_cone_trajectory_points->draw_points();
+            m_right_cone_trajectory_points->draw_points();
         }
 
         void Display::draw_best_guess() {
@@ -401,6 +440,8 @@ namespace controls {
                 draw_best_guess();
                 m_left_cone_trajectory->draw();
                 m_right_cone_trajectory->draw();
+                m_left_cone_trajectory_points->draw_points();
+                m_right_cone_trajectory_points->draw_points();
 
                 SDL_GL_SwapWindow(window);
 
