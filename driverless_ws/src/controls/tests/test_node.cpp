@@ -188,7 +188,10 @@ namespace controls {
 
             bool m_is_loop = m_is_loop || within_start && within_end;
             std::cout << "Track is loop? " << m_is_loop << "\n";
-            std::ofstream outputFile(m_log_path, std::ios::app);
+            std::ofstream outputFile {m_log_path, std::ios::app};
+            outputFile << "HIIII\n";
+            
+
             if (!m_is_loop) { //track is not a loop
                 if (within_start && !m_seen_start) {
                     m_seen_start = true;
