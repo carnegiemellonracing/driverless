@@ -63,10 +63,19 @@ for line in linesYellow:
 
 plt.style.use('dark_background')
 
+i = 0
 for (c_x, c_y) in zip(b_cur_chunk_x, b_cur_chunk_y):
-        plt.scatter(c_x, c_y, color='blue')
+        if i % 2 == 0:
+            plt.scatter(c_x, c_y, color='blue')
+        else:
+            plt.scatter(c_x, c_y, color='green')
+        i += 1
 for (c_x, c_y) in zip(y_cur_chunk_x, y_cur_chunk_y):
-        plt.scatter(c_x, c_y, color='yellow')
+        if i % 2 == 0:
+            plt.scatter(c_x, c_y, color='yellow')
+        else:
+            plt.scatter(c_x, c_y, color='red')
+        i += 1
 
 
 def ator(a):

@@ -165,40 +165,40 @@ int main() {
     
     // std::cout << "Hello, world!" << std::endl;
 
-    // testMakeSplinesVector();
+    testMakeSplinesVector();
 
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
-    // if (chunks == nullptr) {
-    //     std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
-    // }
+    if (chunks == nullptr) {
+        std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
+    }
 
-    // if ((*chunks)[0] == nullptr) {
-    //     std::cout << "FIRST CHUNK IS NULL" << std::endl;
-    // }
+    if ((*chunks)[0] == nullptr) {
+        std::cout << "FIRST CHUNK IS NULL" << std::endl;
+    }
 
-    // outputting chunks
-    // std::ofstream Blue("blue_points.txt");
-    // std::ofstream Yellow("yellow_points.txt");
+    outputting chunks
+    std::ofstream Blue("blue_points.txt");
+    std::ofstream Yellow("yellow_points.txt");
 
-    // for (int i  = 0; i < chunks.size(); i++) {
-    //     // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
-    //     // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
+    for (int i  = 0; i < chunks.size(); i++) {
+        // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
+        // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
 
-    //     for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
-    //         Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-    //     }
+        for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
+            Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+        }
 
-    //     for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
-    //         Yellow << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
-    //     }
+        for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
+            Yellow << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
+        }
 
-    //     Blue << "#";
-    //     Yellow << "#";
-    // }
+        Blue << "#";
+        Yellow << "#";
+    }
 
-    // Blue.close();
-    // Yellow.close();
+    Blue.close();
+    Yellow.close();
 
     for (int j = 0; j < chunks.size(); j++) {
         for (int i = 0; i < chunks[j]->bluePoints.size(); i++) {

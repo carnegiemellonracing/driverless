@@ -52,9 +52,9 @@ polynomial poly_mult(polynomial a,polynomial b){
 }
 
 double poly_eval(polynomial a, double x){
-    std::cout << "poly eval" << std::endl;
-    std::cout << a.nums << std::endl;
-    std::cout << x << std::endl;
+    // std::cout << "poly eval" << std::endl;
+    // std::cout << a.nums << std::endl;
+    // std::cout << x << std::endl;
     double result = 0;
     double xval = 1.0;
     for(int i = 0; i <= a.deg; i++){
@@ -236,9 +236,9 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
             // std::cout << "first x " << i << ": "<< first_x << std::endl;
             // std::cout << "poly " << i << ": "<< this->spl_poly.nums << std::endl;
             double guess_length = arclength(this->first_der, first_x, guess);
-            std::cout << "progress " << progress << std::endl;
-            std::cout << "guess length " << i << ": "<< guess_length << std::endl;
-            std::cout << "past " << past << std::endl;
+            // std::cout << "progress " << progress << std::endl;
+            // std::cout << "guess length " << i << ": "<< guess_length << std::endl;
+            // std::cout << "past " << past << std::endl;
             if (abs(progress - guess_length) > abs(progress - past)) //# if we did worst than before
                 break;
             best_guess = guess;
