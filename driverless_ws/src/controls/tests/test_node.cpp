@@ -2,10 +2,15 @@
  * To-do list
  * 1. Add noise to cone positions
  * 2. Add a flag to merge cones that are really close together
+ * 3. Start at the start of the track
  * 4. Add timing
  * 3. (When C++ SVM is ready, integrate Husain's code)
  */
 
+/**
+ * Notes about track specification
+ * Angles are in degrees - positive means clockwise, negative means counterclockwise
+ */
 
 #include <iostream>
 #include <fstream>
@@ -21,17 +26,18 @@
 #include <model/two_track/codegen/minimal_state_function.h>
 #include <filesystem>
 #include "test_node.hpp"
+#include <utils/general_utils.hpp>
 
 namespace controls {
     namespace tests {
         /// @brief Clamp some heading/angle value to the range [0, 2pi)
         static constexpr float arc_rad_adjusted(float arc_rad)
         {
-            while (arc_rad < 0.0f)
+            while (arc_rad < -M_PI)
             {
                 arc_rad += 2.0f * M_PI;
             }
-            while (arc_rad >= 2.0f * M_PI)
+            while (arc_rad >= M_PI)
             {
                 arc_rad -= 2.0f * M_PI;
             }
@@ -92,6 +98,7 @@ namespace controls {
                     curr_pos = spline.back();
                 }
             }
+            m_finish_line = curr_pos;
             // Update visible indexes
             update_visible_indices();
 
@@ -135,41 +142,6 @@ namespace controls {
             m_visible_indices = {left_closest, left_furthest, right_closest, right_furthest, spline_closest, spline_furthest};
         }
 
-        /**
-         *
-         *
-         *             while (get_squared_distance(m_all_left_cones.at(left_closest), curr_pos) >= m_lookahead_squared) {
-                left_closest = (left_closest + 1) % m_all_left_cones.size();
-            }
-
-            while (get_squared_distance(m_all_right_cones.at(right_closest), curr_pos) >= m_lookahead_squared) {
-                right_closest = (right_closest + 1) % m_all_right_cones.size();
-            }
-
-            while (get_squared_distance(m_all_right_cones.at(right_furthest), curr_pos) < m_lookahead_squared) {
-                right_furthest = (right_furthest + 1) % m_all_right_cones.size();
-                if (right_furthest == right_closest) {
-                    break;
-                }
-            }
-
-            while (get_squared_distance(m_all_left_cones.at(left_furthest), curr_pos) < m_lookahead_squared) {
-                left_furthest = (left_furthest + 1) % m_all_left_cones.size();
-                if (left_furthest == left_closest) {
-                    break;
-                }
-            }
-
-            while (get_squared_distance(m_all_spline.at(spline_closest), curr_pos) >= m_lookahead_squared) {
-                spline_closest = (spline_closest + 1) % m_all_spline.size();
-            }
-            while (get_squared_distance(m_all_spline.at(spline_furthest), curr_pos) < m_lookahead_squared) {
-                spline_furthest = (spline_furthest + 1) % m_all_spline.size();
-                if (spline_furthest == spline_closest) {
-                    break;
-                }
-            }
-         */
 
         std::vector<glm::fvec2> TestNode::arc_segment(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
             std::vector<glm::fvec2> result;
@@ -328,9 +300,28 @@ namespace controls {
             }
 
             gsl_odeiv2_driver_free(driver);
-
-            const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
             update_visible_indices();
+
+            // float x_diff = (m_world_state[0] - m_finish_line.x);
+            // float y_diff = (m_world_state[1] - m_finish_line.y);
+            // if (x_diff * x_diff + y_diff * y_diff < ) {
+            //     std::cout << "REACHED FINISH LINE!!!\n";
+            //     m_world_state = { -3,
+            //                       0,
+            //                       0,
+            //                       0,
+            //                       0,
+            //                       0,
+            //                       0,
+            //                       0,
+            //                       -3.0411,
+            //                       0,
+            //                       0,
+            //                       0,
+            //                       0 };
+
+            //     m_visible_indices = m_initial_visible_indices;
+            // }
         }
 
 
@@ -427,15 +418,19 @@ namespace controls {
             if (spec_file.is_open())
             {
                 std::string line;
-                while (std::getline(spec_file, line, ','))
+                while (std::getline(spec_file, line, '\n'))
                 {
                     std::istringstream segment_stream(line);
                     char segment_type;
                     segment_stream >> segment_type;
                     
                     Segment segment;
-                    
-                    if (segment_type == 's')
+
+                    if (segment_type == '#') {
+                        // this is a comment
+                        continue;
+                    }
+                    else if (segment_type == 's')
                     {
                         float length;
                         segment_stream.ignore(1);
@@ -456,7 +451,7 @@ namespace controls {
                         
                         segment.type = SegmentType::ARC;
                         segment.radius = radius;
-                        segment.heading_change = heading_change_deg;
+                        segment.heading_change = arc_rad_adjusted(heading_change_deg * M_PI / 180.0f);
                         // std::cout << segment.heading_change << std::endl;
                         segments.push_back(segment);
                     }
