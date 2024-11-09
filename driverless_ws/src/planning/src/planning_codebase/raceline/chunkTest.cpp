@@ -169,13 +169,13 @@ int main() {
 
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
-    if (chunks == nullptr) {
-        std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
-    }
+    // if (chunks == nullptr) {
+    //     std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
+    // }
 
-    if ((*chunks)[0] == nullptr) {
-        std::cout << "FIRST CHUNK IS NULL" << std::endl;
-    }
+    // if ((*chunks)[0] == nullptr) {
+    //     std::cout << "FIRST CHUNK IS NULL" << std::endl;
+    // }
 
     // outputting chunks
     std::ofstream Blue("blue_points.txt");
