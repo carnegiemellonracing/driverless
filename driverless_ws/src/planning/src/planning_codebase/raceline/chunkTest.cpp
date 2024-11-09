@@ -177,7 +177,7 @@ int main() {
         std::cout << "FIRST CHUNK IS NULL" << std::endl;
     }
 
-    outputting chunks
+    // outputting chunks
     std::ofstream Blue("blue_points.txt");
     std::ofstream Yellow("yellow_points.txt");
 

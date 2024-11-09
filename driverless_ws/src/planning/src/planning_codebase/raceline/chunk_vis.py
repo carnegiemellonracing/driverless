@@ -77,7 +77,6 @@ for (c_x, c_y) in zip(y_cur_chunk_x, y_cur_chunk_y):
             plt.scatter(c_x, c_y, color='red')
         i += 1
 
-
 def ator(a):
     return a * (np.pi / 180.0)
 
