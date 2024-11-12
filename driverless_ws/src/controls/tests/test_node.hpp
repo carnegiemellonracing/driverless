@@ -134,7 +134,7 @@ namespace controls {
             rclcpp::Time m_start_time;
             rclcpp::Time m_end_time;
             size_t m_lap_count = 1;
-            std::string m_log_path;
+            std::ofstream m_log_file;
         };
 
     }

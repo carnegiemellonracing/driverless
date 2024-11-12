@@ -55,7 +55,7 @@ namespace controls {
     constexpr double controller_freq = 10.; ///< Target number of controller steps per second, in Hz. 1 controller step outputs 1 control action.
     constexpr float controller_period = 1. / controller_freq; ///< Target duration between control actions, in sec
 
-    constexpr uint32_t num_samples = 1024 * 64; ///< Number of trajectories sampled each controller step
+    constexpr uint32_t num_samples = 1024 * 16; ///< Number of trajectories sampled each controller step
     constexpr uint32_t num_timesteps = 16; ///< Number of controller steps simulated into the future
     constexpr uint8_t action_dims = 2; ///< \f$q\f$, dimensions of @ref Action
     constexpr uint8_t state_dims = 4; ///< \f$p\f$, dimensions of @ref State
