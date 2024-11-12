@@ -77,7 +77,9 @@ namespace controls {
 
 
               m_lookahead{lookahead},
-              m_lookahead_squared {lookahead * lookahead}
+              m_lookahead_squared {lookahead * lookahead},
+
+              m_log_file {log_path}
         {
             glm::fvec2 curr_pos {0.0f, 0.0f};
             float curr_heading = 0.0f;
@@ -109,7 +111,6 @@ namespace controls {
             m_start_line.push_back(m_all_right_cones[0]);
             m_end_line.push_back(m_all_left_cones.back());
             m_end_line.push_back(m_all_right_cones.back());
-            m_log_path = log_path;
             update_track_time();
         }
         float distanceToLine(glm::fvec2 point, std::vector<glm::fvec2> line) {
@@ -188,9 +189,7 @@ namespace controls {
 
             bool m_is_loop = m_is_loop || within_start && within_end;
             std::cout << "Track is loop? " << m_is_loop << "\n";
-            std::ofstream outputFile {m_log_path, std::ios::app};
-            outputFile << "HIIII\n";
-            
+
 
             if (!m_is_loop) { //track is not a loop
                 if (within_start && !m_seen_start) {
@@ -199,8 +198,8 @@ namespace controls {
                 } else if (within_end && m_seen_start) {
                     m_end_time = get_clock()->now();
                     rclcpp::Duration elapsed = m_end_time - m_start_time;
-                    if (outputFile) {
-                        outputFile << "Lap:" << m_lap_count << ":" << elapsed.seconds() << std::endl;
+                    if (m_log_file) {
+                        m_log_file << "Lap:" << m_lap_count << ":" << elapsed.seconds() << std::endl;
                     }
                 }
             } else { //track is a loop
@@ -212,8 +211,8 @@ namespace controls {
                     rclcpp::Duration elapsed = m_end_time - m_start_time;
 
                     if (elapsed.seconds() > 2.0f){
-                        if (outputFile) {
-                            outputFile << "Lap:" << m_lap_count++ <<":" << elapsed.seconds() << std::endl;
+                        if (m_log_file) {
+                            m_log_file << "Lap:" << m_lap_count++ <<":" << elapsed.seconds() << std::endl;
 
                             std::cout<< "Lap:" << m_lap_count++ <<":" << elapsed.seconds() << "\n";
                             std::cout<<"FILE FOUND\n";
@@ -555,7 +554,7 @@ namespace controls {
     }
 }
 
-static constexpr float default_lookahead = 8.0f;
+static constexpr float default_lookahead = 50.0f;
 
 int main(int argc, char* argv[]){
     if (argc == 1) {
@@ -565,12 +564,12 @@ int main(int argc, char* argv[]){
 
     std::string track_specification = argv[1];
     float look_ahead = default_lookahead;
-    if (argc == 3) {
+    if (argc >= 3) {
         look_ahead = std::stof(argv[2]);
     }
 
     std::string track_lap_log_path;
-    if (argc == 4) {
+    if (argc >= 4) {
         track_lap_log_path = argv[3];
     }
 
