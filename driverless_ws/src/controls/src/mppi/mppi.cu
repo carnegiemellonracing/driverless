@@ -150,7 +150,7 @@ namespace controls {
 
             thrust::inclusive_scan_by_key(keys, keys + num_samples * num_timesteps,
                                           actions, actions,
-                                          Equal<size_t> {}, //TODO: surely this can be operator==?
+                                          Equal<size_t> {},
                                           AddActions {});
         }
 

@@ -109,7 +109,7 @@ namespace controls {
         struct TransformStdNormal {
             thrust::device_ptr<float> std_normals;
 
-            // Constructor is made explicit because of something about single-argument constructors //TODO: figure out
+            // Constructor is made explicit so no ugly implicit type conversions happen (single argument constructor)
             explicit TransformStdNormal(thrust::device_ptr<float> std_normals)
                     : std_normals {std_normals} { }
 
@@ -257,6 +257,7 @@ namespace controls {
                             cuda_globals::action_min[k],
                             cuda_globals::action_max[k]
                         );
+                        // TODO: document what deadzoned means
                         const float deadzoned = k == action_torque_idx && x_curr[state_speed_idx] < brake_enable_speed ?
                             max(clamped_brownian, 0.0f) : clamped_brownian;
 
@@ -296,7 +297,7 @@ namespace controls {
             }
         };
 
-        // TODO: why can't this just be a function
+        // Note: Thrust needs a functor (similar to std::hash), so we can't use a standalone function
         /// Adds two device actions
         struct AddActions {
             __device__ DeviceAction operator() (const DeviceAction& a1, const DeviceAction& a2) const {
