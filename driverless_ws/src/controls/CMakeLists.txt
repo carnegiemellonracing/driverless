@@ -43,6 +43,8 @@ if (DISPLAY)
   add_compile_options(-DDISPLAY)
 endif()
 
+# add_compile_options(-DSLIPLESS)
+
 if (PARANOID)
   add_compile_options(-DPARANOID)
 endif()
@@ -118,7 +120,7 @@ if(BUILD_TESTING)
   add_executable(controls_test_node tests/test_node.cpp)
   target_link_libraries(controls_test_node controls_lib GSL::gsl)
 
-  add_executable(controls_echo_node tests/echo_node.cpp)
+  add_executable(controls_echo_node tests/echo_node/echo_node.cpp)
 
   add_executable(model_wrapper tests/model/model_wrapper.cu)
   target_link_libraries(model_wrapper controls_lib)

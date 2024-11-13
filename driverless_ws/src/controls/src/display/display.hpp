@@ -38,9 +38,9 @@ namespace controls {
             void run();
 
         private:
-            class Trajectory {
+            class DrawableLine {
             public:
-                Trajectory(glm::fvec4 color, float thickness, GLuint program);
+                DrawableLine(glm::fvec4 color, float thickness, GLuint program);
 
                 void draw();
                 void draw_points();
@@ -48,6 +48,8 @@ namespace controls {
                 std::vector<float> vertex_buf;
 
             private:
+                std::vector<float> fill_triangle_points();
+
                 glm::fvec4 color;
                 float thickness;
                 GLuint program;
@@ -80,15 +82,13 @@ namespace controls {
             GLuint m_trajectory_shader_program;
             GLuint m_img_shader_program;
 
-            std::vector<Trajectory> m_trajectories;
-            std::unique_ptr<Trajectory> m_spline = nullptr;
-			std::unique_ptr<Trajectory> m_left_cone_trajectory = nullptr;
-			std::unique_ptr<Trajectory> m_right_cone_trajectory = nullptr;
-            std::unique_ptr<Trajectory> m_left_cone_trajectory_points = nullptr;
-			std::unique_ptr<Trajectory> m_right_cone_trajectory_points = nullptr;
-            std::unique_ptr<Trajectory> m_left_cone_trajectory_visible = nullptr;
-            std::unique_ptr<Trajectory> m_right_cone_trajectory_visible = nullptr;
-            std::unique_ptr<Trajectory> m_best_guess = nullptr;
+            std::vector<DrawableLine> m_trajectories;
+            std::unique_ptr<DrawableLine> m_spline = nullptr;
+			std::unique_ptr<DrawableLine> m_left_cone_trajectory = nullptr;
+			std::unique_ptr<DrawableLine> m_right_cone_trajectory = nullptr;
+            std::unique_ptr<DrawableLine> m_left_cone_trajectory_visible = nullptr;
+            std::unique_ptr<DrawableLine> m_right_cone_trajectory_visible = nullptr;
+            std::unique_ptr<DrawableLine> m_best_guess = nullptr;
 
             utils::GLObj m_offset_img_obj;
             GLuint m_offset_img_tex;
