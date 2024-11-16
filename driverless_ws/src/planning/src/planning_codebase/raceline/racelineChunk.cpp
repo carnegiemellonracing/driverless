@@ -146,7 +146,9 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     }
     // add last chunk in the vector
     chunk->generateConePoints(blue, yellow);
+    std::cout << "gencone" << std::endl;
     chunk->avgCurvature = chunk->calcRunningAvgCurvature();
+    std::cout << "avg curve" << std::endl;
     chunkVector->emplace_back(chunk);
 
     return chunkVector;
