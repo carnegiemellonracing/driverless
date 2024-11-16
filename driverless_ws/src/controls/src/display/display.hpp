@@ -74,6 +74,12 @@ namespace controls {
             void draw_offset_image();
             void draw_triangles();
 
+            void draw_car();
+
+            // *******************************NEW*********
+            void draw_raceline();
+            void update_raceline();
+
             void update_loop(SDL_Window* window);
 
             glm::fvec2 m_cam_pos {0.0f, 0.0f};
@@ -89,6 +95,12 @@ namespace controls {
             std::unique_ptr<DrawableLine> m_left_cone_trajectory_visible = nullptr;
             std::unique_ptr<DrawableLine> m_right_cone_trajectory_visible = nullptr;
             std::unique_ptr<DrawableLine> m_best_guess = nullptr;
+
+
+            // *******************************NEW*********
+            std::vector<glm::fvec2> m_raceline;
+            std::unique_ptr<DrawableLine> m_raceline = nullptr;
+
 
             utils::GLObj m_offset_img_obj;
             GLuint m_offset_img_tex;

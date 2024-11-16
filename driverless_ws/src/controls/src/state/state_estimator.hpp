@@ -13,6 +13,7 @@ namespace controls {
          * Refer to the @rst :doc:`explainer </source/explainers/state_estimation>` @endrst for a more detailed overview.
          */
         class StateEstimator {
+
         public:
          /**
           * @brief Essentially serves as a named constructor that grants ownership of a StateEstimator to the caller.
@@ -21,6 +22,7 @@ namespace controls {
           * @param[in] logger Function object of logger (string to void)
           * @return Pointer to the created StateEstimator
           */
+
          static std::shared_ptr<StateEstimator> create(std::mutex& mutex, LoggerFunc logger = no_log);
 
             /**

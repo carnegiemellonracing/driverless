@@ -459,6 +459,7 @@ namespace controls {
 
             m_all_left_cone_points = process_ros_points(cone_msg.orange_cones);
             m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
+            m_
 
             std::cout << "Here 2\n";
 
@@ -618,6 +619,11 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
             
             return m_right_cone_points;
+        }
+        std::vector<glm::fvec2> StateEstimator_Impl::get_raceline_points(){
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            return m_raceline_points;
         }
 
 

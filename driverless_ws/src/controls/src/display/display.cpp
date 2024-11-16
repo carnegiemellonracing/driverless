@@ -167,6 +167,29 @@ namespace controls {
             glDisable(GL_CULL_FACE);
         }
 
+        //*******************************NEW */
+        void Display::init_raceline() {
+            m_raceline = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 0.5f, 0.0f, 1.0f}, 2.0f, m_trajectory_shader_program);
+        }
+
+
+        //TODO: FIX POSITIONING
+        void Display::update_raceline() {
+            glm::fvec2 car_pos = m_state_estimator->get_raceline_points();
+
+
+            //not necessary. just have it so that there aren't any duplicates
+            const float minimum_distance = 0.1f;  // so the raceline doesn't get too dense with points
+            if (m_race_line.empty() || glm::distance(car_pos, m_race_line.back()) > minimum_distance) {
+                m_race_line.push_back(car_pos);
+
+                // if (m_raceline.size() > car_pos.size) {
+                //     m_raceline.erase(m_raceline.begin(), m_raceline.begin() + m_raceline.size() - car_pos.size);
+                // }
+            }
+        }
+
+
         void Display::init_trajectories() {
             for (uint32_t i = 0; i < num_samples_to_draw; i++) {
                 m_trajectories.emplace_back(glm::fvec4 {1.0f, 0.0f, 0.0f, 0.0f}, 1, m_trajectory_shader_program);
@@ -225,6 +248,27 @@ namespace controls {
             glUseProgram(m_img_shader_program);
             glUniform1i(img_shader_img_tex_loc, 0);
         }
+
+        //*******************************NEW********** */
+        void Display::draw_raceline() {
+            if (m_raceline.empty()) {
+                return;
+            }
+
+            m_raceline_line->vertex_buf.resize(m_raceline.size() * 2);
+
+            for (size_t i = 0; i < m_raceline.size(); i++) {
+                m_raceline_line->vertex_buf[2 * i] = m_raceline[i].x;
+                m_raceline_line->vertex_buf[2 * i + 1] = m_raceline[i].y;
+
+                // as raceline ages changes color
+                float alpha = static_cast<float>(i) / m_raceline.size();
+                m_raceline_line->color.w = alpha;
+            }
+
+            m_raceline_line->draw();
+        }
+
 
         void Display::fill_trajectories() {
             using namespace glm;
@@ -348,6 +392,41 @@ namespace controls {
             glDrawArrays(GL_TRIANGLES, 0, triangle_vertices.size() / 3);
         }
 
+        void Display::draw_car(){
+            //Make sure a line exists
+            assert(m_best_guess != nullptr);
+            assert(m_best_guess->vertex_buf.size() != 0);
+            float xdir = m_best_guess->vertex_buf[0];
+            float ydir = m_best_guess->vertex_buf[1];
+            //Centered at (0,0)
+            float angle = atan2(ydir,xdir);
+            //In (x,y) coords, (0,1) is front left, (2,3) is front right, (4,5) is back left, (6,7) is back right
+            std::vector<float> carpts;
+            carpts.reserve(8);
+            carpts.push_back(cg_to_nose);
+            carpts.push_back(cg_to_side);
+            carpts.push_back(cg_to_nose);
+            carpts.push_back(-cg_to_side);
+            carpts.push_back(-cg_to_rear);
+            carpts.push_back(cg_to_side);
+            carpts.push_back(-cg_to_rear);
+            carpts.push_back(-cg_to_side);
+            unsigned int VAO;
+            unsigned int VBO;
+            glGenBuffers(1,&VBO);
+            glGenVertexArrays(1,&VAO);
+            glUniform4f(1, 1, 0, 0, 1);
+            glUseProgram(m_img_shader_program);
+            glBindVertexArray(VAO);
+
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * carpts.size(), carpts.data(), GL_DYNAMIC_DRAW);
+
+            //assert(triangle_vertices.size() % 3 == 0);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 2);
+
+        }
+
         void Display::run() {
             SDL_Window* window = utils::create_sdl2_gl_window("MPPI Display", width, height);
             init_gl(window);
@@ -355,6 +434,9 @@ namespace controls {
             init_spline();
             init_best_guess();
             init_img();
+
+            //*******************************NEW */
+            init_raceline();
 
             update_loop(window);
         }
@@ -432,6 +514,7 @@ namespace controls {
                     m_right_cone_trajectory->vertex_buf[2 * i + 1] = m_right_cone_points[i].y;
                 }
 
+
                 draw_offset_image();
 
                 fill_trajectories();
@@ -440,6 +523,12 @@ namespace controls {
                 draw_spline();
                 draw_cones();
                 draw_best_guess();
+                draw_car();
+
+                // // ********************NEW*************************
+                draw_raceline();
+                update_raceline();
+                // // ********************NEW*************************
 
                 SDL_GL_SwapWindow(window);
 
