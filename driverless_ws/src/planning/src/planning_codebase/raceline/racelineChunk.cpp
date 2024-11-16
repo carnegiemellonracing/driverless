@@ -144,6 +144,10 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             chunk->sumCurvature = curvature;
         }
     }
+    // add last chunk in the vector
+    chunk->generateConePoints(blue, yellow);
+    chunk->avgCurvature = chunk->calcRunningAvgCurvature();
+    chunkVector->emplace_back(chunk);
 
     return chunkVector;
 }
