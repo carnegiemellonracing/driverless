@@ -121,7 +121,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         // compare curvature to avgCurvature of the curr bucket
         // // std::cout << "after curvature" << std::endl;
         chunk->endProgress = currPercentProgress;
-        if (!chunk->checkStopChunk(curvature)) {
+        if (currPercentProgress < 100 || !chunk->checkStopChunk(curvature)) {
             // if curvature belongs in current chunk, updated sumCurvature
             chunk->sumCurvature += curvature;
             // std::cout << "not created new chunk in loop" << std::endl;
@@ -144,13 +144,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             chunk->sumCurvature = curvature;
         }
     }
-    std::cout << "before gencone" << std::endl;
-    // add last chunk in the vector
-    chunk->generateConePoints(blue, yellow);
-    std::cout << "gencone" << std::endl;
-    chunk->avgCurvature = chunk->calcRunningAvgCurvature();
-    std::cout << "avg curve" << std::endl;
-    chunkVector->emplace_back(chunk);
 
     return chunkVector;
 }
