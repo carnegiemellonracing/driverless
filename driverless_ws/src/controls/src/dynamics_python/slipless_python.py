@@ -7,14 +7,21 @@ def clamp(value, min_value, max_value):
 
 
 class Slipless:
-    def __init__(self, name="slipless", car_mass=car_mass_default, rolling_drag=rolling_drag_default, long_tractive_capability=long_tractive_capability_default, understeer_slope=understeer_slope_default):
+    def __init__(self, name="slipless", car_mass=car_mass_default, rolling_drag_constant=rolling_drag_default, rolling_drag_coefficient=0, long_tractive_capability=long_tractive_capability_default, understeer_slope=understeer_slope_default,
+                 swangle_scale=1, swangle_bias=0, torque_scale=1, torque_bias=0):
         self.name = name
         self.car_mass = car_mass
-        self.rolling_drag = rolling_drag
+        self.rolling_drag_constant = rolling_drag_constant
+        self.rolling_drag_coefficient = rolling_drag_coefficient
         self.long_tractive_capability = long_tractive_capability
         self.understeer_slope = understeer_slope
-        self.saturating_motor_torque = (self.long_tractive_capability + self.rolling_drag / self.car_mass) * self.car_mass * whl_radius / gear_ratio
+        self.saturating_motor_torque = (self.long_tractive_capability + self.rolling_drag_constant / self.car_mass) * self.car_mass * whl_radius / gear_ratio
+        self.swangle_scale = swangle_scale
+        self.swangle_bias = swangle_bias
+        self.torque_scale = torque_scale
+        self.torque_bias = torque_bias
 
+        self.param 
 
     def kinematic_swangle(self, speed, swangle):
         return swangle / (1 + self.understeer_slope * speed)
@@ -46,8 +53,8 @@ class Slipless:
     def dynamics(self, state, action):
         x, y, yaw, speed = state[:slipless_state_dim]
 
-        swangle = action[0]
-        torque = action[1] * gear_ratio
+        swangle = action[0] * self.swangle_scale + self.swangle_bias
+        torque = action[1] * gear_ratio * self.torque_scale + self.torque_bias
 
         kinematic_swangle_ = self.kinematic_swangle(speed, swangle)
         slip_angle_ = self.slip_angle(kinematic_swangle_)
@@ -66,7 +73,7 @@ class Slipless:
 
         next_speed_raw = speed + (
             (torque_front * math.cos(swangle - slip_angle_) + torque_rear * math.cos(slip_angle_)) / 
-            (whl_radius * self.car_mass) - self.rolling_drag / self.car_mass
+            (whl_radius * self.car_mass) - (self.rolling_drag_constant + self.rolling_drag_coefficient * speed) / self.car_mass
         ) * timestep
         next_speed = max(0.0, next_speed_raw)
 
