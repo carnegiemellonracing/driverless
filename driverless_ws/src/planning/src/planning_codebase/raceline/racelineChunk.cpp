@@ -5,7 +5,7 @@
 
 
 // tunable params for chunks
-#define CHUNK_LEN_THRESH 15
+#define CHUNK_LEN_THRESH 1000
 #define CHUNK_CURVE_THRESH 1
 
 /**
