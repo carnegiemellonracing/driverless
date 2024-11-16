@@ -68,7 +68,7 @@ class TrackVisualizer:
     for point in self.click_points:
       color = BLUE if point[2] == "left" else YELLOW
       adjusted_point = (point[0] + self.offset_x, point[1] + self.offset_y)
-      pygame.draw.circle(self.screen, color, adjusted_point, 4);
+      pygame.draw.circle(self.screen, color, adjusted_point, 4)
       
     self.adjusted_origin_x = self.origin_x + self.offset_x
     self.adjusted_origin_y = self.origin_y + self.offset_y

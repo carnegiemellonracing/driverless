@@ -40,6 +40,14 @@ namespace controls {
             paranoid_assert(!any_nan(world_state_out, state_dims) && "World state out was nan directly after dynamics call");
         }
 
+        __device__ static void corner_creation(const float center_state[], float forward, float right, float corner_state[]) {
+            float change_x = cosf(center_state[state_yaw_idx]) * forward + sinf(center_state[state_yaw_idx]) * right;
+            float change_y = sinf(center_state[state_yaw_idx]) * forward - cosf(center_state[state_yaw_idx]) * right;
+            corner_state[0] = center_state[state_x_idx] + change_x;
+            corner_state[1] = center_state[state_y_idx] + change_y;
+            corner_state[2] = center_state[state_yaw_idx];
+        }
+
         /**
          * Calculate cost at a particular state.
          *
@@ -55,23 +63,29 @@ namespace controls {
             const float world_state[], const float action[], const float last_taken_action[],
             float start_progress, float time_since_traj_start, bool first) {
 
-            float nose_curv_pose[3];
             float cent_curv_pose[3];
-            bool nose_out_of_bounds;
-            bool cent_out_of_bounds;
+            bool cent_out_of_bounds;             
 
-            float forward_x = cosf(world_state[state_yaw_idx]) * cg_to_nose;
-            float forward_y = sinf(world_state[state_yaw_idx]) * cg_to_nose;
-            float nose_pose[3] = {world_state[state_x_idx] + forward_x, world_state[state_y_idx] + forward_y, world_state[state_yaw_idx]};
-            cuda_globals::sample_curv_state(nose_pose, nose_curv_pose, nose_out_of_bounds);
             cuda_globals::sample_curv_state(world_state, cent_curv_pose, cent_out_of_bounds);
 
             const float centripedal_accel = model::slipless::centripedal_accel(world_state[state_speed_idx], action[action_swangle_idx]);
             const float abs_centripedal_accel = fabsf(centripedal_accel);
 
-            if (nose_out_of_bounds || cent_out_of_bounds
-             || abs_centripedal_accel > lat_tractive_capability) {
+            if (abs_centripedal_accel > lat_tractive_capability) {
                 return out_of_bounds_cost;
+            }
+
+            bool corner_out_of_bounds;
+            float dummy_progress[3];
+            float corner_state[3];
+            for (int forward_mult = -1; forward_mult <= 1; forward_mult++) {
+                for (int right_mult = -1; right_mult <= 1; right_mult += 2) {
+                    corner_creation(world_state, cg_to_nose * forward_mult, cg_to_side * right_mult, corner_state);
+                    cuda_globals::sample_curv_state(corner_state, dummy_progress, corner_out_of_bounds);
+                    if (corner_out_of_bounds) {
+                        return out_of_bounds_cost;
+                    }
+                }
             }
 
             const float progress = cent_curv_pose[0];

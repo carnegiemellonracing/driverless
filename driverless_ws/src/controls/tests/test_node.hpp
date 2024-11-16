@@ -60,13 +60,16 @@ namespace controls {
             static constexpr float max_straight = 30.0f;
             static constexpr float new_seg_dist = 15.0f;
             static constexpr uint8_t max_segs = 4;
+            static constexpr float cone_spacing_straight = 3.0f;
+            static constexpr float cone_spacing_arc_inner = 1.5f;
+            static constexpr float cone_spacing_arc_outer = 2.5f;
 
             static constexpr float spline_period = 0.2f;
             static constexpr float gps_period = 0.05f;
             static constexpr float sim_step = 0.01f;
             static constexpr float track_width = 4.0f;
-            
 
+            static constexpr uint32_t seed = 15251;
 
             void on_sim();
             void on_action(const ActionMsg& msg);
@@ -129,12 +132,17 @@ namespace controls {
             /// For lap tracking
             std::vector<glm::fvec2> m_start_line;
             std::vector<glm::fvec2> m_end_line;
+            std::vector<glm::fvec2> m_raceline_points;
             bool m_seen_start = false;
             bool m_is_loop = false;
             rclcpp::Time m_start_time;
             rclcpp::Time m_end_time;
             size_t m_lap_count = 1;
             std::ofstream m_log_file;
+
+            /// For cone jittering
+            std::normal_distribution m_straight_jitter_gen{0.0, 1.0};
+            std::normal_distribution m_arc_jitter_gen{0.0, 1.0};
         };
 
     }

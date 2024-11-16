@@ -43,7 +43,7 @@ namespace controls {
     const rclcpp::QoS spline_qos = best_effort_qos;
     const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
-    const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1));
+    const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1)); 
     const rclcpp::QoS world_pose_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS controller_info_qos = best_effort_qos;
 
@@ -55,7 +55,7 @@ namespace controls {
     constexpr double controller_freq = 10.; ///< Target number of controller steps per second, in Hz. 1 controller step outputs 1 control action.
     constexpr float controller_period = 1. / controller_freq; ///< Target duration between control actions, in sec
 
-    constexpr uint32_t num_samples = 1024 * 16; ///< Number of trajectories sampled each controller step
+    constexpr uint32_t num_samples = 1024; ///< Number of trajectories sampled each controller step
     constexpr uint32_t num_timesteps = 16; ///< Number of controller steps simulated into the future
     constexpr uint8_t action_dims = 2; ///< \f$q\f$, dimensions of @ref Action
     constexpr uint8_t state_dims = 4; ///< \f$p\f$, dimensions of @ref State
@@ -95,10 +95,13 @@ namespace controls {
     constexpr float triangle_threshold_squared = 25.0f;
 
     // Car params
-
-    constexpr float cg_to_front = 0.775;
-    constexpr float cg_to_rear = 0.775;
-    constexpr float cg_to_nose = 1.5f;
+    //cg_to_front and cg_to_rear are from center of gravity to wheel base
+    //cg_to_nose is actual front of car
+    //Wheel base = 1.55, car length = 2.80
+    constexpr float cg_to_front = 0.775; 
+    constexpr float cg_to_rear = 0.775; //Also rear of car
+    constexpr float cg_to_nose = 2.025f;
+    constexpr float cg_to_side = 1.0f; //ACTUAL .75
     //constexpr float whl_base = 2.0f;
     constexpr float whl_radius = 0.2286;
     /// gear ratio = motor speed / wheel speed = wheel torque / motor torque
