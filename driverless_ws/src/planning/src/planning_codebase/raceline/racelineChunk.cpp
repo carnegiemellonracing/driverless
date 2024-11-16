@@ -127,6 +127,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             // std::cout << "not created new chunk in loop" << std::endl;
         }
         else { 
+            std::cout << currPercentProgress << std::endl;
             // if we need to stop current chunk, create a new chunk and update
             // previous chunk & add it to the chunk vector
             // std::cout << "new chunk" << std::endl;
