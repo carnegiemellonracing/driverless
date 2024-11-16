@@ -144,6 +144,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             chunk->sumCurvature = curvature;
         }
     }
+    std::cout << "before gencone" << std::endl;
     // add last chunk in the vector
     chunk->generateConePoints(blue, yellow);
     std::cout << "gencone" << std::endl;
