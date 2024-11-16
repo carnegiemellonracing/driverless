@@ -122,7 +122,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         // // std::cout << "after curvature" << std::endl;
         chunk->endProgress = currPercentProgress;
         std::cout << currPercentProgress << std::endl;
-        if (currPercentProgress < 100 || !chunk->checkStopChunk(curvature)) {
+        if (currPercentProgress < 100 && !chunk->checkStopChunk(curvature)) {
             // if curvature belongs in current chunk, updated sumCurvature
             chunk->sumCurvature += curvature;
             // std::cout << "not created new chunk in loop" << std::endl;
