@@ -66,7 +66,7 @@ void Chunk::generateConePoints(std::pair<std::vector<Spline>,std::vector<double>
 
     std::cout << "total length" << std::endl;
 
-    for (double percent = startProgress; percent <= endProgress; percent += interval){
+    for (double percent = startProgress; percent < endProgress; percent += interval){
         // convert percent progress into meter progress for both racelines
         double progressBlue_m = (percent*totalBlueLength)/100;
         double progressYellow_m = (percent*totalYellowLength)/100;
