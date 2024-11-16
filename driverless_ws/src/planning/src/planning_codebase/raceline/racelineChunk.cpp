@@ -58,23 +58,31 @@ void Chunk::generateConePoints(std::pair<std::vector<Spline>,std::vector<double>
     std::vector<double> blueLengths = blueRaceline.second;
     std::vector<double> yellowLengths = yellowRaceline.second;
 
+    std::cout << "length" << std::endl;
+
     // get the total length of both racelines
     double totalBlueLength = blueLengths[blueLengths.size()-1];
     double totalYellowLength = yellowLengths[yellowLengths.size()-1];
+
+    std::cout << "total length" << std::endl;
 
     for (double percent = startProgress; percent <= endProgress; percent += interval){
         // convert percent progress into meter progress for both racelines
         double progressBlue_m = (percent*totalBlueLength)/100;
         double progressYellow_m = (percent*totalYellowLength)/100;
+
+        std::cout << "percent" <<percent << std::endl;
       
         // std::cout << "before interpolate" << std::endl;
         std::pair<double, double> xyBlue = interpolate_raceline(progressBlue_m, blueRaceline.first, blueRaceline.second, 100);
         std::pair<double, double> xyYellow = interpolate_raceline(progressYellow_m, yellowRaceline.first, yellowRaceline.second, 100);
 
+        std::cout << "interpolate_raceline" << std::endl;
+
         // std::cout << "after interpolate" << std::endl;
         bluePoints.push_back(xyBlue);
         yellowPoints.push_back(xyYellow);
-        // std::cout << "after pushback" << std::endl;
+        std::cout << "after pushback" << std::endl;
     }
 }
 
@@ -122,7 +130,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         // // std::cout << "after curvature" << std::endl;
         chunk->endProgress = currPercentProgress;
         std::cout << currPercentProgress << std::endl;
-        if (currPercentProgress < 100 && !chunk->checkStopChunk(curvature)) {
+        if (!chunk->checkStopChunk(curvature)) {
             // if curvature belongs in current chunk, updated sumCurvature
             chunk->sumCurvature += curvature;
             // std::cout << "not created new chunk in loop" << std::endl;
@@ -146,6 +154,9 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             chunk->sumCurvature = curvature;
         }
     }
+    chunk->generateConePoints(blue, yellow);
+    chunk->avgCurvature = chunk->calcRunningAvgCurvature();
+    chunkVector->emplace_back(chunk);
 
     return chunkVector;
 }
