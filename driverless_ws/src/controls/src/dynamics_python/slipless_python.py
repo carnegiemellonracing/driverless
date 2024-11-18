@@ -21,8 +21,6 @@ class Slipless:
         self.torque_scale = torque_scale
         self.torque_bias = torque_bias
 
-        self.param 
-
     def kinematic_swangle(self, speed, swangle):
         return swangle / (1 + self.understeer_slope * speed)
 
@@ -64,12 +62,12 @@ class Slipless:
         if torque_mode == TorqueMode.AWD:
             torque_front = clamp(torque * 0.5, -saturating_tire_torque, saturating_tire_torque)
             torque_rear = clamp(torque * 0.5, -saturating_tire_torque, saturating_tire_torque)
-        elif torque_mode == TorqueMode.FWD:
-            torque_front = clamp(torque, -saturating_tire_torque, saturating_tire_torque)
-            torque_rear = 0
-        elif torque_mode == TorqueMode.RWD:
-            torque_front = 0
-            torque_rear = clamp(torque, -saturating_tire_torque, saturating_tire_torque)
+        # elif torque_mode == TorqueMode.FWD:
+        #     torque_front = clamp(torque, -saturating_tire_torque, saturating_tire_torque)
+        #     torque_rear = 0
+        # elif torque_mode == TorqueMode.RWD:
+        #     torque_front = 0
+        #     torque_rear = clamp(torque, -saturating_tire_torque, saturating_tire_torque)
 
         next_speed_raw = speed + (
             (torque_front * math.cos(swangle - slip_angle_) + torque_rear * math.cos(slip_angle_)) / 
