@@ -31,6 +31,7 @@ setup(
 
             # debugging nodes
             'lidar_vis_node = perceptions.ros.utils.debug.LidarVisNode:main',
+            'lidar_vis_node1 = perceptions.ros.utils.debug.LidarVisNode1:main',
             'lidar_vis_node2 = perceptions.ros.utils.debug.LidarVisNode2:main',
             # util nodes
             'data_node = perceptions.ros.utils.DataNode:main',

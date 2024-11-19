@@ -13,8 +13,6 @@ from perceptions.topics import POINT_TOPIC #, DATAFRAME_TOPIC
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
-from perc22a.predictors.utils.transform.transform import PoseTransformations
-import perc22a.predictors.utils.lidar.filter as filter
 
 # general imports
 import cv2
@@ -33,12 +31,10 @@ RELIABLE_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.RELIABLE,
 class LidarVisNode(Node):
 
     def __init__(self):
-        super().__init__("lidar_vis_node2")
+        super().__init__("lidar_vis_node1")
 
         self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.window = vis.init_visualizer_window()
-
-        self.transformer = PoseTransformations()
 
                 
     def points_callback(self, msg):
@@ -48,32 +44,7 @@ class LidarVisNode(Node):
 
         points = points[:, [1, 0, 2]]
         points[:, 0] *= -1
-
-        points = points[~np.any(points == 0, axis=1)]
-        points = points[~np.any(np.isnan(points), axis=-1)]
-        points = points[:, :3]
-        self.points = points
-        self.num_points = self.points.shape[0]
-
-        # # transfer to origin of car
-        points = self.transformer.to_origin("lidar", points, inverse=False)
-
-        points_ground_plane = filter.fov_range(
-            points, 
-            fov=180, 
-            minradius=0, 
-            maxradius=20
-        )
-
-        points_filtered_ground = filter.GraceAndConrad(
-            points_ground_plane, 
-            points_ground_plane, 
-            0.1, 
-            10, 
-            0.13
-        )
-
-        vis.update_visualizer_window(self.window, points_filtered_ground[:,:3])
+        vis.update_visualizer_window(self.window, points[:,:3])
         print(f"{points.shape[0]} points")
 
 def main(args=None):

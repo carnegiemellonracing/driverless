@@ -25,6 +25,8 @@ import perc22a.predictors.utils.lidar.visualization as vis
 from perc22a.predictors.utils.lidar.transform import transform_left_lidar, transform_right_lidar
 from perc22a.data.utils.DataType import DataType
 from perc22a.data.utils.DataInstance import DataInstance
+from perc22a.predictors.utils.cones import Cones
+
 
 # Cone Merger and pipeline enum type
 from perc22a.mergers.MergerInterface import Merger
@@ -45,8 +47,12 @@ import perc22a.predictors.utils.lidar.visualization as vis
 from perc22a.utils.Timer import Timer
 
 from perc22a.predictors.utils.ConeState import ConeState
+from perc22a.predictors.utils.transform.transform import PoseTransformations
+import perc22a.predictors.utils.lidar.filter as filter
+import perc22a.predictors.utils.lidar.cluster as cluster
 
 import time
+import timeit
 import numpy as np
 # Aopproximate time synchronizer
 from message_filters import ApproximateTimeSynchronizer, Subscriber
@@ -100,6 +106,10 @@ class EndToEndNode(Node):
         self.ts = ApproximateTimeSynchronizer([self.point_subscriber, self.point2_subscriber], queue_size=10, slop=0.1)
         self.ts.registerCallback(self.dual_points_callback)
 
+        self.transformer = PoseTransformations()
+        self.column = np.array([[1.0] for _ in range(100000)])
+        
+
 
         return
     
@@ -124,22 +134,137 @@ class EndToEndNode(Node):
         # initialize time for staleness of data 
         data_time = self.get_clock().now()
 
+        # # experiment, delete after use
+        # left_npy_untransformed = conv.pointcloud2_to_npy(msg1)
+        # right_npy_untransformed = conv.pointcloud2_to_npy(msg2)
+        # print(f"left_size: {left_npy_untransformed.size}\nright_size: {right_npy_untransformed.size}")
+        # self.timer.start("experiment")
+        # dummy1 = transform_left_lidar(left_npy_untransformed, self.column)
+        # time_exp1 = self.timer.end("experiment", ret=True)
+        # self.timer.start("experiment")
+        # dummy2 = transform_right_lidar(right_npy_untransformed, self.column)
+        # time_exp2 = self.timer.end("experiment", ret=True)
+        # self.timer.start("experiment")
+        # dummy3 = transform_right_lidar(left_npy_untransformed, self.column)
+        # time_exp3 = self.timer.end("experiment", ret=True)
+        # self.timer.start("experiment")
+        # dummy4 = transform_left_lidar(right_npy_untransformed, self.column)
+        # time_exp4 = self.timer.end("experiment", ret=True)
+        # print(f"experiment:\nleft-left: {time_exp1}\nright-right: {time_exp2}\nright-left: {time_exp3}\nleft-right: {time_exp4}\n")
+
+        self.timer.start("lidar")
+        self.timer.start("filter")
+        # self.timer.start("nonsense")
         # convert point cloud messages into numpy arrays and transform to common frame
         self.data = {}
-        left_points = transform_left_lidar(conv.pointcloud2_to_npy(msg1))
-        right_points = transform_right_lidar(conv.pointcloud2_to_npy(msg2))
-        points = np.vstack((left_points, right_points))
-        self.data[DataType.HESAI_POINTCLOUD] = points
+        left_npy_untransformed = conv.pointcloud2_to_npy(msg1)
+        left_points = transform_left_lidar(left_npy_untransformed, self.column)
+        left_points = left_points[:, [1, 0, 2]]
+        left_points[:, 0] *= -1
+        left_points = self.transformer.to_origin("lidar", left_points, inverse=False)
+
+        # time1 = self.timer.end("nonsense", ret=True)
+        # self.timer.start("nonsense")
+        left_points_ground_plane = filter.fov_range(
+            left_points, 
+            fov=180, 
+            minradius=0, 
+            maxradius=20
+        )
+        # time2 = self.timer.end("nonsense", ret=True)
+        # self.timer.start("nonsense")
+        left_points_filtered_ground = filter.GraceAndConrad(
+            left_points_ground_plane, 
+            left_points_ground_plane, 
+            0.1, 
+            10, 
+            0.13
+        )
+        # time3 = self.timer.end("nonsense", ret=True)
+        # self.timer.start("nonsense")
+
+        right_npy_untransformed = conv.pointcloud2_to_npy(msg2)
+
+        # time41 = self.timer.end("nonsense", ret=True)
+        # self.timer.start("nonsense")
+
+        right_points = transform_right_lidar(right_npy_untransformed, self.column)
+
+        # time42 = self.timer.end("nonsense", ret=True)
+        # self.timer.start("nonsense")
+
+        right_points = right_points[:, [1, 0, 2]]
+        right_points[:, 0] *= -1
+        right_points = self.transformer.to_origin("lidar", right_points, inverse=False)
+
+        # time43 = self.timer.end("nonsense", ret=True)
+        # self.timer.start("nonsense")
+
+        right_points_ground_plane = filter.fov_range(
+            right_points, 
+            fov=180, 
+            minradius=0, 
+            maxradius=20
+        )
+
+        # time5 = self.timer.end("nonsense", ret=True)
+        # self.timer.start("nonsense")
+
+        right_points_filtered_ground = filter.GraceAndConrad(
+            right_points_ground_plane, 
+            right_points_ground_plane, 
+            0.1, 
+            10, 
+            0.13
+        )
+
+        points_filtered_ground = np.vstack((left_points_filtered_ground, right_points_filtered_ground))
+        # points = np.vstack((left_points, right_points))
+        # self.data[DataType.HESAI_POINTCLOUD] = left_points
+
+        # time6 = self.timer.end("nonsense", ret=True)
+        # print(f"time1: {time1}\ntime2: {time2}\ntime3: {time3}\ntime41: {time41}\ntime42: {time42}\ntime43: {time43}\ntime5: {time5}\ntime6: {time6}\n")
+        time_filter = self.timer.end("filter", ret=True)
+        self.timer.start("cluster")
+
+        points_cluster_subset = filter.voxel_downsample(
+            points_filtered_ground, 
+            0.1
+        )
+
+        num_cluster_points = points_cluster_subset.shape[0] 
+        cone_centers = cluster.predict_cones_z(
+            points_cluster_subset,
+            # ground_planevals,
+            height_threshold=0.5,
+        )
+
+        # TODO: is this correct?
+        cone_centers = cluster.correct_clusters(cone_centers)
+
+
+        # no coloring of cones, default all of them to blue
+        cones = Cones()
+        for i in range(cone_centers.shape[0]):
+            x, y, z = cone_centers[i, :]
+            cones.add_blue_cone(x, y, z)
+        # cones = self._centers_to_cones(cone_centers)
+        time_cluster = self.timer.end("cluster", ret=True)
+        time_lidar = self.timer.end("lidar", ret=True)
         
         mi = conv.gps_to_motion_info(self.curr_twist, self.curr_quat)
 
         # predict lidar
-        self.timer.start("lidar")
-        cones = self.predictor.predict(self.data)
-        time_lidar = self.timer.end("lidar", ret=True)
+        # cones1 = self.predictor.predict(self.data)
+        # self.data[DataType.HESAI_POINTCLOUD] = right_points
+        # cones2 = self.predictor.predict(self.data)
+        # cones = Cones()
+        # cones.yellow_cones = cones1.yellow_cones + cones2.yellow_cones
+        # cones.blue_cones = cones1.blue_cones + cones2.blue_cones
+        
 
         # update using cone merger
-        self.timer.start("merge+color+state")
+        self.timer.start("color")
         self.merger.add(cones, PipelineType.LIDAR)
         cones = self.merger.merge()
         self.merger.reset()
@@ -149,8 +274,8 @@ class EndToEndNode(Node):
 
         # update overall cone state
         # TODO: should separately update cones and then return cones relevant for svm
-        cones = self.cone_state.update(cones, mi)
-        time_state = self.timer.end("merge+color+state", ret=True)
+        cones = self.cone_state.update(cones, mi) # ICP against old cones
+        time_color = self.timer.end("color", ret=True)
 
         # spline
         self.timer.start("spline")
@@ -178,13 +303,14 @@ class EndToEndNode(Node):
             return
         
         msg.frames = points
+        msg.header.stamp = msg1.header.stamp
         msg.orig_data_stamp = data_time.to_msg()
         self.midline_pub.publish(msg)
 
         # done publishing spline
         curr_time = self.get_clock().now()
         # print the timings of everything
-        print(f"{len(cones):<3} cones {len(downsampled_boundary_points):<3} frames {(curr_time.nanoseconds - data_time.nanoseconds) / 1000000:.3f}ms lidar: {time_lidar:.1f}ms merge+color+state: {time_state:.1f}ms spline: {time_spline:.1f}ms")
+        print(f"{len(cones):<3} cones {len(downsampled_boundary_points):<3} total time {(curr_time.nanoseconds - data_time.nanoseconds) / 1000000:.3f}ms lidar: {time_lidar:.1f}ms filter: {time_filter:.1f} cluster: {time_cluster:.1f} color: {time_color:.1f}ms spline: {time_spline:.1f}ms")
 
         return
 

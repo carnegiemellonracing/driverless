@@ -13,10 +13,13 @@ from perceptions.topics import POINT_TOPIC, POINT_2_TOPIC #, DATAFRAME_TOPIC
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
+from perc22a.predictors.utils.transform.transform import PoseTransformations
+import perc22a.predictors.utils.lidar.filter as filter
 
 # general imports
 import cv2
 import numpy as np
+from message_filters import Subscriber, ApproximateTimeSynchronizer
 
 # configure QOS profile
 BEST_EFFORT_QOS_PROFILE = QoSProfile(reliability = QoSReliabilityPolicy.BEST_EFFORT,
@@ -35,11 +38,82 @@ class LidarVisNode(Node):
 
         self.points = None
 
-        self.point_1_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.point_2_subscriber = self.create_subscription(PointCloud2, POINT_2_TOPIC, self.points_callback2, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.point_1_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # self.point_2_subscriber = self.create_subscription(PointCloud2, POINT_2_TOPIC, self.points_callback2, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.window = vis.init_visualizer_window()
 
+        self.point_1_subscriber = Subscriber(self, PointCloud2, POINT_TOPIC, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.point_2_subscriber = Subscriber(self, PointCloud2, POINT_2_TOPIC, qos_profile=BEST_EFFORT_QOS_PROFILE)
+
+        self.ts = ApproximateTimeSynchronizer([self.point_1_subscriber, self.point_2_subscriber], queue_size=10, slop=0.1)
+        self.ts.registerCallback(self.dual_points_callback)
+
+        self.transformer = PoseTransformations()
+
                 
+    def dual_points_callback(self, msg1, msg2):
+        pc = conv.pointcloud2_to_npy(msg1)
+        points = pc[:, :3] # downsample points
+        # points = points[np.any(points != 0, axis=1)]
+
+        tf_mat_left = np.array([[   0.76604444,    -0.64278764,    0.        ,  -0.18901      ],
+                                [  0.64278764,    0.76604444,    0.        , 0.15407      ],
+                                [   0.        ,    0.        ,    1.        ,    0.        ],
+                                [   0.        ,    0.        ,    0.        ,    1.        ]])
+        column = np.array([[1.0] for _ in range(len(points))])
+        points = np.hstack((points, column))
+        points = np.matmul(points, tf_mat_left.T)
+
+        # multiply transformation matrix with points
+        points = points[:, [1, 0, 2]]
+        points[:, 0] *= -1
+
+        combined_points = points
+
+        pc = conv.pointcloud2_to_npy(msg2)
+        points = pc[:, :3] # downsample points
+        # points = points[np.any(points != 0, axis=1)]
+
+        tf_mat_right = np.array([[  0.76604444,  0.64278764,   0.        , -0.16541      ],
+                                 [  -0.64278764,   0.76604444,   0.        , -0.12595      ],
+                                 [  0.        ,   0.        ,   1.        ,   0.        ],
+                                 [  0.        ,   0.        ,   0.        ,   1.        ]])
+        column = np.array([[1.0] for _ in range(len(points))])
+        points = np.hstack((points, column))
+        points = np.matmul(points, tf_mat_right.T)
+        points = points / points[:,3][:, np.newaxis]
+
+        # multiply transformation matrix with points
+        points = points[:, [1, 0, 2]]
+        points[:, 0] *= -1
+
+        points = np.vstack((combined_points, points))
+        points = points[~np.any(points == 0, axis=1)]
+        points = points[~np.any(np.isnan(points), axis=-1)]
+        points = points[:, :3]
+        self.points = points
+        self.num_points = self.points.shape[0]
+
+        # # transfer to origin of car
+        points = self.transformer.to_origin("lidar", points, inverse=False)
+
+        points_ground_plane = filter.fov_range(
+            points, 
+            fov=180, 
+            minradius=0, 
+            maxradius=20
+        )
+
+        points_filtered_ground = filter.GraceAndConrad(
+            points_ground_plane, 
+            points_ground_plane, 
+            0.1, 
+            10, 
+            0.13
+        )
+
+        vis.update_visualizer_window(self.window, points_filtered_ground[:,:3])
+
     def points_callback(self, msg):
         pc = conv.pointcloud2_to_npy(msg)
         points = pc[:, :3] # downsample points
