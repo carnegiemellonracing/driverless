@@ -169,25 +169,25 @@ namespace controls {
 
         //*******************************NEW */
         void Display::init_raceline() {
-            m_raceline = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 0.5f, 0.0f, 1.0f}, 2.0f, m_trajectory_shader_program);
+            m_raceline_line = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 0.5f, 0.0f, 1.0f}, 2.0f, m_trajectory_shader_program);
         }
 
 
         //TODO: FIX POSITIONING
-        void Display::update_raceline() {
-            glm::fvec2 car_pos = m_state_estimator->get_raceline_points();
+        // void Display::update_raceline() {
+        //     glm::fvec2 car_pos = m_state_estimator->get_raceline_points();
 
 
-            //not necessary. just have it so that there aren't any duplicates
-            const float minimum_distance = 0.1f;  // so the raceline doesn't get too dense with points
-            if (m_race_line.empty() || glm::distance(car_pos, m_race_line.back()) > minimum_distance) {
-                m_race_line.push_back(car_pos);
+        //     //not necessary. just have it so that there aren't any duplicates
+        //     const float minimum_distance = 0.1f;  // so the raceline doesn't get too dense with points
+        //     if (m_raceline.empty() || glm::distance(car_pos, m_race_line.back()) > minimum_distance) {
+        //         m_raceline.push_back(car_pos);
 
-                // if (m_raceline.size() > car_pos.size) {
-                //     m_raceline.erase(m_raceline.begin(), m_raceline.begin() + m_raceline.size() - car_pos.size);
-                // }
-            }
-        }
+        //         // if (m_raceline.size() > car_pos.size) {
+        //         //     m_raceline.erase(m_raceline.begin(), m_raceline.begin() + m_raceline.size() - car_pos.size);
+        //         // }
+        //     }
+        // }
 
 
         void Display::init_trajectories() {
@@ -249,21 +249,20 @@ namespace controls {
             glUniform1i(img_shader_img_tex_loc, 0);
         }
 
-        //*******************************NEW********** */
         void Display::draw_raceline() {
-            if (m_raceline.empty()) {
+            if (m_raceline_points.empty()) {
                 return;
             }
 
-            m_raceline_line->vertex_buf.resize(m_raceline.size() * 2);
+            m_raceline_line->vertex_buf.resize(m_raceline_points.size() * 2);
 
-            for (size_t i = 0; i < m_raceline.size(); i++) {
-                m_raceline_line->vertex_buf[2 * i] = m_raceline[i].x;
-                m_raceline_line->vertex_buf[2 * i + 1] = m_raceline[i].y;
+            for (size_t i = 0; i < m_raceline_points.size(); i++) {
+                m_raceline_line->vertex_buf[2 * i] = m_raceline_points[i].x;
+                m_raceline_line->vertex_buf[2 * i + 1] = m_raceline_points[i].y;
 
                 // as raceline ages changes color
-                float alpha = static_cast<float>(i) / m_raceline.size();
-                m_raceline_line->color.w = alpha;
+                // float alpha = static_cast<float>(i) / m_raceline_points.size();
+                // m_raceline_line->color.w = alpha;
             }
 
             m_raceline_line->draw();
@@ -435,7 +434,6 @@ namespace controls {
             init_best_guess();
             init_img();
 
-            //*******************************NEW */
             init_raceline();
 
             update_loop(window);
@@ -492,6 +490,7 @@ namespace controls {
 
                 m_left_cone_points = m_state_estimator->get_left_cone_points();
                 m_right_cone_points = m_state_estimator->get_right_cone_points();
+                m_raceline_points = m_state_estimator->get_raceline_points();
 
                 // if (m_spline_frames.size() != m_left_cone_points.size() || m_spline_frames.size() != m_right_cone_points.size())
                 // {
@@ -525,10 +524,8 @@ namespace controls {
                 draw_best_guess();
                 draw_car();
 
-                // // ********************NEW*************************
                 draw_raceline();
-                update_raceline();
-                // // ********************NEW*************************
+                //update_raceline();
 
                 SDL_GL_SwapWindow(window);
 
