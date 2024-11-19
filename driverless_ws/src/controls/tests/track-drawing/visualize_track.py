@@ -1,4 +1,3 @@
-# TODO Add a scaling system so that each grid block is 1m across
 import pygame
 import sys
 import os
@@ -27,6 +26,8 @@ class TrackVisualizer:
     self.offset_y = 0
     self.adjusted_origin_x = self.origin_x + self.offset_x
     self.adjusted_origin_y = self.origin_y + self.offset_y
+    self.active_chunk = None
+    self.chunks = []
         
     if not os.path.exists("data"):
       os.makedirs("data")
@@ -47,15 +48,25 @@ class TrackVisualizer:
   
   def save_points(self):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename_points = f"data/track_points_{timestamp}.txt"
-    filename_seg = f"data/track_segs_{timestamp}.txt"
+    filename = f"data/track_points_{timestamp}.txt"
     
-    with open(filename_points, 'w') as file:
-      for point in self.click_points:
-        x_meters = point[0] / self.scale
-        y_meters = point[1] / self.scale
-        file.write(f"{x_meters},{y_meters},{point[2]}\n")
-      print(f"Points saved to {filename_points}\n")
+    with open(filename, 'w') as file:
+      if self.chunks:
+        for idx, chunk in enumerate(self.chunks, 1):
+          file.write(f"Chunk {idx}:\n")
+          for point in chunk["points"]:
+            x_meters = point[0] / self.scale
+            y_meters = point[1] / self.scale
+            file.write(f"{x_meters},{y_meters},{point[2]}\n")
+          file.write("\n")
+      else:
+        file.write("All Points:\n")
+        for point in self.click_points:
+          x_meters = point[0] / self.scale
+          y_meters = point[1] / self.scale
+          file.write(f"{x_meters},{y_meters},{point[2]}\n")
+          
+    print(f"Points saved to {filename}\n")
       
   def pan(self, delta_x, delta_y):
     self.offset_x += delta_x
@@ -68,13 +79,54 @@ class TrackVisualizer:
     for point in self.click_points:
       color = BLUE if point[2] == "left" else YELLOW
       adjusted_point = (point[0] + self.offset_x, point[1] + self.offset_y)
-      pygame.draw.circle(self.screen, color, adjusted_point, 4)
+      pygame.draw.circle(self.screen, color, adjusted_point, 4);
       
+    for chunk in self.chunks:
+      start_x, start_y = chunk["start"]
+      end_x, end_y = chunk["end"]
+      top_left = (min(start_x, end_x) + self.offset_x, min(start_y, end_y) + self.offset_y)
+      width = abs(end_x - start_x)
+      height = abs(end_y - start_y)
+      pygame.draw.rect(self.screen, WHITE, (*top_left, width, height), 2)
+      
+    if self.active_chunk:
+      start_x, start_y = self.active_chunk["start"]
+      mouse_x, mouse_y = pygame.mouse.get_pos()
+      end_x, end_y = mouse_x - self.offset_x, mouse_y - self.offset_y
+      top_left = (min(start_x, end_x) + self.offset_x, min(start_y, end_y) + self.offset_y)
+      width = abs(end_x - start_x)
+      height = abs(end_y - start_y)
+      pygame.draw.rect(self.screen, WHITE, (*top_left, width, height), 2)
+
     self.adjusted_origin_x = self.origin_x + self.offset_x
     self.adjusted_origin_y = self.origin_y + self.offset_y
     pygame.draw.circle(self.screen, RED, (self.adjusted_origin_x, self.adjusted_origin_y), 8)
+      
     pygame.display.flip()
+      
+      
+  def start_chunk(self):
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    self.active_chunk = {"start": (mouse_x - self.offset_x, mouse_y - self.offset_y), "end": None, "points": []}
+    
+  def finalize_chunk(self):
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    self.active_chunk["end"] = (mouse_x - self.offset_x, mouse_y - self.offset_y)
   
+    x1, y1 = self.active_chunk["start"]
+    x2, y2 = self.active_chunk["end"]
+    x_min, x_max = min(x1, x2), max(x1, x2)
+    y_min, y_max = min(y1, y2), max(y1, y2)
+    
+    self.active_chunk["points"] = [
+      point for point in self.click_points if x_min <= point[0] <= x_max and y_min <= point[1] <= y_max
+    ]
+    self.chunks.append(self.active_chunk)
+    self.active_chunk = None
+    
+  def clear_chunks(self):
+    self.chunks = []
+    
 def main():
   visualizer = TrackVisualizer()
   running = True
@@ -90,6 +142,13 @@ def main():
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_s:
           visualizer.save_points()
+        elif event.key == pygame.K_d:
+          if not visualizer.active_chunk:
+            visualizer.start_chunk()
+          else:
+            visualizer.finalize_chunk()
+        elif event.key == pygame.K_c:
+          visualizer.clear_chunks()
         elif event.key == pygame.K_UP:
           visualizer.pan(0, -10)
         elif event.key == pygame.K_DOWN:
