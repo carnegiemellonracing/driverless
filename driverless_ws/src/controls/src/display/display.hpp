@@ -63,6 +63,7 @@ namespace controls {
             void init_trajectories();
             void init_spline();
             void init_best_guess();
+            void init_raceline();
 
             void fill_trajectories();
             void draw_trajectories();
@@ -76,7 +77,6 @@ namespace controls {
 
             void draw_car();
 
-            // *******************************NEW*********
             void draw_raceline();
             void update_raceline();
 
@@ -97,9 +97,8 @@ namespace controls {
             std::unique_ptr<DrawableLine> m_best_guess = nullptr;
 
 
-            // *******************************NEW*********
-            std::vector<glm::fvec2> m_raceline;
-            std::unique_ptr<DrawableLine> m_raceline = nullptr;
+            std::vector<glm::fvec2> m_raceline_points;
+            std::unique_ptr<DrawableLine> m_raceline_line = nullptr;
 
 
             utils::GLObj m_offset_img_obj;

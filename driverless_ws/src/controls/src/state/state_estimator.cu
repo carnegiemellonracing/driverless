@@ -459,7 +459,7 @@ namespace controls {
 
             m_all_left_cone_points = process_ros_points(cone_msg.orange_cones);
             m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
-            m_
+            m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
 
             std::cout << "Here 2\n";
 
