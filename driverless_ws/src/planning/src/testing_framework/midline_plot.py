@@ -5,7 +5,7 @@ from scipy.interpolate import interp1d
 
 
 
-def plot_lin_input(blue_cone_pos, yellow_cone_pos, midline,plotnum):
+def plot_lin_input(blue_cone_pos, yellow_cone_pos, midline, plotnum):
     bx = []
     by = []
     

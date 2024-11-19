@@ -159,11 +159,3 @@ while True:
 
     else:
         print("Error: please type in a number corresponding to a track")
-
-
-
-
-
-
-
-
