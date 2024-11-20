@@ -6,7 +6,7 @@
 
 // tunable params for chunks
 #define CHUNK_LEN_THRESH 1000
-#define CHUNK_CURVE_THRESH 0.5
+#define CHUNK_CURVE_THRESH 0.02
 
 /**
  * Constructor for chunks.
