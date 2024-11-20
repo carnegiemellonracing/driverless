@@ -109,8 +109,8 @@ std::vector<std::pair<double,double>> yellow_cones = {
 std::vector<std::pair<double,double>> blue_cones = {
     std::make_pair(0, 20),
     std::make_pair(20, 0),
-    std::make_pair(40, 40),
-    std::make_pair(60, 40)
+    std::make_pair(13.24, -14.99),
+    std::make_pair(0, -20)
 };
 
 void testMakeSplinesVector() {
