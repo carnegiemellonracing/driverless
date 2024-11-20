@@ -6,7 +6,7 @@
 
 // tunable params for chunks
 #define CHUNK_LEN_THRESH 1000
-#define CHUNK_CURVE_THRESH 1
+#define CHUNK_CURVE_THRESH 0.5
 
 /**
  * Constructor for chunks.
@@ -118,6 +118,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         std::vector<double> currProgressVec;
         currProgressVec.push_back(currProgress);
         double curvature = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen)[0];
+        std::cout << curvature << std::endl;
         // compare curvature to avgCurvature of the curr bucket
         // // std::cout << "after curvature" << std::endl;
         chunk->endProgress = currPercentProgress;
