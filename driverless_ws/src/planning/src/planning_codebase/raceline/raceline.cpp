@@ -67,8 +67,8 @@ double poly_eval(polynomial a, double x){
 // Curvature at point(s) `min_x` based on 2d curvature equation
 // https://mathworld.wolfram.com/Curvature.html
 double get_curvature(polynomial poly_der_1, polynomial poly_der_2, double min_x) {
-  return poly_eval(poly_der_2, min_x) /
-         pow(1 + pow(poly_eval(poly_der_1, min_x), 2), 3 / 2);
+  return 1/(poly_eval(poly_der_2, min_x) /
+         pow(1 + pow(poly_eval(poly_der_1, min_x), 2), 3 / 2));
 }
 
 Spline::Spline(polynomial interpolation_poly) {
