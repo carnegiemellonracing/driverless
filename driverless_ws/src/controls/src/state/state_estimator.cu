@@ -459,12 +459,11 @@ namespace controls {
 
             m_all_left_cone_points = process_ros_points(cone_msg.orange_cones);
             m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
-            m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
+            // m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
 
             std::cout << "Here 2\n";
 
             assert(m_all_left_cone_points.size() > 0);
-            assert(m_all_left_cone_points.size() == m_all_right_cone_points.size());
 #endif
 
             if constexpr (reset_pose_on_spline) {
@@ -620,6 +619,8 @@ namespace controls {
             
             return m_right_cone_points;
         }
+
+        // *****REVIEW: not be needed for display
         std::vector<glm::fvec2> StateEstimator_Impl::get_raceline_points(){
             std::lock_guard<std::mutex> guard {m_mutex};
 

@@ -190,8 +190,6 @@ namespace controls {
             //std::cout << "TWO sx: " << m_end_line[1].x << " sy: " << m_end_line[1].x << "\n";
 
             m_is_loop = m_is_loop || within_start && within_end;
-            std::cout << "Track is loop? " << m_is_loop << "\n";
-
 
             if (!m_is_loop) { //track is not a loop
                 if (within_start && !m_seen_start) {
@@ -248,11 +246,9 @@ namespace controls {
             }
             return result;
         }
-
-
-
+        
         TestNode::SplineAndCones TestNode::arc_segment_with_cones(float radius, glm::fvec2 start_pos, float start_heading, float end_heading) {
-            std::vector<glm::fvec2> spline, left_cones, right_cones, left_spline,right_spline;
+            std::vector<glm::fvec2> spline, left_cones, right_cones, left_spline, right_spline;
 
             float arc_rad = arc_rad_adjusted(end_heading - start_heading);
             bool counter_clockwise = arc_rad > 0;
@@ -268,15 +264,10 @@ namespace controls {
             
             const float step_rad = arc_rad / steps;
 
-            float left_noise = m_arc_jitter_gen(m_seed);
-            float right_noise = m_arc_jitter_gen(m_seed);
-
             float left_dist;
             float right_dist;
             float distance_right;
             float distance_left;
-            const unit32_t left_steps;
-            const init32_t right_steps;
 
             if (counter_clockwise)
             {
@@ -284,6 +275,7 @@ namespace controls {
                 right_dist = radius + track_width / 2;
                 distance_right = cone_spacing_arc_outer;
                 distance_left = cone_spacing_arc_inner;
+            }
             else
             {
                 left_dist = radius + track_width / 2;
@@ -292,38 +284,36 @@ namespace controls {
                 distance_right = cone_spacing_arc_inner;
             }
             
-            left_steps = glm::abs(left_dist * arc_rad / distance_left);
-            right_steps = glm::abs(right_dist * arc_rad / distance_right);            
+            const uint32_t left_steps = glm::abs(left_dist * arc_rad / distance_left);
+            const uint32_t right_steps = glm::abs(right_dist * arc_rad / distance_right);            
 
-            for (uint32_t i = 1; i <= max(max(steps, left_steps), right_steps); i++) {
-                float angle = arc_rad_adjusted(start_angle + i * step_rad);
-                float angle_left = arc_rad_adjusted
-                glm::fvec2 outgoing_vector = glm::fvec2 {glm::cos(angle), glm::sin(angle)};
-                if(i < steps) spline.push_back(center + radius * outgoing_vector);
-                if(i < left_steps) 
+            for (uint32_t i = 1; i <= std::max(std::max(steps, left_steps), right_steps); i++) {
+                if(i <= steps) {
+                    float angle = arc_rad_adjusted(start_angle + i * step_rad);
+                    glm::fvec2 outgoing_vector = glm::fvec2 {glm::cos(angle), glm::sin(angle)};
+                    spline.push_back(center + radius * outgoing_vector);
+                }
+                if(i <= left_steps) {
+                    float angle_left = arc_rad_adjusted(start_angle + i * arc_rad / left_steps);
+                    glm::fvec2 outgoing_vector = glm::fvec2 {glm::cos(angle_left), glm::sin(angle_left)};
+                    float left_noise = glm::clamp(m_arc_jitter_gen(m_rng), -m_noise_clip, m_noise_clip);
                     left_cones.push_back(center + left_dist * outgoing_vector + left_noise * outgoing_vector);
-                if(i < rightt_steps)
+                }
+                if(i <= right_steps) {
+                    float angle_right = arc_rad_adjusted(start_angle + i * arc_rad / right_steps);
+                    glm::fvec2 outgoing_vector = glm::fvec2 {glm::cos(angle_right), glm::sin(angle_right)};
+                    float right_noise = glm::clamp(m_arc_jitter_gen(m_rng), -1 * m_noise_clip, m_noise_clip);
                     right_cones.push_back(center + right_dist * outgoing_vector + right_noise * outgoing_vector);
+                    std::cout << "Right dist: " << right_dist << " Right noise: " << right_noise << "\n9";
+                }
             }
 
-            for (uint32_t i = 1; i <= steps; i++) {
-                float angle = arc_rad_adjusted(start_angle + i * step_rad);
-                glm::fvec2 outgoing_vector = glm::fvec2 {glm::cos(angle), glm::sin(angle)};
-                spline.push_back(center + radius * outgoing_vector);
-                
-                left_cones.push_back(center + left_dist * outgoing_vector + left_noise * outgoing_vector);
-                right_cones.push_back(center + right_dist * outgoing_vector + right_noise * outgoing_vector);
-            }
-
-            left_cones = new_left_cones;
-            right_cones = new_right_cones;
             return make_tuple(spline, left_cones, right_cones);
         }
-    }
+    
     
         /**
          * Generate a sequence of positions along a straight line.
-/******  33f22034-c459-4035-a104-8e87ae7156ca  *******/
          *
          * Given a position, a length, and a heading, generate a sequence of
          * positions along a straight line, starting at the given position,
@@ -350,19 +340,28 @@ namespace controls {
         TestNode::SplineAndCones TestNode::straight_segment_with_cones(glm::fvec2 start, float length, float heading) {
             std::vector<glm::fvec2> spline, left, right;
             constexpr float cone_dist = track_width / 2;
-            float left_noise = m_straight_jitter_gen(m_seed);
-            float right_noise = m_straight_jitter_gen(m_seed);
+
 
             glm::fvec2 left_diff {glm::cos(heading + M_PI_2), glm::sin(heading + M_PI_2)};
             glm::fvec2 right_diff {glm::cos(heading - M_PI_2), glm::sin(heading - M_PI_2)};
-            glm::fvec2 left_start = start + cone_dist * left_diff + left_noise * left_diff;
-            glm::fvec2 right_start = start + cone_dist * right_diff + right_noise * right_diff;
+            glm::fvec2 left_start = start + cone_dist * left_diff;
+            glm::fvec2 right_start = start + cone_dist * right_diff;
             const uint32_t steps = length / spline_frame_separation;
-            for (uint32_t i = 1; i <= steps; i++) {
-                glm::fvec2 step = i * spline_frame_separation * glm::fvec2 {glm::cos(heading), glm::sin(heading)};
-                spline.push_back(start + step);
-                left.push_back(left_start + step);
-                right.push_back(right_start + step);
+            const uint32_t lr_steps = length / cone_spacing_straight;
+
+            for (uint32_t i = 1; i <= std::max(lr_steps, steps); i++) {
+                if(i <= steps) {
+                    glm::fvec2 step = i * spline_frame_separation * glm::fvec2 {glm::cos(heading), glm::sin(heading)};
+                    spline.push_back(start + step);
+                }
+                if(i <= lr_steps) {
+                    glm::fvec2 step = i * cone_spacing_straight * glm::fvec2 {glm::cos(heading), glm::sin(heading)};
+                    glm::fvec2 perp = glm::fvec2 {glm::sin(heading), -glm::cos(heading)};
+                    float left_noise = glm::clamp(m_straight_jitter_gen(m_rng), -1 * m_noise_clip, m_noise_clip);
+                    float right_noise = glm::clamp(m_straight_jitter_gen(m_rng), -1 * m_noise_clip, m_noise_clip);
+                    left.push_back(left_start + step + left_noise * perp);
+                    right.push_back(right_start + step + right_noise * perp);
+                }
             }
             return std::make_tuple(spline, left, right);
         }
@@ -502,8 +501,8 @@ namespace controls {
                 cone_msg.unknown_color_cones.push_back(gen_point(point));
             }
 
-            for(const glm::fvec2& point : m_raceline_points) {
-                cone_msg.big_orange_cones.push_back(gen_points(point));
+            for (const glm::fvec2& point : m_raceline_points) {
+                cone_msg.big_orange_cones.push_back(gen_point(point));
             }
     
         
@@ -600,7 +599,7 @@ static constexpr float default_lookahead = 50.0f;
 
 int main(int argc, char* argv[]){
     if (argc == 1) {
-        std::cout << "Specify track specification." << std::endl;
+        std::cout << "Specify fi track specification." << std::endl;
         return 1;
     }
 
