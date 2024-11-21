@@ -300,7 +300,7 @@ namespace controls {
                     // REASON 2: To save a loop over timesteps, we have essentially calculated the negative cost
                     // so far and stored it in cost_to_gos. During weighting, we will add back the total cost of the
                     // entire trajectory (which is |cost_to_gos| at final timestep). Likewise with log_prob_densities
-                    constF float d = log_prob_densities[i*num_timesteps + j];
+                    const float d = log_prob_densities[i*num_timesteps + j];
                     j_curr -= c;
                     d_curr -= d;
                     cost_to_gos[i * num_timesteps + j] = j_curr;

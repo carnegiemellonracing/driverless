@@ -117,9 +117,9 @@ namespace controls {
             /// Stores the current state of the car (in Thomas model coordinates)
             std::array<double, 13> m_world_state {-3, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
 
+
             rclcpp::Time m_time;
             std::mt19937 m_rng;
-            std::normal_distribution<float> m_norm_dist {0, 1};
             std::uniform_real_distribution<float> m_uniform_dist {0, 1};
 
             SegmentType m_last_segment_type = SegmentType::NONE;
@@ -141,8 +141,9 @@ namespace controls {
             std::ofstream m_log_file;
 
             /// For cone jittering
-            std::normal_distribution m_straight_jitter_gen{0.0, 1.0};
-            std::normal_distribution m_arc_jitter_gen{0.0, 1.0};
+            std::normal_distribution<float> m_straight_jitter_gen {0, 0.25f};
+            std::normal_distribution<float> m_arc_jitter_gen {0, 0.25f};
+            float m_noise_clip = 0.2f;
         };
 
     }

@@ -490,12 +490,8 @@ namespace controls {
 
                 m_left_cone_points = m_state_estimator->get_left_cone_points();
                 m_right_cone_points = m_state_estimator->get_right_cone_points();
-                m_raceline_points = m_state_estimator->get_raceline_points();
+                // m_raceline_points = m_state_estimator->get_raceline_points();
 
-                // if (m_spline_frames.size() != m_left_cone_points.size() || m_spline_frames.size() != m_right_cone_points.size())
-                // {
-                //     throw std::runtime_error("m_spline_frames.size() != m_left_cone_points.size() || m_spline_frames.size() != m_right_cone_points.size()");
-                // }
                 m_state_estimator->get_offset_pixels(m_offset_image);
                 m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();
                 m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);
