@@ -248,7 +248,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         }
         Eigen::VectorXd rotated_point(2);
         rotated_point(0)=best_guess;
-        // std::cout << "best guess: " << best_guess << std::endl;
+        std::cout << "best guess: " << best_guess << std::endl;
 
         //std::cout << "SPLINE ALONG 4" << std::endl;
         
@@ -262,6 +262,8 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         rotated_points(0,0)=rotated_point(0);
         //std::cout << "SPLINE ALONG 4.3" << std::endl;
         rotated_points(1,0)=rotated_point(1);
+
+        std::cout << "rotated points: " << rotated_points << std::endl;
 
         //std::cout << "SPLINE ALONG 5" << std::endl;
     
