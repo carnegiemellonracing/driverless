@@ -80,17 +80,15 @@ namespace controls {
                 "\ncurrent time: " << rcl_now_time.nanoseconds() << 
                 "\nnumerical diff 2: " << (rcl_now_time.nanoseconds() - rcl_header_time.nanoseconds()) / 1e9 << std::endl;
 
-                RCLCPP_WARN(get_logger(), ss.str());
+                RCLCPP_WARN(get_logger(), ss.str().c_str());
 
-                if (rcl_now_time.nanoseconds() - rcl_header_time.nanoseconds() <= 1e9) {
 
-                    {
-                        std::lock_guard<std::mutex> guard {m_state_mut};
-                        m_state_estimator->on_spline(spline_msg);
-                    }
-
-                    notify_state_dirty();
+                {
+                    std::lock_guard<std::mutex> guard {m_state_mut};
+                    m_state_estimator->on_spline(spline_msg);
                 }
+
+                notify_state_dirty();
             }
 
             void ControllerNode::world_twist_callback(const TwistMsg &twist_msg) {
