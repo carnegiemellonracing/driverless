@@ -548,6 +548,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         RCLCPP_INFO(logger, "rotated_points");
         for (int i = 0; i < rotated_points.cols(); i++) {
             RCLCPP_INFO(logger, "point %d is (%f, %f)\n", i, rotated_points(0, i), rotated_points(1, i));
+            RCLCPP_INFO(logger, "regular point %d is (%f, %f)\n", i, group(0, i), group(1, i));
 
         }
         RCLCPP_INFO(logger, "second point is (%f, %f)\n", rotated_points(0, 1), rotated_points(1, 1));

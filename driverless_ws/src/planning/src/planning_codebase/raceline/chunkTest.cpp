@@ -100,10 +100,13 @@ double ftom(int a){
 // };
 
 std::vector<std::pair<double,double>> yellow_cones = {
-    std::make_pair(0, 0),
+    std::make_pair(0, 20),
+    std::make_pair(9.25, 17.73),
+    std::make_pair(17.5, 9.68),
     std::make_pair(20, 0),
-    std::make_pair(40, 40),
-    std::make_pair(60, 40)
+    std::make_pair(18.25, -8.18),
+    std::make_pair(13.24, -14.99),
+    std::make_pair(0, -20)
 };
 
 std::vector<std::pair<double,double>> blue_cones = {
@@ -188,7 +191,7 @@ int main() {
         // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
         // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
 
-        for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
+        for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
             std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
         }
 
