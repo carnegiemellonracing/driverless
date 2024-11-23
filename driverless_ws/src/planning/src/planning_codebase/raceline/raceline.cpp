@@ -593,10 +593,10 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
             RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
             cumsum.push_back(cumsum.back()+splines[i].calculateLength());
         }
-
+        std::cout << "i: " << i << std::endl;
     }
 
-    std::cout << "cum lengths " << i << ": " << cumsum << std::endl;
+    std::cout << "cum lengths: " << cumsum << std::endl;
 
 
     return std::make_pair(splines, cumsum);
