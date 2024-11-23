@@ -22,7 +22,9 @@ namespace controls
           m_state_estimator{std::move(state_estimator)},
           m_mppi_controller{std::move(mppi_controller)}
     {
+        std::cout << "Processing input file: " << input_file << " with " << num_samples << " samples" << std::endl;
         process_file(input_file, std::to_string(num_samples) + "_offline_output_" + input_file);
+        std::cout << "Job done!\n";
     }
 
     static std::vector<std::string> split(const std::string& str, char delimiter) {
@@ -97,6 +99,7 @@ namespace controls
             for (Action action : averaged_trajectory) {
                 output << action[0] << ";" << action[1] << ",";
             }
+            output << "\n";
         }
 
     }
@@ -121,7 +124,8 @@ int main(int argc, char *argv[])
 
     // create a condition variable to notify main thread when either display or node dies
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<OfflineController>(state_estimator, controller, argv[1]));
+    auto node = std::make_shared<OfflineController>(state_estimator, controller, argv[1]);
+    rclcpp::spin(node);
     rclcpp::shutdown();
     return 0;
 }

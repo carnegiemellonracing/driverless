@@ -33,7 +33,7 @@ namespace controls {
                       controller_info_qos)
               },
 
-              m_data_trajectory_log {"data_log.txt", std::ios::out}
+              m_data_trajectory_log {"mppi_inputs.txt", std::ios::out}
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
             rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group{
@@ -203,32 +203,53 @@ namespace controls {
                         ss << "Iteration #: " << num_iterations << std::endl;
                         error_str = ss.str();
 
-                        // writing to logging file for NN
+
+                        // writing to logging file for sampling exploration
                         // write the state
-                        m_data_trajectory_log << "Current State: ";
-                        for (int i = 0; i < state_dims; i++) {
-                            m_data_trajectory_log << proj_curr_state[i] << ", ";
+                        for (int i = 0; i < state_dims - 1; i++) {
+                            m_data_trajectory_log << proj_curr_state[i] << ",";
                         }
-                        m_data_trajectory_log << "\nSpline: ";
-                        // write the spline ???
+                        m_data_trajectory_log << proj_curr_state[state_dims - 1] << "|";
+                        // write the spline
                         std::vector<glm::fvec2> frames = m_state_estimator->get_spline_frames();
-                        for (int i = 0; i < frames.size(); i++)
+                        for (int i = 0; i < frames.size() - 1; i++)
                         {
-                            m_data_trajectory_log << "[" << frames[i].x << ", " << frames[i].y << "], ";
+                            m_data_trajectory_log << frames[i].x << " " << frames[i].y << ",";
                         }
-                        m_data_trajectory_log << "\nLast Action Trajectory: ";
+                        m_data_trajectory_log << frames[frames.size() - 1].x << " " << frames[frames.size() - 1].y << "|";
                         // write the guess trajectory
-                        for (const auto &action : last_action_trajectory)
+                        for (int i = 0; i < last_action_trajectory.size() - 1; i++)
                         {
-                            m_data_trajectory_log << "[" << action[0] << ", " << action[1] << "], ";
+                            m_data_trajectory_log << last_action_trajectory[i][0] << " " << last_action_trajectory[i][1] << ",";
                         }
-                        m_data_trajectory_log << "\nResult Trajectory: ";
-                        // write the result trajectory
-                        for (const auto &action : averaged_trajectory)
-                        {
-                            m_data_trajectory_log << "[" << action[0] << ", " << action[1] << "], ";
-                        }
-                        m_data_trajectory_log << "\n";
+                        m_data_trajectory_log << last_action_trajectory[last_action_trajectory.size() - 1][0] << " " << last_action_trajectory[last_action_trajectory.size() - 1][1] << "\n";
+
+                        // // writing to logging file for NN
+                        // // write the state
+                        // m_data_trajectory_log << "Current State: ";
+                        // for (int i = 0; i < state_dims; i++) {
+                        //     m_data_trajectory_log << proj_curr_state[i] << ", ";
+                        // }
+                        // m_data_trajectory_log << "\nSpline: ";
+                        // // write the spline ???
+                        // std::vector<glm::fvec2> frames = m_state_estimator->get_spline_frames();
+                        // for (int i = 0; i < frames.size(); i++)
+                        // {
+                        //     m_data_trajectory_log << "[" << frames[i].x << ", " << frames[i].y << "], ";
+                        // }
+                        // m_data_trajectory_log << "\nLast Action Trajectory: ";
+                        // // write the guess trajectory
+                        // for (const auto &action : last_action_trajectory)
+                        // {
+                        //     m_data_trajectory_log << "[" << action[0] << ", " << action[1] << "], ";
+                        // }
+                        // m_data_trajectory_log << "\nResult Trajectory: ";
+                        // // write the result trajectory
+                        // for (const auto &action : averaged_trajectory)
+                        // {
+                        //     m_data_trajectory_log << "[" << action[0] << ", " << action[1] << "], ";
+                        // }
+                        // m_data_trajectory_log << "\n";
 
 #endif
 
