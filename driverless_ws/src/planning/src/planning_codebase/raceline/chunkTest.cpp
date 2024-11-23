@@ -171,7 +171,7 @@ int main() {
     
     // std::cout << "Hello, world!" << std::endl;
 
-    testMakeSplinesVector();
+    // testMakeSplinesVector();
 
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
