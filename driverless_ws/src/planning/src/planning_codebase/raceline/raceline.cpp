@@ -693,6 +693,7 @@ std::vector<double> get_curvature_raceline(std::vector<double> progress, std::ve
         );
 
         std::cout << "x: " << min_x << std::endl
+        std::cout << "y: " << poly_eval(splines[index]->spl_poly, x) << std::endl
 
         curvatures.push_back(curvature);
     }
