@@ -49,7 +49,7 @@ class Slipless:
         return math.atan(cg_to_rear / (cg_to_front + cg_to_rear) * math.tan(kinematic_swangle))
 
     def dynamics(self, state, action):
-        x, y, yaw, speed = state[:slipless_state_dim]
+        x, y, yaw, speed = state
 
         swangle = action[0] * self.swangle_scale + self.swangle_bias
         torque = action[1] * gear_ratio * self.torque_scale + self.torque_bias
@@ -58,6 +58,7 @@ class Slipless:
         slip_angle_ = self.slip_angle(kinematic_swangle_)
 
         saturating_tire_torque = self.saturating_motor_torque * 0.5 * gear_ratio
+        # this is like 250
 
         if torque_mode == TorqueMode.AWD:
             torque_front = clamp(torque * 0.5, -saturating_tire_torque, saturating_tire_torque)
@@ -86,7 +87,7 @@ class Slipless:
         angular_speed_ = self.angular_speed(dist_avg_speed, kinematic_swangle_)
         next_yaw = yaw + angular_speed_ * timestep
 
-        rear_to_center = (cg_to_rear + cg_to_front) / math.tan(kinematic_swangle_) +  1e-10
+        rear_to_center = (cg_to_rear + cg_to_front) / (math.tan(kinematic_swangle_) +  1e-10)
         next_x = (
             x + dist_avg_speed * math.cos(yaw) * timestep if angular_speed_ == 0
             else x + cg_to_rear * (math.cos(next_yaw) - math.cos(yaw)) + 

@@ -21,7 +21,7 @@ long_tractive_capability_default = 10.0  # m/s^2
 understeer_slope_default = 0.0
 # brake_enable_speed = 1.0
 # saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio
-torque_mode = TorqueMode.FWD
+torque_mode = TorqueMode.AWD
 slipless_state_dim = 4
 
 # Bicycle model constants

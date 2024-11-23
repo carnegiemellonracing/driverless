@@ -15,9 +15,9 @@ def cross2d(a, b, c, d):
 class Bicycle:
     def __init__(self):
         self.car_mass = car_mass_default
-        pass
+        self.name = "bicycle"
 
-    def calculate_slip_ratio(wheel_speed, velocity):
+    def calculate_slip_ratio(self, wheel_speed, velocity):
         velocity = abs(velocity)
 
         if velocity == 0:
@@ -25,12 +25,12 @@ class Bicycle:
 
         tangential_velo = wheel_speed * whl_radius
         return np.clip(
-            (tangential_velo - velocity) / velocity,
-            -slip_ratio_saturation,
+            (tangential_velo - velocity) / velocity, # TODO: (velocity - tangential_velo) / velocity
+            -slip_ratio_saturation, # TODO: clip to -1 and 1
             slip_ratio_saturation
         )
 
-    def tire_model(slip_ratio, slip_angle, load, forces):
+    def tire_model(self, slip_ratio, slip_angle, load, forces):
         if abs(slip_ratio) < abs(slip_ratio_max_x):
             numerator = load * slip_ratio * max_force_y_at_1N
             within_sqrt = np.square(np.tan(slip_angle)) + \
@@ -130,4 +130,16 @@ class Bicycle:
         next_state[6] = state[6] + (torque_front - whl_radius * front_forces_tire[0]) / wheel_rotational_inertia
         next_state[7] = state[7] +(torque_rear - whl_radius * rear_forces_tire[0]) / wheel_rotational_inertia
         return next_state
+
+
+# torque is proportional to current
+# velocity is proportinal to voltage
+
+
+# model max torque and max regen as body acceleration and linear velocity
+
+# max torque >>> max regen
+
+
+# ttc with pacejka with scaling factor
 
