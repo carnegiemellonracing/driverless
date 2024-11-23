@@ -39,7 +39,7 @@ for line in lines:
 
         cur_chunk_x = np.array([])
         cur_chunk_y = np.array([])
-
+        
 print("DONE READING BLUE CHUNKS")
 plt.style.use('dark_background')
 for (j,(l_x, l_y)) in enumerate(zip(blue_chunks_x, blue_chunks_y)):

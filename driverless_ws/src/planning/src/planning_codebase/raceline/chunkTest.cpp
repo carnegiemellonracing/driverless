@@ -99,24 +99,33 @@ double ftom(int a){
 //     std::make_pair(-4,2)
 // };
 
+// semi circle with straight line after, should gen 3 splines, 2 for semicircle, 1 for straight
+// std::vector<std::pair<double,double>> yellow_cones = {
+//     std::make_pair(0, 20),
+//     std::make_pair(9.25, 17.73),
+//     std::make_pair(17.5, 9.68),
+//     std::make_pair(20, 0),
+//     std::make_pair(18.25, -8.18),
+//     std::make_pair(13.24, -14.99),
+//     std::make_pair(0, -20), 
+    // std::make_pair(-5, -20),
+    // std::make_pair(-10, -20),
+    // std::make_pair(0, -20)  
+// };
+
+// wave 1 spline
 std::vector<std::pair<double,double>> yellow_cones = {
     std::make_pair(0, 20),
-    std::make_pair(9.25, 17.73),
-    std::make_pair(17.5, 9.68),
     std::make_pair(20, 0),
-    std::make_pair(18.25, -8.18),
-    std::make_pair(13.24, -14.99),
-    std::make_pair(0, -20)
+    std::make_pair(40, 40),
+    std::make_pair(60, 40)
 };
 
 std::vector<std::pair<double,double>> blue_cones = {
     std::make_pair(0, 20),
-    std::make_pair(9.25, 17.73),
-    std::make_pair(17.5, 9.68),
     std::make_pair(20, 0),
-    std::make_pair(18.25, -8.18),
-    std::make_pair(13.24, -14.99),
-    std::make_pair(0, -20)
+    std::make_pair(40, 40),
+    std::make_pair(60, 40)
 };
 
 void testMakeSplinesVector() {
