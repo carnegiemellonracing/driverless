@@ -21,6 +21,7 @@
 #include <geometry_msgs/msg/point.hpp>
 #include <glm/glm.hpp>
 #include <random>
+#include <map>
 
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
@@ -45,7 +46,7 @@ namespace controls {
             return arc_rad;
         }
 
-        TestNode::TestNode(const std::string &track_specification, const std::string &log_path, float lookahead)
+        TestNode::TestNode(std::map<std::string, std::string> config_dict)
             : Node{"test_node"},
 
               // ROS stuff
@@ -72,16 +73,22 @@ namespace controls {
               m_spline_publisher{create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
               m_twist_publisher{create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
               m_cone_publisher {create_publisher<ConeMsg>(cone_topic_name, spline_qos)},
+              
+              m_config_dict{config_dict},
+              m_all_segments{parse_segments_specification(m_config_dict["root_dir"] + m_config_dict["track_specs"])},
 
-              m_all_segments{parse_segments_specification(track_specification)},
 
+              m_lookahead{std::stof(m_config_dict["look_ahead"])},
+              m_lookahead_squared {m_lookahead * m_lookahead},
 
-
-              m_lookahead{lookahead},
-              m_lookahead_squared {lookahead * lookahead},
-
-              m_log_file {log_path}
+              m_log_file {m_config_dict["root_dir"] + m_config_dict["track_logs"]}
         {
+            std::cout << m_lookahead << std::endl;
+            std::cout << m_all_segments.size() << std::endl;
+            // m_all_segmentsd = parse_segments_specification(m_config_dict["root_dir"] + m_config_dict["track_specs"]);
+            // m_lookahead = std::stof(m_config_dict["look_ahead"]);
+            // m_lookahead_squared = m_lookahead * m_lookahead;
+            
             glm::fvec2 curr_pos {0.0f, 0.0f};
             float curr_heading = 0.0f;
             for (const auto& seg : m_all_segments) {
@@ -539,8 +546,15 @@ namespace controls {
         }
         std::deque<Segment> TestNode::parse_segments_specification(std::string track_specifications_path)
         {
+            if (!std::filesystem::exists(track_specifications_path)) {
+                std::cout << "Track spec with the path <" << track_specifications_path << "> does not exist. Did you remember to put it in tests/tracks/ ?\n";
+            } else {
+                std::cout << "Track spec file exists.\n";
+            }                
             std::deque<Segment> segments;
             std::ifstream spec_file(track_specifications_path);
+
+            
             if (spec_file.is_open())
             {
                 std::string line;
@@ -597,41 +611,81 @@ namespace controls {
 
 static constexpr float default_lookahead = 50.0f;
 
+std::string trim(const std::string &str) {
+    const size_t first = str.find_first_not_of(" \t");
+
+    if (first == std::string::npos) return "";
+
+    const size_t last = str.find_last_not_of(" \t");
+    const size_t length = last - first + 1;
+
+    return str.substr(first, length);
+}
+
+
+
 int main(int argc, char* argv[]){
-    if (argc == 1) {
-        std::cout << "Specify fi track specification." << std::endl;
+
+    if (argc < 2) {
+        std::cout << "Perhaps you didn't pass in the simulation config file path." << std::endl;
+        return 1;
+    } else {
+        std::cout << "Simulation config file passed." << std::endl;
+    }
+    
+    std::string config_file_path = argv[1];
+    std::string config_file_base_path = "/home/controls_copy/driverless/driverless_ws/src/controls/tests/sim_configs/";
+    std::string config_file_full_path = config_file_base_path + config_file_path;
+    
+    std::map<std::string, std::string> config_dict;
+    
+    if (std::filesystem::exists(config_file_full_path)) {
+        std::cout << "Simulation config file found.\n";
+    } else {
+        std::cout << "Simulation config file not found.\n";
         return 1;
     }
-
-    std::string track_specification = argv[1];
-    float look_ahead = default_lookahead;
-    if (argc >= 3) {
-        look_ahead = std::stof(argv[2]);
+    
+    std::ifstream conf_file(config_file_full_path);  
+    
+    if (conf_file.is_open()) {
+        std::string line;
+        while (std::getline(conf_file, line, '\n'))
+        {
+            std::cout << line << std::endl;
+            if (line.empty() || line[0] == '#') {
+                continue;
+            } else {
+                int delim_position = line.find(':');
+                std::string key = trim(line.substr(0, delim_position));
+                std::string val = trim(line.substr(delim_position + 1));
+                // std::cout << line << " " << key << " " << val <<std::endl;
+                config_dict[key] = val;
+            }
+        }
     }
 
-    std::string track_lap_log_path;
-    if (argc >= 4) {
-        track_lap_log_path = argv[3];
-    }
+    // for(const auto & elem : config_dict)
+    // {
+    //     std::cout << elem.first << " " << elem.second << " " << "\n";
+    // }
+    // std::string track_spec_full_path = "/home/controls_copy/driverless/driverless_ws/src/controls/tests/" + track_specification;
+    // std::cout << "track_spec_full_path: " << track_spec_full_path << std::endl;
 
-    std::string track_spec_full_path = "/home/controls_copy/driverless/driverless_ws/src/controls/tests/" + track_specification;
-    std::cout << "track_spec_full_path: " << track_spec_full_path << std::endl;
+    // if (!std::filesystem::exists(config_file_path)) {
+    //     std::cout << "File with that config file path does not exist. Did you remember to put it in tests/sim_configs/ ?\n";
+    // } else {
+    //     std::cout << "Config file exists\n";
+    // }
 
-    if (!std::filesystem::exists(track_spec_full_path)) {
-        std::cout << "File with those track specs does not exist. Did you remember to put it in src/controls/tests/ ?\n";
-    } else {
-        std::cout << "Track specs exist\n";
-    }
-
-    if (!std::filesystem::exists(track_lap_log_path)) {
-        std::cout << "File named with that output name does not exist.\n";
-    } else {
-        std::cout << "Path for logs exists.\n";
-    }
-
+    // if (!std::filesystem::exists(track_lap_log_path)) {
+    //     std::cout << "File named with that output name does not exist.\n";
+    // } else {
+    //     std::cout << "Path for logs exists.\n";
+    // }
     rclcpp::init(argc, argv);
 
-    rclcpp::spin(std::make_shared<controls::tests::TestNode>(track_spec_full_path, track_lap_log_path, look_ahead));
+    rclcpp::spin(std::make_shared<controls::tests::TestNode>(config_dict));
 
     rclcpp::shutdown();
     return 0;

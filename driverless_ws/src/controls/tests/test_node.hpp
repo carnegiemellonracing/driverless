@@ -10,6 +10,7 @@
 #include <glm/common.hpp>
 #include <glm/common.hpp>
 #include <glm/common.hpp>
+#include <map>
 
 namespace controls {
     namespace tests {
@@ -42,7 +43,7 @@ namespace controls {
         class TestNode : public rclcpp::Node {
         public:
             /// Constructor reads in the track specification, populates the vector of all segments and cones
-            TestNode (const std::string& track_specification, const std::string& log_path, float lookahead);
+            TestNode (std::map<std::string, std::string> config_dict);
             
 
         private:
@@ -69,7 +70,6 @@ namespace controls {
             static constexpr float sim_step = 0.01f;
             static constexpr float track_width = 4.0f;
 
-            static constexpr uint32_t seed = 15251;
 
             void on_sim();
             void on_action(const ActionMsg& msg);
@@ -77,6 +77,8 @@ namespace controls {
             void publish_twist();
 
             void next_segment();
+
+            std::map<std::string, std::string> m_config_dict;
             std::vector<glm::fvec2> arc_segment(float radius, glm::fvec2 start_pos, float start_heading, float end_heading);
             std::vector<glm::fvec2> straight_segment(glm::fvec2 start, float length, float heading);
 
@@ -111,8 +113,8 @@ namespace controls {
             };
             Visibility m_visible_indices; ///< The indices of m_all_left_cones, m_all_right_cones, and m_all_spline that are visible to the car.
 
-            const float m_lookahead;
-            const float m_lookahead_squared;
+            float m_lookahead;
+            float m_lookahead_squared;
 
             /// Stores the current state of the car (in Thomas model coordinates)
             std::array<double, 13> m_world_state {-3, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
