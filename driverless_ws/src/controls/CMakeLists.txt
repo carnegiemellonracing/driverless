@@ -53,10 +53,14 @@ endif()
 #   target_link_libraries(offline_controller controls_lib)
 #   ament_target_dependencies(offline_controller rclcpp interfaces builtin_interfaces)
 #   target_compile_definitions(offline_controller PRIVATE DATA)
-  # set_target_properties(controls_lib controller offline_controller PROPERTIES
+  # set_target_properties(offline_controller PROPERTIES
   #         CUDA_SEPARABLE_COMPILATION ON
   #         CUDA_ARCHITECTURES ${CUDA_ARCH}
   # )
+#   install(
+#         TARGETS offline_controller
+#         DESTINATION lib/${PROJECT_NAME}
+# )
 # endif()
 
 
