@@ -161,7 +161,7 @@ int Spline::get_sort_index(){
  */
 std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double progress, double point_index, int precision){
     
-    std::cout << "progress: " << progress << std::endl;
+    // std::cout << "progress: " << progress << std::endl;
    
     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> ret;
 
@@ -593,12 +593,12 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
             RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
             cumsum.push_back(cumsum.back()+splines[i].calculateLength());
         }
-        std::cout << "i: " << i << std::endl;
+        // std::cout << "i: " << i << std::endl;
     }
 
-    std::cout << "cum length: " << std::endl;
+    // std::cout << "cum length: " << std::endl;
     for (auto l : cumsum) {
-        std::cout << l << std::endl;
+        // std::cout << l << std::endl;
     }
 
     return std::make_pair(splines, cumsum);
@@ -735,7 +735,7 @@ int searchSorted (std::vector<double> arr, double target) {
  */
 std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
                                                std::vector<double> cumulated_lengths, int precision) {
-    std::cout << "real progress: " << progress << std::endl;
+    // std::cout << "real progress: " << progress << std::endl;
     int index = searchSorted(cumulated_lengths, progress) + 1; //TODO: use std::binary_search
     //std::cout << "searchsorted" << std::endl;
     //std::cout << index << std::endl;
@@ -744,9 +744,9 @@ std::pair<double, double> interpolate_raceline(double progress, std::vector<Spli
     double delta = 0;
     //std::cout << "get curr and delta" << std::endl;
 
-    std::cout << "cum length again: " << std::endl;
+    // std::cout << "cum length again: " << std::endl;
     for (auto l : cumulated_lengths) {
-        std::cout << l << std::endl;
+        // std::cout << l << std::endl;
     }
     
     if (index == 0) {
@@ -756,8 +756,8 @@ std::pair<double, double> interpolate_raceline(double progress, std::vector<Spli
     } else {
         //std::cout << "else1" << std::endl;
         delta = progress - cumulated_lengths[index-1];
-        std::cout << "cumulated index: " << index << std::endl;
-        std::cout << "cumulated length: " << cumulated_lengths[index-1] << std::endl;
+        // std::cout << "cumulated index: " << index << std::endl;
+        // std::cout << "cumulated length: " << cumulated_lengths[index-1] << std::endl;
     }
     //std::cout << "before curr along" << std::endl;
     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> result =
