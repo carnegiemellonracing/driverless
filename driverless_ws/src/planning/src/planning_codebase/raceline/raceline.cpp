@@ -596,8 +596,10 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         std::cout << "i: " << i << std::endl;
     }
 
-    std::cout << "cum lengths: " << cumsum << std::endl;
-
+    std::cout << "cum length: " << std::endl;
+    for (auto l : cumsum) {
+        std::cout << l << std::endl;
+    }
 
     return std::make_pair(splines, cumsum);
 }
