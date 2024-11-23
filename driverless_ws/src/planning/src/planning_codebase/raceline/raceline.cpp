@@ -743,6 +743,11 @@ std::pair<double, double> interpolate_raceline(double progress, std::vector<Spli
     Spline curr = splines[index + 1]; // +1 because otherwise if less than first spline lenght, returns 0
     double delta = 0;
     //std::cout << "get curr and delta" << std::endl;
+
+    std::cout << "cum length again: " << std::endl;
+    for (auto l : cumulated_lengths) {
+        std::cout << l << std::endl;
+    }
     
     if (index == 0) {
         //std::cout << "if1" << std::endl;
