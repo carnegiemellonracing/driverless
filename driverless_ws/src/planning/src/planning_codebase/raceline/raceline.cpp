@@ -736,7 +736,7 @@ int searchSorted (std::vector<double> arr, double target) {
 std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
                                                std::vector<double> cumulated_lengths, int precision) {
     std::cout << "real progress: " << progress << std::endl;
-    int index = searchSorted(cumulated_lengths, progress); //TODO: use std::binary_search
+    int index = searchSorted(cumulated_lengths, progress) + 1; //TODO: use std::binary_search
     //std::cout << "searchsorted" << std::endl;
     //std::cout << index << std::endl;
     //std::cout << splines.size() << std::endl;
