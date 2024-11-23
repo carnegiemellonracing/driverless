@@ -220,10 +220,10 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         }
 
 
-        std::cout << "number of guesses: " << guesses.size() << std::endl;
-        for (double guess : guesses){
-            std::cout << guess << std::endl;
-        }
+        // std::cout << "number of guesses: " << guesses.size() << std::endl;
+        // for (double guess : guesses){
+        //     std::cout << guess << std::endl;
+        // }
 
         //std::cout << "SPLINE ALONG 3" << std::endl;
 
@@ -233,13 +233,13 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         double past = double(INT64_MAX), best_guess = 0.1, best_length = 0;
         int i = 0;
         for (double guess : guesses){
-            std::cout << "guess " << i << ": "<< guess << std::endl;
-            std::cout << "first x " << i << ": "<< first_x << std::endl;
-            std::cout << "poly " << i << ": "<< this->spl_poly.nums << std::endl;
+            // std::cout << "guess " << i << ": "<< guess << std::endl;
+            // std::cout << "first x " << i << ": "<< first_x << std::endl;
+            // std::cout << "poly " << i << ": "<< this->spl_poly.nums << std::endl;
             double guess_length = arclength(this->first_der, first_x, guess);
-            std::cout << "progress " << progress << std::endl;
-            std::cout << "guess length " << i << ": "<< guess_length << std::endl;
-            std::cout << "past " << past << std::endl;
+            // std::cout << "progress " << progress << std::endl;
+            // std::cout << "guess length " << i << ": "<< guess_length << std::endl;
+            // std::cout << "past " << past << std::endl;
             if (abs(progress - guess_length) > abs(progress - past)) //# if we did worst than before
                 break;
             best_guess = guess;
@@ -264,7 +264,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         //std::cout << "SPLINE ALONG 4.3" << std::endl;
         rotated_points(1,0)=rotated_point(1);
 
-        std::cout << "rotated points: " << rotated_points << std::endl;
+        // std::cout << "rotated points: " << rotated_points << std::endl;
 
         //std::cout << "SPLINE ALONG 5" << std::endl;
     
@@ -729,7 +729,7 @@ int searchSorted (std::vector<double> arr, double target) {
  */
 std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
                                                std::vector<double> cumulated_lengths, int precision) {
-    // std::cout << "progress: " << progress << std::endl;
+    std::cout << "real progress: " << progress << std::endl;
     int index = searchSorted(cumulated_lengths, progress); //TODO: use std::binary_search
     //std::cout << "searchsorted" << std::endl;
     //std::cout << index << std::endl;
@@ -745,7 +745,7 @@ std::pair<double, double> interpolate_raceline(double progress, std::vector<Spli
     } else {
         //std::cout << "else1" << std::endl;
         delta = progress - cumulated_lengths[index-1];
-        //std::cout << "else" << std::endl;
+        std::cout << "cumulated length: " << cumulated_lengths[index-1] << std::endl;
     }
     //std::cout << "before curr along" << std::endl;
     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> result =
