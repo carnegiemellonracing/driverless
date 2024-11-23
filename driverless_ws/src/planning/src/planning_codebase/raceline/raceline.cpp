@@ -756,6 +756,7 @@ std::pair<double, double> interpolate_raceline(double progress, std::vector<Spli
     } else {
         //std::cout << "else1" << std::endl;
         delta = progress - cumulated_lengths[index-1];
+        std::cout << "cumulated index: " << index << std::endl;
         std::cout << "cumulated length: " << cumulated_lengths[index-1] << std::endl;
     }
     //std::cout << "before curr along" << std::endl;
