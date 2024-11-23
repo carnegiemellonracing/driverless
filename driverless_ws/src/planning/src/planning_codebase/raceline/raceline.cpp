@@ -249,7 +249,7 @@ std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double 
         }
         Eigen::VectorXd rotated_point(2);
         rotated_point(0)=best_guess;
-        std::cout << "best guess: " << best_guess << std::endl;
+        // std::cout << "best guess: " << best_guess << std::endl;
 
         //std::cout << "SPLINE ALONG 4" << std::endl;
         
@@ -692,8 +692,11 @@ std::vector<double> get_curvature_raceline(std::vector<double> progress, std::ve
             min_x
         );
 
+        std::cout << "x: " << min_x << std::endl
+
         curvatures.push_back(curvature);
     }
+
 
     return curvatures;
 }
