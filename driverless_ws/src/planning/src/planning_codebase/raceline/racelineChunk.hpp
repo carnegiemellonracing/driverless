@@ -33,7 +33,7 @@ class Chunk
          * @return True if this chunk should be terminated and should not
          *         include given curvature point, false otherwise.
          */
-        bool checkStopChunk(double newCurvature);
+        bool checkStopChunk(Concavity newCurvature);
 
         /** 
          * Populate the point vectors in the chunk by interpolating points along

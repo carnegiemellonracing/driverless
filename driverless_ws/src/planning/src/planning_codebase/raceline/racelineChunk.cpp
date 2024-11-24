@@ -116,7 +116,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         currProgressVec.push_back(currProgress);
 
         /* Get the concavity using the cubic spline interpolation from make_splines */
-        Concavity cur_concavity_sign = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen)[0];
+        Concavity cur_concavity_sign = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen);
         std::cout << concavity_to_string(cur_concavity_sign) << std::endl;
 
         /* Determine whether to split the chunk */
