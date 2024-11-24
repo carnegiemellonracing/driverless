@@ -722,7 +722,7 @@ Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Splin
     Concavity cur_concavity = get_concavity_sign(splines[index].get_second_der(), min_x);
 
     std::cout << "x: " << min_x << std::endl;
-    std::cout << "y: " << poly_eval(splines[index]->spl_poly, x) << std::endl;
+    std::cout << "y: " << poly_eval(splines[index].spl_poly, min_x) << std::endl;
     return cur_concavity;
 }
 
