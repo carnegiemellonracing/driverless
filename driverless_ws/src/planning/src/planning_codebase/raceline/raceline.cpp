@@ -730,10 +730,10 @@ Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Splin
         //    min_x
         //);
     std::pair<double, double> xy = interpolate_raceline(prog, splines, cumulated_lengths, 200);
-    Concavity cur_concavity = get_concavity_sign(splines[index].get_second_der(), xy[0]);
+    Concavity cur_concavity = get_concavity_sign(splines[index].get_second_der(), xy.first);
 
-    std::cout << "x: " << xy[0] << std::endl;
-    std::cout << "y: " << xy[1] << std::endl;
+    std::cout << "x: " << xy.first << std::endl;
+    std::cout << "y: " << xy.second << std::endl;
     return cur_concavity;
 }
 
