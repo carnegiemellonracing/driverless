@@ -718,10 +718,10 @@ Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Splin
     std::vector<int> indices = inject_clamped(cumulated_lengths, progress);
 
     //for (int i = 0; i < progress.size(); i++){
-    int min_x = progress[0];
+    int prog = progress[0];
     int index = indices[0];
     if (index > 0){
-        min_x -= cumulated_lengths[index-1];
+        prog -= cumulated_lengths[index-1];
     }
         
         //double curvature = get_curvature(
@@ -729,10 +729,11 @@ Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Splin
         //    splines[index].get_second_der(),
         //    min_x
         //);
-    Concavity cur_concavity = get_concavity_sign(splines[index].get_second_der(), min_x);
+    std::pair<double, double> xy = interpolate_raceline(prog, splines, cumulated_lengths, 200);
+    Concavity cur_concavity = get_concavity_sign(splines[index].get_second_der(), xy[0]);
 
-    std::cout << "x: " << min_x << std::endl;
-    std::cout << "y: " << poly_eval(splines[index].spl_poly, min_x) << std::endl;
+    std::cout << "x: " << xy[0] << std::endl;
+    std::cout << "y: " << xy[1] << std::endl;
     return cur_concavity;
 }
 
