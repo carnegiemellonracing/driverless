@@ -37,7 +37,7 @@ Chunk::Chunk() {
  *         include given curvature point, false otherwise.
  */
 bool Chunk::checkStopChunk(Concavity newConcavitySign) {
-    return curConcavitySign != newConcavitySign || (endProgress - startProgress) > CHUNK_LEN_THRESH
+    return curConcavitySign != newConcavitySign || (endProgress - startProgress) > CHUNK_LEN_THRESH;
 }
 
 /** 
