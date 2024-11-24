@@ -69,6 +69,23 @@ double poly_eval(polynomial a, double x){
 double get_curvature(polynomial poly_der_1, polynomial poly_der_2, double min_x) {
   return (poly_eval(poly_der_2, min_x) /
          pow(1 + pow(poly_eval(poly_der_1, min_x), 2), 3 / 2));
+
+}
+
+/*
+ * @brief Gets the sign of the concavity using the 2nd derivative at input_x
+ */
+Chunk_Concavity get_concavity_sign(polynomial poly_der_2, double input_x) {
+    double value = poly_eval(poly_der_2, input_x);
+
+    if (value < -STRAIGHT_CONCAVITY_TH) {
+        return Chunk_Concavity::NEG;
+    } else if (value > STRAIGHT_CONCAVITY_TH) {
+        return Chunk_Concavity::POS;
+    } else {
+        return Chunk_Concavity::STRAIGHT;
+    }
+
 }
 
 Spline::Spline(polynomial interpolation_poly) {
@@ -666,40 +683,47 @@ std::vector<int> inject_clamped(std::vector<double> old_vals, std::vector<double
 }
 
 /**
+ * TODO: get_curvature_raceline will return the sign of the concavity of the current chunk
  * Returns the curvature of the raceline at a given progress.
  * 
- * @param progress A sorted vector of progresses along the raceline.
+ * @param progress A sorted vector of progresses along the raceline. (Progress in meters)
  * @param splines A vector of splines that make up the raceline.
- * @param cumulated_lengths A vector of the cumulated lengths of the splines.
+ * @param cumulated_lengths A vector of the cumulated lengths of the splines. (meters)
  * 
  * @return The curvature at the given progress.
  */
-std::vector<double> get_curvature_raceline(std::vector<double> progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths) {
+Chunk_Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths) {
+    //TODO: progress and splines currently are singletons, they should be just doubles
+    // We have these as vectors because inject_clamped expects vectors
+
     // indices of splines that progress should be on 
+    /* 
+     * 3 components; modifying the components for each chunk
+     * 
+     * 1.) Each chunk has an accumulator for curvature average
+     * - Stores information about the chunk's "curvature" (in this case, identified by the concavity)
+     * 2.) Function that updates the curvature
+     * 3.) Function to check if we need to create a new chunk; happens if the signs change
+     */
     std::vector<int> indices = inject_clamped(cumulated_lengths, progress);
 
-    std::vector<double> curvatures;
-    for (int i = 0; i < progress.size(); i++){
-        int min_x = progress[i];
-        int index = indices[i];
-        if (index > 0){
-            min_x -= cumulated_lengths[index-1];
-        }
-        
-        double curvature = get_curvature(
-            splines[index].get_first_der(),
-            splines[index].get_second_der(),
-            min_x
-        );
-
-        std::cout << "x: " << min_x << std::endl
-        std::cout << "y: " << poly_eval(splines[index]->spl_poly, x) << std::endl
-
-        curvatures.push_back(curvature);
+    //for (int i = 0; i < progress.size(); i++){
+    int min_x = progress[i];
+    int index = indices[i];
+    if (index > 0){
+        min_x -= cumulated_lengths[index-1];
     }
+        
+        //double curvature = get_curvature(
+        //    splines[index].get_first_der(),
+        //    splines[index].get_second_der(),
+        //    min_x
+        //);
+    Chunk_Concavity cur_concavity = get_concavity_sign(splines[index].get_second_der(), min_x);
 
-
-    return curvatures;
+    std::cout << "x: " << min_x << std::endl
+    std::cout << "y: " << poly_eval(splines[index]->spl_poly, x) << std::endl
+    return cur_concavity;
 }
 
 /** 

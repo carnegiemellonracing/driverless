@@ -13,6 +13,8 @@
 // TODO make separate file for poly things here and in frenet
 
 const int prefered_degree = 3,overlap = 0;
+const int STRAIGHT_CONCAVITY_TH = 0.0
+
 struct polynomial
 {
     int deg;

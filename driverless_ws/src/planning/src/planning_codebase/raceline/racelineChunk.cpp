@@ -1,4 +1,3 @@
-#include "racelineChunk.hpp"
 
 #include <math.h>
 #include "../midline/generator.hpp"
@@ -14,7 +13,7 @@
 Chunk::Chunk() {
     startProgress = 0;
     endProgress = 0;
-    sumCurvature = 0;
+    curConcavitySign = Chunk_Concavity::STRAIGHT;
     avgCurvature = 0;
 }
 
@@ -35,13 +34,8 @@ double Chunk::calcRunningAvgCurvature() {
  * @return True if this chunk should be terminated and should not
  *         include given curvature point, false otherwise.
  */
-bool Chunk::checkStopChunk(double newCurvature) {
-    double avgCurve = calcRunningAvgCurvature();
-    if (abs(avgCurve - newCurvature) >= CHUNK_CURVE_THRESH ||
-            (endProgress - startProgress) > CHUNK_LEN_THRESH) {
-        return true;
-    }
-    return false;
+bool Chunk::checkStopChunk(double newConcavitySign) {
+    return curConcavitySign != newConcavitySign || (endProgress - startProgress) > CHUNK_LEN_THRESH
 }
 
 /** 
@@ -97,7 +91,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     // // std::cout << "init chunck vector" << std::endl;
 
-    // make splines for track boundaries
+    /* Getting the polynomials/splines for each track bound*/
+    /* Pass in all of the blue and yellow cones, */
     std::pair<std::vector<Spline>,std::vector<double>> blue = make_splines_vector(blueCones);
     std::pair<std::vector<Spline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
 
@@ -117,17 +112,22 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         double currProgress = (currPercentProgress*totalBlueLength)/totalProgress; // progress in meters
         std::vector<double> currProgressVec;
         currProgressVec.push_back(currProgress);
-        double curvature = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen)[0];
-        std::cout << curvature << std::endl;
-        // compare curvature to avgCurvature of the curr bucket
-        // // std::cout << "after curvature" << std::endl;
+
+        /* Get the concavity using the cubic spline interpolation from make_splines */
+        Chunk_Concavity cur_concavity_sign = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen)[0];
+        std::cout << concavity_to_string(concavity_sign) << std::endl;
+
+        /* Determine whether to split the chunk */
         chunk->endProgress = currPercentProgress;
-        if (!chunk->checkStopChunk(curvature)) {
+        if (!chunk->checkStopChunk(concavity_sign)) {
             // if curvature belongs in current chunk, updated sumCurvature
-            chunk->sumCurvature += curvature;
+            //chunk->sumCurvature += curvature;
+            std::cout << concavity_to_string(cur_concavity_sign) << std::endl;
+            assert(cur_concavity_sign == chunk->cur_concavity_sign);
             // std::cout << "not created new chunk in loop" << std::endl;
         }
-        else { 
+
+        if (chunk->checkStopChunk(concavity_sign)) { 
             // if we need to stop current chunk, create a new chunk and update
             // previous chunk & add it to the chunk vector
             // std::cout << "new chunk" << std::endl;
@@ -142,7 +142,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             // std::cout << "created new chunk in loop" << std::endl;
             chunk->startProgress = currPercentProgress;
             chunk->endProgress = currPercentProgress;
-            chunk->sumCurvature = curvature;
+            chunk->curConcavitySign = cur_concavity_sign;
         }
     }
     chunk->generateConePoints(blue, yellow);
