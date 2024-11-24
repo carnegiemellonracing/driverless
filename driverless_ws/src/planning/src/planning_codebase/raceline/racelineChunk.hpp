@@ -1,22 +1,6 @@
 #include <vector>
 #include "raceline.hpp"
 
-enum class Chunk_Concavity {
-    NEG,
-    STRAIGHT,
-    POS
-};
-
-string concavity_to_string(Chunk_Concavity c) {
-    if (c == Chunk_Concavity::NEG) {
-        return "NEGATIVE CONCAVITY";
-    } else if (c == Chunk_Concavity::STRAIGHT) {
-        return "STRAIGHT CONCAVITY";
-    } else {
-        return "POSITIVE CONCAVITY";
-    }
-}
-
 /**
  * Chunks represent segments of the track where all points have similar curvature. 
  */
@@ -26,7 +10,7 @@ class Chunk
         double startProgress; // start of the chunk
         double endProgress; // end of the chunk
         //double sumCurvature; // sum of curvatures at sample points
-        Chunk_Concavity curConcavitySign;
+        Concavity curConcavitySign;
 
         double avgCurvature; // running avg of chunk
         std::vector<std::pair<double, double>> bluePoints; // interpolated points on the blue cone spline

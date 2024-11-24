@@ -75,15 +75,15 @@ double get_curvature(polynomial poly_der_1, polynomial poly_der_2, double min_x)
 /*
  * @brief Gets the sign of the concavity using the 2nd derivative at input_x
  */
-Chunk_Concavity get_concavity_sign(polynomial poly_der_2, double input_x) {
+Concavity get_concavity_sign(polynomial poly_der_2, double input_x) {
     double value = poly_eval(poly_der_2, input_x);
 
     if (value < -STRAIGHT_CONCAVITY_TH) {
-        return Chunk_Concavity::NEG;
+        return Concavity::NEG;
     } else if (value > STRAIGHT_CONCAVITY_TH) {
-        return Chunk_Concavity::POS;
+        return Concavity::POS;
     } else {
-        return Chunk_Concavity::STRAIGHT;
+        return Concavity::STRAIGHT;
     }
 
 }
@@ -692,7 +692,7 @@ std::vector<int> inject_clamped(std::vector<double> old_vals, std::vector<double
  * 
  * @return The curvature at the given progress.
  */
-Chunk_Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths) {
+Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths) {
     //TODO: progress and splines currently are singletons, they should be just doubles
     // We have these as vectors because inject_clamped expects vectors
 
@@ -719,7 +719,7 @@ Chunk_Concavity get_curvature_raceline(std::vector<double> progress, std::vector
         //    splines[index].get_second_der(),
         //    min_x
         //);
-    Chunk_Concavity cur_concavity = get_concavity_sign(splines[index].get_second_der(), min_x);
+    Concavity cur_concavity = get_concavity_sign(splines[index].get_second_der(), min_x);
 
     std::cout << "x: " << min_x << std::endl
     std::cout << "y: " << poly_eval(splines[index]->spl_poly, x) << std::endl

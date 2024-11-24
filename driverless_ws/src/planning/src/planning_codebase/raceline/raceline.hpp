@@ -15,6 +15,22 @@
 const int prefered_degree = 3,overlap = 0;
 const int STRAIGHT_CONCAVITY_TH = 0.0;
 
+enum class Concavity {
+    NEG,
+    STRAIGHT,
+    POS
+};
+
+string concavity_to_string(Concavity c) {
+    if (c == Concavity::NEG) {
+        return "NEGATIVE CONCAVITY";
+    } else if (c == Concavity::STRAIGHT) {
+        return "STRAIGHT CONCAVITY";
+    } else {
+        return "POSITIVE CONCAVITY";
+    }
+}
+
 struct polynomial
 {
     int deg;
