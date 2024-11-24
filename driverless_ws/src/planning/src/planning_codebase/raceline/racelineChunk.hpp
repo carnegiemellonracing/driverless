@@ -18,10 +18,10 @@ class Chunk
 
         Chunk();
 
-        /** 
-         * Calculate curvature running average.
-         */
-        double calcRunningAvgCurvature();
+        // /** 
+        //  * Calculate curvature running average.
+        //  */
+        // double calcRunningAvgCurvature();
 
         /** 
          * Checks if given chunk should be terminated, i.e. running average of

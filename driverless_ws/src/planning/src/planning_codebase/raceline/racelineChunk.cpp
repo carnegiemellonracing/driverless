@@ -128,14 +128,13 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             assert(cur_concavity_sign == chunk->curConcavitySign);
             // std::cout << "not created new chunk in loop" << std::endl;
         }
-
-        if (chunk->checkStopChunk(cur_concavity_sign)) { 
+        else { 
             // if we need to stop current chunk, create a new chunk and update
             // previous chunk & add it to the chunk vector
             // std::cout << "new chunk" << std::endl;
             chunk->generateConePoints(blue, yellow); // fill in the current bucket's blue and yellow points vectors
             // std::cout << "new chunk 1" << std::endl;
-            chunk->avgCurvature = chunk->calcRunningAvgCurvature();
+            // chunk->avgCurvature = chunk->calcRunningAvgCurvature();
             // std::cout << "new chunk 2" << std::endl;
             //TODO: look into emplace_back
             chunkVector->emplace_back(chunk);
@@ -148,7 +147,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         }
     }
     chunk->generateConePoints(blue, yellow);
-    chunk->avgCurvature = chunk->calcRunningAvgCurvature();
+    // chunk->avgCurvature = chunk->calcRunningAvgCurvature();
+    chunk->curConcavitySign = cur_concavity_sign;
     chunkVector->emplace_back(chunk);
 
     return chunkVector;
