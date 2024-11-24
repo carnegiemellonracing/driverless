@@ -21,15 +21,7 @@ enum class Concavity {
     POS
 };
 
-std::string concavity_to_string(Concavity c) {
-    if (c == Concavity::NEG) {
-        return "NEGATIVE CONCAVITY";
-    } else if (c == Concavity::STRAIGHT) {
-        return "STRAIGHT CONCAVITY";
-    } else {
-        return "POSITIVE CONCAVITY";
-    }
-}
+std::string concavity_to_string(Concavity c);
 
 struct polynomial
 {

@@ -2,6 +2,16 @@
 #include <eigen3/Eigen/Dense>
 // #include "random.h"
 
+std::string concavity_to_string(Concavity c) {
+    if (c == Concavity::NEG) {
+        return "NEGATIVE CONCAVITY";
+    } else if (c == Concavity::STRAIGHT) {
+        return "STRAIGHT CONCAVITY";
+    } else {
+        return "POSITIVE CONCAVITY";
+    }
+}
+
 polynomial poly(int deg = 3){
     polynomial inst;
     inst.deg=deg;
