@@ -148,7 +148,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     }
     chunk->generateConePoints(blue, yellow);
     // chunk->avgCurvature = chunk->calcRunningAvgCurvature();
-    chunk->curConcavitySign = cur_concavity_sign;
+
     chunkVector->emplace_back(chunk);
 
     return chunkVector;
