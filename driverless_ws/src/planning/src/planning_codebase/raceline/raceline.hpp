@@ -21,7 +21,7 @@ enum class Concavity {
     POS
 };
 
-string concavity_to_string(Concavity c) {
+std::string concavity_to_string(Concavity c) {
     if (c == Concavity::NEG) {
         return "NEGATIVE CONCAVITY";
     } else if (c == Concavity::STRAIGHT) {
