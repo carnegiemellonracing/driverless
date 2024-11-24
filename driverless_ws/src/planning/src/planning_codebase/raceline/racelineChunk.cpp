@@ -19,12 +19,12 @@ Chunk::Chunk() {
     avgCurvature = 0;
 }
 
-/** 
- * Calculate curvature running average.
- */
-double Chunk::calcRunningAvgCurvature() {
-    return sumCurvature / (endProgress - startProgress);
-}
+// /** 
+//  * Calculate curvature running average.
+//  */
+// double Chunk::calcRunningAvgCurvature() {
+//     return sumCurvature / (endProgress - startProgress);
+// }
 
 /** 
  * Checks if given chunk should be terminated, i.e. running average of
@@ -36,7 +36,7 @@ double Chunk::calcRunningAvgCurvature() {
  * @return True if this chunk should be terminated and should not
  *         include given curvature point, false otherwise.
  */
-bool Chunk::checkStopChunk(double newConcavitySign) {
+bool Chunk::checkStopChunk(Concavity newConcavitySign) {
     return curConcavitySign != newConcavitySign || (endProgress - startProgress) > CHUNK_LEN_THRESH
 }
 
@@ -117,19 +117,19 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
         /* Get the concavity using the cubic spline interpolation from make_splines */
         Concavity cur_concavity_sign = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen)[0];
-        std::cout << concavity_to_string(concavity_sign) << std::endl;
+        std::cout << concavity_to_string(cur_concavity_sign) << std::endl;
 
         /* Determine whether to split the chunk */
         chunk->endProgress = currPercentProgress;
-        if (!chunk->checkStopChunk(concavity_sign)) {
+        if (!chunk->checkStopChunk(cur_concavity_sign)) {
             // if curvature belongs in current chunk, updated sumCurvature
             //chunk->sumCurvature += curvature;
             std::cout << concavity_to_string(cur_concavity_sign) << std::endl;
-            assert(cur_concavity_sign == chunk->cur_concavity_sign);
+            assert(cur_concavity_sign == chunk->curConcavitySign);
             // std::cout << "not created new chunk in loop" << std::endl;
         }
 
-        if (chunk->checkStopChunk(concavity_sign)) { 
+        if (chunk->checkStopChunk(cur_concavity_sign)) { 
             // if we need to stop current chunk, create a new chunk and update
             // previous chunk & add it to the chunk vector
             // std::cout << "new chunk" << std::endl;
