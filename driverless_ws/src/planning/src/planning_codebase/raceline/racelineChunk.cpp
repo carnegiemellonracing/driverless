@@ -1,4 +1,3 @@
-
 #include "racelineChunk.hpp"
 
 #include <math.h>
@@ -16,7 +15,6 @@ Chunk::Chunk() {
     startProgress = 0;
     endProgress = 0;
     curConcavitySign = Concavity::STRAIGHT;
-    avgCurvature = 0;
 }
 
 // /** 
@@ -133,9 +131,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             // previous chunk & add it to the chunk vector
             // std::cout << "new chunk" << std::endl;
             chunk->generateConePoints(blue, yellow); // fill in the current bucket's blue and yellow points vectors
-            // std::cout << "new chunk 1" << std::endl;
-            // chunk->avgCurvature = chunk->calcRunningAvgCurvature();
-            // std::cout << "new chunk 2" << std::endl;
             //TODO: look into emplace_back
             chunkVector->emplace_back(chunk);
             // std::cout << "new chunk 3" << std::endl;
@@ -147,7 +142,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         }
     }
     chunk->generateConePoints(blue, yellow);
-    // chunk->avgCurvature = chunk->calcRunningAvgCurvature();
 
     chunkVector->emplace_back(chunk);
 
