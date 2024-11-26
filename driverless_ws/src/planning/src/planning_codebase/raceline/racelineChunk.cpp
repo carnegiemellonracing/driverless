@@ -5,7 +5,8 @@
 
 
 // tunable params for chunks
-#define CHUNK_LEN_THRESH 1000
+#define CHUNK_LEN_MAX_THRESH 1000
+#define CHUNK_LEN_MIN_THRESH 5
 #define CHUNK_CURVE_THRESH 0.02
 
 /**
@@ -16,14 +17,6 @@ Chunk::Chunk() {
     endProgress = 0;
     curConcavitySign = Concavity::STRAIGHT;
 }
-
-// /** 
-//  * Calculate curvature running average.
-//  */
-// double Chunk::calcRunningAvgCurvature() {
-//     return sumCurvature / (endProgress - startProgress);
-// }
-
 /** 
  * Checks if given chunk should be terminated, i.e. running average of
  * given chunk is significantly different from the given curvature
@@ -35,7 +28,8 @@ Chunk::Chunk() {
  *         include given curvature point, false otherwise.
  */
 bool Chunk::checkStopChunk(Concavity newConcavitySign) {
-    return curConcavitySign != newConcavitySign || (endProgress - startProgress) > CHUNK_LEN_THRESH;
+    return (((curConcavitySign != newConcavitySign) && ((endProgress - startProgress) > CHUNK_LEN_MIN_THRESH)) || 
+            ((endProgress - startProgress) > CHUNK_LEN_MAX_THRESH));
 }
 
 /** 
@@ -101,7 +95,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     // create a chunk
     Chunk* chunk = new Chunk();
-    // // std::cout << "created new chunk" << std::endl;
     
     // loop through progress and sample curvature at each progress point
     int increment = 1; // TODO: tunable param
@@ -120,16 +113,11 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         /* Determine whether to split the chunk */
         chunk->endProgress = currPercentProgress;
         if (!chunk->checkStopChunk(cur_concavity_sign)) {
-            // if curvature belongs in current chunk, updated sumCurvature
-            //chunk->sumCurvature += curvature;
             std::cout << concavity_to_string(cur_concavity_sign) << std::endl;
             assert(cur_concavity_sign == chunk->curConcavitySign);
             // std::cout << "not created new chunk in loop" << std::endl;
         }
         else { 
-            // if we need to stop current chunk, create a new chunk and update
-            // previous chunk & add it to the chunk vector
-            // std::cout << "new chunk" << std::endl;
             chunk->generateConePoints(blue, yellow); // fill in the current bucket's blue and yellow points vectors
             //TODO: look into emplace_back
             chunkVector->emplace_back(chunk);
