@@ -5,6 +5,7 @@
 
 
 // tunable params for chunks
+// thresholds are arclength in meters
 #define CHUNK_LEN_MAX_THRESH 1000
 #define CHUNK_LEN_MIN_THRESH 5
 #define CHUNK_CURVE_THRESH 0.02
@@ -108,13 +109,18 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
         /* Get the concavity using the cubic spline interpolation from make_splines */
         Concavity cur_concavity_sign = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen);
+
+        /* Perform initialization of the 0th chunk */
+        if (currPercentProgress == 0) {
+            chunk->curConcavitySign = cur_concavity_sign;
+        }
         std::cout << concavity_to_string(cur_concavity_sign) << std::endl;
 
         /* Determine whether to split the chunk */
+        /* Update the end progress of the current chunk */
         chunk->endProgress = currPercentProgress;
         if (!chunk->checkStopChunk(cur_concavity_sign)) {
             std::cout << concavity_to_string(cur_concavity_sign) << std::endl;
-            assert(cur_concavity_sign == chunk->curConcavitySign);
             // std::cout << "not created new chunk in loop" << std::endl;
         }
         else { 
