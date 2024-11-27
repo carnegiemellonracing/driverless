@@ -1,4 +1,4 @@
-import numpy as np
+import autograd.numpy as np
 from scipy.io import loadmat
 
 def Fx0(p, longslip, Fz, pressure, inclinagl):
