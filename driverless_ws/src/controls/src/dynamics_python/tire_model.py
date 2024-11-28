@@ -59,9 +59,7 @@ def Fy0(p, slipangl, Fz, pressure, inclinagl):
     muy = (p['PDY1'] + p['PDY2'] * dfz) * (1 + p['PPY3'] * dpi + p['PPY4'] * dpi2) * (1 - p['PDY3'] * gammaAst2) * p['LMUY']
     Dy = muy * Fz * ZETA2
     Kya = p['PKY1'] * Fz0_ * (1 + p['PPY1'] * dpi) * (1 - p['PKY3'] * np.abs(gammaAst)) * np.sin(p['PKY4'] * np.arctan(Fz / Fz0_ / ((p['PKY2'] + p['PKY5'] * gammaAst2) * (1 + p['PPY2'] * dpi)))) * p['LKY'] * ZETA3
-    eps_kya = np.finfo(float).eps
-    if Kya < 0:
-        eps_kya = eps_kya * -1
+    eps_kya = np.finfo(float).eps * np.where(Kya >= 0, 1, -1)
     # signKya = np.array(np.sign(Kya))
     # signKya[signKya == 0] = 1
     # Kya_ = Kya + np.finfo(float).eps * signKya
@@ -76,8 +74,7 @@ def Fy0(p, slipangl, Fz, pressure, inclinagl):
     # signCy = np.sign(Cy)
     # signCy[signCy == 0] = 1
     eps_Cy = np.finfo(float).eps
-    if Cy < 0:
-        eps_Cy = eps_Cy * -1
+    eps_Cy = eps_Cy * np.where(Cy >= 0, 1, -1)
     By = Kya / (Cy * Dy + eps_Cy)
     fy0 = Dy * np.sin(Cy * np.arctan(By * alphay - Ey * (By * alphay - np.arctan(By * alphay)))) + SVy
     return fy0, muy, dfz, Fz0_, dpi, By, Cy, Ey, Dy, Kya_, SVy, SHy
