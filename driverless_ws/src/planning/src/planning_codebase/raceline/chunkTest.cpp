@@ -220,16 +220,16 @@ int main() {
             Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
         }
 
-        //for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
-        //    std::cout << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
-        //}
+        for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
+            Yellow << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
+        }
 
         Blue << "#" << std::endl;
-        // Yellow << "#" << std::endl;
+        Yellow << "#" << std::endl;
     }
 
     Blue.close();
-    // Yellow.close();
+    Yellow.close();
 
     // for (int j = 0; j < chunks.size(); j++) {
     //     for (int i = 0; i < chunks[j]->bluePoints.size(); i++) {
