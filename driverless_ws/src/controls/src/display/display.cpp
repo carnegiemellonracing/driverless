@@ -169,7 +169,7 @@ namespace controls {
 
         //*******************************NEW */
         void Display::init_raceline() {
-            m_raceline_line = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 6, m_trajectory_shader_program);
+            m_raceline_line = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 0.5f, 0.0f, 1.0f}, 6, m_trajectory_shader_program);
         }
 
 
@@ -391,13 +391,8 @@ namespace controls {
             //Make sure a line exists
             assert(m_best_guess != nullptr);
             assert(m_best_guess->vertex_buf.size() != 0);
-            float xdir = m_best_guess->vertex_buf[0];
-            float ydir = m_best_guess->vertex_buf[1];
-            //Centered at (0,0)
-            float angle = atan2(ydir,xdir);
             //In (x,y) coords, (0,1) is front left, (2,3) is front right, (4,5) is back left, (6,7) is back right
-            std::vector<float> carpts;
-            carpts.reserve(8);
+            std::vector<float> carpts = std::vector<float>(8);
             carpts.push_back(cg_to_nose);
             carpts.push_back(cg_to_side);
             carpts.push_back(cg_to_nose);
@@ -410,7 +405,8 @@ namespace controls {
             unsigned int VBO;
             glGenBuffers(1,&VBO);
             glGenVertexArrays(1,&VAO);
-            glUniform4f(1, 1, 0, 0, 1);
+            GLint color_loc = glGetUniformLocation(m_img_shader_program, "col");
+            glUniform4f(color_loc, 1, 0, 0, 1);
             glUseProgram(m_img_shader_program);
             glBindVertexArray(VAO);
 

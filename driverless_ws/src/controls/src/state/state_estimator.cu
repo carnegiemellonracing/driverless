@@ -625,7 +625,6 @@ namespace controls {
             {
                 ss << "Index: " << i << " Point x: " << m_raceline_points[i].x << "Point y: " << m_raceline_points[i].y << "\n";
             }
-            RCLCPP_WARN(m_logger_obj, ss.str().c_str());
 
             return m_raceline_points;
         }
@@ -975,10 +974,10 @@ namespace controls {
                 }
                 vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, 0.0f}});
 
-                vertices.push_back({{low1.x, low1.y}, {total_progress, 1.0f, 0.0f}});
-                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, 1.0f, 0.0f}});
-                vertices.push_back({{high1.x, high1.y}, {total_progress, 0.0f, 1.0f}});
-                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, 0.0f, 1.0f}});
+                vertices.push_back({{low1.x, low1.y}, {total_progress, -radius, 0.0f}});
+                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, -radius, 0.0f}});
+                vertices.push_back({{high1.x, high1.y}, {total_progress, radius, 1.0f}});
+                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, radius, 1.0f}});
 
                 const GLuint p1i = i == 0 ? 0 : (i - 1) * 5 + 1;
                 const GLuint p2i = i * 5 + 1;
