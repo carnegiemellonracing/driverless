@@ -383,23 +383,25 @@ namespace controls {
             return std::sqrt(perp[0] * perp[0] + perp[1] * perp[1]);
         }
 
-        // bool TestNode::detect_cone(float threshold, glm::fvec2 cone_pos, glm::fvec2 robot_pos, float heading, float width, float height) {
-        //     glm::fvec2 off_height = height/2 * glm::fvec2 {glm::cos(heading), glm::sin(heading)};
-        //     glm::fvec2 off_width = width/2 * glm::fvec2 {glm::sin(heading), -glm::cos(heading)};
-        //     glm::fvec2 bounding_box[4];
-        //     int idx = 0;
-        //     for(int i = -1; i <= 1; i += 2) {
-        //         for(int j = -1; j <= 1; j += 2) {
-        //             bounding_box[idx++] = robot_pos + i * off_height + j * off_width;
-        //         }
-        //     }
-        //     std::swap(bounding_box[2], bounding_box[3]);
-        //     for(int i = 0; i < 2; i++) {
-        //         int dist = dist_line(bounding_box[i], bounding_box[3-i], cone_pos);
-        //         if(dist <= threshold) return false;
-        //     }
-        //     return true;
-        // }
+        bool TestNode::detect_cone(float threshold, glm::fvec2 cone_pos, glm::fvec2 robot_pos, float heading, float width, float height) {
+            glm::fvec2 off_height = glm::fvec2 { height/2 *glm::cos(heading),  height/2 *glm::sin(heading)};
+            glm::fvec2 off_width = glm::fvec2 {width/2 * glm::sin(heading),width/2 *  -glm::cos(heading)};
+            glm::fvec2 bounding_box[6];
+            int idx = 0;
+            for(int i = -1; i <= 1; i += 1) {
+                for(int j = -1; j <= 1; j += 2) {
+                    bounding_box[idx] = glm::fvec2{
+                        robot_pos.x + i * off_height.x + j * off_width.x, robot_pos.y + i *off_height.y + j *off_width.y};
+                    idx += 1;
+                }
+            }
+            std::swap(bounding_box[2], bounding_box[3]);
+            for(int i = 0; i < 2; i++) {
+                int dist = dist_line(bounding_box[i], bounding_box[3-i], cone_pos);
+                if(dist <= threshold) return false;
+            }
+            return true;
+        }
 
 
         int model_func(double t, const double state[], double dstatedt[], void* params) {

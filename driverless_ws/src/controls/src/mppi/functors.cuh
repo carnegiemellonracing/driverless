@@ -63,9 +63,15 @@ namespace controls {
             const float world_state[], const float action[], const float last_taken_action[],
             float start_progress, float time_since_traj_start, bool first) {
 
+            float nose_curv_pose[3];
             float cent_curv_pose[3];
-            bool cent_out_of_bounds;             
+            bool cent_out_of_bounds;
 
+            bool nose_out_of_bounds;
+            float forward_x = cosf(world_state[state_yaw_idx]) * cg_to_nose;
+            float forward_y = sinf(world_state[state_yaw_idx]) * cg_to_nose;
+            float nose_pose[3] = {world_state[state_x_idx] + forward_x, world_state[state_y_idx] + forward_y, world_state[state_yaw_idx]};
+            cuda_globals::sample_curv_state(nose_pose, nose_curv_pose, nose_out_of_bounds);
             cuda_globals::sample_curv_state(world_state, cent_curv_pose, cent_out_of_bounds);
 
             const float centripedal_accel = model::slipless::centripedal_accel(world_state[state_speed_idx], action[action_swangle_idx]);
@@ -94,20 +100,20 @@ namespace controls {
             const float speed_deviation = approx_speed_along - target_speed;
             const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
 
-            //const float distance_cost = 0; // track bounds
+            const float distance_cost = offset_1m_cost * fmax(
+               fabsf(nose_curv_pose[state_y_idx]), fabsf(cent_curv_pose[state_y_idx])
+            );
             const float progress_cost = progress_cost_multiplier * (1.0f - progress);
 
-            //offset_1m_cost * fmax(
-            //    fabsf(nose_curv_pose[state_y_idx]), fabsf(cent_curv_pose[state_y_idx])
-            //);
+
 
             //TODO: delete?
             // const float deriv_cost = first ?
             //     fabsf(action[action_torque_idx] - last_taken_action[action_torque_idx]) / controller_period / 10 * torque_10Nps_cost
             //   + fabsf(action[action_swangle_idx] - last_taken_action[action_swangle_idx]) / controller_period * swangle_1radps_cost
             //   : 0;
-
-            return progress_cost;// + fabsf(action[action_torque_idx]) * 0.05f;// + deriv_cost;
+            return distance_cost + speed_cost;
+            // return progress_cost;// + fabsf(action[action_torque_idx]) * 0.05f;// + deriv_cost;
         }
 
         // Functors for Brownian Generation
