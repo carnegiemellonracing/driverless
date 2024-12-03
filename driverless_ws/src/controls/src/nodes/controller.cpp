@@ -92,6 +92,7 @@ namespace controls {
                 ss << "Length of yellow cones: " << cone_msg.yellow_cones.size() << std::endl;
                 ss << "Length of orange cones: " << cone_msg.orange_cones.size() << std::endl;
                 ss << "Length of unknown color cones: " << cone_msg.unknown_color_cones.size() << std::endl;
+                ss << "Length of big orange cones: " << cone_msg.big_orange_cones.size() << std::endl;
                 RCLCPP_WARN(get_logger(), ss.str().c_str());
                 RCLCPP_WARN(get_logger(), "Received cones");
 
@@ -186,7 +187,6 @@ namespace controls {
                         std::string info_str = ss.str();
 
                         m_info_publisher->publish(info);
-                        std::cout << "IMADEACHANGE!" << std::endl;
                         std::cout << clear_term_sequence << info_str << std::flush;
                         RCLCPP_INFO_STREAM(get_logger(), "mppi step complete. info:\n" << info_str);
                     }

@@ -169,7 +169,7 @@ namespace controls {
 
         //*******************************NEW */
         void Display::init_raceline() {
-            m_raceline_line = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 0.5f, 0.0f, 1.0f}, 2.0f, m_trajectory_shader_program);
+            m_raceline_line = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 6, m_trajectory_shader_program);
         }
 
 
@@ -200,8 +200,6 @@ namespace controls {
             m_spline = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_trajectory_shader_program);
             m_left_cone_trajectory = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 0.0f, 1.0f, 1.0f}, 3, m_trajectory_shader_program);
             m_right_cone_trajectory = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 1.0f, 0.0f, 1.0f}, 3, m_trajectory_shader_program);
-            m_left_cone_trajectory_visible = std::make_unique<DrawableLine>(glm::fvec4 {252.0f, 15.0f, 192.0f, 1.0f}, 3, m_trajectory_shader_program);
-            m_right_cone_trajectory_visible = std::make_unique<DrawableLine>(glm::fvec4 {50.0f, 205.0f, 5.0f, 1.0f}, 3, m_trajectory_shader_program);
         }
 
         void Display::init_best_guess() {
@@ -250,11 +248,8 @@ namespace controls {
         }
 
         void Display::draw_raceline() {
-            if (m_raceline_points.empty()) {
-                return;
-            }
-
-            m_raceline_line->vertex_buf.resize(m_raceline_points.size() * 2);
+            assert(m_raceline_line!=nullptr);
+            m_raceline_line->vertex_buf = std::vector<float>(m_raceline_points.size() * 2);
 
             for (size_t i = 0; i < m_raceline_points.size(); i++) {
                 m_raceline_line->vertex_buf[2 * i] = m_raceline_points[i].x;
@@ -266,6 +261,7 @@ namespace controls {
             }
 
             m_raceline_line->draw();
+
         }
 
 
@@ -317,8 +313,8 @@ namespace controls {
             m_left_cone_trajectory->vertex_buf = std::vector<float>(left_cone_points.size() * 2);
             for (size_t i = 0; i < left_cone_points.size(); i++) {
                 //Draw trajectory line
-                m_left_cone_trajectory->vertex_buf[2 * i] = left_cone_points[i].x;
-                m_left_cone_trajectory->vertex_buf[2 * i + 1] = left_cone_points[i].y;
+                m_left_cone_trajectory->vertex_buf[2 * i] = m_all_left_cone_points[i].x;
+                m_left_cone_trajectory->vertex_buf[2 * i + 1] = m_all_left_cone_points[i].y;
             }
 
             m_right_cone_trajectory->vertex_buf = std::vector<float>(right_cone_points.size() * 2);
@@ -490,13 +486,12 @@ namespace controls {
 
                 m_left_cone_points = m_state_estimator->get_left_cone_points();
                 m_right_cone_points = m_state_estimator->get_right_cone_points();
-                // m_raceline_points = m_state_estimator->get_raceline_points();
+                m_raceline_points = m_state_estimator->get_raceline_points();
 
                 m_state_estimator->get_offset_pixels(m_offset_image);
                 m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();
                 m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);
                 
-                // m_*_cone_trajectory_visible and m_*_cone_trajectory seem to have same functionality?
                 m_left_cone_trajectory->vertex_buf = std::vector<float>(m_left_cone_points.size() * 2);
                 for (size_t i = 0; i < m_left_cone_points.size(); i++) {
                     m_left_cone_trajectory->vertex_buf[2 * i] = m_left_cone_points[i].x;
@@ -518,7 +513,7 @@ namespace controls {
                 draw_spline();
                 draw_cones();
                 draw_best_guess();
-                draw_car();
+                //draw_car();
 
                 draw_raceline();
                 //update_raceline();
