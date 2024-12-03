@@ -232,6 +232,7 @@ namespace controls {
                     m_seen_start = false;
                 }
             }
+            m_raceline_points.push_back(curr_pos);
         }
 
 
@@ -342,8 +343,6 @@ namespace controls {
             return result;
         }
 
-
-
         TestNode::SplineAndCones TestNode::straight_segment_with_cones(glm::fvec2 start, float length, float heading) {
             std::vector<glm::fvec2> spline, left, right;
             constexpr float cone_dist = track_width / 2;
@@ -372,6 +371,35 @@ namespace controls {
             }
             return std::make_tuple(spline, left, right);
         }
+
+        float dot(glm::fvec2 u, glm::fvec2 v) {
+            return u[0] * v[0] + u[1] * v[1];
+        }
+
+        float dist_line(glm::fvec2 start, glm::fvec2 end, glm::fvec2 point) {
+            glm::fvec2 line_vec = end - start;
+            glm::fvec2 point_vec = point - start;
+            glm::fvec2 perp = point_vec - line_vec * (dot(point_vec, line_vec) / dot(line_vec, line_vec));
+            return std::sqrt(perp[0] * perp[0] + perp[1] * perp[1]);
+        }
+
+        // bool TestNode::detect_cone(float threshold, glm::fvec2 cone_pos, glm::fvec2 robot_pos, float heading, float width, float height) {
+        //     glm::fvec2 off_height = height/2 * glm::fvec2 {glm::cos(heading), glm::sin(heading)};
+        //     glm::fvec2 off_width = width/2 * glm::fvec2 {glm::sin(heading), -glm::cos(heading)};
+        //     glm::fvec2 bounding_box[4];
+        //     int idx = 0;
+        //     for(int i = -1; i <= 1; i += 2) {
+        //         for(int j = -1; j <= 1; j += 2) {
+        //             bounding_box[idx++] = robot_pos + i * off_height + j * off_width;
+        //         }
+        //     }
+        //     std::swap(bounding_box[2], bounding_box[3]);
+        //     for(int i = 0; i < 2; i++) {
+        //         int dist = dist_line(bounding_box[i], bounding_box[3-i], cone_pos);
+        //         if(dist <= threshold) return false;
+        //     }
+        //     return true;
+        // }
 
 
         int model_func(double t, const double state[], double dstatedt[], void* params) {

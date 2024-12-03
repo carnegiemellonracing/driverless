@@ -451,7 +451,6 @@ namespace controls {
 
             m_left_cone_points = process_ros_points(cone_msg.blue_cones);
             m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
-            std::cout << "Here 1\n";
 
 #ifdef DISPLAY
             m_all_left_cone_points.clear();
@@ -459,9 +458,7 @@ namespace controls {
 
             m_all_left_cone_points = process_ros_points(cone_msg.orange_cones);
             m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
-            // m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
-
-            std::cout << "Here 2\n";
+            m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
 
             assert(m_all_left_cone_points.size() > 0);
 #endif
@@ -470,8 +467,6 @@ namespace controls {
                 // TODO: correct orig_data_stamp
                 m_state_projector.record_pose(0, 0, 0, cone_msg.orig_data_stamp);
             }
-
-            std::cout << "Here 3\n";
             
             m_logger("finished state estimator cone processing");
         }
@@ -623,6 +618,14 @@ namespace controls {
         // *****REVIEW: not be needed for display
         std::vector<glm::fvec2> StateEstimator_Impl::get_raceline_points(){
             std::lock_guard<std::mutex> guard {m_mutex};
+            std::stringstream ss;
+
+            ss << "Raceline points size: " << m_raceline_points.size() << "\n";
+            for (size_t i = 0; i < m_raceline_points.size(); i++)
+            {
+                ss << "Index: " << i << " Point x: " << m_raceline_points[i].x << "Point y: " << m_raceline_points[i].y << "\n";
+            }
+            RCLCPP_WARN(m_logger_obj, ss.str().c_str());
 
             return m_raceline_points;
         }
