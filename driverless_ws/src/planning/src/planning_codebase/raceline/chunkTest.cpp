@@ -216,12 +216,14 @@ int main() {
         // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
         // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
 
-        for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
-            Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-        }
+        // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
+        //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+        //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+        // }
 
         for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
             Yellow << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
+            std::cout << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
         }
 
         Blue << "#" << std::endl;
