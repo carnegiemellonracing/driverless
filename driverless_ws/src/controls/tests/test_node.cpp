@@ -29,11 +29,99 @@
 #include <filesystem>
 #include "test_node.hpp"
 #include <cstdlib>
+#include <tuple>
+#include <vector>
 
 //#include <utils/general_utils.hpp>
 
 namespace controls {
     namespace tests {
+
+        std::vector<std::tuple<glm::fvec2, float, float>> g_car_poses; // <(x,y), heading, time of state>
+        std::vector<glm::fvec2> g_cones;
+        std::map<std::string, std::string> g_config_dict;
+
+        std::string pretty_print_car_pos(std::tuple<glm::fvec2, float, float> car_pos) {
+            // auto [vec, heading, time] = car_pos;
+            // return "(X: " + std::to_string(vec[0]) + ", Y: " + std::to_string(vec[1]) + ", heading: " + std::to_string(heading) + ", time: " + std::to_string(time);
+            return "(X: " + std::to_string(std::get<0>(car_pos)[0]) + ", Y: " + std::to_string(std::get<0>(car_pos)[1]) + ", heading: " + std::to_string(std::get<1>(car_pos)) + ", time: " + std::to_string(std::get<2>(car_pos));
+        }
+    
+
+        static float dot(glm::fvec2 u, glm::fvec2 v) {
+            return u[0] * v[0] + u[1] * v[1];
+        }
+        static float dist_line(glm::fvec2 start, glm::fvec2 end, glm::fvec2 point)
+        {
+            glm::fvec2 line_vec = end - start;
+            glm::fvec2 point_vec = point - start;
+            glm::fvec2 proj_vec = line_vec * (dot(point_vec, line_vec) / dot(line_vec, line_vec));
+            if (glm::length(proj_vec) > glm::length(line_vec))
+            {
+                return 1000.0f;
+            }
+            glm::fvec2 perp = point_vec - proj_vec;
+            return glm::length(perp);
+        }
+        
+        bool detect_cone_collision(float threshold, glm::fvec2 cone_pos, glm::fvec2 robot_pos, float heading, float width, float height) {
+            glm::fvec2 off_height = glm::fvec2 { height/2 *glm::cos(heading),  height/2 *glm::sin(heading)};
+            glm::fvec2 off_width = glm::fvec2 {width/2 * glm::sin(heading),width/2 *  -glm::cos(heading)};
+            glm::fvec2 bounding_box[6];
+            int idx = 0;
+            for(int i = -1; i <= 1; i += 1) {
+                for(int j = -1; j <= 1; j += 2) {
+                    bounding_box[idx] = glm::fvec2{
+                        robot_pos.x + i * off_height.x + j * off_width.x, robot_pos.y + i *off_height.y + j *off_width.y};
+                    idx += 1;
+                }
+            }
+            std::swap(bounding_box[2], bounding_box[3]);
+            for(int i = 0; i < 2; i++) {
+                int dist = dist_line(bounding_box[i], bounding_box[3-i], cone_pos);
+                if(dist <= threshold) return true;
+            }
+            return false;
+        }
+
+
+
+        void detect_all_collisions() {
+            std::cout << "Received Ctrl-C order, starting cone detection now...\n";
+            std::ofstream collision_log_output;
+
+            std::string collision_log_path = g_config_dict["root_dir"] + g_config_dict["collision_logs"];
+            bool output_file_exists = std::filesystem::exists(collision_log_path);
+            if (output_file_exists)
+            {
+                std::cout << "Collision log file with path " << collision_log_path << " found!" << std::endl;
+                collision_log_output = std::ofstream {collision_log_path};
+            }
+
+            for (auto i = 0; i < g_car_poses.size(); ++i)
+            {
+                for (auto j = 0; j < g_cones.size(); ++j)
+                {
+                    if (detect_cone_collision(std::stof(g_config_dict["collision_threshold"]), 
+                                              g_cones[j], 
+                                              std::get<0>(g_car_poses[i]), 
+                                              std::get<1>(g_car_poses[i]), 
+                                              std::stof(g_config_dict["car_width"]), 
+                                              std::stof(g_config_dict["car_length"]))) {
+
+                        if (output_file_exists) {
+                            collision_log_output << "Collided with cone (" << g_cones[j][0] << ", " << g_cones[j][1] << "), with state: " << pretty_print_car_pos(g_car_poses[i]) << "\n";    
+                        }
+                        else {
+                            std::cout << "Collided with cone (" << g_cones[j][0]  << ", " << g_cones[j][1] << "), with state: " << pretty_print_car_pos(g_car_poses[i]) << "\n";    
+                        }
+                    }
+                    
+                }
+            }
+            std::cout << "Cone detection completed, outputted to " << collision_log_path << ".\n";
+        }
+
         /// @brief Clamp some heading/angle value to the range [0, 2pi)
         static constexpr float arc_rad_adjusted(float arc_rad)
         {
@@ -83,7 +171,9 @@ namespace controls {
               m_lookahead{std::stof(m_config_dict["look_ahead"])},
               m_lookahead_squared {m_lookahead * m_lookahead},
 
-              m_log_file {m_config_dict["root_dir"] + m_config_dict["track_logs"]}
+              m_log_file {m_config_dict["root_dir"] + m_config_dict["track_logs"]},
+
+              m_is_loop {m_config_dict["is_loop"]=="true"}
         {
             std::cout << m_lookahead << std::endl;
             std::cout << m_all_segments.size() << std::endl;
@@ -100,6 +190,9 @@ namespace controls {
                     m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
                     m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
                     m_all_spline.insert(m_all_spline.end(), spline.begin(), spline.end());
+                    g_cones.insert(g_cones.end(), left.begin(), left.end());
+                    g_cones.insert(g_cones.end(), right.begin(), right.end());
+                    
                     curr_pos = spline.back();
                     curr_heading = next_heading;
                 } else if (seg.type == SegmentType::STRAIGHT) {
@@ -107,6 +200,9 @@ namespace controls {
                     m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
                     m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
                     m_all_spline.insert(m_all_spline.end(), spline.begin(), spline.end());
+                    g_cones.insert(g_cones.end(), left.begin(), left.end());
+                    g_cones.insert(g_cones.end(), right.begin(), right.end());
+
                     curr_pos = spline.back();
                 }
             }
@@ -185,22 +281,11 @@ namespace controls {
             glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
             bool within_start = false;
             bool within_end = false;
-            
-            if (!m_is_loop) {
-                within_start = is_within_line(curr_pos, m_start_line, 0.5f);
-                within_end = is_within_line(curr_pos, m_end_line, 1.0f);
-            } else {
-                within_start = is_within_line(curr_pos, m_start_line, 0.5f);
-            }
-            //std::cout << "ONE sx: " << m_start_line[0].x << " sy: " << m_start_line[0].y << "\n";
-            //std::cout << "TWO sx: " << m_start_line[1].x << " sy: " << m_start_line[1].x << "\n";
-
-            //std::cout << "ONE sx: " << m_end_line[0].x << " sy: " << m_end_line[0].y << "\n";
-            //std::cout << "TWO sx: " << m_end_line[1].x << " sy: " << m_end_line[1].x << "\n";
-
-            m_is_loop = m_is_loop || within_start && within_end;
+        
 
             if (!m_is_loop) { //track is not a loop
+                within_start = is_within_line(curr_pos, m_start_line, 0.5f);
+                within_end = is_within_line(curr_pos, m_end_line, 1.0f);
                 if (within_start && !m_seen_start) {
                     m_seen_start = true;
                     m_start_time = get_clock()->now();
@@ -212,6 +297,7 @@ namespace controls {
                     }
                 }
             } else { //track is a loop
+                within_start = is_within_line(curr_pos, m_start_line, 0.5f);
                 if (within_start && !m_seen_start) { // at the start of loop
                     m_seen_start = true;
                     m_start_time = get_clock()->now();
@@ -221,11 +307,12 @@ namespace controls {
 
                     if (elapsed.seconds() > 2.0f){
                         if (m_log_file) {
-                            m_lap_count++;
                             m_log_file << "Lap:" << m_lap_count <<":" << elapsed.seconds() << std::endl;
 
                             std::cout<< "Lap:" << m_lap_count <<":" << elapsed.seconds() << "\n";
                             std::cout<<"FILE FOUND\n";
+                            m_lap_count++;
+
                         }
                         else {
                             std::cout<< "Lap:" << m_lap_count <<":" << elapsed.seconds() << "\n";
@@ -374,36 +461,6 @@ namespace controls {
             return std::make_tuple(spline, left, right);
         }
 
-        float dot(glm::fvec2 u, glm::fvec2 v) {
-            return u[0] * v[0] + u[1] * v[1];
-        }
-
-        float dist_line(glm::fvec2 start, glm::fvec2 end, glm::fvec2 point) {
-            glm::fvec2 line_vec = end - start;
-            glm::fvec2 point_vec = point - start;
-            glm::fvec2 perp = point_vec - line_vec * (dot(point_vec, line_vec) / dot(line_vec, line_vec));
-            return std::sqrt(perp[0] * perp[0] + perp[1] * perp[1]);
-        }
-
-        bool TestNode::detect_cone(float threshold, glm::fvec2 cone_pos, glm::fvec2 robot_pos, float heading, float width, float height) {
-            glm::fvec2 off_height = glm::fvec2 { height/2 *glm::cos(heading),  height/2 *glm::sin(heading)};
-            glm::fvec2 off_width = glm::fvec2 {width/2 * glm::sin(heading),width/2 *  -glm::cos(heading)};
-            glm::fvec2 bounding_box[6];
-            int idx = 0;
-            for(int i = -1; i <= 1; i += 1) {
-                for(int j = -1; j <= 1; j += 2) {
-                    bounding_box[idx] = glm::fvec2{
-                        robot_pos.x + i * off_height.x + j * off_width.x, robot_pos.y + i *off_height.y + j *off_width.y};
-                    idx += 1;
-                }
-            }
-            std::swap(bounding_box[2], bounding_box[3]);
-            for(int i = 0; i < 2; i++) {
-                int dist = dist_line(bounding_box[i], bounding_box[3-i], cone_pos);
-                if(dist <= threshold) return false;
-            }
-            return true;
-        }
 
 
         int model_func(double t, const double state[], double dstatedt[], void* params) {
@@ -462,6 +519,10 @@ namespace controls {
             gsl_odeiv2_driver_free(driver);
             update_visible_indices();
             update_track_time();
+            glm::fvec2 world_state_vec {m_world_state[0], m_world_state[1]};
+            
+            g_car_poses.push_back(std::make_tuple(world_state_vec, m_world_state[2], m_time.seconds() - m_start_time.seconds()));
+
             // float x_diff = (m_world_state[0] - m_finish_line.x);
             // float y_diff = (m_world_state[1] - m_finish_line.y);
             // if (x_diff * x_diff + y_diff * y_diff < ) {
@@ -700,6 +761,8 @@ int main(int argc, char* argv[]){
         }
     }
 
+    controls::tests::g_config_dict = config_dict;
+
     // for(const auto & elem : config_dict)
     // {
     //     std::cout << elem.first << " " << elem.second << " " << "\n";
@@ -718,9 +781,14 @@ int main(int argc, char* argv[]){
     // } else {
     //     std::cout << "Path for logs exists.\n";
     // }
-    rclcpp::init(argc, argv);
 
-    rclcpp::spin(std::make_shared<controls::tests::TestNode>(config_dict));
+    rclcpp::init(argc, argv);
+    
+    auto node = std::make_shared<controls::tests::TestNode>(config_dict);
+
+    rclcpp::on_shutdown(controls::tests::detect_all_collisions);
+
+    rclcpp::spin(node);
 
     rclcpp::shutdown();
     return 0;
