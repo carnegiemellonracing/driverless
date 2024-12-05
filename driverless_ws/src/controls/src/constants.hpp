@@ -73,7 +73,7 @@ namespace controls {
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 
     // Cost params
-    constexpr float progress_cost_multiplier = 60.0f;
+    constexpr float progress_cost_multiplier = 0.6f;
     /// Reason for not using infinity: reduction uses log of the cost (trading precision for representable range).
     /// This covers the edge case where every trajectory goes out of bounds, allowing us to still extract useful information.
     constexpr float out_of_bounds_cost = 100.0f; ///< Cost for being out of (fake) track bound as defined by @ref track_width.
@@ -109,10 +109,10 @@ namespace controls {
     constexpr float car_mass = 210.0f;
     constexpr float rolling_drag = 100.0f; /// Total drag forces on the car (rolling friction + air drag) in N
     /// Maximum forward acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
-    constexpr float long_tractive_capability = 10.0f;
+    constexpr float long_tractive_capability = 2.0f;
     /// Maximum centripetal acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
     /// Usually slightly more than @c long_tractive_capability
-    constexpr float lat_tractive_capability = 9.0f;
+    constexpr float lat_tractive_capability = 3.0f;
     constexpr float understeer_slope = 0.0f; ///< How much car understeers as speed increases. See @rst :doc:`/source/explainers/slipless_model` @endrst.
     constexpr float brake_enable_speed = 1.0f;
     /// Maximum torque request (N m)

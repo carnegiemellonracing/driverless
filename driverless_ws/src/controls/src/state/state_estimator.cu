@@ -711,7 +711,7 @@ namespace controls {
 
         void StateEstimator_Impl::render_fake_track() {
             glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
-            glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
@@ -951,7 +951,7 @@ namespace controls {
                 }
 
                 glm::fvec2 disp = p2 - p1;
-                float new_progress = glm::length(disp) / 100.0f; // TODO: figure out a way to normalize without some arbitrary magic number
+                float new_progress = glm::length(disp); // TODO: figure out a way to normalize without some arbitrary magic number
                 // 1. go through the vector and divide based on total progress
                 // 2. set total progress to be a member variable, then use that as a uniform, thus passing it into the fragment shader
                 float segment_heading = std::atan2(disp.y, disp.x);
@@ -974,8 +974,9 @@ namespace controls {
                 }
                 vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, 0.0f}});
 
-                vertices.push_back({{low1.x, low1.y}, {total_progress, -radius, 0.0f}});
-                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, -radius, 0.0f}});
+                // I set offset to be 1.0 to prevent plateauing
+                vertices.push_back({{low1.x, low1.y}, {total_progress, radius, 0.0f}});
+                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, radius, 0.0f}});
                 vertices.push_back({{high1.x, high1.y}, {total_progress, radius, 1.0f}});
                 vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, radius, 1.0f}});
 

@@ -169,7 +169,7 @@ namespace controls {
 
         //*******************************NEW */
         void Display::init_raceline() {
-            m_raceline_line = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 0.5f, 0.0f, 1.0f}, 6, m_trajectory_shader_program);
+            m_raceline_line = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 0.0f, 1.0f, 1.0f}, 6, m_trajectory_shader_program);
         }
 
 
