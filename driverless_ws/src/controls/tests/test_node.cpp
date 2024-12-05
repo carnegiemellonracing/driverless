@@ -188,7 +188,7 @@ namespace controls {
             
             if (!m_is_loop) {
                 within_start = is_within_line(curr_pos, m_start_line, 0.5f);
-                within_end = is_within_line(curr_pos, m_end_line, 0.5f);
+                within_end = is_within_line(curr_pos, m_end_line, 1.0f);
             } else {
                 within_start = is_within_line(curr_pos, m_start_line, 0.5f);
             }
@@ -234,6 +234,7 @@ namespace controls {
                     m_seen_start = false;
                 }
             }
+            m_raceline_points.push_back(curr_pos);
         }
 
 
@@ -344,8 +345,6 @@ namespace controls {
             return result;
         }
 
-
-
         TestNode::SplineAndCones TestNode::straight_segment_with_cones(glm::fvec2 start, float length, float heading) {
             std::vector<glm::fvec2> spline, left, right;
             constexpr float cone_dist = track_width / 2;
@@ -373,6 +372,37 @@ namespace controls {
                 }
             }
             return std::make_tuple(spline, left, right);
+        }
+
+        float dot(glm::fvec2 u, glm::fvec2 v) {
+            return u[0] * v[0] + u[1] * v[1];
+        }
+
+        float dist_line(glm::fvec2 start, glm::fvec2 end, glm::fvec2 point) {
+            glm::fvec2 line_vec = end - start;
+            glm::fvec2 point_vec = point - start;
+            glm::fvec2 perp = point_vec - line_vec * (dot(point_vec, line_vec) / dot(line_vec, line_vec));
+            return std::sqrt(perp[0] * perp[0] + perp[1] * perp[1]);
+        }
+
+        bool TestNode::detect_cone(float threshold, glm::fvec2 cone_pos, glm::fvec2 robot_pos, float heading, float width, float height) {
+            glm::fvec2 off_height = glm::fvec2 { height/2 *glm::cos(heading),  height/2 *glm::sin(heading)};
+            glm::fvec2 off_width = glm::fvec2 {width/2 * glm::sin(heading),width/2 *  -glm::cos(heading)};
+            glm::fvec2 bounding_box[6];
+            int idx = 0;
+            for(int i = -1; i <= 1; i += 1) {
+                for(int j = -1; j <= 1; j += 2) {
+                    bounding_box[idx] = glm::fvec2{
+                        robot_pos.x + i * off_height.x + j * off_width.x, robot_pos.y + i *off_height.y + j *off_width.y};
+                    idx += 1;
+                }
+            }
+            std::swap(bounding_box[2], bounding_box[3]);
+            for(int i = 0; i < 2; i++) {
+                int dist = dist_line(bounding_box[i], bounding_box[3-i], cone_pos);
+                if(dist <= threshold) return false;
+            }
+            return true;
         }
 
 
