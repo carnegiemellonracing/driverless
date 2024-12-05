@@ -84,7 +84,6 @@ namespace controls {
 
             SplineAndCones straight_segment_with_cones(glm::fvec2 start, float length, float heading);
             SplineAndCones arc_segment_with_cones(float radius, glm::fvec2 start_pos, float start_heading, float end_heading);
-            bool detect_cone(float threshold, glm::fvec2 cone_pos, glm::fvec2 robot_pos, float heading, float width, float height);
 
             std::deque<Segment> parse_segments_specification(std::string track_specifications_path);
             void update_visible_indices();

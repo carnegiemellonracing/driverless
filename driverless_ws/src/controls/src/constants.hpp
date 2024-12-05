@@ -101,7 +101,7 @@ namespace controls {
     constexpr float cg_to_front = 0.775; 
     constexpr float cg_to_rear = 0.775; //Also rear of car
     constexpr float cg_to_nose = 2.025f;
-    constexpr float cg_to_side = 1.0f; //ACTUAL .75
+    constexpr float cg_to_side = 0.0f; //ACTUAL .75
     //constexpr float whl_base = 2.0f;
     constexpr float whl_radius = 0.2286;
     /// gear ratio = motor speed / wheel speed = wheel torque / motor torque
