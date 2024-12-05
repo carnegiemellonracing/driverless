@@ -61,11 +61,11 @@ namespace controls {
          * @returns Cost at the given state
          */
         __device__ static float cost(
-            const float world_state[], const float action[], const float last_taken_action[],
+            const float world_state[state_dims], const float action[], const float last_taken_action[],
             float start_progress, float time_since_traj_start, bool first) {
 
             float cent_curv_pose[3];
-            bool cent_out_of_bounds;             
+            bool cent_out_of_bounds;
 
             cuda_globals::sample_curv_state(world_state, cent_curv_pose, cent_out_of_bounds);
 
@@ -92,23 +92,27 @@ namespace controls {
             const float progress = cent_curv_pose[0];
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
+            const float actual_speed_along = world_state[3];
+            // if (fabsf(approx_speed_along - actual_speed_along) > 1.0f) {
+            //     printf("Approx speed along: %f, actual speed along: %f\n", approx_speed_along, actual_speed_along);
+            // }
             const float speed_deviation = approx_speed_along - target_speed;
-            const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
+            // const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
+            const float speed_cost = speed_off_1mps_cost * (-speed_deviation);
 
-            //const float distance_cost = 0; // track bounds
-            const float progress_cost = progress_cost_multiplier * (1.0f - progress);
+            const float distance_cost = offset_1m_cost * cent_curv_pose[state_y_idx];
+            const float progress_cost = progress_cost_multiplier * (-progress);
 
-            //offset_1m_cost * fmax(
-            //    fabsf(nose_curv_pose[state_y_idx]), fabsf(cent_curv_pose[state_y_idx])
-            //);
+
 
             //TODO: delete?
             // const float deriv_cost = first ?
             //     fabsf(action[action_torque_idx] - last_taken_action[action_torque_idx]) / controller_period / 10 * torque_10Nps_cost
             //   + fabsf(action[action_swangle_idx] - last_taken_action[action_swangle_idx]) / controller_period * swangle_1radps_cost
             //   : 0;
-
-            return progress_cost;// + fabsf(action[action_torque_idx]) * 0.05f;// + deriv_cost;
+            // return speed_cost;
+            return progress_cost;
+            // + fabsf(action[action_torque_idx]) * 0.05f;// + deriv_cost;
         }
 
         // Functors for Brownian Generation
