@@ -186,7 +186,7 @@ namespace controls {
             
             if (!m_is_loop) {
                 within_start = is_within_line(curr_pos, m_start_line, 0.5f);
-                within_end = is_within_line(curr_pos, m_end_line, 0.5f);
+                within_end = is_within_line(curr_pos, m_end_line, 1.0f);
             } else {
                 within_start = is_within_line(curr_pos, m_start_line, 0.5f);
             }

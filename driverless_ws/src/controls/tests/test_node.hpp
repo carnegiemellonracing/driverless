@@ -118,7 +118,7 @@ namespace controls {
             float m_lookahead_squared;
 
             /// Stores the current state of the car (in Thomas model coordinates)
-            std::array<double, 13> m_world_state {-3, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
+            std::array<double, 13> m_world_state {0, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
 
 
             rclcpp::Time m_time;
