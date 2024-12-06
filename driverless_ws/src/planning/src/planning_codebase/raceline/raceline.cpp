@@ -573,8 +573,9 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
         }
         RCLCPP_INFO(logger, "second point is (%f, %f)\n", rotated_points(0, 1), rotated_points(1, 1));
 
+        // not rotating here because doing parametrized spline
+        polynomial interpolation_poly = lagrange_gen(group);
 
-        polynomial interpolation_poly = lagrange_gen(rotated_points);
         polynomial first_der = polyder(interpolation_poly);
         polynomial second_der = polyder(first_der);
 
@@ -614,9 +615,9 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
     }
 
     // std::cout << "cum length: " << std::endl;
-    for (auto l : cumsum) {
-        // std::cout << l << std::endl;
-    }
+    // for (auto l : cumsum) {
+    //     // std::cout << l << std::endl;
+    // }
 
     return std::make_pair(splines, cumsum);
 }
