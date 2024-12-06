@@ -90,12 +90,12 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     std::vector<std::pair<double,double>> yellowConesX;
     std::vector<std::pair<double,double>> yellowConesY;
 
-    for (int i = 0; i < blueCones.size; i++) {
+    for (int i = 0; i < blueCones.size(); i++) {
         blueConesX.push_back(std::make_pair(i, blueCones[i].first));
         blueConesY.push_back(std::make_pair(i, blueCones[i].second));
     }
 
-    for (int i = 0; i < yellowCones.size; i++) {
+    for (int i = 0; i < yellowCones.size(); i++) {
         yellowConesX.push_back(std::make_pair(i, yellowCones[i].first));
         yellowConesY.push_back(std::make_pair(i, yellowCones[i].first));
     }
