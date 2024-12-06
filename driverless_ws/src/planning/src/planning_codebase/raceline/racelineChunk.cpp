@@ -84,12 +84,34 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     //TODO: use new keyword to create vector in heap not stack
     std::vector<Chunk*>* chunkVector = new std::vector<Chunk*>();
 
-    // // std::cout << "init chunck vector" << std::endl;
+    // indices vectors
+    std::vector<std::pair<double,double>> blueConesX;
+    std::vector<std::pair<double,double>> blueConesY;
+    std::vector<std::pair<double,double>> yellowConesX;
+    std::vector<std::pair<double,double>> yellowConesY;
+
+    for (int i = 0; i < blueCones.size; i++) {
+        blueConesX.push_back(std::make_pair(i, blueCones[i].first));
+        blueConesY.push_back(std::make_pair(i, blueCones[i].second));
+    }
+
+    for (int i = 0; i < yellowCones.size; i++) {
+        yellowConesX.push_back(std::make_pair(i, yellowCones[i].first));
+        yellowConesY.push_back(std::make_pair(i, yellowCones[i].first));
+    }
+    // // std::cout << "init chunk vector" << std::endl;
 
     /* Getting the polynomials/splines for each track bound*/
     /* Pass in all of the blue and yellow cones, */
+
     std::pair<std::vector<Spline>,std::vector<double>> blue = make_splines_vector(blueCones);
     std::pair<std::vector<Spline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
+
+    std::cout << "param splines" << std::endl;
+    std::pair<std::vector<Spline>,std::vector<double>> blueX = make_splines_vector(blueConesX);
+    std::pair<std::vector<Spline>,std::vector<double>> yellowX = make_splines_vector(yellowConesX);
+    std::pair<std::vector<Spline>,std::vector<double>> blueY = make_splines_vector(blueConesY);
+    std::pair<std::vector<Spline>,std::vector<double>> yellowY = make_splines_vector(yellowConesY);
 
     std::vector<Spline> racetrackSplines = blue.first;
     std::vector<double> cumulativeLen = blue.second;

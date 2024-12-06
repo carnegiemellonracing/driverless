@@ -189,10 +189,16 @@ void testMakeSplinesVector() {
 
 
 int main() {
-    std::vector<std::pair<double, double>> blue_cones = {};
-    std::vector<std::pair<double, double>> yellow_cones = {};
+    //std::vector<std::pair<double, double>> blue_cones = {};
+    //std::vector<std::pair<double, double>> yellow_cones = {};
 
-    createSquidwardTrack(blue_cones, yellow_cones);
+    //createSquidwardTrack(blue_cones, yellow_cones);
+    std::vector<std::pair<double,double>> blue_cones = {
+        std::make_pair(400, 400),
+        std::make_pair(300, 300),
+        std::make_pair(200, 200),
+        std::make_pair(100, 100)
+    };
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
     // if (chunks == nullptr) {
