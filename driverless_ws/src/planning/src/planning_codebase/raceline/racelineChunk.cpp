@@ -107,10 +107,13 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     std::pair<std::vector<Spline>,std::vector<double>> blue = make_splines_vector(blueCones);
     std::pair<std::vector<Spline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
 
-    std::cout << "param splines" << std::endl;
+    std::cout << "param splines blue x" << std::endl;
     std::pair<std::vector<Spline>,std::vector<double>> blueX = make_splines_vector(blueConesX);
+    std::cout << "param splines yellow x" << std::endl;
     std::pair<std::vector<Spline>,std::vector<double>> yellowX = make_splines_vector(yellowConesX);
+    std::cout << "param splines blue y" << std::endl;
     std::pair<std::vector<Spline>,std::vector<double>> blueY = make_splines_vector(blueConesY);
+    std::cout << "param splines yellow y" << std::endl;
     std::pair<std::vector<Spline>,std::vector<double>> yellowY = make_splines_vector(yellowConesY);
 
     std::vector<Spline> racetrackSplines = blue.first;
