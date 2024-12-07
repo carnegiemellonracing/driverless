@@ -22,6 +22,7 @@
 #include <glm/glm.hpp>
 #include <random>
 #include <map>
+#include <stack>
 
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
@@ -55,13 +56,12 @@ namespace controls {
         {
             glm::fvec2 line_vec = end - start;
             glm::fvec2 point_vec = point - start;
-            glm::fvec2 proj_vec = line_vec * (dot(point_vec, line_vec) / dot(line_vec, line_vec));
-            if (glm::length(proj_vec) > glm::length(line_vec))
-            {
+            float scalar_multiple = (dot(point_vec, line_vec) / dot(line_vec, line_vec));
+            if (scalar_multiple > 0.0f && scalar_multiple < 1.0f) {
+                return glm::length(point_vec - line_vec * scalar_multiple);
+            } else {
                 return 1000.0f;
             }
-            glm::fvec2 perp = point_vec - proj_vec;
-            return glm::length(perp);
         }
         
         bool detect_cone_collision(float threshold, glm::fvec2 cone_pos, glm::fvec2 robot_pos, float heading, float width, float height) {
@@ -77,11 +77,11 @@ namespace controls {
                 }
             }
             std::swap(bounding_box[2], bounding_box[3]);
+            float sum = 0;
             for(int i = 0; i < 2; i++) {
-                int dist = dist_line(bounding_box[i], bounding_box[3-i], cone_pos);
-                if(dist <= threshold) return true;
+                sum += dist_line(bounding_box[i], bounding_box[3-i], cone_pos);
             }
-            return false;
+            return sum < width;
         }
 
 
@@ -89,17 +89,20 @@ namespace controls {
         void detect_all_collisions() {
             std::cout << "Received Ctrl-C order, starting cone detection now...\n";
             std::ofstream collision_log_output;
+            std::stack<std::pair<glm::fvec2, std::tuple<glm::fvec2, float, float>>> collisions;
 
             std::string collision_log_path = getenv("HOME") + g_config_dict["root_dir"] + g_config_dict["collision_logs"];
             bool output_file_exists = std::filesystem::exists(collision_log_path);
             if (output_file_exists)
             {
                 std::cout << "Collision log file with path " << collision_log_path << " found!" << std::endl;
-                collision_log_output = std::ofstream {collision_log_path};
+                collision_log_output = std::ofstream{collision_log_path, std::ios_base::trunc};
             }
-
+            
+            int prev_cone = -1;
             for (auto i = 0; i < g_car_poses.size(); ++i)
-            {
+                {
+
                 for (auto j = 0; j < g_cones.size(); ++j)
                 {
                     if (detect_cone_collision(std::stof(g_config_dict["collision_threshold"]), 
@@ -108,17 +111,73 @@ namespace controls {
                                               std::get<1>(g_car_poses[i]), 
                                               std::stof(g_config_dict["car_width"]), 
                                               std::stof(g_config_dict["car_length"]))) {
-
-                        if (output_file_exists) {
-                            collision_log_output << "Collided with cone (" << g_cones[j][0] << ", " << g_cones[j][1] << "), with state: " << pretty_print_car_pos(g_car_poses[i]) << "\n";    
+                        if (prev_cone != j) {
+                                if (output_file_exists) {
+                                    collision_log_output << "Collided with cone (" << g_cones[j][0] << ", " << g_cones[j][1]
+                                        << "), with state: " << pretty_print_car_pos(g_car_poses[i]) <<"J:" <<  j << "\n";    
+                                } 
+                            else 
+                                {
+                                    std::cout << "Collided with cone (" << g_cones[j][0] << ", " << g_cones[j][1]
+                                        << "), with state: " << pretty_print_car_pos(g_car_poses[i]) << "\n";
+                                }
+                            }
+                            prev_cone = j;
                         }
-                        else {
-                            std::cout << "Collided with cone (" << g_cones[j][0]  << ", " << g_cones[j][1] << "), with state: " << pretty_print_car_pos(g_car_poses[i]) << "\n";    
-                        }
-                    }
-                    
+                    }       
                 }
-            }
+            
+
+            // std::vector<std::pair<glm::fvec2, std::tuple<glm::fvec2, float, float>>> cols_without_duplicates;
+            // if ((g_config_dict["remove_duplicates"]) == "true") {
+            //     if (!collisions.empty()) {
+            //         auto curr = collisions.top();
+            //         collisions.pop();
+            //         glm::fvec2 curr_cone = std::get<0>(curr);
+            //         cols_without_duplicates.push_back(curr);
+            //         int n = 1;
+            //         while (!collisions.empty()) {
+            //             auto next = collisions.top();
+            //             collisions.pop();
+            //             glm::fvec2 next_cone = std::get<0>(next);
+
+            //             if (curr_cone == next_cone) {
+            //                 auto top = cols_without_duplicates[cols_without_duplicates.size()-1];
+            //                 std::get<0>(top.second)[0] *= (n / (n+1));
+            //                 std::get<0>(top.second)[0] += (std::get<0>(next.second)[0] / (n+1));
+
+            //                 std::get<0>(top.second)[1] *= (n / (n+1));
+            //                 std::get<0>(top.second)[1] += (std::get<0>(next.second)[1] / (n+1));                            
+
+            //                 std::get<1>(top.second) *= (n / (n+1));
+            //                 std::get<1>(top.second) += (std::get<1>(next.second) / (n+1));  
+
+            //                 std::get<2>(top.second) *= (n / (n+1));
+            //                 std::get<2>(top.second) += (std::get<2>(next.second) / (n+1)); 
+
+            //                 n+=1; 
+            
+            //             } else {
+            //                 cols_without_duplicates.push_back(next);
+            //                 curr_cone = next_cone;
+            //                 n = 1;
+            //             }
+            //         }
+            //     }
+                // if (output_file_exists) {
+                //     for (auto i = cols_without_duplicates.size()-1; i >= 0; i--) {
+                //         collision_log_output << "Collided with cone (" << cols_without_duplicates[i].first[0] << ", " << cols_without_duplicates[i].first[1]
+                //             << "), with state: " << pretty_print_car_pos(cols_without_duplicates[i].second) << "\n";    
+                //     } 
+                // }
+                // else {
+                //     for (auto i = cols_without_duplicates.size()-1; i >= 0; i--) {
+                //         std::cout << "Collided with cone (" << cols_without_duplicates[i].first[0] << ", " << cols_without_duplicates[i].first[1]
+                //             << "), with state: " << pretty_print_car_pos(cols_without_duplicates[i].second) << "\n";    
+                //     }            
+                // }
+
+            
             std::cout << "Cone detection completed, outputted to " << collision_log_path << ".\n";
         }
 
@@ -170,7 +229,7 @@ namespace controls {
               m_lookahead{std::stof(m_config_dict["look_ahead"])},
               m_lookahead_squared{m_lookahead * m_lookahead},
 
-              m_log_file{getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_logs"]},
+              m_log_file{getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_logs"], std::ios_base::trunc},
 
               m_is_loop{m_config_dict["is_loop"] == "true"}
         {
@@ -311,7 +370,6 @@ namespace controls {
                             std::cout<< "Lap:" << m_lap_count <<":" << elapsed.seconds() << "\n";
                             std::cout<<"FILE FOUND\n";
                             m_lap_count++;
-
                         }
                         else {
                             std::cout<< "Lap:" << m_lap_count <<":" << elapsed.seconds() << "\n";
