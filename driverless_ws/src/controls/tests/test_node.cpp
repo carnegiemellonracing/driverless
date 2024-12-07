@@ -90,7 +90,7 @@ namespace controls {
             std::cout << "Received Ctrl-C order, starting cone detection now...\n";
             std::ofstream collision_log_output;
 
-            std::string collision_log_path = g_config_dict["root_dir"] + g_config_dict["collision_logs"];
+            std::string collision_log_path = getenv("HOME") + g_config_dict["root_dir"] + g_config_dict["collision_logs"];
             bool output_file_exists = std::filesystem::exists(collision_log_path);
             if (output_file_exists)
             {
@@ -162,18 +162,17 @@ namespace controls {
 
               m_spline_publisher{create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
               m_twist_publisher{create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
-              m_cone_publisher {create_publisher<ConeMsg>(cone_topic_name, spline_qos)},
-              
-              m_config_dict{config_dict},
-              m_all_segments{parse_segments_specification(m_config_dict["root_dir"] + m_config_dict["track_specs"])},
+              m_cone_publisher{create_publisher<ConeMsg>(cone_topic_name, spline_qos)},
 
+              m_config_dict{config_dict},
+              m_all_segments{parse_segments_specification(getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
 
               m_lookahead{std::stof(m_config_dict["look_ahead"])},
-              m_lookahead_squared {m_lookahead * m_lookahead},
+              m_lookahead_squared{m_lookahead * m_lookahead},
 
-              m_log_file {m_config_dict["root_dir"] + m_config_dict["track_logs"]},
+              m_log_file{getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_logs"]},
 
-              m_is_loop {m_config_dict["is_loop"]=="true"}
+              m_is_loop{m_config_dict["is_loop"] == "true"}
         {
             std::cout << m_lookahead << std::endl;
             std::cout << m_all_segments.size() << std::endl;
