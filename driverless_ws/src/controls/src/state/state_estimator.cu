@@ -32,6 +32,8 @@
 #include <mppi/functors.cuh>
 #include <SDL2/SDL_video.h>
 
+#include <midline/svm_conv.h>
+
 
 namespace controls {
     namespace state {
@@ -403,6 +405,8 @@ namespace controls {
 
             m_logger("beginning state estimator spline processing");
 
+
+
             m_spline_frames.clear();
             m_spline_frames.reserve(spline_msg.frames.size());
 
@@ -417,7 +421,8 @@ namespace controls {
             //     m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
             // } I want the state to be dirtied only by the cones, so disable this for the splines
 
-            m_orig_spline_data_stamp = spline_msg.orig_data_stamp;
+            m_orig_spline_data_stamp = spline_msg.header.stamp;
+
 
             m_logger("finished state estimator spline processing");
         }
@@ -451,6 +456,20 @@ namespace controls {
 
             m_left_cone_points = process_ros_points(cone_msg.blue_cones);
             m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
+
+            // This code segfaults currently 
+            // Cones cones;
+            // for (const auto& cone : m_left_cone_points) {
+            //     cones.addBlueCone(cone.x, cone.y, 0);
+            // }
+            // for (const auto& cone : m_right_cone_points) {
+            //     cones.addYellowCone(cone.x, cone.y, 0);
+            // }            
+            // auto spline_frames = cones_to_midline(cones);
+            // m_spline_frames.clear();
+            // for (const auto& frame : spline_frames) {
+            //     m_spline_frames.emplace_back(frame.first, frame.second);
+            // }
 
 #ifdef DISPLAY
             m_all_left_cone_points.clear();
@@ -550,12 +569,13 @@ namespace controls {
             utils::sync_gl_and_unbind_context(m_gl_window);
         }
 
-        void StateEstimator_Impl::sync_to_device(const rclcpp::Time& time) {
+        std::vector<std::chrono::milliseconds> StateEstimator_Impl::sync_to_device(const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_logger("beginning state estimator device sync");
 
             m_logger("projecting current state");
+            auto t1 = std::chrono::high_resolution_clock::now();
             const State state = m_state_projector.project(
                 rclcpp::Time {
                     time.nanoseconds()
@@ -563,6 +583,7 @@ namespace controls {
                     default_clock_type
                 }, m_logger
             );
+            auto t2 = std::chrono::high_resolution_clock::now();
 
             // enable openGL
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
@@ -591,12 +612,15 @@ namespace controls {
             m_logger("syncing world state to device");
             m_synced_projected_state = state;
             sync_world_state();
+            auto t3 = std::chrono::high_resolution_clock::now();
 
             m_logger("syncing spline frame lookup texture info to device");
             sync_tex_info();
 
             utils::sync_gl_and_unbind_context(m_gl_window);
             m_logger("finished state estimator device sync");
+            return std::vector {std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1), 
+            std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2)};
         }
 
         bool StateEstimator_Impl::is_ready() {

@@ -3,6 +3,8 @@
 #include <types.hpp>
 #include <glm/glm.hpp>
 #include <builtin_interfaces/msg/time.hpp>
+#include <chrono>
+#include <vector>
 
 
 namespace controls {
@@ -31,7 +33,7 @@ namespace controls {
              * (into @ref cuda_globals::curv_frame_lookup_tex and @ref cuda_globals::curr_state respectively)
              * @param time The current time
              */
-            virtual void sync_to_device(const rclcpp::Time &time) =0;
+            virtual std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) =0;
 
             virtual void generate_lookup_table() =0;
             virtual void hardcode_state(State state) =0;
