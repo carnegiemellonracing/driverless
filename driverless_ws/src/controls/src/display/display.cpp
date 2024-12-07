@@ -347,7 +347,12 @@ namespace controls {
         void Display::draw_offset_image() {
             // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-            const auto& offset_image = m_offset_image;
+            auto& offset_image = m_offset_image;
+            // auto max = std::max_element(offset_image.pixels.begin(), offset_image.pixels.end());
+
+            // for (int i = 0; i < offset_image.pixels.size(); i++) {
+            //     offset_image.pixels[i] /= *max;
+            // }
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, m_offset_img_tex);
