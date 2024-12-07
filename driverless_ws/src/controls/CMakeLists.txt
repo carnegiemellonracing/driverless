@@ -76,6 +76,9 @@ set(LIB_SOURCES
         extern/src/glad.c
         src/utils/gl_utils.cpp
         ${TWO_TRACK_SRCS}
+        src/midline/svm.cpp
+        src/midline/svm_conv.cpp
+        src/midline/cones.cpp
 )
 
 if (DISPLAY)
@@ -85,6 +88,7 @@ if (DISPLAY)
 endif()
 
 add_library(controls_lib SHARED ${LIB_SOURCES})
+
 ament_target_dependencies(controls_lib rclcpp std_msgs interfaces glm)
 target_link_libraries(controls_lib CUDA::curand OpenGL::GL OpenGL::GLU ${SDL2_LIBRARIES})
 

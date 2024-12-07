@@ -122,9 +122,9 @@ namespace controls {
             // on_pose is not used, for future proofing
             void on_pose(const PoseMsg& pose_msg) override;
 
-            void sync_to_device(const rclcpp::Time &time) override;
             void hardcode_state(State state) override;
             void generate_lookup_table() override;
+            std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) override;
             bool is_ready() override;
             State get_projected_state() override;
             void set_logger(LoggerFunc logger) override;
