@@ -39,7 +39,7 @@ for line in lines:
 
         cur_chunk_x = np.array([])
         cur_chunk_y = np.array([])
-        
+
 print("DONE READING BLUE CHUNKS")
 plt.style.use('dark_background')
 for (j,(l_x, l_y)) in enumerate(zip(blue_chunks_x, blue_chunks_y)):
@@ -73,9 +73,9 @@ for line in lines:
         cur_chunk_x = np.array([])
         cur_chunk_y = np.array([])
 
-for (l_x, l_y) in zip(yellow_chunks_x, yellow_chunks_y):
+for (j, (l_x, l_y)) in enumerate(zip(yellow_chunks_x, yellow_chunks_y)):
     for i in range(len(l_x)):
-        if i % 2 == 0:
+        if j % 2 == 0:
             plt.scatter(l_x[i], l_y[i], color='yellow')
         else:
             plt.scatter(l_x[i], l_y[i], color='red')
