@@ -18,6 +18,7 @@
   find_package(GSL REQUIRED)
   find_package(interfaces REQUIRED)
 
+
   add_library(planning_export src/planning_codebase/raceline/raceline.cpp)
   ament_target_dependencies(planning_export interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
 
@@ -26,10 +27,15 @@
   # ament_target_dependencies(midpoint_test interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
 
   add_executable(chunk_test src/planning_codebase/raceline/chunkTest.cpp src/planning_codebase/raceline/racelineChunk.cpp src/planning_codebase/raceline/raceline.cpp src/planning_codebase/midline/generator.cpp)
-  ament_target_dependencies(chunk_test interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
+  ament_target_dependencies(chunk_test PUBLIC interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
 
   ament_export_targets(planning_exportTargets HAS_LIBRARY_TARGET)
   ament_export_dependencies(interfaces rclcpp std_msgs geometry_msgs Eigen3 GSL)
+
+  install(
+    TARGETS chunk_test
+    DESTINATION lib/${PROJECT_NAME}
+  )
 
   # install(
   #   TARGETS midpoint_test
