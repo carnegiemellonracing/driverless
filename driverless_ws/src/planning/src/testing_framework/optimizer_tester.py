@@ -2,7 +2,7 @@ import my_optimizer
 import matplotlib.pyplot as plt
 import math
 import numpy as np
-from sklearn import svm
+#from sklearn import svm
 import time
 
 class TestSuite:

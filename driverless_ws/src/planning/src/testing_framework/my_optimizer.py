@@ -56,22 +56,26 @@ def run_optimizer(blue_cones_x, blue_cones_y, yellow_cones_x, yellow_cones_y):
     blue_c = list(zip(blue_cones_x, blue_cones_y))
     yellow_c = list(zip(yellow_cones_x, yellow_cones_y))
 
+    # use only if points are sorted
+    points = initial_points(blue_c,yellow_c,d1=2,d2=2.5)
+
     # sort blue and yellow cones by x value
-    blue_cones = sorted(blue_c, key=lambda cone: cone[0])
-    yellow_cones = sorted(yellow_c, key=lambda cone: cone[0])
+    # use if cones are not sorted
+    blue_cones = sorted(blue_c, key=lambda cone: cone[1])
+    yellow_cones = sorted(yellow_c, key=lambda cone: cone[1])
 
     # extract initial points
     # 2 and 4 are d1 and d2 respectively
-    points = initial_points(blue_cones,yellow_cones,d1=2,d2=4)
-    print(points)
+    # points = initial_points(blue_cones,yellow_cones,d1=2,d2=2.5)
     # test initial points
+    # print(points)
     # points_x = [point[0] for point in points]
     # points_y = [point[1] for point in points]
     # return [points_x, points_y]
     
     # find k and l by taking slope from first and last couple points
-    k = (blue_cones[0][1]-blue_cones[5][1])/(blue_cones[0][0]-blue_cones[5][0])
-    l = (blue_cones[-1][1]-blue_cones[-6][1])/(blue_cones[-1][0]-blue_cones[-6][0])
+    k = (blue_cones[0][1]-blue_cones[1][1])/(blue_cones[0][0]-blue_cones[1][0])
+    l = (blue_cones[-1][1]-blue_cones[-2][1])/(blue_cones[-1][0]-blue_cones[-2][0])
     # print(k)
     # print(l)
 
@@ -112,10 +116,10 @@ def run_optimizer(blue_cones_x, blue_cones_y, yellow_cones_x, yellow_cones_y):
     spline_y1 = np.array([a1y,b1y,c1y,d1y])
     spline_y2 = np.array([a2y,b2y,c2y,d2y])
 
-    # set base values (25 points each)
+    # set base values (500 points each)
     base = np.linspace(0,0.5,num=500)
 
-    # outputs of cubic funtion
+    # outputs of cubic function
     splinex1 = interpolate_cubic(spline_x1,base)
     splinex2 = interpolate_cubic(spline_x2,base)
     spliney1 = interpolate_cubic(spline_y1,base)
@@ -126,5 +130,3 @@ def run_optimizer(blue_cones_x, blue_cones_y, yellow_cones_x, yellow_cones_y):
     spline_y = np.append(spliney1,spliney2)
 
     return [spline_x,spline_y]
-
-    # return [np.array([1,2,3]), np.array([1,2,3])]
