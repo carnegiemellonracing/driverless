@@ -51,22 +51,22 @@ def initial_points(blue_cones, yellow_cones, d1, d2):
 
     return points
 
-"""change this function, this is where you implement your raceline optimizer"""
+# assumes points are **SORTED**
 def run_optimizer(blue_cones_x, blue_cones_y, yellow_cones_x, yellow_cones_y):
     blue_c = list(zip(blue_cones_x, blue_cones_y))
     yellow_c = list(zip(yellow_cones_x, yellow_cones_y))
 
     # use only if points are sorted
-    points = initial_points(blue_c,yellow_c,d1=2,d2=2.5)
+    #points = initial_points(blue_c,yellow_c,d1=2,d2=2.5)
 
     # sort blue and yellow cones by x value
     # use if cones are not sorted
-    blue_cones = sorted(blue_c, key=lambda cone: cone[1])
-    yellow_cones = sorted(yellow_c, key=lambda cone: cone[1])
-
+    blue_cones = sorted(blue_c, key=lambda cone: cone[0])
+    yellow_cones = sorted(yellow_c, key=lambda cone: cone[0])
     # extract initial points
-    # 2 and 4 are d1 and d2 respectively
-    # points = initial_points(blue_cones,yellow_cones,d1=2,d2=2.5)
+    # 2 and 2.5 are d1 and d2 respectively
+    points = initial_points(blue_cones,yellow_cones,d1=2,d2=2.5)
+
     # test initial points
     # print(points)
     # points_x = [point[0] for point in points]
