@@ -101,12 +101,9 @@ Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial secon
 }
 
 
-Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind, bool calcLength)
-    : spl_poly(interpolation_poly),points(points_mat), rotated_points(rotated),Q(Q_mat),translation_vector(translation),first_der(first),second_der(second),path_id(path_id),sort_index(sort_ind)
+Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat, polynomial first, polynomial second, int path, int sort_ind, bool calcLength)
+    : spl_poly(interpolation_poly),points(points_mat),first_der(first),second_der(second),path_id(path_id),sort_index(sort_ind)
 {
-    if(calcLength){
-        this->length = this->calculateLength();
-    }
 
 }
 
@@ -120,11 +117,7 @@ Spline::~Spline()
 
 }
 
-//change to calculate length
-double Spline::calculateLength(){
-    // return 1.0;
-    return arclength(first_der, rotated_points(0,0), rotated_points(0, rotated_points.cols()-1));
-}
+
 
 // Eigen::MatrixXd Spline::interpolate(int number, std::pair<float, float> bounds){
 //     return interpolate(*this,number,bounds);
@@ -148,18 +141,6 @@ polynomial Spline::get_second_der(){
 
 Eigen::MatrixXd  Spline::get_points(){
     return points;}
-
-Eigen::MatrixXd  Spline::get_rotated_points(){
-    return rotated_points;
-}
-
-Eigen::Matrix2d Spline::get_Q(){
-    return Q;
-}
-
-Eigen::VectorXd Spline::get_translation(){
-    return translation_vector;
-}
 
 int Spline::get_path_id(){
     return path_id;
@@ -451,20 +432,21 @@ polynomial lagrange_gen(Eigen::MatrixXd& points){
 
 }
 
-double arclength_f(double x, void* params){
-    
-    polynomial p = *(polynomial*)params;
-    double y = poly_eval(p,x);
-    return sqrt(y*y+1);
+double arclength_f(double t, void* params){
+    polynomial px = (*(std::pair<polynomial>*)params).first;
+    polynomial py = (*(std::pair<polynomial>*)params).second;
+    double x = poly_eval(px,t);
+    double y = poly_eval(py,t);
+    return sqrt(x*x+y*y);
 }
 
 
 // CHECK CORRECTNESS
-double arclength(polynomial poly_der1, double x0,double x1){
+double arclength(std::pair<polynomial> poly_der, double x0,double x1){
 
     gsl_function F;
     F.function = &arclength_f;
-    F.params = &poly_der1;
+    F.params = &poly_der;
     // std::cout << "deriv: " << poly_der1.nums << std::endl;
 
     double result, error;
@@ -477,6 +459,139 @@ double arclength(polynomial poly_der1, double x0,double x1){
 
     return result;
 
+}
+
+std::pair<std::vector<std::pair<Spline>>,std::vector<double>> parameterized_spline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){
+
+    ////std::cout << "Number of rows:" << res.rows() << std::endl;
+    ////std::cout << "Number of cols:" << res.cols() << std::endl;
+    
+    int n = res.cols();
+
+    // vector of tuples (spline param x, spline param y)
+    std::vector<std::pair<Spline>> splines;
+
+    // Eigen::MatrixXd points=res;
+
+    // TODO: make sure that the group numbers are being calculated properly
+    // [2, 3, 4, 3, 5, 3, 5, ]
+
+    int shift = points_per_spline-1; //3
+    int group_numbers;
+
+    if (shift == 1){
+        group_numbers = n/shift;
+
+        if (loop)
+            group_numbers += (int)(n % shift != 0);
+    }
+    else{
+        if (n < 4) group_numbers = 0; // NEED TO MODIFY TO 1 AND DEAL WITH FEWER THAN 4 POINTS
+        else group_numbers = ((n-2)/3) + 1;
+
+        //RCLCPP_INFO(logger, "group numbers is %d\n", group_numbers);
+    }
+
+    // for loop through group numbers
+    // extra points if mod 3 != 1, in this case we take last 4 points and make spline and change the start point
+    // by going back by 2 if mod3 = 0, go back by 0 if mod3 = 1, go back by 1 if mod3 = 2
+
+    //If there are is leftover, 
+
+    // std::vector<std::vector<int>> groups; not used anywhere else 
+
+    std::vector<double> lengths;
+    std::vector<double> cumsum;
+    // lengths.resize(group_numbers);
+
+    //RCLCPP_INFO(logger, "points:%d, group numbers: %d\n",n,group_numbers);
+
+    int flag = 0;
+
+    // Define the t values
+    Eigen::RowVector4d t_values(0, 0.33, 0.66, 1);
+
+    for(int i=0; i<group_numbers; i++){
+
+        // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
+        Eigen::MatrixXd group(2, points_per_spline);
+
+        // if last group, set flag to (0, 1, or 2) depending on mod3 as stated above
+        // @TODO make remaining points wrap around the front of the track to close the loop
+        if (i == (group_numbers - 1)) {
+            ////std::cout << "LAST GROUP" << std::endl;
+            // flag =  (n - 1) % 3;
+            flag = points_per_spline - (n - i*shift);
+        }
+
+        for(int k = 0; k < group.cols(); k++) {
+            for (int j = 0; j < 2; j++) {
+                ////std::cout << "Curr row:" << j << std::endl;
+                ////std::cout << "Curr col:" << i*shift + k - flag << std::endl;
+                ////std::cout << "Curr flag:" << flag << std::endl;
+
+                group(j, k) = res(j, i*shift + k - flag); // ERROR index out of bound error
+                // if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
+            }
+        }
+
+        // shave off overlapping points from the spline if last group for og matrix
+        group = group.block(0, flag, 2, group.cols()-flag);
+
+        // now have a 2x4 matrix of x and y, make matrices for t and x, t and y
+        // make a t vector 0, 0.33, 0.66, 1
+
+        // Create 2x4 matrices for t and x, t and y
+        //TODO
+        Eigen::MatrixXd t_and_x(2, 4);
+        Eigen::MatrixXd t_and_y(2, 4);
+
+        // Fill the matrices
+        t_and_x.row(0) = t_values;
+        t_and_x.row(1) = group.row(0); 
+
+        t_and_y.row(0) = t_values;
+        t_and_y.row(1) = group.row(1);
+
+        // Print the matrices
+        // std::cout << "Matrix for t and x:\n" << t_and_x << "\n\n";
+        // std::cout << "Matrix for t and y:\n" << t_and_y << "\n";
+
+        // not rotating here because doing parametrized spline
+        polynomial interpolation_poly_x = lagrange_gen(t_and_x);
+        polynomial first_der_x = polyder(interpolation_poly_x);
+        polynomial second_der_x = polyder(first_derx);
+
+        polynomial interpolation_poly_y = lagrange_gen(t_and_y);
+        polynomial first_der_y = polyder(interpolation_poly_y);
+        polynomial second_der_y = polyder(first_der_y);
+
+        lengths.emplace_back(0);
+
+        // TODO delete spline rotated points and translation vector
+        Spline spline_x = Spline(interpolation_poly_x,t_and_x,first_der_x,second_der_x,path_id,i);
+        Spline spline_y = Spline(interpolation_poly_x,t_and_y,first_der_y,second_der_y,path_id,i);
+        splines.emplace_back(std::make_pair(spline_x, spline_y));
+
+        // lengths.push_back(spline.calculateLength());
+        if (i == 0) {
+            RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
+            // //RCLCPP_INFO(logger, "spline derivative is %f + %fx + %fx^2 + %fx^3\n", spline.first_der.nums(0), spline.first_der.nums(1), spline.first_der.nums(2), spline.first_der.nums(3));
+            // TODO rewrite calcLength
+            cumsum.push_back(arclength(std::make_pair(spline_x.first_der, spline_y.first_der), 0, 1));
+        } else {
+            RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
+            cumsum.push_back(cumsum.back()+arclength(std::make_pair(spline_x.first_der, spline_y.first_der), 0, 1));
+        }
+        // std::cout << "i: " << i << std::endl;
+    }
+
+    // std::cout << "cum length: " << std::endl;
+    // for (auto l : cumsum) {
+    //     // std::cout << l << std::endl;
+    // }
+
+    return std::make_pair(splines, cumsum);
 }
 
 std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){
@@ -628,7 +743,7 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
  * @param points The points to make splines from.
  * @return Vector of splines, vector of their cumulative lengths. 
  */
-std::pair<std::vector<Spline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points) {
+std::pair<std::vector<std::pair<Spline>>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points) {
     Eigen::MatrixXd pointMatrix(2, points.size() + 2);
     // Eigen::MatrixXd pointMatrix(2, points.size());
     for(int i = 0; i < points.size(); i++){
@@ -646,7 +761,7 @@ std::pair<std::vector<Spline>,std::vector<double>> make_splines_vector(std::vect
     ////std::cout << pointMatrix << std::endl;
 
     auto dummy_logger = rclcpp::get_logger("du");
-    std::pair<std::vector<Spline>,std::vector<double>> res = raceline_gen(dummy_logger, pointMatrix, std::rand(), 4, false);
+    std::pair<std::vector<std::pair<Spline>>,std::vector<double>> res = parameterized_spline_gen(dummy_logger, pointMatrix, std::rand(), 4, false);
     return res;
 }
 
