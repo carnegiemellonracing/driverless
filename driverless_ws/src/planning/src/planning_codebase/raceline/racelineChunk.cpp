@@ -9,6 +9,9 @@
 #define CHUNK_LEN_MAX_THRESH 1000
 #define CHUNK_LEN_MIN_THRESH 0
 #define CHUNK_CURVE_THRESH 0.02
+#define CHUNK_FIRST_DER_THRESH 1
+#define CHUNK_SECOND_DER_THRESH 1
+#define CHUNK_THIRD_DER_THRESH 1
 
 /**
  * Constructor for chunks.
@@ -28,43 +31,12 @@ Chunk::Chunk() {
  * @return True if this chunk should be terminated and should not
  *         include given curvature point, false otherwise.
  */
-bool Chunk::checkStopChunk(Concavity newConcavitySign) {
-    return (((curConcavitySign != newConcavitySign) && ((endProgress - startProgress) > CHUNK_LEN_MIN_THRESH)) || 
-            ((endProgress - startProgress) > CHUNK_LEN_MAX_THRESH));
-}
-
-/** 
- * Populate the point vectors in the chunk by interpolating points along
- * the given splines.
- *
- * @param blueRaceline Vectors of splines and cumulative lengths for blue cones.
- * @param yellowRaceline Vectors of splines and cumulative lengths for yellow
- *                       cones.
- */
-void Chunk::generateConePoints(std::pair<std::vector<Spline>,std::vector<double>> blueRaceline,
-                        std::pair<std::vector<Spline>,std::vector<double>> yellowRaceline) {
-    double interval = 0.5; // @TODO tunable param
-    std::vector<double> blueLengths = blueRaceline.second;
-    std::vector<double> yellowLengths = yellowRaceline.second;
-
-
-    // get the total length of both racelines
-    double totalBlueLength = blueLengths[blueLengths.size()-1];
-    double totalYellowLength = yellowLengths[yellowLengths.size()-1];
-
-    for (double percent = startProgress; percent < endProgress; percent += interval){
-        // convert percent progress into meter progress for both racelines
-        double progressBlue_m = (percent*totalBlueLength)/100;
-        double progressYellow_m = (percent*totalYellowLength)/100;
-
-        // std::cout << "before interpolate" << std::endl;
-        std::pair<double, double> xyBlue = interpolate_raceline(progressBlue_m, blueRaceline.first, blueRaceline.second, 200);
-        std::pair<double, double> xyYellow = interpolate_raceline(progressYellow_m, yellowRaceline.first, yellowRaceline.second, 200);
-
-        // std::cout << "after interpolate" << std::endl;
-        bluePoints.push_back(xyBlue);
-        yellowPoints.push_back(xyYellow);
-    }
+bool Chunk::checkStopChunk(ParameterizedSpline spline1, ParameterizedSpline spline2) {
+    
+    bool checkFirstDer = abs(spline1->get_first_der(1) - spline2->get_first_der(0)) < CHUNK_FIRST_DER_THRESH;
+    bool checkFirstDer = abs(spline1->get_second_der(1) - spline2->get_second_der(0)) < CHUNK_SECOND_DER_THRESH;
+    bool checkFirstDer = abs(spline1->get_third_der(1) - spline2->get_third_der(0)) < CHUNK_THIRD_DER_THRESH;
+    return checkFirstDer && checkSecondDer && checkThirdDer;
 }
 
 /** 
@@ -87,60 +59,52 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     /* Getting the polynomials/splines for each track bound*/
     /* Pass in all of the blue and yellow cones, */
 
-    std::pair<std::vector<std::pair<Spline>>,std::vector<double>> blue = make_splines_vector(blueCones);
-    std::pair<std::vector<std::pair<Spline>>,std::vector<double>> yellow = make_splines_vector(yellowCones);
+    std::pair<ParameterizedSpline>,std::vector<double>> blue = make_splines_vector(blueCones);
+    std::pair<ParameterizedSpline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
 
-    std::vector<Spline> racetrackSplines = blue.first;
-    std::vector<double> cumulativeLen = blue.second;
+    std::vector<ParameterizedSpline> blueRacetrackSplines = blue.first;
+    std::vector<double> blueCumulativeLen = blue.second;
+
+    std::vector<ParameterizedSpline> yellowRacetrackSplines = yellow.first;
+    std::vector<double> yellowCumulativeLen = yellow.second;
+
 
     // create a chunk
     Chunk* chunk = new Chunk();
     
-    // loop through progress and sample curvature at each progress point
-    int increment = 1; // TODO: tunable param
-    int totalProgress = 100;
-    int totalBlueLength = cumulativeLen[cumulativeLen.size()-1];
-    // LOOP THROUGH SPLINES
-    // IN T VALUE, IF first last CHECK FIRST DERIVATIVE AND THIRD DERIVATIVE MATCH UP AND SECOND DERIVATIVE SIGN MATCH UP
-    // TODO
+    // // loop through progress and sample curvature at each progress point
+    // int increment = 1; // TODO: tunable param
+    // int totalProgress = 100;
+    // int totalBlueLength = cumulativeLen[cumulativeLen.size()-1];
+    // // LOOP THROUGH SPLINES
+    // // IN T VALUE, IF first last CHECK FIRST DERIVATIVE AND THIRD DERIVATIVE MATCH UP AND SECOND DERIVATIVE SIGN MATCH UP
+    // // TODO
     
-    for (int i = 0; i )
-    
-    for (int currPercentProgress = 0; currPercentProgress <= totalProgress; currPercentProgress += increment) {
-        double currProgress = (currPercentProgress*totalBlueLength)/totalProgress; // progress in meters
-        std::vector<double> currProgressVec;
-        currProgressVec.push_back(currProgress);
-
-        /* Get the concavity using the cubic spline interpolation from make_splines */
-        Concavity cur_concavity_sign = get_curvature_raceline(currProgressVec, racetrackSplines, cumulativeLen);
-
-        /* Perform initialization of the 0th chunk */
-        if (currPercentProgress == 0) {
-            chunk->curConcavitySign = cur_concavity_sign;
+    int yellowSplineIdx = 0;
+    for (int i = 1; i < blueRacetrackSplines.size(); i++) {
+        // add spline to chunk
+        if (!chunk->checkStopChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i])) {
+            chunk->blueSplines.push_back(blueRacetrackSplines[i]);
         }
-        std::cout << concavity_to_string(cur_concavity_sign) << std::endl;
-
-        /* Determine whether to split the chunk */
-        /* Update the end progress of the current chunk */
-        chunk->endProgress = currPercentProgress;
-        if (!chunk->checkStopChunk(cur_concavity_sign)) {
-            std::cout << concavity_to_string(cur_concavity_sign) << std::endl;
-            // std::cout << "not created new chunk in loop" << std::endl;
-        }
+        // stop current chunk, add to vector, start new chunk
         else { 
-            chunk->generateConePoints(blue, yellow); // fill in the current bucket's blue and yellow points vectors
-            //TODO: look into emplace_back
+            // TODO makevector for yellow
+            bluePercentProgress = blueCumulativeLen[i - 1] / blueCumulativeLen[-1];
+            
+            // yellowindex is greater than yellowRacetrackSplines or 
+            // cumsum is greater than cumsum of blue;yellowSplineIdx
+            while ((yellowSplineIdx < yellowRacetrackSplines.size()) || 
+                (yellowCumulativeLen[yellowSplineIdx]<= yellowCumulativeLen[-1] * bluePercentProgress)) {
+                chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
+                yellowSplineIdx++;
+            }
             chunkVector->emplace_back(chunk);
-            // std::cout << "new chunk 3" << std::endl;
-            chunk = new Chunk(); 
-            // std::cout << "created new chunk in loop" << std::endl;
-            chunk->startProgress = currPercentProgress;
-            chunk->endProgress = currPercentProgress;
-            chunk->curConcavitySign = cur_concavity_sign;
+            chunk = new Chunk();
+            // init chunk and add curr spline
+            chunk->blueSplines.push_back(blueRacetrackSplines[i]);
         }
     }
-    chunk->generateConePoints(blue, yellow);
-
+    
     chunkVector->emplace_back(chunk);
 
     return chunkVector;

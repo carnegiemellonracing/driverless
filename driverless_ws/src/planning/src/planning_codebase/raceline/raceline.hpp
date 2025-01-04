@@ -62,12 +62,13 @@ public:
     polynomial spl_poly;
     polynomial first_der;
     polynomial second_der;
+    polynomial third_der; // TODO add third der constructor
     
     Eigen::MatrixXd points;
-    Eigen::MatrixXd rotated_points;
+    // Eigen::MatrixXd rotated_points;
 
-    Eigen::Matrix2d Q;
-    Eigen::VectorXd translation_vector;
+    // Eigen::Matrix2d Q;
+    // Eigen::VectorXd translation_vector;
     double length;
 
 
@@ -86,11 +87,11 @@ public:
     Eigen::MatrixXd get_points();
     void set_points(Eigen::MatrixXd newpoints);
 
-    Eigen::MatrixXd get_rotated_points();
-    void set_rotated_points(Eigen::MatrixXd newpoints);
+    // Eigen::MatrixXd get_rotated_points();
+    // void set_rotated_points(Eigen::MatrixXd newpoints);
 
-    Eigen::VectorXd get_translation();
-    void set_translation(Eigen::VectorXd new_trans);
+    // Eigen::VectorXd get_translation();
+    // void set_translation(Eigen::VectorXd new_trans);
 
     int get_path_id();
     void set_path_id(int new_id);
@@ -122,15 +123,24 @@ public:
     ~Spline();
 };
 
+class ParameterizedSpline
+{
+public:
+    Spline spline_x;
+    Spline spline_y;
+
+    double get_first_der(double t);
+    double get_second_der(double t);
+    double get_third_der(double t);
+}
 
 
+// Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts);
+// Eigen::VectorXd get_translation_vector(Eigen::MatrixXd& group);
 
-Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts);
-Eigen::VectorXd get_translation_vector(Eigen::MatrixXd& group);
+// Eigen::MatrixXd transform_points(rclcpp::Logger logger,Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector);
 
-Eigen::MatrixXd transform_points(rclcpp::Logger logger,Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector);
-
-Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector);
+// Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector);
 
 polynomial lagrange_gen(Eigen::MatrixXd& points);
 
