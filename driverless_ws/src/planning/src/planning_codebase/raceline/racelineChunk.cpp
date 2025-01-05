@@ -16,11 +16,8 @@
 /**
  * Constructor for chunks.
  */
-Chunk::Chunk() {
-    startProgress = 0;
-    endProgress = 0;
-    curConcavitySign = Concavity::STRAIGHT;
-}
+Chunk::Chunk() = default;
+
 /** 
  * TODO handle infinity subtraction
  *
@@ -35,9 +32,9 @@ Chunk::Chunk() {
  */
 bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline spline2) {
     
-    bool checkFirstDer = abs(spline1->get_first_der(1) - spline2->get_first_der(0)) < CHUNK_FIRST_DER_THRESH;
-    bool checkSecondDer = abs(spline1->get_second_der(1) - spline2->get_second_der(0)) < CHUNK_SECOND_DER_THRESH;
-    bool checkThirdDer = abs(spline1->get_third_der(1) - spline2->get_third_der(0)) < CHUNK_THIRD_DER_THRESH;
+    bool checkFirstDer = abs(spline1.get_first_der(1) - spline2.get_first_der(0)) < CHUNK_FIRST_DER_THRESH;
+    bool checkSecondDer = abs(spline1.get_second_der(1) - spline2.get_second_der(0)) < CHUNK_SECOND_DER_THRESH;
+    bool checkThirdDer = abs(spline1.get_third_der(1) - spline2.get_third_der(0)) < CHUNK_THIRD_DER_THRESH;
     return checkFirstDer && checkSecondDer && checkThirdDer;
 }
 
@@ -61,8 +58,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     /* Getting the polynomials/splines for each track bound*/
     /* Pass in all of the blue and yellow cones, */
 
-    std::pair<ParameterizedSpline,std::vector<double>> blue = make_splines_vector(blueCones);
-    std::pair<ParameterizedSpline,std::vector<double>> yellow = make_splines_vector(yellowCones);
+    std::pair<std::vector<ParameterizedSpline>,std::vector<double>> blue = make_splines_vector(blueCones);
+    std::pair<std::vector<ParameterizedSpline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
 
     std::vector<ParameterizedSpline> blueRacetrackSplines = blue.first;
     std::vector<double> blueCumulativeLen = blue.second;
@@ -82,6 +79,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     // // IN T VALUE, IF first last CHECK FIRST DERIVATIVE AND THIRD DERIVATIVE MATCH UP AND SECOND DERIVATIVE SIGN MATCH UP
     // // TODO
     
+    double bluePercentProgress;
     int yellowSplineIdx = 0;
     for (int i = 1; i <= blueRacetrackSplines.size(); i++) {
         // add spline to chunk

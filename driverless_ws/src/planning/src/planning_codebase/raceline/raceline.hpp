@@ -154,7 +154,7 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
 
 std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id =std::rand(), int points_per_spline = prefered_degree+1,bool loop = true);
 
-std::pair<std::vector<Spline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points);
+std::pair<std::vector<ParameterizedSpline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points);
 
 Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths);
 

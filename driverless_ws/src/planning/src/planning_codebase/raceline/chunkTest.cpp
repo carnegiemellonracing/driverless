@@ -208,7 +208,7 @@ int main() {
     // };
 
     createWaveTrack(blue_cones, yellow_cones);
-    std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
+    //std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
     // if (chunks == nullptr) {
     //     std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
@@ -219,35 +219,35 @@ int main() {
     // }
 
     // outputting chunks
-    std::string blue_chunk_file = "/root/driverless/driverless_ws/src/planning/src/planning_codebase/raceline/chunk_vis_blue.txt";
-    std::string yellow_chunk_file = "/root/driverless/driverless_ws/src/planning/src/planning_codebase/raceline/chunk_vis_yellow.txt";
-    std::ofstream Blue;
-    Blue.open(blue_chunk_file, std::ios::out);
-    std::ofstream Yellow;
-    Yellow.open(yellow_chunk_file, std::ios::out);
+    // std::string blue_chunk_file = "/root/driverless/driverless_ws/src/planning/src/planning_codebase/raceline/chunk_vis_blue.txt";
+    // std::string yellow_chunk_file = "/root/driverless/driverless_ws/src/planning/src/planning_codebase/raceline/chunk_vis_yellow.txt";
+    // std::ofstream Blue;
+    // Blue.open(blue_chunk_file, std::ios::out);
+    // std::ofstream Yellow;
+    // Yellow.open(yellow_chunk_file, std::ios::out);
 
     
-    for (int i  = 0; i < chunks.size(); i++) {
-        // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
-        // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
+    // for (int i  = 0; i < chunks.size(); i++) {
+    //     // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
+    //     // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
 
-        // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
-        //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-        //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-        // }
+    //     // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
+    //     //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+    //     //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+    //     // }
 
-        for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
-            Yellow << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
-            std::cout << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
-        }
+    //     for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
+    //         Yellow << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
+    //         std::cout << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
+    //     }
 
-        Blue << "#" << std::endl;
-        std::cout << "#" << std::endl;
-        Yellow << "#" << std::endl;
-    }
+    //     Blue << "#" << std::endl;
+    //     std::cout << "#" << std::endl;
+    //     Yellow << "#" << std::endl;
+    // }
 
-    Blue.close();
-    Yellow.close();
+    // Blue.close();
+    // Yellow.close();
 
     // for (int j = 0; j < chunks.size(); j++) {
     //     for (int i = 0; i < chunks[j]->bluePoints.size(); i++) {
