@@ -57,22 +57,22 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     /* Getting the polynomials/splines for each track bound*/
     /* Pass in all of the blue and yellow cones, */
-    std::cout << "make splines done" << std::endl;
+    std::cout << "make splines done1" << std::endl;
     std::pair<std::vector<ParameterizedSpline>,std::vector<double>> blue = make_splines_vector(blueCones);
-    std::cout << "make splines done" << std::endl;
+    std::cout << "make splines done2" << std::endl;
     std::pair<std::vector<ParameterizedSpline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
 
-    std::cout << "make splines done" << std::endl;
+    std::cout << "make splines done3" << std::endl;
 
     std::vector<ParameterizedSpline> blueRacetrackSplines = blue.first;
-    std::cout << "make splines done" << std::endl;
+    std::cout << "make splines done4" << std::endl;
     std::vector<double> blueCumulativeLen = blue.second;
-    std::cout << "make splines done" << std::endl;
+    std::cout << "make splines done5" << std::endl;
 
     std::vector<ParameterizedSpline> yellowRacetrackSplines = blue.first;//yellow.first;
-    std::cout << "make splines done" << std::endl;
+    std::cout << "make splines done6" << std::endl;
     std::vector<double> yellowCumulativeLen = blue.second;//yellow.second;
-    std::cout << "make splines done" << std::endl;
+    std::cout << "make splines done7" << std::endl;
 
 
     // create a chunk
