@@ -69,9 +69,9 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     std::vector<double> blueCumulativeLen = blue.second;
     std::cout << "make splines done" << std::endl;
 
-    std::vector<ParameterizedSpline> yellowRacetrackSplines = yellow.first;
+    std::vector<ParameterizedSpline> yellowRacetrackSplines = blue.first;//yellow.first;
     std::cout << "make splines done" << std::endl;
-    std::vector<double> yellowCumulativeLen = yellow.second;
+    std::vector<double> yellowCumulativeLen = blue.second;//yellow.second;
     std::cout << "make splines done" << std::endl;
 
 
