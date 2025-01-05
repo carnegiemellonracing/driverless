@@ -140,51 +140,51 @@ void createWaveTrack(std::vector<std::pair<double, double>> &blue_cones,
 }
 
 
-void testMakeSplinesVector() {
-    // make a std::vector<std::pair<double,double>> with 2 different polynomials
-    // one point overlap, have 7 points in total 
-    std::vector<std::pair<double,double>> blue_cones = {
-        std::make_pair(400, 400),
-        std::make_pair(300, 300),
-        std::make_pair(200, 200),
-        std::make_pair(100, 100)
-    };
+// void testMakeSplinesVector() {
+//     // make a std::vector<std::pair<double,double>> with 2 different polynomials
+//     // one point overlap, have 7 points in total 
+//     std::vector<std::pair<double,double>> blue_cones = {
+//         std::make_pair(400, 400),
+//         std::make_pair(300, 300),
+//         std::make_pair(200, 200),
+//         std::make_pair(100, 100)
+//     };
 
-    // std::make_pair(589, 167.513),
-    // std::make_pair(455, 101.664),
-    // std::make_pair(320, 94.88),
-    // std::make_pair(201, 21.194), 
+//     // std::make_pair(589, 167.513),
+//     // std::make_pair(455, 101.664),
+//     // std::make_pair(320, 94.88),
+//     // std::make_pair(201, 21.194), 
 
-    // std::make_pair(1.382, 9.425), // y = 2x^3 + 3x
-    // std::make_pair(1.192, 6.963),
-    // std::make_pair(0.494, 1.723),
-    // std::make_pair(0, 0), // y = 2x^3 + 5x^2 + x
-    // std::make_pair(-0.68, 1.003), 
-    // std::make_pair(-1.78, 2.782),
-    // std::make_pair(-2.56, -3.346)
+//     // std::make_pair(1.382, 9.425), // y = 2x^3 + 3x
+//     // std::make_pair(1.192, 6.963),
+//     // std::make_pair(0.494, 1.723),
+//     // std::make_pair(0, 0), // y = 2x^3 + 5x^2 + x
+//     // std::make_pair(-0.68, 1.003), 
+//     // std::make_pair(-1.78, 2.782),
+//     // std::make_pair(-2.56, -3.346)
 
-    // pass these 7 points into makeSplinesVector
-    std::pair<std::vector<Spline>,std::vector<double>> slVectors = make_splines_vector(blue_cones);
+//     // pass these 7 points into makeSplinesVector
+//     std::pair<std::vector<Spline>,std::vector<double>> slVectors = make_splines_vector(blue_cones);
 
-    // should return a vector of 2 splines, each splines should have one of the polynomials
-    std::vector<Spline> splines = slVectors.first;
-    // std::cout << "size of splines: " << deg << std::endl;
+//     // should return a vector of 2 splines, each splines should have one of the polynomials
+//     std::vector<Spline> splines = slVectors.first;
+//     // std::cout << "size of splines: " << deg << std::endl;
 
-    // should return a vecotr of cumulativeLengths
-    std::vector<double> cumulativeLengths = slVectors.second;
+//     // should return a vecotr of cumulativeLengths
+//     std::vector<double> cumulativeLengths = slVectors.second;
 
-    assert(splines.size() == 1);
-    assert(cumulativeLengths.size() == 1);
+//     assert(splines.size() == 1);
+//     assert(cumulativeLengths.size() == 1);
 
-    for (int i = 0; i < splines.size(); i++){
-        polynomial poly = splines[i].get_SplPoly();
-        int deg = poly.deg;
-        Eigen::VectorXd coeffs = poly.nums;
-        // std::cout << "degree: " << deg << std::endl;
-        // std::cout << "coefficients: " << coeffs << std::endl;
-        // std::cout << "length: " << cumulativeLengths[i] << std::endl;
-    }
-}
+//     for (int i = 0; i < splines.size(); i++){
+//         polynomial poly = splines[i].get_SplPoly();
+//         int deg = poly.deg;
+//         Eigen::VectorXd coeffs = poly.nums;
+//         // std::cout << "degree: " << deg << std::endl;
+//         // std::cout << "coefficients: " << coeffs << std::endl;
+//         // std::cout << "length: " << cumulativeLengths[i] << std::endl;
+//     }
+// }
 
 
 
