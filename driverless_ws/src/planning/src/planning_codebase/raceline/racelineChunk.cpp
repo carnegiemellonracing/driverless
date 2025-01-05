@@ -93,7 +93,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             
             // yellowindex is greater than yellowRacetrackSplines or 
             // cumsum is greater than cumsum of blue;yellowSplineIdx
-            while ((yellowSplineIdx < yellowRacetrackSplines.size()) || 
+            while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
                 (yellowCumulativeLen[yellowSplineIdx]<= yellowCumulativeLen[-1] * bluePercentProgress)) {
                     std::cout << i + 9 << "make splines donel" << std::endl;
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
