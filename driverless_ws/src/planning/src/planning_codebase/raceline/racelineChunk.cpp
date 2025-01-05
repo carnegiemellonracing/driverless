@@ -94,11 +94,13 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         // add spline to chunk
         if (!chunk->checkContinueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]) && 
             i < blueRacetrackSplines.size()) {
+                std::cout << i + 9 << "make splines done" << std::endl;
             chunk->blueSplines.push_back(blueRacetrackSplines[i]);
         }
         // stop current chunk, add to vector, start new chunk
         else { 
             // TODO makevector for yellow
+            std::cout << i + 9 << "make splines done" << std::endl;
             bluePercentProgress = blueCumulativeLen[i - 1] / blueCumulativeLen[-1];
             std::cout << i + 9 << "make splines done" << std::endl;
             
