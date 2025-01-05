@@ -556,9 +556,6 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
 
     int flag = 0;
 
-    // Define the t values
-    Eigen::RowVector4d t_values(0, 0.33, 0.66, 1);
-
     for(int i=0; i<group_numbers; i++){
 
         // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
@@ -585,18 +582,27 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
 
         std::cout << "DEBUG 1" << std::endl;
 
+        int num_cols = group.cols()-flag;
+        std::cout << num_cols << std::endl;
+
         // shave off overlapping points from the spline if last group for og matrix
-        Eigen::MatrixXd group_blocked = group.block(0, flag, 2, group.cols()-flag);
+        Eigen::MatrixXd group_blocked = group.block(0, flag, 2, num_cols);
 
         // now have a 2x4 matrix of x and y, make matrices for t and x, t and y
         // make a t vector 0, 0.33, 0.66, 1
 
         std::cout << "DEBUG 2" << std::endl;
 
+        Eigen::VectorXd t_values(num_cols);
+
+        for (int i = 0; i < num_cols; i++) {
+            t_values(i) = ((double)i)/((double)num_cols);
+        }
+
         // Create 2x4 matrices for t and x, t and y
         //TODO
-        Eigen::MatrixXd t_and_x(2, 4);
-        Eigen::MatrixXd t_and_y(2, 4);
+        Eigen::MatrixXd t_and_x(2, num_cols);
+        Eigen::MatrixXd t_and_y(2, num_cols);
 
         // Fill the matrices
         t_and_x.row(0) = t_values;
