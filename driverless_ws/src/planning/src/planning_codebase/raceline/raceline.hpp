@@ -134,7 +134,7 @@ public:
     double get_first_der(double t);
     double get_second_der(double t);
     double get_third_der(double t);
-}
+};
 
 
 // Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts);
@@ -148,9 +148,9 @@ polynomial lagrange_gen(Eigen::MatrixXd& points);
 
 double arclength_f(double, void* params);
 
-double arclength(std::pair<polynomial> poly_der, double x0,double x1);
+double arclength(std::pair<polynomial, polynomial> poly_der, double x0,double x1);
 
-std::pair<std::vector<std::pair<Spline>>,std::vector<double>> parameterized_spline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop);
+std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_spline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop);
 
 std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id =std::rand(), int points_per_spline = prefered_degree+1,bool loop = true);
 
