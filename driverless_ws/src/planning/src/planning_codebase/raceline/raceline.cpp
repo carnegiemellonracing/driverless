@@ -160,36 +160,36 @@ ParameterizedSpline::ParameterizedSpline(Spline spline_x, Spline spline_y) {
 // dy/dx = dy/dt / dx/dt
 double ParameterizedSpline::get_first_der(double t) {
     // handle infinity
-    double first_der_x = poly_eval(spline_x->first_der, t);
+    double first_der_x = poly_eval(spline_x.first_der, t);
     if (first_der_x == 0) {
         return std::numeric_limits<double>::infinity();
     }
-    return poly_eval(spline_y->first_der, t) / first_der_x;
+    return poly_eval(spline_y.first_der, t) / first_der_x;
 }
 
 // dy2/d2x = (dy/dt / dx/dt)/dt * dt/dx = (x'y''-y'x'')/(x')^3
 double ParameterizedSpline::get_second_der(double t) {
-    double first_der_x = poly_eval(spline_x->first_der, t);
+    double first_der_x = poly_eval(spline_x.first_der, t);
     if (first_der_x == 0) {
         return std::numeric_limits<double>::infinity();
     }
-    double first_der_y = poly_eval(spline_y->first_der, t);
-    double second_der_x = poly_eval(spline_x->second_der, t);
-    double second_der_y = poly_eval(spline_y->second_der, t);
+    double first_der_y = poly_eval(spline_y.first_der, t);
+    double second_der_x = poly_eval(spline_x.second_der, t);
+    double second_der_y = poly_eval(spline_y.second_der, t);
     return (first_der_x * second_der_y - first_der_y * second_der_x) / std::pow(first_der_x, 3);
 }
 
 // TODO finish this
 double ParameterizedSpline::get_third_der(double t) {
-    double first_der_x = poly_eval(spline_x->first_der, t);
+    double first_der_x = poly_eval(spline_x.first_der, t);
     if (first_der_x == 0) {
         return std::numeric_limits<double>::infinity();
     }
-    double first_der_y = poly_eval(spline_y->first_der, t);
-    double second_der_x = poly_eval(spline_x->second_der, t);
-    double second_der_y = poly_eval(spline_y->second_der, t);
-    double third_der_x = poly_eval(spline_x->third_der, t);
-    double third_der_y = poly_eval(spline_y->third_der, t);
+    double first_der_y = poly_eval(spline_y.first_der, t);
+    double second_der_x = poly_eval(spline_x.second_der, t);
+    double second_der_y = poly_eval(spline_y.second_der, t);
+    double third_der_x = poly_eval(spline_x.third_der, t);
+    double third_der_y = poly_eval(spline_y.third_der, t);
     return ((first_der_x * first_der_x * third_der_y) - 
            (first_der_x * first_der_y * third_der_x) -
            (3 * first_der_x * second_der_x * second_der_y) + 
@@ -789,7 +789,7 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
  * @param points The points to make splines from.
  * @return Vector of splines, vector of their cumulative lengths. 
  */
-std::pair<std::vector<std::pair<Spline>>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points) {
+std::pair<std::vector<ParameterizedSpline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points) {
     Eigen::MatrixXd pointMatrix(2, points.size() + 2);
     // Eigen::MatrixXd pointMatrix(2, points.size());
     for(int i = 0; i < points.size(); i++){
@@ -807,7 +807,7 @@ std::pair<std::vector<std::pair<Spline>>,std::vector<double>> make_splines_vecto
     ////std::cout << pointMatrix << std::endl;
 
     auto dummy_logger = rclcpp::get_logger("du");
-    std::pair<std::vector<std::pair<Spline>>,std::vector<double>> res = parameterized_spline_gen(dummy_logger, pointMatrix, std::rand(), 4, false);
+    std::pair<std::vector<ParameterizedSpline>,std::vector<double>> res = parameterized_spline_gen(dummy_logger, pointMatrix, std::rand(), 4, false);
     return res;
 }
 
