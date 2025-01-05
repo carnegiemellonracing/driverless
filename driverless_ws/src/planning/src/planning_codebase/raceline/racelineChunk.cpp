@@ -77,6 +77,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     // create a chunk
     Chunk* chunk = new Chunk();
+    std::cout << "make splines done8" << std::endl;
     
     // // loop through progress and sample curvature at each progress point
     // int increment = 1; // TODO: tunable param
@@ -89,6 +90,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     double bluePercentProgress;
     int yellowSplineIdx = 0;
     for (int i = 1; i <= blueRacetrackSplines.size(); i++) {
+        std::cout << i + 9 << "make splines done" << std::endl;
         // add spline to chunk
         if (!chunk->checkContinueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]) && 
             i < blueRacetrackSplines.size()) {
