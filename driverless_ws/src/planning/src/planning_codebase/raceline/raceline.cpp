@@ -621,12 +621,14 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
 
         // lengths.push_back(spline.calculateLength());
         if (i == 0) {
-            RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
+            RCLCPP_INFO(logger, "spline x is %f + %fx + %fx^2 + %fx^3\n", spline_x.spl_poly.nums(0), spline_x.spl_poly.nums(1), spline_x.spl_poly.nums(2), spline_x.spl_poly.nums(3));
+            RCLCPP_INFO(logger, "spline y is %f + %fx + %fx^2 + %fx^3\n", spline_y.spl_poly.nums(0), spline_y.spl_poly.nums(1), spline_y.spl_poly.nums(2), spline_y.spl_poly.nums(3));
             // //RCLCPP_INFO(logger, "spline derivative is %f + %fx + %fx^2 + %fx^3\n", spline.first_der.nums(0), spline.first_der.nums(1), spline.first_der.nums(2), spline.first_der.nums(3));
             // TODO rewrite calcLength
             cumsum.push_back(arclength(std::make_pair(spline_x.first_der, spline_y.first_der), 0, 1));
         } else {
-            RCLCPP_INFO(logger, "spline is %f + %fx + %fx^2 + %fx^3\n", spline.spl_poly.nums(0), spline.spl_poly.nums(1), spline.spl_poly.nums(2), spline.spl_poly.nums(3));
+            RCLCPP_INFO(logger, "spline x is %f + %fx + %fx^2 + %fx^3\n", spline_x.spl_poly.nums(0), spline_x.spl_poly.nums(1), spline_x.spl_poly.nums(2), spline_x.spl_poly.nums(3));
+            RCLCPP_INFO(logger, "spline y is %f + %fx + %fx^2 + %fx^3\n", spline_y.spl_poly.nums(0), spline_y.spl_poly.nums(1), spline_y.spl_poly.nums(2), spline_y.spl_poly.nums(3));
             cumsum.push_back(cumsum.back()+arclength(std::make_pair(spline_x.first_der, spline_y.first_der), 0, 1));
         }
         // std::cout << "i: " << i << std::endl;

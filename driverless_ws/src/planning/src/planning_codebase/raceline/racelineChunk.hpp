@@ -10,6 +10,8 @@ class Chunk
         std::vector<ParameterizedSpline> blueSplines;
         std::vector<ParameterizedSpline> yellowSplines;
 
+        Chunk();
+
         /** 
          * Checks if given chunk should be terminated, i.e. derivatives from endpoint of 
          * previous spline match the first point of current spline
