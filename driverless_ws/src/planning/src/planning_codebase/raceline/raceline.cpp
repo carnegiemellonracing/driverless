@@ -478,8 +478,8 @@ polynomial lagrange_gen(Eigen::MatrixXd& points){
 }
 
 double arclength_f(double t, void* params){
-    polynomial px = (*(std::pair<polynomial>*)params).first;
-    polynomial py = (*(std::pair<polynomial>*)params).second;
+    polynomial px = (*(std::pair<polynomial, polynomial>*)params).first;
+    polynomial py = (*(std::pair<polynomial, polynomial>*)params).second;
     double x = poly_eval(px,t);
     double y = poly_eval(py,t);
     return sqrt(x*x+y*y);
@@ -487,7 +487,7 @@ double arclength_f(double t, void* params){
 
 
 // CHECK CORRECTNESS
-double arclength(std::pair<polynomial> poly_der, double x0,double x1){
+double arclength(std::pair<polynomial, polynomial> poly_der, double x0,double x1){
 
     gsl_function F;
     F.function = &arclength_f;

@@ -61,8 +61,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     /* Getting the polynomials/splines for each track bound*/
     /* Pass in all of the blue and yellow cones, */
 
-    std::pair<ParameterizedSpline>,std::vector<double>> blue = make_splines_vector(blueCones);
-    std::pair<ParameterizedSpline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
+    std::pair<ParameterizedSpline,std::vector<double>> blue = make_splines_vector(blueCones);
+    std::pair<ParameterizedSpline,std::vector<double>> yellow = make_splines_vector(yellowCones);
 
     std::vector<ParameterizedSpline> blueRacetrackSplines = blue.first;
     std::vector<double> blueCumulativeLen = blue.second;
