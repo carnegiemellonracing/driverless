@@ -31,11 +31,9 @@ Chunk::Chunk() = default;
  *         include given curvature point, false otherwise.
  */
 bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline spline2) {
-    std::cout << "h" << std::endl;
     bool checkFirstDer = abs(spline1.get_first_der(1) - spline2.get_first_der(0)) < CHUNK_FIRST_DER_THRESH;
     bool checkSecondDer = abs(spline1.get_second_der(1) - spline2.get_second_der(0)) < CHUNK_SECOND_DER_THRESH;
     bool checkThirdDer = abs(spline1.get_third_der(1) - spline2.get_third_der(0)) < CHUNK_THIRD_DER_THRESH;
-    std::cout << "h " << std::endl;
     return checkFirstDer && checkSecondDer && checkThirdDer;
 }
 
@@ -58,27 +56,19 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     /* Getting the polynomials/splines for each track bound*/
     /* Pass in all of the blue and yellow cones, */
-    std::cout << "make splines done1" << std::endl;
     std::pair<std::vector<ParameterizedSpline>,std::vector<double>> blue = make_splines_vector(blueCones);
-    std::cout << "make splines done2" << std::endl;
     std::pair<std::vector<ParameterizedSpline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
 
-    std::cout << "make splines done3" << std::endl;
 
     std::vector<ParameterizedSpline> blueRacetrackSplines = blue.first;
-    std::cout << "make splines done4" << std::endl;
     std::vector<double> blueCumulativeLen = blue.second;
-    std::cout << "make splines done5" << std::endl;
 
     std::vector<ParameterizedSpline> yellowRacetrackSplines = yellow.first;
-    std::cout << "make splines done6" << std::endl;
     std::vector<double> yellowCumulativeLen = yellow.second;
-    std::cout << "make splines done7" << std::endl;
 
 
     // create a chunk
     Chunk* chunk = new Chunk();
-    std::cout << "make splines done8" << std::endl;
     
     // // loop through progress and sample curvature at each progress point
     // int increment = 1; // TODO: tunable param
