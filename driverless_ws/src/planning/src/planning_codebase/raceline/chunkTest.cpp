@@ -186,6 +186,11 @@ void createWaveTrack(std::vector<std::pair<double, double>> &blue_cones,
 //     }
 // }
 
+void print_poly(Spline spline) {
+    std::cout << "spline x is " << spline.spl_poly.nums(0) << "+" << spline.spl_poly.nums(1) << "x +"
+     << spline.spl_poly.nums(2) << "x^2 +" << spline.spl_poly.nums(3) << "x^3" << std::endl;
+}
+
 
 
 int main() {
@@ -208,7 +213,8 @@ int main() {
     // };
 
     createWaveTrack(blue_cones, yellow_cones);
-    //std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
+
+    std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
     // if (chunks == nullptr) {
     //     std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
@@ -227,24 +233,25 @@ int main() {
     // Yellow.open(yellow_chunk_file, std::ios::out);
 
     
-    // for (int i  = 0; i < chunks.size(); i++) {
-    //     // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
-    //     // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
+    for (int i  = 0; i < chunks.size(); i++) {
+        // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
+        // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
 
-    //     // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
-    //     //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-    //     //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-    //     // }
+        // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
+        //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+        //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+        // }
 
-    //     for (int j = 0; j < chunks[i]->yellowPoints.size(); j++) {
-    //         Yellow << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
-    //         std::cout << chunks[i]->yellowPoints[j].first << "," << chunks[i]->yellowPoints[j].second << std::endl;
-    //     }
+        for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
+            // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
+            print_poly(chunks[i]->yellowSplines[j].spline_x);
+            print_poly(chunks[i]->yellowSplines[j].spline_y);
+        }
 
-    //     Blue << "#" << std::endl;
-    //     std::cout << "#" << std::endl;
-    //     Yellow << "#" << std::endl;
-    // }
+        // Blue << "#" << std::endl;
+        std::cout << "#" << std::endl;
+        // Yellow << "#" << std::endl;
+    }
 
     // Blue.close();
     // Yellow.close();
