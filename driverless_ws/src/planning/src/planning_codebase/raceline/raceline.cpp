@@ -583,11 +583,15 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
             }
         }
 
+        std::cout << "DEBUG 1" << std::endl;
+
         // shave off overlapping points from the spline if last group for og matrix
         Eigen::MatrixXd group_blocked = group.block(0, flag, 2, group.cols()-flag);
 
         // now have a 2x4 matrix of x and y, make matrices for t and x, t and y
         // make a t vector 0, 0.33, 0.66, 1
+
+        std::cout << "DEBUG 2" << std::endl;
 
         // Create 2x4 matrices for t and x, t and y
         //TODO
@@ -600,6 +604,8 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
 
         t_and_y.row(0) = t_values;
         t_and_y.row(1) = group_blocked.row(1);
+
+        std::cout << "DEBUG 3" << std::endl;
 
         // Print the matrices
         // std::cout << "Matrix for t and x:\n" << t_and_x << "\n\n";
