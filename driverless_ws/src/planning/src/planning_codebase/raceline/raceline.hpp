@@ -109,7 +109,6 @@ public:
     bool operator==(Spline const & other) const;
     bool operator<(Spline const & other) const;
 
-    std::tuple<Eigen::VectorXd  ,double, Eigen::VectorXd  ,double> along(double progress, double point_index=0, int precision=20);
     double getderiv(double x);
 
     // std::pair<double, double> along(double progress) const;
@@ -157,7 +156,5 @@ std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger l
 std::pair<std::vector<ParameterizedSpline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points);
 
 Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths);
-
-std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths, int precision = 20);
 
 #endif

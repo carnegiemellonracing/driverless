@@ -848,50 +848,50 @@ std::vector<int> inject_clamped(std::vector<double> old_vals, std::vector<double
     return indices;
 }
 
-/**
- * TODO: get_curvature_raceline will return the sign of the concavity of the current chunk
- * Returns the curvature of the raceline at a given progress.
- * 
- * @param progress A sorted vector of progresses along the raceline. (Progress in meters)
- * @param splines A vector of splines that make up the raceline.
- * @param cumulated_lengths A vector of the cumulated lengths of the splines. (meters)
- * 
- * @return The curvature at the given progress.
- */
-Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths) {
-    //TODO: progress and splines currently are singletons, they should be just doubles
-    // We have these as vectors because inject_clamped expects vectors
+// /**
+//  * TODO: get_curvature_raceline will return the sign of the concavity of the current chunk
+//  * Returns the curvature of the raceline at a given progress.
+//  * 
+//  * @param progress A sorted vector of progresses along the raceline. (Progress in meters)
+//  * @param splines A vector of splines that make up the raceline.
+//  * @param cumulated_lengths A vector of the cumulated lengths of the splines. (meters)
+//  * 
+//  * @return The curvature at the given progress.
+//  */
+// Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths) {
+//     //TODO: progress and splines currently are singletons, they should be just doubles
+//     // We have these as vectors because inject_clamped expects vectors
 
-    // indices of splines that progress should be on 
-    /* 
-     * 3 components; modifying the components for each chunk
-     * 
-     * 1.) Each chunk has an accumulator for curvature average
-     * - Stores information about the chunk's "curvature" (in this case, identified by the concavity)
-     * 2.) Function that updates the curvature
-     * 3.) Function to check if we need to create a new chunk; happens if the signs change
-     */
-    std::vector<int> indices = inject_clamped(cumulated_lengths, progress);
+//     // indices of splines that progress should be on 
+//     /* 
+//      * 3 components; modifying the components for each chunk
+//      * 
+//      * 1.) Each chunk has an accumulator for curvature average
+//      * - Stores information about the chunk's "curvature" (in this case, identified by the concavity)
+//      * 2.) Function that updates the curvature
+//      * 3.) Function to check if we need to create a new chunk; happens if the signs change
+//      */
+//     std::vector<int> indices = inject_clamped(cumulated_lengths, progress);
 
-    //for (int i = 0; i < progress.size(); i++){
-    int prog = progress[0];
-    int index = indices[0];
-    if (index > 0){
-        prog -= cumulated_lengths[index-1];
-    }
+//     //for (int i = 0; i < progress.size(); i++){
+//     int prog = progress[0];
+//     int index = indices[0];
+//     if (index > 0){
+//         prog -= cumulated_lengths[index-1];
+//     }
         
-        //double curvature = get_curvature(
-        //    splines[index].get_first_der(),
-        //    splines[index].get_second_der(),
-        //    min_x
-        //);
-    std::pair<double, double> xy = interpolate_raceline(prog, splines, cumulated_lengths, 200);
-    Concavity cur_concavity = get_concavity_sign(splines[index].get_second_der(), xy.first);
+//         //double curvature = get_curvature(
+//         //    splines[index].get_first_der(),
+//         //    splines[index].get_second_der(),
+//         //    min_x
+//         //);
+//     std::pair<double, double> xy = interpolate_raceline(prog, splines, cumulated_lengths, 200);
+//     Concavity cur_concavity = get_concavity_sign(splines[index].get_second_der(), xy.first);
 
-    std::cout << "x: " << xy.first << std::endl;
-    std::cout << "y: " << xy.second << std::endl;
-    return cur_concavity;
-}
+//     std::cout << "x: " << xy.first << std::endl;
+//     std::cout << "y: " << xy.second << std::endl;
+//     return cur_concavity;
+// }
 
 /** 
  * Replicates the searchSorted function from numpy.
@@ -918,47 +918,47 @@ int searchSorted (std::vector<double> arr, double target) {
     return right;
 }
 
-/** 
- * Returns the x-y point on the raceline at a given progress. 
- * 
- * @param progress A single progress along the raceline.
- * @param splines A vector of splines that make up the raceline.
- * @param cumulated_lengths A vector of the cumulated lengths of the splines.
- * @param precision A number of points used to get approximation for a specific spline.
- * 
- * @return A tuple representing point on the raceline at the given progress.
- */
-std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
-                                               std::vector<double> cumulated_lengths, int precision) {
-    // std::cout << "real progress: " << progress << std::endl;
-    int index = searchSorted(cumulated_lengths, progress) + 1; //TODO: use std::binary_search
-    //std::cout << "searchsorted" << std::endl;
-    //std::cout << index << std::endl;
-    //std::cout << splines.size() << std::endl;
-    Spline curr = splines[index]; // +1 because otherwise if less than first spline lenght, returns 0
-    double delta = 0;
-    //std::cout << "get curr and delta" << std::endl;
+// /** 
+//  * Returns the x-y point on the raceline at a given progress. 
+//  * 
+//  * @param progress A single progress along the raceline.
+//  * @param splines A vector of splines that make up the raceline.
+//  * @param cumulated_lengths A vector of the cumulated lengths of the splines.
+//  * @param precision A number of points used to get approximation for a specific spline.
+//  * 
+//  * @return A tuple representing point on the raceline at the given progress.
+//  */
+// std::pair<double, double> interpolate_raceline(double progress, std::vector<Spline> splines, 
+//                                                std::vector<double> cumulated_lengths, int precision) {
+//     // std::cout << "real progress: " << progress << std::endl;
+//     int index = searchSorted(cumulated_lengths, progress) + 1; //TODO: use std::binary_search
+//     //std::cout << "searchsorted" << std::endl;
+//     //std::cout << index << std::endl;
+//     //std::cout << splines.size() << std::endl;
+//     Spline curr = splines[index]; // +1 because otherwise if less than first spline lenght, returns 0
+//     double delta = 0;
+//     //std::cout << "get curr and delta" << std::endl;
 
-    // std::cout << "cum length again: " << std::endl;
-    for (auto l : cumulated_lengths) {
-        // std::cout << l << std::endl;
-    }
+//     // std::cout << "cum length again: " << std::endl;
+//     for (auto l : cumulated_lengths) {
+//         // std::cout << l << std::endl;
+//     }
     
-    if (index == 0) {
-        //std::cout << "if1" << std::endl;
-        delta = progress;
-        //std::cout << "if" << std::endl;
-    } else {
-        //std::cout << "else1" << std::endl;
-        delta = progress - cumulated_lengths[index-1];
-        // std::cout << "cumulated index: " << index << std::endl;
-        // std::cout << "cumulated length: " << cumulated_lengths[index-1] << std::endl;
-    }
-    //std::cout << "before curr along" << std::endl;
-    std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> result =
-        curr.along(delta, 0, precision);
-    Eigen::VectorXd point = std::get<0>(result);
-    //std::cout << "after point" << std::endl;
-    return std::make_pair(point(0), point(1));
-}
+//     if (index == 0) {
+//         //std::cout << "if1" << std::endl;
+//         delta = progress;
+//         //std::cout << "if" << std::endl;
+//     } else {
+//         //std::cout << "else1" << std::endl;
+//         delta = progress - cumulated_lengths[index-1];
+//         // std::cout << "cumulated index: " << index << std::endl;
+//         // std::cout << "cumulated length: " << cumulated_lengths[index-1] << std::endl;
+//     }
+//     //std::cout << "before curr along" << std::endl;
+//     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> result =
+//         curr.along(delta, 0, precision);
+//     Eigen::VectorXd point = std::get<0>(result);
+//     //std::cout << "after point" << std::endl;
+//     return std::make_pair(point(0), point(1));
+// }
 
