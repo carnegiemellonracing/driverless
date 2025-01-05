@@ -81,17 +81,13 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     double bluePercentProgress;
     int yellowSplineIdx = 0;
     for (int i = 1; i <= blueRacetrackSplines.size(); i++) {
-        std::cout << i + 9 << "make splines done" << std::endl;
         // add spline to chunk
-        if (!chunk->checkContinueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]) && 
-            i < blueRacetrackSplines.size()) {
-                std::cout << i + 9 << "make splines done" << std::endl;
+        if (i < blueRacetrackSplines.size && (!chunk->checkContinueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]))) {
             chunk->blueSplines.push_back(blueRacetrackSplines[i]);
         }
         // stop current chunk, add to vector, start new chunk
         else { 
             // TODO makevector for yellow
-            std::cout << i + 9 << "make splines done" << std::endl;
             bluePercentProgress = blueCumulativeLen[i - 1] / blueCumulativeLen[-1];
             std::cout << i + 9 << "make splines done" << std::endl;
             
@@ -102,7 +98,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     std::cout << i + 9 << "make splines done" << std::endl;
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
                 yellowSplineIdx++;
-                std::cout << i + 9 << "make splines done" << std::endl;
             }
             chunkVector->emplace_back(chunk);
             std::cout << i + 9 << "make splines done" << std::endl;
