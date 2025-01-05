@@ -106,8 +106,12 @@ Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial secon
 Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat, polynomial first, polynomial second, polynomial third, int path, int sort_ind, bool calcLength)
     : spl_poly(interpolation_poly),points(points_mat),first_der(first),second_der(second),third_der(third),path_id(path_id),sort_index(sort_ind)
 {
-
+    // if(calcLength){
+    //     this->length = this->calculateLength();
+    // }
 }
+
+Spline::Spline(){}
 
 Spline::~Spline()
 {
