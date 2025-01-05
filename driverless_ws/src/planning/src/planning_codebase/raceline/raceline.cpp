@@ -640,6 +640,8 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
     //     // std::cout << l << std::endl;
     // }
 
+    std::cout << "finished param spline gen" << std::endl;
+
     return std::make_pair(splines, cumsum);
 }
 
