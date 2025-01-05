@@ -92,17 +92,19 @@ Spline::Spline(polynomial interpolation_poly) {
     this->spl_poly = interpolation_poly;
 }
 
-Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path, int sort_ind) {
+Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial second, 
+                polynomial third, int path, int sort_ind) {
     this->spl_poly=interpolation_poly;
     this->first_der = first;
     this->second_der = second;
+    this->third_der = third;
     this->path_id = path_id;
     this->sort_index = sort_ind;
 }
 
 
-Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat, polynomial first, polynomial second, int path, int sort_ind, bool calcLength)
-    : spl_poly(interpolation_poly),points(points_mat),first_der(first),second_der(second),path_id(path_id),sort_index(sort_ind)
+Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat, polynomial first, polynomial second, polynomial third, int path, int sort_ind, bool calcLength)
+    : spl_poly(interpolation_poly),points(points_mat),first_der(first),second_der(second),third_der(third),path_id(path_id),sort_index(sort_ind)
 {
 
 }
@@ -150,6 +152,11 @@ int Spline::get_sort_index(){
     return sort_index;
 }
 
+ParameterizedSpline::ParameterizedSpline(Spline spline_x, Spline spline_y) {
+    this->spline_x = spline_x;
+    this->spline_y = spline_y;
+}
+
 // dy/dx = dy/dt / dx/dt
 double ParameterizedSpline::get_first_der(double t) {
     // handle infinity
@@ -178,7 +185,15 @@ double ParameterizedSpline::get_third_der(double t) {
     if (first_der_x == 0) {
         return std::numeric_limits<double>::infinity();
     }
-    return 0;
+    double first_der_y = poly_eval(spline_y->first_der, t);
+    double second_der_x = poly_eval(spline_x->second_der, t);
+    double second_der_y = poly_eval(spline_y->second_der, t);
+    double third_der_x = poly_eval(spline_x->third_der, t);
+    double third_der_y = poly_eval(spline_y->third_der, t);
+    return ((first_der_x * first_der_x * third_der_y) - 
+           (first_der_x * first_der_y * third_der_x) -
+           (3 * first_der_x * second_der_x * second_der_y) + 
+           (3 * first_der_y * second_der_x * second_der_x)) / std::pow(first_der_x, 5);
 }
 
 
@@ -350,27 +365,27 @@ double ParameterizedSpline::get_third_der(double t) {
 //     return ret;
 // }
 
-Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts){
-    Eigen::Vector2d beg; beg << pnts.col(0);
-    Eigen::Vector2d end; end << pnts.col(pnts.cols()-1);
+// Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts){
+//     Eigen::Vector2d beg; beg << pnts.col(0);
+//     Eigen::Vector2d end; end << pnts.col(pnts.cols()-1);
 
-    Eigen::Vector2d diff = end-beg;
+//     Eigen::Vector2d diff = end-beg;
 
-    double norm = diff.norm();
+//     double norm = diff.norm();
 
-    double cos = diff(0)/norm;
-    double sin = diff(1)/norm;
+//     double cos = diff(0)/norm;
+//     double sin = diff(1)/norm;
 
-    Eigen::Matrix2d ret;
-    ret(0,0)=cos;
-    ret(1,0)=sin;
-    ret(0,1)=-1*sin;
-    ret(1,1)=cos;
+//     Eigen::Matrix2d ret;
+//     ret(0,0)=cos;
+//     ret(1,0)=sin;
+//     ret(0,1)=-1*sin;
+//     ret(1,1)=cos;
 
-    // //RCLCPP_INFO(logger, "(sin,cos),(%f, %f)\n", sin,cos);
-    // //RCLCPP_INFO(logger, "(diff,norm),(%f, %f),%f\n", diff(0),diff(1),norm);
-    return ret;
-}
+//     // //RCLCPP_INFO(logger, "(sin,cos),(%f, %f)\n", sin,cos);
+//     // //RCLCPP_INFO(logger, "(diff,norm),(%f, %f),%f\n", diff(0),diff(1),norm);
+//     return ret;
+// }
 
 // Eigen::VectorXd get_translation_vector(Eigen::MatrixXd& group){
 //     Eigen::Vector2d ret;
@@ -491,15 +506,14 @@ double arclength(std::pair<polynomial> poly_der, double x0,double x1){
 
 }
 
-std::pair<std::vector<std::pair<Spline>>,std::vector<double>> parameterized_spline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){
+std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_spline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){
 
     ////std::cout << "Number of rows:" << res.rows() << std::endl;
     ////std::cout << "Number of cols:" << res.cols() << std::endl;
     
     int n = res.cols();
 
-    // vector of tuples (spline param x, spline param y)
-    std::vector<std::pair<Spline>> splines;
+    std::vector<ParameterizedSpline> splines;
 
     // Eigen::MatrixXd points=res;
 
@@ -590,18 +604,20 @@ std::pair<std::vector<std::pair<Spline>>,std::vector<double>> parameterized_spli
         // not rotating here because doing parametrized spline
         polynomial interpolation_poly_x = lagrange_gen(t_and_x);
         polynomial first_der_x = polyder(interpolation_poly_x);
-        polynomial second_der_x = polyder(first_derx);
+        polynomial second_der_x = polyder(first_der_x);
+        polynomial third_der_x = polyder(second_der_x);
 
         polynomial interpolation_poly_y = lagrange_gen(t_and_y);
         polynomial first_der_y = polyder(interpolation_poly_y);
         polynomial second_der_y = polyder(first_der_y);
+        polynomial third_der_y = polyder(second_der_y);
 
         lengths.emplace_back(0);
 
         // TODO delete spline rotated points and translation vector
-        Spline spline_x = Spline(interpolation_poly_x,t_and_x,first_der_x,second_der_x,path_id,i);
-        Spline spline_y = Spline(interpolation_poly_x,t_and_y,first_der_y,second_der_y,path_id,i);
-        splines.emplace_back(std::make_pair(spline_x, spline_y));
+        Spline spline_x = Spline(interpolation_poly_x,t_and_x,first_der_x,second_der_x,third_der_x,path_id,i);
+        Spline spline_y = Spline(interpolation_poly_x,t_and_y,first_der_y,second_der_y,third_der_y,path_id,i);
+        splines.emplace_back(ParameterizedSpline(spline_x, spline_y));
 
         // lengths.push_back(spline.calculateLength());
         if (i == 0) {

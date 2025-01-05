@@ -115,9 +115,9 @@ public:
     // std::pair<double, double> along(double progress) const;
 
     Spline(polynomial interpolation_poly);
-    Spline(polynomial interpolation_poly, polynomial first, polynomial second, int path, int sort_ind);
+    Spline(polynomial interpolation_poly, polynomial first, polynomial second, polynomial third, int path, int sort_ind);
     // Spline(polynomial interpolation_poly,Eigen::MatrixXd points_mat,Eigen::MatrixXd rotated,Eigen::Matrix2d Q_mat, Eigen::VectorXd translation,polynomial first, polynomial second, int path, int sort_ind);
-    Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,polynomial first, polynomial second, int path, int sort_ind, bool calcLength = false);
+    Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat,polynomial first, polynomial second, polynomial third, int path, int sort_ind, bool calcLength = false);
 
     Spline();
     ~Spline();
@@ -128,6 +128,8 @@ class ParameterizedSpline
 public:
     Spline spline_x;
     Spline spline_y;
+
+    ParameterizedSpline(Spline spline_x, Spline spline_y);
 
     double get_first_der(double t);
     double get_second_der(double t);
