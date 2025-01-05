@@ -82,7 +82,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     int yellowSplineIdx = 0;
     for (int i = 1; i <= blueRacetrackSplines.size(); i++) {
         // add spline to chunk
-        if (i < blueRacetrackSplines.size && (!chunk->checkContinueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]))) {
+        if (i < blueRacetrackSplines.size() && (!chunk->checkContinueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]))) {
             chunk->blueSplines.push_back(blueRacetrackSplines[i]);
         }
         // stop current chunk, add to vector, start new chunk
