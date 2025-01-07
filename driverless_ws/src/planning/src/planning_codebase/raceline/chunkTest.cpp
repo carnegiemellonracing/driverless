@@ -150,8 +150,7 @@ void createSemiCircleTrack(std::vector<std::pair<double, double>> &blue_cones,
         std::make_pair(13.24, -14.99),
         std::make_pair(0, -20), 
         std::make_pair(-5, -20),
-        std::make_pair(-10, -20),
-        std::make_pair(0, -20)  
+        std::make_pair(-10, -20)
     };
 
     blue_cones = {
@@ -163,8 +162,7 @@ void createSemiCircleTrack(std::vector<std::pair<double, double>> &blue_cones,
         std::make_pair(13.24, -14.99),
         std::make_pair(0, -20), 
         std::make_pair(-5, -20),
-        std::make_pair(-10, -20),
-        std::make_pair(0, -20)  
+        std::make_pair(-10, -20)
     };                
 }
 
