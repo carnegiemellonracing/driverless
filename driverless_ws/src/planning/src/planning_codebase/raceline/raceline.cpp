@@ -183,7 +183,6 @@ double ParameterizedSpline::get_second_der(double t) {
     return (first_der_x * second_der_y - first_der_y * second_der_x) / std::pow(first_der_x, 3);
 }
 
-// TODO finish this
 double ParameterizedSpline::get_third_der(double t) {
     double first_der_x = poly_eval(spline_x.first_der, t);
     if (first_der_x == 0) {
@@ -199,7 +198,7 @@ double ParameterizedSpline::get_third_der(double t) {
            (3 * first_der_x * second_der_x * second_der_y) + 
            (3 * first_der_y * second_der_x * second_der_x)) / std::pow(first_der_x, 5);
 }
-
+// ((n'(t)^2 * o'''(t)) - (o'(t)^2 * n'''(t)) - (3 * n'(t) * n''(t) * o''(t)) + (3 * o'(t) * n''(t)^2)) / n'(t)^5
 
 // /**
 //  * @TODO: fix reverse transform

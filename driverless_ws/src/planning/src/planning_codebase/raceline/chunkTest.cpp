@@ -150,7 +150,8 @@ void createSemiCircleTrack(std::vector<std::pair<double, double>> &blue_cones,
         std::make_pair(13.24, -14.99),
         std::make_pair(0, -20), 
         std::make_pair(-5, -20),
-        std::make_pair(-10, -20)
+        std::make_pair(-10, -20),
+         std::make_pair(-15, -20)
     };
 
     blue_cones = {
@@ -162,7 +163,8 @@ void createSemiCircleTrack(std::vector<std::pair<double, double>> &blue_cones,
         std::make_pair(13.24, -14.99),
         std::make_pair(0, -20), 
         std::make_pair(-5, -20),
-        std::make_pair(-10, -20)
+        std::make_pair(-10, -20),
+        std::make_pair(-15, -20)
     };                
 }
 
@@ -266,7 +268,7 @@ int main() {
     //     std::make_pair(100, 100)
     // };
 
-    createSquidwardTrack(blue_cones, yellow_cones);
+    createSemiCircleTrack(blue_cones, yellow_cones);
 
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
