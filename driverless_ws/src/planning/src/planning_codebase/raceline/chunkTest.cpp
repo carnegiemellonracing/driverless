@@ -240,7 +240,7 @@ int main() {
     //     std::make_pair(100, 100)
     // };
 
-    createSemiCircleTrack(blue_cones, yellow_cones);
+    createSquidwardTrack(blue_cones, yellow_cones);
 
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
