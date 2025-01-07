@@ -457,7 +457,7 @@ double ParameterizedSpline::get_third_der(double t) {
     
 //     return [a3, a2, a1, a0]
 
-polynomial catmull_rom(Eigen::MatrixXd& points) {
+polynomial catmull_rom(const Eigen::MatrixXd& points) {
     double P0 = points(0);
     double P1 = points(1);
     double P2 = points(2);
@@ -603,8 +603,8 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
         lengths.emplace_back(0);
 
         // TODO delete spline rotated points and translation vector
-        Spline spline_x = Spline(interpolation_poly_x,t_and_x,first_der_x,second_der_x,third_der_x,path_id,i);
-        Spline spline_y = Spline(interpolation_poly_y,t_and_y,first_der_y,second_der_y,third_der_y,path_id,i);
+        Spline spline_x = Spline(interpolation_poly_x,first_der_x,second_der_x,third_der_x,path_id,i);
+        Spline spline_y = Spline(interpolation_poly_y,first_der_y,second_der_y,third_der_y,path_id,i);
         splines.emplace_back(ParameterizedSpline(spline_x, spline_y));
 
         // lengths.push_back(spline.calculateLength());
