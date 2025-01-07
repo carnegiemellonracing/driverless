@@ -457,6 +457,7 @@ double ParameterizedSpline::get_third_der(double t) {
     
 //     return [a3, a2, a1, a0]
 
+
 polynomial catmull_rom(const Eigen::MatrixXd& points) {
     double P0 = points(0);
     double P1 = points(1);

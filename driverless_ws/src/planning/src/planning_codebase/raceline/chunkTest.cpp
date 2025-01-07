@@ -298,7 +298,7 @@ int main() {
     //     std::make_pair(100, 100)
     // };
 
-    createParabToStraightTrack(blue_cones, yellow_cones);
+    createSquidwardTrack(blue_cones, yellow_cones);
 
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
@@ -328,10 +328,10 @@ int main() {
         //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
         // }
 
-        for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
+        for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
             // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-            print_poly(chunks[i]->yellowSplines[j].spline_x);
-            print_poly(chunks[i]->yellowSplines[j].spline_y);
+            print_poly(chunks[i]->blueSplines[j].spline_x);
+            print_poly(chunks[i]->blueSplines[j].spline_y);
 
         }
 
