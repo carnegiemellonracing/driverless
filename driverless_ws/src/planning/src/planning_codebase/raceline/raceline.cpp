@@ -579,10 +579,15 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
                 ////std::cout << "Curr flag:" << flag << std::endl;
 
                 group(j, k) = res(j, i*shift + k - flag); // ERROR index out of bound error
+                if (j) {
+                    std::cout << "y:" << res(j, i*shift + k - flag) << std::endl;
+                } else {
+                    std::cout << "x:" << res(j, i*shift + k - flag) << std::endl;
+                }
                 // if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
             }
         }
-
+        
         // now have a 2x4 matrix of x and y, make matrices for t and x, t and y
         // make a t vector 0, 0.33, 0.66, 1
 
