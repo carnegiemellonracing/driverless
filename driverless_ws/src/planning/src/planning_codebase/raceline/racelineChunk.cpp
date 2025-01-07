@@ -75,6 +75,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     // create a chunk
     Chunk* chunk = new Chunk();
+    chunk->blueSplines.push_back(blueRacetrackSplines[0]);
     
     // // loop through progress and sample curvature at each progress point
     // int increment = 1; // TODO: tunable param

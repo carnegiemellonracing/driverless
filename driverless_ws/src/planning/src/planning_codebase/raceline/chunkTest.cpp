@@ -56,8 +56,8 @@ void createSquidwardTrack(std::vector<std::pair<double,double>> &blue_cones,
          std::make_pair(-12,-2),
          std::make_pair(-10,-2),
          std::make_pair(-8,-2),
-         std::make_pair(-6,-2),
-         std::make_pair(-4,-2)
+         std::make_pair(-6,-2)
+        //  std::make_pair(-4,-2)
     };
 
     blue_cones = {
@@ -98,8 +98,8 @@ void createSquidwardTrack(std::vector<std::pair<double,double>> &blue_cones,
         std::make_pair(-12,2),
         std::make_pair(-10,2),
         std::make_pair(-8,2),
-        std::make_pair(-6,2),
-        std::make_pair(-4,2)
+        std::make_pair(-6,2)
+        // std::make_pair(-4,2)
     };
 }
 
@@ -278,7 +278,6 @@ void print_poly(Spline x, Spline y) {
      << "[" << y.spl_poly.nums(0) << "," << y.spl_poly.nums(1) << ","
      << y.spl_poly.nums(2) << "," << y.spl_poly.nums(3) << "])"<< std::endl;
 }
-
 
 int main() {
     std::vector<std::pair<double, double>> blue_cones = {};
