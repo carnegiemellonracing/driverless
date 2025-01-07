@@ -168,6 +168,36 @@ void createSemiCircleTrack(std::vector<std::pair<double, double>> &blue_cones,
     };                
 }
 
+void createParabToStraightTrack(std::vector<std::pair<double, double>> &blue_cones, 
+                        std::vector<std::pair<double, double>> &yellow_cones) {
+    yellow_cones = {
+        std::make_pair(0, 25),
+        std::make_pair(2, 16),
+        std::make_pair(4, 9),
+        std::make_pair(6, 4),
+        std::make_pair(7, 2.25),
+        std::make_pair(8, 1),
+        std::make_pair(10, 0),
+        std::make_pair(15, 0),
+        std::make_pair(20, 0),
+        std::make_pair(25, 0)
+    };
+
+    blue_cones = {
+        std::make_pair(0, 25),
+        std::make_pair(2, 16),
+        std::make_pair(4, 9),
+        std::make_pair(6, 4),
+        std::make_pair(7, 2.25),
+        std::make_pair(8, 1),
+        std::make_pair(10, 0),
+        std::make_pair(15, 0),
+        std::make_pair(20, 0),
+        std::make_pair(25, 0)
+    };                
+}
+
+
 // a(t) = 0+0t +0t^2 +0t^3
 // b(t) = 0+6.00266t +0.263389t^2 +-0.266049t^3
 // c(t) = 0+0t +0t^2 +0t^3
@@ -268,7 +298,7 @@ int main() {
     //     std::make_pair(100, 100)
     // };
 
-    createSemiCircleTrack(blue_cones, yellow_cones);
+    createParabToStraightTrack(blue_cones, yellow_cones);
 
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 

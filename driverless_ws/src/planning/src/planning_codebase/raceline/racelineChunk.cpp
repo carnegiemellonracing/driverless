@@ -9,9 +9,9 @@
 #define CHUNK_LEN_MAX_THRESH 1000
 #define CHUNK_LEN_MIN_THRESH 0
 #define CHUNK_CURVE_THRESH 0.02
-#define CHUNK_FIRST_DER_THRESH 1
-#define CHUNK_SECOND_DER_THRESH 1
-#define CHUNK_THIRD_DER_THRESH 1
+#define CHUNK_FIRST_DER_THRESH 0
+#define CHUNK_SECOND_DER_THRESH 0
+#define CHUNK_THIRD_DER_THRESH 0
 
 /**
  * Constructor for chunks.
@@ -31,13 +31,13 @@ Chunk::Chunk() = default;
  *         include given curvature point, false otherwise.
  */
 bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline spline2) {
-    bool checkFirstDer = abs(spline1.get_first_der(1) - spline2.get_first_der(0)) < CHUNK_FIRST_DER_THRESH;
+    bool checkFirstDer = abs(spline1.get_first_der(1) - spline2.get_first_der(0)) <= CHUNK_FIRST_DER_THRESH;
     std::cout << "first der diff" << abs(spline1.get_first_der(1) - spline2.get_first_der(0)) << std::endl;
 
-    bool checkSecondDer = abs(spline1.get_second_der(1) - spline2.get_second_der(0)) < CHUNK_SECOND_DER_THRESH;
+    bool checkSecondDer = abs(spline1.get_second_der(1) - spline2.get_second_der(0)) <= CHUNK_SECOND_DER_THRESH;
     std::cout << "second der diff" << abs(spline1.get_second_der(1) - spline2.get_second_der(0)) << std::endl;
 
-    bool checkThirdDer = abs(spline1.get_third_der(1) - spline2.get_third_der(0)) < CHUNK_THIRD_DER_THRESH;
+    bool checkThirdDer = abs(spline1.get_third_der(1) - spline2.get_third_der(0)) <= CHUNK_THIRD_DER_THRESH;
     std::cout << "third der diff" << abs(spline1.get_third_der(1) - spline2.get_third_der(0)) << std::endl;
 
     return checkFirstDer && checkSecondDer && checkThirdDer;
@@ -88,7 +88,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     int yellowSplineIdx = 0;
     for (int i = 1; i <= blueRacetrackSplines.size(); i++) {
         // add spline to chunk
-        if (i < blueRacetrackSplines.size() && (!chunk->checkContinueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]))) {
+        if (i < blueRacetrackSplines.size() && (chunk->checkContinueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]))) {
             chunk->blueSplines.push_back(blueRacetrackSplines[i]);
         }
         // stop current chunk, add to vector, start new chunk
