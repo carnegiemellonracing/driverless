@@ -217,8 +217,8 @@ void createSemiCircleTrack(std::vector<std::pair<double, double>> &blue_cones,
 // }
 
 void print_poly(Spline spline) {
-    std::cout << "spline x is " << spline.spl_poly.nums(0) << "+" << spline.spl_poly.nums(1) << "x +"
-     << spline.spl_poly.nums(2) << "x^2 +" << spline.spl_poly.nums(3) << "x^3" << std::endl;
+    std::cout << spline.spl_poly.nums(0) << "+" << spline.spl_poly.nums(1) << "t +"
+     << spline.spl_poly.nums(2) << "t^2 +" << spline.spl_poly.nums(3) << "t^3" << std::endl;
 }
 
 
