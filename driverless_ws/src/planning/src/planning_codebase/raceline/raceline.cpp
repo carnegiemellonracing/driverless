@@ -444,6 +444,41 @@ double ParameterizedSpline::get_third_der(double t) {
 //     return ret;
 // }
 
+// def compute_catmull_rom_coefficients(P0, P1, P2, P3):
+//     # Tangents
+//     T1 = 0.5 * (P2 - P0)
+//     T2 = 0.5 * (P3 - P1)
+    
+//     # Coefficients
+//     a3 = 2*P1 - 2*P2 + T1 + T2
+//     a2 = -3*P1 + 3*P2 - 2*T1 - T2
+//     a1 = T1
+//     a0 = P1
+    
+//     return [a3, a2, a1, a0]
+
+polynomial catmull_rom(Eigen::MatrixXd& points) {
+    double P0 = points(0);
+    double P1 = points(1);
+    double P2 = points(2);
+    double P3 = points(3);
+
+    double T1 = 0.5 * (P2 - P0);
+    double T2 = 0.5 * (P3 - P1);
+
+    Eigen::VectorXd coeffs(4);
+
+    coeffs(3) = 2*P1 - 2*P2 + T1 + T2;
+    coeffs(2) = -3*P1 + 3*P2 - 2*T1 - T2;
+    coeffs(1) = T1;
+    coeffs(0) = P1;
+
+    polynomial spline_poly = poly(3);
+    spline_poly.nums = coeffs;
+
+    return spline_poly;
+}
+
 polynomial lagrange_gen(Eigen::MatrixXd& points){
     polynomial lagrange_poly = poly(points.cols() - 1);
 
@@ -518,70 +553,26 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
 
     std::vector<ParameterizedSpline> splines;
 
-    // Eigen::MatrixXd points=res;
-
-    // TODO: make sure that the group numbers are being calculated properly
-    // [2, 3, 4, 3, 5, 3, 5, ]
-
-    int shift = points_per_spline-1; //3
-    int group_numbers;
-
-    if (shift == 1){
-        group_numbers = n/shift;
-
-        if (loop)
-            group_numbers += (int)(n % shift != 0);
-    }
-    else{
-        if (n < 4) group_numbers = 0; // NEED TO MODIFY TO 1 AND DEAL WITH FEWER THAN 4 POINTS
-        else group_numbers = ((n-2)/3) + 1;
-
-        //RCLCPP_INFO(logger, "group numbers is %d\n", group_numbers);
-    }
-
-    // for loop through group numbers
-    // extra points if mod 3 != 1, in this case we take last 4 points and make spline and change the start point
-    // by going back by 2 if mod3 = 0, go back by 0 if mod3 = 1, go back by 1 if mod3 = 2
-
-    //If there are is leftover, 
-
-    // std::vector<std::vector<int>> groups; not used anywhere else 
-
     std::vector<double> lengths;
     std::vector<double> cumsum;
-    // lengths.resize(group_numbers);
 
-    //RCLCPP_INFO(logger, "points:%d, group numbers: %d\n",n,group_numbers);
+    // assume add last point to beginning, and first point to end in make_splines_vector
 
-    int flag = 0;
-
-    // Define the t values
-    Eigen::RowVector4d t_values(0, 0.33, 0.66, 1);
-
-    for(int i=0; i<group_numbers; i++){
-
+    for(int i=0; i < res.cols()-3; i++){
         // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
-        Eigen::MatrixXd group(2, points_per_spline);
-
-        // if last group, set flag to (0, 1, or 2) depending on mod3 as stated above
-        // @TODO make remaining points wrap around the front of the track to close the loop
-        if (i == (group_numbers - 1)) {
-            ////std::cout << "LAST GROUP" << std::endl;
-            // flag =  (n - 1) % 3;
-            flag = points_per_spline - (n - i*shift);
-        }
+        Eigen::MatrixXd group(2, 4);
 
         for(int k = 0; k < group.cols(); k++) {
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < group.rows(); j++) {
                 ////std::cout << "Curr row:" << j << std::endl;
                 ////std::cout << "Curr col:" << i*shift + k - flag << std::endl;
                 ////std::cout << "Curr flag:" << flag << std::endl;
 
-                group(j, k) = res(j, i*shift + k - flag); // ERROR index out of bound error
+                group(j, k) = res(j, i + k); // ERROR index out of bound error
                 if (j) {
-                    std::cout << "y:" << res(j, i*shift + k - flag) << std::endl;
+                    std::cout << "y:" << group(j, k) << std::endl;
                 } else {
-                    std::cout << "x:" << res(j, i*shift + k - flag) << std::endl;
+                    std::cout << "x:" << group(j, k) << std::endl;
                 }
                 // if (j==1) RCLCPP_INFO(logger, "raceline point %d is (%f, %f)\n", k, group(0, k), group(1,k));
             }
@@ -592,27 +583,19 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
 
         // Create 2x4 matrices for t and x, t and y
         //TODO
-        Eigen::MatrixXd t_and_x(2, 4);
-        Eigen::MatrixXd t_and_y(2, 4);
 
-        // Fill the matrices
-        t_and_x.row(0) = t_values;
-        t_and_x.row(1) = group.row(0); 
-
-        t_and_y.row(0) = t_values;
-        t_and_y.row(1) = group.row(1);
 
         // Print the matrices
         // std::cout << "Matrix for t and x:\n" << t_and_x << "\n\n";
         // std::cout << "Matrix for t and y:\n" << t_and_y << "\n";
 
         // not rotating here because doing parametrized spline
-        polynomial interpolation_poly_x = lagrange_gen(t_and_x);
+        polynomial interpolation_poly_x = catmull_rom(group.row(0));
         polynomial first_der_x = polyder(interpolation_poly_x);
         polynomial second_der_x = polyder(first_der_x);
         polynomial third_der_x = polyder(second_der_x);
 
-        polynomial interpolation_poly_y = lagrange_gen(t_and_y);
+        polynomial interpolation_poly_y = catmull_rom(group.row(1));
         polynomial first_der_y = polyder(interpolation_poly_y);
         polynomial second_der_y = polyder(first_der_y);
         polynomial third_der_y = polyder(second_der_y);
@@ -802,16 +785,16 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> make_splines_vec
     Eigen::MatrixXd pointMatrix(2, points.size() + 2);
     // Eigen::MatrixXd pointMatrix(2, points.size());
     for(int i = 0; i < points.size(); i++){
-        assert(i < pointMatrix.cols());
-        pointMatrix(0, i) = points[i].first;
-        pointMatrix(1, i) = points[i].second;
+        assert((i + 1) < pointMatrix.cols());
+        pointMatrix(0, i + 1) = points[i].first;
+        pointMatrix(1, i + 1) = points[i].second;
     }
-    // add first point again at the end to make cycle with splines
+    // add first point at end, add last point at beginning
     // uncomment with cycle tests
-    pointMatrix(0, points.size()) = points[0].first;
-    pointMatrix(1, points.size()) = points[0].second;
-    pointMatrix(0, points.size() + 1) = points[1].first;
-    pointMatrix(1, points.size() + 1) = points[1].second;
+    pointMatrix(0, 0) = points[-1].first;
+    pointMatrix(1, 0) = points[-1].second;
+    pointMatrix(0, points.size() + 1) = points[0].first;
+    pointMatrix(1, points.size() + 1) = points[0].second;
 
     ////std::cout << pointMatrix << std::endl;
 
