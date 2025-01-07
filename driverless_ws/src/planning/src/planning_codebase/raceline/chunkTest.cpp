@@ -139,6 +139,36 @@ void createWaveTrack(std::vector<std::pair<double, double>> &blue_cones,
     };
 }
 
+void createSemiCircleTrack(std::vector<std::pair<double, double>> &blue_cones, 
+                        std::vector<std::pair<double, double>> &yellow_cones) {
+    yellow_cones = {
+        std::make_pair(0, 20),
+        std::make_pair(9.25, 17.73),
+        std::make_pair(17.5, 9.68),
+        std::make_pair(20, 0),
+        std::make_pair(18.25, -8.18),
+        std::make_pair(13.24, -14.99),
+        std::make_pair(0, -20), 
+        std::make_pair(-5, -20),
+        std::make_pair(-10, -20),
+        std::make_pair(0, -20)  
+    };
+
+    blue_cones = {
+        std::make_pair(0, 20),
+        std::make_pair(9.25, 17.73),
+        std::make_pair(17.5, 9.68),
+        std::make_pair(20, 0),
+        std::make_pair(18.25, -8.18),
+        std::make_pair(13.24, -14.99),
+        std::make_pair(0, -20), 
+        std::make_pair(-5, -20),
+        std::make_pair(-10, -20),
+        std::make_pair(0, -20)  
+    };                
+}
+
+
 
 // void testMakeSplinesVector() {
 //     // make a std::vector<std::pair<double,double>> with 2 different polynomials
@@ -212,7 +242,7 @@ int main() {
     //     std::make_pair(100, 100)
     // };
 
-    createWaveTrack(blue_cones, yellow_cones);
+    createSemiCircleTrack(blue_cones, yellow_cones);
 
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
