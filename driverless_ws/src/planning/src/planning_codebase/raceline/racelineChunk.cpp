@@ -32,14 +32,14 @@ Chunk::Chunk() = default;
  */
 bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline spline2) {
     bool checkFirstDer = abs(spline1.get_first_der(1) - spline2.get_first_der(0)) < CHUNK_FIRST_DER_THRESH;
-    std::cout << abs(spline1.get_first_der(1) - spline2.get_first_der(0)) << std::endl;
+    std::cout << "first der diff" << abs(spline1.get_first_der(1) - spline2.get_first_der(0)) << std::endl;
 
     bool checkSecondDer = abs(spline1.get_second_der(1) - spline2.get_second_der(0)) < CHUNK_SECOND_DER_THRESH;
-    std::cout << abs(spline1.get_second_der(1) - spline2.get_second_der(0)) << std::endl;
+    std::cout << "second der diff" << abs(spline1.get_second_der(1) - spline2.get_second_der(0)) << std::endl;
 
     bool checkThirdDer = abs(spline1.get_third_der(1) - spline2.get_third_der(0)) < CHUNK_THIRD_DER_THRESH;
-    std::cout << abs(spline1.get_third_der(1) - spline2.get_third_der(0)) << std::endl;
-    
+    std::cout << "third der diff" << abs(spline1.get_third_der(1) - spline2.get_third_der(0)) << std::endl;
+
     return checkFirstDer && checkSecondDer && checkThirdDer;
 }
 
