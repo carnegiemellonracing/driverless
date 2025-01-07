@@ -617,7 +617,7 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
 
         // TODO delete spline rotated points and translation vector
         Spline spline_x = Spline(interpolation_poly_x,t_and_x,first_der_x,second_der_x,third_der_x,path_id,i);
-        Spline spline_y = Spline(interpolation_poly_x,t_and_y,first_der_y,second_der_y,third_der_y,path_id,i);
+        Spline spline_y = Spline(interpolation_poly_y,t_and_y,first_der_y,second_der_y,third_der_y,path_id,i);
         splines.emplace_back(ParameterizedSpline(spline_x, spline_y));
 
         // lengths.push_back(spline.calculateLength());
