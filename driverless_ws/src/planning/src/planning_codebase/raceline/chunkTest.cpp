@@ -272,11 +272,12 @@ void createParabToStraightTrack(std::vector<std::pair<double, double>> &blue_con
 //     }
 // }
 
-void print_poly(Spline spline) {
-    std::cout << spline.spl_poly.nums(0) << "+" << spline.spl_poly.nums(1) << "t +"
-     << spline.spl_poly.nums(2) << "t^2 +" << spline.spl_poly.nums(3) << "t^3" << std::endl;
+void print_poly(Spline x, Spline y) {
+    std::cout << "(["<< x.spl_poly.nums(0) << "," << x.spl_poly.nums(1) << ","
+     << x.spl_poly.nums(2) << "," << x.spl_poly.nums(3) << "]," 
+     << "[" << y.spl_poly.nums(0) << "," << y.spl_poly.nums(1) << ","
+     << y.spl_poly.nums(2) << "," << y.spl_poly.nums(3) << "])"<< std::endl;
 }
-
 
 
 int main() {
@@ -330,8 +331,8 @@ int main() {
 
         for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
             // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-            print_poly(chunks[i]->blueSplines[j].spline_x);
-            print_poly(chunks[i]->blueSplines[j].spline_y);
+            std::cout << ",";
+            print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
 
         }
 
