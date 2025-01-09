@@ -121,24 +121,23 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         else { 
             // TODO makevector for yellow
             bluePercentProgress = blueCumulativeLen[i - 1] / blueCumulativeLen[-1];
-            std::cout << i + 9 << "make splines done" << std::endl;
+            std::cout << "blue percent" << bluePercentProgress << std::endl;
             
             // yellowindex is greater than yellowRacetrackSplines or 
             // cumsum is greater than cumsum of blue;yellowSplineIdx
             while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
                 (yellowCumulativeLen[yellowSplineIdx]<= yellowCumulativeLen[-1] * bluePercentProgress)) {
-                    std::cout << i + 9 << "make splines donel" << std::endl;
+                    std::cout << "yellow length" << yellowCumulativeLen[yellowSplineIdx] << std::endl;
+                    std::cout << "length thresh" << yellowCumulativeLen[-1] * bluePercentProgress << std::endl;
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
                 yellowSplineIdx++;
             }
             chunkVector->emplace_back(chunk);
-            std::cout << i + 9 << "make splines done" << std::endl;
             if (i != blueRacetrackSplines.size()) {
                 chunk = new Chunk();
                 // init chunk and add curr spline
                 chunk->blueSplines.push_back(blueRacetrackSplines[i]);
             }
-            std::cout << i + 9 << "make splines done" << std::endl;
         }
     }
 
