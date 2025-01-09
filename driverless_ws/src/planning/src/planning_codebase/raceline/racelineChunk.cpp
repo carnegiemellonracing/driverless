@@ -44,7 +44,6 @@ bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline 
             inffirst = true;
         }
     bool checkFirstDer = inffirst || (abs(spline1_first_der - spline2_first_der) <= CHUNK_FIRST_DER_THRESH);
-    std::cout << "first der diff" << abs(spline1_first_der - spline2_first_der) << std::endl;
 
     bool infsec = false;
     if ((spline1_second_der == std::numeric_limits<double>::infinity() && abs(spline2_second_der) >= CHUNK_INFINITY_THRESH) || 
@@ -52,7 +51,6 @@ bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline 
             infsec = true;
         }
     bool checkSecondDer = infsec || (abs(spline1_second_der - spline2_second_der) <= CHUNK_SECOND_DER_THRESH);
-    std::cout << "second der diff" << abs(spline1_second_der - spline2_second_der) << std::endl;
 
     bool infthird = false;
     if ((spline1_third_der == std::numeric_limits<double>::infinity() && abs(spline2_third_der) >= CHUNK_INFINITY_THRESH) || 
@@ -60,7 +58,12 @@ bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline 
             infthird = true;
         }
     bool checkThirdDer = infthird || (abs(spline1_third_der - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
-    std::cout << "third der diff" << abs(spline1_third_der - spline2_third_der) << std::endl;
+
+    if !(checkFirstDer && checkSecondDer && checkThirdDer) {
+        std::cout << "first der diff" << abs(spline1_first_der - spline2_first_der) << std::endl;
+        std::cout << "second der diff" << abs(spline1_second_der - spline2_second_der) << std::endl;
+        std::cout << "third der diff" << abs(spline1_third_der - spline2_third_der) << std::endl;
+    }
 
     return checkFirstDer && checkSecondDer && checkThirdDer;
 }
