@@ -794,8 +794,8 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> make_splines_vec
     }
     // add first point at end, add last point at beginning
     // uncomment with cycle tests
-    pointMatrix(0, 0) = points[-1].first;
-    pointMatrix(1, 0) = points[-1].second;
+    pointMatrix(0, 0) = points[points.size()-1].first;
+    pointMatrix(1, 0) = points[points.size()-1].second;
     pointMatrix(0, points.size() + 1) = points[0].first;
     pointMatrix(1, points.size() + 1) = points[0].second;
     pointMatrix(0, points.size() + 2) = points[1].first;
