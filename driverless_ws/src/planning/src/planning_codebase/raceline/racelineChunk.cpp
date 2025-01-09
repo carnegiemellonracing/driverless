@@ -121,6 +121,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         else { 
             // TODO makevector for yellow
             bluePercentProgress = blueCumulativeLen[i - 1] / blueCumulativeLen[-1];
+            std::cout << "blue full" << blueCumulativeLen[-1] << std::endl;
             std::cout << "blue percent" << bluePercentProgress << std::endl;
             
             // yellowindex is greater than yellowRacetrackSplines or 
