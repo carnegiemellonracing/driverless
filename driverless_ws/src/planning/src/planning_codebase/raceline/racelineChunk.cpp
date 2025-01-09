@@ -127,7 +127,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             // yellowindex is greater than yellowRacetrackSplines or 
             // cumsum is greater than cumsum of blue;yellowSplineIdx
             while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
-                (yellowCumulativeLen[yellowSplineIdx]<= yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
+                (yellowCumulativeLen[yellowSplineIdx + 1]<= yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
                     std::cout << "yellow length" << yellowCumulativeLen[yellowSplineIdx] << std::endl;
                     std::cout << "length thresh" << yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress << std::endl;
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
