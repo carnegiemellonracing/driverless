@@ -9,7 +9,7 @@ def evaluate_polynomial(coeffs, t):
     """
     return coeffs[3] * t**3 + coeffs[2] * t**2 + coeffs[1] * t + coeffs[0]
 
-def plot_parametric_cubic_polynomials(polynomials, t_range=(0, 1), num_points=100):
+def plot_parametric_cubic_polynomials(grouped_polynomials, t_range=(0, 1), num_points=100):
     """
     Plot a list of parametric cubic polynomials (x(t), y(t)).
     polynomials: List of tuples [(x_coeffs, y_coeffs), ...].
@@ -19,20 +19,23 @@ def plot_parametric_cubic_polynomials(polynomials, t_range=(0, 1), num_points=10
     """
     t = np.linspace(t_range[0], t_range[1], num_points)
     
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(12, 8))
     
-    for i, (x_coeffs, y_coeffs) in enumerate(polynomials):
-        # Evaluate x(t) and y(t)
-        x_vals = evaluate_polynomial(x_coeffs, t)
-        y_vals = evaluate_polynomial(y_coeffs, t)
+    for i, group in enumerate(grouped_polynomials):
+        # Use a unique color for each group
+        color = plt.cm.viridis(i / len(grouped_polynomials))  # Choose color based on group index
         
-        # Plot the parametric curve
-        plt.plot(x_vals, y_vals, label=f'Curve {i+1}')
+        for x_coeffs, y_coeffs in group:
+            # Evaluate x(t) and y(t)
+            x_vals = evaluate_polynomial(x_coeffs, t)
+            y_vals = evaluate_polynomial(y_coeffs, t)
+            
+            # Plot the parametric curve
+            plt.plot(x_vals, y_vals, color=color)
     
     plt.title("Parametric Cubic Polynomials")
     plt.xlabel("x(t)")
     plt.ylabel("y(t)")
-    # plt.legend()
     plt.grid(True)
     plt.show()
 
