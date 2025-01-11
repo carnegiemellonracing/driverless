@@ -33,6 +33,8 @@
 #include <tuple>
 #include <vector>
 
+#include <model/slipless/model_host.h>
+
 //#include <utils/general_utils.hpp>
 
 namespace controls {
@@ -548,58 +550,23 @@ namespace controls {
 
         void TestNode::on_sim() {
             ActionMsg adj_msg = m_last_action_msg;
-            adj_msg.torque_fl *= gear_ratio / 1000.;
-            adj_msg.torque_fr *= gear_ratio / 1000.;
-            adj_msg.torque_rl *= gear_ratio / 1000.;
-            adj_msg.torque_rr *= gear_ratio / 1000.;
 
-            gsl_odeiv2_system system {};
-            system.function = model_func;
-            system.dimension = 13;
-            system.jacobian = nullptr;
-            system.params = (void*)&adj_msg;
-
-            gsl_odeiv2_driver* driver = gsl_odeiv2_driver_alloc_y_new(
-                &system,
-                gsl_odeiv2_step_rkf45,
-                1e-4, 1e-4, 1e-4
-            );
+            float action[2] = {
+                adj_msg.swangle,
+                adj_msg.torque_fl + adj_msg.torque_fr + adj_msg.torque_rl + adj_msg.torque_rr
+            };
+            float next_state[4];
+            std::array<float, 4> orig_world_state = m_world_state;
 
             double sim_time = m_time.nanoseconds() / 1.0e9;
             m_time = get_clock()->now();
+            controls::model::slipless::dynamics(orig_world_state.data(), action, m_world_state.data(), m_time.nanoseconds() / 1.0e9 - sim_time);
 
-            int result = gsl_odeiv2_driver_apply(driver, &sim_time, m_time.nanoseconds() / 1.0e9, m_world_state.data());
-            if (result != GSL_SUCCESS) {
-                throw std::runtime_error("GSL driver failed");
-            }
-
-            gsl_odeiv2_driver_free(driver);
             update_visible_indices();
             update_track_time();
             glm::fvec2 world_state_vec {m_world_state[0], m_world_state[1]};
             
             g_car_poses.push_back(std::make_tuple(world_state_vec, m_world_state[2], m_time.seconds() - m_start_time.seconds()));
-
-            // float x_diff = (m_world_state[0] - m_finish_line.x);
-            // float y_diff = (m_world_state[1] - m_finish_line.y);
-            // if (x_diff * x_diff + y_diff * y_diff < ) {
-            //     std::cout << "REACHED FINISH LINE!!!\n";
-            //     m_world_state = { -3,
-            //                       0,
-            //                       0,
-            //                       0,
-            //                       0,
-            //                       0,
-            //                       0,
-            //                       0,
-            //                       -3.0411,
-            //                       0,
-            //                       0,
-            //                       0,
-            //                       0 };
-
-            //     m_visible_indices = m_initial_visible_indices;
-            // }
         }
 
 
@@ -677,18 +644,20 @@ namespace controls {
         void TestNode::publish_twist() {
             TwistMsg msg {};
 
-            const float yaw = m_world_state[2];
-            const float car_xdot = m_world_state[3];
-            const float car_ydot = m_world_state[4];
-            const float yawdot = m_world_state[5];
+            msg.twist.linear.x = m_world_state[3];
 
-            msg.twist.linear.x = car_xdot * std::cos(yaw) - car_ydot * std::sin(yaw);
-            msg.twist.linear.y = car_xdot * std::sin(yaw) + car_ydot * std::cos(yaw);
-            msg.twist.linear.z = 0.0;
+            // const float yaw = m_world_state[2];
+            // const float car_xdot = m_world_state[3];
+            // const float car_ydot = m_world_state[4];
+            // const float yawdot = m_world_state[5];
 
-            msg.twist.angular.x = 0.0;
-            msg.twist.angular.y = 0.0;
-            msg.twist.angular.z = yawdot;
+            // msg.twist.linear.x = car_xdot * std::cos(yaw) - car_ydot * std::sin(yaw);
+            // msg.twist.linear.y = car_xdot * std::sin(yaw) + car_ydot * std::cos(yaw);
+            // msg.twist.linear.z = 0.0;
+
+            // msg.twist.angular.x = 0.0;
+            // msg.twist.angular.y = 0.0;
+            // msg.twist.angular.z = yawdot;
 
             msg.header.stamp = get_clock()->now();
 
