@@ -35,7 +35,7 @@
 
 #include <model/slipless/model_host.h>
 
-//#include <utils/general_utils.hpp>
+#include <utils/general_utils.hpp>
 
 namespace controls {
     namespace tests {
@@ -183,7 +183,7 @@ namespace controls {
             std::cout << "Cone detection completed, outputted to " << collision_log_path << ".\n";
         }
 
-        /// @brief Clamp some heading/angle value to the range [0, 2pi)
+        /// @brief Clamp some heading/angle value to the range [-pi, pi)
         static constexpr float arc_rad_adjusted(float arc_rad)
         {
             while (arc_rad < -M_PI)
@@ -241,8 +241,8 @@ namespace controls {
             // m_lookahead = std::stof(m_config_dict["look_ahead"]);
             // m_lookahead_squared = m_lookahead * m_lookahead;
             
-            glm::fvec2 curr_pos {0.0f, 0.0f};
-            float curr_heading = 0.0f;
+            glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
+            float curr_heading = m_world_state[2];
             for (const auto& seg : m_all_segments) {
                 if (seg.type == SegmentType::ARC) {
                     float next_heading = arc_rad_adjusted(curr_heading + seg.heading_change);
@@ -573,7 +573,7 @@ namespace controls {
         void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
             std::cout << "\nSwangle: " << msg.swangle * (180 / M_PI) << " Torque f: " <<
                 msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl;
-
+            
             m_last_action_msg = msg;
         }
         /**
@@ -605,8 +605,9 @@ namespace controls {
             auto gen_point = [&car_pos, car_heading](const glm::fvec2& point) {
                 geometry_msgs::msg::Point p;
                 glm::fvec2 rel_point = point - car_pos;
-                p.y = rel_point.x * glm::cos(car_heading) + rel_point.y * glm::sin(car_heading);
-                p.x = rel_point.x * -glm::sin(car_heading) + rel_point.y * glm::cos(car_heading);
+                glm::fvec2 rotated_point = rotate_point(rel_point, M_PI_2 - car_heading);
+                p.x = rotated_point.x;
+                p.y = rotated_point.y;
                 return p;
             };
 

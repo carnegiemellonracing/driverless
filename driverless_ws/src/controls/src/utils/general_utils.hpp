@@ -19,5 +19,13 @@ namespace controls {
         }
         return ss.str();
     }
+
+    /// Rotates a point by an angle
+    inline glm::fvec2 rotate_point(glm::fvec2 point, float angle) {
+        return {
+            glm::cos(angle) * point.x - glm::sin(angle) * point.y, 
+            glm::sin(angle) * point.x + glm::cos(angle) * point.y
+            };
+    }
 }
 

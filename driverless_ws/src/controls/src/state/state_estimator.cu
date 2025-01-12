@@ -400,22 +400,33 @@ namespace controls {
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
 
+        std::vector<glm::fvec2> process_ros_points(std::vector<geometry_msgs::msg::Point,
+                                                               std::allocator<geometry_msgs::msg::Point>>
+                                                       points)
+        {
+
+            assert(points.size() > 0);
+
+            std::vector<glm::fvec2> processed_points;
+            processed_points.reserve(points.size());
+            for (const auto &point : points)
+            {
+                float cone_y = static_cast<float>(point.y);
+                float cone_x = static_cast<float>(point.x);
+                processed_points.push_back(
+                    glm::fvec2(cone_x, cone_y));
+            }
+            assert(processed_points.size() == points.size());
+            return processed_points;
+        }
+
         void StateEstimator_Impl::on_spline(const SplineMsg& spline_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_logger("beginning state estimator spline processing");
 
 
-
-            m_spline_frames.clear();
-            m_spline_frames.reserve(spline_msg.frames.size());
-
-            for (const auto& frame : spline_msg.frames) {
-                m_spline_frames.push_back({
-                    static_cast<float>(frame.y),
-                    static_cast<float>(frame.x)
-                });
-            }
+            m_spline_frames = process_ros_points(spline_msg.frames);
 
             // if constexpr (reset_pose_on_spline) {
             //     m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
@@ -425,24 +436,6 @@ namespace controls {
 
 
             m_logger("finished state estimator spline processing");
-        }
-
-        std::vector<glm::fvec2> process_ros_points(std::vector<geometry_msgs::msg::Point, 
-                std::allocator<geometry_msgs::msg::Point>> points) {
-
-            assert(points.size() > 0);  
-
-            std::vector<glm::fvec2> processed_points;
-            processed_points.reserve(points.size());
-            for (const auto& point : points) {
-                // Swap the dimensions because of perceptions
-                float cone_y = static_cast<float>(point.y);
-                float cone_x = static_cast<float>(point.x);
-                processed_points.push_back(
-                    glm::fvec2(cone_y, cone_x));
-            }
-            assert(processed_points.size() == points.size());
-            return processed_points;
         }
         
 
@@ -484,7 +477,7 @@ namespace controls {
 
             if constexpr (reset_pose_on_spline) {
                 // TODO: correct orig_data_stamp
-                m_state_projector.record_pose(0, 0, 0, cone_msg.orig_data_stamp);
+                m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.orig_data_stamp);
             }
             
             m_logger("finished state estimator cone processing");
