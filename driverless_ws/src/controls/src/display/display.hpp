@@ -83,7 +83,7 @@ namespace controls {
             void update_loop(SDL_Window* window);
 
             glm::fvec2 m_cam_pos {0.0f, 0.0f};
-            float m_cam_scale = 1.0f;
+            float m_cam_scale = 10.0f;
 
             GLuint m_trajectory_shader_program;
             GLuint m_img_shader_program;

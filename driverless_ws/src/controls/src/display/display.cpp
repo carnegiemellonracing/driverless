@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <gsl/gsl_odeiv2.h>
 #include <mppi/types.cuh>
+#include <utils/general_utils.hpp>
 
 
 using namespace std::chrono_literals;
@@ -25,7 +26,7 @@ namespace controls {
             void main()
             {
                vec2 sae_coords = (aPos - camPos) / camScale;
-               gl_Position = vec4(sae_coords.x, -sae_coords.y, 0.0f, 1.0f);
+               gl_Position = vec4(sae_coords.x, sae_coords.y, 0.0f, 1.0f);
             }
         )";
 
@@ -61,7 +62,7 @@ namespace controls {
             void main()
             {
                 vec2 sae_coords = (aPos * imgWidth * 0.5f + imgCenter - camPos) / camScale;
-                gl_Position = vec4(sae_coords.x, -sae_coords.y, 0.0f, 1.0f);
+                gl_Position = vec4(sae_coords.x, sae_coords.y, 0.0f, 1.0f);
                 texCoord = i_texCoord;
             }
         )";
@@ -462,10 +463,10 @@ namespace controls {
                     m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(1,0);
                 }
                 if (keyboard_state[SDL_SCANCODE_UP]) {
-                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,-1);
+                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,1);
                 }
                 if (keyboard_state[SDL_SCANCODE_DOWN]) {
-                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,1);
+                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,-1);
                 }
 
                 if (keyboard_state[SDL_SCANCODE_S]) {

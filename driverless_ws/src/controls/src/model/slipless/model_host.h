@@ -76,6 +76,7 @@ namespace controls {
             /**
              * @brief Calculate slip angle. This is the angle between the direction the car is pointing (heading) and the direction the car is moving (trajectory).
              * It does not necessarily imply the car is slipping.
+             * This will have the same sign as kinematic_swangle.
              * @param[in] kinematic_swangle Kinematic steering angle in radians.
              * @return Slip angle in radians.
              */
