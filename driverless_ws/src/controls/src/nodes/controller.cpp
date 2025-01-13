@@ -14,6 +14,7 @@
 
 #include "controller.hpp"
 #include <sstream>
+#include <utils/general_utils.hpp>
 
 namespace controls {
     namespace nodes {
@@ -145,6 +146,20 @@ namespace controls {
                 m_action_publisher->publish(msg);
             }
 
+#ifdef DATA
+            std::string vector_to_parseable_string(const std::vector<glm::fvec2> &vec) {
+                std::stringstream ss;
+                for (int i = 0; i < vec.size() - 1; i++)
+                {
+                    ss << vec[i].x << " " << vec[i].y << ",";
+                }
+                ss << vec[vec.size() - 1].x << " " << vec[vec.size() - 1].y;
+
+                return ss.str();
+            }
+#endif
+
+
             std::thread ControllerNode::launch_mppi() {
                 return std::thread {[this] {
 #ifdef DATA
@@ -166,13 +181,14 @@ namespace controls {
                         RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
 
                         // save for info publishing later, since might be changed during iteration
-                        State proj_curr_state = m_state_estimator->get_projected_state();
                         rclcpp::Time orig_spline_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
 
                         // send state to device (i.e. cuda globals)
                         // (also serves to lock state since nothing else updates gpu state)
                         RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                        auto duration_vec = m_state_estimator->sync_to_device(get_clock()->now());
+                        State proj_curr_state = m_state_estimator->project_state(get_clock()->now());
+                        m_state_estimator->render_and_sync(proj_curr_state);
+                        // auto duration_vec = m_state_estimator->sync_to_device(get_clock()->now());
                         auto post_sync_time = std::chrono::high_resolution_clock::now();
 
                         // we don't need the host state anymore, so release the lock and let state callbacks proceed
@@ -194,8 +210,19 @@ namespace controls {
                         std::vector<Action> last_action_trajectory = m_mppi_controller->m_last_action_trajectory_logging;
                         auto diff_statistics = m_mppi_controller->m_diff_statistics;
 
+                        // write the spline
+                        std::vector<glm::fvec2> frames = m_state_estimator->get_spline_frames();
+                        std::vector<glm::fvec2> left_cones = m_state_estimator->get_left_cone_points();
+                        std::vector<glm::fvec2> right_cones = m_state_estimator->get_right_cone_points();
+
                         // create debugging string
                         std::stringstream ss;
+                        ss << "Spline (MPPI Input): \n";
+                        ss << points_to_string(frames) << "\n";
+                        ss << "Left cones (MPPI Input): \n";
+                        ss << points_to_string(left_cones) << "\n";
+                        ss << "Right cones (MPPI Input): \n";
+                        ss << points_to_string(right_cones) << "\n";
                         ss << "Last action_trajectory (MPPI Input/Guess): \n";
                         for (const auto &action : last_action_trajectory)
                         {
@@ -228,46 +255,15 @@ namespace controls {
                             m_data_trajectory_log << proj_curr_state[i] << ",";
                         }
                         m_data_trajectory_log << proj_curr_state[state_dims - 1] << "|";
-                        // write the spline
-                        std::vector<glm::fvec2> frames = m_state_estimator->get_spline_frames();
-                        for (int i = 0; i < frames.size() - 1; i++)
-                        {
-                            m_data_trajectory_log << frames[i].x << " " << frames[i].y << ",";
-                        }
-                        m_data_trajectory_log << frames[frames.size() - 1].x << " " << frames[frames.size() - 1].y << "|";
+                        m_data_trajectory_log << vector_to_parseable_string(frames) << "|";
+                        m_data_trajectory_log << vector_to_parseable_string(left_cones) << "|";
+                        m_data_trajectory_log << vector_to_parseable_string(right_cones) << "|";
                         // write the guess trajectory
                         for (int i = 0; i < last_action_trajectory.size() - 1; i++)
                         {
                             m_data_trajectory_log << last_action_trajectory[i][0] << " " << last_action_trajectory[i][1] << ",";
                         }
                         m_data_trajectory_log << last_action_trajectory[last_action_trajectory.size() - 1][0] << " " << last_action_trajectory[last_action_trajectory.size() - 1][1] << "\n";
-
-                        // // writing to logging file for NN
-                        // // write the state
-                        // m_data_trajectory_log << "Current State: ";
-                        // for (int i = 0; i < state_dims; i++) {
-                        //     m_data_trajectory_log << proj_curr_state[i] << ", ";
-                        // }
-                        // m_data_trajectory_log << "\nSpline: ";
-                        // // write the spline ???
-                        // std::vector<glm::fvec2> frames = m_state_estimator->get_spline_frames();
-                        // for (int i = 0; i < frames.size(); i++)
-                        // {
-                        //     m_data_trajectory_log << "[" << frames[i].x << ", " << frames[i].y << "], ";
-                        // }
-                        // m_data_trajectory_log << "\nLast Action Trajectory: ";
-                        // // write the guess trajectory
-                        // for (const auto &action : last_action_trajectory)
-                        // {
-                        //     m_data_trajectory_log << "[" << action[0] << ", " << action[1] << "], ";
-                        // }
-                        // m_data_trajectory_log << "\nResult Trajectory: ";
-                        // // write the result trajectory
-                        // for (const auto &action : averaged_trajectory)
-                        // {
-                        //     m_data_trajectory_log << "[" << action[0] << ", " << action[1] << "], ";
-                        // }
-                        // m_data_trajectory_log << "\n";
 
 #endif
 
@@ -294,8 +290,8 @@ namespace controls {
                         interfaces::msg::ControllerInfo info {};
                         info.action = action_to_msg(action);
                         info.proj_state = state_to_msg(proj_curr_state);
-                        info.projection_latency_ms = duration_vec[0].count();
-                        info.render_latency_ms = duration_vec[1].count();
+                        info.projection_latency_ms = 69;// duration_vec[0].count();
+                        info.render_latency_ms = 69;// duration_vec[1].count();
                         info.mppi_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)).count();
                         info.latency_ms = time_elapsed.count();
                         info.latency1_ms = latency_vec[0].count();

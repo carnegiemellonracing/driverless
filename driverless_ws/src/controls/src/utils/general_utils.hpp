@@ -6,6 +6,13 @@
 #include <glm/glm.hpp>
 
 namespace controls {
+    struct SplineAndCones
+    {
+        std::vector<glm::fvec2> spline;
+        std::vector<glm::fvec2> left_cones;
+        std::vector<glm::fvec2> right_cones;
+    };
+
     inline std::string points_to_string(std::vector<glm::fvec2> points)
     {
         std::stringstream ss;

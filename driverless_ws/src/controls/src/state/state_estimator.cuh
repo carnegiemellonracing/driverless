@@ -123,7 +123,8 @@ namespace controls {
             void on_pose(const PoseMsg& pose_msg) override;
 
             void hardcode_state(State state) override;
-            void generate_lookup_table() override;
+            void render_and_sync(State state) override;
+            State project_state(const rclcpp::Time &time) override;
             std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) override;
             bool is_ready() override;
             State get_projected_state() override;

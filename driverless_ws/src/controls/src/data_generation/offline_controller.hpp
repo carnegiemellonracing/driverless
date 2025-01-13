@@ -1,14 +1,3 @@
-/**
- * @file controller.hpp The main controller process.
- *
- * --- OVERVIEW ---
- * Running `main` starts up to two tasks:
- *    1. Spinning the controller node
- *    2. Starting the OpenGL display, if DISPLAY is defined
- *
- * Each of these is started asynchronously, and the process terminates after either tasks exits.
- */
-
 #pragma once
 
 // TODO: MPPI is supposedly included by state_estimator but I can't find it. Weird
