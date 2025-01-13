@@ -94,10 +94,10 @@ target_link_libraries(controls_lib CUDA::curand OpenGL::GL OpenGL::GLU ${SDL2_LI
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
-          -g --generate-line-info
+          -g -G
           >)
 else ()
-  add_compile_options(-O3)
+  add_compile_options(-O3 -diag-suppress 177-D)
 endif()
 
 target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:

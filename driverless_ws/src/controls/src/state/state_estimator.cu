@@ -965,14 +965,17 @@ namespace controls {
                 glm::fvec2 p1 = m_spline_frames[i];
                 glm::fvec2 p2 = m_spline_frames[i + 1];
 
+                glm::fvec2 unit_vec = glm::length(p2 - p1) != 0 ? glm::normalize(p2 - p1) : glm::fvec2(0, 0);
+                // This creates a longitudinal buffer at the start and the end of the spline for the fake track to be rendered
                 if (i == 0) {
-                    p1 = p1 - normalize(p2 - p1) * car_padding;
+                    p1 = p1 - unit_vec * car_padding;
                 } else if (i == n - 2) {
-                    p2 = p2 + normalize(p2 - p1) * car_padding;
+                    p2 = p2 + unit_vec * car_padding;
                 }
 
                 glm::fvec2 disp = p2 - p1;
                 float new_progress = glm::length(disp); // TODO: figure out a way to normalize without some arbitrary magic number
+                paranoid_assert(!isnan(new_progress));
                 // 1. go through the vector and divide based on total progress
                 // 2. set total progress to be a member variable, then use that as a uniform, thus passing it into the fragment shader
                 float segment_heading = std::atan2(disp.y, disp.x);

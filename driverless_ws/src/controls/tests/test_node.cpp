@@ -443,7 +443,7 @@ namespace controls {
             const uint32_t left_steps = glm::abs(left_dist * arc_rad / distance_left);
             const uint32_t right_steps = glm::abs(right_dist * arc_rad / distance_right);            
 
-            for (uint32_t i = 1; i <= std::max(std::max(steps, left_steps), right_steps); i++) {
+            for (uint32_t i = 0; i < std::max(std::max(steps, left_steps), right_steps); i++) {
                 if(i <= steps) {
                     float angle = arc_rad_adjusted(start_angle + i * step_rad);
                     glm::fvec2 outgoing_vector = glm::fvec2 {glm::cos(angle), glm::sin(angle)};
@@ -503,7 +503,7 @@ namespace controls {
             const uint32_t steps = length / spline_frame_separation;
             const uint32_t lr_steps = length / cone_spacing_straight;
 
-            for (uint32_t i = 1; i <= std::max(lr_steps, steps); i++) {
+            for (uint32_t i = 0; i < std::max(lr_steps, steps); i++) {
                 if(i <= steps) {
                     glm::fvec2 step = i * spline_frame_separation * glm::fvec2 {glm::cos(heading), glm::sin(heading)};
                     spline.push_back(start + step);
@@ -552,8 +552,8 @@ namespace controls {
             ActionMsg adj_msg = m_last_action_msg;
 
             float action[2] = {
-                adj_msg.swangle,
-                adj_msg.torque_fl + adj_msg.torque_fr + adj_msg.torque_rl + adj_msg.torque_rr
+                static_cast<float>(adj_msg.swangle),
+                static_cast<float>(adj_msg.torque_fl + adj_msg.torque_fr + adj_msg.torque_rl + adj_msg.torque_rr)
             };
             float next_state[4];
             std::array<float, 4> orig_world_state = m_world_state;
@@ -571,7 +571,7 @@ namespace controls {
 
 
         void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
-            std::cout << "\nSwangle: " << msg.swangle * (180 / M_PI) << " Torque f: " <<
+            std::cout << "\nSwangle: " << msg.swangle * (180 / M_PI) << "deg Torque f: " <<
                 msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl;
             
             m_last_action_msg = msg;
