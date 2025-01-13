@@ -315,7 +315,11 @@ namespace controls {
             while (get_squared_distance(points.at(prev_furthest), position) < lookahead_squared) {
                 prev_furthest = (prev_furthest + 1) % points.size();
                 if (prev_furthest == prev_closest) {
-                    break;
+                    if (prev_closest == 0) {
+                        return points.size() - 1;
+                    } else {
+                        return prev_closest - 1;
+                    }
                 }
             }
             return prev_furthest;
@@ -581,6 +585,7 @@ namespace controls {
         }
         /**
          * Fills output vector (some field of a ROS message) with the points in input vector starting at start and ending at end
+         * Note that start and end are inclusive bounds
          */
         static void fill_points(std::vector<geometry_msgs::msg::Point> & output, const std::vector<glm::fvec2> &input, size_t start, size_t end,
                                  const std::function<geometry_msgs::msg::Point(const glm::fvec2&)> &gen_point)
@@ -594,6 +599,7 @@ namespace controls {
                     start = 0;
                 }
             }
+            output.push_back(gen_point(input.at(end)));
         }
 
         
