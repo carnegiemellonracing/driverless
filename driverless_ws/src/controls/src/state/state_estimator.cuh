@@ -122,12 +122,10 @@ namespace controls {
             // on_pose is not used, for future proofing
             void on_pose(const PoseMsg& pose_msg) override;
 
-            void hardcode_state(State state) override;
             void render_and_sync(State state) override;
             State project_state(const rclcpp::Time &time) override;
             std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) override;
             bool is_ready() override;
-            State get_projected_state() override;
             void set_logger(LoggerFunc logger) override;
             void set_logger_obj(rclcpp::Logger logger) override;
 
@@ -179,10 +177,7 @@ namespace controls {
              * Think about it like releasing a mutex.
              */
             void unmap_curv_frame_lookup();
-            /**
-             * Syncs m_synced_projected_state to cuda_globals so it can be accessed by MPPI
-             */
-            void sync_world_state();
+
             /**
              * @brief Syncs m_curv_frame_lookup_tex_info to cuda_globals so it can be accessed by MPPI
              */
@@ -244,8 +239,6 @@ namespace controls {
 
             /// The owned StateProjector to estimate the current state.
             StateProjector m_state_projector;
-            /// Where the most recent projected state is stored.
-            State m_synced_projected_state;
 
             ///// -----OPENGL OBJECTS----- /////
 

@@ -518,11 +518,6 @@ namespace controls {
             );
         }
 
-        void StateEstimator_Impl::hardcode_state(State state) {
-            std::lock_guard<std::mutex> guard {m_mutex};
-            m_synced_projected_state = state;
-        }
-
         // Used only for the offline controller
         void StateEstimator_Impl::render_and_sync(State state) {
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -551,8 +546,8 @@ namespace controls {
             map_curv_frame_lookup();
 
             m_logger("syncing world state to device");
-            m_synced_projected_state = state;
-            sync_world_state();
+
+            CUDA_CALL(cudaMemcpyToSymbolAsync(cuda_globals::curr_state, state.data(), state_dims * sizeof(float)));
 
             m_logger("syncing spline frame lookup texture info to device");
             sync_tex_info();
@@ -598,12 +593,6 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             return m_state_projector.is_ready();
-        }
-
-        State StateEstimator_Impl::get_projected_state() {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            return m_synced_projected_state;
         }
 
         void StateEstimator_Impl::set_logger(LoggerFunc logger) {
@@ -716,12 +705,6 @@ namespace controls {
             utils::make_gl_current_or_except(prev_window, prev_context);
         }
 #endif
-
-        void StateEstimator_Impl::sync_world_state() {
-            CUDA_CALL(cudaMemcpyToSymbolAsync(
-                cuda_globals::curr_state, m_synced_projected_state.data(), state_dims * sizeof(float)
-            ));
-        }
 
         void StateEstimator_Impl::sync_tex_info() {
             CUDA_CALL(cudaMemcpyToSymbolAsync(
