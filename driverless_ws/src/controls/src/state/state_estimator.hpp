@@ -26,6 +26,7 @@ namespace controls {
           */
 
          static std::shared_ptr<StateEstimator> create(std::mutex& mutex, LoggerFunc logger = no_log);
+            virtual State project_state(const rclcpp::Time &time) =0;
 
             /**
              * @brief "main" function of the state estimator. Calculates current inertial state and the
@@ -35,7 +36,7 @@ namespace controls {
              */
             virtual std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) =0;
 
-            virtual void generate_lookup_table() =0;
+            virtual void render_and_sync(State state) =0;
             virtual void hardcode_state(State state) =0;
 
             /**

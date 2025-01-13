@@ -39,7 +39,26 @@ namespace controls
         return tokens;
     }
 
-    void OfflineController::process_file(const std::string& input_file, const std::string& output_file) {
+    static std::vector<geometry_msgs::msg::Point,
+                       std::allocator<geometry_msgs::msg::Point>> string_to_point_array(
+        const std::vector<std::string>& fields)
+    {
+        std::vector<geometry_msgs::msg::Point,
+                    std::allocator<geometry_msgs::msg::Point>> points;
+        for (const auto& field : fields) {
+            geometry_msgs::msg::Point point;
+            float x;
+            float y;
+            std::istringstream(field) >> x >> y;
+            point.x = x;
+            point.y = y;
+            points.push_back(point);
+        }
+        return points;
+    }
+
+        void OfflineController::process_file(const std::string &input_file, const std::string &output_file)
+    {
         // Process the input file line by line
         std::ifstream file {input_file};
         std::ofstream output {output_file};
@@ -56,22 +75,14 @@ namespace controls
             for (size_t i = 0; i < state_dims; i++) {
                 state[i] = std::stof(state_fields[i]);
             }
-
-            std::vector<std::string> spline_fields = split(parameters[1], ',');
             SplineMsg spline_msg;
-
-            for (size_t i = 0; i < spline_fields.size(); i++) {
-                geometry_msgs::msg::Point point;
-                float x;
-                float y;
-                std::istringstream(spline_fields[i]) >> x >> y;
-                point.x = x;
-                point.y = y;
-                spline_msg.frames.push_back(point);
-            }
+            spline_msg.frames = string_to_point_array(split(parameters[1], ','));
+            ConeMsg cone_msg;
+            cone_msg.blue_cones = string_to_point_array(split(parameters[2], ','));
+            cone_msg.yellow_cones = string_to_point_array(split(parameters[3], ','));
 
             std::vector<Action> last_action_trajectory;
-            std::vector<std::string> last_action_fields = split(parameters[2], ',');
+            std::vector<std::string> last_action_fields = split(parameters[4], ',');
             for (size_t i = 0; i < last_action_fields.size(); i++) {
                 Action action;
                 std::istringstream(last_action_fields[i]) >> action[0] >> action[1];
@@ -82,9 +93,9 @@ namespace controls
             // construct spline and twist "messages" then pass them to state estimator
 
             m_state_estimator->on_spline(spline_msg);
-            m_state_estimator->hardcode_state(state);
+            m_state_estimator->on_cone(cone_msg);
 
-            m_state_estimator->generate_lookup_table();
+            m_state_estimator->render_and_sync(state);
 
             // send state to device (i.e. cuda globals)
             // (also serves to lock state since nothing else updates gpu state)
@@ -101,9 +112,7 @@ namespace controls
             }
             output << "\n";
         }
-
     }
-
 }
 
 int main(int argc, char *argv[])

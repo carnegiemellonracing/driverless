@@ -404,9 +404,6 @@ namespace controls {
                                                                std::allocator<geometry_msgs::msg::Point>>
                                                        points)
         {
-
-            assert(points.size() > 0);
-
             std::vector<glm::fvec2> processed_points;
             processed_points.reserve(points.size());
             for (const auto &point : points)
@@ -425,6 +422,7 @@ namespace controls {
 
             m_logger("beginning state estimator spline processing");
 
+            paranoid_assert(spline_msg.frames.size() > 0);
 
             m_spline_frames = process_ros_points(spline_msg.frames);
 
@@ -434,13 +432,15 @@ namespace controls {
 
             m_orig_spline_data_stamp = spline_msg.header.stamp;
 
-
             m_logger("finished state estimator spline processing");
         }
         
 
         void StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
+
+            paranoid_assert(cone_msg.blue_cones.size() > 0);
+            paranoid_assert(cone_msg.yellow_cones.size() > 0);
 
             m_logger("beginning state estimator cone processing");
 
@@ -471,8 +471,6 @@ namespace controls {
             m_all_left_cone_points = process_ros_points(cone_msg.orange_cones);
             m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
             m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
-
-            assert(m_all_left_cone_points.size() > 0);
 #endif
 
             if constexpr (reset_pose_on_spline) {
@@ -526,9 +524,9 @@ namespace controls {
         }
 
         // Used only for the offline controller
-        void StateEstimator_Impl::generate_lookup_table() {
-            State state = m_synced_projected_state;
-
+        void StateEstimator_Impl::render_and_sync(State state) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            
             // enable openGL
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
@@ -562,6 +560,17 @@ namespace controls {
             utils::sync_gl_and_unbind_context(m_gl_window);
         }
 
+        State StateEstimator_Impl::project_state(const rclcpp::Time& time) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            State state = m_state_projector.project(
+                rclcpp::Time{
+                    time.nanoseconds() + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
+                    default_clock_type},
+                m_logger);
+                 
+            return state;
+        }
+
         std::vector<std::chrono::milliseconds> StateEstimator_Impl::sync_to_device(const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
@@ -577,40 +586,9 @@ namespace controls {
                 }, m_logger
             );
             auto t2 = std::chrono::high_resolution_clock::now();
-
-            // enable openGL
-            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
-
-            m_logger("generating spline frame lookup texture info...");
-
-            gen_tex_info({state[state_x_idx], state[state_y_idx]});
-
-            m_logger("filling OpenGL buffers...");
-            
-            fill_path_buffers_cones();
-            fill_path_buffers_spline();
-
-            m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
-            unmap_curv_frame_lookup();
-
-            // render the lookup table
-            m_logger("rendering curv frame lookup table...");
-
-            render_fake_track();
-            render_curv_frame_lookup();
-
-            m_logger("mapping OpenGL curv frame texture back to CUDA");
-            map_curv_frame_lookup();
-
-            m_logger("syncing world state to device");
-            m_synced_projected_state = state;
-            sync_world_state();
+            render_and_sync(state);
             auto t3 = std::chrono::high_resolution_clock::now();
 
-            m_logger("syncing spline frame lookup texture info to device");
-            sync_tex_info();
-
-            utils::sync_gl_and_unbind_context(m_gl_window);
             m_logger("finished state estimator device sync");
             return std::vector {std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1), 
             std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2)};
