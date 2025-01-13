@@ -37,7 +37,6 @@ namespace controls {
             virtual std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) =0;
 
             virtual void render_and_sync(State state) =0;
-            virtual void hardcode_state(State state) =0;
 
             /**
              * @brief Callback for spline messages. Updates the state estimator with the new spline. Used for both
@@ -69,19 +68,12 @@ namespace controls {
              * @return True if state projection is ready, False otherwise.
              */
             virtual bool is_ready() =0;
-            /**
-             * @brief Returns the last state that was projected. Does not actually do the projection (that is in an
-             * internal call in sync_to_device). Used for debugging pursposes.
-             * @return The most recent projected state.
-             * @note Spline provides state information since car is at (0, 0) relative to a new spline.
-             */
-            virtual State get_projected_state() =0;
+
             /**
              * @brief Sets the logger function for the state estimator. Can be integrated with ROS or print to stdout.
              * @param logger The logger function to be used.
              */
             virtual void set_logger(LoggerFunc logger) =0;
-
 
          /**
           * Attaches the node's logger object to the state estimator.
