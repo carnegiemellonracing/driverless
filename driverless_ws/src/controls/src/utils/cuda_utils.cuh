@@ -3,6 +3,7 @@
 #include <curand.h>
 #include <iostream>
 
+#include "general_utils.hpp"
 #include "constants.hpp"
 
 /** @brief indexes into a 3-dimensional tensor that is represented in memory as a single nested array.
@@ -17,13 +18,6 @@
 #define CUDA_CALL(x) (cuda_assert(x, __FILE__, __LINE__))
 /// Wrapper for CURAND API calls to do error checking
 #define CURAND_CALL(x) (curand_assert(x, __FILE__, __LINE__))
-
-/// Asserts whether x is true if the PARANOID compiler flag is set (-P)
-#ifdef PARANOID
-#define paranoid_assert(x) (assert(x))
-#else
-#define paranoid_assert(x) ((void)0)
-#endif
 
 
 namespace controls {

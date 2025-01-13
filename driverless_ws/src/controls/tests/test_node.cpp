@@ -444,21 +444,24 @@ namespace controls {
             const uint32_t right_steps = glm::abs(right_dist * arc_rad / distance_right);            
 
             for (uint32_t i = 0; i < std::max(std::max(steps, left_steps), right_steps); i++) {
-                if(i <= steps) {
+                if(i < steps) {
                     float angle = arc_rad_adjusted(start_angle + i * step_rad);
                     glm::fvec2 outgoing_vector = glm::fvec2 {glm::cos(angle), glm::sin(angle)};
+                    paranoid_assert(!isnan_vec(center + radius * outgoing_vector));
                     spline.push_back(center + radius * outgoing_vector);
                 }
-                if(i <= left_steps) {
+                if(i < left_steps) {
                     float angle_left = arc_rad_adjusted(start_angle + i * arc_rad / left_steps);
                     glm::fvec2 outgoing_vector = glm::fvec2 {glm::cos(angle_left), glm::sin(angle_left)};
                     float left_noise = glm::clamp(m_arc_jitter_gen(m_rng), -m_noise_clip, m_noise_clip);
+                    paranoid_assert(!isnan_vec(center + left_dist * outgoing_vector + left_noise * outgoing_vector));
                     left_cones.push_back(center + left_dist * outgoing_vector + left_noise * outgoing_vector);
                 }
-                if(i <= right_steps) {
+                if(i < right_steps) {
                     float angle_right = arc_rad_adjusted(start_angle + i * arc_rad / right_steps);
                     glm::fvec2 outgoing_vector = glm::fvec2 {glm::cos(angle_right), glm::sin(angle_right)};
                     float right_noise = glm::clamp(m_arc_jitter_gen(m_rng), -1 * m_noise_clip, m_noise_clip);
+                    paranoid_assert(!isnan_vec(center + right_dist * outgoing_vector + right_noise * outgoing_vector));
                     right_cones.push_back(center + right_dist * outgoing_vector + right_noise * outgoing_vector);
                     std::cout << "Right dist: " << right_dist << " Right noise: " << right_noise << "\n9";
                 }
@@ -504,11 +507,11 @@ namespace controls {
             const uint32_t lr_steps = length / cone_spacing_straight;
 
             for (uint32_t i = 0; i < std::max(lr_steps, steps); i++) {
-                if(i <= steps) {
+                if(i < steps) {
                     glm::fvec2 step = i * spline_frame_separation * glm::fvec2 {glm::cos(heading), glm::sin(heading)};
                     spline.push_back(start + step);
                 }
-                if(i <= lr_steps) {
+                if(i < lr_steps) {
                     glm::fvec2 step = i * cone_spacing_straight * glm::fvec2 {glm::cos(heading), glm::sin(heading)};
                     glm::fvec2 perp = glm::fvec2 {glm::sin(heading), -glm::cos(heading)};
                     float left_noise = glm::clamp(m_straight_jitter_gen(m_rng), -1 * m_noise_clip, m_noise_clip);

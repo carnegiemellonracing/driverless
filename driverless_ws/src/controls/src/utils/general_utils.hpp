@@ -6,6 +6,13 @@
 #include <glm/glm.hpp>
 
 namespace controls {
+    /// Asserts whether x is true if the PARANOID compiler flag is set (-P)
+    #ifdef PARANOID
+    #define paranoid_assert(x) (assert(x))
+    #else
+    #define paranoid_assert(x) ((void)0)
+    #endif
+
     struct SplineAndCones
     {
         std::vector<glm::fvec2> spline;
@@ -33,6 +40,10 @@ namespace controls {
             glm::cos(angle) * point.x - glm::sin(angle) * point.y, 
             glm::sin(angle) * point.x + glm::cos(angle) * point.y
             };
+    }
+
+    inline bool isnan_vec(glm::fvec2 vec) {
+        return std::isnan(vec.x) || std::isnan(vec.y);
     }
 }
 
