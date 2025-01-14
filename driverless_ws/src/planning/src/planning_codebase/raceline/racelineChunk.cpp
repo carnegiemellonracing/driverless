@@ -91,7 +91,7 @@ double ySplit(ParameterizedSpline spline, double targetArclength) {
     return low + (high-low) / 2;
 }
 
-void print_poly(Spline x, Spline y) {
+void print_poly_1(Spline x, Spline y) {
     std::cout << "(["<< x.spl_poly.nums(0) << "," << x.spl_poly.nums(1) << ","
      << x.spl_poly.nums(2) << "," << x.spl_poly.nums(3) << "]," 
      << "[" << y.spl_poly.nums(0) << "," << y.spl_poly.nums(1) << ","
@@ -163,7 +163,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     std::cout << "yellow length" << yellowCumulativeLen[yellowSplineIdx] << std::endl;
                     std::cout << "length thresh" << yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress << std::endl;
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
-                print_poly(yellowRacetrackSplines[yellowSplineIdx].spline_x, yellowRacetrackSplines[yellowSplineIdx].spline_y);
+                print_poly_1(yellowRacetrackSplines[yellowSplineIdx].spline_x, yellowRacetrackSplines[yellowSplineIdx].spline_y);
                 yellowSplineIdx++;
             }
 
@@ -185,7 +185,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     nextTStart = splitT;
                 }
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
-                print_poly(yellowRacetrackSplines[yellowSplineIdx].spline_x, yellowRacetrackSplines[yellowSplineIdx].spline_y);
+                print_poly_1(yellowRacetrackSplines[yellowSplineIdx].spline_x, yellowRacetrackSplines[yellowSplineIdx].spline_y);
             }
 
             chunkVector->emplace_back(chunk);
