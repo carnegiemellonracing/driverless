@@ -68,7 +68,7 @@ bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline 
     return checkFirstDer && checkSecondDer && checkThirdDer;
 }
 
-double ySplit(ParameterizedSpline spline, double arclength) {
+double ySplit(ParameterizedSpline spline, double targetArclength) {
     std::pair<polynomial, polynomial> splinePair = std::make_pair(spline.spline_x.spl_poly, spline.spline_y.spl_poly);
     double low = 0;
     double high = 1;
@@ -77,10 +77,10 @@ double ySplit(ParameterizedSpline spline, double arclength) {
     while (high-low >= 0.001) {
         double mid = low + (high-low) / 2;
         double curArclength = arclength(splinePair, 0, mid);
-        if (abs(curArclength - arclength) <= 0.001) {
+        if (abs(curArclength - targetArclength) <= 0.001) {
             return mid;
         }
-        else if (curArclength < arclength) {
+        else if (curArclength < targetArclength) {
             low = mid + 0.01;
         }
         else {
