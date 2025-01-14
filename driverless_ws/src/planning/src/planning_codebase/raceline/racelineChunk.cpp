@@ -69,7 +69,7 @@ bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline 
 }
 
 double ySplit(ParameterizedSpline spline, double arclength) {
-    double splinePair = std::make_pair(spline.spline_x, spline.spline_y);
+    std::pair<polynomial> splinePair = std::make_pair(spline.spline_x.spl_poly, spline.spline_y.spl_poly);
     double low = 0;
     double high = 1;
     double mid;
