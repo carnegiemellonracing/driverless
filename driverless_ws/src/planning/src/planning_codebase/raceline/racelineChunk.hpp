@@ -7,6 +7,8 @@
 class Chunk
 {
     public:
+        double tStart;
+        double tEnd;
         std::vector<ParameterizedSpline> blueSplines;
         std::vector<ParameterizedSpline> yellowSplines;
 

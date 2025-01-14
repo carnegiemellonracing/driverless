@@ -101,6 +101,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     // create a chunk
     Chunk* chunk = new Chunk();
     chunk->blueSplines.push_back(blueRacetrackSplines[0]);
+    chunk->tStart = 0;
     
     // // loop through progress and sample curvature at each progress point
     // int increment = 1; // TODO: tunable param
@@ -127,15 +128,38 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             // yellowindex is greater than yellowRacetrackSplines or 
             // cumsum is greater than cumsum of blue;yellowSplineIdx
             while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
-                (yellowCumulativeLen[yellowSplineIdx + 1]<= yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
+                (yellowCumulativeLen[yellowSplineIdx + 1] <= yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
                     std::cout << "yellow length" << yellowCumulativeLen[yellowSplineIdx] << std::endl;
                     std::cout << "length thresh" << yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress << std::endl;
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
                 yellowSplineIdx++;
             }
+
+            double nextTStart = 0;
+
+            // split yellow if yellow spline included in chunk is longer than curr blue
+            if (yellowSplineIdx < yellowRacetrackSplines.size()) {
+                Spline splitSpline = yellowRacetrackSplines[yellowSplineIdx];
+                
+                // takes in spline, x-y, returns t value
+                // x is the blue percent prog, y is yellow percent prog
+                double splitT = ySplit(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowCumulativeLen[yellowSplineIdx]);
+                chunk->tEnd = splitT;
+                if (splitT == 1) {
+                    nextTStart = 0;
+                    yellowSplineIdx++;
+                }
+                else {
+                    nextTStart = splitT;
+                }
+                
+                chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
+            }
+
             chunkVector->emplace_back(chunk);
             if (i != blueRacetrackSplines.size()) {
                 chunk = new Chunk();
+                chunk->tStart = nextTStart;
                 // init chunk and add curr spline
                 chunk->blueSplines.push_back(blueRacetrackSplines[i]);
             }
@@ -143,4 +167,26 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     }
 
     return chunkVector;
+}
+
+double ySplit(Spline spline, double arclength) {
+    double low = 0
+    double high = 1;
+    double mid;
+    double curArclength;
+    while (high-low >= 0.001) {
+        double mid = low + (high-low) / 2;
+        double curArclength = arclength(spline, 0, mid);
+        if (abs(curArclength - arclength) <= 0.001) {
+            return mid;
+        }
+        else if (curArclength < arclength) {
+            low = mid + 0.01;
+        }
+        else {
+            high = mid;
+        }
+    }
+    
+    return low + (high-low) / 2;
 }
