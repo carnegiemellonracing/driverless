@@ -327,7 +327,9 @@ int main() {
         //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
         //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
         // }
-        std::cout << "[" << std::endl;
+
+
+        std::cout << "([" << std::endl;
 
         // for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
         //     // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
@@ -341,16 +343,20 @@ int main() {
         for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
             // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
             if (j != 0) {
-                std::cout << ",";
+                std::cout << "," << std::endl;
             }
             print_poly(chunks[i]->yellowSplines[j].spline_x, chunks[i]->yellowSplines[j].spline_y);
 
         }
 
-        std::cout << "(" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")" << std::endl;
+        std::cout << "]," << std::endl;
+
+        std::cout << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")" << std::endl;
 
         // Blue << "#" << std::endl;
-        std::cout << "]," << std::endl;
+        std::cout << ")," << std::endl;
+
+
         // Yellow << "#" << std::endl;
     }
 
