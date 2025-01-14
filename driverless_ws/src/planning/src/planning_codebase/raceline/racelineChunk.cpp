@@ -190,7 +190,5 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         }
     }
 
-    chunkVector->emplace_back(chunk);
-
     return chunkVector;
 }
