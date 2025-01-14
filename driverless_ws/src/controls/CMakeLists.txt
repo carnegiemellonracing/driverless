@@ -97,7 +97,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
           -g -G
           >)
 else ()
-  add_compile_options(-O3 -diag-suppress 177-D)
+  add_compile_options(-O3)
 endif()
 
 target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
