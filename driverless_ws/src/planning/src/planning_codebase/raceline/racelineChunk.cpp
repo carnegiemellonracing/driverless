@@ -68,6 +68,30 @@ bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline 
     return checkFirstDer && checkSecondDer && checkThirdDer;
 }
 
+double ySplit(ParameterizedSpline spline, double arclength) {
+    double splinePair = std::make_pair(spline.spline_x, spline.spline_y);
+    double low = 0;
+    double high = 1;
+    double mid;
+    double curArclength;
+    while (high-low >= 0.001) {
+        double mid = low + (high-low) / 2;
+        double curArclength = arclength(splinePair, 0, mid);
+        if (abs(curArclength - arclength) <= 0.001) {
+            return mid;
+        }
+        else if (curArclength < arclength) {
+            low = mid + 0.01;
+        }
+        else {
+            high = mid;
+        }
+    }
+    
+    return low + (high-low) / 2;
+}
+
+
 /** 
  * Generates a vector of raceline chunks based on track boundaries.
  *
@@ -139,7 +163,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
             // split yellow if yellow spline included in chunk is longer than curr blue
             if (yellowSplineIdx < yellowRacetrackSplines.size()) {
-                Spline splitSpline = yellowRacetrackSplines[yellowSplineIdx];
+                ParameterizedSpline splitSpline = yellowRacetrackSplines[yellowSplineIdx];
                 
                 // takes in spline, x-y, returns t value
                 // x is the blue percent prog, y is yellow percent prog
@@ -167,26 +191,4 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     }
 
     return chunkVector;
-}
-
-double ySplit(Spline spline, double arclength) {
-    double low = 0
-    double high = 1;
-    double mid;
-    double curArclength;
-    while (high-low >= 0.001) {
-        double mid = low + (high-low) / 2;
-        double curArclength = arclength(spline, 0, mid);
-        if (abs(curArclength - arclength) <= 0.001) {
-            return mid;
-        }
-        else if (curArclength < arclength) {
-            low = mid + 0.01;
-        }
-        else {
-            high = mid;
-        }
-    }
-    
-    return low + (high-low) / 2;
 }
