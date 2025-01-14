@@ -351,7 +351,8 @@ int main() {
 
         std::cout << "]," << std::endl;
 
-        std::cout << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")" << std::endl;
+        std::cout << " (" << "0" <<  ", " << "1" << ")" << std::endl;
+        // std::cout << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")" << std::endl;
 
         // Blue << "#" << std::endl;
         std::cout << ")," << std::endl;
