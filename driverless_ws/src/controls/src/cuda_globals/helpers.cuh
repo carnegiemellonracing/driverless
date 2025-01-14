@@ -24,6 +24,9 @@ namespace controls {
             const float v = (y - ymin) / curv_frame_lookup_tex_info.width;
 
             const float4 parallel_pose = tex2D<float4>(curv_frame_lookup_tex, u, v);
+            
+            paranoid_assert(isnan(parallel_pose.x) || isnan(parallel_pose.y) || isnan(parallel_pose.z) || isnan(parallel_pose.w));
+            
             curv_pose[0] = parallel_pose.x;
             curv_pose[1] = parallel_pose.y;
             curv_pose[2] = yaw - parallel_pose.z;

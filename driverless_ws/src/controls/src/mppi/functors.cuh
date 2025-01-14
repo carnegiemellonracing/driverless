@@ -253,7 +253,9 @@ namespace controls {
                 float init_curv_pose[3];
                 bool out_of_bounds;
                 cuda_globals::sample_curv_state(x_curr, init_curv_pose, out_of_bounds);
-                // paranoid_assert(!out_of_bounds && "Initial state was out of bounds");
+                // Note that it is perfectly possible for initial position to be out_of_bounds (though undesirable)
+                // Since out_of_bounds_cost is not infinite, we still prioritize heading back into the bounds
+
 
                 // for each timestep, calculate cost and add to get cost to go
                 // iterate through time because state depends on previous state (can't parallelize)
