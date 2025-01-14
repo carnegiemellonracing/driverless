@@ -7,8 +7,9 @@
 class Chunk
 {
     public:
-        double tStart;
-        double tEnd;
+        // t start and end are only representative of yellow splines, 
+        double tStart; // t start of the first spline in yellowSplines
+        double tEnd; // t end for the last spline in yellowSplines
         std::vector<ParameterizedSpline> blueSplines;
         std::vector<ParameterizedSpline> yellowSplines;
 
