@@ -91,6 +91,13 @@ double ySplit(ParameterizedSpline spline, double targetArclength) {
     return low + (high-low) / 2;
 }
 
+void print_poly(Spline x, Spline y) {
+    std::cout << "(["<< x.spl_poly.nums(0) << "," << x.spl_poly.nums(1) << ","
+     << x.spl_poly.nums(2) << "," << x.spl_poly.nums(3) << "]," 
+     << "[" << y.spl_poly.nums(0) << "," << y.spl_poly.nums(1) << ","
+     << y.spl_poly.nums(2) << "," << y.spl_poly.nums(3) << "])"<< std::endl;
+}
+
 
 /** 
  * Generates a vector of raceline chunks based on track boundaries.
@@ -156,6 +163,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     std::cout << "yellow length" << yellowCumulativeLen[yellowSplineIdx] << std::endl;
                     std::cout << "length thresh" << yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress << std::endl;
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
+                print_poly(yellowRacetrackSplines[yellowSplineIdx].spline_x, yellowRacetrackSplines[yellowSplineIdx].spline_y);
                 yellowSplineIdx++;
             }
 
@@ -176,8 +184,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 else {
                     nextTStart = splitT;
                 }
-                
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
+                print_poly(yellowRacetrackSplines[yellowSplineIdx].spline_x, yellowRacetrackSplines[yellowSplineIdx].spline_y);
             }
 
             chunkVector->emplace_back(chunk);
