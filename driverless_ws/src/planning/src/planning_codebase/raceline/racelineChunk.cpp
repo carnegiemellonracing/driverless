@@ -167,7 +167,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             // yellowindex is greater than yellowRacetrackSplines or 
             // cumsum is greater than cumsum of blue;yellowSplineIdx
             while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
-                (yellowCumulativeLen[yellowSplineIdx + 1] <= yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
+                (yellowCumulativeLen[yellowSplineIdx] < yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
                     std::cout << "yellow length" << yellowCumulativeLen[yellowSplineIdx] << std::endl;
                     std::cout << "length thresh" << yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress << std::endl;
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
@@ -180,11 +180,20 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             // split yellow if yellow spline included in chunk is longer than curr blue
             if (yellowSplineIdx < yellowRacetrackSplines.size()) {
                 ParameterizedSpline splitSpline = yellowRacetrackSplines[yellowSplineIdx];
+
+                int newYInd = 0;
+
+                if (yellowSplineIdx != 0) {
+                    newYInd = yellowCumulativeLen[yellowSplineIdx - 1];
+                }
                 
                 // takes in spline, x-y, returns t value
                 // x is the blue percent prog, y is yellow percent prog
-                double splitT = ySplit(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowCumulativeLen[yellowSplineIdx]);
+                double splitT = ySplit(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - newYInd);
                 chunk->tEnd = splitT;
+    
+                chunk->yellowSplines.push_back(splitSpline);
+
                 if (splitT == 1) {
                     nextTStart = 0;
                     yellowSplineIdx++;
@@ -192,7 +201,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 else {
                     nextTStart = splitT;
                 }
-                chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
                 // print_poly_1(yellowRacetrackSplines[yellowSplineIdx].spline_x, yellowRacetrackSplines[yellowSplineIdx].spline_y);
             }
 
