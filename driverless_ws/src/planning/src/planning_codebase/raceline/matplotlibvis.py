@@ -23,7 +23,7 @@ def plot_parametric_cubic_polynomials(input_data, num_points=100):
     for group_index, (splines, t_range) in enumerate(input_data):
         group_size = len(splines)
         start_t, end_t = t_range
-        group_color = colors[group_index % len(colors)]
+        group_color = colors[group_index % 18 % len(colors)]
         
         for spline_index, (x_coeffs, y_coeffs) in enumerate(splines):
             # Determine t_range for this spline
@@ -47,7 +47,7 @@ def plot_parametric_cubic_polynomials(input_data, num_points=100):
     plt.xlabel("x(t)")
     plt.ylabel("y(t)")
     plt.grid(True)
-    plt.legend()
+    # plt.legend()
     plt.show()
 
 # Example Input Data
@@ -222,7 +222,7 @@ input_data = [([
 ],
  (1.00203, 1.00203)
 )] + [([
-([-4,1,-2,1],[0,0,4,-2])
+([-4,0,0,0],[0,0,4,-2])
 ,
 ([-4,0,0,0],[2,2,0,0])
 ,
@@ -342,12 +342,17 @@ input_data = [([
 ,
 ([-10,2,0,0],[2,0,0,0])
 ,
-([-8,2,0,0],[2,0,1,-1])
+([-8,2,0,0],[2,0,0,0])
 ],
  (0, 1)
 ),
 ([
-([-6,2,1,-1],[2,-1,-4,3])
+([-6,2,1,-1],[2,0,1,-1])
+],
+ (0, 1)
+),
+([
+([-4,1,-2,1],[2,-1,-4,3])
 ],
  (0, 1)
 )]
