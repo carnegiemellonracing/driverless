@@ -77,12 +77,12 @@ void Chunk::generateConePoints(std::pair<std::vector<Spline>,std::vector<double>
  */
 
 //TODO: should be returning by reference not value
-std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCones,
+std::shared_ptr<std::vector<std::shared_ptr<Chunk>>> generateChunks(std::vector<std::pair<double,double>> blueCones,
                                   std::vector<std::pair<double,double>> yellowCones) {
 
     // create chunk vector that stores chunks
     //TODO: use new keyword to create vector in heap not stack
-    std::vector<Chunk*>* chunkVector = new std::vector<Chunk*>();
+    auto chunkVector = std::make_shared<std::vector<std::shared_ptr<Chunk>>>();
 
     // indices vectors
     std::vector<std::pair<double,double>> blueConesX;
@@ -120,7 +120,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     std::vector<double> cumulativeLen = blue.second;
 
     // create a chunk
-    Chunk* chunk = new Chunk();
+    auto chunk = std::make_shared<Chunk>();
     
     // loop through progress and sample curvature at each progress point
     int increment = 1; // TODO: tunable param
@@ -153,7 +153,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             //TODO: look into emplace_back
             chunkVector->emplace_back(chunk);
             // std::cout << "new chunk 3" << std::endl;
-            chunk = new Chunk(); 
+            chunk = std::make_shared<Chunk>();
             // std::cout << "created new chunk in loop" << std::endl;
             chunk->startProgress = currPercentProgress;
             chunk->endProgress = currPercentProgress;

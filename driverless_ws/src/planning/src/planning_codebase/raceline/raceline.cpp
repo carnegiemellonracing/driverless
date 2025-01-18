@@ -5,8 +5,7 @@
 polynomial poly(int deg = 3){
     polynomial inst;
     inst.deg=deg;
-    Eigen::VectorXd nums(deg+1);
-    nums.setZero();
+    Eigen::VectorXd nums = VectorXd::Zero(deg+1);
     inst.nums = nums;
     
 	return inst;
@@ -32,7 +31,6 @@ polynomial polyder(polynomial p){
         double coef = p.nums(i+1)*(i+1);
         der.nums(i)=coef;
     }
-    p.nums(p.deg)=0;
 
 	return der;
 }
