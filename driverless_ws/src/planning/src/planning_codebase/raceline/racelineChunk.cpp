@@ -194,7 +194,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 double splitT = ySplit(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - newYInd);
                 chunk->tEnd = splitT;
 
-                std::cout << "yellow chunk splitT length end" << yellowCumulativeLen[yellowSplineIdx - 1] + arclength(splitSpline, 0, splitT) << std::endl;
+                std::cout << "yellow chunk splitT length end" << yellowCumulativeLen[yellowSplineIdx - 1] + arclength(std::make_pair(splitSpline.spline_x.spl_poly, splitSpline.spline_y.spl_poly), 0, splitT) << std::endl;
 
                 std::cout << "yellow full length" << yellowCumulativeLen[yellowCumulativeLen.size() - 1] << std::endl;
     
