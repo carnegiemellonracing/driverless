@@ -183,7 +183,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             if (yellowSplineIdx < yellowRacetrackSplines.size()) {
                 ParameterizedSpline splitSpline = yellowRacetrackSplines[yellowSplineIdx];
 
-                int yellowStartLen = 0;
+                double yellowStartLen = 0;
 
                 if (yellowSplineIdx != 0) {
                     yellowStartLen = yellowCumulativeLen[yellowSplineIdx - 1];
