@@ -192,7 +192,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 // takes in spline, x-y, returns t value
                 // x is the blue percent prog, y is yellow percent prog
                 std::cout << "yellow chunk blue percent length end " << bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1] << std::endl;
-                std::cout << "target length end " << bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1] - yellowStartLen << std::endl;
+                std::cout << "target length end " << bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1] - yellowStartLen +  << std::endl;
 
                 double splitT = ySplit(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
                 chunk->tEnd = splitT;
