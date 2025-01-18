@@ -87,7 +87,8 @@ double ySplit(ParameterizedSpline spline, double targetArclength) {
             high = mid;
         }
     }
-    
+    std::cout << "actual arc length" << arclength(splinePair, 0, low + (high-low) / 2) << std::endl;
+    std::cout << "target arc length" << targetArclength << std::endl;
     return low + (high-low) / 2;
 }
 
@@ -182,18 +183,18 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             if (yellowSplineIdx < yellowRacetrackSplines.size()) {
                 ParameterizedSpline splitSpline = yellowRacetrackSplines[yellowSplineIdx];
 
-                int newYInd = 0;
+                int yellowStartLen = 0;
 
                 if (yellowSplineIdx != 0) {
-                    newYInd = yellowCumulativeLen[yellowSplineIdx - 1];
+                    yellowStartLen = yellowCumulativeLen[yellowSplineIdx - 1];
                 }
                 
                 // takes in spline, x-y, returns t value
                 // x is the blue percent prog, y is yellow percent prog
                 std::cout << "yellow chunk blue percent length end" << bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1] << std::endl;
-                double splitT = ySplit(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - newYInd);
+                double splitT = ySplit(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
                 chunk->tEnd = splitT;
-
+            
                 std::cout << "yellow chunk splitT length end" << yellowCumulativeLen[yellowSplineIdx - 1] + arclength(std::make_pair(splitSpline.spline_x.spl_poly, splitSpline.spline_y.spl_poly), 0, splitT) << std::endl;
 
                 std::cout << "yellow full length" << yellowCumulativeLen[yellowCumulativeLen.size() - 1] << std::endl;

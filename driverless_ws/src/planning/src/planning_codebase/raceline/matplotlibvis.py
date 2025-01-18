@@ -18,7 +18,7 @@ def plot_parametric_cubic_polynomials(input_data_1, input_data_2, num_points=100
     num_points: Number of points to evaluate for each polynomial.
     """
     plt.figure(figsize=(12, 8))
-    colors = ['red', 'blue', 'green', 'orange', 'purple']
+    colors = ['blue', 'red', 'green', 'purple', 'orange']
     
     for input_data in [input_data_1, input_data_2]:
         for group_index, (splines, t_range) in enumerate(input_data):
