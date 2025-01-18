@@ -163,6 +163,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             bluePercentProgress = blueCumulativeLen[i - 1] / blueCumulativeLen[blueCumulativeLen.size() - 1];
             std::cout << "blue full" << blueCumulativeLen[blueCumulativeLen.size() - 1] << std::endl;
             std::cout << "blue percent" << bluePercentProgress << std::endl;
+            std::cout << "blue chunk length end" << blueCumulativeLen[i - 1] << std::endl;
             
             // yellowindex is greater than yellowRacetrackSplines or 
             // cumsum is greater than cumsum of blue;yellowSplineIdx
@@ -189,8 +190,13 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 
                 // takes in spline, x-y, returns t value
                 // x is the blue percent prog, y is yellow percent prog
+                std::cout << "yellow chunk blue percent length end" << bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1] << std::endl;
                 double splitT = ySplit(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - newYInd);
                 chunk->tEnd = splitT;
+
+                std::cout << "yellow chunk splitT length end" << yellowCumulativeLen[yellowSplineIdx - 1] + arclength(splitSpline, 0, splitT) << std::endl;
+
+                std::cout << "yellow full length" << yellowCumulativeLen[yellowCumulativeLen.size() - 1] << std::endl;
     
                 chunk->yellowSplines.push_back(splitSpline);
 
