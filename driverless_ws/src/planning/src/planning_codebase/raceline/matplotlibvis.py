@@ -9,7 +9,7 @@ def evaluate_polynomial(coeffs, t):
     """
     return coeffs[3] * t**3 + coeffs[2] * t**2 + coeffs[1] * t + coeffs[0]
 
-def plot_parametric_cubic_polynomials(input_data, num_points=100):
+def plot_parametric_cubic_polynomials(input_data_1, input_data_2, num_points=100):
     """
     Plot a list of parametric cubic polynomials (x(t), y(t)).
     input_data: List of tuples. Each tuple contains:
@@ -20,28 +20,29 @@ def plot_parametric_cubic_polynomials(input_data, num_points=100):
     plt.figure(figsize=(12, 8))
     colors = ['red', 'blue', 'green', 'orange', 'purple']
     
-    for group_index, (splines, t_range) in enumerate(input_data):
-        group_size = len(splines)
-        start_t, end_t = t_range
-        group_color = colors[group_index % 18 % len(colors)]
-        
-        for spline_index, (x_coeffs, y_coeffs) in enumerate(splines):
-            # Determine t_range for this spline
-            if spline_index == 0:
-                t_start, t_end = start_t, 1  # First spline gets group start_t
-            elif spline_index == group_size - 1:
-                t_start, t_end = 0, end_t  # Last spline gets group end_t
-            else:
-                t_start, t_end = 0, 1  # Intermediate splines default to [0, 1]
+    for input_data in [input_data_1, input_data_2]:
+        for group_index, (splines, t_range) in enumerate(input_data):
+            group_size = len(splines)
+            start_t, end_t = t_range
+            group_color = colors[group_index % 18 % len(colors)]
             
-            t = np.linspace(t_start, t_end, num_points)
-            
-            # Evaluate x(t) and y(t)
-            x_vals = evaluate_polynomial(x_coeffs, t)
-            y_vals = evaluate_polynomial(y_coeffs, t)
-            
-            # Plot the parametric curve
-            plt.plot(x_vals, y_vals, color=group_color, label=f'Group {group_index + 1}' if spline_index == 0 else None)
+            for spline_index, (x_coeffs, y_coeffs) in enumerate(splines):
+                # Determine t_range for this spline
+                if spline_index == 0:
+                    t_start, t_end = start_t, 1  # First spline gets group start_t
+                elif spline_index == group_size - 1:
+                    t_start, t_end = 0, end_t  # Last spline gets group end_t
+                else:
+                    t_start, t_end = 0, 1  # Intermediate splines default to [0, 1]
+                
+                t = np.linspace(t_start, t_end, num_points)
+                
+                # Evaluate x(t) and y(t)
+                x_vals = evaluate_polynomial(x_coeffs, t)
+                y_vals = evaluate_polynomial(y_coeffs, t)
+                
+                # Plot the parametric curve
+                plt.plot(x_vals, y_vals, color=group_color, label=f'Group {group_index + 1}' if spline_index == 0 else None)
     
     plt.title("Parametric Cubic Polynomials")
     plt.xlabel("x(t)")
@@ -221,7 +222,9 @@ input_data = [([
 ([-4,3,4,-3],[-2,1,2,-1])
 ],
  (1, 1)
-)] + [([
+)]
+
+input_data_2 = [([
 ([-4,0,0,0],[0,0,4,-2])
 ,
 ([-4,0,0,0],[2,2,0,0])
@@ -358,4 +361,4 @@ input_data = [([
 )]
 
 # Plot the parametric cubic polynomials
-plot_parametric_cubic_polynomials(input_data)
+plot_parametric_cubic_polynomials(input_data, input_data_2)
