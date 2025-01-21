@@ -99,7 +99,6 @@ void print_poly_1(Spline x, Spline y) {
      << y.spl_poly.nums(2) << "," << y.spl_poly.nums(3) << "])"<< std::endl;
 }
 
-
 /** 
  * Generates a vector of raceline chunks based on track boundaries.
  *
@@ -142,6 +141,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     Chunk* chunk = new Chunk();
     chunk->blueSplines.push_back(blueRacetrackSplines[0]);
     chunk->tStart = 0;
+    chunk->blueArclengthStart = 0;
     
     // // loop through progress and sample curvature at each progress point
     // int increment = 1; // TODO: tunable param
@@ -153,6 +153,10 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     
     double bluePercentProgress;
     int yellowSplineIdx = 0;
+
+    int blueIdx = 0;
+    int yellowIdx = 0;
+
     for (int i = 1; i <= blueRacetrackSplines.size(); i++) {
         // add spline to chunk
         if (i < blueRacetrackSplines.size() && (chunk->checkContinueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]))) {
@@ -161,6 +165,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         // stop current chunk, add to vector, start new chunk
         else { 
             // TODO makevector for yellow
+            chunk->blueArclengthEnd = blueCumulativeLen[i - 1];
+
             bluePercentProgress = blueCumulativeLen[i - 1] / blueCumulativeLen[blueCumulativeLen.size() - 1];
             std::cout << "blue full " << blueCumulativeLen[blueCumulativeLen.size() - 1] << std::endl;
             std::cout << "blue percent " << bluePercentProgress << std::endl;
@@ -198,6 +204,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
                 double splitT = ySplit(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
                 chunk->tEnd = splitT;
+
             
                 std::cout << "yellow chunk splitT length end " << yellowCumulativeLen[yellowSplineIdx - 1] + arclength(std::make_pair(splitSpline.spline_x.first_der, splitSpline.spline_y.first_der), 0, splitT) << std::endl;
 
@@ -217,12 +224,68 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
             chunkVector->emplace_back(chunk);
             if (i != blueRacetrackSplines.size()) {
+
+                chunk->blueArclength = chunk->blueArclengthEnd - chunk->blueArclengthStart;
+                chunk->yellowArclength = chunk->blueArclength * yellowCumulativeLen[yellowCumulativeLen.size() - 1] / blueCumulativeLen[blueCumulativeLen.size() - 1];
+
+                chunk->blueFirstDerXStart = poly_eval(chunk->blueSplines[0].spline_x.first_der, 0);
+                chunk->blueFirstDerXEnd = poly_eval(chunk->blueSplines[chunk->blueSplines.size() - 1].spline_x.first_der, 1);
+                chunk->blueFirstDerYStart = poly_eval(chunk->blueSplines[0].spline_y.first_der, 0);
+                chunk->blueFirstDerYEnd = poly_eval(chunk->blueSplines[chunk->blueSplines.size() - 1].spline_y.first_der, 1);
+
+                chunk->yellowFirstDerXStart = poly_eval(chunk->yellowSplines[0].spline_x.first_der, chunk->tStart);
+                chunk->yellowFirstDerXEnd = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_x.first_der, chunk->tEnd);
+                chunk->yellowFirstDerYStart = poly_eval(chunk->yellowSplines[0].spline_x.first_der, chunk->tStart);
+                chunk->yellowFirstDerYEnd = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_y.first_der, chunk->tEnd);
+
+ 
+                double blueArcStart = chunk->blueArclengthEnd;
+
+                // blue midpoint and tangent
+                while (blueCumulativeLen[blueIdx] < (chunk->blueArclength/2 + chunk->blueArclengthStart)) {
+                    blueIdx += 1;
+                }
+
+                double midFromMidSpline = (chunk->blueArclength/2 + chunk->blueArclengthStart) - blueCumulativeLen[blueIdx]
+                // binary search from start of blueIdx spline 
+                double midT = ySplit(blueRacetrackSplines[blueIdx], midFromMidSpline);
+
+                chunk->blueMidX = polyeval(blueRacetrackSplines[blueIdx].spline_x.spl_poly, midT);
+                chunk->blueMidY = polyeval(blueRacetrackSplines[blueIdx].spline_y.spl_poly, midT);
+                chunk->blueFirstDerMidX = polyeval(blueRacetrackSplines[blueIdx].spline_x.first_der, midT);
+                chunk->blueFirstDerMidY = polyeval(blueRacetrackSplines[blueIdx].spline_y.first_der, midT);
+
+
+                // yellow midpoint and tangent
+                double yellowEndLength = arclength(std::make_pair(splitSpline.spline_x.first_der, splitSpline.spline_y.first_der), 0, chunk->tEnd);
+                if (yellowSplineIdx > 0) {
+                    yellowEndLength += yellowCumulativeLen[yellowSplineIdx - 1];
+                }
+
+
+                while (yellowCumulativeLen[yellowIdx] < (yellowEndLength - chunk->yellowArclength/2)) {
+                    yellowIdx += 1;
+                }
+
+                // spline containing
+                double midFromMidSpline = (yellowEndLength - chunk->yellowArclength/2) - yellowCumulativeLen[yellowIdx]
+                // binary search from start of yellowIdx spline 
+                double midT = ySplit(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
+
+                chunk->yellowMidX = polyeval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
+                chunk->yellowMidY = polyeval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);
+                chunk->yellowFirstDerMidX = polyeval(yellowRacetrackSplines[yellowIdx].spline_x.first_der, midT);
+                chunk->yellowFirstDerMidY = polyeval(yellowRacetrackSplines[yellowIdx].spline_y.first_der, midT);
+
+
                 chunk = new Chunk();
                 chunk->tStart = nextTStart;
+                chunk->blueArclengthStart = blueArcStart;
                 // init chunk and add curr spline
                 chunk->blueSplines.push_back(blueRacetrackSplines[i]);
             }
         }
+
     }
 
     return chunkVector;
