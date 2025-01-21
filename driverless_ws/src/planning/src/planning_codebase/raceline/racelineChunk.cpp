@@ -69,7 +69,7 @@ bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline 
 }
 
 double ySplit(ParameterizedSpline spline, double targetArclength) {
-    std::pair<polynomial, polynomial> splinePair = std::make_pair(spline.spline_x.spl_poly, spline.spline_y.spl_poly);
+    std::pair<polynomial, polynomial> splinePair = std::make_pair(spline.spline_x.first_der, spline.spline_y.first_der);
     double low = 0;
     double high = 1;
     double mid;
@@ -199,7 +199,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 double splitT = ySplit(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
                 chunk->tEnd = splitT;
             
-                std::cout << "yellow chunk splitT length end " << yellowCumulativeLen[yellowSplineIdx - 1] + arclength(std::make_pair(splitSpline.spline_x.spl_poly, splitSpline.spline_y.spl_poly), 0, splitT) << std::endl;
+                std::cout << "yellow chunk splitT length end " << yellowCumulativeLen[yellowSplineIdx - 1] + arclength(std::make_pair(splitSpline.spline_x.first_der, splitSpline.spline_y.first_der), 0, splitT) << std::endl;
 
                 std::cout << "yellow full length " << yellowCumulativeLen[yellowCumulativeLen.size() - 1] << std::endl;
     
