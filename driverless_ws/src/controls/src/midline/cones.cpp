@@ -8,7 +8,7 @@
 #include <numbers>
 #include <utility> 
 
-#include "cones.h"
+#include "cones.hpp"
 
 std::string Cones::reprCones(const std::vector<std::vector<double>>& cones) const {
     if (cones.empty()) {

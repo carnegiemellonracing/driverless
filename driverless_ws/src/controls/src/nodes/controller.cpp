@@ -373,12 +373,12 @@ namespace controls {
                     << "  y (m): " << info.proj_state.y << "\n"
                     << "  yaw (rad): " << info.proj_state.yaw << "\n"
                     << "  speed (m/s): " << info.proj_state.speed << "\n"
-                    << "Cone Processing Latency (ms)" << m_last_cone_process_time << "\n"
+                    // << "Cone Processing Latency (ms)" << m_last_cone_process_time << "\n"
                     << "SVM Latency (ms): " << m_last_svm_time << "\n"
                     << "State Projection Latency (ms): " << info.projection_latency_ms << "\n"
                     << "OpenGL Render Latency (ms): " << info.render_latency_ms << "\n"
-                    << "MPPI Step Latency (ms): " << info.latency_ms << "\n"
-                    << "Controls Latency (ms): " << info.mppi_latency_ms << "\n"
+                    << "MPPI Step Latency (ms): " << info.mppi_latency_ms << "\n"
+                    << "Controls Latency (ms): " << info.latency_ms << "\n"
                     << "Total Latency (ms): " << info.total_latency_ms << "\n"
                     << additional_info
                     << std::endl;

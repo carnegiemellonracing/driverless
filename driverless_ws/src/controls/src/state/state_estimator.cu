@@ -32,7 +32,7 @@
 #include <mppi/functors.cuh>
 #include <SDL2/SDL_video.h>
 
-#include <midline/svm_conv.h>
+#include <midline/svm_conv.hpp>
 
 
 namespace controls {
@@ -450,7 +450,6 @@ namespace controls {
             m_left_cone_points = process_ros_points(cone_msg.blue_cones);
             m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
 
-            // This code segfaults currently 
             Cones cones;
             for (const auto& cone : m_left_cone_points) {
                 cones.addBlueCone(cone.x, cone.y, 0);
@@ -469,7 +468,6 @@ namespace controls {
                 paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
                 m_spline_frames.emplace_back(frame.first, frame.second);
             }
-            // std::cout << "COMPUTED MIDLINE: " << points_to_string(m_spline_frames) << std::endl;
 
             m_orig_spline_data_stamp = cone_msg.orig_data_stamp;
 
