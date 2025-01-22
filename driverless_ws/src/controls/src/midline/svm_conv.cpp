@@ -10,10 +10,11 @@
 #include <numeric>
 #include <limits>
 #include <cassert>
-#include "svm.h" // libSVM headers
+#include "svm.hpp" // libSVM headers
 
-#include "svm_conv.h"
-#include "cones.h"
+#include "svm_conv.hpp"
+#include "cones.hpp"
+#include "constants.hpp"
 
 
 

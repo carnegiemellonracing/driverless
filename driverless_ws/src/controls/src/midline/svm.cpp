@@ -1,13 +1,13 @@
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <float.h>
-#include <string.h>
-#include <stdarg.h>
-#include <limits.h>
-#include <locale.h>
-#include "svm.h"
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cctype>
+#include <cfloat>
+#include <cstring>
+#include <cstdarg>
+#include <climits>
+#include <clocale>
+#include "svm.hpp"
 #ifdef _OPENMP
 #include <omp.h>
 #endif
