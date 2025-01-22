@@ -450,7 +450,7 @@ namespace controls {
             m_left_cone_points = process_ros_points(cone_msg.blue_cones);
             m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
 
-            Cones cones;
+            midline::Cones cones;
             for (const auto& cone : m_left_cone_points) {
                 cones.addBlueCone(cone.x, cone.y, 0);
             }
@@ -460,7 +460,7 @@ namespace controls {
 
             // // TODO: convert this to using std::transform
             auto svm_start = std::chrono::high_resolution_clock::now();            
-            auto spline_frames = cones_to_midline(cones);
+            auto spline_frames = midline::cones_to_midline(cones);
             auto svm_end = std::chrono::high_resolution_clock::now();
             float svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
             m_spline_frames.clear();
