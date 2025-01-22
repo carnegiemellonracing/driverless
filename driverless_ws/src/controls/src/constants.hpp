@@ -79,6 +79,10 @@ namespace controls {
     constexpr float out_of_bounds_cost = 100.0f; ///< Cost for being out of (fake) track bound as defined by @ref track_width.
     // TODO: use real bounds
 
+    // Midline/SVM
+    constexpr float mesh_grid_spacing = 0.5f; //m
+    constexpr float max_spline_length = 100.0f;
+
 
     // State Estimation
 
