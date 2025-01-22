@@ -424,19 +424,19 @@ namespace controls {
 
             paranoid_assert(spline_msg.frames.size() > 0);
 
-            m_spline_frames = process_ros_points(spline_msg.frames);
+            // m_spline_frames = process_ros_points(spline_msg.frames);
 
             // if constexpr (reset_pose_on_spline) {
             //     m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
             // } I want the state to be dirtied only by the cones, so disable this for the splines
 
-            m_orig_spline_data_stamp = spline_msg.header.stamp;
+            // m_orig_spline_data_stamp = spline_msg.header.stamp;
 
             m_logger("finished state estimator spline processing");
         }
         
 
-        void StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
+        float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             paranoid_assert(cone_msg.blue_cones.size() > 0);
@@ -451,18 +451,27 @@ namespace controls {
             m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
 
             // This code segfaults currently 
-            // Cones cones;
-            // for (const auto& cone : m_left_cone_points) {
-            //     cones.addBlueCone(cone.x, cone.y, 0);
-            // }
-            // for (const auto& cone : m_right_cone_points) {
-            //     cones.addYellowCone(cone.x, cone.y, 0);
-            // }            
-            // auto spline_frames = cones_to_midline(cones);
-            // m_spline_frames.clear();
-            // for (const auto& frame : spline_frames) {
-            //     m_spline_frames.emplace_back(frame.first, frame.second);
-            // }
+            Cones cones;
+            for (const auto& cone : m_left_cone_points) {
+                cones.addBlueCone(cone.x, cone.y, 0);
+            }
+            for (const auto& cone : m_right_cone_points) {
+                cones.addYellowCone(cone.x, cone.y, 0);
+            }
+
+            // // TODO: convert this to using std::transform
+            auto svm_start = std::chrono::high_resolution_clock::now();            
+            auto spline_frames = cones_to_midline(cones);
+            auto svm_end = std::chrono::high_resolution_clock::now();
+            float svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
+            m_spline_frames.clear();
+            for (const auto& frame : spline_frames) {
+                paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
+                m_spline_frames.emplace_back(frame.first, frame.second);
+            }
+            // std::cout << "COMPUTED MIDLINE: " << points_to_string(m_spline_frames) << std::endl;
+
+            m_orig_spline_data_stamp = cone_msg.orig_data_stamp;
 
 #ifdef DISPLAY
             m_all_left_cone_points.clear();
@@ -479,6 +488,7 @@ namespace controls {
             }
             
             m_logger("finished state estimator cone processing");
+            return svm_time;
         }
 
         void StateEstimator_Impl::on_twist(const TwistMsg &twist_msg, const rclcpp::Time &time) {
@@ -937,6 +947,9 @@ namespace controls {
          * The framebuffer object will be used as a texture object to be sampled from the state estimator.
          */
         void StateEstimator_Impl::fill_path_buffers_spline() {
+            for (const auto& frame : m_spline_frames) {
+                paranoid_assert(!isnan_vec(frame));
+            }
             struct Vertex {
                 struct {
                     float x;
