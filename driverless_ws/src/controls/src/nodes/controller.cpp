@@ -111,7 +111,11 @@ namespace controls {
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_cone(cone_msg);
+                    auto cone_process_start = std::chrono::high_resolution_clock::now();
+                    float svm_time = m_state_estimator->on_cone(cone_msg);
+                    auto cone_process_end = std::chrono::high_resolution_clock::now();
+                    m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
+                    m_last_svm_time = svm_time;
                 }
                 notify_state_dirty();
             }
@@ -358,27 +362,26 @@ namespace controls {
                 std::stringstream ss;
 
                 ss
-                << "Action:\n"
-                << "  swangle (rad): " << info.action.swangle << "\n"
-                << "  torque_fl (Nm): " << info.action.torque_fl << "\n"
-                << "  torque_fr (Nm): " << info.action.torque_fr << "\n"
-                << "  torque_rl (Nm): " << info.action.torque_rl << "\n"
-                << "  torque_rr (Nm): " << info.action.torque_rr << "\n"
-                << "Projected State:\n"
-                << "  x (m): " << info.proj_state.x << "\n"
-                << "  y (m): " << info.proj_state.y << "\n"
-                << "  yaw (rad): " << info.proj_state.yaw << "\n"
-                << "  speed (m/s): " << info.proj_state.speed << "\n"
-                << "MPPI Step Latency (ms): " << info.latency_ms << "\n"
-                << "Phase 1 (ms): " << info.latency1_ms << "\n"
-                << "Phase 2 (ms): " << info.latency2_ms << "\n"
-                << "Phase 3 (ms): " << info.latency3_ms << "\n"
-                << "Projection Latency (ms): " << info.projection_latency_ms << "\n"
-                << "Render Latency (ms): " << info.render_latency_ms << "\n"
-                << "Controls Latency (ms): " << info.mppi_latency_ms << "\n"
-                << "Total Latency (ms): " << info.total_latency_ms << "\n"
-                << additional_info
-                << std::endl;
+                    << "Action:\n"
+                    << "  swangle (rad): " << info.action.swangle << "\n"
+                    << "  torque_fl (Nm): " << info.action.torque_fl << "\n"
+                    << "  torque_fr (Nm): " << info.action.torque_fr << "\n"
+                    << "  torque_rl (Nm): " << info.action.torque_rl << "\n"
+                    << "  torque_rr (Nm): " << info.action.torque_rr << "\n"
+                    << "Projected State:\n"
+                    << "  x (m): " << info.proj_state.x << "\n"
+                    << "  y (m): " << info.proj_state.y << "\n"
+                    << "  yaw (rad): " << info.proj_state.yaw << "\n"
+                    << "  speed (m/s): " << info.proj_state.speed << "\n"
+                    << "Cone Processing Latency (ms)" << m_last_cone_process_time << "\n"
+                    << "SVM Latency (ms): " << m_last_svm_time << "\n"
+                    << "State Projection Latency (ms): " << info.projection_latency_ms << "\n"
+                    << "OpenGL Render Latency (ms): " << info.render_latency_ms << "\n"
+                    << "MPPI Step Latency (ms): " << info.latency_ms << "\n"
+                    << "Controls Latency (ms): " << info.mppi_latency_ms << "\n"
+                    << "Total Latency (ms): " << info.total_latency_ms << "\n"
+                    << additional_info
+                    << std::endl;
 
                 std::string info_str = ss.str();
 

@@ -135,6 +135,8 @@ namespace controls {
             std::condition_variable m_state_cond_var;
 
             std::fstream m_data_trajectory_log;
+            float m_last_cone_process_time = 0.0f;
+            float m_last_svm_time = 0.0f;
         };
     }
 }
