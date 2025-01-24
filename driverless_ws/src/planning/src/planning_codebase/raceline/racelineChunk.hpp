@@ -55,6 +55,6 @@ class Chunk
  * 
  * @return Vector of raceline chunks.
  */
-std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCones,
+std::shared_ptr<std::vector<std::shared_ptr<Chunk>>> generateChunks(std::vector<std::pair<double,double>> blueCones,
                                   std::vector<std::pair<double,double>> yellowCones);
     

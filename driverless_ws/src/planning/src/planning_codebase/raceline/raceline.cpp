@@ -5,7 +5,7 @@
 polynomial poly(int deg = 3){
     polynomial inst;
     inst.deg=deg;
-    Eigen::VectorXd nums = VectorXd::Zero(deg+1);
+    Eigen::VectorXd nums = Eigen::VectorXd::Zero(deg+1);
     inst.nums = nums;
     
 	return inst;

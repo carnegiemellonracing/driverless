@@ -208,7 +208,7 @@ int main() {
     // };
 
     createWaveTrack(blue_cones, yellow_cones);
-    std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
+    std::vector<std::shared_ptr<Chunk>> chunks = *generateChunks(blue_cones, yellow_cones);
 
     // if (chunks == nullptr) {
     //     std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
