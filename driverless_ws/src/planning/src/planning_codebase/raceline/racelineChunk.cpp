@@ -271,12 +271,12 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 // spline containing
                 midFromMidSpline = (yellowEndLength - chunk->yellowArclength/2) - yellowCumulativeLen[yellowIdx];
                 // binary search from start of yellowIdx spline 
-                double midT = ySplit(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
+                midT = ySplit(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
 
-                chunk->yellowMidX = polyeval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
-                chunk->yellowMidY = polyeval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);
-                chunk->yellowFirstDerMidX = polyeval(yellowRacetrackSplines[yellowIdx].spline_x.first_der, midT);
-                chunk->yellowFirstDerMidY = polyeval(yellowRacetrackSplines[yellowIdx].spline_y.first_der, midT);
+                chunk->yellowMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
+                chunk->yellowMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);
+                chunk->yellowFirstDerMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.first_der, midT);
+                chunk->yellowFirstDerMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.first_der, midT);
 
 
                 chunk = new Chunk();
