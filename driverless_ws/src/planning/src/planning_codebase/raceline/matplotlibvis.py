@@ -9,7 +9,7 @@ def evaluate_polynomial(coeffs, t):
     """
     return coeffs[3] * t**3 + coeffs[2] * t**2 + coeffs[1] * t + coeffs[0]
 
-def plot_parametric_cubic_polynomials(input_data_1, input_data_2, num_points=100):
+def plot_parametric_cubic_polynomials(input_data_1, input_data_2, points, num_points=100):
     """
     Plot a list of parametric cubic polynomials (x(t), y(t)).
     input_data: List of tuples. Each tuple contains:
@@ -48,6 +48,12 @@ def plot_parametric_cubic_polynomials(input_data_1, input_data_2, num_points=100
                 # Plot the parametric curve
                 plt.plot(x_vals, y_vals, color=group_color, label=f'Group {group_index + 1}' if spline_index == 0 else None)
     
+    if points:
+        x_points, y_points = zip(*points)
+        plt.scatter(x_points, y_points, color='black', label='Points')
+        for x, y in points:
+            plt.text(x, y, f'({x}, {y})', fontsize=9, ha='right')
+
     plt.title("Parametric Cubic Polynomials")
     plt.xlabel("x(t)")
     plt.ylabel("y(t)")
@@ -56,6 +62,8 @@ def plot_parametric_cubic_polynomials(input_data_1, input_data_2, num_points=100
     plt.show()
 
 # Example Input Data
+points = []
+
 input_data = [([
 ([-4,1,-2,1],[2,1,2,-1])
 ,
@@ -360,4 +368,4 @@ input_data_2 = [([
 # )]
 
 # Plot the parametric cubic polynomials
-plot_parametric_cubic_polynomials(input_data, input_data_2)
+plot_parametric_cubic_polynomials(input_data, input_data_2, points)
