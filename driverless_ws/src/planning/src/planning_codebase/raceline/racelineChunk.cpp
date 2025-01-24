@@ -243,6 +243,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             std::cout << "chunk->yellowFirstDerXEnd" << chunk->yellowFirstDerXEnd << std::endl;
             std::cout << "chunk->yellowFirstDerYStart" << chunk->yellowFirstDerYStart << std::endl;
             std::cout << "chunk->yellowFirstDerYEnd" << chunk->yellowFirstDerYEnd << std::endl;
+            std::cout << "spline y " << chunk->yellowSplines[0].spline_y.spl_poly.nums << std::endl;
 
             double blueArcStart = chunk->blueArclengthEnd;
             // std::cout << "chunk->blueArclength/2" << chunk->blueArclength/2 << std::endl;
