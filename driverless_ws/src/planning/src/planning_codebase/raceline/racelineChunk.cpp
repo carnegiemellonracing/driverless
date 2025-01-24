@@ -240,12 +240,12 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
  
                 double blueArcStart = chunk->blueArclengthEnd;
-                std::cout << "chunk->blueArclength/2" << chunk->blueArclength/2 << std::endl;
+                // std::cout << "chunk->blueArclength/2" << chunk->blueArclength/2 << std::endl;
 
 
                 while (blueCumulativeLen[blueIdx] < (chunk->blueArclength/2 + chunk->blueArclengthStart)) {
                     // blue midpoint and tangent
-                    std::cout << "blueCumulativeLen[blueIdx] - chunk->blueArclengthStart " << blueCumulativeLen[blueIdx] - chunk->blueArclengthStart << std::endl;
+                    // std::cout << "blueCumulativeLen[blueIdx] - chunk->blueArclengthStart " << blueCumulativeLen[blueIdx] - chunk->blueArclengthStart << std::endl;
                     blueIdx += 1;
                 }
     
@@ -253,7 +253,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 if (blueIdx != 0) {
                     midFromMidSpline = midFromMidSpline - blueCumulativeLen[blueIdx-1];
                 }
-                std::cout << "midFromMidSpline" << midFromMidSpline << std::endl;
+                // std::cout << "midFromMidSpline" << midFromMidSpline << std::endl;
                 // binary search from start of blueIdx spline 
                 double midT = ySplit(blueRacetrackSplines[blueIdx], midFromMidSpline);
 
@@ -270,13 +270,19 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     yellowEndLength += yellowCumulativeLen[yellowSplineIdx - 1];
                 }
 
+                std::cout << "chunk->yellowArclength/2" << chunk->yellowArclength/2 << std::endl;
 
                 while (yellowCumulativeLen[yellowIdx] < (yellowEndLength - chunk->yellowArclength/2)) {
+                    std::cout << "yellowEndLength - chunk->yellowArclength/2 - yellowCumulativeLen[yellowIdx] " << yellowEndLength - chunk->yellowArclength/2 - yellowCumulativeLen[yellowIdx] << std::endl;
                     yellowIdx += 1;
                 }
 
                 // spline containing
                 midFromMidSpline = (yellowEndLength - chunk->yellowArclength/2) - yellowCumulativeLen[yellowIdx];
+                if (yellowIdx != 0) {
+                    midFromMidSpline = midFromMidSpline - yellowCumulativeLen[yellowIdx-1];
+                }
+                std::cout << "midFromMidSpline" << midFromMidSpline << std::endl;
                 // binary search from start of yellowIdx spline 
                 midT = ySplit(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
 
