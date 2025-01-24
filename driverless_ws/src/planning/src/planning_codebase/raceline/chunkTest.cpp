@@ -318,7 +318,7 @@ int main() {
     // std::ofstream Yellow;
     // Yellow.open(yellow_chunk_file, std::ios::out);
 
-    
+    // spline printing
     for (int i  = 0; i < chunks.size(); i++) {
         // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
         // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
@@ -356,6 +356,45 @@ int main() {
 
         // Blue << "#" << std::endl;
         std::cout << ")," << std::endl;
+
+
+        // Yellow << "#" << std::endl;
+    }
+
+    std::cout << "midpoints for chunks" << std::endl;
+
+    // print mid point of chunks, list of tuples
+    for (int i  = 0; i < chunks.size(); i++) {
+        // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
+        // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
+
+        // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
+        //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+        //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+        // }
+
+        std::cout << "[" << std::endl;
+
+        // for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
+        //     // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
+        //     if (j != 0) {
+        //         std::cout << ",";
+        //     }
+        //     print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
+
+        // }
+
+        for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
+            // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
+            if (j != 0) {
+                std::cout << "," << std::endl;
+            }
+            std::cout << " (" << chunks[i]->blueMidX <<  ", " << chunks[i]->blueMidY << ")," << std::endl;
+            std::cout << " (" << chunks[i]->yellowMidX <<  ", " << chunks[i]->yellowMidY << ")," << std::endl;
+        }
+
+        // Blue << "#" << std::endl;
+        std::cout << "]" << std::endl;
 
 
         // Yellow << "#" << std::endl;
