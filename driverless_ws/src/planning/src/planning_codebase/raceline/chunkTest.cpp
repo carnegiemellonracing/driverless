@@ -384,11 +384,9 @@ int main() {
 
         // }
 
-        for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
             // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-            std::cout << " (" << chunks[i]->blueMidX <<  ", " << chunks[i]->blueMidY << ")," << std::endl;
-            std::cout << " (" << chunks[i]->yellowMidX <<  ", " << chunks[i]->yellowMidY << ")," << std::endl;
-        }
+        std::cout << " (" << chunks[i]->blueMidX <<  ", " << chunks[i]->blueMidY << ")," << std::endl;
+        std::cout << " (" << chunks[i]->yellowMidX <<  ", " << chunks[i]->yellowMidY << ")," << std::endl;
 
         // Blue << "#" << std::endl;
 
