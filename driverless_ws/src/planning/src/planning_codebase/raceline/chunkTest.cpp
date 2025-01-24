@@ -363,6 +363,8 @@ int main() {
 
     std::cout << "midpoints for chunks" << std::endl;
 
+    std::cout << "[" << std::endl;
+
     // print mid point of chunks, list of tuples
     for (int i  = 0; i < chunks.size(); i++) {
         // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
@@ -372,8 +374,6 @@ int main() {
         //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
         //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
         // }
-
-        std::cout << "[" << std::endl;
 
         // for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
         //     // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
@@ -394,11 +394,12 @@ int main() {
         }
 
         // Blue << "#" << std::endl;
-        std::cout << "]" << std::endl;
-
 
         // Yellow << "#" << std::endl;
     }
+
+    std::cout << "]" << std::endl;
+
 
     // Blue.close();
     // Yellow.close();
