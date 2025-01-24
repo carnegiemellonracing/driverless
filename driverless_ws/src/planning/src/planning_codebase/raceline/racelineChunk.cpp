@@ -250,9 +250,9 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 }
     
                 double midFromMidSpline = (chunk->blueArclength/2 + chunk->blueArclengthStart)
-                if (!blueIdx)
-
-                - blueCumulativeLen[blueIdx-1];
+                if (blueIdx != 0) {
+                    midFromMidSpline = midFromMidSpline - blueCumulativeLen[blueIdx-1];
+                }
                 std::cout << "midFromMidSpline" << midFromMidSpline << std::endl;
                 // binary search from start of blueIdx spline 
                 double midT = ySplit(blueRacetrackSplines[blueIdx], midFromMidSpline);
