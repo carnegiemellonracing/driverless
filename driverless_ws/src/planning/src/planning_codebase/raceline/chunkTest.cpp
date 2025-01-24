@@ -395,6 +395,10 @@ int main() {
 
     std::cout << "]" << std::endl;
 
+    std::cout << "chunk 3 first der yellow middle (" << chunks[2]->yellowFirstDerMidX << "," << chunks[2]->yellowFirstDerMidY << ")" << std::endl;
+    std::cout << "chunk 3 first der yellow start (" << chunks[2]->yellowFirstDerXStart << "," << chunks[2]->yellowFirstDerYStart << ")" << std::endl;
+    std::cout << "chunk 3 first der yellow end (" << chunks[2]->yellowFirstDerXEnd << "," << chunks[2]->yellowFirstDerYEnd << ")" << std::endl;
+    
 
     // Blue.close();
     // Yellow.close();

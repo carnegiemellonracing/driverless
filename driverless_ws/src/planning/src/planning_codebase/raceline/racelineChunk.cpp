@@ -287,6 +287,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             std::cout << "midFromMidSpline" << midFromMidSpline << std::endl;
             // binary search from start of yellowIdx spline 
             midT = ySplit(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
+            std::cout << "YELLOW MID T VALUE" << midT << std::endl;
 
             chunk->yellowMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
             chunk->yellowMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);
