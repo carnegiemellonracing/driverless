@@ -76,6 +76,9 @@ setup(
             'endtoend_node = perceptions.ros.predictors.EndToEndNode:main',
             'steering_node = perceptions.ros.predictors.steering_test:main',
 
+             # foxglove node
+            'foxglove_node = perceptions.foxglove.FoxgloveNode:main',
+            
             # sync test node
             'sync_test_node = perceptions.planning_stuff.SynchronizationTesterNode:main',
         ],
