@@ -278,7 +278,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 }
 
                 // spline containing
-                midFromMidSpline = (yellowEndLength - chunk->yellowArclength/2) - yellowCumulativeLen[yellowIdx];
+                midFromMidSpline = (yellowEndLength - chunk->yellowArclength/2);
                 if (yellowIdx != 0) {
                     midFromMidSpline = midFromMidSpline - yellowCumulativeLen[yellowIdx-1];
                 }
