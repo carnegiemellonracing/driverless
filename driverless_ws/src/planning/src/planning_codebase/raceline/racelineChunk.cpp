@@ -240,13 +240,17 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
  
                 double blueArcStart = chunk->blueArclengthEnd;
+                std::cout << "chunk->blueArclength/2" << chunk->blueArclength/2 << std::endl;
 
                 // blue midpoint and tangent
+                std::cout << "blueCumulativeLen[blueIdx] - chunk->blueArclengthStart" << blueCumulativeLen[blueIdx] - chunk->blueArclengthStart << std::endl;
+
                 while (blueCumulativeLen[blueIdx] < (chunk->blueArclength/2 + chunk->blueArclengthStart)) {
                     blueIdx += 1;
                 }
 
                 double midFromMidSpline = (chunk->blueArclength/2 + chunk->blueArclengthStart) - blueCumulativeLen[blueIdx];
+                std::cout << "midFromMidSpline" << midFromMidSpline << std::endl;
                 // binary search from start of blueIdx spline 
                 double midT = ySplit(blueRacetrackSplines[blueIdx], midFromMidSpline);
 
