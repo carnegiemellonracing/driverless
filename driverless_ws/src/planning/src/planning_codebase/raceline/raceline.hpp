@@ -12,26 +12,6 @@
 
 // TODO make separate file for poly things here and in frenet
 
-const int prefered_degree = 3,overlap = 0;
-const int STRAIGHT_CONCAVITY_TH = 0.0;
-
-enum class Concavity {
-    NEG,
-    STRAIGHT,
-    POS
-};
-
-inline std::string concavity_to_string(Concavity c) {
-    if (c == Concavity::NEG) {
-        return "NEGATIVE CONCAVITY";
-    } else if (c == Concavity::STRAIGHT) {
-        return "STRAIGHT CONCAVITY";
-    } else {
-        return "POSITIVE CONCAVITY";
-    }
-}
-//std::string concavity_to_string(Concavity c);
-
 struct polynomial
 {
     int deg;
@@ -135,26 +115,12 @@ public:
     double get_third_der(double t);
 };
 
-
-// Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts);
-// Eigen::VectorXd get_translation_vector(Eigen::MatrixXd& group);
-
-// Eigen::MatrixXd transform_points(rclcpp::Logger logger,Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector);
-
-// Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector);
-
-polynomial lagrange_gen(Eigen::MatrixXd& points);
-
 double arclength_f(double, void* params);
 
 double arclength(std::pair<polynomial, polynomial> poly_der, double x0,double x1);
 
 std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_spline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop);
 
-std::pair<std::vector<Spline>,std::vector<double>> raceline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id =std::rand(), int points_per_spline = prefered_degree+1,bool loop = true);
-
 std::pair<std::vector<ParameterizedSpline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points);
-
-Concavity get_curvature_raceline(std::vector<double> progress, std::vector<Spline> splines, std::vector<double> cumulated_lengths);
 
 #endif
