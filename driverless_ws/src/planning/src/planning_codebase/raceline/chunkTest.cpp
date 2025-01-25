@@ -4,6 +4,9 @@
 #include "racelineChunk.hpp"
 #include <cassert>
 #include <fstream>
+#include <eigen3/Eigen/Dense>
+
+typedef pair<double, double> Point;
 
 // angle to rads?
 double ator(int a){
@@ -279,132 +282,230 @@ void print_poly(Spline x, Spline y) {
      << y.spl_poly.nums(2) << "," << y.spl_poly.nums(3) << "])"<< std::endl;
 }
 
-int main() {
-    std::vector<std::pair<double, double>> blue_cones = {};
-    std::vector<std::pair<double, double>> yellow_cones = {};
-
-    //createSquidwardTrack(blue_cones, yellow_cones);
-    // std::vector<std::pair<double,double>> blue_cones = {
-    //     std::make_pair(400, 400),
-    //     std::make_pair(300, 300),
-    //     std::make_pair(200, 200),
-    //     std::make_pair(100, 100)
-    // };
-
-    // std::vector<std::pair<double,double>> yellow_cones = {
-    //     std::make_pair(400, 400),
-    //     std::make_pair(300, 300),
-    //     std::make_pair(200, 200),
-    //     std::make_pair(100, 100)
-    // };
-
-    createSquidwardTrack(blue_cones, yellow_cones);
-
-    std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
-
-    // if (chunks == nullptr) {
-    //     std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
-    // }
-
-    // if ((*chunks)[0] == nullptr) {
-    //     std::cout << "FIRST CHUNK IS NULL" << std::endl;
-    // }
-
-    // outputting chunks
-    // std::string blue_chunk_file = "/root/driverless/driverless_ws/src/planning/src/planning_codebase/raceline/chunk_vis_blue.txt";
-    // std::string yellow_chunk_file = "/root/driverless/driverless_ws/src/planning/src/planning_codebase/raceline/chunk_vis_yellow.txt";
-    // std::ofstream Blue;
-    // Blue.open(blue_chunk_file, std::ios::out);
-    // std::ofstream Yellow;
-    // Yellow.open(yellow_chunk_file, std::ios::out);
-
-    // // spline printing
-    // for (int i  = 0; i < chunks.size(); i++) {
-
-    //     std::cout << "([" << std::endl;
-
-    //     // for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
-    //     //     // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-    //     //     if (j != 0) {
-    //     //         std::cout << ",";
-    //     //     }
-    //     //     print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
-
-    //     // }
-
-    //     for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
-    //         // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-    //         if (j != 0) {
-    //             std::cout << "," << std::endl;
-    //         }
-    //         print_poly(chunks[i]->yellowSplines[j].spline_x, chunks[i]->yellowSplines[j].spline_y);
-
-    //     }
-
-    //     std::cout << "]," << std::endl;
-
-    //     // std::cout << " (" << "0" <<  ", " << "1" << ")" << std::endl;
-    //     std::cout << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")" << std::endl;
-
-    //     // Blue << "#" << std::endl;
-    //     std::cout << ")," << std::endl;
-
-
-    //     // Yellow << "#" << std::endl;
-    // }
-
-    std::cout << "midpoints for chunks" << std::endl;
-
-    std::cout << "[" << std::endl;
-
-    // print mid point of chunks, list of tuples
-    for (int i  = 0; i < chunks.size(); i++) {
-        // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
-        // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
-
-        // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
-        //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-        //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-        // }
-
-        // for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
-        //     // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-        //     if (j != 0) {
-        //         std::cout << ",";
-        //     }
-        //     print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
-
-        // }
-
-            // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-
-        std::cout << " (" << chunks[i]->blueMidX <<  ", " << chunks[i]->blueMidY << ")," << std::endl;
-        std::cout << " (" << chunks[i]->yellowMidX <<  ", " << chunks[i]->yellowMidY << ")," << std::endl;
-
-
-        // Blue << "#" << std::endl;
-
-        // Yellow << "#" << std::endl;
-    }
-
-    std::cout << "]" << std::endl;
-
-    
-
-    std::cout << "chunk 3 first der yellow middle (" << chunks[2]->yellowFirstDerMidX << "," << chunks[2]->yellowFirstDerMidY << ")" << std::endl;
-    std::cout << "chunk 3 first der yellow start (" << chunks[2]->yellowFirstDerXStart << "," << chunks[2]->yellowFirstDerYStart << ")" << std::endl;
-    std::cout << "chunk 3 first der yellow end (" << chunks[2]->yellowFirstDerXEnd << "," << chunks[2]->yellowFirstDerYEnd << ")" << std::endl;
-    
-
-    // Blue.close();
-    // Yellow.close();
-
-    // for (int j = 0; j < chunks.size(); j++) {
-    //     for (int i = 0; i < chunks[j]->bluePoints.size(); i++) {
-    //         std::cout << "(" << chunks[j]->bluePoints[i].first << "," << chunks[j]->bluePoints[i].second << ")" << std::endl;
-    //     }
-    // }    
-    
-    return 0;
+// Function to calculate a point at a specific distance along a line (half for now)
+Point pointAlongLine(const Point& blue_point, const Point& yellow_point, double distance) {
+  double dx = blue_point.first - yellow_point.first;
+  double dy = blue_point.second - yellow_point.second;
+  double length = sqrt(dx * dx + dy * dy);
+  double unit_dx = dx / length;
+  double unit_dy = dy / length;
+  return {yellow_point.first + length * distance * unit_dx, yellow_point.second + length * distance * unit_dy};
 }
+
+// Function to solve the large matrix equation
+vector<VectorXd> solve(const vector<Point>& points, double k_x, double l_x, double k_y, double l_y) {
+  VectorXd b_x(8), b_y(8);
+  b_x << points[0].first, points[1].first, points[1].first, points[2].first, k_x, l_x, 0, 0;
+  b_y << points[0].second, points[1].second, points[1].second, points[2].second, k_y, l_y, 0, 0;
+  // Hardcoded inverse matrix
+  MatrixXd A_inverse(8, 8);
+  A_inverse << 10, -10, -6, 6, 3, -1, 2, 0.25,
+         -9, 9, 3, -3, -3.5, 0.5, -1, -0.125,
+         0, 0, 0, 0, 1, 0, 0, 0,
+         1, 0, 0, 0, 0, 0, 0, 0,
+         -6, 6, 10, -10, -1, 3, -2, 0.25,
+         6, -6, -6, 6, 1, -1, 2, -0.25,
+         -1.5, 1.5, -1.5, 1.5, -0.25, -0.25, -0.5, 0.0625,
+         0, 0, 1, 0, 0, 0, 0, 0;
+  VectorXd X = A_inverse * b_x;
+  VectorXd Y = A_inverse * b_y;
+  return {X.segment(0, 4), X.segment(4, 4), Y.segment(0, 4), Y.segment(4, 4)};
+}
+
+// Function to run the optimizer
+std::pair<std::vector<double>, std::vector<double>> runOptimizer(Chunk chunk, double d1, double d2, double d3) {
+  Point blueStart = {chunk->blueStartX, chunk->blueStartY};
+  Point yellowStart = {chunk->yellowStartX, chunk->yellowStartY};
+  Point blueMid = {chunk->blueMidX, chunk->blueMidY};
+  Point yellowMid = {chunk->yellowMidX, chunk->yellowMidY};
+  Point blueEnd = {chunk->blueEndX, chunk->blueEndY};
+  Point yellowEnd = {chunk->yellowEndX, chunk->yellowEndY};
+
+  double blueFirstDerXStart = chunk->blueFirstDerXStart;
+  double blueFirstDerXEnd = chunk->blueFirstDerXEnd;
+  double blueFirstDerYStart = chunk->blueFirstDerYStart;
+  double blueFirstDerYEnd = chunk->blueFirstDerYEnd;
+  double yellowFirstDerXStart = chunk->yellowFirstDerXStart;
+  double yellowFirstDerXEnd = chunk->yellowFirstDerXEnd;
+  double yellowFirstDerYStart = chunk->yellowFirstDerYStart;
+  double yellowFirstDerYEnd = chunk->yellowFirstDerYEnd;
+
+  vector<Point> points;
+  points.push_back(pointAlongLine(blueStart, yellowStart, d1));
+  points.push_back(pointAlongLine(blueMid, yellowMid, d2));
+  points.push_back(pointAlongLine(blueEnd, yellowEnd, d3));
+
+  double k_x = (blueFirstDerXStart + blueFirstDerXEnd) / 2;
+  double k_y = (blueFirstDerYStart + blueFirstDerYEnd) / 2;
+  double l_x = (yellowFirstDerXStart + yellowFirstDerXEnd) / 2;
+  double l_y = (yellowFirstDerYStart + yellowFirstDerYEnd) / 2;
+
+  auto splines = solve(points, k_x, l_x, k_y, l_y);
+  return {splines[0], splines[2]}; // Return X and Y splines
+}
+
+int main() {
+  std::vector<std::pair<double, double>> blue_cones = {};
+  std::vector<std::pair<double, double>> yellow_cones = {};
+
+  createSquidwardTrack(blue_cones, yellow_cones);
+  std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
+
+  // Vector to hold results: one vector for each chunk, with 4 elements
+  std::vector<std::vector<double>> racelineSplines(chunks.size());
+
+  for (size_t i = 0; i < chunks.size(); ++i) {
+      auto result = runOptimizer(*chunks[i], 0.5, 0.5, 0.5);
+
+      // Combine X and Y splines into a single vector of size 4 (2 X coefficients, 2 Y coefficients)
+      racelineSplines[i] = {
+          result.first[0], result.first[1],  // First two X coefficients
+          result.second[0], result.second[1]  // First two Y coefficients
+      };
+  }
+  
+  // Output results for visualization
+  for (const auto& spline : racelineSplines) {
+      std::cout << "Spline X coefficients: ";
+      for (double value : spline.first) {
+          std::cout << value << " ";
+      }
+      std::cout << "\nSpline Y coefficients: ";
+      for (double value : spline.second) {
+          std::cout << value << " ";
+      }
+      std::cout << "\n";
+  }
+
+  return 0;
+}
+
+// int main() {
+//     std::vector<std::pair<double, double>> blue_cones = {};
+//     std::vector<std::pair<double, double>> yellow_cones = {};
+
+//     //createSquidwardTrack(blue_cones, yellow_cones);
+//     // std::vector<std::pair<double,double>> blue_cones = {
+//     //     std::make_pair(400, 400),
+//     //     std::make_pair(300, 300),
+//     //     std::make_pair(200, 200),
+//     //     std::make_pair(100, 100)
+//     // };
+
+//     // std::vector<std::pair<double,double>> yellow_cones = {
+//     //     std::make_pair(400, 400),
+//     //     std::make_pair(300, 300),
+//     //     std::make_pair(200, 200),
+//     //     std::make_pair(100, 100)
+//     // };
+
+//     createSquidwardTrack(blue_cones, yellow_cones);
+
+//     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
+
+//     // if (chunks == nullptr) {
+//     //     std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
+//     // }
+
+//     // if ((*chunks)[0] == nullptr) {
+//     //     std::cout << "FIRST CHUNK IS NULL" << std::endl;
+//     // }
+
+//     // outputting chunks
+//     // std::string blue_chunk_file = "/root/driverless/driverless_ws/src/planning/src/planning_codebase/raceline/chunk_vis_blue.txt";
+//     // std::string yellow_chunk_file = "/root/driverless/driverless_ws/src/planning/src/planning_codebase/raceline/chunk_vis_yellow.txt";
+//     // std::ofstream Blue;
+//     // Blue.open(blue_chunk_file, std::ios::out);
+//     // std::ofstream Yellow;
+//     // Yellow.open(yellow_chunk_file, std::ios::out);
+
+//     // // spline printing
+//     // for (int i  = 0; i < chunks.size(); i++) {
+
+//     //     std::cout << "([" << std::endl;
+
+//     //     // for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
+//     //     //     // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
+//     //     //     if (j != 0) {
+//     //     //         std::cout << ",";
+//     //     //     }
+//     //     //     print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
+
+//     //     // }
+
+//     //     for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
+//     //         // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
+//     //         if (j != 0) {
+//     //             std::cout << "," << std::endl;
+//     //         }
+//     //         print_poly(chunks[i]->yellowSplines[j].spline_x, chunks[i]->yellowSplines[j].spline_y);
+
+//     //     }
+
+//     //     std::cout << "]," << std::endl;
+
+//     //     // std::cout << " (" << "0" <<  ", " << "1" << ")" << std::endl;
+//     //     std::cout << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")" << std::endl;
+
+//     //     // Blue << "#" << std::endl;
+//     //     std::cout << ")," << std::endl;
+
+
+//     //     // Yellow << "#" << std::endl;
+//     // }
+
+//     std::cout << "midpoints for chunks" << std::endl;
+
+//     std::cout << "[" << std::endl;
+
+//     // print mid point of chunks, list of tuples
+//     for (int i  = 0; i < chunks.size(); i++) {
+//         // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
+//         // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
+
+//         // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
+//         //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+//         //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
+//         // }
+
+//         // for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
+//         //     // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
+//         //     if (j != 0) {
+//         //         std::cout << ",";
+//         //     }
+//         //     print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
+
+//         // }
+
+//             // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
+
+//         std::cout << " (" << chunks[i]->blueMidX <<  ", " << chunks[i]->blueMidY << ")," << std::endl;
+//         std::cout << " (" << chunks[i]->yellowMidX <<  ", " << chunks[i]->yellowMidY << ")," << std::endl;
+
+
+//         // Blue << "#" << std::endl;
+
+//         // Yellow << "#" << std::endl;
+//     }
+
+//     std::cout << "]" << std::endl;
+
+    
+
+//     std::cout << "chunk 3 first der yellow middle (" << chunks[2]->yellowFirstDerMidX << "," << chunks[2]->yellowFirstDerMidY << ")" << std::endl;
+//     std::cout << "chunk 3 first der yellow start (" << chunks[2]->yellowFirstDerXStart << "," << chunks[2]->yellowFirstDerYStart << ")" << std::endl;
+//     std::cout << "chunk 3 first der yellow end (" << chunks[2]->yellowFirstDerXEnd << "," << chunks[2]->yellowFirstDerYEnd << ")" << std::endl;
+    
+
+//     // Blue.close();
+//     // Yellow.close();
+
+//     // for (int j = 0; j < chunks.size(); j++) {
+//     //     for (int i = 0; i < chunks[j]->bluePoints.size(); i++) {
+//     //         std::cout << "(" << chunks[j]->bluePoints[i].first << "," << chunks[j]->bluePoints[i].second << ")" << std::endl;
+//     //     }
+//     // }    
+    
+//     return 0;
+// }
 
