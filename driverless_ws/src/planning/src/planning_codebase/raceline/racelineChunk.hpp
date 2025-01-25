@@ -60,7 +60,7 @@ class Chunk
          * @return True if this chunk should be terminated and not include 
          * the curr spline, false otherwise.
          */
-        bool checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline spline2);
+        bool continueChunk(ParameterizedSpline spline1, ParameterizedSpline spline2);
 };
 
 /** 

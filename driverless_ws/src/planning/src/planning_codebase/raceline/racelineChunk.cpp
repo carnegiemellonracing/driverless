@@ -57,12 +57,6 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
         }
     bool checkThirdDer = infthird || (abs(spline1_third_der - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
 
-    if (!(checkFirstDer && checkSecondDer && checkThirdDer)) {
-        std::cout << "first der diff" << abs(spline1_first_der - spline2_first_der) << std::endl;
-        std::cout << "second der diff" << abs(spline1_second_der - spline2_second_der) << std::endl;
-        std::cout << "third der diff" << abs(spline1_third_der - spline2_third_der) << std::endl;
-    }
-
     return checkFirstDer && checkSecondDer && checkThirdDer;
 }
 
@@ -85,8 +79,6 @@ double ySplit(ParameterizedSpline spline, double targetArclength) {
             high = mid;
         }
     }
-    std::cout << "actual arc length" << arclength(splinePair, 0, low + (high-low) / 2) << std::endl;
-    std::cout << "target arc length" << targetArclength << std::endl;
     return low + (high-low) / 2;
 }
 
@@ -126,28 +118,15 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     std::vector<ParameterizedSpline> yellowRacetrackSplines = yellow.first;
     std::vector<double> yellowCumulativeLen = yellow.second;
 
-    std::cout << "YELLOW RACELINE START" << std::endl;
-
     for (int i = 0; i < yellowRacetrackSplines.size(); i++) {
         print_poly_1(yellowRacetrackSplines[i].spline_x, yellowRacetrackSplines[i].spline_y);
     }
-
-    std::cout << "YELLOW RACELINE END" << std::endl;
-
 
     // create a chunk
     Chunk* chunk = new Chunk();
     chunk->blueSplines.push_back(blueRacetrackSplines[0]);
     chunk->tStart = 0;
     chunk->blueArclengthStart = 0;
-    
-    // // loop through progress and sample curvature at each progress point
-    // int increment = 1; // TODO: tunable param
-    // int totalProgress = 100;
-    // int totalBlueLength = cumulativeLen[cumulativeLen.size()-1];
-    // // LOOP THROUGH SPLINES
-    // // IN T VALUE, IF first last CHECK FIRST DERIVATIVE AND THIRD DERIVATIVE MATCH UP AND SECOND DERIVATIVE SIGN MATCH UP
-    // // TODO
     
     double bluePercentProgress;
     int yellowSplineIdx = 0;
@@ -163,22 +142,14 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
         }
         // stop current chunk, add to vector, start new chunk
         else { 
-            // TODO makevector for yellow
             chunk->blueArclengthEnd = blueCumulativeLen[i - 1];
-
             bluePercentProgress = blueCumulativeLen[i - 1] / blueCumulativeLen[blueCumulativeLen.size() - 1];
-            // std::cout << "blue full " << blueCumulativeLen[blueCumulativeLen.size() - 1] << std::endl;
-            // std::cout << "blue percent " << bluePercentProgress << std::endl;
-            // std::cout << "blue chunk length end " << blueCumulativeLen[i - 1] << std::endl;
             
             // yellowindex is greater than yellowRacetrackSplines or 
             // cumsum is greater than cumsum of blue;yellowSplineIdx
             while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
                 (yellowCumulativeLen[yellowSplineIdx] < yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
-                    // std::cout << "yellow length " << yellowCumulativeLen[yellowSplineIdx] << std::endl;
-                    // std::cout << "length thresh " << yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress << std::endl;
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
-                // print_poly_1(yellowRacetrackSplines[yellowSplineIdx].spline_x, yellowRacetrackSplines[yellowSplineIdx].spline_y);
                 yellowSplineIdx++;
             }
 
@@ -194,21 +165,9 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     yellowStartLen = yellowCumulativeLen[yellowSplineIdx - 1];
                 }
                 
-                // takes in spline, x-y, returns t value
-                // x is the blue percent prog, y is yellow percent prog
-                // std::cout << "yellow chunk blue percent length end " << bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1] << std::endl;
-                // std::cout << "yellow index " << yellowSplineIdx  << std::endl;
-                // std::cout << "yellowStartLen " << yellowStartLen << std::endl;
-                // std::cout << "yellowCumulativeLen[yellowSplineIdx - 1] " << yellowCumulativeLen[yellowSplineIdx - 1]  << std::endl;
-
                 double splitT = ySplit(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
                 chunk->tEnd = splitT;
 
-            
-                // std::cout << "yellow chunk splitT length end " << yellowCumulativeLen[yellowSplineIdx - 1] + arclength(std::make_pair(splitSpline.spline_x.first_der, splitSpline.spline_y.first_der), 0, splitT) << std::endl;
-
-                // std::cout << "yellow full length " << yellowCumulativeLen[yellowCumulativeLen.size() - 1] << std::endl;
-    
                 chunk->yellowSplines.push_back(splitSpline);
 
                 if (splitT == 1) {
@@ -218,7 +177,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 else {
                     nextTStart = splitT;
                 }
-                // print_poly_1(yellowRacetrackSplines[yellowSplineIdx].spline_x, yellowRacetrackSplines[yellowSplineIdx].spline_y);
             }
 
             chunkVector->emplace_back(chunk);
@@ -231,26 +189,14 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             chunk->blueFirstDerYStart = poly_eval(chunk->blueSplines[0].spline_y.first_der, 0);
             chunk->blueFirstDerYEnd = poly_eval(chunk->blueSplines[chunk->blueSplines.size() - 1].spline_y.first_der, 1);
 
-            std::cout << "chunk->tStart" << chunk->tStart << std::endl;
-
             chunk->yellowFirstDerXStart = poly_eval(chunk->yellowSplines[0].spline_x.first_der, chunk->tStart);
             chunk->yellowFirstDerXEnd = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_x.first_der, chunk->tEnd);
             chunk->yellowFirstDerYStart = poly_eval(chunk->yellowSplines[0].spline_y.first_der, chunk->tStart);
             chunk->yellowFirstDerYEnd = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_y.first_der, chunk->tEnd);
 
-            std::cout << "chunk->yellowFirstDerXStart" << chunk->yellowFirstDerXStart << std::endl;
-            std::cout << "chunk->yellowFirstDerXEnd" << chunk->yellowFirstDerXEnd << std::endl;
-            std::cout << "chunk->yellowFirstDerYStart" << chunk->yellowFirstDerYStart << std::endl;
-            std::cout << "chunk->yellowFirstDerYEnd" << chunk->yellowFirstDerYEnd << std::endl;
-            std::cout << "spline y " << chunk->yellowSplines[0].spline_y.spl_poly.nums << std::endl;
-
             double blueArcStart = chunk->blueArclengthEnd;
-            // std::cout << "chunk->blueArclength/2" << chunk->blueArclength/2 << std::endl;
-
 
             while (blueCumulativeLen[blueIdx] < (chunk->blueArclength/2 + chunk->blueArclengthStart)) {
-                // blue midpoint and tangent
-                // std::cout << "blueCumulativeLen[blueIdx] - chunk->blueArclengthStart " << blueCumulativeLen[blueIdx] - chunk->blueArclengthStart << std::endl;
                 blueIdx += 1;
             }
 
@@ -258,7 +204,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             if (blueIdx != 0) {
                 midFromMidSpline = midFromMidSpline - blueCumulativeLen[blueIdx-1];
             }
-            // std::cout << "midFromMidSpline" << midFromMidSpline << std::endl;
+
             // binary search from start of blueIdx spline 
             double midT = ySplit(blueRacetrackSplines[blueIdx], midFromMidSpline);
 
@@ -282,10 +228,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 }
             }
 
-            // std::cout << "chunk->yellowArclength/2" << chunk->yellowArclength/2 << std::endl;
-
             while (yellowCumulativeLen[yellowIdx] < (yellowEndLength - chunk->yellowArclength/2)) {
-                // std::cout << "yellowEndLength - chunk->yellowArclength/2 - yellowCumulativeLen[yellowIdx] " << yellowEndLength - chunk->yellowArclength/2 - yellowCumulativeLen[yellowIdx] << std::endl;
                 yellowIdx += 1;
             }
 
@@ -294,10 +237,9 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             if (yellowIdx != 0) {
                 midFromMidSpline = midFromMidSpline - yellowCumulativeLen[yellowIdx-1];
             }
-            // std::cout << "midFromMidSpline" << midFromMidSpline << std::endl;
+            
             // binary search from start of yellowIdx spline 
             midT = ySplit(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
-            std::cout << "YELLOW MID T VALUE" << midT << std::endl;
 
             chunk->yellowMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
             chunk->yellowMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);

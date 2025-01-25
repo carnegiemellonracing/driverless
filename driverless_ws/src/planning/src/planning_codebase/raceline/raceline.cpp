@@ -52,9 +52,6 @@ polynomial poly_mult(polynomial a,polynomial b){
 }
 
 double poly_eval(polynomial a, double x){
-    // std::cout << "poly eval" << std::endl;
-    // std::cout << a.nums << std::endl;
-    // std::cout << x << std::endl;
     double result = 0;
     double xval = 1.0;
     for(int i = 0; i <= a.deg; i++){
@@ -105,23 +102,11 @@ Spline::Spline(polynomial interpolation_poly, polynomial first, polynomial secon
 
 Spline::Spline(polynomial interpolation_poly, Eigen::MatrixXd points_mat, polynomial first, polynomial second, polynomial third, int path, int sort_ind, bool calcLength)
     : spl_poly(interpolation_poly),points(points_mat),first_der(first),second_der(second),third_der(third),path_id(path_id),sort_index(sort_ind)
-{
-    // if(calcLength){
-    //     this->length = this->calculateLength();
-    // }
-}
+{}
 
 Spline::Spline(){}
 
-Spline::~Spline()
-{
-    // ~spl_poly();
-    // polynomial first_der;
-    // polynomial second_der;
-    
-    //No need for this function in Eigen as it frees memory itself
-
-}
+Spline::~Spline(){}
 
 
 
@@ -198,265 +183,6 @@ double ParameterizedSpline::get_third_der(double t) {
            (3 * first_der_x * second_der_x * second_der_y) + 
            (3 * first_der_y * second_der_x * second_der_x)) / std::pow(first_der_x, 5);
 }
-// ((n'(t)^2 * o'''(t)) - (o'(t)^2 * n'''(t)) - (3 * n'(t) * n''(t) * o''(t)) + (3 * o'(t) * n''(t)^2)) / n'(t)^5
-
-// /**
-//  * @TODO: fix reverse transform
-//  * @TODO: even though guesses make sense, final interpolated points are still all the same
-//  * @TODO: update get_curvature_raceline to use interpolation
-//  */
-// std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> Spline::along(double progress, double point_index, int precision){
-    
-//     // std::cout << "progress: " << progress << std::endl;
-   
-//     std::tuple<Eigen::VectorXd,double, Eigen::VectorXd,double> ret;
-
-
-//     double len = this->calculateLength();
-
-
-//     double first_x = this->get_rotated_points()(0,0);
-//     // std::cout << "first x: " << first_x << std::endl;
-//     double last_x = this->get_rotated_points()(0,this->get_rotated_points().cols()-1);
-
-//     //std::cout << "SPLINE ALONG 1" << std::endl;
-
-//     double delta = last_x - first_x;
-
-//     std::pair<double,double> boundaries = std::make_pair(first_x,last_x);
-//     int ratio = progress / len + 1;
-
-//     if (ratio >= 2){
-//         double x = first_x + delta*ratio;
-//         double shoot = arclength(this->first_der,first_x,x);
-        
-//         double lower_bound = first_x + delta * (ratio - 1);
-//         double upper_bound =  first_x + delta * ratio;
-
-//         if (shoot < progress){
-//             while (shoot < progress){
-//                 // std::cout << "." << std::endl;
-//                 lower_bound = x;
-//                 //  add approximately one spline length to shoot
-//                 shoot = arclength(this->first_der,first_x,x+delta);
-//                 x=x+delta;
-//             }
-//             upper_bound = x; // upper bound is direct first overshoot (separated by delta from the lower bound)
-//         }
-//         else if (shoot >= progress){ // equality not very important
-//             while (shoot >= progress){
-//                 //std::cout << ", " << shoot << " " << progress << std::endl;
-//                 upper_bound = x;
-//                 // # remove approximately one splien length to shoot
-//                 shoot = arclength(this->first_der,first_x,x - delta);
-//                 x -= delta;
-//             }
-//             lower_bound = x; // lower bound is direct first undershoot (separated by delta from the upper bound)
-//         }    
-//         std::pair<double,double> boundaries = std::make_pair(lower_bound, upper_bound);
-        
-//     }
-//     //  Perform a more precise search between the two computed bounds
-//     //std::cout << "SPLINE ALONG 2" << std::endl;
-
-//         std::vector<double> guesses;
-//         guesses.resize(precision+1);
-//         for(int i=0;i<=precision;i++){
-//             guesses[i] = (boundaries.first*i + boundaries.second*(precision-i))/precision;
-//         }
-
-
-//         // std::cout << "number of guesses: " << guesses.size() << std::endl;
-//         // for (double guess : guesses){
-//         //     std::cout << guess << std::endl;
-//         // }
-
-//         //std::cout << "SPLINE ALONG 3" << std::endl;
-
-//         //  Evaluate progress along the (extrapolated) spline
-//         //  As arclength is expensive and cannot take multiple points
-//         //  at the same time, it is faster to use a for loop
-//         double past = double(INT64_MAX), best_guess = 0.1, best_length = 0;
-//         int i = 0;
-//         for (double guess : guesses){
-//             // std::cout << "guess " << i << ": "<< guess << std::endl;
-//             // std::cout << "first x " << i << ": "<< first_x << std::endl;
-//             // std::cout << "poly " << i << ": "<< this->spl_poly.nums << std::endl;
-//             double guess_length = arclength(this->first_der, first_x, guess);
-//             // std::cout << "progress " << progress << std::endl;
-//             // std::cout << "guess length " << i << ": "<< guess_length << std::endl;
-//             // std::cout << "past " << past << std::endl;
-//             if (abs(progress - guess_length) > abs(progress - past)) //# if we did worst than before
-//                 break;
-//             best_guess = guess;
-//             best_length = guess_length;
-//             past = guess_length;
-//             i++;
-//         }
-//         Eigen::VectorXd rotated_point(2);
-//         rotated_point(0)=best_guess;
-//         // std::cout << "best guess: " << best_guess << std::endl;
-
-//         //std::cout << "SPLINE ALONG 4" << std::endl;
-        
-//         rotated_point(1)=poly_eval(this->spl_poly,best_guess);
-//         // std::cout << "spline poly: " << this->spl_poly.num << std::endl;
-
-//         //std::cout << "SPLINE ALONG 4.1" << std::endl;
-        
-//         Eigen::MatrixXd rotated_points(2,1);
-//         //std::cout << "SPLINE ALONG 4.2" << std::endl;
-//         rotated_points(0,0)=rotated_point(0);
-//         //std::cout << "SPLINE ALONG 4.3" << std::endl;
-//         rotated_points(1,0)=rotated_point(1);
-
-//         // std::cout << "rotated points: " << rotated_points << std::endl;
-
-//         //std::cout << "SPLINE ALONG 5" << std::endl;
-    
-//         Eigen::MatrixXd point_mat = reverse_transform(rotated_points,this->Q,this->translation_vector);
-//         // std::cout << "SPLINE ALONG 5" << std::endl;
-
-//         Eigen::VectorXd point (2);
-//         point(0)=point_mat(0);
-//         point(1)=point_mat(1);
-
-//         // std::cout << "point mat: \n" << point_mat << std::endl ;
-
-//         ret = std::make_tuple(point,best_length,rotated_point,best_guess);
-
-//         //std::cout << "SPLINE ALONG 6" << std::endl;
-
-//         return ret;
-// }
-
-// double Spline::getderiv(double x){
-//     Eigen::MatrixXd point_x(1,2);
-//     point_x(0,0)=x;
-//     point_x(0,1)=0;
-
-//     Eigen::MatrixXd gm= reverse_transform(point_x,this->Q,this->translation_vector);
-//     return poly_eval(this->first_der,gm.data()[0]);
-
-
-
-// }
-
-// Eigen::MatrixXd Spline::interpolate(int number, std::pair<float,float> bounds){
-
-//     if(bounds.first == -1 && bounds.second == -1){
-//         double bound1 = get_rotated_points()(0,0);
-//         // MAKE PROPER BOUND 2
-//         double bound2 = get_rotated_points()(0,get_rotated_points().cols());
-//         bounds = std::make_pair(bound1,bound2);
-//     }
-
-//     Eigen::MatrixXd points(number,2);
-    
-//     for(int i=0;i<number;i++){
-//         double x = bounds.first+ (bounds.second-bounds.first)*(i/(number-1));
-//         points(i,0)=x;
-//         points(i,1)=poly_eval(get_SplPoly(),x);
-//     }
-
-    
-
-//     Eigen::Matrix2d q = Spline::get_Q();
-//     Eigen::VectorXd trans = Spline::get_translation();
-// 	Eigen::MatrixXd ret= reverse_transform(points, q, trans);
-
-//     return ret;
-// }
-
-// Eigen::Matrix2d rotation_matrix_gen(rclcpp::Logger logger,Eigen::MatrixXd& pnts){
-//     Eigen::Vector2d beg; beg << pnts.col(0);
-//     Eigen::Vector2d end; end << pnts.col(pnts.cols()-1);
-
-//     Eigen::Vector2d diff = end-beg;
-
-//     double norm = diff.norm();
-
-//     double cos = diff(0)/norm;
-//     double sin = diff(1)/norm;
-
-//     Eigen::Matrix2d ret;
-//     ret(0,0)=cos;
-//     ret(1,0)=sin;
-//     ret(0,1)=-1*sin;
-//     ret(1,1)=cos;
-
-//     // //RCLCPP_INFO(logger, "(sin,cos),(%f, %f)\n", sin,cos);
-//     // //RCLCPP_INFO(logger, "(diff,norm),(%f, %f),%f\n", diff(0),diff(1),norm);
-//     return ret;
-// }
-
-// Eigen::VectorXd get_translation_vector(Eigen::MatrixXd& group){
-//     Eigen::Vector2d ret;
-//     ret(0) = group(0, 0);
-//     ret(1) = group(1, 0);
-//     return ret;
-// }
-
-// Eigen::MatrixXd transform_points(rclcpp::Logger logger,Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector){
-//     Eigen::MatrixXd temp(points.rows(),points.cols());
-//         // //RCLCPP_INFO(logger, "transform points:rotation");
-//         // //RCLCPP_INFO(logger, "first point is (%f, %f)\n", Q(0, 0), Q(0, 1));
-//         // //RCLCPP_INFO(logger, "second point is (%f, %f)\n", Q(1, 0), Q(1, 1));
-    
-//     for(int i=0;i<temp.cols();++i){
-//         temp(0,i)=points(0,i)-get_translation_vector(0);
-//         temp(1,i)=points(1,i)-get_translation_vector(1);
-//     }
-
-//     // //RCLCPP_INFO(logger, "temp");
-//     // //RCLCPP_INFO(logger, "first point is (%f, %f)\n", temp(0, 0), temp(0, 1));
-//     // //RCLCPP_INFO(logger, "second point is (%f, %f)\n", temp(1, 0),temp(1, 1));
-
-
-//     Eigen::Matrix2d trans = Q.transpose(); 
-//     // //RCLCPP_INFO(logger, "q.trans");
-//     // //RCLCPP_INFO(logger, "first point is (%f, %f)\n", trans(0, 0), trans(0, 1));
-//     // //RCLCPP_INFO(logger, "second point is (%f, %f)\n", trans(1, 0), trans(1, 1));
-//     Eigen::MatrixXd ret = trans * temp;  
-//     // //RCLCPP_INFO(logger, "return");
-//     // //RCLCPP_INFO(logger, "first point is (%f, %f)\n", ret(0, 0), ret(0, 1));
-//     // //RCLCPP_INFO(logger, "second point is (%f, %f)\n", ret(1, 0), ret(1, 1));
-    
-//     return ret;
-// }
-
-// // TODO: use eigen functions instead of for loops
-// Eigen::MatrixXd reverse_transform(Eigen::MatrixXd& points, Eigen::Matrix2d& Q, Eigen::VectorXd& get_translation_vector){
-//     //std::cout << Q << std::endl;
-//     Eigen::MatrixXd temp(points.rows(),points.cols()); // TODO: is it necessary to copy points here? pass by value
-//     for(int i=0;i<temp.cols();++i){
-//         temp(0,i)=points(0,i);
-//         temp(1,i)=points(1,i);
-//     }
-
-//     Eigen::MatrixXd ret = Q*temp;
-
-//     for(int i=0;i<ret.cols();++i){
-//         ret(0,i) += get_translation_vector(0);
-//         ret(1,i) += get_translation_vector(1);
-//     }
-
-//     return ret;
-// }
-
-// def compute_catmull_rom_coefficients(P0, P1, P2, P3):
-//     # Tangents
-//     T1 = 0.5 * (P2 - P0)
-//     T2 = 0.5 * (P3 - P1)
-    
-//     # Coefficients
-//     a3 = 2*P1 - 2*P2 + T1 + T2
-//     a2 = -3*P1 + 3*P2 - 2*T1 - T2
-//     a1 = T1
-//     a0 = P1
-    
-//     return [a3, a2, a1, a0]
-
 
 polynomial catmull_rom(const Eigen::MatrixXd& points) {
     double P0 = points(0);
@@ -531,7 +257,6 @@ double arclength(std::pair<polynomial, polynomial> poly_der, double x0,double x1
     gsl_function F;
     F.function = &arclength_f;
     F.params = &poly_der;
-    // std::cout << "deriv: " << poly_der1.nums << std::endl;
 
     double result, error;
     size_t neval;
