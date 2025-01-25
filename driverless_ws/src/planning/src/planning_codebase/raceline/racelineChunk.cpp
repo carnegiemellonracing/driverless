@@ -7,7 +7,7 @@
 // tunable params for chunks
 // thresholds are arclength in meters
 #define CHUNK_LEN_MAX_THRESH 1000
-#define CHUNK_LEN_MIN_THRESH 0
+#define CHUNK_LEN_MIN_THRESH 15
 #define CHUNK_FIRST_DER_THRESH 0.01
 #define CHUNK_SECOND_DER_THRESH 1
 #define CHUNK_THIRD_DER_THRESH 1
@@ -19,18 +19,16 @@
 Chunk::Chunk() = default;
 
 /** 
- * TODO handle infinity subtraction
- *
- * Checks if given chunk should be terminated, i.e. running average of
- * given chunk is significantly different from the given curvature
- * sample or the chunk is too long. 
- *
- * @param newCurvature Curvature of new point.
+ * Returns true if the thresholds for derivatives and length are met.
+ * Otherwise returns false.
  * 
- * @return True if this chunk should not be terminated and should not
- *         include given curvature point, false otherwise.
+ * @param spline1 the previous spline we check against
+ * @param spline2 the current spline
+ * 
+ * subtract cumulen1 from cumulen2 to get length of spline2
+ * 
  */
-bool Chunk::checkContinueChunk(ParameterizedSpline spline1, ParameterizedSpline spline2) {
+bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline spline2) {
     double spline1_first_der = spline1.get_first_der(1);
     double spline2_first_der = spline2.get_first_der(0);
     double spline1_second_der = spline1.get_second_der(1);
@@ -159,7 +157,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     for (int i = 1; i <= blueRacetrackSplines.size(); i++) {
         // add spline to chunk
-        if (i < blueRacetrackSplines.size() && (chunk->checkContinueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]))) {
+        if (i < blueRacetrackSplines.size() && 
+            (chunk->continueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i], blueCumulativeLen[i-1]))) {
             chunk->blueSplines.push_back(blueRacetrackSplines[i]);
         }
         // stop current chunk, add to vector, start new chunk
@@ -265,6 +264,10 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
             chunk->blueMidX = poly_eval(blueRacetrackSplines[blueIdx].spline_x.spl_poly, midT);
             chunk->blueMidY = poly_eval(blueRacetrackSplines[blueIdx].spline_y.spl_poly, midT);
+            chunk->blueStartX = poly_eval(chunk->blueSplines[0].spline_x.spl_poly, 0);
+            chunk->blueStartY = poly_eval(chunk->blueSplines[0].spline_y.spl_poly, 0);
+            chunk->blueEndX = poly_eval(chunk->blueSplines[chunk->blueSplines.size() - 1].spline_x.spl_poly, 1);
+            chunk->blueEndY = poly_eval(chunk->blueSplines[chunk->blueSplines.size() - 1].spline_y.spl_poly, 1);
             chunk->blueFirstDerMidX = poly_eval(blueRacetrackSplines[blueIdx].spline_x.first_der, midT);
             chunk->blueFirstDerMidY = poly_eval(blueRacetrackSplines[blueIdx].spline_y.first_der, midT);
 
@@ -298,8 +301,13 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
             chunk->yellowMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
             chunk->yellowMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);
+            chunk->yellowStartX = poly_eval(chunk->yellowSplines[0].spline_x.spl_poly, chunk->tStart);
+            chunk->yellowStartY = poly_eval(chunk->yellowSplines[0].spline_y.spl_poly, chunk->tStart);
+            chunk->yellowEndX = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_x.spl_poly, chunk->tEnd);
+            chunk->yellowEndY = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_y.spl_poly, chunk->tEnd);
             chunk->yellowFirstDerMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.first_der, midT);
             chunk->yellowFirstDerMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.first_der, midT);
+            
 
             if (i != blueRacetrackSplines.size()) {
 

@@ -27,13 +27,21 @@ class Chunk
         double yellowFirstDerYStart;
         double yellowFirstDerYEnd;
 
+        double blueStartX;
+        double blueStartY;
         double blueMidX;
         double blueMidY;
+        double blueEndX;
+        double blueEndY;
         double blueFirstDerMidX;
         double blueFirstDerMidY;
 
+        double yellowStartX;
+        double yellowStartY;
         double yellowMidX;
         double yellowMidY;
+        double yellowEndX;
+        double yellowEndY;
         double yellowFirstDerMidX;
         double yellowFirstDerMidY;
         
