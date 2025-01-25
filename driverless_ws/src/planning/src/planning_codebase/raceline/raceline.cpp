@@ -69,22 +69,6 @@ double get_curvature(polynomial poly_der_1, polynomial poly_der_2, double min_x)
 
 }
 
-/*
- * @brief Gets the sign of the concavity using the 2nd derivative at input_x
- */
-Concavity get_concavity_sign(polynomial poly_der_2, double input_x) {
-    double value = poly_eval(poly_der_2, input_x);
-
-    if (value < -STRAIGHT_CONCAVITY_TH) {
-        return Concavity::NEG;
-    } else if (value > STRAIGHT_CONCAVITY_TH) {
-        return Concavity::POS;
-    } else {
-        return Concavity::STRAIGHT;
-    }
-
-}
-
 Spline::Spline(polynomial interpolation_poly) {
     this->spl_poly = interpolation_poly;
 }
