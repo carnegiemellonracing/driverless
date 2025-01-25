@@ -1,13 +1,13 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
-from perceptions.topics import POINT_TOPIC, POINT_2_TOPIC
-
-from visualization_msgs.msg import Marker, MarkerArray
-from geometry_msgs.msg import Point
-from sensor_msgs.msg import Image, PointCloud2, PointField
+from tf2_ros import TransformBroadcaster
+from geometry_msgs.msg import TransformStamped, Point
+from sensor_msgs.msg import PointCloud2
 from sensor_msgs_py import point_cloud2 as pc2
+from visualization_msgs.msg import Marker, MarkerArray
 from interfaces.msg import ConeArray, SplineFrames
+from perceptions.topics import POINT_TOPIC, POINT_2_TOPIC
 import numpy as np
 import argparse
 import sys
@@ -24,25 +24,14 @@ BEST_EFFORT_QOS_PROFILE = QoSProfile(
 class FoxgloveNode(Node):
     def __init__(self, print_counts):
         super().__init__(NODE_NAME)
-
         self.print_counts = print_counts
         self.last_marker_count = 0
         self.last_spline_marker_count = 0
 
-        # Subscribers and Publishers
-        self.cone_publisher = self.create_publisher(MarkerArray, 'cone_markers', qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.spline_publisher = self.create_publisher(MarkerArray, 'spline_markers', qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.fused_publisher = self.create_publisher(PointCloud2, '/fused_lidar_points', qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # TF broadcaster
+        self.tf_broadcaster = TransformBroadcaster(self)
 
-        self.cone_subscriber = self.create_subscription(ConeArray, '/perc_cones', self.cone_array_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.spline_subscriber = self.create_subscription(SplineFrames, '/spline', self.spline_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.point_1_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback_1, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.point_2_subscriber = self.create_subscription(PointCloud2, POINT_2_TOPIC, self.points_callback_2, qos_profile=BEST_EFFORT_QOS_PROFILE)
-
-        # LiDAR points and transformation matrices
-        self.points_1 = None
-        self.points_2 = None
-
+        # Transformation matrices
         self.tf_mat_left = np.array([
             [0.76604444, -0.64278764, 0., -0.18901],
             [0.64278764, 0.76604444, 0., 0.15407],
@@ -56,40 +45,92 @@ class FoxgloveNode(Node):
             [0., 0., 0., 1.]
         ])
 
+        # Publishers and Subscribers
+        self.cone_publisher = self.create_publisher(
+            MarkerArray, 'cone_markers', 
+            qos_profile=BEST_EFFORT_QOS_PROFILE
+        )
+        self.spline_publisher = self.create_publisher(
+            MarkerArray, 'spline_markers', 
+            qos_profile=BEST_EFFORT_QOS_PROFILE
+        )
+
+        self.cone_subscriber = self.create_subscription(
+            ConeArray, '/perc_cones', 
+            self.cone_array_callback, 
+            qos_profile=BEST_EFFORT_QOS_PROFILE
+        )
+        self.spline_subscriber = self.create_subscription(
+            SplineFrames, '/spline', 
+            self.spline_callback, 
+            qos_profile=BEST_EFFORT_QOS_PROFILE
+        )
+        self.point_1_subscriber = self.create_subscription(
+            PointCloud2, POINT_TOPIC, 
+            self.points_callback_1, 
+            qos_profile=BEST_EFFORT_QOS_PROFILE
+        )
+        self.point_2_subscriber = self.create_subscription(
+            PointCloud2, POINT_2_TOPIC,
+            self.points_callback_2,
+            qos_profile=BEST_EFFORT_QOS_PROFILE
+        )
+
     def points_callback_1(self, msg: PointCloud2):
-        self.points_1 = self.transform_points(msg, self.tf_mat_left)
-        self.publish_fused_points()
+        self.publish_tf(self.tf_mat_left, 'dual_lidar', 'hesai_lidar')
 
     def points_callback_2(self, msg: PointCloud2):
-        self.points_2 = self.transform_points(msg, self.tf_mat_right)
-        self.publish_fused_points()
+        self.publish_tf(self.tf_mat_right, 'dual_lidar', 'hesai_lidar2')
 
-    def transform_points(self, msg, tf_mat):
-        points = list(pc2.read_points(msg, field_names=("x", "y", "z", "intensity"), skip_nans=True))
-        if not points:
-            return np.array([])
-        
-        points = np.array([[p[0], p[1], p[2], p[3]] for p in points][::2])
-        points_h = np.hstack((points[:, :3], np.ones((points.shape[0], 1))))
-        transformed = np.dot(points_h, tf_mat.T)[:, :3]
-        
-        return np.hstack((transformed, points[:, 3:4]))
+    def publish_tf(self, tf_mat, parent_frame, child_frame):
+        t = TransformStamped()
+        t.header.stamp = self.get_clock().now().to_msg()
+        t.header.frame_id = parent_frame
+        t.child_frame_id = child_frame
 
-    def publish_fused_points(self):
-        if self.points_1 is not None and self.points_2 is not None:
-            fused_points = np.vstack((self.points_1, self.points_2))
-            header = PointCloud2().header
-            header.frame_id = 'hesai_lidar'
-            header.stamp = self.get_clock().now().to_msg()
-            fields = [
-                PointField(name='x', offset=0, datatype=PointField.FLOAT32, count=1),
-                PointField(name='y', offset=4, datatype=PointField.FLOAT32, count=1),
-                PointField(name='z', offset=8, datatype=PointField.FLOAT32, count=1),
-                PointField(name='intensity', offset=12, datatype=PointField.FLOAT32, count=1)
-            ]
-            pc2_msg = pc2.create_cloud(header, fields, fused_points.tolist())
-            self.fused_publisher.publish(pc2_msg)
-            self.get_logger().info(f"Published {fused_points.shape[0]} fused LiDAR points")
+        # Extract translation directly from the transformation matrix
+        t.transform.translation.x = tf_mat[0, 3]
+        t.transform.translation.y = tf_mat[1, 3]
+        t.transform.translation.z = tf_mat[2, 3]
+
+        # Extract rotation matrix and convert to quaternion
+        rotation_matrix = tf_mat[:3, :3]
+        q = self.rotation_matrix_to_quaternion(rotation_matrix)
+        t.transform.rotation.x = q[0]
+        t.transform.rotation.y = q[1]
+        t.transform.rotation.z = q[2]
+        t.transform.rotation.w = q[3]
+
+        self.tf_broadcaster.sendTransform(t)
+
+    def rotation_matrix_to_quaternion(self, R):
+        # Convert rotation matrix to quaternion
+        trace = R[0, 0] + R[1, 1] + R[2, 2]
+        if trace > 0:
+            S = 0.5 / np.sqrt(trace + 1.0)
+            w = 0.25 / S
+            x = (R[2, 1] - R[1, 2]) * S
+            y = (R[0, 2] - R[2, 0]) * S
+            z = (R[1, 0] - R[0, 1]) * S
+        elif (R[0, 0] > R[1, 1]) and (R[0, 0] > R[2, 2]):
+            S = 2.0 * np.sqrt(1.0 + R[0, 0] - R[1, 1] - R[2, 2])
+            w = (R[2, 1] - R[1, 2]) / S
+            x = 0.25 * S
+            y = (R[0, 1] + R[1, 0]) / S
+            z = (R[0, 2] + R[2, 0]) / S
+        elif R[1, 1] > R[2, 2]:
+            S = 2.0 * np.sqrt(1.0 + R[1, 1] - R[0, 0] - R[2, 2])
+            w = (R[0, 2] - R[2, 0]) / S
+            x = (R[0, 1] + R[1, 0]) / S
+            y = 0.25 * S
+            z = (R[1, 2] + R[2, 1]) / S
+        else:
+            S = 2.0 * np.sqrt(1.0 + R[2, 2] - R[0, 0] - R[1, 1])
+            w = (R[1, 0] - R[0, 1]) / S
+            x = (R[0, 2] + R[2, 0]) / S
+            y = (R[1, 2] + R[2, 1]) / S
+            z = 0.25 * S
+        return [x, y, z, w]
 
     def cone_array_callback(self, msg: ConeArray):
         if self.print_counts:
@@ -201,9 +242,8 @@ class FoxgloveNode(Node):
 
         self.spline_publisher.publish(marker_array)
 
-
 def main(args=None):
-    parser = argparse.ArgumentParser(description="Foxglove Nod")
+    parser = argparse.ArgumentParser(description="Foxglove Node")
     parser.add_argument('-p', '--print', action='store_true', help="Print cone counts")
     parsed_args = parser.parse_args(args=sys.argv[1:])
 
@@ -212,7 +252,6 @@ def main(args=None):
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()
