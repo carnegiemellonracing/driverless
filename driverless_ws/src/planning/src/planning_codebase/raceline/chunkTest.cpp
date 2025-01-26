@@ -5,6 +5,7 @@
 #include <cassert>
 #include <fstream>
 #include <eigen3/Eigen/Dense>
+#include <tuple>
 
 typedef std::pair<double, double> Point;
 
@@ -315,43 +316,44 @@ std::vector<Eigen::VectorXd> solve(const std::vector<Point>& points, double k_x,
     return {X.segment(0, 4), X.segment(4, 4), Y.segment(0, 4), Y.segment(4, 4)};
 }
 
-// Function to run the optimizer
-std::pair<std::vector<double>, std::vector<double>> runOptimizer(Chunk& chunk, double d1, double d2, double d3) {
-  Point blueStart = {chunk.blueStartX, chunk.blueStartY};
-  Point yellowStart = {chunk.yellowStartX, chunk.yellowStartY};
-  Point blueMid = {chunk.blueMidX, chunk.blueMidY};
-  Point yellowMid = {chunk.yellowMidX, chunk.yellowMidY};
-  Point blueEnd = {chunk.blueEndX, chunk.blueEndY};
-  Point yellowEnd = {chunk.yellowEndX, chunk.yellowEndY};
+//Function to find raceline
+std::tuple<std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>> 
+runOptimizer(Chunk& chunk, double d1, double d2, double d3) {
+    Point blueStart = {chunk.blueStartX, chunk.blueStartY};
+    Point yellowStart = {chunk.yellowStartX, chunk.yellowStartY};
+    Point blueMid = {chunk.blueMidX, chunk.blueMidY};
+    Point yellowMid = {chunk.yellowMidX, chunk.yellowMidY};
+    Point blueEnd = {chunk.blueEndX, chunk.blueEndY};
+    Point yellowEnd = {chunk.yellowEndX, chunk.yellowEndY};
 
-  double blueFirstDerXStart = chunk.blueFirstDerXStart;
-  double blueFirstDerXEnd = chunk.blueFirstDerXEnd;
-  double blueFirstDerYStart = chunk.blueFirstDerYStart;
-  double blueFirstDerYEnd = chunk.blueFirstDerYEnd;
-  double yellowFirstDerXStart = chunk.yellowFirstDerXStart;
-  double yellowFirstDerXEnd = chunk.yellowFirstDerXEnd;
-  double yellowFirstDerYStart = chunk.yellowFirstDerYStart;
-  double yellowFirstDerYEnd = chunk.yellowFirstDerYEnd;
+    double blueFirstDerXStart = chunk.blueFirstDerXStart;
+    double blueFirstDerXEnd = chunk.blueFirstDerXEnd;
+    double blueFirstDerYStart = chunk.blueFirstDerYStart;
+    double blueFirstDerYEnd = chunk.blueFirstDerYEnd;
+    double yellowFirstDerXStart = chunk.yellowFirstDerXStart;
+    double yellowFirstDerXEnd = chunk.yellowFirstDerXEnd;
+    double yellowFirstDerYStart = chunk.yellowFirstDerYStart;
+    double yellowFirstDerYEnd = chunk.yellowFirstDerYEnd;
 
-  std::vector<Point> points;
-  points.push_back(pointAlongLine(blueStart, yellowStart, d1));
-  points.push_back(pointAlongLine(blueMid, yellowMid, d2));
-  points.push_back(pointAlongLine(blueEnd, yellowEnd, d3));
+    std::vector<Point> points;
+    points.push_back(pointAlongLine(blueStart, yellowStart, d1));
+    points.push_back(pointAlongLine(blueMid, yellowMid, d2));
+    points.push_back(pointAlongLine(blueEnd, yellowEnd, d3));
 
-  double k_x = (blueFirstDerXStart + blueFirstDerXEnd) / 2;
-  double k_y = (blueFirstDerYStart + blueFirstDerYEnd) / 2;
-  double l_x = (yellowFirstDerXStart + yellowFirstDerXEnd) / 2;
-  double l_y = (yellowFirstDerYStart + yellowFirstDerYEnd) / 2;
+    double k_x = (blueFirstDerXStart + blueFirstDerXEnd) / 2;
+    double k_y = (blueFirstDerYStart + blueFirstDerYEnd) / 2;
+    double l_x = (yellowFirstDerXStart + yellowFirstDerXEnd) / 2;
+    double l_y = (yellowFirstDerYStart + yellowFirstDerYEnd) / 2;
 
-  auto splines = solve(points, k_x, l_x, k_y, l_y);
+    auto splines = solve(points, k_x, l_x, k_y, l_y);
 
-  // Return the full 16 coefficients: 4 for X1, 4 for X2, 4 for Y1, 4 for Y2
-  return std::make_pair(
-      std::vector<double>(splines[0].data(), splines[0].data() + splines[0].size()),  // First X spline (first half)
-      std::vector<double>(splines[1].data(), splines[1].data() + splines[1].size()),  // Second X spline (second half)
-      std::vector<double>(splines[2].data(), splines[2].data() + splines[2].size()),  // First Y spline (first half)
-      std::vector<double>(splines[3].data(), splines[3].data() + splines[3].size())   // Second Y spline (second half)
-  );
+    // Return the full 16 coefficients: 4 for X1, 4 for X2, 4 for Y1, 4 for Y2
+    return std::make_tuple(
+        std::vector<double>(splines[0].data(), splines[0].data() + splines[0].size()),  // First X spline (first half)
+        std::vector<double>(splines[1].data(), splines[1].data() + splines[1].size()),  // Second X spline (second half)
+        std::vector<double>(splines[2].data(), splines[2].data() + splines[2].size()),  // First Y spline (first half)
+        std::vector<double>(splines[3].data(), splines[3].data() + splines[3].size())   // Second Y spline (second half)
+    );
 }
 
 int main() {
@@ -365,14 +367,14 @@ int main() {
     std::vector<std::vector<double>> racelineSplines(chunks.size());
 
     for (size_t i = 0; i < chunks.size(); ++i) {
-        auto result = runOptimizer(*chunks[i], 0.5, 0.5, 0.5);
+        auto [X1, X2, Y1, Y2] = runOptimizer(*chunks[i], 0.5, 0.5, 0.5);
 
         // Combine all coefficients into one vector (16 coefficients per chunk)
         racelineSplines[i] = {
-            result.first[0], result.first[1], result.first[2], result.first[3],  // First X spline (first half)
-            result.second[0], result.second[1], result.second[2], result.second[3],  // Second X spline (second half)
-            result.third[0], result.third[1], result.third[2], result.third[3],  // First Y spline (first half)
-            result.fourth[0], result.fourth[1], result.fourth[2], result.fourth[3]  // Second Y spline (second half)
+            X1[0], X1[1], X1[2], X1[3],  // First X spline (first half)
+            X2[0], X2[1], X2[2], X2[3],  // Second X spline (second half)
+            Y1[0], Y1[1], Y1[2], Y1[3],  // First Y spline (first half)
+            Y2[0], Y2[1], Y2[2], Y2[3]   // Second Y spline (second half)
         };
     }
 
@@ -382,19 +384,19 @@ int main() {
         std::cout << "First Half X: ";
         std::cout << spline[0] << "t^3 + " << spline[1] << "t^2 + " << spline[2] << "t + " << spline[3] << std::endl;
 
-        // Second Half X
-        std::cout << "Second Half X: ";
-        std::cout << spline[4] << "t^3 + " << spline[5] << "t^2 + " << spline[6] << "t + " << spline[7] << std::endl;
-
         // First Half Y
         std::cout << "First Half Y: ";
         std::cout << spline[8] << "t^3 + " << spline[9] << "t^2 + " << spline[10] << "t + " << spline[11] << std::endl;
+
+        // Second Half X
+        std::cout << "Second Half X: ";
+        std::cout << spline[4] << "t^3 + " << spline[5] << "t^2 + " << spline[6] << "t + " << spline[7] << std::endl;
 
         // Second Half Y
         std::cout << "Second Half Y: ";
         std::cout << spline[12] << "t^3 + " << spline[13] << "t^2 + " << spline[14] << "t + " << spline[15] << std::endl;
 
-        std::cout << std::endl;  // Just to separate the two halves
+        std::cout << std::endl;  // Separate chunks
     }
 
     return 0;
