@@ -426,12 +426,6 @@ namespace controls {
 
             // m_spline_frames = process_ros_points(spline_msg.frames);
 
-            // if constexpr (reset_pose_on_spline) {
-            //     m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
-            // } I want the state to be dirtied only by the cones, so disable this for the splines
-
-            // m_orig_spline_data_stamp = spline_msg.header.stamp;
-
             m_logger("finished state estimator spline processing");
         }
         
@@ -468,6 +462,7 @@ namespace controls {
                 paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
                 m_spline_frames.emplace_back(frame.first, frame.second);
             }
+            // float svm_time = 0.0f;
 
             m_orig_spline_data_stamp = cone_msg.orig_data_stamp;
 
@@ -965,7 +960,8 @@ namespace controls {
             const size_t n = m_spline_frames.size();
 
             if (n < 2) {
-                throw std::runtime_error("less than 2 spline frames! (bruh andrew and/or deep)");
+                // throw std::runtime_error("less than 2 spline frames! (bruh andrew and/or deep)");
+                return;
             }
 
             std::vector<Vertex> vertices;
