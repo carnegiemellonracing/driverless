@@ -1,6 +1,45 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Function to evaluate the spline at a given t (between 0 and 1)
+def evaluate_spline(coeffs, t):
+    # Compute the cubic polynomial at the given t
+    return coeffs[0] * t**3 + coeffs[1] * t**2 + coeffs[2] * t + coeffs[3]
+
+# Function to read the spline coefficients from the file
+def read_splines(file_name):
+    splines = []
+    with open(file_name, 'r') as file:
+        for line in file:
+            # Read the coefficients for each chunk (16 coefficients per chunk)
+            coeffs = list(map(float, line.split()))
+            splines.append(coeffs)
+    return splines
+
+# Function to generate the raceline
+def generate_raceline(splines, num_points=100):
+    x_vals = []
+    y_vals = []
+    
+    for spline in splines:
+        # Split the coefficients into two parts (X and Y splines)
+        X1, X2, Y1, Y2 = np.array(spline[:4]), np.array(spline[4:8]), np.array(spline[8:12]), np.array(spline[12:])
+        
+        # Interpolate along the X and Y splines with t ranging from 0 to 0.5
+        for i in range(num_points):
+            t = 0 + (i / (num_points - 1)) * 0.5  # Scale t to go from 0 to 0.5
+            # X and Y values at this t
+            x1 = evaluate_spline(X1, t)
+            y1 = evaluate_spline(Y1, t)
+            x2 = evaluate_spline(X2, t)
+            y2 = evaluate_spline(Y2, t)
+            x_vals.append(x1)
+            y_vals.append(y1)
+            x_vals.append(x2)
+            y_vals.append(y2)
+
+    return np.array(x_vals), np.array(y_vals)
+
 def evaluate_polynomial(coeffs, t):
     """
     Evaluate a cubic polynomial given its coefficients and parameter t.
@@ -9,7 +48,7 @@ def evaluate_polynomial(coeffs, t):
     """
     return coeffs[3] * t**3 + coeffs[2] * t**2 + coeffs[1] * t + coeffs[0]
 
-def plot_parametric_cubic_polynomials(input_data_1, input_data_2, points, num_points=100):
+def plot_parametric_cubic_polynomials(input_data_1, input_data_2, points, file_name = "splines.txt", num_points=100):
     """
     Plot a list of parametric cubic polynomials (x(t), y(t)).
     input_data: List of tuples. Each tuple contains:
@@ -53,6 +92,12 @@ def plot_parametric_cubic_polynomials(input_data_1, input_data_2, points, num_po
         plt.scatter(x_points, y_points, color='black', label='Points')
         for x, y in points:
             plt.text(x, y, f'({x}, {y})', fontsize=9, ha='right')
+
+    # Read spline coefficients from file
+    splines = read_splines(file_name)
+    # Generate the raceline
+    x_vals, y_vals = generate_raceline(splines, num_points)
+    plt.scatter(x_vals, y_vals, marker='.', color='blue')
 
     plt.title("Parametric Cubic Polynomials")
     plt.xlabel("x(t)")

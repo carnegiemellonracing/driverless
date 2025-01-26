@@ -6,6 +6,7 @@
 #include <fstream>
 #include <eigen3/Eigen/Dense>
 #include <tuple>
+#include <fstream>
 
 typedef std::pair<double, double> Point;
 
@@ -378,25 +379,20 @@ int main() {
         };
     }
 
-    // Output results for visualization in cubic form
-    for (const auto& spline : racelineSplines) {
-        // First Half X
-        std::cout << "First Half X: ";
-        std::cout << spline[0] << "t^3 + " << spline[1] << "t^2 + " << spline[2] << "t + " << spline[3] << std::endl;
-
-        // First Half Y
-        std::cout << "First Half Y: ";
-        std::cout << spline[8] << "t^3 + " << spline[9] << "t^2 + " << spline[10] << "t + " << spline[11] << std::endl;
-
-        // Second Half X
-        std::cout << "Second Half X: ";
-        std::cout << spline[4] << "t^3 + " << spline[5] << "t^2 + " << spline[6] << "t + " << spline[7] << std::endl;
-
-        // Second Half Y
-        std::cout << "Second Half Y: ";
-        std::cout << spline[12] << "t^3 + " << spline[13] << "t^2 + " << spline[14] << "t + " << spline[15] << std::endl;
-
-        std::cout << std::endl;  // Separate chunks
+    // Write output to a text file
+    std::ofstream outputFile("splines.txt");
+    if (outputFile.is_open()) {
+        for (const auto& spline : racelineSplines) {
+            // Write coefficients to file
+            outputFile << spline[0] << " " << spline[1] << " " << spline[2] << " " << spline[3] << " "; // First Half X
+            outputFile << spline[4] << " " << spline[5] << " " << spline[6] << " " << spline[7] << " "; // Second Half X
+            outputFile << spline[8] << " " << spline[9] << " " << spline[10] << " " << spline[11] << " "; // First Half Y
+            outputFile << spline[12] << " " << spline[13] << " " << spline[14] << " " << spline[15] << "\n"; // Second Half Y
+        }
+        outputFile.close();
+        std::cout << "Spline coefficients have been written to splines.txt" << std::endl;
+    } else {
+        std::cerr << "Unable to open file for writing!" << std::endl;
     }
 
     return 0;
