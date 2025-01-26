@@ -331,9 +331,9 @@ namespace controls {
             glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
 
             // TODO: make this more modular
-            left_closest = find_closest_point(m_all_left_cones, curr_pos, m_lookahead_squared, left_closest);
-            right_closest = find_closest_point(m_all_right_cones, curr_pos, m_lookahead_squared, right_closest);
-            spline_closest = find_closest_point(m_all_spline, curr_pos, m_lookahead_squared, spline_closest);
+            left_closest = find_closest_point(m_all_left_cones, curr_pos, lookahead_behind_squared, left_closest);
+            right_closest = find_closest_point(m_all_right_cones, curr_pos, lookahead_behind_squared, right_closest);
+            spline_closest = find_closest_point(m_all_spline, curr_pos, lookahead_behind_squared, spline_closest);
 
             right_furthest = find_furthest_point(m_all_right_cones, curr_pos, m_lookahead_squared, right_furthest, right_closest);
             left_furthest = find_furthest_point(m_all_left_cones, curr_pos, m_lookahead_squared, left_furthest, left_closest);

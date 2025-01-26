@@ -65,7 +65,7 @@ namespace controls {
             static constexpr float cone_spacing_arc_inner = 1.5f;
             static constexpr float cone_spacing_arc_outer = 2.5f;
 
-            static constexpr float spline_period = 0.2f;
+            static constexpr float spline_period = 0.1f;
             static constexpr float gps_period = 0.05f;
             static constexpr float sim_step = 0.01f;
             static constexpr float track_width = 4.0f;
