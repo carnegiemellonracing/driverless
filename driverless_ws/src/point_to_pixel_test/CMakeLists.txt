@@ -24,7 +24,7 @@ include_directories(~/Documents/driverless-packages/zed-open-capture/include)
 
 # Point to Pixel Executable
 add_executable(point_to_pixel src/point_to_pixel.cpp)
-ament_target_dependencies(point_to_pixel rclcpp interfaces geometry_msgs Eigen3)
+ament_target_dependencies(point_to_pixel rclcpp interfaces geometry_msgs Eigen3 OpenCV)
 
 target_include_directories(point_to_pixel PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -42,6 +42,10 @@ target_compile_features(zed_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and 
 
 target_link_libraries(zed_node
   ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so)  # Link ZED SDK library
+
+target_link_libraries(point_to_pixel
+  ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so)  # Link ZED SDK library
+target_compile_definitions(point_to_pixel PUBLIC VIDEO_MOD_AVAILABLE)
 
 target_compile_definitions(zed_node PUBLIC VIDEO_MOD_AVAILABLE)
 

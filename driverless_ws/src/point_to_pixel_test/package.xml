@@ -4,7 +4,7 @@
   <name>point_to_pixel_test</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="aryalohia00@gmail.com">aryalohia</maintainer>
+  <maintainer email="alohia@andrew.cmu.edu">aryalohia</maintainer>
   <license>TODO: License declaration</license>
 
   <depend>interfaces</depend>

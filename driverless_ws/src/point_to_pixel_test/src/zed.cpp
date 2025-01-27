@@ -24,7 +24,7 @@ class Zed_Node : public rclcpp::Node
     public:
         Zed_Node(); // Constructor Declaration
 
-        sl_oc::video::VideoCapture cap_;
+        // sl_oc::video::VideoCapture cap_;
     private:
 };
 
@@ -37,6 +37,7 @@ Zed_Node::Zed_Node() : Node("zed_node")
     params.fps = sl_oc::video::FPS::FPS_60;
 
     // cap_ = sl_oc::video::VideoCapture(params);
+    sl_oc::video::VideoCapture cap_(params);
 
     if( !cap_.initializeVideo() )
     {
@@ -61,6 +62,7 @@ Zed_Node::Zed_Node() : Node("zed_node")
         // <---- Conversion from YUV 4:2:2 to BGR for visualization
 
         // RCLCPP_INFO(this->get_logger(), "frame data type: %s", typeid(frame.data));
+        cv::imshow("Display Window", frameBGR);
     }
 }
 
