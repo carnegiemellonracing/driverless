@@ -11,6 +11,9 @@ class Chunk
         double tStart; // t start of the first spline in yellowSplines
         double tEnd; // t end for the last spline in yellowSplines
 
+        double minThirdDer
+        double maxThirdDer
+
         double blueArclengthStart;
         double blueArclengthEnd;
         double blueArclength;

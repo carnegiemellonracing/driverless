@@ -34,8 +34,10 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
     double spline2_first_der = spline2.get_first_der(0);
     double spline1_second_der = spline1.get_second_der(1);
     double spline2_second_der = spline2.get_second_der(0);
-    double spline1_third_der = spline1.get_third_der(1);
+    // double spline1_third_der = spline1.get_third_der(1);
     double spline2_third_der = spline2.get_third_der(0);
+
+
 
     bool inffirst = false;
     if ((spline1_first_der == std::numeric_limits<double>::infinity() && abs(spline2_first_der) >= CHUNK_INFINITY_THRESH) || 
@@ -52,13 +54,27 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
     bool checkSecondDer = infsec || (abs(spline1_second_der - spline2_second_der) <= CHUNK_SECOND_DER_THRESH);
 
     bool infthird = false;
-    if ((spline1_third_der == std::numeric_limits<double>::infinity() && abs(spline2_third_der) >= CHUNK_INFINITY_THRESH) || 
-        (spline2_third_der == std::numeric_limits<double>::infinity()) && abs(spline1_third_der) >= CHUNK_INFINITY_THRESH){
+    if (((this->minThirdDer == std::numeric_limits<double>::infinity() && abs(spline2_third_der) >= CHUNK_INFINITY_THRESH) || 
+        (spline2_third_der == std::numeric_limits<double>::infinity()) && abs(this->minThirdDer) >= CHUNK_INFINITY_THRESH )&&
+        ((this->maxThirdDer == std::numeric_limits<double>::infinity() && abs(spline2_third_der) >= CHUNK_INFINITY_THRESH) || 
+        (spline2_third_der == std::numeric_limits<double>::infinity()) && abs(this->maxThirdDer) >= CHUNK_INFINITY_THRESH )){
             infthird = true;
         }
-    bool checkThirdDer = infthird || (abs(spline1_third_der - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
+    bool checkThirdDerMin = infthird || (abs(this->minThirdDer - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
+    bool checkThirdDerMax = infthird || (abs(this->maxThirdDer - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
 
-    return checkFirstDer && checkSecondDer && checkThirdDer;
+    bool res = checkFirstDer && checkSecondDer && checkThirdDerMax && checkThirdDerMin;
+
+    if (res) {
+        if (spline2_third_der < this->minThirdDer) {
+            this->minThirdDer = spline2_third_der;
+        }
+        else if (spline2_third_der > this->maxThirdDer) {
+            this->maxThirdDer = spline2_third_der;
+        }
+    }
+
+    return res;
 }
 
 /**
@@ -122,6 +138,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     // create a chunk
     Chunk* chunk = new Chunk();
+    chunk->minThirdDer = blueRacetrackSplines[0].get_third_der(0);
+    chunk->maxThirdDer = chunk->minThirdDer;
     chunk->blueSplines.push_back(blueRacetrackSplines[0]);
     chunk->tStart = 0;
     chunk->blueArclengthStart = 0;
@@ -259,6 +277,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 chunk->blueArclengthStart = blueArcStart;
                 // init chunk and add curr spline
                 chunk->blueSplines.push_back(blueRacetrackSplines[i]);
+                chunk->minThirdDer = blueRacetrackSplines[i].get_third_der(0);
+                chunk->maxThirdDer = chunk->minThirdDer;
             }
         }
 
