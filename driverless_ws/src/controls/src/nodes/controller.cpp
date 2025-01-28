@@ -16,6 +16,15 @@
 #include <sstream>
 #include <utils/general_utils.hpp>
 
+void SendControlAction(int16_t a, int16_t b, uint8_t c) {
+    (void) 0;
+}
+
+void SendFinished() {
+    (void) 0;
+}
+
+
 namespace controls {
     namespace nodes {
         ControllerNode::ControllerNode(
@@ -75,8 +84,9 @@ namespace controls {
             // start mppi :D
             // this won't immediately begin publishing, since it waits for the first dirty state
             launch_mppi().detach();
+            m_aim_communication_thread = std::thread(&ControllerNode::aim_communication_loop, this);
         }
-
+        
             void ControllerNode::spline_callback(const SplineMsg& spline_msg) {
                 RCLCPP_DEBUG(get_logger(), "Received spline");
                 rclcpp::Time rcl_orig_time (spline_msg.orig_data_stamp);
@@ -161,6 +171,19 @@ namespace controls {
                 return ss.str();
             }
 #endif
+            static uint8_t swangle_to_rackdisplacement(float swangle) {
+                return 0;
+            }
+
+            ControllerNode::ActionSignal ControllerNode::action_to_signal(Action action) {
+                ActionSignal action_signal;
+
+                action_signal.front_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
+                action_signal.back_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
+                action_signal.rack_displacement_mm = swangle_to_rackdisplacement(action[action_swangle_idx]);
+
+                return action_signal;   
+            }
 
             std::thread ControllerNode::launch_mppi() {
                 return std::thread {[this] {
@@ -206,6 +229,7 @@ namespace controls {
                         Action action = m_mppi_controller->generate_action();
                         auto gen_action_end = std::chrono::high_resolution_clock::now();
                         publish_action(action);
+                        m_last_action_signal = action_to_signal(action);
                         std::string error_str;
 #ifdef DATA
                         std::stringstream parameters_ss;
@@ -389,6 +413,17 @@ namespace controls {
                 RCLCPP_INFO_STREAM(get_logger(), "mppi step complete. info:\n"
                                                      << info_str);
             }
+
+
+            void ControllerNode::aim_communication_loop() {
+                while (rclcpp::ok()) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
+                    ActionSignal last_action_signal = m_last_action_signal;
+                    SendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
+                }
+                SendFinished();
+            }
+        
     }
 }
 
@@ -405,6 +440,8 @@ int main(int argc, char *argv[]) {
 
     rclcpp::init(argc, argv);
     std::cout << "rclcpp initialized" << std::endl;
+
+    //rclcpp::on_shutdown(SendFinished());
 
     // instantiate node
     const auto node = std::make_shared<nodes::ControllerNode>(state_estimator, controller);
@@ -470,6 +507,7 @@ int main(int argc, char *argv[]) {
     }
 
     std::cout << "Shutting down" << std::endl;
+
     rclcpp::shutdown();
     return 0;
 }

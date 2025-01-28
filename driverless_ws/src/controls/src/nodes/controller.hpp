@@ -18,7 +18,6 @@
 
 namespace controls {
     namespace nodes {
-
         /**
          * Controller node! ROS node that subscribes to spline and twist, and publishes control actions and debugging
          * information.
@@ -137,6 +136,19 @@ namespace controls {
             std::fstream m_data_trajectory_log;
             float m_last_cone_process_time = 0.0f;
             float m_last_svm_time = 0.0f;
+
+            struct ActionSignal {
+                int16_t front_torque_mNm = 0;
+                int16_t back_torque_mNm = 0;
+                uint8_t rack_displacement_mm = 0;
+            };
+
+            ActionSignal action_to_signal(Action action);
+
+            ActionSignal m_last_action_signal;
+            std::thread m_aim_communication_thread;
+            std::atomic<bool> m_keep_sending_aim_signal = true;
+            void aim_communication_loop();
         };
     }
 }
