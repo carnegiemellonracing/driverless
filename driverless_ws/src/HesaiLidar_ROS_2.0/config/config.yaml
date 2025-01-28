@@ -31,6 +31,7 @@ lidar:
       ros_recv_packet_topic: /lidar_packets2         #Topic used to receive lidar packets from rosbag
       ros_send_packet_topic: /lidar_packets2         #Topic used to send lidar raw packets through ROS
       ros_send_point_cloud_topic: /lidar_points2     #Topic used to send point cloud through ROS
+      ros_send_cone_topic: /cones
       # ros_send_correction_topic: /lidar_corrections #Topic used to send correction through ROS
       # ros_send_firetime_topic: /lidar_firetime
       ros_send_packet_loss_topic: /lidar_packets_loss2

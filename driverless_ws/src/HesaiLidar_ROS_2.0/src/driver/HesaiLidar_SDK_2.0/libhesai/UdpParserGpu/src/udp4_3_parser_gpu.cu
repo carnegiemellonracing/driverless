@@ -916,6 +916,7 @@ __global__ void compute_xyzs_v4_3_impl(
   gpu::setRing(xyzs[point_index], ichannel % lasernum);
   gpu::setConfidence(xyzs[point_index], point_data[point_index].confidence);
 }
+
 template <typename T_Point>
 int Udp4_3ParserGpu<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame) {
   if (!corrections_loaded_) return int(ReturnCode::CorrectionsUnloaded);
@@ -958,6 +959,9 @@ compute_xyzs_v4_3_impl<<<frame.packet_num, frame.block_num * frame.laser_num>>>(
   auto cone_clusters = runDBSCAN(filtered_points, *num_filtered, eps, min_samples); // Call your coloring function here
   cudaDeviceSynchronize();
   std::cout << "Number of clusters: " << cone_clusters.size() << std::endl;
+  frame.cone_centroids_num = cone_clusters.size();
+  std::memcpy(frame.cone_centroids, cone_clusters.data(), cone_clusters.size() * sizeof(T_Point));
+
 
   cudaFree(filtered_points);
 

@@ -55,6 +55,8 @@ namespace lidar
 #define PACKED __attribute__((packed))
 #endif
 
+//max number of cones in one frame
+static constexpr uint16_t kMaxConeCentroidsPerFrame = 100;
 //max point num of one packet, laser_num * block_num <= kMaxPointsNumPerPacket
 static constexpr uint16_t kMaxPointsNumPerPacket = 512;
 //max packet num of one frame, it means the capacity of frame buffer
@@ -149,6 +151,8 @@ typedef struct _LidarDecodeConfig {
 #define SENSOR_TIMESTAMP_OFFSET         (POINT_DATA_OFFSET + POINT_DATA_LEN)
 #define SENSOR_TIMESTAMP_LEN            (sizeof(uint64_t) * kMaxPacketNumPerFrame)
 #define POINTS_OFFSET                   (SENSOR_TIMESTAMP_OFFSET + SENSOR_TIMESTAMP_LEN)
+#define POINTS_LEN                      (sizeof(PointT) * kMaxPacketNumPerFrame * kMaxPointsNumPerPacket)
+#define CONE_CENTROIDS_OFFSET           (POINTS_OFFSET + POINTS_LEN)
 
 struct PointDecodeData {
   float azimuth;
@@ -167,11 +171,13 @@ class LidarDecodedFrame
     LidarDecodedFrame() {
         total_memory = new uint8_t[sizeof(PointDecodeData) * kMaxPacketNumPerFrame * kMaxPointsNumPerPacket
                                    + sizeof(uint64_t) * kMaxPacketNumPerFrame
-                                   + sizeof(PointT) * kMaxPacketNumPerFrame * kMaxPointsNumPerPacket];
+                                   + sizeof(PointT) * kMaxPacketNumPerFrame * kMaxPointsNumPerPacket
+                                   + sizeof(PointT) * kMaxConeCentroidsPerFrame];
 
         pointData = reinterpret_cast<PointDecodeData* >(total_memory + POINT_DATA_OFFSET);
         sensor_timestamp = reinterpret_cast<uint64_t* >(total_memory + SENSOR_TIMESTAMP_OFFSET);
         points = reinterpret_cast <PointT* >(total_memory + POINTS_OFFSET);
+        cone_centroids = reinterpret_cast <PointT* >(total_memory + CONE_CENTROIDS_OFFSET);
 
         host_timestamp = 0;
         major_version = 0;
@@ -228,10 +234,12 @@ class LidarDecodedFrame
     uint32_t packet_num;
     uint8_t* total_memory = nullptr;                  
     PointT* points = nullptr;
+    uint32_t cone_centroids_num;
+    PointT* cone_centroids;
     PointDecodeData* pointData = nullptr;
     uint16_t block_num;
     uint16_t laser_num;
-    uint32_t per_points_num; 
+    uint32_t per_points_num;
     bool scan_complete;
     double distance_unit;
     int frame_index;
