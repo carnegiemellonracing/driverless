@@ -368,7 +368,7 @@ int main() {
     std::vector<std::vector<double>> racelineSplines(chunks.size());
 
     for (size_t i = 0; i < chunks.size(); ++i) {
-        auto [X1, X2, Y1, Y2] = runOptimizer(*chunks[i], 0.5, 0.5, 0.5);
+        auto [X1, X2, Y1, Y2] = runOptimizer(*chunks[i], 0.25, 0.25, 0.25);
 
         // Combine all coefficients into one vector (16 coefficients per chunk)
         racelineSplines[i] = {
