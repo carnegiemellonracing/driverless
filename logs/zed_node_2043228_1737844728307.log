@@ -1,3 +1,0 @@
-[INFO] [1737844728.349297633] [zed_node]: Connected to ZED camera. /dev/video0
-[INFO] [1737844728.349487623] [zed_node]: Zed Node INITIALIZED
-[INFO] [1737844734.795222174] [rclcpp]: signal_handler(signal_value=2)
