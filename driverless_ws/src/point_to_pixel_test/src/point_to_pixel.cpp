@@ -24,7 +24,7 @@
 using namespace std::chrono_literals;
 using std::placeholders::_1;
 
-#define DEBU
+#define DEBUG 0
 
 class Point_To_Pixel_Node : public rclcpp::Node
 {
@@ -75,13 +75,13 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 {
   params.res = sl_oc::video::RESOLUTION::HD720;
   params.fps = sl_oc::video::FPS::FPS_60;
-  if( !(this->cap_0).initializeVideo(0) )
-  {
-    RCLCPP_ERROR(this->get_logger(), "Cannot open camera 0 video capture");
-    rclcpp::shutdown(); // Shutdown node
-  }
+  // if( !(this->cap_0).initializeVideo(0) )
+  // {
+  //   RCLCPP_ERROR(this->get_logger(), "Cannot open camera 0 video capture");
+  //   rclcpp::shutdown(); // Shutdown node
+  // }
   
-  RCLCPP_INFO(this->get_logger(), "Connected to ZED camera. %s", (this->cap_0).getDeviceName().c_str());
+  // RCLCPP_INFO(this->get_logger(), "Connected to ZED camera. %s", (this->cap_0).getDeviceName().c_str());
 
   if( !(this->cap_1).initializeVideo(2) )
   {
@@ -124,7 +124,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   RCLCPP_INFO(this->get_logger(), "Point to Pixel Node INITIALIZED");
 
   // for opencv test
-  this->canvas = this->cap_0.getLastFrame();
+  // this->canvas = this->cap_0.getLastFrame();
 };
 
 
@@ -142,7 +142,9 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
   // Divide by z coordinate for euclidean normalization
   Eigen::Vector2d pixel_1 (transformed(0)/transformed(2), transformed(1)/transformed(2));
 
-  const sl_oc::video::Frame frame_0 = this->cap_0.getLastFrame();
+  // const sl_oc::video::Frame frame_0 = this->cap_0.getLastFrame();
+
+  RCLCPP_INFO(this->get_logger(), "%d, %d \n", pixel_1(0), pixel_1(1));
   
   #endif
 
@@ -151,32 +153,33 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
   Eigen::Vector2d pixel_1 (point.x, point.y);
   #endif
 
-  cv::Mat frameBGR_0;
+  // cv::Mat frameBGR_0;
 
-    if (frame_0.data != nullptr){
-        // ----> Conversion from YUV 4:2:2 to BGR for visualization
-        // cv::Mat frameYUV_0 = cv::Mat(1280, 720, CV_8UC2, frame_0.data); 
-        cv::Mat frameYUV_0 = cv::Mat(frame_0.height, frame_0.width, CV_8UC2, frame_0.data);
-        // cv::Mat frameBGR_0;
-        cv::cvtColor(frameYUV_0,frameBGR_0,cv::COLOR_YUV2BGR_YUYV);
-        // <---- Conversion from YUV 4:2:2 to BGR for visualization);
-    }
+  //   if (frame_0.data != nullptr){
+  //       // ----> Conversion from YUV 4:2:2 to BGR for visualization
+  //       // cv::Mat frameYUV_0 = cv::Mat(1280, 720, CV_8UC2, frame_0.data); 
+  //       cv::Mat frameYUV_0 = cv::Mat(frame_0.height, frame_0.width, CV_8UC2, frame_0.data);
+  //       // cv::Mat frameBGR_0;
+  //       cv::cvtColor(frameYUV_0,frameBGR_0,cv::COLOR_YUV2BGR_YUYV);
+  //       // <---- Conversion from YUV 4:2:2 to BGR for visualization);
+  //   }
   const sl_oc::video::Frame frame_1 = this->cap_1.getLastFrame();
 
   cv::Mat frameBGR_1;
     if (frame_1.data != nullptr){
         // ----> Conversion from YUV 4:2:2 to BGR for visualization
         // cv::Mat frameYUV_1 = cv::Mat(1280, 720, CV_8UC2, frame_0.data);
+        RCLCPP_INFO(this->get_logger(), "%d, %d", frame_1.height, frame_1.width);
         cv::Mat frameYUV_1 = cv::Mat(frame_1.height, frame_1.width, CV_8UC2, frame_1.data);
         // cv::Mat frameBGR_1;
         cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
         // <---- Conversion from YUV 4:2:2 to BGR for visualization
     }
 
-  if (frame_0.data == nullptr) {
-    RCLCPP_ERROR(this->get_logger(), "Failed to capture frame from camera 0.");
-    return 0;
-  }
+  // if (frame_0.data == nullptr) {
+  //   RCLCPP_ERROR(this->get_logger(), "Failed to capture frame from camera 0.");
+  //   return 0;
+  // }
   if (frame_1.data == nullptr) {
       RCLCPP_ERROR(this->get_logger(), "Failed to capture frame from camera 1.");
       return 0;
@@ -184,7 +187,7 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
 
   std::tuple<int, float> ppm = this->identify_color(pixel_1, frameBGR_1);
 
-  RCLCPP_INFO(this->get_logger(), "Point to Pixel Node INITIALIZED %d, %f", std::get<0>(ppm), std::get<1>(ppm));
+  RCLCPP_INFO(this->get_logger(), "Transformed Cone: %d, %f", std::get<0>(ppm), std::get<1>(ppm));
   
   return std::get<0>(ppm);
 }
@@ -322,8 +325,10 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
 };
 
 void Point_To_Pixel_Node::opencv_callback() {
-  this->frame_0 = this->cap_0.getLastFrame();
+  this->frame_0 = this->cap_1.getLastFrame();
   cv::Mat frameBGR;
+
+
   
   if (frame_0.data != nullptr){
     // RCLCPP_INFO(this->get_logger(), "inside");

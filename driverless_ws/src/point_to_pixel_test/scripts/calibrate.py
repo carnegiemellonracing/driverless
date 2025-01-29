@@ -52,10 +52,10 @@ def get_lidar_input() -> Tuple[float, float, float]:
     """Get LiDAR coordinates."""
     while True:
         try:
-            coords = input('Enter LiDAR coordinates (x y z): ').split()
-            if len(coords) != 3:
-                raise ValueError("Please enter exactly 3 coordinates")
-            return tuple(map(float, coords))
+            x = float(input('x:'))
+            y = float(input('y:'))
+            z = float(input('z:'))
+            return(x, y, z)
         except ValueError as e:
             print(f"Invalid input: {e}. Please try again.")
 
@@ -70,6 +70,7 @@ def mouse_callback(event: int, x: int, y: int, flags: int,
     lidar_coords = get_lidar_input()
     calibration_data.lidar_points.append(lidar_coords)
     calibration_data.camera_points.append((float(x), float(y)))
+    print(f'{(x, y)}')
     print(f'Points collected: {len(calibration_data)}/{min_points}')
 
 def collect_calibration_points(window_name: str, camera_id: int) -> CalibrationPoints:
@@ -77,6 +78,9 @@ def collect_calibration_points(window_name: str, camera_id: int) -> CalibrationP
     calibration_data = CalibrationPoints()
     cap = cv2.VideoCapture(camera_id)
     
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280*2)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
     if not cap.isOpened():
         raise CalibrationError(f"Could not open camera {camera_id}")
 
@@ -104,10 +108,10 @@ def main():
     try:
         # Collect points for both cameras
         print("Collecting points for camera 1...")
-        cam1_data = collect_calibration_points("Camera 1", 0)
+        cam1_data = collect_calibration_points("Camera 1", 2)
         
-        print("Collecting points for camera 2...")
-        cam2_data = collect_calibration_points("Camera 2", 1)
+        # print("Collecting points for camera 2...")
+        # cam2_data = collect_calibration_points("Camera 2", 1)
 
         # Calculate projection matrices
         proj_mat1 = calculate_projection_matrix(
@@ -115,16 +119,19 @@ def main():
             np.array(cam1_data.lidar_points)
         )
         
-        proj_mat2 = calculate_projection_matrix(
-            np.array(cam2_data.camera_points),
-            np.array(cam2_data.lidar_points)
-        )
+        # proj_mat2 = calculate_projection_matrix(
+        #     np.array(cam2_data.camera_points),
+        #     np.array(cam2_data.lidar_points)
+        # )
 
         # Save results in YAML file
         calibration_data = {
-            "proj_mat1": proj_mat1.flatten().tolist(),
-            "proj_mat2": proj_mat2.flatten().tolist(),
-            "confidence_threshold": ct
+            "point_to_pixel": {
+                "ros__parameters": {
+                    "projection_matrix": proj_mat1.flatten().tolist(),
+                    # "proj_mat2": proj_mat2.flatten().tolist(),
+                }
+            } 
         }
 
         with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config/params.yaml"), "w") as f:
