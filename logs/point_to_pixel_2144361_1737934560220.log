@@ -1,0 +1,66 @@
+[DEBUG] [1737934560.220519464] [rclcpp]: signal handler installed
+[DEBUG] [1737934560.220788730] [rcl]: Initializing node 'point_to_pixel' in namespace ''
+[DEBUG] [1737934560.220927976] [rcl]: Using domain ID of '0'
+[DEBUG] [1737934560.228477666] [rcl]: Initializing publisher for topic name '/rosout'
+[DEBUG] [1737934560.228650155] [rcl]: Expanded topic name '/rosout'
+[DEBUG] [1737934560.229259084] [rcl]: Publisher initialized
+[DEBUG] [1737934560.229404238] [rcl]: Node initialized
+[DEBUG] [1737934560.228560723] [rclcpp]: deferred_signal_handler(): waiting for SIGINT or uninstall
+[DEBUG] [1737934560.229578524] [rcl]: Initializing service for service name 'point_to_pixel/get_parameters'
+[DEBUG] [1737934560.229709976] [rcl]: Expanded service name '/point_to_pixel/get_parameters'
+[DEBUG] [1737934560.230001756] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737934560.230013356] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/get_parametersRequest
+[DEBUG] [1737934560.230018583] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/get_parametersReply
+[DEBUG] [1737934560.230023259] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737934560.230185886] [rcl]: Service initialized
+[DEBUG] [1737934560.230210470] [rcl]: Initializing service for service name 'point_to_pixel/get_parameter_types'
+[DEBUG] [1737934560.230225621] [rcl]: Expanded service name '/point_to_pixel/get_parameter_types'
+[DEBUG] [1737934560.230289872] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737934560.230302480] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/get_parameter_typesRequest
+[DEBUG] [1737934560.230310968] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/get_parameter_typesReply
+[DEBUG] [1737934560.230318420] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737934560.230492473] [rcl]: Service initialized
+[DEBUG] [1737934560.230511915] [rcl]: Initializing service for service name 'point_to_pixel/set_parameters'
+[DEBUG] [1737934560.230520133] [rcl]: Expanded service name '/point_to_pixel/set_parameters'
+[DEBUG] [1737934560.230580975] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737934560.230596141] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/set_parametersRequest
+[DEBUG] [1737934560.230608064] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/set_parametersReply
+[DEBUG] [1737934560.230615935] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737934560.230762519] [rcl]: Service initialized
+[DEBUG] [1737934560.230786450] [rcl]: Initializing service for service name 'point_to_pixel/set_parameters_atomically'
+[DEBUG] [1737934560.230798100] [rcl]: Expanded service name '/point_to_pixel/set_parameters_atomically'
+[DEBUG] [1737934560.230864154] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737934560.230877354] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/set_parameters_atomicallyRequest
+[DEBUG] [1737934560.230885189] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/set_parameters_atomicallyReply
+[DEBUG] [1737934560.230892774] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737934560.231135192] [rcl]: Service initialized
+[DEBUG] [1737934560.231157507] [rcl]: Initializing service for service name 'point_to_pixel/describe_parameters'
+[DEBUG] [1737934560.231169182] [rcl]: Expanded service name '/point_to_pixel/describe_parameters'
+[DEBUG] [1737934560.231230334] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737934560.231243164] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/describe_parametersRequest
+[DEBUG] [1737934560.231250831] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/describe_parametersReply
+[DEBUG] [1737934560.231258212] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737934560.231593490] [rcl]: Service initialized
+[DEBUG] [1737934560.231619038] [rcl]: Initializing service for service name 'point_to_pixel/list_parameters'
+[DEBUG] [1737934560.231630753] [rcl]: Expanded service name '/point_to_pixel/list_parameters'
+[DEBUG] [1737934560.231697202] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737934560.231710304] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/list_parametersRequest
+[DEBUG] [1737934560.231825884] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/list_parametersReply
+[DEBUG] [1737934560.231837847] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737934560.232007552] [rcl]: Service initialized
+[DEBUG] [1737934560.232036355] [rcl]: Initializing publisher for topic name '/parameter_events'
+[DEBUG] [1737934560.232048795] [rcl]: Expanded topic name '/parameter_events'
+[DEBUG] [1737934560.232215121] [rcl]: Publisher initialized
+[DEBUG] [1737934560.232287661] [rcl]: Finalizing event
+[DEBUG] [1737934560.232299044] [rcl]: Event finalized
+[DEBUG] [1737934560.232462682] [rcl]: Initializing subscription for topic name '/parameter_events'
+[DEBUG] [1737934560.232478492] [rcl]: Expanded topic name '/parameter_events'
+[DEBUG] [1737934560.232719897] [rcl]: Subscription initialized
+[DEBUG] [1737934560.232754320] [rcl]: Finalizing event
+[DEBUG] [1737934560.232764594] [rcl]: Event finalized
+[INFO] [1737934569.948782309] [rclcpp]: signal_handler(signal_value=2)
+[DEBUG] [1737934569.948830080] [rclcpp]: signal_handler(): SIGINT received, notifying deferred signal handler
+[DEBUG] [1737934569.948874662] [rclcpp]: deferred_signal_handler(): woken up due to SIGINT or uninstall
+[DEBUG] [1737934569.948903519] [rclcpp]: deferred_signal_handler(): SIGINT received, shutting down
+[DEBUG] [1737934569.948936680] [rclcpp]: deferred_signal_handler(): shutting down rclcpp::Context @ 0x56257b265ab0, because it had shutdown_on_sigint == true
+[DEBUG] [1737934569.948946303] [rcl]: Shutting down ROS client library, for context at address: 0x56257b31a280

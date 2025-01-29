@@ -1,0 +1,20 @@
+[INFO] [1737935989.366594881] [point_to_pixel]: Connected to ZED camera. /dev/video1
+[INFO] [1737935989.400282578] [point_to_pixel]: Connected to ZED camera. /dev/video2
+[INFO] [1737935989.403341237] [point_to_pixel]: Point to Pixel Node INITIALIZED
+[INFO] [1737935989.903390638] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935990.403407607] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935990.903500378] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935991.403480394] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935991.903480558] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935992.403465499] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935992.903505760] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935993.403498202] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935993.903501847] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935994.403544101] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935994.903532525] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935995.403539943] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935995.903521038] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935996.403574582] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935996.903588332] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935997.403639026] [point_to_pixel]: Timer callback triggered.
+[INFO] [1737935997.817302373] [rclcpp]: signal_handler(signal_value=2)
