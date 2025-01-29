@@ -1,0 +1,198 @@
+[DEBUG] [1737935015.492473105] [rclcpp]: signal handler installed
+[DEBUG] [1737935015.492518872] [rclcpp]: deferred_signal_handler(): waiting for SIGINT or uninstall
+[DEBUG] [1737935015.492712870] [rcl]: Initializing node 'point_to_pixel' in namespace ''
+[DEBUG] [1737935015.492743373] [rcl]: Using domain ID of '0'
+[DEBUG] [1737935015.498073622] [rcl]: Initializing publisher for topic name '/rosout'
+[DEBUG] [1737935015.498116126] [rcl]: Expanded topic name '/rosout'
+[DEBUG] [1737935015.498646285] [rcl]: Publisher initialized
+[DEBUG] [1737935015.498679156] [rcl]: Node initialized
+[DEBUG] [1737935015.498781424] [rcl]: Initializing service for service name 'point_to_pixel/get_parameters'
+[DEBUG] [1737935015.498790589] [rcl]: Expanded service name '/point_to_pixel/get_parameters'
+[DEBUG] [1737935015.499004905] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737935015.499014417] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/get_parametersRequest
+[DEBUG] [1737935015.499018569] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/get_parametersReply
+[DEBUG] [1737935015.499022246] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737935015.499416500] [rcl]: Service initialized
+[DEBUG] [1737935015.499442243] [rcl]: Initializing service for service name 'point_to_pixel/get_parameter_types'
+[DEBUG] [1737935015.499456709] [rcl]: Expanded service name '/point_to_pixel/get_parameter_types'
+[DEBUG] [1737935015.499512377] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737935015.499519608] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/get_parameter_typesRequest
+[DEBUG] [1737935015.499523756] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/get_parameter_typesReply
+[DEBUG] [1737935015.499527315] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737935015.499699690] [rcl]: Service initialized
+[DEBUG] [1737935015.499717754] [rcl]: Initializing service for service name 'point_to_pixel/set_parameters'
+[DEBUG] [1737935015.499724399] [rcl]: Expanded service name '/point_to_pixel/set_parameters'
+[DEBUG] [1737935015.499768702] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737935015.499775387] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/set_parametersRequest
+[DEBUG] [1737935015.499779312] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/set_parametersReply
+[DEBUG] [1737935015.499782781] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737935015.499950765] [rcl]: Service initialized
+[DEBUG] [1737935015.499967892] [rcl]: Initializing service for service name 'point_to_pixel/set_parameters_atomically'
+[DEBUG] [1737935015.499974564] [rcl]: Expanded service name '/point_to_pixel/set_parameters_atomically'
+[DEBUG] [1737935015.500028900] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737935015.500035972] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/set_parameters_atomicallyRequest
+[DEBUG] [1737935015.500040107] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/set_parameters_atomicallyReply
+[DEBUG] [1737935015.500043790] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737935015.500216385] [rcl]: Service initialized
+[DEBUG] [1737935015.500241504] [rcl]: Initializing service for service name 'point_to_pixel/describe_parameters'
+[DEBUG] [1737935015.500248423] [rcl]: Expanded service name '/point_to_pixel/describe_parameters'
+[DEBUG] [1737935015.500291589] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737935015.500297984] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/describe_parametersRequest
+[DEBUG] [1737935015.500301763] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/describe_parametersReply
+[DEBUG] [1737935015.500305461] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737935015.500460763] [rcl]: Service initialized
+[DEBUG] [1737935015.500477368] [rcl]: Initializing service for service name 'point_to_pixel/list_parameters'
+[DEBUG] [1737935015.500491513] [rcl]: Expanded service name '/point_to_pixel/list_parameters'
+[DEBUG] [1737935015.500536258] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737935015.500543247] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/list_parametersRequest
+[DEBUG] [1737935015.500567478] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/list_parametersReply
+[DEBUG] [1737935015.500572308] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737935015.500744618] [rcl]: Service initialized
+[DEBUG] [1737935015.500767017] [rcl]: Initializing publisher for topic name '/parameter_events'
+[DEBUG] [1737935015.500773649] [rcl]: Expanded topic name '/parameter_events'
+[DEBUG] [1737935015.500923519] [rcl]: Publisher initialized
+[DEBUG] [1737935015.500980097] [rcl]: Finalizing event
+[DEBUG] [1737935015.500994255] [rcl]: Event finalized
+[DEBUG] [1737935015.501101792] [rcl]: Initializing subscription for topic name '/parameter_events'
+[DEBUG] [1737935015.501119000] [rcl]: Expanded topic name '/parameter_events'
+[DEBUG] [1737935015.501278355] [rcl]: Subscription initialized
+[DEBUG] [1737935015.501306695] [rcl]: Finalizing event
+[DEBUG] [1737935015.501312429] [rcl]: Event finalized
+[INFO] [1737935015.505028327] [point_to_pixel]: INFO: Cannot open camera video capture
+[ERROR] [1737935015.505068216] [point_to_pixel]: Cannot open camera video capture
+[INFO] [1737935015.505076233] [point_to_pixel]: Connected to ZED camera. /dev/video0
+[DEBUG] [1737935015.505118154] [rcl]: Initializing publisher for topic name 'colored_cones'
+[DEBUG] [1737935015.505125363] [rcl]: Expanded topic name '/colored_cones'
+[DEBUG] [1737935015.505638690] [rcl]: Publisher initialized
+[DEBUG] [1737935015.505685146] [rcl]: Finalizing event
+[DEBUG] [1737935015.505690809] [rcl]: Event finalized
+[DEBUG] [1737935015.505723137] [rcl]: Initializing subscription for topic name 'cone_array'
+[DEBUG] [1737935015.505732687] [rcl]: Expanded topic name '/cone_array'
+[DEBUG] [1737935015.505951299] [rcl]: Subscription initialized
+[DEBUG] [1737935015.505980714] [rcl]: Finalizing event
+[DEBUG] [1737935015.505994150] [rcl]: Event finalized
+[DEBUG] [1737935015.506061569] [rcl]: Initializing timer with period: 500000000ns
+[INFO] [1737935015.506093434] [point_to_pixel]: Point to Pixel Node INITIALIZED
+[DEBUG] [1737935015.506142152] [rcl]: Initializing wait set with '0' subscriptions, '2' guard conditions, '0' timers, '0' clients, '0' services
+[DEBUG] [1737935015.506195676] [rcl]: Waiting with timeout: 0s + 499875896ns
+[DEBUG] [1737935015.506200753] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935015.506209754] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935015.506213758] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935015.506224485] [rcl]: Waiting with timeout: 0s + 499846900ns
+[DEBUG] [1737935015.506228486] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935015.506287401] [rcl]: Subscription in wait set is ready
+[DEBUG] [1737935015.506312099] [rcl]: Subscription taking message
+[DEBUG] [1737935015.506371767] [rcl]: Subscription take succeeded: true
+[DEBUG] [1737935015.506397086] [rcl]: Waiting with timeout: 0s + 499674359ns
+[DEBUG] [1737935015.506401641] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935015.506405909] [rcl]: Subscription in wait set is ready
+[DEBUG] [1737935015.506409258] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935015.506414590] [rcl]: Subscription taking message
+[DEBUG] [1737935015.506421057] [rcl]: Subscription take succeeded: true
+[DEBUG] [1737935015.506428219] [rcl]: Waiting with timeout: 0s + 499643205ns
+[DEBUG] [1737935015.506432255] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935015.506436592] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935015.506441828] [rcl]: Waiting with timeout: 0s + 499629545ns
+[DEBUG] [1737935015.506445564] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935016.006212379] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935016.006313386] [rcl]: Calling timer
+[INFO] [1737935016.006340174] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935016.006544636] [rcl]: Waiting with timeout: 0s + 499541194ns
+[DEBUG] [1737935016.006573108] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935016.006662062] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935016.006694533] [rcl]: Waiting with timeout: 0s + 499390556ns
+[DEBUG] [1737935016.006711578] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935016.506260777] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935016.506342932] [rcl]: Calling timer
+[INFO] [1737935016.506369831] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935016.506497159] [rcl]: Waiting with timeout: 0s + 499601964ns
+[DEBUG] [1737935016.506524126] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935016.506543342] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935016.506565338] [rcl]: Waiting with timeout: 0s + 499532787ns
+[DEBUG] [1737935016.506581544] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935017.006225706] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935017.006317518] [rcl]: Calling timer
+[INFO] [1737935017.006344174] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935017.006483537] [rcl]: Waiting with timeout: 0s + 499628652ns
+[DEBUG] [1737935017.006510871] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935017.006533264] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935017.006558702] [rcl]: Waiting with timeout: 0s + 499552570ns
+[DEBUG] [1737935017.006577015] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935017.506279814] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935017.506365251] [rcl]: Calling timer
+[INFO] [1737935017.506391840] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935017.506537718] [rcl]: Waiting with timeout: 0s + 499587976ns
+[DEBUG] [1737935017.506563102] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935017.506582996] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935017.506609963] [rcl]: Waiting with timeout: 0s + 499514379ns
+[DEBUG] [1737935017.506626020] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935018.006288583] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935018.006378734] [rcl]: Calling timer
+[INFO] [1737935018.006406060] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935018.006541900] [rcl]: Waiting with timeout: 0s + 499596468ns
+[DEBUG] [1737935018.006572279] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935018.006595641] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935018.006620453] [rcl]: Waiting with timeout: 0s + 499517046ns
+[DEBUG] [1737935018.006638411] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935018.506266146] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935018.506297328] [rcl]: Calling timer
+[INFO] [1737935018.506304723] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935018.506364454] [rcl]: Waiting with timeout: 0s + 499785989ns
+[DEBUG] [1737935018.506371138] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935018.506376235] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935018.506382199] [rcl]: Waiting with timeout: 0s + 499767987ns
+[DEBUG] [1737935018.506385741] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935019.006249635] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935019.006354758] [rcl]: Calling timer
+[INFO] [1737935019.006382194] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935019.006533809] [rcl]: Waiting with timeout: 0s + 499631162ns
+[DEBUG] [1737935019.006560276] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935019.006597897] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935019.006624319] [rcl]: Waiting with timeout: 0s + 499539459ns
+[DEBUG] [1737935019.006640879] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935019.506258314] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935019.506289158] [rcl]: Calling timer
+[INFO] [1737935019.506296528] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935019.506411983] [rcl]: Waiting with timeout: 0s + 499764735ns
+[DEBUG] [1737935019.506486303] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935019.506511211] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935019.506517825] [rcl]: Waiting with timeout: 0s + 499658645ns
+[DEBUG] [1737935019.506539490] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935020.006298750] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935020.006404636] [rcl]: Calling timer
+[INFO] [1737935020.006432293] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935020.006565757] [rcl]: Waiting with timeout: 0s + 499625160ns
+[DEBUG] [1737935020.006592045] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935020.006629715] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935020.006664774] [rcl]: Waiting with timeout: 0s + 499525403ns
+[DEBUG] [1737935020.006682696] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935020.506298835] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935020.506382432] [rcl]: Calling timer
+[INFO] [1737935020.506406496] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935020.506549378] [rcl]: Waiting with timeout: 0s + 499654596ns
+[DEBUG] [1737935020.506577695] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935020.506598034] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935020.506625998] [rcl]: Waiting with timeout: 0s + 499577316ns
+[DEBUG] [1737935020.506642718] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935021.006336933] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935021.006374537] [rcl]: Calling timer
+[INFO] [1737935021.006382210] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935021.006470145] [rcl]: Waiting with timeout: 0s + 499746099ns
+[DEBUG] [1737935021.006476926] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935021.006482482] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935021.006488115] [rcl]: Waiting with timeout: 0s + 499727745ns
+[DEBUG] [1737935021.006491810] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935021.506356376] [rcl]: Timer in wait set is ready
+[DEBUG] [1737935021.506442787] [rcl]: Calling timer
+[INFO] [1737935021.506471412] [point_to_pixel]: Timer callback triggered.
+[DEBUG] [1737935021.506606532] [rcl]: Waiting with timeout: 0s + 499623866ns
+[DEBUG] [1737935021.506632515] [rcl]: Timeout calculated based on next scheduled timer: true
+[DEBUG] [1737935021.506651734] [rcl]: Guard condition in wait set is ready
+[DEBUG] [1737935021.506674955] [rcl]: Waiting with timeout: 0s + 499554479ns
+[DEBUG] [1737935021.506691743] [rcl]: Timeout calculated based on next scheduled timer: true
+[INFO] [1737935021.920089565] [rclcpp]: signal_handler(signal_value=2)
+[DEBUG] [1737935021.920132309] [rclcpp]: signal_handler(): SIGINT received, notifying deferred signal handler
+[DEBUG] [1737935021.920214908] [rclcpp]: deferred_signal_handler(): woken up due to SIGINT or uninstall
+[DEBUG] [1737935021.920246778] [rclcpp]: deferred_signal_handler(): SIGINT received, shutting down
+[DEBUG] [1737935021.920302618] [rclcpp]: deferred_signal_handler(): shutting down rclcpp::Context @ 0x5612f5e991f0, because it had shutdown_on_sigint == true
+[DEBUG] [1737935021.920310782] [rcl]: Shutting down ROS client library, for context at address: 0x5612f5e99400

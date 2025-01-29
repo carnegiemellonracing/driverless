@@ -1,0 +1,47 @@
+[DEBUG] [1737933815.961774922] [rclcpp]: signal handler installed
+[DEBUG] [1737933815.961864342] [rcl]: Initializing node 'point_to_pixel' in namespace ''
+[DEBUG] [1737933815.961878469] [rcl]: Using domain ID of '0'
+[DEBUG] [1737933815.966193202] [rcl]: Initializing publisher for topic name '/rosout'
+[DEBUG] [1737933815.966213637] [rcl]: Expanded topic name '/rosout'
+[DEBUG] [1737933815.966493020] [rcl]: Publisher initialized
+[DEBUG] [1737933815.966528222] [rcl]: Node initialized
+[DEBUG] [1737933815.961828645] [rclcpp]: deferred_signal_handler(): waiting for SIGINT or uninstall
+[DEBUG] [1737933815.966644583] [rcl]: Initializing service for service name 'point_to_pixel/get_parameters'
+[DEBUG] [1737933815.966652792] [rcl]: Expanded service name '/point_to_pixel/get_parameters'
+[DEBUG] [1737933815.966885500] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737933815.966893307] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/get_parametersRequest
+[DEBUG] [1737933815.966896412] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/get_parametersReply
+[DEBUG] [1737933815.966899242] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737933815.967067143] [rcl]: Service initialized
+[DEBUG] [1737933815.967150919] [rcl]: Initializing service for service name 'point_to_pixel/get_parameter_types'
+[DEBUG] [1737933815.967157549] [rcl]: Expanded service name '/point_to_pixel/get_parameter_types'
+[DEBUG] [1737933815.967230558] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737933815.967235774] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/get_parameter_typesRequest
+[DEBUG] [1737933815.967239348] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/get_parameter_typesReply
+[DEBUG] [1737933815.967242682] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737933815.967472703] [rcl]: Service initialized
+[DEBUG] [1737933815.967517421] [rcl]: Initializing service for service name 'point_to_pixel/set_parameters'
+[DEBUG] [1737933815.967523260] [rcl]: Expanded service name '/point_to_pixel/set_parameters'
+[DEBUG] [1737933815.967563104] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737933815.967568580] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/set_parametersRequest
+[DEBUG] [1737933815.967572074] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/set_parametersReply
+[DEBUG] [1737933815.967575390] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737933815.967780297] [rcl]: Service initialized
+[DEBUG] [1737933815.967794333] [rcl]: Initializing service for service name 'point_to_pixel/set_parameters_atomically'
+[DEBUG] [1737933815.967800062] [rcl]: Expanded service name '/point_to_pixel/set_parameters_atomically'
+[DEBUG] [1737933815.967842877] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737933815.967848562] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/set_parameters_atomicallyRequest
+[DEBUG] [1737933815.967852186] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/set_parameters_atomicallyReply
+[DEBUG] [1737933815.967855576] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737933815.968015582] [rcl]: Service initialized
+[DEBUG] [1737933815.968049394] [rcl]: Initializing service for service name 'point_to_pixel/describe_parameters'
+[DEBUG] [1737933815.968055370] [rcl]: Expanded service name '/point_to_pixel/describe_parameters'
+[DEBUG] [1737933815.968096899] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737933815.968102552] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_pixel/describe_parametersRequest
+[DEBUG] [1737933815.968106254] [rmw_fastrtps_cpp]: Pub Topic rr/point_to_pixel/describe_parametersReply
+[DEBUG] [1737933815.968109681] [rmw_fastrtps_cpp]: ***********
+[DEBUG] [1737933815.968346507] [rcl]: Service initialized
+[DEBUG] [1737933815.968396878] [rcl]: Initializing service for service name 'point_to_pixel/list_parameters'
+[DEBUG] [1737933815.968402636] [rcl]: Expanded service name '/point_to_pixel/list_parameters'
+[DEBUG] [1737933815.968460234] [rmw_fastrtps_cpp]: ************ Service Details *********
+[DEBUG] [1737933815.968465542] [rmw_fastrtps_cpp]: Sub Topic rq/point_to_p

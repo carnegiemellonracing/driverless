@@ -1,0 +1,2 @@
+[INFO] [1737696085.617891336] [rosbag2_storage]: Opened database 'third-run-demo-practice-five-laps/third-run-demo-practice-five-laps_0.db3' for READ_ONLY.
+[INFO] [1737696278.767315156] [rclcpp]: signal_handler(signal_value=2)
