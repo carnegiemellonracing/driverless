@@ -63,6 +63,16 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
     bool checkThirdDerMin = infthird || (abs(this->minThirdDer - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
     bool checkThirdDerMax = infthird || (abs(this->maxThirdDer - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
 
+    if (checkFirstDer == false) {
+        std::cout << "check first failed " << std::endl;
+    } else if (checkSecondDer == false) {
+        std::cout << "check second failed " << std::endl;
+    } else if (checkThirdDerMin == false) {
+        std::cout << "check third min failed " << std::endl;
+    } else if (checkThirdDerMax == false) {
+        std::cout << "check third max failed " << std::endl;
+    }
+
     bool res = checkFirstDer && checkSecondDer && checkThirdDerMax && checkThirdDerMin;
 
     if (res) {
