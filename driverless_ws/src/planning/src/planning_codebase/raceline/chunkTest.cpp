@@ -283,62 +283,14 @@ int main() {
     std::vector<std::pair<double, double>> blue_cones = {};
     std::vector<std::pair<double, double>> yellow_cones = {};
 
-    //createSquidwardTrack(blue_cones, yellow_cones);
-    // std::vector<std::pair<double,double>> blue_cones = {
-    //     std::make_pair(400, 400),
-    //     std::make_pair(300, 300),
-    //     std::make_pair(200, 200),
-    //     std::make_pair(100, 100)
-    // };
-
-    // std::vector<std::pair<double,double>> yellow_cones = {
-    //     std::make_pair(400, 400),
-    //     std::make_pair(300, 300),
-    //     std::make_pair(200, 200),
-    //     std::make_pair(100, 100)
-    // };
-
     createSquidwardTrack(blue_cones, yellow_cones);
 
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
-    // if (chunks == nullptr) {
-    //     std::cout << "CHUNKS VECTOR IS NULL" << std::endl;
-    // }
+    std::cout << "YELLOW SPLINE START" << std::endl;
 
-    // if ((*chunks)[0] == nullptr) {
-    //     std::cout << "FIRST CHUNK IS NULL" << std::endl;
-    // }
-
-    // outputting chunks
-    // std::string blue_chunk_file = "/root/driverless/driverless_ws/src/planning/src/planning_codebase/raceline/chunk_vis_blue.txt";
-    // std::string yellow_chunk_file = "/root/driverless/driverless_ws/src/planning/src/planning_codebase/raceline/chunk_vis_yellow.txt";
-    // std::ofstream Blue;
-    // Blue.open(blue_chunk_file, std::ios::out);
-    // std::ofstream Yellow;
-    // Yellow.open(yellow_chunk_file, std::ios::out);
-
-    // spline printing
     for (int i  = 0; i < chunks.size(); i++) {
-        // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
-        // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
-
-        // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
-        //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-        //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-        // }
-
-
         std::cout << "([" << std::endl;
-
-        // for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
-        //     // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-        //     if (j != 0) {
-        //         std::cout << ",";
-        //     }
-        //     print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
-
-        // }
 
         for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
             // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
@@ -351,63 +303,34 @@ int main() {
 
         std::cout << "]," << std::endl;
 
-        // std::cout << " (" << "0" <<  ", " << "1" << ")" << std::endl;
         std::cout << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")" << std::endl;
 
-        // Blue << "#" << std::endl;
         std::cout << ")," << std::endl;
-
-
-        // Yellow << "#" << std::endl;
     }
 
-    std::cout << "midpoints for chunks" << std::endl;
+    std::cout << "YELLOW SPLINE END" << std::endl;
+    std::cout << "BLUE SPLINE START" << std::endl;
 
-    std::cout << "[" << std::endl;
-
-    // print mid point of chunks, list of tuples
     for (int i  = 0; i < chunks.size(); i++) {
-        // std::cout << "start, end: " << chunks[i]->startProdgress << ", " << chunks[i]->endProgress << std::endl;
-        // std::cout << "average curvature: " << chunks[i]->avgCurvature << std::endl;
+        std::cout << "([" << std::endl;
 
-        // for (int j = 0; j < chunks[i]->bluePoints.size(); j++) {
-        //     Blue << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-        //     std::cout << chunks[i]->bluePoints[j].first << "," << chunks[i]->bluePoints[j].second << std::endl;
-        // }
-
-        // for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
-        //     // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-        //     if (j != 0) {
-        //         std::cout << ",";
-        //     }
-        //     print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
-
-        // }
-
+        for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
             // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-        std::cout << " (" << chunks[i]->blueMidX <<  ", " << chunks[i]->blueMidY << ")," << std::endl;
-        std::cout << " (" << chunks[i]->yellowMidX <<  ", " << chunks[i]->yellowMidY << ")," << std::endl;
+            if (j != 0) {
+                std::cout << "," << std::endl;
+            }
+            print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
 
-        // Blue << "#" << std::endl;
+        }
 
-        // Yellow << "#" << std::endl;
+        std::cout << "]," << std::endl;
+
+        std::cout << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")" << std::endl;
+
+        std::cout << ")," << std::endl;
     }
 
-    std::cout << "]" << std::endl;
+    std::cout << "BLUE SPLINE START" << std::endl;
 
-    std::cout << "chunk 3 first der yellow middle (" << chunks[2]->yellowFirstDerMidX << "," << chunks[2]->yellowFirstDerMidY << ")" << std::endl;
-    std::cout << "chunk 3 first der yellow start (" << chunks[2]->yellowFirstDerXStart << "," << chunks[2]->yellowFirstDerYStart << ")" << std::endl;
-    std::cout << "chunk 3 first der yellow end (" << chunks[2]->yellowFirstDerXEnd << "," << chunks[2]->yellowFirstDerYEnd << ")" << std::endl;
-    
-
-    // Blue.close();
-    // Yellow.close();
-
-    // for (int j = 0; j < chunks.size(); j++) {
-    //     for (int i = 0; i < chunks[j]->bluePoints.size(); i++) {
-    //         std::cout << "(" << chunks[j]->bluePoints[i].first << "," << chunks[j]->bluePoints[i].second << ")" << std::endl;
-    //     }
-    // }    
-    
     return 0;
 }
