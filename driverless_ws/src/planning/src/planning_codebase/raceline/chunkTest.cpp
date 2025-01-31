@@ -5,6 +5,8 @@
 #include <cassert>
 #include <fstream>
 
+typedef std::pair<double, double> Point;
+
 // angle to rads?
 double ator(int a){
     return (double) a * M_PI / 180.0;
