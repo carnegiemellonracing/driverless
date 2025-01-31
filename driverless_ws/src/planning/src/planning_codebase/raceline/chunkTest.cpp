@@ -364,6 +364,8 @@ int main() {
     createSquidwardTrack(blue_cones, yellow_cones);
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
 
+    std::cout << "YELLOW SPLINES START" << std::endl;
+
     for (int i  = 0; i < chunks.size(); i++) {
         std::cout << "[" << std::endl;
 
@@ -379,6 +381,27 @@ int main() {
 
         std::cout << "]," << std::endl;
     }
+
+    std::cout << "YELLOW SPLINES END" << std::endl;
+    std::cout << "BLUE SPLINES START" << std::endl;
+
+    for (int i  = 0; i < chunks.size(); i++) {
+        std::cout << "[" << std::endl;
+
+        for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
+            if (j != 0) {
+                std::cout << ",";
+            }
+            print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
+
+        }
+
+        std::cout << "(" << chunk->tStart <<  ", " << chunk->tEnd << ")" << std::endl;
+
+        std::cout << "]," << std::endl;
+    }
+
+    std::cout << "BLUE SPLINES END" << std::endl;
 
     // Vector to hold results: one vector for each chunk, with 16 coefficients (4 X1, 4 X2, 4 Y1, 4 Y2)
     std::vector<std::vector<double>> racelineSplines(chunks.size());
