@@ -66,12 +66,20 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
     bool res = checkFirstDer && checkSecondDer && checkThirdDerMax && checkThirdDerMin;
 
     if (res) {
+        std::cout << "3rd diff with min" << abs(this->minThirdDer - spline2_third_der) << std::endl;
+        std::cout << "3rd diff with max" << abs(this->maxThirdDer - spline2_third_der) << std::endl;
+
+        std::cout << "2nd diff with prev spline" << abs(spline1_second_der - spline2_second_der) << std::endl;
+
+
+
         if (spline2_third_der < this->minThirdDer) {
             this->minThirdDer = spline2_third_der;
         }
         else if (spline2_third_der > this->maxThirdDer) {
             this->maxThirdDer = spline2_third_der;
         }
+
     }
 
     return res;
