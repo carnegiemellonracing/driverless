@@ -9,7 +9,7 @@
 #define CHUNK_LEN_MAX_THRESH 1000
 #define CHUNK_LEN_MIN_THRESH 15
 #define CHUNK_FIRST_DER_THRESH 0.01
-#define CHUNK_SECOND_DER_THRESH 10
+#define CHUNK_SECOND_DER_THRESH 100
 #define CHUNK_THIRD_DER_THRESH 100
 #define CHUNK_INFINITY_THRESH 500.0
 
@@ -69,8 +69,12 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
         std::cout << "check second failed " << std::endl;
     } else if (checkThirdDerMin == false) {
         std::cout << "check third min failed " << std::endl;
+        std::cout << "3rd min" << this->minThirdDer << std::endl;
+        std::cout << "curr 3rd" << spline2_third_der << std::endl;
     } else if (checkThirdDerMax == false) {
         std::cout << "check third max failed " << std::endl;
+        std::cout << "3rd max" << this->maxThirdDer << std::endl;
+        std::cout << "curr 3rd" << spline2_third_der << std::endl;
     }
 
     bool res = checkFirstDer && checkSecondDer && checkThirdDerMax && checkThirdDerMin;
