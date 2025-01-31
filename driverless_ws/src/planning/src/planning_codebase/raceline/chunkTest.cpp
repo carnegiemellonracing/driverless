@@ -325,7 +325,7 @@ int main() {
 
         std::cout << "]," << std::endl;
 
-        std::cout << " (" << 0 <<  ", " << 1 << std::endl;
+        std::cout << " (" << 0 <<  ", " << 1 << ")" << std::endl;
 
         std::cout << ")," << std::endl;
     }
