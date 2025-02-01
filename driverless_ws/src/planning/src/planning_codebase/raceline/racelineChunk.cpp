@@ -321,6 +321,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 chunk->blueFirstSplineArclength = blueCumulativeLen[i]-blueCumulativeLen[i-1];
             }
         }
-
+    }
     return chunkVector;
 }
