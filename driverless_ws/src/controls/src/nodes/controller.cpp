@@ -321,7 +321,7 @@ namespace controls {
                         info.total_latency_ms = total_time_elapsed;
 
                         publish_and_print_info(info, error_str);
-
+                                                
                     }
                 }};
             }

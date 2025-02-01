@@ -26,8 +26,8 @@ namespace controls
          * @param mppi_controller Shared pointer to an mppi controller
          */
         OfflineController(
-            // std::shared_ptr<state::StateEstimator> state_estimator,
-            // std::shared_ptr<mppi::MppiController> mppi_controller,
+            std::shared_ptr<state::StateEstimator> state_estimator,
+            std::shared_ptr<mppi::MppiController> mppi_controller,
             const std::string& input_file);
 
         void process_file(const std::string &input_file,
@@ -37,10 +37,10 @@ namespace controls
 
 
         /** State estimator instance */
-        // std::shared_ptr<state::StateEstimator> m_state_estimator;
+        std::shared_ptr<state::StateEstimator> m_state_estimator;
 
         /** MPPI Controller instance */
-        // std::shared_ptr<mppi::MppiController> m_mppi_controller;
+        std::shared_ptr<mppi::MppiController> m_mppi_controller;
     };
     
 }
