@@ -653,10 +653,6 @@ T_Point* processPointsCUDA(
     cudaFree(d_bin_min_indices);
 
 
-    cudaMemset(d_outlier_count, 0, sizeof(int));
-    cudaMemset(d_bin_min_z, FLT_MAX, total_bins * sizeof(float));
-
-
     cudaEventDestroy(start);
     cudaEventDestroy(stop);
 
@@ -953,7 +949,7 @@ compute_xyzs_v4_3_impl<<<frame.packet_num, frame.block_num * frame.laser_num>>>(
   int* num_filtered = (int*)malloc(sizeof(int));
   auto filtered_points = GraceAndConrad(frame.points, frame.block_num * frame.laser_num * frame.packet_num, alpha, num_bins, height_threshold, num_filtered);
   
-  
+  cudaDeviceSynchronize();
   int min_samples = 2;
   float eps = 0.3f;
   auto cone_clusters = runDBSCAN(filtered_points, *num_filtered, eps, min_samples); // Call your coloring function here
@@ -963,7 +959,7 @@ compute_xyzs_v4_3_impl<<<frame.packet_num, frame.block_num * frame.laser_num>>>(
   std::memcpy(frame.cone_centroids, cone_clusters.data(), cone_clusters.size() * sizeof(T_Point));
 
 
-  cudaFree(filtered_points);
+  free(filtered_points);
 
   // Clustering
 
