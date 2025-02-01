@@ -211,6 +211,7 @@ std::vector<T_Point> runDBSCAN(const T_Point* points_ptr, size_t num_points, flo
         }
     }
 
+
     // Step 4: Compute centroids
     cudaEventRecord(start);
     computeCentroids<<<grid, block>>>(
@@ -255,6 +256,11 @@ std::vector<T_Point> runDBSCAN(const T_Point* points_ptr, size_t num_points, flo
         }
     }
 
+    free(h_parent);
+    free(h_centroids);
+    free(h_cluster_sizes);
+
+
     // Print timing for each step
     std::cout << "Timing Results (ms):" << std::endl;
     std::cout << " - Initialize Clusters: " << time_initialize << std::endl;
@@ -286,6 +292,7 @@ __global__ void assignToGrid(
     int num_segments, int num_bins) {
 
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    
     if (idx >= num_points) return;
 
     T_Point p = points[idx];
@@ -294,12 +301,17 @@ __global__ void assignToGrid(
 
     float range = sqrtf((p.x * p.x) + (p.y * p.y));
 
-    if (fabsf(p.x) > MAX_DISTANCE || fabsf(p.y) > MAX_DISTANCE) return;
+    if (fabsf(p.x) > MAX_DISTANCE || fabsf(p.y) > MAX_DISTANCE) {
+        bins[idx] = 0;
+        segments[idx] = 0;
+        return;
+    }
 
     if (range > MAX_DISTANCE) return; // Discard points further than MAX_DISTANCE
 
 
-    segments[idx] = min(static_cast<int>((angle - angle_min) / (angle_max - angle_min) * num_segments), num_segments - 1);
+    int segment_value = min(static_cast<int>((angle - angle_min) / (angle_max - angle_min) * num_segments), num_segments - 1);
+    segments[idx] = segment_value;
     bins[idx] = min(static_cast<int>((range - range_min) / (range_max - range_min) * num_bins), num_bins - 1);
     // if (idx % 1000 == 0){
     //     printf("Point %d is assigned to bin %d and segment %d \n", idx, bins[idx], segments[idx]);
@@ -336,7 +348,7 @@ template <typename T_Point>
 __global__ void findLowestPointInBin(
     const T_Point* points, const int* segments, const int* bins, 
     unsigned long long* bin_min_z, int* bin_min_indices,
-    int num_points, int num_segments, int num_bins) {
+    int num_points, int total_bins, int num_segments, int num_bins) {
 
     
     int idx = threadIdx.x + blockIdx.x * blockDim.x;
@@ -345,7 +357,10 @@ __global__ void findLowestPointInBin(
     int segment = segments[idx];
     int bin = bins[idx];
     int cell_idx = segment * num_bins + bin;
-    // printf("bin: %d, segment: %d, num_bins: %d, cell_idx %d, point index %d \n", bin, segment, num_bins, cell_idx, idx);
+    // if (cell_idx == 603) return;
+    if (cell_idx >= total_bins){
+        printf("bin: %d, segment: %d, num_bins: %d, cell_idx %d, point index %d \n", bin, segment, num_bins, cell_idx, idx);
+    }
 
     float z = points[idx].z;
 
@@ -554,6 +569,8 @@ T_Point* processPointsCUDA(
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
 
+    std::cout << "Number of points going into processPointsCUDA: " << num_points << "\n"; 
+
     float memAllocTime = 0.0f, assignToGridTime = 0.0f, findLowestPointInBinTime = 0.0f;
 
     // Allocate device memory
@@ -589,8 +606,9 @@ T_Point* processPointsCUDA(
     dim3 block(256);
     dim3 grid((num_points + block.x - 1) / block.x);
 
+
     cudaEventRecord(start);
-    assignToGrid<<<grid, block>>>(d_points, d_segments, d_bins, num_points, -M_PI, M_PI, 0.0f, MAX_DISTANCE, num_segments, num_bins);
+    assignToGrid<<<grid, block>>>(d_points, d_segments, d_bins, num_points, 0.0f, 2*M_PI, 0.0f, MAX_DISTANCE, num_segments, num_bins);
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&assignToGridTime, start, stop);
@@ -605,12 +623,15 @@ T_Point* processPointsCUDA(
     cudaMalloc(&d_bin_min_z, total_bins * sizeof(unsigned long long));
     cudaMalloc(&d_bin_min_indices, total_bins * sizeof(int));
 
-   initializeBinMinZ<<<((total_bins + 255) / 256), 256>>>(d_bin_min_z, total_bins);
+   initializeBinMinZ<<<grid, block>>>(d_bin_min_z, total_bins);
 
+   cudaDeviceSynchronize();
 
+    std::cout << "total_bins is " << total_bins << "\n";
     findLowestPointInBin<<<grid, block>>>(
         d_points, d_segments, d_bins, d_bin_min_z, d_bin_min_indices, 
-        num_points, num_segments, num_bins);    
+        num_points, total_bins, num_segments, num_bins);
+    std::cout << "error caused by lowest point function is " << cudaGetLastError() << "\n";    
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&findLowestPointInBinTime, start, stop);
@@ -726,7 +747,8 @@ T_Point* GraceAndConrad(
     float height_threshold,
     int* num_filtered) {
 
-      // int num_points = points.size();
+    //   int num_points = points.size();
+      std::cout << "Points into GNC: " << num_points << std::endl; 
       
       // // Allocate memory for device points
       auto start = std::chrono::high_resolution_clock::now();
@@ -784,9 +806,12 @@ T_Point* GraceAndConrad(
       float angle_min = *std::min_element(h_block_min.begin(), h_block_min.end());
       float angle_max = *std::max_element(h_block_max.begin(), h_block_max.end());
 
+      std::cout << "angle_max and angle_min respectively are " << angle_max << ", " << angle_min << "\n";
+
       // Free temporary memory
       cudaFree(d_block_min);
       cudaFree(d_block_max);
+      cudaFree(d_points);
 
       // Compute number of segments
       int num_segments = static_cast<int>((angle_max - angle_min) / alpha) + 1;
@@ -916,11 +941,15 @@ __global__ void compute_xyzs_v4_3_impl(
 template <typename T_Point>
 int Udp4_3ParserGpu<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame) {
   if (!corrections_loaded_) return int(ReturnCode::CorrectionsUnloaded);
+  std::cout << "cuda error at the start of the function? " << cudaGetLastError() << "\n";
   auto t1 = std::chrono::high_resolution_clock::now();
   assert(frame.pointData != nullptr);
+  assert(point_data_cu_ != nullptr);
+  std::cout << "cuda error before memcpy? " << cudaGetLastError() << "\n";
   cudaSafeCall(cudaMemcpy(point_data_cu_, frame.pointData,
                           frame.block_num * frame.laser_num * frame.packet_num * sizeof(PointDecodeData), 
                           cudaMemcpyHostToDevice), ReturnCode::CudaMemcpyHostToDeviceError);
+  std::cout << "cuda error after memcpy? " << cudaGetLastError() << "\n";
   cudaSafeCall(cudaMemcpy(sensor_timestamp_cu_, frame.sensor_timestamp,
                           frame.packet_num * sizeof(uint64_t), 
                           cudaMemcpyHostToDevice), ReturnCode::CudaMemcpyHostToDeviceError);                          
@@ -949,18 +978,19 @@ compute_xyzs_v4_3_impl<<<frame.packet_num, frame.block_num * frame.laser_num>>>(
   int* num_filtered = (int*)malloc(sizeof(int));
   auto filtered_points = GraceAndConrad(frame.points, frame.block_num * frame.laser_num * frame.packet_num, alpha, num_bins, height_threshold, num_filtered);
   
-  cudaDeviceSynchronize();
-  int min_samples = 2;
-  float eps = 0.3f;
-  auto cone_clusters = runDBSCAN(filtered_points, *num_filtered, eps, min_samples); // Call your coloring function here
-  cudaDeviceSynchronize();
-  std::cout << "Number of clusters: " << cone_clusters.size() << std::endl;
-  frame.cone_centroids_num = cone_clusters.size();
-  std::memcpy(frame.cone_centroids, cone_clusters.data(), cone_clusters.size() * sizeof(T_Point));
+//   cudaDeviceSynchronize();
+//   int min_samples = 2;
+//   float eps = 0.3f;
+//   auto cone_clusters = runDBSCAN(filtered_points, *num_filtered, eps, min_samples); // Call your coloring function here
+//   free(num_filtered);
+//   cudaDeviceSynchronize();
+//   std::cout << "Number of clusters: " << cone_clusters.size() << std::endl;
+//   frame.cone_centroids_num = cone_clusters.size();
+//   std::memcpy(frame.cone_centroids, cone_clusters.data(), cone_clusters.size() * sizeof(T_Point));
 
 
   free(filtered_points);
-
+//   cudaSafeCall(cudaGetLastError(), ReturnCode::CudaXYZComputingError);
   // Clustering
 
   return 0;
