@@ -47,6 +47,12 @@ class Chunk
         double yellowEndY;
         double yellowFirstDerMidX;
         double yellowFirstDerMidY;
+
+        double blueFirstSplineArclength;
+        double blueLastSplineArclength;
+        double yellowFirstSplineArclength;
+        double yellowLastSplineArclength;
+
         
 
         std::vector<ParameterizedSpline> blueSplines;

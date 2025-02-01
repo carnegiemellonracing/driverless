@@ -63,19 +63,19 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
     bool checkThirdDerMin = infthird || (abs(this->minThirdDer - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
     bool checkThirdDerMax = infthird || (abs(this->maxThirdDer - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
 
-    if (checkFirstDer == false) {
-        std::cout << "check first failed " << std::endl;
-    } else if (checkSecondDer == false) {
-        std::cout << "check second failed " << std::endl;
-    } else if (checkThirdDerMin == false) {
-        std::cout << "check third min failed " << std::endl;
-        std::cout << "3rd min" << this->minThirdDer << std::endl;
-        std::cout << "curr 3rd" << spline2_third_der << std::endl;
-    } else if (checkThirdDerMax == false) {
-        std::cout << "check third max failed " << std::endl;
-        std::cout << "3rd max" << this->maxThirdDer << std::endl;
-        std::cout << "curr 3rd" << spline2_third_der << std::endl;
-    }
+    // if (checkFirstDer == false) {
+    //     std::cout << "check first failed " << std::endl;
+    // } else if (checkSecondDer == false) {
+    //     std::cout << "check second failed " << std::endl;
+    // } else if (checkThirdDerMin == false) {
+    //     std::cout << "check third min failed " << std::endl;
+    //     std::cout << "3rd min" << this->minThirdDer << std::endl;
+    //     std::cout << "curr 3rd" << spline2_third_der << std::endl;
+    // } else if (checkThirdDerMax == false) {
+    //     std::cout << "check third max failed " << std::endl;
+    //     std::cout << "3rd max" << this->maxThirdDer << std::endl;
+    //     std::cout << "curr 3rd" << spline2_third_der << std::endl;
+    // }
 
     bool res = checkFirstDer && checkSecondDer && checkThirdDerMax && checkThirdDerMin;
 
@@ -88,10 +88,10 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
         }
 
     } else {
-        std::cout << "3rd diff with min" << abs(this->minThirdDer - spline2_third_der) << std::endl;
-        std::cout << "3rd diff with max" << abs(this->maxThirdDer - spline2_third_der) << std::endl;
+        // std::cout << "3rd diff with min" << abs(this->minThirdDer - spline2_third_der) << std::endl;
+        // std::cout << "3rd diff with max" << abs(this->maxThirdDer - spline2_third_der) << std::endl;
 
-        std::cout << "2nd diff with prev spline" << abs(spline1_second_der - spline2_second_der) << std::endl;
+        // std::cout << "2nd diff with prev spline" << abs(spline1_second_der - spline2_second_der) << std::endl;
     }
 
     return res;
@@ -163,6 +163,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     chunk->blueSplines.push_back(blueRacetrackSplines[0]);
     chunk->tStart = 0;
     chunk->blueArclengthStart = 0;
+    chunk->blueFirstSplineArclength = blueCumulativeLen[0];
     
     double bluePercentProgress;
     int yellowSplineIdx = 0;
@@ -288,9 +289,28 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             chunk->yellowEndY = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_y.spl_poly, chunk->tEnd);
             chunk->yellowFirstDerMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.first_der, midT);
             chunk->yellowFirstDerMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.first_der, midT);
-            
+            if (chunk->yellowSplines.size() == 1) {
+                chunk->yellowFirstSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, chunk->tEnd);
+                chunk->yellowLastSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, chunk->tEnd);
+            }
+            }
+            else {
+                chunk->yellowFirstSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, 1);
+                chunk->yellowLastSplineArclength = arclength(std::make_pair(chunk->yellowSplines[chunk->yellowSplines.size()-1].spline_x.spl_poly, chunk->yellowSplines[chunk->yellowSplines.size()-1].spline_y.spl_poly), 0, chunk->tEnd);
+            }
 
             if (i != blueRacetrackSplines.size()) {
+                if (i > 1) {
+                    chunk->blueLastSplineArclength = blueCumulativeLen[i-1] - blueCumulativeLen[i-2];
+                }
+                else {
+                     chunk->blueLastSplineArclength = blueCumulativeLen[0];
+                }
+
+                std::cout << "blue first spline leng" << chunk->blueFirstSplineArclength << std::endl;
+                std::cout << "blue last spline leng" << chunk->blueLastSplineArclength << std::endl;
+                std::cout << "yellow first spline leng" << chunk->yellowFirstSplineArclength << std::endl;
+                std::cout << "yellow last spline leng" << chunk->yellowLastSplineArclength << std::endl;
 
                 chunk = new Chunk();
                 chunk->tStart = nextTStart;
@@ -299,10 +319,9 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 chunk->blueSplines.push_back(blueRacetrackSplines[i]);
                 chunk->minThirdDer = blueRacetrackSplines[i].get_third_der(0);
                 chunk->maxThirdDer = chunk->minThirdDer;
+                chunk->blueFirstSplineArclength = blueCumulativeLen[i]-blueCumulativeLen[i-1];
             }
         }
-
-    }
 
     return chunkVector;
 }
