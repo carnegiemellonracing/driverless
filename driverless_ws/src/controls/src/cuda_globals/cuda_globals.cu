@@ -4,7 +4,8 @@
 
 namespace controls {
     namespace cuda_globals {
-        __constant__ cudaTextureObject_t curv_frame_lookup_tex;
+        __constant__ cudaTextureObject_t left_curv_frame_lookup_tex;
+        __constant__ cudaTextureObject_t right_curv_frame_lookup_tex;
         __constant__ CurvFrameLookupTexInfo curv_frame_lookup_tex_info;
 
         __constant__ float curr_state[state_dims] = {0, 0, 0, 0};

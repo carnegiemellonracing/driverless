@@ -161,23 +161,26 @@ namespace controls {
             /// in m_curv_frame_lookup_tex_info.
             void gen_tex_info(glm::fvec2 car_pos);
 
-            void render_fake_track();
+            void render_left_track();
+            void render_right_track();
             /**
              * Render the lookup table into m_curv_frame_lookup_fbo
              */
-            void render_curv_frame_lookup();
+            void render_left_curv_frame_lookup();
+            void render_right_curv_frame_lookup();
             /**
              * Maps the rendered OpenGL frame buffer to a CUDA texture (cuda_globals::curv_frame_lookup_tex)
              * Since the OpenGL frame buffer can't be referred to by the rest of the code directly.
              */
-            void map_curv_frame_lookup();
+            void map_left_curv_frame_lookup();
+            void map_right_curv_frame_lookup();
             /**
              * Unmaps the frame buffer from CUDA memory, since
              * you can't render to something when it is mapped.
              * Think about it like releasing a mutex.
              */
-            void unmap_curv_frame_lookup();
-
+            void unmap_left_curv_frame_lookup();
+            void unmap_right_curv_frame_lookup();
             /**
              * @brief Syncs m_curv_frame_lookup_tex_info to cuda_globals so it can be accessed by MPPI
              */
@@ -185,9 +188,12 @@ namespace controls {
             /**
              * @brief Creates the frame and render buffers (m_curv_frame_lookup_fbo/rbo).
              */
-            void gen_curv_frame_lookup_framebuffer();
+            void gen_left_curv_frame_lookup_framebuffer();
+            void gen_right_curv_frame_lookup_framebuffer();
 
             void gen_fake_track();
+            void gen_left_track();
+            void gen_right_track();
 
             /**
              * Creates the buffers to be used, as well as the descriptions of how the buffers are laid out.
@@ -203,6 +209,8 @@ namespace controls {
              */
             void fill_path_buffers_cones();
             void fill_path_buffers_spline();
+            void fill_left_path_buffers_spline();
+            void fill_right_path_buffers_spline();
 
             struct Vertex {
                 struct {
@@ -222,6 +230,8 @@ namespace controls {
 
             /// Stores the sequence of (x,y) spline points from path planning.
             std::vector<glm::fvec2> m_spline_frames;
+            std::vector<glm::fvec2> m_left_spline_frames;
+            std::vector<glm::fvec2> m_right_spline_frames;
 
             std::vector<glm::fvec2> m_all_left_cone_points;
             std::vector<glm::fvec2> m_all_right_cone_points;
@@ -242,12 +252,14 @@ namespace controls {
 
             ///// -----OPENGL OBJECTS----- /////
 
-            cudaGraphicsResource_t m_curv_frame_lookup_rsc;
+            cudaGraphicsResource_t m_left_curv_frame_lookup_rsc;
+            cudaGraphicsResource_t m_right_curv_frame_lookup_rsc;
             /// Center and scale information (transformation from IRL to rendered coordinates)
-            cuda_globals::CurvFrameLookupTexInfo m_curv_frame_lookup_tex_info;            
+            cuda_globals::CurvFrameLookupTexInfo m_curv_frame_lookup_tex_info;             
             /// Frame buffer object. Where the OpenGL shader pipeline renders to. The actual lookup table.
             /// OpenGL object, not a CUDA object.
-            GLuint m_curv_frame_lookup_fbo;
+            GLuint m_left_curv_frame_lookup_fbo;
+            GLuint m_right_curv_frame_lookup_fbo;
             /**
              * TODO:
              * 1. Make the fbo complete
@@ -255,11 +267,20 @@ namespace controls {
              * 3. Delete the framebuffer after use
              */
             /// Render buffer object. Render target for the fbo, used to map to CUDA memory
-            GLuint m_curv_frame_lookup_rbo;
+            GLuint m_left_curv_frame_lookup_rbo;
+            GLuint m_right_curv_frame_lookup_rbo;
 
             GLuint m_fake_track_fbo;
+            GLuint m_left_track_fbo;
+            GLuint m_right_track_fbo;  
+            
             GLuint m_fake_track_texture_color;
+            GLuint m_left_track_texture_color;
+            GLuint m_right_track_texture_color;
+
             utils::GLObj m_fake_track_path;
+            utils::GLObj m_left_track_path;
+            utils::GLObj m_right_track_path;
             GLuint m_fake_track_shader_program; 
 
             /**
@@ -278,7 +299,8 @@ namespace controls {
             SDL_Window* m_gl_window;
 
             /// Whether the frame buffer is mapped to CUDA memory or not
-            bool m_curv_frame_lookup_mapped = false;
+            bool m_left_curv_frame_lookup_mapped = false;
+            bool m_right_curv_frame_lookup_mapped = false;
 
             LoggerFunc m_logger; ///< The logger function to be used.
             rclcpp::Logger m_logger_obj; ///< Logger object (belonging to the node)

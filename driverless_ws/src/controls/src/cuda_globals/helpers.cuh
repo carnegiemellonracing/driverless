@@ -12,7 +12,7 @@ namespace controls {
          * @param[out] curv_pose [progress, offset, heading] in curvilinear frame
          * @param[out] out_of_bounds true if the world pose is out of bounds of the lookup table.
          */
-        __device__ static void sample_curv_state(const float world_pose[3], float curv_pose[3], bool& out_of_bounds) {
+        __device__ static void sample_curv_state(const float world_pose[3], float curv_pose[6], bool& out_of_bounds) {
             const float x = world_pose[0];
             const float y = world_pose[1];
             const float yaw = world_pose[2];
@@ -23,13 +23,17 @@ namespace controls {
             const float u = (x - xmin) / curv_frame_lookup_tex_info.width;
             const float v = (y - ymin) / curv_frame_lookup_tex_info.width;
 
-            const float4 parallel_pose = tex2D<float4>(curv_frame_lookup_tex, u, v);
-            
-            paranoid_assert(isnan(parallel_pose.x) || isnan(parallel_pose.y) || isnan(parallel_pose.z) || isnan(parallel_pose.w));
-            
-            curv_pose[0] = parallel_pose.x;
-            curv_pose[1] = parallel_pose.y;
-            curv_pose[2] = yaw - parallel_pose.z;
+            const float4 left_parallel_pose = tex2D<float4>(left_curv_frame_lookup_tex, u, v);
+            const float4 right_parallel_pose = tex2D<float4>(right_curv_frame_lookup_tex, u, v);
+            paranoid_assert(isnan(left_parallel_pose.x) || isnan(left_parallel_pose.y) || isnan(left_parallel_pose.z) || isnan(left_parallel_pose.w));
+            paranoid_assert(isnan(right_parallel_pose.x) || isnan(right_parallel_pose.y) || isnan(right_parallel_pose.z) || isnan(right_parallel_pose.w));
+
+            curv_pose[0] = left_parallel_pose.x;
+            curv_pose[1] = left_parallel_pose.y;
+            curv_pose[2] = yaw - left_parallel_pose.z;
+            curv_pose[0] = right_parallel_pose.x;
+            curv_pose[1] = right_parallel_pose.y;
+            curv_pose[2] = yaw - right_parallel_pose.z;
 
             // if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
             //     printf("tex info: %f, %f, %f\n", curv_frame_lookup_tex_info.xcenter, curv_frame_lookup_tex_info.ycenter, curv_frame_lookup_tex_info.width);
@@ -37,7 +41,7 @@ namespace controls {
             // }
             // __syncthreads();
 
-            out_of_bounds = parallel_pose.w < 0.5f;
+            out_of_bounds = left_parallel_pose.w < 0.5f;
         }
     }
 }

@@ -64,7 +64,7 @@ namespace controls {
             const float world_state[state_dims], const float action[], const float last_taken_action[],
             float start_progress, float time_since_traj_start, bool first) {
 
-            float cent_curv_pose[3];
+            float cent_curv_pose[6];
             bool cent_out_of_bounds;
 
             cuda_globals::sample_curv_state(world_state, cent_curv_pose, cent_out_of_bounds);
@@ -89,7 +89,7 @@ namespace controls {
                 }
             }
 
-            const float progress = cent_curv_pose[0];
+            const float progress = cent_curv_pose[0] + cent_curv_pose[3];
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
             const float actual_speed_along = world_state[3];
