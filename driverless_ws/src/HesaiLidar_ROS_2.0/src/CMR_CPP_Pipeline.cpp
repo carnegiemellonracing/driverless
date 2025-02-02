@@ -303,12 +303,12 @@ PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon, int mi
   return cloud;
 }
 
-PointCloud<LidarPointXYZ> run_pipeline(PointCloud<LidarPointXYZ> &cloud, double alpha, 
+PointCloud<PointXYZ> run_pipeline(LidarDecodedFrame<LidarPointXYZIRT> &frame, double alpha, 
                                     int num_bins, double height_threshold, double epsilon, int min_points, double epsilon2, int min_points2) {
 
   // Convert LidarPointXYZ to PointXYZ
   PointCloud<PointXYZ> cloud_xyz;
-  for (const auto &point : cloud.points) {
+  for (const auto &point : frame.points) {
     cloud_xyz.push_back(PointXYZ(point.x, point.y, point.z));
   }
 
@@ -316,11 +316,5 @@ PointCloud<LidarPointXYZ> run_pipeline(PointCloud<LidarPointXYZ> &cloud, double 
   PointCloud<PointXYZ> clustered_cloud = DBSCAN(GNC_cloud, epsilon, min_points);
   PointCloud<PointXYZ> filtered_cloud = DBSCAN2(clustered_cloud, epsilon2, min_points2);
 
-  // Convert PointXYZ to LidarPointXYZ
-  PointCloud<LidarPointXYZ> filtered_cloud_lidar;
-  for (const auto &point : filtered_cloud.points) {
-    filtered_cloud_lidar.push_back(LidarPointXYZ(point.x, point.y, point.z));
-  }
-
-  return filtered_cloud_lidar;
+  return filtered_cloud;
 }

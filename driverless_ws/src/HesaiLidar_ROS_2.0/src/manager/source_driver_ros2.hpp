@@ -263,23 +263,20 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarD
   sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_msg, "z");
   int num_valid_points = 0;
   float epsilon = 0.1;
-
-  PointCloud<LidarPointXYZ> original_cloud;
   // int counter = 0;
   
-  for (size_t i = 0; i < frame.points_num; i++)
-  {
+  // for (size_t i = 0; i < frame.points_num; i++)
+  // {
 
-    LidarPointXYZIRT point = frame.points[i];
-    if (std::abs(point.x) < epsilon && std::abs(point.y) < epsilon && std::abs(point.z) < epsilon) {
-      continue;
-    }
-    // counter++;
-    // if (counter == 3) {
-    original_cloud.push_back(LidarPointXYZ(point.x, point.y, point.z));
-    //   counter = 0;
-    // }
-  }
+  //   LidarPointXYZIRT point = frame.points[i];
+  //   if (std::abs(point.x) < epsilon && std::abs(point.y) < epsilon && std::abs(point.z) < epsilon) {
+  //     continue;
+  //   }
+  //   // counter++;
+  //   // if (counter == 3) {
+  //   //   counter = 0;
+  //   // }
+  // }
   // Define Constants 
   double cpp_alpha = 0.1;
   int cpp_num_bins = 10;
@@ -289,7 +286,7 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarD
   double cpp_epsilon2 = 3;
   int cpp_min_points2 = 3;
 
-  PointCloud<PointXYZ> filtered_cloud = run_pipeline(original_cloud, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
+  PointCloud<PointXYZ> filtered_cloud = run_pipeline(frame, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
 
   for (size_t i = 0; i < filtered_cloud.size(); i++) {
     *iter_x_ = filtered_cloud.points[i].x;
