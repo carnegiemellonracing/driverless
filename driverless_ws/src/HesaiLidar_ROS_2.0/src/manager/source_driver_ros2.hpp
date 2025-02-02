@@ -264,7 +264,7 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarD
   int num_valid_points = 0;
   float epsilon = 0.1;
 
-  PointCloud<PointXYZ> original_cloud;
+  PointCloud<LidarPointXYZ> original_cloud;
   // int counter = 0;
   
   for (size_t i = 0; i < frame.points_num; i++)
@@ -276,20 +276,20 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarD
     }
     // counter++;
     // if (counter == 3) {
-    original_cloud.push_back(PointXYZ(point.x, point.y, point.z));
+    original_cloud.push_back(LidarPointXYZ(point.x, point.y, point.z));
     //   counter = 0;
     // }
   }
   // Define Constants 
-  double alpha = 0.1;
-  int num_bins = 10;
-  double height_threshold = 0.13;
-  double epsilon = 0.2;
-  int min_points = 3;
-  double epsilon2 = 3;
-  int min_points2 = 3;
+  double cpp_alpha = 0.1;
+  int cpp_num_bins = 10;
+  double cpp_height_threshold = 0.13;
+  double cpp_epsilon = 0.2;
+  int cpp_min_points = 3;
+  double cpp_epsilon2 = 3;
+  int cpp_min_points2 = 3;
 
-  PointCloud<PointXYZ> filtered_cloud = run_pipeline(original_cloud, alpha, num_bins, height_threshold, epsilon, min_points, epsilon2, min_points2);
+  PointCloud<PointXYZ> filtered_cloud = run_pipeline(original_cloud, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
 
   for (size_t i = 0; i < filtered_cloud.size(); i++) {
     *iter_x_ = filtered_cloud.points[i].x;
