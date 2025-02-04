@@ -1,4 +1,4 @@
-Raceline Algorithm
+//Raceline Algorithm
 
 #include <math.h>
 #include <vector>
@@ -380,17 +380,21 @@ int main() {
     std::vector<std::pair<double, double>> blue_cones = {};
     std::vector<std::pair<double, double>> yellow_cones = {};
     
-    auto start_chunking = std::chrono::high_resolution_clock::now();
-    std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
-    auto end_chunking = std::chrono::high_resolution_clock::now();
-    auto dur_chunking = duration_cast<microseconds>(end_chunking - start_chunking);
-    std::cout << "Chunking time: " << dur_chunking.count() << std::endl;
     createSquidwardTrack(blue_cones, yellow_cones);
+    
+    int max_total_raceline_gen_time = std::numeric_limits<int>::min();
     for (size_t i = 0; i<100; ++i) {
-    	
+        std::cout << "===========================" << std::endl;
+    	auto start_chunking = std::chrono::high_resolution_clock::now();
+        std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
+        auto end_chunking = std::chrono::high_resolution_clock::now();
+        auto dur_chunking = duration_cast<microseconds>(end_chunking - start_chunking);
+        std::cout << "Chunking time: " << dur_chunking.count() << std::endl;
+
     	double dstart = 0.5; 
     	// Vector to hold results: one vector for each chunk, with 16 coefficients (4 X1, 4 X2, 4 Y1, 4 Y2)
     	std::vector<std::vector<double>> racelineSplines(chunks.size());
+        int max_indiv_raceline_gen_time = std::numeric_limits<int>::min();
     	auto start_raceline_gen = std::chrono::high_resolution_clock::now();
     	for (size_t i = 0; i < chunks.size(); ++i) {
     	    // Define param2 and param4 dynamically for each chunk
@@ -407,13 +411,29 @@ int main() {
     	    dstart = dend;
     	    auto end_cur_raceline_gen = std::chrono::high_resolution_clock::now();
     	    auto dur_cur_raceline_gen = duration_cast<microseconds>(end_cur_raceline_gen - start_cur_raceline_gen);
-    	    std::cout << "\t Current raceline gen time: " << dur_cur_raceline_gen.count();
+
+            if (max_indiv_raceline_gen_time < dur_cur_raceline_gen.count()) {
+                max_indiv_raceline_gen_time = dur_cur_raceline_gen.count();
+            }
+    	    // std::cout << "\t Current raceline gen time: " << dur_cur_raceline_gen.count() << " microseconds" << std::endl;
 
     	}
     	auto end_raceline_gen = std::chrono::high_resolution_clock::now();
     	auto dur_raceline_gen = duration_cast<microseconds>(end_raceline_gen - start_raceline_gen);
-    	std::cout << "Raceline gen entire track time: " << dur_raceline_gen.count() << std::endl;
+
+        if (max_total_raceline_gen_time < dur_raceline_gen.count() + dur_chunking.count()) {
+            max_total_raceline_gen_time = dur_raceline_gen.count() + dur_chunking.count();
+        }
+        std::cout << "Raceline gen longest individual run time: " << max_indiv_raceline_gen_time << " microseconds" << std::endl;
+    	std::cout << "Raceline gen entire track time: " << dur_raceline_gen.count() << " microseconds" << std::endl;
+        std::cout << "===========================" << std::endl;
     }
+
+    std::cout << "===========================" << std::endl;
+    std::cout << "End results: " << std::endl;
+    std::cout << "Longest pipeline time: " << max_total_raceline_gen_time << std::endl;
+    std::cout << "===========================" << std::endl;
+
     // Write output to a text file
     //std::ofstream outputFile("src/planning/src/planning_codebase/raceline/splines.txt");
     //if (outputFile.is_open()) {
