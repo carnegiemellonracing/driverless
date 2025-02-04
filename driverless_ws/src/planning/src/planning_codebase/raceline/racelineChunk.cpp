@@ -306,11 +306,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                      chunk->blueLastSplineArclength = blueCumulativeLen[0];
                 }
 
-                std::cout << "blue first spline leng" << chunk->blueFirstSplineArclength << std::endl;
-                std::cout << "blue last spline leng" << chunk->blueLastSplineArclength << std::endl;
-                std::cout << "yellow first spline leng" << chunk->yellowFirstSplineArclength << std::endl;
-                std::cout << "yellow last spline leng" << chunk->yellowLastSplineArclength << std::endl;
-
                 chunk = new Chunk();
                 chunk->tStart = nextTStart;
                 chunk->blueArclengthStart = blueArcStart;
