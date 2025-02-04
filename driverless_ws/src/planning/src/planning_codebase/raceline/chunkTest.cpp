@@ -5,6 +5,7 @@
 #include "racelineChunk.hpp"
 #include <cassert>
 #include <fstream>
+#include <chrono>
 
 typedef std::pair<double, double> Point;
 
@@ -287,7 +288,11 @@ int main() {
 
     createSquidwardTrack(blue_cones, yellow_cones);
 
+    auto start = std::chrono::high_resolution_clock::now();
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
 
     std::cout << "YELLOW SPLINE START" << std::endl;
 
