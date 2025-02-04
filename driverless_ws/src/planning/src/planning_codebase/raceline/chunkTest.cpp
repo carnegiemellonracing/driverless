@@ -299,21 +299,32 @@ Point pointAlongLine(const Point& blue_point, const Point& yellow_point, double 
 }
 
 // Function to solve the large matrix equation
-std::vector<Eigen::VectorXd> solve(const std::vector<Point>& points, double k_x, double l_x, double k_y, double l_y) {
+std::vector<Eigen::VectorXd> solve(const std::vector<Point>& points, double t, double k_x, double l_x, double k_y, double l_y) {
     Eigen::VectorXd b_x(8), b_y(8);
     b_x << points[0].first, points[1].first, points[1].first, points[2].first, k_x, l_x, 0, 0;
     b_y << points[0].second, points[1].second, points[1].second, points[2].second, k_y, l_y, 0, 0;
 
     // Hardcoded inverse matrix
-    Eigen::MatrixXd A_inverse(8, 8);
-    A_inverse << 10, -10, -6, 6, 3, -1, 2, 0.25,
-                 -9, 9, 3, -3, -3.5, 0.5, -1, -0.125,
+    // Eigen::MatrixXd A_inverse(8, 8);
+    // A_inverse << 10, -10, -6, 6, 3, -1, 2, 0.25,
+    //              -9, 9, 3, -3, -3.5, 0.5, -1, -0.125,
+    //              0, 0, 0, 0, 1, 0, 0, 0,
+    //              1, 0, 0, 0, 0, 0, 0, 0,
+    //              -6, 6, 10, -10, -1, 3, -2, 0.25,
+    //              6, -6, -6, 6, 1, -1, 2, -0.25,
+    //              -1.5, 1.5, -1.5, 1.5, -0.25, -0.25, -0.5, 0.0625,
+    //              0, 0, 1, 0, 0, 0, 0, 0;
+
+    //Hardcoded inverse matrix (t scaled from 0 to t)
+    Eigen::MatrixXd A_inverse(8,8);
+    A_inverse << 10/pow(t,3), -8/pow(t,3), -8/pow(t,3), 6/pow(t,3), 3/pow(t,3), -1/pow(t,2), 0, 0,
+                 -9/pow(t,2), 6/pow(t,2), 6/pow(t,2), -3/pow(t,2), -3.5/t, 0.5/t, 0, 0,
                  0, 0, 0, 0, 1, 0, 0, 0,
                  1, 0, 0, 0, 0, 0, 0, 0,
-                 -6, 6, 10, -10, -1, 3, -2, 0.25,
-                 6, -6, -6, 6, 1, -1, 2, -0.25,
-                 -1.5, 1.5, -1.5, 1.5, -0.25, -0.25, -0.5, 0.0625,
-                 0, 0, 1, 0, 0, 0, 0, 0;
+                 -6/pow(t,3), 8/pow(t,3), 8/pow(t,3), -10/pow(t,3), -1/pow(t,2), 3/pow(t,2), 0, 0,
+                 6/pow(t,2), -6/pow(t,2), -6/pow(t,2), 6/pow(t,2), 1/t, -1/t, 0, 0,
+                 -1.5/t, 0, 0, 1.5/t, -0.25, -0.25, 0, 0,
+                 0, 0.5, 0.5, 0, 0, 0, 0, 0;
 
     Eigen::VectorXd X = A_inverse * b_x;
     Eigen::VectorXd Y = A_inverse * b_y;
@@ -332,9 +343,6 @@ runOptimizer(Chunk& chunk, double d1, double d2, double d3) {
 
     Point blueEnd = {chunk.blueEndX, chunk.blueEndY};
     Point yellowEnd = {chunk.yellowEndX, chunk.yellowEndY};
-
-    // TODO: check with chunking to see what first der start and end mean
-    // You may need the start deriv of the next chunk and the end deriv of the previous chunk
 
     double blueFirstDerXStart = chunk.blueFirstDerXStart;
     double blueFirstDerXEnd = chunk.blueFirstDerXEnd;
@@ -361,7 +369,8 @@ runOptimizer(Chunk& chunk, double d1, double d2, double d3) {
     double l_x = yellowFirstDerXEnd;
     double l_y = yellowFirstDerYEnd;
 
-    auto splines = solve(points, k_x, l_x, k_y, l_y);
+    //modify t value here (second argument)
+    auto splines = solve(points, 1, k_x, l_x, k_y, l_y);
 
     // Return the full 16 coefficients: 4 for X1, 4 for X2, 4 for Y1, 4 for Y2
     return std::make_tuple(
