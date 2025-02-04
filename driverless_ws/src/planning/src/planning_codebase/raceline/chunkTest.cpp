@@ -294,81 +294,81 @@ int main() {
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
 
-    std::cout << "YELLOW SPLINE START" << std::endl;
+    // std::cout << "YELLOW SPLINE START" << std::endl;
 
-    for (int i  = 0; i < chunks.size(); i++) {
-        std::cout << "([" << std::endl;
+    // for (int i  = 0; i < chunks.size(); i++) {
+    //     std::cout << "([" << std::endl;
 
-        for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
-            // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-            if (j != 0) {
-                std::cout << "," << std::endl;
-            }
-            print_poly(chunks[i]->yellowSplines[j].spline_x, chunks[i]->yellowSplines[j].spline_y);
+    //     for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
+    //         // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
+    //         if (j != 0) {
+    //             // std::cout << "," << std::endl;
+    //         }
+    //         // print_poly(chunks[i]->yellowSplines[j].spline_x, chunks[i]->yellowSplines[j].spline_y);
 
-        }
+    //     }
 
-        std::cout << "]," << std::endl;
+    //     // std::cout << "]," << std::endl;
 
-        std::cout << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")" << std::endl;
+    //     // std::cout << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")" << std::endl;
 
-        std::cout << ")," << std::endl;
-    }
+    //     // std::cout << ")," << std::endl;
+    // }
 
-    std::cout << "YELLOW SPLINE END" << std::endl;
-    std::cout << "BLUE SPLINE START" << std::endl;
+    // // std::cout << "YELLOW SPLINE END" << std::endl;
+    // // std::cout << "BLUE SPLINE START" << std::endl;
 
-    for (int i  = 0; i < chunks.size(); i++) {
-        std::cout << "([" << std::endl;
+    // for (int i  = 0; i < chunks.size(); i++) {
+    //     std::cout << "([" << std::endl;
 
-        for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
-            // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-            if (j != 0) {
-                std::cout << "," << std::endl;
-            }
-            print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
+    //     for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
+    //         // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
+    //         if (j != 0) {
+    //             std::cout << "," << std::endl;
+    //         }
+    //         print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
 
-        }
+    //     }
 
-        std::cout << "]," << std::endl;
+    //     std::cout << "]," << std::endl;
 
-        std::cout << " (" << 0 <<  ", " << 1 << ")" << std::endl;
+    //     std::cout << " (" << 0 <<  ", " << 1 << ")" << std::endl;
 
-        std::cout << ")," << std::endl;
-    }
+    //     std::cout << ")," << std::endl;
+    // }
 
-    std::cout << "BLUE SPLINE START" << std::endl;
+    // std::cout << "BLUE SPLINE START" << std::endl;
 
-    // Vector to hold results: one vector for each chunk, with 16 coefficients (4 X1, 4 X2, 4 Y1, 4 Y2)
-    std::vector<std::vector<double>> racelineSplines(chunks.size());
+    // // Vector to hold results: one vector for each chunk, with 16 coefficients (4 X1, 4 X2, 4 Y1, 4 Y2)
+    // std::vector<std::vector<double>> racelineSplines(chunks.size());
 
-    for (size_t i = 0; i < chunks.size(); ++i) {
-        auto [X1, X2, Y1, Y2] = runOptimizer(*chunks[i], 0.5, 0.5, 0.5);
+    // for (size_t i = 0; i < chunks.size(); ++i) {
+    //     auto [X1, X2, Y1, Y2] = runOptimizer(*chunks[i], 0.5, 0.5, 0.5);
 
-        // Combine all coefficients into one vector (16 coefficients per chunk)
-        racelineSplines[i] = {
-            X1[0], X1[1], X1[2], X1[3],  // First X spline (first half)
-            X2[0], X2[1], X2[2], X2[3],  // Second X spline (second half)
-            Y1[0], Y1[1], Y1[2], Y1[3],  // First Y spline (first half)
-            Y2[0], Y2[1], Y2[2], Y2[3]   // Second Y spline (second half)
-        };
-    }
+    //     // Combine all coefficients into one vector (16 coefficients per chunk)
+    //     racelineSplines[i] = {
+    //         X1[0], X1[1], X1[2], X1[3],  // First X spline (first half)
+    //         X2[0], X2[1], X2[2], X2[3],  // Second X spline (second half)
+    //         Y1[0], Y1[1], Y1[2], Y1[3],  // First Y spline (first half)
+    //         Y2[0], Y2[1], Y2[2], Y2[3]   // Second Y spline (second half)
+    //     };
+    // }
 
-    // Write output to a text file
-    std::ofstream outputFile("splines.txt");
-    if (outputFile.is_open()) {
-        for (const auto& spline : racelineSplines) {
-            // Write coefficients to file
-            outputFile << spline[0] << " " << spline[1] << " " << spline[2] << " " << spline[3] << " "; // First Half X
-            outputFile << spline[4] << " " << spline[5] << " " << spline[6] << " " << spline[7] << " "; // Second Half X
-            outputFile << spline[8] << " " << spline[9] << " " << spline[10] << " " << spline[11] << " "; // First Half Y
-            outputFile << spline[12] << " " << spline[13] << " " << spline[14] << " " << spline[15] << "\n"; // Second Half Y
-        }
-        outputFile.close();
-        std::cout << "Spline coefficients have been written to splines.txt" << std::endl;
-    } else {
-        std::cerr << "Unable to open file for writing!" << std::endl;
-    }
+    // // Write output to a text file
+    // std::ofstream outputFile("splines.txt");
+    // if (outputFile.is_open()) {
+    //     for (const auto& spline : racelineSplines) {
+    //         // Write coefficients to file
+    //         outputFile << spline[0] << " " << spline[1] << " " << spline[2] << " " << spline[3] << " "; // First Half X
+    //         outputFile << spline[4] << " " << spline[5] << " " << spline[6] << " " << spline[7] << " "; // Second Half X
+    //         outputFile << spline[8] << " " << spline[9] << " " << spline[10] << " " << spline[11] << " "; // First Half Y
+    //         outputFile << spline[12] << " " << spline[13] << " " << spline[14] << " " << spline[15] << "\n"; // Second Half Y
+    //     }
+    //     outputFile.close();
+    //     std::cout << "Spline coefficients have been written to splines.txt" << std::endl;
+    // } else {
+    //     std::cerr << "Unable to open file for writing!" << std::endl;
+    // }
 
 
     return 0;
