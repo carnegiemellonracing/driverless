@@ -292,7 +292,7 @@ int main() {
     std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
+    std::cout << "Generate chunks total time " << duration.count() << " microseconds" << std::endl;
 
     // std::cout << "YELLOW SPLINE START" << std::endl;
 

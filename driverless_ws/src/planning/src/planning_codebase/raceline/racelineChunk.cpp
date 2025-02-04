@@ -1,6 +1,7 @@
 #include "racelineChunk.hpp"
 
 #include <math.h>
+#include <chrono>
 // #include "../midline/generator.hpp"
 
 
@@ -146,8 +147,12 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     /* Getting the polynomials/splines for each track bound*/
     /* Pass in all of the blue and yellow cones, */
+    auto start = std::chrono::high_resolution_clock::now();
     std::pair<std::vector<ParameterizedSpline>,std::vector<double>> blue = make_splines_vector(blueCones);
     std::pair<std::vector<ParameterizedSpline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Make splines vector time " << duration.count() << " microseconds" << std::endl;
 
 
     std::vector<ParameterizedSpline> blueRacetrackSplines = blue.first;
