@@ -190,53 +190,53 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             // GET CORRESPONDING YELLOW CHUNK
             // yellowindex is greater than yellowRacetrackSplines or 
             // cumsum is greater than cumsum of blue;yellowSplineIdx
-            // while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
-            //     (yellowCumulativeLen[yellowSplineIdx] < yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
-            //     chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
-            //     yellowSplineIdx++;
-            // }
+            while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
+                (yellowCumulativeLen[yellowSplineIdx] < yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
+                chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
+                yellowSplineIdx++;
+            }
 
             double nextTStart = 0;
 
-            // // split yellow if yellow spline included in chunk is longer than curr blue
-            // if (yellowSplineIdx < yellowRacetrackSplines.size()) {
-            //     ParameterizedSpline splitSpline = yellowRacetrackSplines[yellowSplineIdx];
+            // split yellow if yellow spline included in chunk is longer than curr blue
+            if (yellowSplineIdx < yellowRacetrackSplines.size()) {
+                ParameterizedSpline splitSpline = yellowRacetrackSplines[yellowSplineIdx];
 
-            //     double yellowStartLen = 0;
+                double yellowStartLen = 0;
 
-            //     if (yellowSplineIdx != 0) {
-            //         yellowStartLen = yellowCumulativeLen[yellowSplineIdx - 1];
-            //     }
+                if (yellowSplineIdx != 0) {
+                    yellowStartLen = yellowCumulativeLen[yellowSplineIdx - 1];
+                }
                 
-            //     double splitT = tInterpolate(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
-            //     chunk->tEnd = splitT;
+                double splitT = tInterpolate(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
+                chunk->tEnd = splitT;
 
-            //     chunk->yellowSplines.push_back(splitSpline);
+                chunk->yellowSplines.push_back(splitSpline);
 
-            //     if (splitT == 1) {
-            //         nextTStart = 0;
-            //         yellowSplineIdx++;
-            //     }
-            //     else {
-            //         nextTStart = splitT;
-            //     }
-            // }
+                if (splitT == 1) {
+                    nextTStart = 0;
+                    yellowSplineIdx++;
+                }
+                else {
+                    nextTStart = splitT;
+                }
+            }
 
             // FIND ALL FIELDS NEEDED FOR A CHUNK
             chunkVector->emplace_back(chunk);
 
             chunk->blueArclength = chunk->blueArclengthEnd - chunk->blueArclengthStart;
-            // chunk->yellowArclength = chunk->blueArclength * yellowCumulativeLen[yellowCumulativeLen.size() - 1] / blueCumulativeLen[blueCumulativeLen.size() - 1];
+            chunk->yellowArclength = chunk->blueArclength * yellowCumulativeLen[yellowCumulativeLen.size() - 1] / blueCumulativeLen[blueCumulativeLen.size() - 1];
 
             chunk->blueFirstDerXStart = poly_eval(chunk->blueSplines[0].spline_x.first_der, 0);
             chunk->blueFirstDerXEnd = poly_eval(chunk->blueSplines[chunk->blueSplines.size() - 1].spline_x.first_der, 1);
             chunk->blueFirstDerYStart = poly_eval(chunk->blueSplines[0].spline_y.first_der, 0);
             chunk->blueFirstDerYEnd = poly_eval(chunk->blueSplines[chunk->blueSplines.size() - 1].spline_y.first_der, 1);
 
-            // chunk->yellowFirstDerXStart = poly_eval(chunk->yellowSplines[0].spline_x.first_der, chunk->tStart);
-            // chunk->yellowFirstDerXEnd = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_x.first_der, chunk->tEnd);
-            // chunk->yellowFirstDerYStart = poly_eval(chunk->yellowSplines[0].spline_y.first_der, chunk->tStart);
-            // chunk->yellowFirstDerYEnd = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_y.first_der, chunk->tEnd);
+            chunk->yellowFirstDerXStart = poly_eval(chunk->yellowSplines[0].spline_x.first_der, chunk->tStart);
+            chunk->yellowFirstDerXEnd = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_x.first_der, chunk->tEnd);
+            chunk->yellowFirstDerYStart = poly_eval(chunk->yellowSplines[0].spline_y.first_der, chunk->tStart);
+            chunk->yellowFirstDerYEnd = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_y.first_der, chunk->tEnd);
 
             double blueArcStart = chunk->blueArclengthEnd;
 
@@ -262,46 +262,46 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             chunk->blueFirstDerMidX = poly_eval(blueRacetrackSplines[blueIdx].spline_x.first_der, midT);
             chunk->blueFirstDerMidY = poly_eval(blueRacetrackSplines[blueIdx].spline_y.first_der, midT);
 
-            // double yellowEndLength = yellowCumulativeLen[yellowCumulativeLen.size() - 1];
+            double yellowEndLength = yellowCumulativeLen[yellowCumulativeLen.size() - 1];
 
-            // if (i != blueRacetrackSplines.size()) {
-            //     // yellow midpoint and tangent
-            //     ParameterizedSpline yellowSpline = yellowRacetrackSplines[yellowSplineIdx];
-            //     yellowEndLength = arclength(std::make_pair(yellowSpline.spline_x.first_der, yellowSpline.spline_y.first_der), 0, chunk->tEnd);
-            //     if (yellowSplineIdx > 0) {
-            //         yellowEndLength += yellowCumulativeLen[yellowSplineIdx - 1];
-            //     }
-            // }
+            if (i != blueRacetrackSplines.size()) {
+                // yellow midpoint and tangent
+                ParameterizedSpline yellowSpline = yellowRacetrackSplines[yellowSplineIdx];
+                yellowEndLength = arclength(std::make_pair(yellowSpline.spline_x.first_der, yellowSpline.spline_y.first_der), 0, chunk->tEnd);
+                if (yellowSplineIdx > 0) {
+                    yellowEndLength += yellowCumulativeLen[yellowSplineIdx - 1];
+                }
+            }
 
-            // while (yellowCumulativeLen[yellowIdx] < (yellowEndLength - chunk->yellowArclength/2)) {
-            //     yellowIdx += 1;
-            // }
+            while (yellowCumulativeLen[yellowIdx] < (yellowEndLength - chunk->yellowArclength/2)) {
+                yellowIdx += 1;
+            }
 
-            // // spline containing
-            // midFromMidSpline = (yellowEndLength - chunk->yellowArclength/2);
-            // if (yellowIdx != 0) {
-            //     midFromMidSpline = midFromMidSpline - yellowCumulativeLen[yellowIdx-1];
-            // }
+            // spline containing
+            midFromMidSpline = (yellowEndLength - chunk->yellowArclength/2);
+            if (yellowIdx != 0) {
+                midFromMidSpline = midFromMidSpline - yellowCumulativeLen[yellowIdx-1];
+            }
             
-            // // binary search from start of yellowIdx spline 
-            // midT = tInterpolate(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
+            // binary search from start of yellowIdx spline 
+            midT = tInterpolate(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
 
-            // chunk->yellowMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
-            // chunk->yellowMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);
-            // chunk->yellowStartX = poly_eval(chunk->yellowSplines[0].spline_x.spl_poly, chunk->tStart);
-            // chunk->yellowStartY = poly_eval(chunk->yellowSplines[0].spline_y.spl_poly, chunk->tStart);
-            // chunk->yellowEndX = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_x.spl_poly, chunk->tEnd);
-            // chunk->yellowEndY = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_y.spl_poly, chunk->tEnd);
-            // chunk->yellowFirstDerMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.first_der, midT);
-            // chunk->yellowFirstDerMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.first_der, midT);
-            // if (chunk->yellowSplines.size() == 1) {
-            //     chunk->yellowFirstSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, chunk->tEnd);
-            //     chunk->yellowLastSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, chunk->tEnd);
-            // }
-            // else {
-            //     chunk->yellowFirstSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, 1);
-            //     chunk->yellowLastSplineArclength = arclength(std::make_pair(chunk->yellowSplines[chunk->yellowSplines.size()-1].spline_x.spl_poly, chunk->yellowSplines[chunk->yellowSplines.size()-1].spline_y.spl_poly), 0, chunk->tEnd);
-            // }
+            chunk->yellowMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
+            chunk->yellowMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);
+            chunk->yellowStartX = poly_eval(chunk->yellowSplines[0].spline_x.spl_poly, chunk->tStart);
+            chunk->yellowStartY = poly_eval(chunk->yellowSplines[0].spline_y.spl_poly, chunk->tStart);
+            chunk->yellowEndX = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_x.spl_poly, chunk->tEnd);
+            chunk->yellowEndY = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_y.spl_poly, chunk->tEnd);
+            chunk->yellowFirstDerMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.first_der, midT);
+            chunk->yellowFirstDerMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.first_der, midT);
+            if (chunk->yellowSplines.size() == 1) {
+                chunk->yellowFirstSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, chunk->tEnd);
+                chunk->yellowLastSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, chunk->tEnd);
+            }
+            else {
+                chunk->yellowFirstSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, 1);
+                chunk->yellowLastSplineArclength = arclength(std::make_pair(chunk->yellowSplines[chunk->yellowSplines.size()-1].spline_x.spl_poly, chunk->yellowSplines[chunk->yellowSplines.size()-1].spline_y.spl_poly), 0, chunk->tEnd);
+            }
 
             if (i != blueRacetrackSplines.size()) {
                 if (i > 1) {
