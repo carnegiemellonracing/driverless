@@ -111,14 +111,14 @@ double tInterpolate(ParameterizedSpline spline, double targetArclength) {
     double high = 1;
     double mid;
     double curArclength;
-    while (high-low >= 0.000001) {
+    while (high-low >= 0.001) {
         double mid = low + (high-low) / 2;
         double curArclength = arclength(splinePair, 0, mid);
-        if (abs(curArclength - targetArclength) <= 0.000001) {
+        if (abs(curArclength - targetArclength) <= 0.001) {
             return mid;
         }
         else if (curArclength < targetArclength) {
-            low = mid + 0.00001;
+            low = mid + 0.001;
         }
         else {
             high = mid;
