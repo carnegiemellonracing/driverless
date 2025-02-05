@@ -246,7 +246,7 @@ namespace controls {
 
             // augment dataset to make it better for SVM training
             cones.supplementCones();
-            cones = cones.augmentConesCircle(cones, 10, 1.2);
+            cones = cones.augmentConesCircle(cones, 30, 1.2);
 
             // acquire the feature matrix and label vector
             std::pair<std::vector<std::vector<double>>, std::vector<double>> xy = cones.conesToXY(cones);
