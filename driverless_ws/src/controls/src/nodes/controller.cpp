@@ -1,3 +1,4 @@
+#include <chrono>
 #include <mppi/mppi.hpp>
 #include <mutex>
 #include <rclcpp/rclcpp.hpp>
@@ -56,11 +57,6 @@ namespace controls {
             rclcpp::SubscriptionOptions options{};
             options.callback_group = state_estimation_callback_group;
 
-            m_spline_subscription = create_subscription<SplineMsg>(
-                spline_topic_name, spline_qos,
-                [this](const SplineMsg::SharedPtr msg)
-                { spline_callback(*msg); },
-                options);
 
                 m_cone_subscription = create_subscription<ConeMsg>(
                     cone_topic_name, spline_qos, //was cone_qos but that didn't exist, publisher uses spline_qos
@@ -83,81 +79,9 @@ namespace controls {
 
             // start mppi :D
             // this won't immediately begin publishing, since it waits for the first dirty state
-            launch_mppi().detach();
             m_aim_communication_thread = std::thread(&ControllerNode::aim_communication_loop, this);
         }
-        
-            void ControllerNode::spline_callback(const SplineMsg& spline_msg) {
-                RCLCPP_DEBUG(get_logger(), "Received spline");
-                rclcpp::Time rcl_orig_time (spline_msg.orig_data_stamp);
-                rclcpp::Time rcl_header_time (spline_msg.header.stamp);
-                rclcpp::Time rcl_now_time (get_clock()->now());
 
-                std::stringstream ss;
-                ss << "DIFFERENCE IN TIMES --- \norig_stamp: " << rcl_orig_time.nanoseconds() <<
-                "\nheader_stamp: " << rcl_header_time.nanoseconds() << 
-                "\nnumerical diff: " << (rcl_orig_time.nanoseconds() - rcl_header_time.nanoseconds()) / 1e9 <<
-                "\ncurrent time: " << rcl_now_time.nanoseconds() << 
-                "\nnumerical diff 2: " << (rcl_now_time.nanoseconds() - rcl_header_time.nanoseconds()) / 1e9 << std::endl;
-
-                RCLCPP_DEBUG(get_logger(), ss.str().c_str());
-                {
-                    std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_spline(spline_msg);
-                }
-
-                notify_state_dirty();
-            }
-
-            void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
-                std::stringstream ss;
-                ss << "Received cones: " << std::endl;
-                ss << "Length of blue cones: " << cone_msg.blue_cones.size() << std::endl;
-                ss << "Length of yellow cones: " << cone_msg.yellow_cones.size() << std::endl;
-                ss << "Length of orange cones: " << cone_msg.orange_cones.size() << std::endl;
-                ss << "Length of unknown color cones: " << cone_msg.unknown_color_cones.size() << std::endl;
-                ss << "Length of big orange cones: " << cone_msg.big_orange_cones.size() << std::endl;
-                RCLCPP_DEBUG(get_logger(), ss.str().c_str());
-
-                {
-                    std::lock_guard<std::mutex> guard {m_state_mut};
-                    auto cone_process_start = std::chrono::high_resolution_clock::now();
-                    float svm_time = m_state_estimator->on_cone(cone_msg);
-                    auto cone_process_end = std::chrono::high_resolution_clock::now();
-                    m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
-                    m_last_svm_time = svm_time;
-                }
-                notify_state_dirty();
-            }
-
-            void ControllerNode::world_twist_callback(const TwistMsg &twist_msg) {
-                RCLCPP_DEBUG(get_logger(), "Received twist");
-
-
-                {
-                    std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_twist(twist_msg, twist_msg.header.stamp);
-                }
-
-                notify_state_dirty();
-            }
-
-            void ControllerNode::world_pose_callback(const PoseMsg &pose_msg) {
-                RCLCPP_DEBUG(get_logger(), "Received pose");
-
-
-                {
-                    std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_pose(pose_msg);
-                }
-
-                notify_state_dirty();
-            }
-
-            void ControllerNode::publish_action(const Action& action) {
-                const auto msg = action_to_msg(action);
-                m_action_publisher->publish(msg);
-            }
 
 #ifdef DATA
             std::string vector_to_parseable_string(const std::vector<glm::fvec2> &vec) {
@@ -171,6 +95,175 @@ namespace controls {
                 return ss.str();
             }
 #endif
+
+            void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
+                std::stringstream ss;
+                ss << "Received cones: " << std::endl;
+                ss << "Length of blue cones: " << cone_msg.blue_cones.size() << std::endl;
+                ss << "Length of yellow cones: " << cone_msg.yellow_cones.size() << std::endl;
+                ss << "Length of orange cones: " << cone_msg.orange_cones.size() << std::endl;
+                ss << "Length of unknown color cones: " << cone_msg.unknown_color_cones.size() << std::endl;
+                ss << "Length of big orange cones: " << cone_msg.big_orange_cones.size() << std::endl;
+                RCLCPP_DEBUG(get_logger(), ss.str().c_str());
+
+                // * We want to manually lock the state mutex here, so use a unique_lock
+                std::unique_lock<std::mutex> state_lock {m_state_mut};
+
+                // record time to estimate speed of the entire pipeline
+                auto start_time = std::chrono::high_resolution_clock::now();
+
+                // Process cones and report timing
+                auto cone_process_start = std::chrono::high_resolution_clock::now();
+                float svm_time = m_state_estimator->on_cone(cone_msg);
+                auto cone_process_end = std::chrono::high_resolution_clock::now();
+                m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
+                m_last_svm_time = svm_time;
+
+                RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
+
+                // save for info publishing later, since might be changed during iteration
+                rclcpp::Time orig_spline_data_stamp = cone_msg.orig_data_stamp;
+
+                // send state to device (i.e. cuda globals)
+                // (also serves to lock state since nothing else updates gpu state)
+                RCLCPP_DEBUG(get_logger(), "syncing state to device");
+                auto project_start = std::chrono::high_resolution_clock::now();
+                State proj_curr_state = m_state_estimator->project_state(get_clock()->now());
+                auto project_end = std::chrono::high_resolution_clock::now();
+
+                // * Let state callbacks proceed, so unlock the state mutex
+                state_lock.unlock();
+
+                // send state to device
+                auto sync_start = std::chrono::high_resolution_clock::now();
+                m_state_estimator->render_and_sync(proj_curr_state);
+                // auto duration_vec = m_state_estimator->sync_to_device(get_clock()->now());
+                auto sync_end = std::chrono::high_resolution_clock::now();
+
+                // we don't need the host state anymore, so release the lock and let state callbacks proceed
+
+                // run mppi, and write action to the write buffer
+                auto gen_action_start = std::chrono::high_resolution_clock::now();
+                Action action = m_mppi_controller->generate_action();
+                auto gen_action_end = std::chrono::high_resolution_clock::now();
+                publish_action(action);
+                m_last_action_signal = action_to_signal(action);
+                std::string error_str;
+
+#ifdef DATA
+                std::stringstream parameters_ss;
+                parameters_ss << "Swangle range: " << 19 * M_PI / 180 * 2 << "\nThrottle range: " << saturating_motor_torque * 2 << "\n";
+                RCLCPP_WARN_ONCE(get_logger(), parameters_ss.str().c_str());
+
+                std::vector<Action> percentage_diff_trajectory = m_mppi_controller->m_percentage_diff_trajectory;
+                std ::vector<Action> averaged_trajectory = m_mppi_controller->m_averaged_trajectory;
+                std::vector<Action> last_action_trajectory = m_mppi_controller->m_last_action_trajectory_logging;
+                auto diff_statistics = m_mppi_controller->m_diff_statistics;
+
+                // write the spline
+                std::vector<glm::fvec2> frames = m_state_estimator->get_spline_frames();
+                std::vector<glm::fvec2> left_cones = m_state_estimator->get_left_cone_points();
+                std::vector<glm::fvec2> right_cones = m_state_estimator->get_right_cone_points();
+
+                // create debugging string
+                ss.clear();
+                ss << "Spline (MPPI Input): \n";
+                ss << points_to_string(frames) << "\n";
+                ss << "Left cones (MPPI Input): \n";
+                ss << points_to_string(left_cones) << "\n";
+                ss << "Right cones (MPPI Input): \n";
+                ss << points_to_string(right_cones) << "\n";
+                ss << "Last action_trajectory (MPPI Input/Guess): \n";
+                for (const auto &action : last_action_trajectory)
+                {
+                    ss << "[" << action[0] << ", " << action[1] << "], ";
+                }
+                ss << "\nAveraged Trajectory (MPPI Output): \n";
+                for (const auto &action : averaged_trajectory)
+                {
+                    ss << "[" << action[0] << ", " << action[1] << "], ";
+                }
+                ss << "\nPercentage Difference between Guess and Result: \n";
+                for (const auto &action : percentage_diff_trajectory)
+                {
+                    ss << "[" << action[0] << ", " << action[1] << "], ";
+                }
+                ss << "\nMean Swangle Error: " << diff_statistics.mean_swangle << std::endl;
+                ss << "Mean Torque Error: " << diff_statistics.mean_throttle << std::endl;
+                ss << "Max Swangle Error: " << diff_statistics.max_swangle << std::endl;
+                ss << "Max Torque Error: " << diff_statistics.max_throttle << std::endl;
+                error_str = ss.str();
+
+                // writing to logging file for sampling exploration
+                // write the state
+                for (int i = 0; i < state_dims - 1; i++)
+                {
+                    m_data_trajectory_log << proj_curr_state[i] << ",";
+                }
+                m_data_trajectory_log << proj_curr_state[state_dims - 1] << "|";
+                m_data_trajectory_log << vector_to_parseable_string(frames) << "|";
+                m_data_trajectory_log << vector_to_parseable_string(left_cones) << "|";
+                m_data_trajectory_log << vector_to_parseable_string(right_cones) << "|";
+                // write the guess trajectory
+                for (int i = 0; i < last_action_trajectory.size() - 1; i++)
+                {
+                    m_data_trajectory_log << last_action_trajectory[i][0] << " " << last_action_trajectory[i][1] << ",";
+                }
+                m_data_trajectory_log << last_action_trajectory[last_action_trajectory.size() - 1][0] << " " << last_action_trajectory[last_action_trajectory.size() - 1][1] << "\n";
+
+#endif
+
+                // this can happen concurrently with another state estimator callback, but the internal lock
+                // protects it.
+                m_state_estimator->record_control_action(action, get_clock()->now());
+
+                // calculate and print time elapsed
+                auto finish_time = std::chrono::high_resolution_clock::now();
+                auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    finish_time - start_time);
+
+                // can't use high res clock since need to be aligned with other nodes
+                auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_spline_data_stamp.nanoseconds()) / 1000000;
+
+                interfaces::msg::ControllerInfo info{};
+                info.action = action_to_msg(action);
+                info.proj_state = state_to_msg(proj_curr_state);
+                info.projection_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(sync_end - sync_start)).count(); // duration_vec[0].count();
+                info.render_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(project_end - project_start)).count();
+                info.mppi_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(gen_action_end - gen_action_start)).count();
+                info.latency_ms = time_elapsed.count();
+                info.total_latency_ms = total_time_elapsed;
+
+                publish_and_print_info(info, error_str);
+            }
+
+            void ControllerNode::world_twist_callback(const TwistMsg &twist_msg) {
+                RCLCPP_DEBUG(get_logger(), "Received twist");
+
+
+                {
+                    std::lock_guard<std::mutex> guard {m_state_mut};
+                    m_state_estimator->on_twist(twist_msg, twist_msg.header.stamp);
+                }
+
+            }
+
+            void ControllerNode::world_pose_callback(const PoseMsg &pose_msg) {
+                RCLCPP_DEBUG(get_logger(), "Received pose");
+
+
+                {
+                    std::lock_guard<std::mutex> guard {m_state_mut};
+                    m_state_estimator->on_pose(pose_msg);
+                }
+
+            }
+
+            void ControllerNode::publish_action(const Action& action) {
+                const auto msg = action_to_msg(action);
+                m_action_publisher->publish(msg);
+            }
+
             static uint8_t swangle_to_rackdisplacement(float swangle) {
                 return 0;
             }
@@ -185,150 +278,7 @@ namespace controls {
                 return action_signal;   
             }
 
-            std::thread ControllerNode::launch_mppi() {
-                return std::thread {[this] {
-#ifdef DATA
-                    float total_spline_error = 0;
-                    float total_throttle_error = 0;
-                    size_t num_iterations = 0;
-#endif
-                    while (true) {
-                        std::unique_lock<std::mutex> state_lock {m_state_mut};
 
-                        m_state_cond_var.wait(state_lock);  // wait to be dirtied
-                        while (!m_state_estimator->is_ready()) {
-                            m_state_cond_var.wait(state_lock);
-                        }
-                        // state_lock acquired.
-
-                        // record time to estimate speed
-                        auto start_time = std::chrono::high_resolution_clock::now();
-                        RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
-
-                        // save for info publishing later, since might be changed during iteration
-                        rclcpp::Time orig_spline_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
-
-                        // send state to device (i.e. cuda globals)
-                        // (also serves to lock state since nothing else updates gpu state)
-                        RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                        auto project_start = std::chrono::high_resolution_clock::now();
-                        State proj_curr_state = m_state_estimator->project_state(get_clock()->now());
-                        auto project_end = std::chrono::high_resolution_clock::now();
-
-                        // send state to device
-                        auto sync_start = std::chrono::high_resolution_clock::now();
-                        m_state_estimator->render_and_sync(proj_curr_state);
-                        // auto duration_vec = m_state_estimator->sync_to_device(get_clock()->now());
-                        auto sync_end = std::chrono::high_resolution_clock::now();
-
-                        // we don't need the host state anymore, so release the lock and let state callbacks proceed
-                        state_lock.unlock();
-
-                        // run mppi, and write action to the write buffer
-                        auto gen_action_start = std::chrono::high_resolution_clock::now();
-                        Action action = m_mppi_controller->generate_action();
-                        auto gen_action_end = std::chrono::high_resolution_clock::now();
-                        publish_action(action);
-                        m_last_action_signal = action_to_signal(action);
-                        std::string error_str;
-#ifdef DATA
-                        std::stringstream parameters_ss;
-                        parameters_ss << "Swangle range: " << 19 * M_PI / 180 * 2 << "\nThrottle range: " << saturating_motor_torque * 2 << "\n";
-                        RCLCPP_WARN_ONCE(get_logger(), parameters_ss.str().c_str());
-
-                        std::vector<Action> percentage_diff_trajectory = m_mppi_controller->m_percentage_diff_trajectory;
-                        std ::vector<Action> averaged_trajectory = m_mppi_controller->m_averaged_trajectory;
-                        std::vector<Action> last_action_trajectory = m_mppi_controller->m_last_action_trajectory_logging;
-                        auto diff_statistics = m_mppi_controller->m_diff_statistics;
-
-                        // write the spline
-                        std::vector<glm::fvec2> frames = m_state_estimator->get_spline_frames();
-                        std::vector<glm::fvec2> left_cones = m_state_estimator->get_left_cone_points();
-                        std::vector<glm::fvec2> right_cones = m_state_estimator->get_right_cone_points();
-
-                        // create debugging string
-                        std::stringstream ss;
-                        ss << "Spline (MPPI Input): \n";
-                        ss << points_to_string(frames) << "\n";
-                        ss << "Left cones (MPPI Input): \n";
-                        ss << points_to_string(left_cones) << "\n";
-                        ss << "Right cones (MPPI Input): \n";
-                        ss << points_to_string(right_cones) << "\n";
-                        ss << "Last action_trajectory (MPPI Input/Guess): \n";
-                        for (const auto &action : last_action_trajectory)
-                        {
-                            ss << "[" << action[0] << ", " << action[1] << "], ";
-                        }
-                        ss << "\nAveraged Trajectory (MPPI Output): \n";
-                        for (const auto& action : averaged_trajectory) {
-                            ss << "[" << action[0]<< ", " << action[1] << "], ";
-                        }
-                        ss << "\nPercentage Difference between Guess and Result: \n";
-                        for (const auto& action : percentage_diff_trajectory) {
-                            ss << "[" << action[0] << ", " << action[1] << "], ";
-                        }
-                        ss << "\nMean Swangle Error: " << diff_statistics.mean_swangle << std::endl;
-                        ss << "Mean Torque Error: " << diff_statistics.mean_throttle << std::endl;
-                        ss << "Max Swangle Error: " << diff_statistics.max_swangle << std::endl;
-                        ss << "Max Torque Error: " << diff_statistics.max_throttle << std::endl;
-                        total_spline_error += diff_statistics.mean_swangle;
-                        total_throttle_error += diff_statistics.mean_throttle;
-                        num_iterations += 1;
-                        ss << "Rolling Swangle Error: " << total_spline_error / num_iterations << std::endl;
-                        ss << "Rolling Torque Error: " << total_throttle_error / num_iterations << std::endl;
-                        ss << "Iteration #: " << num_iterations << std::endl;
-                        error_str = ss.str();
-
-
-                        // writing to logging file for sampling exploration
-                        // write the state
-                        for (int i = 0; i < state_dims - 1; i++) {
-                            m_data_trajectory_log << proj_curr_state[i] << ",";
-                        }
-                        m_data_trajectory_log << proj_curr_state[state_dims - 1] << "|";
-                        m_data_trajectory_log << vector_to_parseable_string(frames) << "|";
-                        m_data_trajectory_log << vector_to_parseable_string(left_cones) << "|";
-                        m_data_trajectory_log << vector_to_parseable_string(right_cones) << "|";
-                        // write the guess trajectory
-                        for (int i = 0; i < last_action_trajectory.size() - 1; i++)
-                        {
-                            m_data_trajectory_log << last_action_trajectory[i][0] << " " << last_action_trajectory[i][1] << ",";
-                        }
-                        m_data_trajectory_log << last_action_trajectory[last_action_trajectory.size() - 1][0] << " " << last_action_trajectory[last_action_trajectory.size() - 1][1] << "\n";
-
-#endif
-
-                        // this can happen concurrently with another state estimator callback, but the internal lock
-                        // protects it.
-                        m_state_estimator->record_control_action(action, get_clock()->now());
-
-                        // calculate and print time elapsed
-                        auto finish_time = std::chrono::high_resolution_clock::now();
-                        auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-                             finish_time - start_time
-                        );
-
-                        // can't use high res clock since need to be aligned with other nodes
-                        auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_spline_data_stamp.nanoseconds()) / 1000000;
-
-                        interfaces::msg::ControllerInfo info {};
-                        info.action = action_to_msg(action);
-                        info.proj_state = state_to_msg(proj_curr_state);
-                        info.projection_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(sync_end - sync_start)).count();                           // duration_vec[0].count();
-                        info.render_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(project_end - project_start)).count();
-                        info.mppi_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(gen_action_end - gen_action_start)).count();
-                        info.latency_ms = time_elapsed.count();
-                        info.total_latency_ms = total_time_elapsed;
-
-                        publish_and_print_info(info, error_str);
-
-                    }
-                }};
-            }
-
-            void ControllerNode::notify_state_dirty() {
-                m_state_cond_var.notify_all();
-            }
 
             ActionMsg ControllerNode::action_to_msg(const Action &action) {
                 interfaces::msg::ControlAction msg;
@@ -398,7 +348,7 @@ namespace controls {
                     << "  yaw (rad): " << info.proj_state.yaw << "\n"
                     << "  speed (m/s): " << info.proj_state.speed << "\n"
                     // << "Cone Processing Latency (ms)" << m_last_cone_process_time << "\n"
-                    << "SVM Latency (ms): " << m_last_svm_time << "\n"
+                    << "SVM Latency (ms): " << m_last_cone_process_time << "\n"
                     << "State Projection Latency (ms): " << info.projection_latency_ms << "\n"
                     << "OpenGL Render Latency (ms): " << info.render_latency_ms << "\n"
                     << "MPPI Step Latency (ms): " << info.mppi_latency_ms << "\n"
