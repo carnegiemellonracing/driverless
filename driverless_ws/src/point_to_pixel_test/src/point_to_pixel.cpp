@@ -24,7 +24,7 @@
 using namespace std::chrono_literals;
 using std::placeholders::_1;
 
-#define DEBUG 0
+#define DEBUG 1
 
 class Point_To_Pixel_Node : public rclcpp::Node
 {
@@ -83,7 +83,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   
   // RCLCPP_INFO(this->get_logger(), "Connected to ZED camera. %s", (this->cap_0).getDeviceName().c_str());
 
-  if( !(this->cap_1).initializeVideo(2) )
+  if( !(this->cap_1).initializeVideo(0) )
   {
     RCLCPP_ERROR(this->get_logger(), "Cannot open camera 1 video capture");
     rclcpp::shutdown(); // Shutdown node
@@ -372,6 +372,7 @@ void Point_To_Pixel_Node::mouse_callback(int event, int x, int y, int flags, voi
         Eigen::Vector2d pix(x, y);
         std::tuple<int, double> out = Point_To_Pixel_Node::identify_color(pix, *image);  // Pass the original image to identify_color
         std::cout << std::get<0>(out) << std::endl << std::get<1>(out) << std::endl;
+        std::cout << x << std::endl << y << std::endl;
 
         // Draw transparent rectangle around the ROI for the identified color
         int side_length = 25;
