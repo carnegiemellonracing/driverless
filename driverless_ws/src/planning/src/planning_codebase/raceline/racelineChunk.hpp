@@ -1,5 +1,6 @@
 #include <vector>
 #include "raceline.hpp"
+#define CHUNK_FILENAME "src/planning/src/planning_codebase/raceline"
 
 /**
  * Chunks represent segments of the track where all points have similar curvature. 

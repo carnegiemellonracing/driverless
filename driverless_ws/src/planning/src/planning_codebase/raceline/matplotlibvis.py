@@ -59,7 +59,10 @@ def plot_parametric_cubic_polynomials(input_data_1, input_data_2, points, file_n
     plt.figure(figsize=(12, 8))
     colors = ['blue', 'red', 'green', 'purple', 'orange']
     
+    # Process input_data = input_data_1 first, then input_data = input_data_2
     for input_data in [input_data_1, input_data_2]:
+        # For a given chunk, process the splines and the t_range
+        # splines is a list of tuples: x(t) and y(t) polynomials
         for group_index, (splines, t_range) in enumerate(input_data):
             print(f"\n chunk {group_index}")
             print(f"range {t_range}")
