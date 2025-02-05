@@ -1,6 +1,7 @@
 #include "racelineChunk.hpp"
 
 #include <math.h>
+#include <chrono>
 // #include "../midline/generator.hpp"
 
 
@@ -111,15 +112,14 @@ double tInterpolate(ParameterizedSpline spline, double targetArclength) {
     double high = 1;
     double mid;
     double curArclength;
-
-    while (high-low >= 0.000001) {
+    while (high-low >= 0.001) {
         double mid = low + (high-low) / 2;
         double curArclength = arclength(splinePair, 0, mid);
-        if (abs(curArclength - targetArclength) <= 0.000001) {
+        if (abs(curArclength - targetArclength) <= 0.001) {
             return mid;
         }
         else if (curArclength < targetArclength) {
-            low = mid + 0.01;
+            low = mid + 0.001;
         }
         else {
             high = mid;
@@ -147,12 +147,13 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     /* Getting the polynomials/splines for each track bound*/
     /* Pass in all of the blue and yellow cones, */
-    auto start_make_splines = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
     std::pair<std::vector<ParameterizedSpline>,std::vector<double>> blue = make_splines_vector(blueCones);
     std::pair<std::vector<ParameterizedSpline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
-    auto end_make_splines = std::chrono::high_resolution_clock::now();
-    auto dur_make_splines = std::chrono::duration_cast<std::chrono::microseconds>(end_make_splines - start_make_splines);
-    std::cout << "generateChunks: make_splines_vector time: " << dur_make_splines.count() << " microseconds" << std::endl;
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Make splines vector time " << duration.count() << " microseconds" << std::endl;
+
 
     std::vector<ParameterizedSpline> blueRacetrackSplines = blue.first;
     std::vector<double> blueCumulativeLen = blue.second;

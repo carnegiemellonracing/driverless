@@ -6,14 +6,10 @@
 #include "racelineChunk.hpp"
 #include <cassert>
 #include <fstream>
-#include <eigen3/Eigen/Dense>
-#include <tuple>
-#include <fstream>
 #include <chrono>
 
 typedef std::pair<double, double> Point;
 
-using namespace std::chrono;
 // angle to rads?
 double ator(int a){
     return (double) a * M_PI / 180.0;
@@ -213,6 +209,7 @@ void print_poly(Spline x, Spline y) {
      << y.spl_poly.nums(2) << "," << y.spl_poly.nums(3) << "])"<< std::endl;
 }
 
+
 // Function to calculate a point at a specific distance along a line (half for now)
 Point pointAlongLine(const Point& blue_point, const Point& yellow_point, double distance) {
   double dx = blue_point.first - yellow_point.first;
@@ -247,44 +244,33 @@ std::vector<Eigen::VectorXd> solve(const std::vector<Point>& points, double k_x,
 }
 
 //Function to find raceline
-std::tuple<std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>>
+std::tuple<std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>> 
 runOptimizer(Chunk& chunk, double d1, double d2, double d3) {
     Point blueStart = {chunk.blueStartX, chunk.blueStartY};
     Point yellowStart = {chunk.yellowStartX, chunk.yellowStartY};
-    
     Point blueMid = {chunk.blueMidX, chunk.blueMidY};
     Point yellowMid = {chunk.yellowMidX, chunk.yellowMidY};
-
     Point blueEnd = {chunk.blueEndX, chunk.blueEndY};
     Point yellowEnd = {chunk.yellowEndX, chunk.yellowEndY};
 
-    // TODO: check with chunking to see what first der start and end mean
-    // You may need the start deriv of the next chunk and the end deriv of the previous chunk
-
     double blueFirstDerXStart = chunk.blueFirstDerXStart;
     double blueFirstDerXEnd = chunk.blueFirstDerXEnd;
-
     double blueFirstDerYStart = chunk.blueFirstDerYStart;
     double blueFirstDerYEnd = chunk.blueFirstDerYEnd;
-
     double yellowFirstDerXStart = chunk.yellowFirstDerXStart;
     double yellowFirstDerXEnd = chunk.yellowFirstDerXEnd;
-
     double yellowFirstDerYStart = chunk.yellowFirstDerYStart;
     double yellowFirstDerYEnd = chunk.yellowFirstDerYEnd;
 
-    // Placing the three foundational points of the raceline
     std::vector<Point> points;
     points.push_back(pointAlongLine(blueStart, yellowStart, d1));
     points.push_back(pointAlongLine(blueMid, yellowMid, d2));
     points.push_back(pointAlongLine(blueEnd, yellowEnd, d3));
 
-
-    // These are the average parametric first derivatives 
-    double k_x = blueFirstDerXStart;
-    double k_y = blueFirstDerYStart;
-    double l_x = yellowFirstDerXEnd;
-    double l_y = yellowFirstDerYEnd;
+    double k_x = (blueFirstDerXStart + blueFirstDerXEnd) / 2;
+    double k_y = (blueFirstDerYStart + blueFirstDerYEnd) / 2;
+    double l_x = (yellowFirstDerXStart + yellowFirstDerXEnd) / 2;
+    double l_y = (yellowFirstDerYStart + yellowFirstDerYEnd) / 2;
 
     auto splines = solve(points, k_x, l_x, k_y, l_y);
 
@@ -315,7 +301,7 @@ int main() {
     	auto start_chunking = std::chrono::high_resolution_clock::now();
         std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
         auto end_chunking = std::chrono::high_resolution_clock::now();
-        auto dur_chunking = duration_cast<microseconds>(end_chunking - start_chunking);
+        auto dur_chunking = std::chrono::duration_cast<std::chrono::microseconds>(end_chunking - start_chunking);
         std::cout << "Chunking time: " << dur_chunking.count() << std::endl;
 
     	double dstart = 0.5; 
@@ -337,7 +323,7 @@ int main() {
     	    };
     	    dstart = dend;
     	    auto end_cur_raceline_gen = std::chrono::high_resolution_clock::now();
-    	    auto dur_cur_raceline_gen = duration_cast<microseconds>(end_cur_raceline_gen - start_cur_raceline_gen);
+    	    auto dur_cur_raceline_gen = std::chrono::duration_cast<std::chrono::microseconds>(end_cur_raceline_gen - start_cur_raceline_gen);
 
             if (max_indiv_raceline_gen_time < dur_cur_raceline_gen.count()) {
                 max_indiv_raceline_gen_time = dur_cur_raceline_gen.count();
@@ -350,7 +336,7 @@ int main() {
             sample_raceline_splines = racelineSplines;
         }
     	auto end_raceline_gen = std::chrono::high_resolution_clock::now();
-    	auto dur_raceline_gen = duration_cast<microseconds>(end_raceline_gen - start_raceline_gen);
+    	auto dur_raceline_gen = std::chrono::duration_cast<std::chrono::microseconds>(end_raceline_gen - start_raceline_gen);
 
         if (max_total_raceline_gen_time < dur_raceline_gen.count() + dur_chunking.count()) {
             max_total_raceline_gen_time = dur_raceline_gen.count() + dur_chunking.count();
@@ -381,20 +367,19 @@ int main() {
         std::cerr << "Unable to open file for writing!" << std::endl;
     }
 
-    std::ofstream outputFile("src/planning/src/planning_codebase/raceline/splines.txt");
-    if (outputFile.is_open()) {
+    std::ofstream splines_outputFile("src/planning/src/planning_codebase/raceline/splines.txt");
+    if (splines_outputFile.is_open()) {
         for (const auto& spline : sample_raceline_splines ){
             // Write coefficients to file
-            outputFile << spline[0] << " " << spline[1] << " " << spline[2] << " " << spline[3] << " "; // First Half X
-            outputFile << spline[4] << " " << spline[5] << " " << spline[6] << " " << spline[7] << " "; // Second Half X
-            outputFile << spline[8] << " " << spline[9] << " " << spline[10] << " " << spline[11] << " "; // First Half Y
-            outputFile << spline[12] << " " << spline[13] << " " << spline[14] << " " << spline[15] << "\n"; // Second Half Y
+            splines_outputFile << spline[0] << " " << spline[1] << " " << spline[2] << " " << spline[3] << " "; // First Half X
+            splines_outputFile << spline[4] << " " << spline[5] << " " << spline[6] << " " << spline[7] << " "; // Second Half X
+            splines_outputFile << spline[8] << " " << spline[9] << " " << spline[10] << " " << spline[11] << " "; // First Half Y
+            splines_outputFile << spline[12] << " " << spline[13] << " " << spline[14] << " " << spline[15] << "\n"; // Second Half Y
         }
-        outputFile.close();
+        splines_outputFile.close();
         std::cout << "Spline coefficients have been written to splines.txt" << std::endl;
     } else {
         std::cerr << "Unable to open file for writing!" << std::endl;
     }
     return 0;
 }
-
