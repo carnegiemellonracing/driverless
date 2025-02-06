@@ -1,0 +1,310 @@
+//Raceline Algorithm
+
+#include <math.h>
+#include <vector>
+#include <iostream>
+#include "racelineChunk.hpp"
+#include <cassert>
+#include <fstream>
+#include <chrono>
+
+typedef std::pair<double, double> Point;
+
+// angle to rads?
+double ator(int a){
+    return (double) a * M_PI / 180.0;
+}
+
+// feet to m
+double ftom(int a){
+    return (double) a * 0.3048;
+}
+
+/* Squidward track */
+void createSquidwardTrack(std::vector<std::pair<double,double>> &blue_cones,
+                            std::vector<std::pair<double,double>> &yellow_cones) {
+    yellow_cones = {
+         std::make_pair(0, 0),
+         std::make_pair(0, 2),
+         std::make_pair(0, 4),
+         std::make_pair(0, 6),
+         std::make_pair(0, 8),
+         std::make_pair(0, 10),
+         std::make_pair(0, 12),
+         std::make_pair(0, 14),
+         std::make_pair(0, 16),
+         std::make_pair(0, 18),
+         std::make_pair(0, 20),
+         std::make_pair(0, 22),
+         std::make_pair(0 - 6 + 6 * cos(ator(30)), 22 + 6 * sin(ator(30))),
+         std::make_pair(0 - 6 + 6 * cos(ator(60)), 22 + 6 * sin(ator(60))),
+         std::make_pair(-6, 28),
+         std::make_pair(-8, 28),
+         std::make_pair(-10, 28),
+         std::make_pair(-12, 28),
+         std::make_pair(-14, 28),
+         std::make_pair(-14 + 6 * cos(ator(120)), 28 - 6 + 6 * sin(ator(120))),
+         std::make_pair(-14 + 6 * cos(ator(150)), 28 - 6 + 6 * sin(ator(150))),
+         std::make_pair(-20, 22),
+         std::make_pair(-20 + ftom(4), 20),
+         std::make_pair(-20 + ftom(6), 18),
+         std::make_pair(-20 + ftom(2), 16),
+         std::make_pair(-20 - ftom(2), 14),
+         std::make_pair(-20 - ftom(6), 12),
+         std::make_pair(-20 - ftom(4), 10),
+         std::make_pair(-20, 8),
+         std::make_pair(-20, 6),
+         std::make_pair(-20, 4),
+         std::make_pair(-16+2 - 6*cos(ator(30)),4-6*sin(ator(30))),
+         std::make_pair(-16+2 - 6*cos(ator(60)),4-6*sin(ator(90))),
+         std::make_pair(-14,-2),
+         std::make_pair(-12,-2),
+         std::make_pair(-10,-2),
+         std::make_pair(-8,-2),
+         std::make_pair(-6,-2),
+         std::make_pair(-4,-2)
+    };
+
+    blue_cones = {
+        // std::make_pair(-4, 0),
+        std::make_pair(-4, 2),
+        std::make_pair(-4, 4),
+        std::make_pair(-4, 6),
+        std::make_pair(-4, 8),
+        std::make_pair(-4, 10),
+        std::make_pair(-4, 12),
+        std::make_pair(-4, 14),
+        std::make_pair(-4, 16),
+        std::make_pair(-4, 18),
+        std::make_pair(-4, 20),
+        std::make_pair(-4, 22),
+        std::make_pair(-4-2 + 2 * cos(ator(30)), 22 + 2 * sin(ator(30))),
+        std::make_pair(-4-2 + 2 * cos(ator(60)), 22 + 2 * sin(ator(60))),
+        std::make_pair(-6, 24),
+        std::make_pair(-8, 24),
+        std::make_pair(-10, 24),
+        std::make_pair(-12, 24),
+        std::make_pair(-14, 24),
+        std::make_pair(-14 + 2 * cos(ator(120)), 24 - 2 + 2 * sin(ator(120))),
+        std::make_pair(-14 + 2 * cos(ator(150)), 24 - 2 + 2 * sin(ator(150))),
+        std::make_pair(-16, 22),
+        std::make_pair(-16 + ftom(4), 20),
+        std::make_pair(-16 + ftom(6), 18),
+        std::make_pair(-16 + ftom(2), 16),
+        std::make_pair(-16 - ftom(2), 14),
+        std::make_pair(-16 - ftom(6), 12),
+        std::make_pair(-16 - ftom(4), 10),
+        std::make_pair(-16, 8),
+        std::make_pair(-16, 6),
+        std::make_pair(-16, 4),
+        std::make_pair(-16+2 - 2*cos(ator(30)),4-2*sin(ator(30))),
+        std::make_pair(-16+2 - 2*cos(ator(60)),4-2*sin(ator(90))),
+        std::make_pair(-14,2),
+        std::make_pair(-12,2),
+        std::make_pair(-10,2),
+        std::make_pair(-8,2),
+        std::make_pair(-6,2)
+        // std::make_pair(-4,2)
+    };
+}
+
+// semi circle with straight line after, should gen 3 splines, 2 for semicircle, 1 for straight
+// std::vector<std::pair<double,double>> yellow_cones = {
+//     std::make_pair(0, 20),
+//     std::make_pair(9.25, 17.73),
+//     std::make_pair(17.5, 9.68),
+//     std::make_pair(20, 0),
+//     std::make_pair(18.25, -8.18),
+//     std::make_pair(13.24, -14.99),
+//     std::make_pair(0, -20), 
+    // std::make_pair(-5, -20),
+    // std::make_pair(-10, -20),
+    // std::make_pair(0, -20)  
+// };
+
+// wave 1 spline
+/* Wave spline */
+
+void createWaveTrack(std::vector<std::pair<double, double>> &blue_cones, 
+                        std::vector<std::pair<double, double>> &yellow_cones) {
+
+
+    yellow_cones = {
+        std::make_pair(0, 20),
+        std::make_pair(20, 0),
+        std::make_pair(40, 40),
+        std::make_pair(60, 40)
+    };
+
+    blue_cones = {
+        std::make_pair(0, 20),
+        std::make_pair(20, 0),
+        std::make_pair(40, 40),
+        std::make_pair(60, 40)
+    };
+}
+
+void createSemiCircleTrack(std::vector<std::pair<double, double>> &blue_cones, 
+                        std::vector<std::pair<double, double>> &yellow_cones) {
+    yellow_cones = {
+        std::make_pair(0, 20),
+        std::make_pair(9.25, 17.73),
+        std::make_pair(17.5, 9.68),
+        std::make_pair(20, 0),
+        std::make_pair(18.25, -8.18),
+        std::make_pair(13.24, -14.99),
+        std::make_pair(0, -20), 
+        std::make_pair(-5, -20),
+        std::make_pair(-10, -20),
+        std::make_pair(-15, -20)
+    };
+
+    blue_cones = {
+        std::make_pair(0, 20),
+        std::make_pair(9.25, 17.73),
+        std::make_pair(17.5, 9.68),
+        std::make_pair(20, 0),
+        std::make_pair(18.25, -8.18),
+        std::make_pair(13.24, -14.99),
+        std::make_pair(0, -20), 
+        std::make_pair(-5, -20),
+        std::make_pair(-10, -20),
+        std::make_pair(-15, -20)
+    };                
+}
+
+void createParabToStraightTrack(std::vector<std::pair<double, double>> &blue_cones, 
+                        std::vector<std::pair<double, double>> &yellow_cones) {
+    yellow_cones = {
+        std::make_pair(0, 25),
+        std::make_pair(2, 16),
+        std::make_pair(4, 9),
+        std::make_pair(6, 4),
+        std::make_pair(7, 2.25),
+        std::make_pair(8, 1),
+        std::make_pair(10, 0),
+        std::make_pair(15, 0),
+        std::make_pair(20, 0),
+        std::make_pair(25, 0)
+    };
+
+    blue_cones = {
+        std::make_pair(0, 25),
+        std::make_pair(2, 16),
+        std::make_pair(4, 9),
+        std::make_pair(6, 4),
+        std::make_pair(7, 2.25),
+        std::make_pair(8, 1),
+        std::make_pair(10, 0),
+        std::make_pair(15, 0),
+        std::make_pair(20, 0),
+        std::make_pair(25, 0)
+    };                
+}
+
+void print_poly(Spline x, Spline y) {
+    std::cout << "(["<< x.spl_poly.nums(0) << "," << x.spl_poly.nums(1) << ","
+     << x.spl_poly.nums(2) << "," << x.spl_poly.nums(3) << "]," 
+     << "[" << y.spl_poly.nums(0) << "," << y.spl_poly.nums(1) << ","
+     << y.spl_poly.nums(2) << "," << y.spl_poly.nums(3) << "])"<< std::endl;
+}
+
+
+
+
+
+// int main() {
+//     std::vector<std::pair<double, double>> blue_cones = {};
+//     std::vector<std::pair<double, double>> yellow_cones = {};
+    
+//     createSquidwardTrack(blue_cones, yellow_cones);
+    
+//     int max_total_raceline_gen_time = std::numeric_limits<int>::min();
+//     std::vector<std::vector<double>> sample_raceline_splines;
+//     for (size_t i = 0; i<100; ++i) {
+//         std::cout << "===========================" << std::endl;
+//     	auto start_chunking = std::chrono::high_resolution_clock::now();
+//         std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
+//         auto end_chunking = std::chrono::high_resolution_clock::now();
+//         auto dur_chunking = std::chrono::duration_cast<std::chrono::microseconds>(end_chunking - start_chunking);
+//         std::cout << "Chunking time: " << dur_chunking.count() << std::endl;
+
+//     	double dstart = 0.5; 
+//     	// Vector to hold results: one vector for each chunk, with 16 coefficients (4 X1, 4 X2, 4 Y1, 4 Y2)
+//         int max_indiv_raceline_gen_time = std::numeric_limits<int>::min();
+//         std::vector<std::vector<double>> racelineSplines(chunks.size());
+//     	auto start_raceline_gen = std::chrono::high_resolution_clock::now();
+//     	for (size_t i = 0; i < chunks.size(); ++i) {
+//     	    // Define param2 and param4 dynamically for each chunk
+//     	    double dend = calculateEnd(*chunks[i],dstart);
+//     	    auto start_cur_raceline_gen =std::chrono::high_resolution_clock::now();
+//     	    auto [X1, X2, Y1, Y2] = runOptimizer(*chunks[i], dstart, 0.5, dend);	
+//     	    // Combine all coefficients into one vector (16 coefficients per chunk)
+//     	    racelineSplines[i] = {
+//     	        X1[0], X1[1], X1[2], X1[3],  // First X spline (first half)
+//     	        X2[0], X2[1], X2[2], X2[3],  // Second X spline (second half)
+//     	        Y1[0], Y1[1], Y1[2], Y1[3],  // First Y spline (first half)
+//     	        Y2[0], Y2[1], Y2[2], Y2[3]   // Second Y spline (second half)
+//     	    };
+//     	    dstart = dend;
+//     	    auto end_cur_raceline_gen = std::chrono::high_resolution_clock::now();
+//     	    auto dur_cur_raceline_gen = std::chrono::duration_cast<std::chrono::microseconds>(end_cur_raceline_gen - start_cur_raceline_gen);
+
+//             if (max_indiv_raceline_gen_time < dur_cur_raceline_gen.count()) {
+//                 max_indiv_raceline_gen_time = dur_cur_raceline_gen.count();
+//             }
+//     	    // std::cout << "\t Current raceline gen time: " << dur_cur_raceline_gen.count() << " microseconds" << std::endl;
+
+//     	}
+
+//         if (i == 0) {
+//             sample_raceline_splines = racelineSplines;
+//         }
+//     	auto end_raceline_gen = std::chrono::high_resolution_clock::now();
+//     	auto dur_raceline_gen = std::chrono::duration_cast<std::chrono::microseconds>(end_raceline_gen - start_raceline_gen);
+
+//         if (max_total_raceline_gen_time < dur_raceline_gen.count() + dur_chunking.count()) {
+//             max_total_raceline_gen_time = dur_raceline_gen.count() + dur_chunking.count();
+//         }
+//         std::cout << "Raceline gen longest individual run time: " << max_indiv_raceline_gen_time << " microseconds" << std::endl;
+//     	std::cout << "Raceline gen entire track time: " << dur_raceline_gen.count() << " microseconds" << std::endl;
+//         std::cout << "===========================\n\n" << std::endl;
+//     }
+
+//     std::cout << "===========================" << std::endl;
+//     std::cout << "End results: " << std::endl;
+//     std::cout << "Longest pipeline time: " << max_total_raceline_gen_time << std::endl;
+//     std::cout << "===========================" << std::endl;
+
+//     // Write output to a text file
+//     std::ofstream outputFile("src/planning/src/planning_codebase/raceline/splines.txt");
+//     if (outputFile.is_open()) {
+//         for (const auto& spline : sample_raceline_splines ){
+//             // Write coefficients to file
+//             outputFile << spline[0] << " " << spline[1] << " " << spline[2] << " " << spline[3] << " "; // First Half X
+//             outputFile << spline[4] << " " << spline[5] << " " << spline[6] << " " << spline[7] << " "; // Second Half X
+//             outputFile << spline[8] << " " << spline[9] << " " << spline[10] << " " << spline[11] << " "; // First Half Y
+//             outputFile << spline[12] << " " << spline[13] << " " << spline[14] << " " << spline[15] << "\n"; // Second Half Y
+//         }
+//         outputFile.close();
+//         std::cout << "Spline coefficients have been written to splines.txt" << std::endl;
+//     } else {
+//         std::cerr << "Unable to open file for writing!" << std::endl;
+//     }
+
+//     std::ofstream splines_outputFile("src/planning/src/planning_codebase/raceline/splines.txt");
+//     if (splines_outputFile.is_open()) {
+//         for (const auto& spline : sample_raceline_splines ){
+//             // Write coefficients to file
+//             splines_outputFile << spline[0] << " " << spline[1] << " " << spline[2] << " " << spline[3] << " "; // First Half X
+//             splines_outputFile << spline[4] << " " << spline[5] << " " << spline[6] << " " << spline[7] << " "; // Second Half X
+//             splines_outputFile << spline[8] << " " << spline[9] << " " << spline[10] << " " << spline[11] << " "; // First Half Y
+//             splines_outputFile << spline[12] << " " << spline[13] << " " << spline[14] << " " << spline[15] << "\n"; // Second Half Y
+//         }
+//         splines_outputFile.close();
+//         std::cout << "Spline coefficients have been written to splines.txt" << std::endl;
+//     } else {
+//         std::cerr << "Unable to open file for writing!" << std::endl;
+//     }
+//     return 0;
+// }

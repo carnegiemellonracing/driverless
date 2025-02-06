@@ -33,6 +33,7 @@
 #include <SDL2/SDL_video.h>
 
 #include <midline/svm_conv.hpp>
+#include <raceline/racelineChunk.hpp>
 
 
 namespace controls {
@@ -444,21 +445,31 @@ namespace controls {
             m_left_cone_points = process_ros_points(cone_msg.blue_cones);
             m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
 
-            midline::Cones cones;
+            std::vector<std::pair<double, double>> left_cones;
             for (const auto& cone : m_left_cone_points) {
-                cones.addBlueCone(cone.x, cone.y, 0);
+                left_cones.emplace_back(cone.x, cone.y);
             }
+            std::vector<std::pair<double, double>> right_cones;
             for (const auto& cone : m_right_cone_points) {
-                cones.addYellowCone(cone.x, cone.y, 0);
+                right_cones.emplace_back(cone.x, cone.y);
             }
 
+            // midline::Cones cones;
+            // for (const auto& cone : m_left_cone_points) {
+            //     cones.addBlueCone(cone.x, cone.y, 0);
+            // }
+            // for (const auto& cone : m_right_cone_points) {
+            //     cones.addYellowCone(cone.x, cone.y, 0);
+            // }
             // // TODO: convert this to using std::transform
             auto svm_start = std::chrono::high_resolution_clock::now();            
-            auto spline_frames = midline::cones_to_midline(cones);
+            // auto spline_frames = midline::cones_to_midline(cones);
+            auto midline = controlsGenerateMidline(left_cones, right_cones, 0.5, 0.5, 0.5);
+
             auto svm_end = std::chrono::high_resolution_clock::now();
             float svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
             m_spline_frames.clear();
-            for (const auto& frame : spline_frames) {
+            for (const auto& frame : midline) {
                 paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
                 m_spline_frames.emplace_back(frame.first, frame.second);
             }

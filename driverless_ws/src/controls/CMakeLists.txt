@@ -79,6 +79,8 @@ set(LIB_SOURCES
         src/midline/svm.cpp
         src/midline/svm_conv.cpp
         src/midline/cones.cpp
+        src/raceline/racelineChunk.cpp
+        src/raceline/raceline.cpp
 )
 
 if (DISPLAY)
@@ -89,7 +91,7 @@ endif()
 
 add_library(controls_lib SHARED ${LIB_SOURCES})
 
-ament_target_dependencies(controls_lib rclcpp std_msgs interfaces glm)
+ament_target_dependencies(controls_lib rclcpp std_msgs interfaces glm GSL)
 target_link_libraries(controls_lib CUDA::curand OpenGL::GL OpenGL::GLU ${SDL2_LIBRARIES})
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -105,7 +107,7 @@ target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
         >)
 
 ament_export_targets(controls_libExport HAS_LIBRARY_TARGET)
-ament_export_dependencies(rclcpp std_msgs interfaces glm builtin_interfaces)
+ament_export_dependencies(rclcpp std_msgs interfaces glm builtin_interfaces GSL)
 
 install(
         TARGETS controls_lib
