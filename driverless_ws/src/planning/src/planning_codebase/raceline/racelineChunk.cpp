@@ -369,6 +369,9 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     }
                 }
 
+                std::cout << "yellowEndLength " << yellowEndLength << std::endl;
+                std::cout << "chunk->tEnd " << chunk->tEnd << std::endl;
+
                 if (yellowSplineIdx > 0) {
                     yellowEndLength += yellowCumulativeLen[yellowSplineIdx - 1];
                 }
