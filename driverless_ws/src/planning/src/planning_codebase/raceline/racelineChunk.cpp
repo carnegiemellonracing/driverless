@@ -134,6 +134,9 @@ double tInterpolate(ParameterizedSpline spline, double targetArclength) {
 // takes arclength of spline (linear method) is the current spline arclength
 // take in goal arclength, and return t value that
 double tEstimate(double currArclength, double targetArclength) {
+    if (targetArclength == 0) {
+        return 0;
+    }
     return currArclength / targetArclength;
 }
 
@@ -412,6 +415,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 chunk->yellowFirstSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, 1);
                 chunk->yellowLastSplineArclength = arclength(std::make_pair(chunk->yellowSplines[chunk->yellowSplines.size()-1].spline_x.spl_poly, chunk->yellowSplines[chunk->yellowSplines.size()-1].spline_y.spl_poly), 0, chunk->tEnd);
             }
+
+            std::cout << "passed yell things" << std::endl;
 
             if (i != blueRacetrackSplines.size()) {
                 if (i > 1) {
