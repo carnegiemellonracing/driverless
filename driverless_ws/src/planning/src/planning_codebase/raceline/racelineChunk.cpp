@@ -244,6 +244,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 // takes arclength of spline (linear method) is the current spline arclength
                 // take in goal arclength, and return t value that
 
+                std::cout << "before splitT" << std::endl;
+
                 double splitT = 0;
                 
                 auto start_split_yellow = std::chrono::high_resolution_clock::now();
@@ -257,6 +259,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                         splitT = tEstimate(yellowCumulativeLen[yellowSplineIdx], (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
                     }
                 }
+
+                std::cout << "after splitT" << std::endl;
 
                 auto end_split_yellow = std::chrono::high_resolution_clock::now();
 
@@ -320,6 +324,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             // TODO arc, use linear arclength
             double midT = 0;
 
+            std::cout << "before midT blue" << std::endl;
+
             if (USE_T_INTERPOLATE) {
                 midT = tInterpolate(blueRacetrackSplines[blueIdx], midFromMidSpline);
             } else {
@@ -330,6 +336,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     midT = tEstimate(blueCumulativeLen[blueIdx], midFromMidSpline);
                 }
             }
+
+            std::cout << "after midT blue" << std::endl;
             
 
             chunk->blueMidX = poly_eval(blueRacetrackSplines[blueIdx].spline_x.spl_poly, midT);
@@ -373,6 +381,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 midFromMidSpline = midFromMidSpline - yellowCumulativeLen[yellowIdx-1];
             }
             
+
+            std::cout << "before midT yell" << std::endl;
             // binary search from start of yellowIdx spline 
             if (USE_T_INTERPOLATE) {
                 midT = tInterpolate(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
@@ -384,6 +394,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     midT = tEstimate(yellowCumulativeLen[yellowIdx], midFromMidSpline);
                 }
             }
+            std::cout << "after midT yell" << std::endl;
 
             chunk->yellowMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
             chunk->yellowMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);
