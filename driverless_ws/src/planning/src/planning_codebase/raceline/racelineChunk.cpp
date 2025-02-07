@@ -66,20 +66,6 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
     bool checkThirdDerMin = infthird || (abs(this->minThirdDer - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
     bool checkThirdDerMax = infthird || (abs(this->maxThirdDer - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
 
-    // if (checkFirstDer == false) {
-    //     std::cout << "check first failed " << std::endl;
-    // } else if (checkSecondDer == false) {
-    //     std::cout << "check second failed " << std::endl;
-    // } else if (checkThirdDerMin == false) {
-    //     std::cout << "check third min failed " << std::endl;
-    //     std::cout << "3rd min" << this->minThirdDer << std::endl;
-    //     std::cout << "curr 3rd" << spline2_third_der << std::endl;
-    // } else if (checkThirdDerMax == false) {
-    //     std::cout << "check third max failed " << std::endl;
-    //     std::cout << "3rd max" << this->maxThirdDer << std::endl;
-    //     std::cout << "curr 3rd" << spline2_third_der << std::endl;
-    // }
-
     bool res = checkFirstDer && checkSecondDer && checkThirdDerMax && checkThirdDerMin;
 
     if (res) {
@@ -90,11 +76,6 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
             this->maxThirdDer = spline2_third_der;
         }
 
-    } else {
-        // std::cout << "3rd diff with min" << abs(this->minThirdDer - spline2_third_der) << std::endl;
-        // std::cout << "3rd diff with max" << abs(this->maxThirdDer - spline2_third_der) << std::endl;
-
-        // std::cout << "2nd diff with prev spline" << abs(spline1_second_der - spline2_second_der) << std::endl;
     }
 
     return res;
@@ -259,7 +240,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     else {
                         splitT = tEstimate(yellowCumulativeLen[yellowSplineIdx], (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
                     }
-                    std::cout << "splitT: " << splitT << std::endl;
                 }
 
                 auto end_split_yellow = std::chrono::high_resolution_clock::now();
@@ -414,11 +394,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 else {
                      chunk->blueLastSplineArclength = blueCumulativeLen[0];
                 }
-
-                // std::cout << "blue first spline leng" << chunk->blueFirstSplineArclength << std::endl;
-                // std::cout << "blue last spline leng" << chunk->blueLastSplineArclength << std::endl;
-                // std::cout << "yellow first spline leng" << chunk->yellowFirstSplineArclength << std::endl;
-                // std::cout << "yellow last spline leng" << chunk->yellowLastSplineArclength << std::endl;
 
                 chunk = new Chunk();
                 chunk->tStart = nextTStart;
