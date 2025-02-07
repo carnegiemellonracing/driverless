@@ -310,7 +310,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
             // binary search from start of blueIdx spline 
             // TODO arc, use linear arclength
-            double midT = 0
+            double midT = 0;
 
             if (USE_T_INTERPOLATE) {
                 midT = tInterpolate(blueRacetrackSplines[blueIdx], midFromMidSpline);
