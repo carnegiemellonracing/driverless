@@ -22,7 +22,7 @@ setup(
         'console_scripts': [
             'multi_node = websocketer_redo.MultiNode:main',
             'websocket_node = websocketer_redo.WebsocketNode:main',
-            'pid_node = websocketer_redo.pidTuning:main'
+            'pid_node = websocketer_redo.PidNode:main'
         ],
     },
 )
