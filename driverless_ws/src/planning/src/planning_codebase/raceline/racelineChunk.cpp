@@ -3,6 +3,8 @@
 #include <math.h>
 // #include "../midline/generator.hpp"
 
+// 0 if use tEstimate, 1 if use tInterpolate
+#define USE_T_INTERPOLATE 1
 
 // tunable params for chunks
 // thresholds are arclength in meters
@@ -127,6 +129,13 @@ double tInterpolate(ParameterizedSpline spline, double targetArclength) {
     return low + (high-low) / 2;
 }
 
+// TODO arc, tEstimate
+// takes arclength of spline (linear method) is the current spline arclength
+// take in goal arclength, and return t value that
+double tEstimate(double currArclength, double targetArclength) {
+    return currArclength / targetArclength;
+}
+
 /** 
  * Generates a vector of raceline chunks based on track boundaries.
  *
@@ -202,7 +211,23 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     yellowStartLen = yellowCumulativeLen[yellowSplineIdx - 1];
                 }
                 
-                double splitT = tInterpolate(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
+                // TODO arc, tEstimate
+                // takes arclength of spline (linear method) is the current spline arclength
+                // take in goal arclength, and return t value that
+
+                double splitT = 0;
+                
+                if (USE_T_INTERPOLATE) {
+                    splitT = tInterpolate(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
+                } else {
+                    if (yellowSplineIdx > 0) {
+                        splitT = tEstimate(yellowCumulativeLen[yellowSplineIdx] - yellowCumulativeLen[yellowSplineIdx - 1], (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
+                    }
+                    else {
+                        splitT = tEstimate(yellowCumulativeLen[yellowSplineIdx], (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
+                    }
+                }
+                
                 chunk->tEnd = splitT;
 
                 chunk->yellowSplines.push_back(splitSpline);
@@ -245,7 +270,20 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             }
 
             // binary search from start of blueIdx spline 
-            double midT = tInterpolate(blueRacetrackSplines[blueIdx], midFromMidSpline);
+            // TODO arc, use linear arclength
+            double midT = 0
+
+            if (USE_T_INTERPOLATE) {
+                midT = tInterpolate(blueRacetrackSplines[blueIdx], midFromMidSpline);
+            } else {
+                if (blueIdx > 0) {
+                    midT = tEstimate(blueCumulativeLen[blueIdx] - blueCumulativeLen[blueIdx - 1], midFromMidSpline);
+                }
+                else {
+                    midT = tEstimate(blueCumulativeLen[blueIdx], midFromMidSpline);
+                }
+            }
+            
 
             chunk->blueMidX = poly_eval(blueRacetrackSplines[blueIdx].spline_x.spl_poly, midT);
             chunk->blueMidY = poly_eval(blueRacetrackSplines[blueIdx].spline_y.spl_poly, midT);
@@ -261,7 +299,18 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             if (i != blueRacetrackSplines.size()) {
                 // yellow midpoint and tangent
                 ParameterizedSpline yellowSpline = yellowRacetrackSplines[yellowSplineIdx];
-                yellowEndLength = arclength(std::make_pair(yellowSpline.spline_x.first_der, yellowSpline.spline_y.first_der), 0, chunk->tEnd);
+
+                if (USE_T_INTERPOLATE) {
+                    yellowEndLength = arclength(std::make_pair(yellowSpline.spline_x.first_der, yellowSpline.spline_y.first_der), 0, chunk->tEnd);
+                } else {
+                    if (yellowSplineIdx > 0) {
+                        yellowEndLength = (yellowCumulativeLen[yellowSplineIdx] - yellowCumulativeLen[yellowSplineIdx - 1]) * chunk->tEnd;
+                    }
+                    else {
+                        yellowEndLength = (yellowCumulativeLen[yellowSplineIdx]) * chunk->tEnd;
+                    }
+                }
+
                 if (yellowSplineIdx > 0) {
                     yellowEndLength += yellowCumulativeLen[yellowSplineIdx - 1];
                 }
@@ -278,7 +327,16 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             }
             
             // binary search from start of yellowIdx spline 
-            midT = tInterpolate(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
+            if (USE_T_INTERPOLATE) {
+                midT = tInterpolate(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
+            } else {
+                if (yellowIdx > 0) {
+                    midT = tEstimate(yellowCumulativeLen[yellowIdx] - yellowCumulativeLen[yellowIdx - 1], midFromMidSpline);
+                }
+                else {
+                    midT = tEstimate(yellowCumulativeLen[yellowIdx], midFromMidSpline);
+                }
+            }
 
             chunk->yellowMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
             chunk->yellowMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);
