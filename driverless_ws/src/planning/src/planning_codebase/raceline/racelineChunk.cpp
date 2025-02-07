@@ -375,6 +375,9 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             }
 
             while (yellowCumulativeLen[yellowIdx] < (yellowEndLength - chunk->yellowArclength/2)) {
+                std::cout << "yellowCumulativeLen[yellowIdx] " << yellowCumulativeLen[yellowIdx] << std::endl;
+                std::cout << "yellowEndLength - chunk->yellowArclength/2 " << yellowEndLength - chunk->yellowArclength/2 << std::endl;
+                std::cout << "yellowIdx" << yellowIdx << std::endl;
                 yellowIdx += 1;
             }
 
