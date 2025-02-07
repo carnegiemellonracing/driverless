@@ -5,7 +5,7 @@
 // #include "../midline/generator.hpp"
 
 // 0 if use tEstimate, 1 if use tInterpolate
-#define USE_T_INTERPOLATE 1
+#define USE_T_INTERPOLATE 0
 
 // tunable params for chunks
 // thresholds are arclength in meters
