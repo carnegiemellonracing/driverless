@@ -246,6 +246,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
                 double splitT = 0;
                 
+                auto start_split_yellow = std::chrono::high_resolution_clock::now();
                 if (USE_T_INTERPOLATE) {
                     splitT = tInterpolate(splitSpline, (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
                 } else {
@@ -255,6 +256,13 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     else {
                         splitT = tEstimate(yellowCumulativeLen[yellowSplineIdx], (bluePercentProgress * yellowCumulativeLen[yellowCumulativeLen.size() - 1]) - yellowStartLen);
                     }
+                }
+
+                auto end_split_yellow = std::chrono::high_resolution_clock::now();
+
+                auto dur_split_yellow = std::chrono::duration_cast<std::chrono::microseconds>(end_split_yellow - start_split_yellow);
+                if (max_split_yellow_time < dur_split_yellow.count()) {
+                    max_split_yellow_time = dur_split_yellow.count();
                 }
                 
                 chunk->tEnd = splitT;
@@ -310,7 +318,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
             // binary search from start of blueIdx spline 
             // TODO arc, use linear arclength
-            double midT = 0;
+            double midT = 0
 
             if (USE_T_INTERPOLATE) {
                 midT = tInterpolate(blueRacetrackSplines[blueIdx], midFromMidSpline);
