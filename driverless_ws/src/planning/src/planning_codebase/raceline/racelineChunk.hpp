@@ -1,5 +1,6 @@
 #include <vector>
 #include "raceline.hpp"
+#define CHUNK_FILENAME "src/planning/src/planning_codebase/raceline"
 
 /**
  * Chunks represent segments of the track where all points have similar curvature. 
@@ -47,6 +48,12 @@ class Chunk
         double yellowEndY;
         double yellowFirstDerMidX;
         double yellowFirstDerMidY;
+
+        double blueFirstSplineArclength;
+        double blueLastSplineArclength;
+        double yellowFirstSplineArclength;
+        double yellowLastSplineArclength;
+
         
 
         std::vector<ParameterizedSpline> blueSplines;

@@ -1,6 +1,7 @@
 #include "racelineChunk.hpp"
 
 #include <math.h>
+#include <chrono>
 // #include "../midline/generator.hpp"
 
 // 0 if use tEstimate, 1 if use tInterpolate
@@ -65,19 +66,19 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
     bool checkThirdDerMin = infthird || (abs(this->minThirdDer - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
     bool checkThirdDerMax = infthird || (abs(this->maxThirdDer - spline2_third_der) <= CHUNK_THIRD_DER_THRESH);
 
-    if (checkFirstDer == false) {
-        std::cout << "check first failed " << std::endl;
-    } else if (checkSecondDer == false) {
-        std::cout << "check second failed " << std::endl;
-    } else if (checkThirdDerMin == false) {
-        std::cout << "check third min failed " << std::endl;
-        std::cout << "3rd min" << this->minThirdDer << std::endl;
-        std::cout << "curr 3rd" << spline2_third_der << std::endl;
-    } else if (checkThirdDerMax == false) {
-        std::cout << "check third max failed " << std::endl;
-        std::cout << "3rd max" << this->maxThirdDer << std::endl;
-        std::cout << "curr 3rd" << spline2_third_der << std::endl;
-    }
+    // if (checkFirstDer == false) {
+    //     std::cout << "check first failed " << std::endl;
+    // } else if (checkSecondDer == false) {
+    //     std::cout << "check second failed " << std::endl;
+    // } else if (checkThirdDerMin == false) {
+    //     std::cout << "check third min failed " << std::endl;
+    //     std::cout << "3rd min" << this->minThirdDer << std::endl;
+    //     std::cout << "curr 3rd" << spline2_third_der << std::endl;
+    // } else if (checkThirdDerMax == false) {
+    //     std::cout << "check third max failed " << std::endl;
+    //     std::cout << "3rd max" << this->maxThirdDer << std::endl;
+    //     std::cout << "curr 3rd" << spline2_third_der << std::endl;
+    // }
 
     bool res = checkFirstDer && checkSecondDer && checkThirdDerMax && checkThirdDerMin;
 
@@ -90,10 +91,10 @@ bool Chunk::continueChunk(ParameterizedSpline spline1, ParameterizedSpline splin
         }
 
     } else {
-        std::cout << "3rd diff with min" << abs(this->minThirdDer - spline2_third_der) << std::endl;
-        std::cout << "3rd diff with max" << abs(this->maxThirdDer - spline2_third_der) << std::endl;
+        // std::cout << "3rd diff with min" << abs(this->minThirdDer - spline2_third_der) << std::endl;
+        // std::cout << "3rd diff with max" << abs(this->maxThirdDer - spline2_third_der) << std::endl;
 
-        std::cout << "2nd diff with prev spline" << abs(spline1_second_der - spline2_second_der) << std::endl;
+        // std::cout << "2nd diff with prev spline" << abs(spline1_second_der - spline2_second_der) << std::endl;
     }
 
     return res;
@@ -113,14 +114,14 @@ double tInterpolate(ParameterizedSpline spline, double targetArclength) {
     double high = 1;
     double mid;
     double curArclength;
-    while (high-low >= 0.000001) {
+    while (high-low >= 0.001) {
         double mid = low + (high-low) / 2;
         double curArclength = arclength(splinePair, 0, mid);
-        if (abs(curArclength - targetArclength) <= 0.000001) {
+        if (abs(curArclength - targetArclength) <= 0.001) {
             return mid;
         }
         else if (curArclength < targetArclength) {
-            low = mid + 0.00001;
+            low = mid + 0.001;
         }
         else {
             high = mid;
@@ -155,8 +156,12 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     /* Getting the polynomials/splines for each track bound*/
     /* Pass in all of the blue and yellow cones, */
+    auto start = std::chrono::high_resolution_clock::now();
     std::pair<std::vector<ParameterizedSpline>,std::vector<double>> blue = make_splines_vector(blueCones);
     std::pair<std::vector<ParameterizedSpline>,std::vector<double>> yellow = make_splines_vector(yellowCones);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Make splines vector time " << duration.count() << " microseconds" << std::endl;
 
 
     std::vector<ParameterizedSpline> blueRacetrackSplines = blue.first;
@@ -172,6 +177,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     chunk->blueSplines.push_back(blueRacetrackSplines[0]);
     chunk->tStart = 0;
     chunk->blueArclengthStart = 0;
+    chunk->blueFirstSplineArclength = blueCumulativeLen[0];
     
     double bluePercentProgress;
     int yellowSplineIdx = 0;
@@ -179,10 +185,24 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     int blueIdx = 0;
     int yellowIdx = 0;
 
+    /* Track the max time it takes for determining whether to continue to chunk */
+    auto max_continue_chunk_time = std::numeric_limits<int>::min();
+    auto max_get_yellow_time = std::numeric_limits<int>::min();
+    auto max_split_yellow_time = std::numeric_limits<int>::min();
+    auto max_define_chunk_fields_time = std::numeric_limits<int>::min();
+
+    auto start_chunking = std::chrono::high_resolution_clock::now();
     for (int i = 1; i <= blueRacetrackSplines.size(); i++) {
         // add spline to chunk
-        if (i < blueRacetrackSplines.size() && 
-            (chunk->continueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]))) {
+        auto start_continue_chunk = std::chrono::high_resolution_clock::now();
+        bool check_continue = i < blueRacetrackSplines.size() && (chunk->continueChunk(blueRacetrackSplines[i-1], blueRacetrackSplines[i]));
+        auto end_continue_chunk = std::chrono::high_resolution_clock::now();
+        auto dur_continue_chunk = std::chrono::duration_cast<std::chrono::microseconds>(end_continue_chunk - start_continue_chunk);
+        if (max_continue_chunk_time < dur_continue_chunk.count()) {
+            max_continue_chunk_time = dur_continue_chunk.count();
+        }
+
+        if (check_continue) {
             chunk->blueSplines.push_back(blueRacetrackSplines[i]);
         }
         // stop current chunk, add to vector, start new chunk
@@ -193,15 +213,24 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             // GET CORRESPONDING YELLOW CHUNK
             // yellowindex is greater than yellowRacetrackSplines or 
             // cumsum is greater than cumsum of blue;yellowSplineIdx
+
+            auto start_get_yellow = std::chrono::high_resolution_clock::now();
             while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
                 (yellowCumulativeLen[yellowSplineIdx] < yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
                 yellowSplineIdx++;
             }
+            auto end_get_yellow = std::chrono::high_resolution_clock::now();
+            auto dur_get_yellow = std::chrono::duration_cast<std::chrono::microseconds>(end_get_yellow - start_get_yellow);
+            if (max_get_yellow_time < dur_get_yellow.count()) {
+                max_get_yellow_time = dur_get_yellow.count();
+            }
+
 
             double nextTStart = 0;
 
             // split yellow if yellow spline included in chunk is longer than curr blue
+
             if (yellowSplineIdx < yellowRacetrackSplines.size()) {
                 ParameterizedSpline splitSpline = yellowRacetrackSplines[yellowSplineIdx];
 
@@ -240,8 +269,13 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                     nextTStart = splitT;
                 }
             }
+            
+
+
 
             // FIND ALL FIELDS NEEDED FOR A CHUNK
+
+            auto start_define_chunk_fields = std::chrono::high_resolution_clock::now();
             chunkVector->emplace_back(chunk);
 
             chunk->blueArclength = chunk->blueArclengthEnd - chunk->blueArclengthStart;
@@ -256,6 +290,11 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             chunk->yellowFirstDerXEnd = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_x.first_der, chunk->tEnd);
             chunk->yellowFirstDerYStart = poly_eval(chunk->yellowSplines[0].spline_y.first_der, chunk->tStart);
             chunk->yellowFirstDerYEnd = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_y.first_der, chunk->tEnd);
+            auto end_define_chunk_fields = std::chrono::high_resolution_clock::now();
+            auto dur_define_chunk_fields = std::chrono::duration_cast<std::chrono::microseconds>(end_define_chunk_fields - start_define_chunk_fields);
+            if (max_define_chunk_fields_time < dur_define_chunk_fields.count()) {
+                max_define_chunk_fields_time = dur_define_chunk_fields.count();
+            }
 
             double blueArcStart = chunk->blueArclengthEnd;
 
@@ -346,9 +385,27 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             chunk->yellowEndY = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_y.spl_poly, chunk->tEnd);
             chunk->yellowFirstDerMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.first_der, midT);
             chunk->yellowFirstDerMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.first_der, midT);
-            
+            if (chunk->yellowSplines.size() == 1) {
+                chunk->yellowFirstSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, chunk->tEnd);
+                chunk->yellowLastSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, chunk->tEnd);
+            }
+            else {
+                chunk->yellowFirstSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, 1);
+                chunk->yellowLastSplineArclength = arclength(std::make_pair(chunk->yellowSplines[chunk->yellowSplines.size()-1].spline_x.spl_poly, chunk->yellowSplines[chunk->yellowSplines.size()-1].spline_y.spl_poly), 0, chunk->tEnd);
+            }
 
             if (i != blueRacetrackSplines.size()) {
+                if (i > 1) {
+                    chunk->blueLastSplineArclength = blueCumulativeLen[i-1] - blueCumulativeLen[i-2];
+                }
+                else {
+                     chunk->blueLastSplineArclength = blueCumulativeLen[0];
+                }
+
+                // std::cout << "blue first spline leng" << chunk->blueFirstSplineArclength << std::endl;
+                // std::cout << "blue last spline leng" << chunk->blueLastSplineArclength << std::endl;
+                // std::cout << "yellow first spline leng" << chunk->yellowFirstSplineArclength << std::endl;
+                // std::cout << "yellow last spline leng" << chunk->yellowLastSplineArclength << std::endl;
 
                 chunk = new Chunk();
                 chunk->tStart = nextTStart;
@@ -357,10 +414,28 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 chunk->blueSplines.push_back(blueRacetrackSplines[i]);
                 chunk->minThirdDer = blueRacetrackSplines[i].get_third_der(0);
                 chunk->maxThirdDer = chunk->minThirdDer;
+                chunk->blueFirstSplineArclength = blueCumulativeLen[i]-blueCumulativeLen[i-1];
             }
         }
-
     }
+    auto end_chunking = std::chrono::high_resolution_clock::now();
+    auto dur_chunking = std::chrono::duration_cast<std::chrono::microseconds>(end_chunking - start_chunking);
+    std::cout << "*************************************" << std::endl;
+    std::cout << "generateChunks: chunking loop time: " << dur_chunking.count() << " microseconds" << std::endl;
+    std::cout << "Per iteration: " << std::endl;
+    std::cout << "generateChunks: max_continue_chunk_time: " << max_continue_chunk_time << " microseconds;" << std::endl;
+    std::cout << "generateChunks: max_get_yellow_time: " << max_get_yellow_time << " microseconds" << std::endl;
+    std::cout << "generateChunks: max_split_yellow_time tInterpolate: " << max_split_yellow_time <<  " microseconds" << std::endl;
+    std::cout << "generateChunks: max_define_chunk_fields_time: " << max_define_chunk_fields_time << " microseconds" << std::endl;
+    std::cout << "\nWorst case one whole run" << std::endl;
+    std::cout << "generateChunks: max_continue_chunk_time: " << max_continue_chunk_time * blueRacetrackSplines.size() << " microseconds;" << std::endl;
+    std::cout << "generateChunks: max_get_yellow_time tInterpolate: " << max_get_yellow_time * blueRacetrackSplines.size()<< " microseconds" << std::endl;
+    std::cout << "generateChunks: max_split_yellow_time: " << max_split_yellow_time* blueRacetrackSplines.size() <<  " microseconds" << std::endl;
+    std::cout << "generateChunks: max_define_chunk_fields_time: " << max_define_chunk_fields_time* blueRacetrackSplines.size() << " microseconds" << std::endl;
+
+    std::cout << "Num blueRacetrackSplines: " << blueRacetrackSplines.size() << std::endl;
+    std::cout << "*************************************" << std::endl;
+
 
     return chunkVector;
 }

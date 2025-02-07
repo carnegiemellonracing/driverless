@@ -1,9 +1,12 @@
+//Raceline Algorithm
+
 #include <math.h>
 #include <vector>
 #include <iostream>
 #include "racelineChunk.hpp"
 #include <cassert>
 #include <fstream>
+#include <chrono>
 
 typedef std::pair<double, double> Point;
 
@@ -280,78 +283,78 @@ runOptimizer(Chunk& chunk, double d1, double d2, double d3) {
     );
 }
 
+double calculateEnd(Chunk& chunk, double start) {
+    return 0.5;
+}
+
+
 int main() {
     std::vector<std::pair<double, double>> blue_cones = {};
     std::vector<std::pair<double, double>> yellow_cones = {};
-
+    
     createSquidwardTrack(blue_cones, yellow_cones);
+    
+    int max_total_raceline_gen_time = std::numeric_limits<int>::min();
+    std::vector<std::vector<double>> sample_raceline_splines;
+    for (size_t i = 0; i<100; ++i) {
+        std::cout << "===========================" << std::endl;
+    	auto start_chunking = std::chrono::high_resolution_clock::now();
+        std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
+        auto end_chunking = std::chrono::high_resolution_clock::now();
+        auto dur_chunking = std::chrono::duration_cast<std::chrono::microseconds>(end_chunking - start_chunking);
+        std::cout << "Chunking time: " << dur_chunking.count() << std::endl;
 
-    std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
+    	double dstart = 0.5; 
+    	// Vector to hold results: one vector for each chunk, with 16 coefficients (4 X1, 4 X2, 4 Y1, 4 Y2)
+        int max_indiv_raceline_gen_time = std::numeric_limits<int>::min();
+        std::vector<std::vector<double>> racelineSplines(chunks.size());
+    	auto start_raceline_gen = std::chrono::high_resolution_clock::now();
+    	for (size_t i = 0; i < chunks.size(); ++i) {
+    	    // Define param2 and param4 dynamically for each chunk
+    	    double dend = calculateEnd(*chunks[i],dstart);
+    	    auto start_cur_raceline_gen =std::chrono::high_resolution_clock::now();
+    	    auto [X1, X2, Y1, Y2] = runOptimizer(*chunks[i], dstart, 0.5, dend);	
+    	    // Combine all coefficients into one vector (16 coefficients per chunk)
+    	    racelineSplines[i] = {
+    	        X1[0], X1[1], X1[2], X1[3],  // First X spline (first half)
+    	        X2[0], X2[1], X2[2], X2[3],  // Second X spline (second half)
+    	        Y1[0], Y1[1], Y1[2], Y1[3],  // First Y spline (first half)
+    	        Y2[0], Y2[1], Y2[2], Y2[3]   // Second Y spline (second half)
+    	    };
+    	    dstart = dend;
+    	    auto end_cur_raceline_gen = std::chrono::high_resolution_clock::now();
+    	    auto dur_cur_raceline_gen = std::chrono::duration_cast<std::chrono::microseconds>(end_cur_raceline_gen - start_cur_raceline_gen);
 
-    std::cout << "YELLOW SPLINE START" << std::endl;
-
-    for (int i  = 0; i < chunks.size(); i++) {
-        std::cout << "([" << std::endl;
-
-        for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
-            // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-            if (j != 0) {
-                std::cout << "," << std::endl;
+            if (max_indiv_raceline_gen_time < dur_cur_raceline_gen.count()) {
+                max_indiv_raceline_gen_time = dur_cur_raceline_gen.count();
             }
-            print_poly(chunks[i]->yellowSplines[j].spline_x, chunks[i]->yellowSplines[j].spline_y);
+    	    // std::cout << "\t Current raceline gen time: " << dur_cur_raceline_gen.count() << " microseconds" << std::endl;
 
+    	}
+
+        if (i == 0) {
+            sample_raceline_splines = racelineSplines;
         }
+    	auto end_raceline_gen = std::chrono::high_resolution_clock::now();
+    	auto dur_raceline_gen = std::chrono::duration_cast<std::chrono::microseconds>(end_raceline_gen - start_raceline_gen);
 
-        std::cout << "]," << std::endl;
-
-        std::cout << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")" << std::endl;
-
-        std::cout << ")," << std::endl;
-    }
-
-    std::cout << "YELLOW SPLINE END" << std::endl;
-    std::cout << "BLUE SPLINE START" << std::endl;
-
-    for (int i  = 0; i < chunks.size(); i++) {
-        std::cout << "([" << std::endl;
-
-        for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
-            // Yellow << chunks[i]->yellowSplines[j].first << "," << chunks[i]->yellowSplines[j].second << std::endl;
-            if (j != 0) {
-                std::cout << "," << std::endl;
-            }
-            print_poly(chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
-
+        if (max_total_raceline_gen_time < dur_raceline_gen.count() + dur_chunking.count()) {
+            max_total_raceline_gen_time = dur_raceline_gen.count() + dur_chunking.count();
         }
-
-        std::cout << "]," << std::endl;
-
-        std::cout << " (" << 0 <<  ", " << 1 << ")" << std::endl;
-
-        std::cout << ")," << std::endl;
+        std::cout << "Raceline gen longest individual run time: " << max_indiv_raceline_gen_time << " microseconds" << std::endl;
+    	std::cout << "Raceline gen entire track time: " << dur_raceline_gen.count() << " microseconds" << std::endl;
+        std::cout << "===========================\n\n" << std::endl;
     }
 
-    std::cout << "BLUE SPLINE START" << std::endl;
-
-    // Vector to hold results: one vector for each chunk, with 16 coefficients (4 X1, 4 X2, 4 Y1, 4 Y2)
-    std::vector<std::vector<double>> racelineSplines(chunks.size());
-
-    for (size_t i = 0; i < chunks.size(); ++i) {
-        auto [X1, X2, Y1, Y2] = runOptimizer(*chunks[i], 0.5, 0.5, 0.5);
-
-        // Combine all coefficients into one vector (16 coefficients per chunk)
-        racelineSplines[i] = {
-            X1[0], X1[1], X1[2], X1[3],  // First X spline (first half)
-            X2[0], X2[1], X2[2], X2[3],  // Second X spline (second half)
-            Y1[0], Y1[1], Y1[2], Y1[3],  // First Y spline (first half)
-            Y2[0], Y2[1], Y2[2], Y2[3]   // Second Y spline (second half)
-        };
-    }
+    std::cout << "===========================" << std::endl;
+    std::cout << "End results: " << std::endl;
+    std::cout << "Longest pipeline time: " << max_total_raceline_gen_time << std::endl;
+    std::cout << "===========================" << std::endl;
 
     // Write output to a text file
-    std::ofstream outputFile("splines.txt");
+    std::ofstream outputFile("src/planning/src/planning_codebase/raceline/splines.txt");
     if (outputFile.is_open()) {
-        for (const auto& spline : racelineSplines) {
+        for (const auto& spline : sample_raceline_splines ){
             // Write coefficients to file
             outputFile << spline[0] << " " << spline[1] << " " << spline[2] << " " << spline[3] << " "; // First Half X
             outputFile << spline[4] << " " << spline[5] << " " << spline[6] << " " << spline[7] << " "; // Second Half X
@@ -364,6 +367,19 @@ int main() {
         std::cerr << "Unable to open file for writing!" << std::endl;
     }
 
-
+    std::ofstream splines_outputFile("src/planning/src/planning_codebase/raceline/splines.txt");
+    if (splines_outputFile.is_open()) {
+        for (const auto& spline : sample_raceline_splines ){
+            // Write coefficients to file
+            splines_outputFile << spline[0] << " " << spline[1] << " " << spline[2] << " " << spline[3] << " "; // First Half X
+            splines_outputFile << spline[4] << " " << spline[5] << " " << spline[6] << " " << spline[7] << " "; // Second Half X
+            splines_outputFile << spline[8] << " " << spline[9] << " " << spline[10] << " " << spline[11] << " "; // First Half Y
+            splines_outputFile << spline[12] << " " << spline[13] << " " << spline[14] << " " << spline[15] << "\n"; // Second Half Y
+        }
+        splines_outputFile.close();
+        std::cout << "Spline coefficients have been written to splines.txt" << std::endl;
+    } else {
+        std::cerr << "Unable to open file for writing!" << std::endl;
+    }
     return 0;
 }
