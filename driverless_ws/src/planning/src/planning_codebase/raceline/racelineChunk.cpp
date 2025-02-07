@@ -391,6 +391,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 midT = tInterpolate(yellowRacetrackSplines[yellowIdx], midFromMidSpline);
             } else {
                 if (yellowIdx > 0) {
+                    std::cout << "yellowCumulativeLen[yellowIdx] - yellowCumulativeLen[yellowIdx - 1] " << yellowCumulativeLen[yellowIdx] - yellowCumulativeLen[yellowIdx - 1] << std::endl;
+                    std::cout << "midFromMidSpline " << midFromMidSpline << std::endl;
                     midT = tEstimate(yellowCumulativeLen[yellowIdx] - yellowCumulativeLen[yellowIdx - 1], midFromMidSpline);
                 }
                 else {
