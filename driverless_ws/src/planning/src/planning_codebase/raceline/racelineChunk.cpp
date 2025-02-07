@@ -134,10 +134,10 @@ double tInterpolate(ParameterizedSpline spline, double targetArclength) {
 // takes arclength of spline (linear method) is the current spline arclength
 // take in goal arclength, and return t value that
 double tEstimate(double currArclength, double targetArclength) {
-    if (targetArclength == 0) {
+    if (currArclength == 0) {
         return 0;
     }
-    return currArclength / targetArclength;
+    return targetArclength/currArclength;
 }
 
 /** 
