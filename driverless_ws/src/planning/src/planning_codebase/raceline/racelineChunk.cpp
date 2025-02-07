@@ -399,6 +399,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             }
             std::cout << "after midT yell" << std::endl;
 
+            std::cout << "midT " << midT << std::endl;
             chunk->yellowMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
             chunk->yellowMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);
             std::cout << "pass mid" << std::endl;
