@@ -401,12 +401,16 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
             chunk->yellowMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.spl_poly, midT);
             chunk->yellowMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.spl_poly, midT);
+            std::cout << "pass mid" << std::endl;
             chunk->yellowStartX = poly_eval(chunk->yellowSplines[0].spline_x.spl_poly, chunk->tStart);
             chunk->yellowStartY = poly_eval(chunk->yellowSplines[0].spline_y.spl_poly, chunk->tStart);
+            std::cout << "past start" << std::endl;
             chunk->yellowEndX = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_x.spl_poly, chunk->tEnd);
             chunk->yellowEndY = poly_eval(chunk->yellowSplines[chunk->yellowSplines.size() - 1].spline_y.spl_poly, chunk->tEnd);
+            std::cout << "past end" << std::endl;
             chunk->yellowFirstDerMidX = poly_eval(yellowRacetrackSplines[yellowIdx].spline_x.first_der, midT);
             chunk->yellowFirstDerMidY = poly_eval(yellowRacetrackSplines[yellowIdx].spline_y.first_der, midT);
+            std::cout << "before conditional" << std::endl;
             if (chunk->yellowSplines.size() == 1) {
                 chunk->yellowFirstSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, chunk->tEnd);
                 chunk->yellowLastSplineArclength = arclength(std::make_pair(chunk->yellowSplines[0].spline_x.spl_poly, chunk->yellowSplines[0].spline_y.spl_poly), chunk->tStart, chunk->tEnd);
