@@ -205,13 +205,12 @@ std::vector<Chunk*>* generateChunks(std::vector<std::tuple<double,double,int>> b
 
             auto start_get_yellow = std::chrono::high_resolution_clock::now();
             bool addToChunk = yellowSplineIdxChange;
-            while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
+            while ((yellowSplineIdx < yellowRacetrackSplines.size()) && (yellowCumulativeLen[yellowSplineIdx] < yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
                 if (addToChunk) {
                     chunk->yellowConeIds.push_back(yellowRacetrackSplines[yellowSplineIdx].start_cone_id);
                 } else {
                     addToChunk = true;
                 }
-                (yellowCumulativeLen[yellowSplineIdx] < yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
                 yellowSplineIdx++;
             }
