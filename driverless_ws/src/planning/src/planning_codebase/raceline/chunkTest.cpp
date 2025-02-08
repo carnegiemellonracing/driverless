@@ -314,7 +314,7 @@ int main() {
                     if (j != 0) {
                         blue_splines_outputFile << ",";
                     }
-                    print_poly(std::ofstream& blue_splines_outputFile, chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
+                    print_poly(std::ofstream &blue_splines_outputFile, chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
 
                 }
             }
@@ -341,7 +341,7 @@ int main() {
                     if (j != 0) {
                         yellow_splines_outputFile << ",";
                     }
-                    print_poly(std::ofstream& yellow_splines_outputFile, chunks[i]->yellowSplines[j].spline_x, chunks[i]->yellowSplines[j].spline_y);
+                    print_poly(std::ofstream &yellow_splines_outputFile, chunks[i]->yellowSplines[j].spline_x, chunks[i]->yellowSplines[j].spline_y);
 
                 }
             }
