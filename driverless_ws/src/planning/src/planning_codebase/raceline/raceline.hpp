@@ -109,6 +109,8 @@ public:
     Spline spline_x;
     Spline spline_y;
 
+    int start_cone_id;
+
     ParameterizedSpline(Spline spline_x, Spline spline_y);
 
     double get_first_der(double t);
@@ -122,6 +124,6 @@ double arclength(std::pair<polynomial, polynomial> poly_der, double x0,double x1
 
 std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_spline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop);
 
-std::pair<std::vector<ParameterizedSpline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points);
+std::pair<std::vector<ParameterizedSpline>,std::vector<double>> make_splines_vector(std::vector<std::tuple<double,double,int>> points);
 
 #endif

@@ -219,8 +219,6 @@ double arclength(std::pair<polynomial, polynomial> poly_der, double x0,double x1
 }
 
 std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_spline_gen(rclcpp::Logger logger, Eigen::MatrixXd& res,int path_id, int points_per_spline,bool loop){    
-    int n = res.cols();
-
     std::vector<ParameterizedSpline> splines;
 
     std::vector<double> lengths;
@@ -230,7 +228,7 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
 
     for(int i=0; i < res.cols()-3; i++){
         // Eigen::MatrixXd group(res,0,group_numbers*shift,2,3);
-        Eigen::MatrixXd group(2, 4);
+        Eigen::MatrixXd group(3, 4);
 
         for(int k = 0; k < group.cols(); k++) {
             for (int j = 0; j < group.rows(); j++) {
@@ -254,7 +252,10 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
         // TODO delete spline rotated points and translation vector
         Spline spline_x = Spline(interpolation_poly_x,first_der_x,second_der_x,third_der_x,path_id,i);
         Spline spline_y = Spline(interpolation_poly_y,first_der_y,second_der_y,third_der_y,path_id,i);
-        splines.emplace_back(ParameterizedSpline(spline_x, spline_y));
+        currParamSpline = ParameterizedSpline(spline_x, spline_y);
+        currParamSpline.start_cone_id = group(2, 1);
+
+        splines.emplace_back(currParamSpline);
 
         // lengths.push_back(spline.calculateLength());
         if (i == 0) {
@@ -277,22 +278,26 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
  * @param points The points to make splines from.
  * @return Vector of splines, vector of their cumulative lengths. 
  */
-std::pair<std::vector<ParameterizedSpline>,std::vector<double>> make_splines_vector(std::vector<std::pair<double,double>> points) {
-    Eigen::MatrixXd pointMatrix(2, points.size() + 3);
+std::pair<std::vector<ParameterizedSpline>,std::vector<double>> make_splines_vector(std::vector<std::tuple<double,double,int>> points) {
+    Eigen::MatrixXd pointMatrix(3, points.size() + 3);
     // Eigen::MatrixXd pointMatrix(2, points.size());
     for(int i = 0; i < points.size(); i++){
         assert((i + 1) < pointMatrix.cols());
-        pointMatrix(0, i + 1) = points[i].first;
-        pointMatrix(1, i + 1) = points[i].second;
+        pointMatrix(0, i + 1) = std::get<0>(points[i]);
+        pointMatrix(1, i + 1) = std::get<1>(points[i]);
+        pointMatrix(2, i + 1) = std::get<2>(points[i]);
     }
     // add first point at end, add last point at beginning
     // uncomment with cycle tests
-    pointMatrix(0, 0) = points[points.size()-1].first;
-    pointMatrix(1, 0) = points[points.size()-1].second;
-    pointMatrix(0, points.size() + 1) = points[0].first;
-    pointMatrix(1, points.size() + 1) = points[0].second;
-    pointMatrix(0, points.size() + 2) = points[1].first;
-    pointMatrix(1, points.size() + 2) = points[1].second;
+    pointMatrix(0, 0) = std::get<0>(points[points.size()-1]);
+    pointMatrix(1, 0) = std::get<1>(points[points.size()-1]);
+    pointMatrix(2, 0) = std::get<2>(points[points.size()-1]);
+    pointMatrix(0, points.size() + 1) = std::get<0>(points[i]);
+    pointMatrix(1, points.size() + 1) = std::get<1>(points[i]);
+    pointMatrix(2, points.size() + 1) = std::get<2>(points[i]);
+    pointMatrix(0, points.size() + 2) = std::get<0>(points[1]);
+    pointMatrix(1, points.size() + 2) = std::get<1>(points[1]);
+    pointMatrix(2, points.size() + 2) = std::get<2>(points[1]);
 
     auto dummy_logger = rclcpp::get_logger("du");
     std::pair<std::vector<ParameterizedSpline>,std::vector<double>> res = parameterized_spline_gen(dummy_logger, pointMatrix, std::rand(), 4, false);

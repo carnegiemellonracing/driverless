@@ -12,6 +12,9 @@ class Chunk
         double tStart; // t start of the first spline in yellowSplines
         double tEnd; // t end for the last spline in yellowSplines
 
+        std::vector<int> blueConeIds;
+        std::vector<int> yellowConeIds;
+
         double minThirdDer;
         double maxThirdDer;
 
@@ -81,6 +84,6 @@ class Chunk
  * 
  * @return Vector of raceline chunks.
  */
-std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCones,
-                                  std::vector<std::pair<double,double>> yellowCones);
+std::vector<Chunk*>* generateChunks(std::vector<std::tuple<double,double,int>> blueCones,
+                                  std::vector<std::tuple<double,double,int>> yellowCones);
     

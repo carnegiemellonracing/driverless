@@ -131,8 +131,8 @@ double tEstimate(double currArclength, double targetArclength) {
  */
 
 //TODO: should be returning by reference not value
-std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCones,
-                                  std::vector<std::pair<double,double>> yellowCones) {
+std::vector<Chunk*>* generateChunks(std::vector<std::tuple<double,double,int>> blueCones,
+                                  std::vector<std::tuple<double,double,int>> yellowCones) {
     
     auto start_generate_chunks = std::chrono::high_resolution_clock::now();
     // create chunk vector that stores chunks
@@ -160,6 +160,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     chunk->minThirdDer = blueRacetrackSplines[0].get_third_der(0);
     chunk->maxThirdDer = chunk->minThirdDer;
     chunk->blueSplines.push_back(blueRacetrackSplines[0]);
+    chunk->blueConeIds.push_back(blueRacetrackSplines[i].start_cone_id);
     chunk->tStart = 0;
     chunk->blueArclengthStart = 0;
     chunk->blueFirstSplineArclength = blueCumulativeLen[0];
@@ -189,6 +190,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
         if (check_continue) {
             chunk->blueSplines.push_back(blueRacetrackSplines[i]);
+            chunk->blueConeIds.push_back(blueRacetrackSplines[i].start_cone_id);
         }
         // stop current chunk, add to vector, start new chunk
         else { 
@@ -203,6 +205,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
             while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
                 (yellowCumulativeLen[yellowSplineIdx] < yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
+                chunk->yellowConeIds.push_back(yellowRacetrackSplines[yellowSplineIdx].start_cone_id);
                 yellowSplineIdx++;
             }
             auto end_get_yellow = std::chrono::high_resolution_clock::now();
@@ -253,6 +256,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 chunk->tEnd = splitT;
 
                 chunk->yellowSplines.push_back(splitSpline);
+                chunk->yellowConeIds.push_back(splitSpline.start_cone_id);
 
                 if (splitT == 1) {
                     nextTStart = 0;
@@ -401,6 +405,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
                 chunk->blueArclengthStart = blueArcStart;
                 // init chunk and add curr spline
                 chunk->blueSplines.push_back(blueRacetrackSplines[i]);
+                chunk->blueConeIds.push_back(blueRacetrackSplines[i].start_cone_id);
                 chunk->minThirdDer = blueRacetrackSplines[i].get_third_der(0);
                 chunk->maxThirdDer = chunk->minThirdDer;
                 chunk->blueFirstSplineArclength = blueCumulativeLen[i]-blueCumulativeLen[i-1];
