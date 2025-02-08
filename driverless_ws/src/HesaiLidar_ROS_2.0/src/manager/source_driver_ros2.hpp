@@ -47,6 +47,11 @@
 #include <boost/thread.hpp>
 #include "source_drive_common.hpp"
 
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <../CMR_CPP_Pipeline.cpp>
+
+using namespace pcl;
 class SourceDriver
 {
 public:
@@ -263,7 +268,7 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarD
   sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_msg, "z");
   int num_valid_points = 0;
   float epsilon = 0.1;
-  // int counter = 0;
+  int counter = 0;
   
   // for (size_t i = 0; i < frame.points_num; i++)
   // {
@@ -286,7 +291,22 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarD
   double cpp_epsilon2 = 3;
   int cpp_min_points2 = 3;
 
-  PointCloud<PointXYZ> filtered_cloud = run_pipeline(frame, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
+  PointCloud<PointXYZ> filtered_points;
+
+  for (size_t i = 0; i < frame.points_num; i++) {
+    LidarPointXYZIRT point = frame.points[i];
+    if (std::abs(point.x) < epsilon && std::abs(point.y) < epsilon && std::abs(point.z) < epsilon) {
+      continue;
+    }
+    num_valid_points++;
+    if (counter == 3) {
+      filtered_points.push_back(PointXYZ(point.x, point.y, point.z));
+      counter = 0;
+    }
+    counter++;
+  }
+
+  PointCloud<PointXYZ> filtered_cloud = run_pipeline(filtered_points, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
 
   for (size_t i = 0; i < filtered_cloud.size(); i++) {
     *iter_x_ = filtered_cloud.points[i].x;
