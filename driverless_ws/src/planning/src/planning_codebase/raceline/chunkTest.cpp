@@ -305,7 +305,8 @@ int main() {
         std::cout << "Chunking time: " << dur_chunking.count() << std::endl;
 
         // write splines to file
-        std::ofstream blue_splines_outputFile("src/planning/src/planning_codebase/raceline/blue.txt");
+        // std::ofstream blue_splines_outputFile("src/planning/src/planning_codebase/raceline/blue.txt");
+        std::ofstream blue_splines_outputFile("blue.txt");
         if (blue_splines_outputFile.is_open()) {
             for (int i  = 0; i < chunks.size(); i++) {
                 blue_splines_outputFile << "([";
@@ -332,7 +333,8 @@ int main() {
         }
 
         // write splines to file
-        std::ofstream yellow_splines_outputFile("src/planning/src/planning_codebase/raceline/blue.txt");
+        // std::ofstream yellow_splines_outputFile("src/planning/src/planning_codebase/raceline/yellow.txt");
+        std::ofstream yellow_splines_outputFile("yellow.txt");
         if (yellow_splines_outputFile.is_open()) {
             for (int i  = 0; i < chunks.size(); i++) {
                 yellow_splines_outputFile << "([";
@@ -407,7 +409,8 @@ int main() {
     std::cout << "===========================" << std::endl;
 
     // Write output to a text file
-    std::ofstream outputFile("src/planning/src/planning_codebase/raceline/splines.txt");
+    // std::ofstream outputFile("src/planning/src/planning_codebase/raceline/splines.txt");
+    std::ofstream outputFile("splines.txt");
     if (outputFile.is_open()) {
         for (const auto& spline : sample_raceline_splines ){
             // Write coefficients to file
@@ -422,7 +425,8 @@ int main() {
         std::cerr << "Unable to open file for writing!" << std::endl;
     }
 
-    std::ofstream splines_outputFile("src/planning/src/planning_codebase/raceline/splines.txt");
+    // std::ofstream splines_outputFile("src/planning/src/planning_codebase/raceline/splines.txt");
+    std::ofstream splines_outputFile("splines.txt");
     if (splines_outputFile.is_open()) {
         for (const auto& spline : sample_raceline_splines ){
             // Write coefficients to file
