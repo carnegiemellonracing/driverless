@@ -38,9 +38,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "safe_call.cuh"
 #include "return_code.h"
 
-#define MAX_DISTANCE 40.0f // Maximum allowable distance
-#define ERROR_MARGIN 0.15f  // Outlier threshold
-#define MAX_HEIGHT 0.4f
+#define MAX_DISTANCE 10.0f // Maximum allowable distance
+#define ERROR_MARGIN 0.01f  // Outlier threshold
+#define MAX_HEIGHT 1.5f
 
 
 // CUDA kernel for union-find initialization
@@ -61,6 +61,51 @@ __device__ int findRoot(T_Point* forced, int* parent, int idx) {
     return idx;
 }
 
+template <typename T_Point>
+__device__ void pairIndexToIJ(const T_Point* points, long long k, int n, int *i_out, int *j_out) {
+    int i = 0;
+    // For row i, there are (n - 1 - i) pairs: (i,i+1), (i,i+2), ..., (i,n-1)
+    while (true) {
+        long long rowCount = (long long)(n - 1 - i);
+        if (k < rowCount) {
+            *i_out = i;
+            *j_out = i + 1 + (int)k;  // j runs from i+1 to n-1
+            break;
+        }
+        k -= rowCount;
+        i++;
+    }
+}
+
+template <typename T_Point>
+__global__ void newFindAndUnionClusters(
+    const T_Point* points, int* parent, int num_points, float eps) {
+    long long totalPairs = ((long long)num_points * (num_points - 1)) / 2;
+    long long k = blockIdx.x * (long long)blockDim.x + threadIdx.x;
+    if (k >= totalPairs) return;
+
+    int i, j;
+    pairIndexToIJ(points, k, num_points, &i, &j);
+
+    // Compute the Euclidean distance between points[i] and points[j]
+    float dx = points[i].x - points[j].x;
+    float dy = points[i].y - points[j].y;
+    float dz = points[i].z - points[j].z;
+    float dist = sqrtf(dx * dx + dy * dy + dz * dz);
+
+    if (dist <= eps) {
+        // Perform union–find union if the points are within eps.
+        int root1 = findRoot(points, parent, i);
+        int root2 = findRoot(points, parent, j);
+        if (root1 != root2) {
+            // Attach the tree with the higher index to the lower one.
+            int high = root1 > root2 ? root1 : root2;
+            int low  = root1 < root2 ? root1 : root2;
+            atomicMin(&parent[high], low);
+         }
+     }
+}
+
 // CUDA kernel to find neighbors and union clusters
 template <typename T_Point>
 __global__ void findAndUnionClusters(
@@ -68,7 +113,7 @@ __global__ void findAndUnionClusters(
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx >= num_points) return;
 
-    for (int j = 0; j < num_points; ++j) {
+    for (int j = idx+1; j < num_points; ++j) {
         if (idx == j) continue;
 
         float dx = points[idx].x - points[j].x;
@@ -173,9 +218,13 @@ std::vector<T_Point> runDBSCAN(const T_Point* points_ptr, size_t num_points, flo
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&time_initialize, start, stop);
 
+    long long totalPairs = ((long long)num_points * (num_points - 1)) / 2;
+    int pairBlock = 256;
+    int pairGrid = (totalPairs + pairBlock - 1) / pairBlock;
+
     // Step 2: Find and union clusters
     cudaEventRecord(start);
-    findAndUnionClusters<<<grid, block>>>(
+    newFindAndUnionClusters<<<pairGrid, pairBlock>>>(
         d_points,
         d_parent,
         num_points, eps);
@@ -343,12 +392,54 @@ __device__ __inline__ void unpackFloatAndInt(unsigned long long packed_value, fl
     
 }
 
+template <typename T_Point>
+__global__ void shitLowestPointInBin(
+    T_Point* points, const int* segments, const int* bins, 
+    unsigned long long* bin_min_z, int* bin_min_indices,
+    int num_points, int num_segments, int num_bins) {
+
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+    if (idx >= num_points) return;
+
+    int segment = segments[idx];
+    int bin = bins[idx];
+    int cell_idx = segment * num_bins + bin;
+
+
+    if (segment < 0 || segment >= num_segments || bin < 0 || bin >= num_bins){
+        // printf("[ERROR] Invalid segment/bin: segment=%d, bin=%d, idx=%d\n", segment, bin, idx);
+        return;
+    }
+
+    float z = points[idx].z;
+
+    if (isnan(z) || z > 100.0f) {
+        printf("[SKIP] Invalid z value: z=%f at idx=%d\n", z, idx);
+        return;
+    }
+
+    unsigned long long packed_z = packFloatAndInt(z, idx);
+
+    float test_z;
+    int test_idx;
+    unpackFloatAndInt(packed_z, test_z, test_idx);
+    
+    assert(test_z == z && "Error: Packed and unpacked z values are different!");
+    assert(test_idx == idx && "Error: Packed and unpacked indices are different!");
+
+    unsigned long long old_value;
+    float old_z;
+    int old_idx;
+    
+    atomicMin(&bin_min_z[cell_idx], packed_z);
+}
+
 
 template <typename T_Point>
 __global__ void findLowestPointInBin(
     const T_Point* points, const int* segments, const int* bins, 
     unsigned long long* bin_min_z, int* bin_min_indices,
-    int num_points, int total_bins, int num_segments, int num_bins) {
+    int num_points, int num_segments, int num_bins) {
 
     
     int idx = threadIdx.x + blockIdx.x * blockDim.x;
@@ -357,10 +448,6 @@ __global__ void findLowestPointInBin(
     int segment = segments[idx];
     int bin = bins[idx];
     int cell_idx = segment * num_bins + bin;
-    // if (cell_idx == 603) return;
-    if (cell_idx >= total_bins){
-        printf("bin: %d, segment: %d, num_bins: %d, cell_idx %d, point index %d \n", bin, segment, num_bins, cell_idx, idx);
-    }
 
     float z = points[idx].z;
 
@@ -376,7 +463,7 @@ __global__ void findLowestPointInBin(
     assert(points[idx].z == z);
     unsigned long long packed_z = packFloatAndInt(z, idx);
 
-    if (isnan(z) || z < 0.0f || z > 100.0f) return;
+    if (isnan(z) || z > 100.0f) return;
     
     unsigned long long value_actually_there = bin_min_z[cell_idx];
     unsigned long long prev_value_actually_there = value_actually_there;
@@ -530,6 +617,7 @@ __global__ void populateLowestPoints(
     int index;
     float z_val;
     unpackFloatAndInt(packed_val, z_val, index);
+    printf("z_val %f \n", z_val);
     assert(packFloatAndInt(z_val, index) == packed_val);
 
 
@@ -560,10 +648,10 @@ template <typename T_Point>
 T_Point* processPointsCUDA(
     const T_Point* points_ptr, size_t num_points, int num_segments, int num_bins, int* h_outlier_count) {
 
-    // Define constants
-    #define MAX_DISTANCE 1000.0f
-    #define ERROR_MARGIN 0.1f
-    #define MAX_HEIGHT 500.0f
+    // // Define constants
+    // #define MAX_DISTANCE 1000.0f
+    // #define ERROR_MARGIN 0.1f
+    // #define MAX_HEIGHT 500.0f
 
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
@@ -628,9 +716,9 @@ T_Point* processPointsCUDA(
    cudaDeviceSynchronize();
 
     std::cout << "total_bins is " << total_bins << "\n";
-    findLowestPointInBin<<<grid, block>>>(
+    shitLowestPointInBin<<<grid, block>>>(
         d_points, d_segments, d_bins, d_bin_min_z, d_bin_min_indices, 
-        num_points, total_bins, num_segments, num_bins);
+        num_points, num_segments, num_bins);
     std::cout << "error caused by lowest point function is " << cudaGetLastError() << "\n";    
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
@@ -744,7 +832,6 @@ T_Point* GraceAndConrad(
     size_t num_points,
     float alpha,
     int num_bins,
-    float height_threshold,
     int* num_filtered) {
 
     //   int num_points = points.size();
@@ -972,21 +1059,20 @@ compute_xyzs_v4_3_impl<<<frame.packet_num, frame.block_num * frame.laser_num>>>(
   //           << "time taken to copy data from gpu is " << std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count() << "\n"
   //           << "time taken to copy cpu to cpu is " << std::chrono::duration_cast<std::chrono::microseconds>(t5 - t4).count() << "\n";
 
-  float alpha = 1.0f;
+  float alpha = 0.1f;
   int num_bins = 100;
-  float height_threshold = 0.05f;
   int* num_filtered = (int*)malloc(sizeof(int));
-  auto filtered_points = GraceAndConrad(frame.points, frame.block_num * frame.laser_num * frame.packet_num, alpha, num_bins, height_threshold, num_filtered);
+  auto filtered_points = GraceAndConrad(frame.points, frame.block_num * frame.laser_num * frame.packet_num, alpha, num_bins, num_filtered);
   
-//   cudaDeviceSynchronize();
-//   int min_samples = 2;
-//   float eps = 0.3f;
-//   auto cone_clusters = runDBSCAN(filtered_points, *num_filtered, eps, min_samples); // Call your coloring function here
-//   free(num_filtered);
-//   cudaDeviceSynchronize();
-//   std::cout << "Number of clusters: " << cone_clusters.size() << std::endl;
-//   frame.cone_centroids_num = cone_clusters.size();
-//   std::memcpy(frame.cone_centroids, cone_clusters.data(), cone_clusters.size() * sizeof(T_Point));
+  cudaDeviceSynchronize();
+  int min_samples = 2;
+  float eps = 0.3f;
+  auto cone_clusters = runDBSCAN(filtered_points, *num_filtered, eps, min_samples); // Call your coloring function here
+  free(num_filtered);
+  cudaDeviceSynchronize();
+  std::cout << "Number of clusters: " << cone_clusters.size() << std::endl;
+  frame.cone_centroids_num = cone_clusters.size();
+  std::memcpy(frame.cone_centroids, cone_clusters.data(), cone_clusters.size() * sizeof(T_Point));
 
 
   free(filtered_points);
