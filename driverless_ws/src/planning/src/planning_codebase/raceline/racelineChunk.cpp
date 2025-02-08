@@ -171,6 +171,8 @@ std::vector<Chunk*>* generateChunks(std::vector<std::tuple<double,double,int>> b
     int blueIdx = 0;
     int yellowIdx = 0;
 
+    bool yellowSplineIdxChange = true;
+
     /* Track the max time it takes for determining whether to continue to chunk */
     auto max_continue_chunk_time = std::numeric_limits<int>::min();
     auto max_get_yellow_time = std::numeric_limits<int>::min();
@@ -202,10 +204,15 @@ std::vector<Chunk*>* generateChunks(std::vector<std::tuple<double,double,int>> b
             // cumsum is greater than cumsum of blue;yellowSplineIdx
 
             auto start_get_yellow = std::chrono::high_resolution_clock::now();
+            bool addToChunk = yellowSplineIdxChange;
             while ((yellowSplineIdx < yellowRacetrackSplines.size()) && 
+                if (addToChunk) {
+                    chunk->yellowConeIds.push_back(yellowRacetrackSplines[yellowSplineIdx].start_cone_id);
+                } else {
+                    addToChunk = true;
+                }
                 (yellowCumulativeLen[yellowSplineIdx] < yellowCumulativeLen[yellowCumulativeLen.size() - 1] * bluePercentProgress)) {
                 chunk->yellowSplines.push_back(yellowRacetrackSplines[yellowSplineIdx]);
-                chunk->yellowConeIds.push_back(yellowRacetrackSplines[yellowSplineIdx].start_cone_id);
                 yellowSplineIdx++;
             }
             auto end_get_yellow = std::chrono::high_resolution_clock::now();
@@ -261,9 +268,11 @@ std::vector<Chunk*>* generateChunks(std::vector<std::tuple<double,double,int>> b
                 if (splitT == 1) {
                     nextTStart = 0;
                     yellowSplineIdx++;
+                    yellowSplineIdxChange = true;
                 }
                 else {
                     nextTStart = splitT;
+                    yellowSplineIdxChange = false;
                 }
             }
             
