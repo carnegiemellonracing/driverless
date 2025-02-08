@@ -10,7 +10,7 @@
 // tunable params for chunks
 // thresholds are arclength in meters
 #define CHUNK_LEN_MAX_THRESH 1000
-#define CHUNK_LEN_MIN_THRESH 15
+#define CHUNK_LEN_MIN_THRESH 0
 #define CHUNK_FIRST_DER_THRESH 0.01
 #define CHUNK_SECOND_DER_THRESH 100
 #define CHUNK_THIRD_DER_THRESH 100

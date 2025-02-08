@@ -320,7 +320,7 @@ int main() {
 
                 blue_splines_outputFile << "], \n";
 
-                blue_splines_outputFile << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")";
+                blue_splines_outputFile << " (0,1) ";
 
                 blue_splines_outputFile << "), \n" ;
             }
