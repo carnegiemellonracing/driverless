@@ -80,6 +80,7 @@ namespace controls {
             };
 
         private:
+            // Utilizes function pointers over std::function for performance
             Reward (*rewardFunction)(std::shared_ptr<Observation>, std::shared_ptr<Action>, std::shared_ptr<Observation>);
     };
 
