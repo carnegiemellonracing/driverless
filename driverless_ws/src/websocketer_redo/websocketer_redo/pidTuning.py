@@ -1,66 +1,94 @@
-#!/usr/bin/env python3
-
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float32MultiArray
-from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy
+from geometry_msgs.msg import Point
+import base64
+import json
+import websockets
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
+import asyncio
 
-class PIDInputPublisher(Node):
+NODE_NAME = 'pid_node'
+
+BEST_EFFORT_QOS_PROFILE = QoSProfile(
+    reliability=QoSReliabilityPolicy.BEST_EFFORT,
+    history=QoSHistoryPolicy.KEEP_LAST,
+    durability=QoSDurabilityPolicy.VOLATILE,
+    depth=5
+)
+
+class PIDTuning(Node):
     def __init__(self):
-        super().__init__('pid_input_publisher')
+        super().__init__(NODE_NAME)
+        self.ws_url = 'ws://live.cmr.red:2022'
+        self.websocket = None
+        self.connected = False
         
-        # Configure QoS profile for better reliability
-        qos_profile = QoSProfile(
-            reliability=ReliabilityPolicy.RELIABLE,
-            history=HistoryPolicy.KEEP_LAST,
-            depth=10
-        )
-        
-        # Create publisher for PID constants
         self.pid_publisher = self.create_publisher(
-            Float32MultiArray,
-            'pid_constants',
-            qos_profile
+            Point,
+            '/pid_values',
+            qos_profile=BEST_EFFORT_QOS_PROFILE
         )
         
-        self.get_logger().info('PID Input Publisher Node started')
-        self.get_logger().info('Enter normalized PID values (0-1) when prompted')
-    
-    def get_valid_input(self, prompt):
-        while True:
-            try:
-                value = float(input(prompt))
-                if 0 <= value <= 1:
-                    return value
-                else:
-                    print("Error: Value must be between 0 and 1")
-            except ValueError:
-                print("Error: Please enter a valid number")
-    
-    def publish_pid_constants(self):
-        # Get PID values from user
-        p = self.get_valid_input("Enter normalized P value (0-1): ")
-        i = self.get_valid_input("Enter normalized I value (0-1): ")
-        d = self.get_valid_input("Enter normalized D value (0-1): ")
+        self.timer_period = 0.1
+        self.timer = self.create_timer(self.timer_period, self.timer_callback)
         
-        # Create message
-        msg = Float32MultiArray()
-        msg.data = [p, i, d]
-        
-        # Publish message
-        self.pid_publisher.publish(msg)
-        self.get_logger().info(f'Published PID constants: P={p}, I={i}, D={d}')
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        self.connect_websocket()
+
+    def connect_websocket(self):
+        try:
+            self.websocket = self.loop.run_until_complete(
+                websockets.connect(self.ws_url)
+            )
+            self.connected = True
+            self.get_logger().info('Connected to WebSocket server')
+        except Exception as e:
+            self.get_logger().error(f'WebSocket connection failed: {str(e)}')
+            self.connected = False
+
+    def timer_callback(self):
+        if not self.connected:
+            self.connect_websocket()
+            return
+
+        try:
+            message = self.loop.run_until_complete(self.websocket.recv())
+            self.get_logger().info(f'yipeeee: {message}')
+
+            data = json.loads(message)
+            
+            values = data.get('object')
+
+            p = float(values['P'])
+            i = float(values['I'])
+            d = float(values['D'])
+            
+            point_msg = Point()
+            point_msg.x = p
+            point_msg.y = i
+            point_msg.z = d
+            
+            self.pid_publisher.publish(point_msg)
+            self.get_logger().info(f'Published PID values: P:{p} I:{i} D:{d}')
+            
+        except websockets.exceptions.ConnectionClosed:
+            self.get_logger().warn('WebSocket connection closed')
+            self.connected = False
+        except json.JSONDecodeError as e:
+            self.get_logger().error(f'Invalid JSON message received: {str(e)}')
+        except Exception as e:
+            self.get_logger().error(f'Error: {str(e)}')
+            self.connected = False
 
 def main(args=None):
     rclpy.init(args=args)
-    node = PIDInputPublisher()
+    node = PIDTuning()
     
     try:
-        while rclpy.ok():
-            node.publish_pid_constants()
-            rclpy.spin_once(node)
-    except KeyboardInterrupt:
-        pass
+        rclpy.spin(node)
+    except Exception as e:
+        node.get_logger().error(f'Node error: {str(e)}')
     finally:
         node.destroy_node()
         rclpy.shutdown()
