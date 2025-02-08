@@ -202,11 +202,11 @@ void createParabToStraightTrack(std::vector<std::pair<double, double>> &blue_con
     };                
 }
 
-void print_poly(Spline x, Spline y) {
-    std::cout << "(["<< x.spl_poly.nums(0) << "," << x.spl_poly.nums(1) << ","
+void print_poly(std::ofstream& outFile, Spline x, Spline y) {
+    outFile << "(["<< x.spl_poly.nums(0) << "," << x.spl_poly.nums(1) << ","
      << x.spl_poly.nums(2) << "," << x.spl_poly.nums(3) << "]," 
      << "[" << y.spl_poly.nums(0) << "," << y.spl_poly.nums(1) << ","
-     << y.spl_poly.nums(2) << "," << y.spl_poly.nums(3) << "])"<< std::endl;
+     << y.spl_poly.nums(2) << "," << y.spl_poly.nums(3) << "])"<<;
 }
 
 
@@ -303,6 +303,59 @@ int main() {
         auto end_chunking = std::chrono::high_resolution_clock::now();
         auto dur_chunking = std::chrono::duration_cast<std::chrono::microseconds>(end_chunking - start_chunking);
         std::cout << "Chunking time: " << dur_chunking.count() << std::endl;
+
+        // write splines to file
+        std::ofstream blue_splines_outputFile("src/planning/src/planning_codebase/raceline/blue.txt");
+        if (blue_splines_outputFile.is_open()) {
+            for (int i  = 0; i < chunks.size(); i++) {
+                blue_splines_outputFile << "([";
+
+                for (int j = 0; j < chunks[i]->blueSplines.size(); j++) {
+                    if (j != 0) {
+                        blue_splines_outputFile << ",";
+                    }
+                    print_poly(std::ofstream& blue_splines_outputFile, chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
+
+                }
+            }
+
+            blue_splines_outputFile << "], \n";
+
+            blue_splines_outputFile << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")";
+
+            blue_splines_outputFile << "), \n" ;
+        }
+            std::cout << "Blue race bound polynomials have been written to blue.txt" << std::endl;
+        } else {
+            std::cerr << "Unable to open file for writing!" << std::endl;
+        }
+
+        // write splines to file
+        std::ofstream yellow_splines_outputFile("src/planning/src/planning_codebase/raceline/blue.txt");
+        if (yellow_splines_outputFile.is_open()) {
+            for (int i  = 0; i < chunks.size(); i++) {
+                yellow_splines_outputFile << "([";
+
+                for (int j = 0; j < chunks[i]->yellowSplines.size(); j++) {
+                    if (j != 0) {
+                        yellow_splines_outputFile << ",";
+                    }
+                    print_poly(std::ofstream& yellow_splines_outputFile, chunks[i]->yellowSplines[j].spline_x, chunks[i]->yellowSplines[j].spline_y);
+
+                }
+            }
+
+            yellow_splines_outputFile << "], \n";
+
+            yellow_splines_outputFile << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")";
+
+            yellow_splines_outputFile << "), \n" ;
+        }
+            std::cout << "Yellow race bound polynomials have been written to blue.txt" << std::endl;
+        } else {
+            std::cerr << "Unable to open file for writing!" << std::endl;
+        }
+
 
     	double dstart = 0.5; 
     	// Vector to hold results: one vector for each chunk, with 16 coefficients (4 X1, 4 X2, 4 Y1, 4 Y2)
