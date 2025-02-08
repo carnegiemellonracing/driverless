@@ -312,8 +312,8 @@ int main() {
                 // }
                 // std::cout << "end yellow cone ids for chunk" << i << std::endl;
 
-                std::cout << "(" << chunks[i]->blueMidX << "," << chunks[i]->blueMidY << ")," std::endl;
-                std::cout << "(" << chunks[i]->yellowMidX << "," << chunks[i]->yellowMidY << ")," std::endl;
+                std::cout << "(" << chunks[i]->blueMidX << "," << chunks[i]->blueMidY << ")," << std::endl;
+                std::cout << "(" << chunks[i]->yellowMidX << "," << chunks[i]->yellowMidY << ")," << std::endl;
 
             }
 
