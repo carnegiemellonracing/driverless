@@ -316,15 +316,14 @@ int main() {
                         blue_splines_outputFile << ",";
                     }
                     print_poly(blue_splines_outputFile, chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
-
                 }
+
+                blue_splines_outputFile << "], \n";
+
+                blue_splines_outputFile << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")";
+
+                blue_splines_outputFile << "), \n" ;
             }
-
-            blue_splines_outputFile << "], \n";
-
-            blue_splines_outputFile << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")";
-
-            blue_splines_outputFile << "), \n" ;
 
             blue_splines_outputFile.close();
             std::cout << "Blue race bound polynomials have been written to blue.txt" << std::endl;
@@ -344,15 +343,14 @@ int main() {
                         yellow_splines_outputFile << ",";
                     }
                     print_poly(yellow_splines_outputFile, chunks[i]->yellowSplines[j].spline_x, chunks[i]->yellowSplines[j].spline_y);
-
                 }
+
+                yellow_splines_outputFile << "], \n";
+
+                yellow_splines_outputFile << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")";
+
+                yellow_splines_outputFile << "), \n" ;
             }
-
-            yellow_splines_outputFile << "], \n";
-
-            yellow_splines_outputFile << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")";
-
-            yellow_splines_outputFile << "), \n" ;
 
             yellow_splines_outputFile.close();
             std::cout << "Yellow race bound polynomials have been written to blue.txt" << std::endl;
