@@ -206,7 +206,7 @@ void print_poly(std::ofstream& outFile, Spline x, Spline y) {
     outFile << "(["<< x.spl_poly.nums(0) << "," << x.spl_poly.nums(1) << ","
      << x.spl_poly.nums(2) << "," << x.spl_poly.nums(3) << "]," 
      << "[" << y.spl_poly.nums(0) << "," << y.spl_poly.nums(1) << ","
-     << y.spl_poly.nums(2) << "," << y.spl_poly.nums(3) << "])"<<;
+     << y.spl_poly.nums(2) << "," << y.spl_poly.nums(3) << "])";
 }
 
 
@@ -324,7 +324,8 @@ int main() {
             blue_splines_outputFile << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")";
 
             blue_splines_outputFile << "), \n" ;
-        }
+
+            blue_splines_outputFile.close();
             std::cout << "Blue race bound polynomials have been written to blue.txt" << std::endl;
         } else {
             std::cerr << "Unable to open file for writing!" << std::endl;
@@ -350,7 +351,8 @@ int main() {
             yellow_splines_outputFile << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")";
 
             yellow_splines_outputFile << "), \n" ;
-        }
+
+            yellow_splines_outputFile.close();
             std::cout << "Yellow race bound polynomials have been written to blue.txt" << std::endl;
         } else {
             std::cerr << "Unable to open file for writing!" << std::endl;
