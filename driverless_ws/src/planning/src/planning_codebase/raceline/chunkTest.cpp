@@ -272,11 +272,11 @@ int main() {
 
                 blue_splines_outputFile << "), \n" ;
 
-                std::cout << "start blue cone ids for chunk" << i << std::endl;
-                for (int k = 0; k < chunks[i]->blueConeIds.size(); k++) {
-                    std::cout << chunks[i]->blueConeIds[k] << std::endl;
-                }
-                std::cout << "end yellow cone ids for chunk" << i << std::endl;
+                // std::cout << "start blue cone ids for chunk" << i << std::endl;
+                // for (int k = 0; k < chunks[i]->blueConeIds.size(); k++) {
+                //     std::cout << chunks[i]->blueConeIds[k] << std::endl;
+                // }
+                // std::cout << "end yellow cone ids for chunk" << i << std::endl;
 
             }
 
@@ -306,11 +306,14 @@ int main() {
 
                 yellow_splines_outputFile << "), \n" ;
 
-                std::cout << "start yellow cone ids for chunk" << i << std::endl;
-                for (int k = 0; k < chunks[i]->yellowConeIds.size(); k++) {
-                    std::cout << chunks[i]->yellowConeIds[k] << std::endl;
-                }
-                std::cout << "end yellow cone ids for chunk" << i << std::endl;
+                // std::cout << "start yellow cone ids for chunk" << i << std::endl;
+                // for (int k = 0; k < chunks[i]->yellowConeIds.size(); k++) {
+                //     std::cout << chunks[i]->yellowConeIds[k] << std::endl;
+                // }
+                // std::cout << "end yellow cone ids for chunk" << i << std::endl;
+
+                std::cout << "(" << chunks[i]->blueMidX << "," << chunks[i]->blueMidY << ")," std::endl;
+                std::cout << "(" << chunks[i]->yellowMidX << "," << chunks[i]->yellowMidY << ")," std::endl;
 
             }
 
