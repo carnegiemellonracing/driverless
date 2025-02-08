@@ -18,6 +18,11 @@ configure_file(
 #=======================================
 set(POINT_TYPE XYZI)
 
+find_package(PCL 1.3 REQUIRED)
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
 #=======================================
 # Compile setup (ORIGINAL, CATKIN, COLCON)
 #=======================================

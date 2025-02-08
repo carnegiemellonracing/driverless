@@ -33,7 +33,7 @@ typedef struct radial {
  * @param pt: The (x,y,z) point to convert
  * @return the converted point
  */
-radial_t point2radial(PointXYZ pt) {
+inline radial_t point2radial(PointXYZ pt) {
   radial_t rd;
   rd.angle = std::atan2(pt.y, pt.x);
   rd.radius = std::sqrt(pt.x * pt.x + pt.y * pt.y);
@@ -46,7 +46,7 @@ radial_t point2radial(PointXYZ pt) {
  * @param rd: The (radius,ang,z) point to convert
  * @return the converted point
  */
-PointXYZ radial2point(radial_t rd) {
+inline PointXYZ radial2point(radial_t rd) {
   PointXYZ pt;
   pt.x = rd.radius * cos(rd.angle);
   pt.y = rd.radius * sin(rd.angle);
@@ -59,7 +59,7 @@ PointXYZ radial2point(radial_t rd) {
  * @param bin: The bin to search
  * @return the point with the lowest z
  */
-radial_t min_height(vector<radial_t> bin) {
+inline radial_t min_height(vector<radial_t> bin) {
   int size = bin.size();
   if (size == 0) {
     return {-100, -100, -100};
@@ -83,7 +83,7 @@ radial_t min_height(vector<radial_t> bin) {
  * @param height_threshold: Keep all points this distance above the best fit line
  * @return A point cloud of ground-filtered points
  */
-PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double alpha, 
+inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double alpha, 
                                     int num_bins, double height_threshold) {
 
   double upper_height_threshold = 0.4;
@@ -165,7 +165,7 @@ PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double alpha,
 }
 
 // Calculates Euclidean distance between two PointXYZ.
-double euclideanDistance(const PointXYZ &a, const PointXYZ &b) {
+inline double euclideanDistance(const PointXYZ &a, const PointXYZ &b) {
   double dx = a.x - b.x;
   double dy = a.y - b.y;
   double dz = a.z - b.z;
@@ -173,7 +173,7 @@ double euclideanDistance(const PointXYZ &a, const PointXYZ &b) {
 }
 
 // Returns indices of points in cloud that are within epsilon of point.
-vector<int> regionQuery(
+inline vector<int> regionQuery(
   PointCloud<PointXYZ> &cloud,
   const PointXYZ &point,
   double epsilon) {
@@ -188,7 +188,7 @@ vector<int> regionQuery(
 }
 
 // Expands the cluster by checking neighbors and assigning them as needed.
-void expandCluster(
+inline void expandCluster(
   PointCloud<PointXYZ> &cloud,
   vector<bool> &visited,
   vector<int> &cluster,
@@ -217,7 +217,7 @@ void expandCluster(
 }
 
 // Computes centroids for the clusters.
-PointCloud<PointXYZ> computeCentroids(
+inline PointCloud<PointXYZ> computeCentroids(
   PointCloud<PointXYZ> &cloud,
   const unordered_map<int, vector<int>> &clusters) {
   PointCloud<PointXYZ> centroids;
@@ -242,7 +242,7 @@ PointCloud<PointXYZ> computeCentroids(
 }
 
 // DBSCAN that works on a PointCloud<PointXYZ>
-PointCloud<PointXYZ> DBSCAN(PointCloud<PointXYZ> &cloud, double epsilon, int min_points) {
+inline PointCloud<PointXYZ> DBSCAN(PointCloud<PointXYZ> &cloud, double epsilon, int min_points) {
   // visited[i] indicates whether the point has been visited.
   // cluster[i] = -1 for unclassified, 0 for noise, >0 for cluster ID.
   vector<bool> visited(cloud.points.size(), false);
@@ -277,7 +277,7 @@ PointCloud<PointXYZ> DBSCAN(PointCloud<PointXYZ> &cloud, double epsilon, int min
 }
 
 //Use for secondary filtering to get rid of extraneous clusters outside of cones
-PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon, int min_points) {
+inline PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon, int min_points) {
   // visited[i] indicates whether the point has been visited.
   // cluster[i] = -1 for unclassified, 0 for noise, >0 for cluster ID.
   vector<bool> visited(cloud.points.size(), false);
@@ -303,7 +303,7 @@ PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon, int mi
   return cloud;
 }
 
-PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alpha, 
+inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alpha, 
                                     int num_bins, double height_threshold, double epsilon, int min_points, double epsilon2, int min_points2) {
 
 
