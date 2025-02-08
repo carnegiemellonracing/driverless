@@ -272,8 +272,8 @@ int main() {
 
                 blue_splines_outputFile << "), \n" ;
 
-                for (int i = 0; i < chunk->blueConeIds.size(); i++) {
-                    std::cout << chunk->blueConeIds[i] << std::endl;
+                for (int i = 0; i < chunks->blueConeIds.size(); i++) {
+                    std::cout << chunks->blueConeIds[i] << std::endl;
                 }
             }
 
@@ -303,8 +303,8 @@ int main() {
 
                 yellow_splines_outputFile << "), \n" ;
 
-                for (int i = 0; i < chunk->yellowConeIds.size(); i++) {
-                    std::cout << chunk->yellowConeIds[i] << std::endl;
+                for (int i = 0; i < chunks->yellowConeIds.size(); i++) {
+                    std::cout << chunks->yellowConeIds[i] << std::endl;
                 }
             }
 
