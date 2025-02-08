@@ -5,7 +5,7 @@
 // #include "../midline/generator.hpp"
 
 // 0 if use tEstimate, 1 if use tInterpolate
-#define USE_T_INTERPOLATE 1
+#define USE_T_INTERPOLATE 0
 
 // tunable params for chunks
 // thresholds are arclength in meters
@@ -133,7 +133,8 @@ double tEstimate(double currArclength, double targetArclength) {
 //TODO: should be returning by reference not value
 std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCones,
                                   std::vector<std::pair<double,double>> yellowCones) {
-
+    
+    auto start_generate_chunks = std::chrono::high_resolution_clock::now();
     // create chunk vector that stores chunks
     //TODO: use new keyword to create vector in heap not stack
     std::vector<Chunk*>* chunkVector = new std::vector<Chunk*>();
@@ -408,8 +409,12 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
     }
     auto end_chunking = std::chrono::high_resolution_clock::now();
     auto dur_chunking = std::chrono::duration_cast<std::chrono::microseconds>(end_chunking - start_chunking);
+
+    auto end_generate_chunks = std::chrono::high_resolution_clock::now();
+    auto dur_generate_chunks = std::chrono::duration_cast<std::chrono::microseconds>(end_generate_chunks - start_generate_chunks);
     std::cout << "*************************************" << std::endl;
     std::cout << "generateChunks: chunking loop time: " << dur_chunking.count() << " microseconds" << std::endl;
+    std::cout << "generateChunks: total time: " << dur_generate_chunks.count() << " microseconds" << std::endl;
     std::cout << "Per iteration: " << std::endl;
     std::cout << "generateChunks: max_continue_chunk_time: " << max_continue_chunk_time << " microseconds;" << std::endl;
     std::cout << "generateChunks: max_get_yellow_time: " << max_get_yellow_time << " microseconds" << std::endl;
@@ -423,7 +428,6 @@ std::vector<Chunk*>* generateChunks(std::vector<std::pair<double,double>> blueCo
 
     std::cout << "Num blueRacetrackSplines: " << blueRacetrackSplines.size() << std::endl;
     std::cout << "*************************************" << std::endl;
-
-
+ 
     return chunkVector;
 }
