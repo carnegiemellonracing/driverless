@@ -324,8 +324,10 @@ namespace controls {
 
             m_logger("compiling state estimator shaders");
             
-            m_fake_track_shader_program = utils::compile_shader(vertex_source_fake_track, fragment_source_fake_track);
-            m_gl_path_shader = utils::compile_shader(vertex_source, fragment_source);
+            m_left_track_shader_program = utils::compile_shader(vertex_source_fake_track, fragment_source_fake_track);
+            m_right_track_shader_program = utils::compile_shader(vertex_source_fake_track, fragment_source_fake_track);
+            m_left_gl_path_shader = utils::compile_shader(vertex_source, fragment_source);
+            m_right_gl_path_shader = utils::compile_shader(vertex_source, fragment_source);
 
             m_logger("setting state estimator gl properties");
 
@@ -334,7 +336,8 @@ namespace controls {
             m_logger("generating state estimator gl buffers");
             gen_left_curv_frame_lookup_framebuffer();
             gen_right_curv_frame_lookup_framebuffer();
-            gen_gl_path(m_gl_path);
+            gen_gl_path(m_left_gl_path);
+            gen_gl_path(m_right_gl_path);
             gen_left_track();
             gen_right_track();
 
@@ -797,7 +800,7 @@ namespace controls {
             glDepthFunc(GL_LESS);
 
             // use a shader program
-            glUseProgram(m_fake_track_shader_program);
+            glUseProgram(m_left_track_shader_program);
             // set the relevant scale and center uniforms (constants) in the shader program
             glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
             glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
@@ -824,7 +827,7 @@ namespace controls {
             glDepthFunc(GL_LESS);
 
             // use a shader program
-            glUseProgram(m_fake_track_shader_program);
+            glUseProgram(m_right_track_shader_program);
             // set the relevant scale and center uniforms (constants) in the shader program
             glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
             glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
@@ -854,12 +857,12 @@ namespace controls {
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // TODO: remove depth buffer
             // use a shader program
-            glUseProgram(m_gl_path_shader);
+            glUseProgram(m_left_gl_path_shader);
             // set the relevant scale and center uniforms (constants) in the shader program
             glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
             glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
-            glBindVertexArray(m_gl_path.vao);
+            glBindVertexArray(m_left_gl_path.vao);
             glBindTexture(GL_TEXTURE_2D, m_left_track_texture_color);
             glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
             // glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
@@ -875,12 +878,12 @@ namespace controls {
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // TODO: remove depth buffer
             // use a shader program
-            glUseProgram(m_gl_path_shader);
+            glUseProgram(m_right_gl_path_shader);
             // set the relevant scale and center uniforms (constants) in the shader program
             glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
             glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
-            glBindVertexArray(m_gl_path.vao);
+            glBindVertexArray(m_right_gl_path.vao);
             glBindTexture(GL_TEXTURE_2D, m_right_track_texture_color);
             glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
             // glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
@@ -950,6 +953,7 @@ namespace controls {
             CUDA_CALL(cudaGraphicsUnmapResources(1, &m_left_curv_frame_lookup_rsc));
             m_left_curv_frame_lookup_mapped = false;
         }
+
         void StateEstimator_Impl::unmap_right_curv_frame_lookup() {
             if (!m_right_curv_frame_lookup_mapped)
                 return;
@@ -1065,7 +1069,9 @@ namespace controls {
             // }
     
             RCLCPP_DEBUG(m_logger_obj, ss.str().c_str());
-            glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, m_left_gl_path.vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(StateEstimator_Impl::Vertex) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, m_right_gl_path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(StateEstimator_Impl::Vertex) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
 
             // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
@@ -1185,6 +1191,18 @@ namespace controls {
                 total_progress += new_progress;
             }
 
+            std::stringstream ss;
+            ss << "Start of right at: " << vertices.size();
+            for(size_t i = 0; i < indices.size(); i++){
+                ss << "Index: " << i << " Point x: " << indices.at(i) << "Point y: "<< indices.at(i) << "\n";
+            }
+            // if(indices.size() > 2) {
+            //     for(size_t i = 0; i < indices.size()-2; i += 3){
+            //         ss << "Index: " << indices.at(i) << " 2: " << indices.at(i+1) << " 3: " << indices.at(i+2) <<"------";
+            //     }
+            // }
+    
+            RCLCPP_DEBUG(m_logger_obj, ss.str().c_str());
             glBindBuffer(GL_ARRAY_BUFFER, m_left_track_path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
 

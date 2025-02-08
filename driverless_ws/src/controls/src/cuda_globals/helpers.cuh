@@ -25,15 +25,18 @@ namespace controls {
 
             const float4 left_parallel_pose = tex2D<float4>(left_curv_frame_lookup_tex, u, v);
             const float4 right_parallel_pose = tex2D<float4>(right_curv_frame_lookup_tex, u, v);
-            paranoid_assert(isnan(left_parallel_pose.x) || isnan(left_parallel_pose.y) || isnan(left_parallel_pose.z) || isnan(left_parallel_pose.w));
+            paranoid_assert(isnan(left_parallel_pose.x));
+            paranoid_assert(isnan(left_parallel_pose.y));
+            paranoid_assert( isnan(left_parallel_pose.z));
+            paranoid_assert(isnan(left_parallel_pose.w));
             paranoid_assert(isnan(right_parallel_pose.x) || isnan(right_parallel_pose.y) || isnan(right_parallel_pose.z) || isnan(right_parallel_pose.w));
 
             curv_pose[0] = left_parallel_pose.x;
             curv_pose[1] = left_parallel_pose.y;
             curv_pose[2] = yaw - left_parallel_pose.z;
-            curv_pose[0] = right_parallel_pose.x;
-            curv_pose[1] = right_parallel_pose.y;
-            curv_pose[2] = yaw - right_parallel_pose.z;
+            curv_pose[3] = right_parallel_pose.x;
+            curv_pose[4] = right_parallel_pose.y;
+            curv_pose[5] = yaw - right_parallel_pose.z;
 
             // if (__cudaGet_threadIdx().x == 0 && __cudaGet_blockIdx().x == 0) {
             //     printf("tex info: %f, %f, %f\n", curv_frame_lookup_tex_info.xcenter, curv_frame_lookup_tex_info.ycenter, curv_frame_lookup_tex_info.width);

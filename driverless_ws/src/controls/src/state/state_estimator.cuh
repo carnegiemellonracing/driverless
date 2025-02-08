@@ -270,28 +270,27 @@ namespace controls {
             GLuint m_left_curv_frame_lookup_rbo;
             GLuint m_right_curv_frame_lookup_rbo;
 
-            GLuint m_fake_track_fbo;
             GLuint m_left_track_fbo;
             GLuint m_right_track_fbo;  
             
-            GLuint m_fake_track_texture_color;
             GLuint m_left_track_texture_color;
             GLuint m_right_track_texture_color;
 
-            utils::GLObj m_fake_track_path;
             utils::GLObj m_left_track_path;
             utils::GLObj m_right_track_path;
-            GLuint m_fake_track_shader_program; 
-
+            GLuint m_left_track_shader_program; 
+            GLuint m_right_track_shader_program; 
             /**
              * Has members vbo, vao, veo. @ref utils::GLObj
              * vbo - vertex buffer object. Contiguous block of memory where all the vertices' information is stored
              * vao - vertex array object. A specification for how memory in the VBO is laid out, e.g. how big is a vertex.
              * ebo - element buffer object. Memory that contains triples of indices into the VBO, representing triangles.
              */
-            utils::GLObj m_gl_path;
+            utils::GLObj m_left_gl_path;
+            utils::GLObj m_right_gl_path;
 
-            GLuint m_gl_path_shader; ///< Shader program to be used. Composed of vertex and fragment shaders.
+            GLuint m_left_gl_path_shader; ///< Shader program to be used. Composed of vertex and fragment shaders.
+            GLuint m_right_gl_path_shader;
 
             /// OpenGL context, stores all the information associated with this instance.
             SDL_GLContext m_gl_context;

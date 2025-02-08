@@ -77,7 +77,7 @@ namespace controls {
             }
 
             bool corner_out_of_bounds;
-            float dummy_progress[3];
+            float dummy_progress[6];
             float corner_state[3];
             for (int forward_mult = -1; forward_mult <= 1; forward_mult++) {
                 for (int right_mult = -1; right_mult <= 1; right_mult += 2) {
