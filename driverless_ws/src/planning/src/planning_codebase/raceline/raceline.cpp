@@ -252,7 +252,7 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> parameterized_sp
         // TODO delete spline rotated points and translation vector
         Spline spline_x = Spline(interpolation_poly_x,first_der_x,second_der_x,third_der_x,path_id,i);
         Spline spline_y = Spline(interpolation_poly_y,first_der_y,second_der_y,third_der_y,path_id,i);
-        currParamSpline = ParameterizedSpline(spline_x, spline_y);
+        ParameterizedSpline currParamSpline = ParameterizedSpline(spline_x, spline_y);
         currParamSpline.start_cone_id = group(2, 1);
 
         splines.emplace_back(currParamSpline);
@@ -292,9 +292,9 @@ std::pair<std::vector<ParameterizedSpline>,std::vector<double>> make_splines_vec
     pointMatrix(0, 0) = std::get<0>(points[points.size()-1]);
     pointMatrix(1, 0) = std::get<1>(points[points.size()-1]);
     pointMatrix(2, 0) = std::get<2>(points[points.size()-1]);
-    pointMatrix(0, points.size() + 1) = std::get<0>(points[i]);
-    pointMatrix(1, points.size() + 1) = std::get<1>(points[i]);
-    pointMatrix(2, points.size() + 1) = std::get<2>(points[i]);
+    pointMatrix(0, points.size() + 1) = std::get<0>(points[0]);
+    pointMatrix(1, points.size() + 1) = std::get<1>(points[0]);
+    pointMatrix(2, points.size() + 1) = std::get<2>(points[0]);
     pointMatrix(0, points.size() + 2) = std::get<0>(points[1]);
     pointMatrix(1, points.size() + 2) = std::get<1>(points[1]);
     pointMatrix(2, points.size() + 2) = std::get<2>(points[1]);

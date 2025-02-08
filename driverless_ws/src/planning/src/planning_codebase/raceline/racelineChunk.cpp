@@ -160,7 +160,7 @@ std::vector<Chunk*>* generateChunks(std::vector<std::tuple<double,double,int>> b
     chunk->minThirdDer = blueRacetrackSplines[0].get_third_der(0);
     chunk->maxThirdDer = chunk->minThirdDer;
     chunk->blueSplines.push_back(blueRacetrackSplines[0]);
-    chunk->blueConeIds.push_back(blueRacetrackSplines[i].start_cone_id);
+    chunk->blueConeIds.push_back(blueRacetrackSplines[0].start_cone_id);
     chunk->tStart = 0;
     chunk->blueArclengthStart = 0;
     chunk->blueFirstSplineArclength = blueCumulativeLen[0];
