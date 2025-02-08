@@ -264,12 +264,6 @@ int main() {
                         blue_splines_outputFile << ",";
                     }
                     print_poly(blue_splines_outputFile, chunks[i]->blueSplines[j].spline_x, chunks[i]->blueSplines[j].spline_y);
-
-                    std::cout << "start blue cone ids for chunk" << i << std::endl;
-                    for (int k = 0; k < chunks[i]->blueConeIds.size(); k++) {
-                        std::cout << chunks[i]->blueConeIds[k] << std::endl;
-                    }
-                    std::cout << "end yellow cone ids for chunk" << i << std::endl;
                 }
 
                 blue_splines_outputFile << "], \n";
@@ -277,6 +271,12 @@ int main() {
                 blue_splines_outputFile << " (0,1) ";
 
                 blue_splines_outputFile << "), \n" ;
+
+                std::cout << "start blue cone ids for chunk" << i << std::endl;
+                for (int k = 0; k < chunks[i]->blueConeIds.size(); k++) {
+                    std::cout << chunks[i]->blueConeIds[k] << std::endl;
+                }
+                std::cout << "end yellow cone ids for chunk" << i << std::endl;
 
             }
 
@@ -298,12 +298,6 @@ int main() {
                         yellow_splines_outputFile << ",";
                     }
                     print_poly(yellow_splines_outputFile, chunks[i]->yellowSplines[j].spline_x, chunks[i]->yellowSplines[j].spline_y);
-                
-                    std::cout << "start yellow cone ids for chunk" << i << std::endl;
-                    for (int k = 0; k < chunks[i]->yellowConeIds.size(); k++) {
-                        std::cout << chunks[i]->yellowConeIds[k] << std::endl;
-                    }
-                    std::cout << "end yellow cone ids for chunk" << i << std::endl;
                 }
 
                 yellow_splines_outputFile << "], \n";
@@ -311,6 +305,12 @@ int main() {
                 yellow_splines_outputFile << " (" << chunks[i]->tStart <<  ", " << chunks[i]->tEnd << ")";
 
                 yellow_splines_outputFile << "), \n" ;
+
+                std::cout << "start yellow cone ids for chunk" << i << std::endl;
+                for (int k = 0; k < chunks[i]->yellowConeIds.size(); k++) {
+                    std::cout << chunks[i]->yellowConeIds[k] << std::endl;
+                }
+                std::cout << "end yellow cone ids for chunk" << i << std::endl;
 
             }
 
