@@ -148,6 +148,7 @@ typedef struct InputParam
 
   std::string ros_send_packet_topic = NULL_TOPIC;
   std::string ros_send_point_topic = NULL_TOPIC;
+  std::string ros_send_filtered_topic = NULL_TOPIC;
   std::string ros_send_cone_topic = NULL_TOPIC;
   std::string ros_send_packet_loss_topic = NULL_TOPIC; 
   std::string ros_send_ptp_topic = NULL_TOPIC;

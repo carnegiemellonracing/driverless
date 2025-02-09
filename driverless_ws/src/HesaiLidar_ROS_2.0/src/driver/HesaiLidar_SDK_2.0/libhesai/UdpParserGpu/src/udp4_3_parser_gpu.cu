@@ -38,9 +38,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "safe_call.cuh"
 #include "return_code.h"
 
-#define MAX_DISTANCE 10.0f // Maximum allowable distance
-#define ERROR_MARGIN 0.01f  // Outlier threshold
-#define MAX_HEIGHT 1.5f
+#define MAX_DISTANCE 5.0f // Maximum allowable distance
+#define ERROR_MARGIN 0.15f  // Outlier threshold
+#define MAX_HEIGHT 0.4f
 
 
 // CUDA kernel for union-find initialization
@@ -350,13 +350,13 @@ __global__ void assignToGrid(
 
     float range = sqrtf((p.x * p.x) + (p.y * p.y));
 
-    if (fabsf(p.x) > MAX_DISTANCE || fabsf(p.y) > MAX_DISTANCE) {
+    if (fabsf(p.x) > MAX_DISTANCE || fabsf(p.y) > MAX_DISTANCE ) {
         bins[idx] = 0;
         segments[idx] = 0;
         return;
     }
 
-    if (range > MAX_DISTANCE) return; // Discard points further than MAX_DISTANCE
+    if (range > MAX_DISTANCE || (p.y < 0.01f && p.x < 0.01f)) return; // Discard points further than MAX_DISTANCE
 
 
     int segment_value = min(static_cast<int>((angle - angle_min) / (angle_max - angle_min) * num_segments), num_segments - 1);
@@ -379,16 +379,14 @@ __device__ __inline__ float atomicMinFloat (float * addr, float value) {
 
 
 __device__ __inline__ unsigned long long packFloatAndInt(float z, int point_index) {
-    uint32_t z_as_int;
-    memcpy(&z_as_int, &z, sizeof(float));
-    unsigned long long packed_value = ((unsigned long long)z_as_int << 32) | (point_index & 0xFFFFFFFF);
-    return packed_value;
+    int32_t scaled_z = __float2int_rz((z + 50.0f) * 100.0f);
+    return (static_cast<unsigned long long>(scaled_z) << 32 | (point_index & 0xFFFFFFFF));
 }
 
 __device__ __inline__ void unpackFloatAndInt(unsigned long long packed_value, float& z, int& point_index) {
-    uint32_t z_as_int = (packed_value >> 32) & 0xFFFFFFFF;
-    point_index = (int)(packed_value & 0xFFFFFFFF);
-    memcpy(&z, &z_as_int, sizeof(float));
+    int32_t scaled_z = (packed_value >> 32) & 0xFFFFFFFF;
+    point_index = static_cast<int>(packed_value & 0xFFFFFFFF);
+    z = (static_cast<float>(scaled_z) / 100.0f) - 50.0f;
     
 }
 
@@ -591,9 +589,9 @@ __global__ void validateOutliers(
     float range = sqrtf(p.x * p.x + p.y * p.y);
     float predicted_z = slope * range + intercept;
 
-    if (sqrtf((p.x * p.x) + (p.y * p.y)) > MAX_DISTANCE) return;
+    if (sqrtf((p.x * p.x) + (p.y * p.y)) > MAX_DISTANCE || (points[idx].y < 0.01f && points[idx].x < 0.01f)) return;
 
-    if ((p.z - predicted_z) > margin_of_error && (p.z - predicted_z) < MAX_HEIGHT) {
+    if ((p.z - predicted_z) > ERROR_MARGIN && (p.z - predicted_z) < MAX_HEIGHT) {
         int out_idx = atomicAdd(outlier_count, 1);
         outliers[out_idx] = p;
     }
@@ -617,7 +615,6 @@ __global__ void populateLowestPoints(
     int index;
     float z_val;
     unpackFloatAndInt(packed_val, z_val, index);
-    printf("z_val %f \n", z_val);
     assert(packFloatAndInt(z_val, index) == packed_val);
 
 
@@ -626,7 +623,7 @@ __global__ void populateLowestPoints(
         // printf("index = %d, points[index].z = %f, z_val = %f, cell_idx = %d\n", index, points[index].z, z_val, cell_idx);
         assert(points[index].z == z_val);
         lowest_points[cell_idx] = points[index];
-        // printf("The lowest z in bin %d is %f: \n", cell_idx, lowest_points[cell_idx].z);
+        printf("The lowest z in bin %d is %f: \n", cell_idx, lowest_points[cell_idx].z);
     } else {
         // printf("cell index %d was never cas'd\n", cell_idx);
         T_Point default_point = {0, 0, FLT_MAX, 0, 0, 0};
@@ -648,10 +645,6 @@ template <typename T_Point>
 T_Point* processPointsCUDA(
     const T_Point* points_ptr, size_t num_points, int num_segments, int num_bins, int* h_outlier_count) {
 
-    // // Define constants
-    // #define MAX_DISTANCE 1000.0f
-    // #define ERROR_MARGIN 0.1f
-    // #define MAX_HEIGHT 500.0f
 
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
@@ -1060,9 +1053,13 @@ compute_xyzs_v4_3_impl<<<frame.packet_num, frame.block_num * frame.laser_num>>>(
   //           << "time taken to copy cpu to cpu is " << std::chrono::duration_cast<std::chrono::microseconds>(t5 - t4).count() << "\n";
 
   float alpha = 0.1f;
-  int num_bins = 100;
+  int num_bins = 5;
   int* num_filtered = (int*)malloc(sizeof(int));
   auto filtered_points = GraceAndConrad(frame.points, frame.block_num * frame.laser_num * frame.packet_num, alpha, num_bins, num_filtered);
+  frame.filtered_points_num = static_cast<uint32_t>(*num_filtered);
+  std::memcpy(frame.filtered_points, filtered_points, *num_filtered * sizeof(T_Point));
+  std::cout << "num_filtered is " << *num_filtered << "\n\n\n\n";
+
   
   cudaDeviceSynchronize();
   int min_samples = 2;
