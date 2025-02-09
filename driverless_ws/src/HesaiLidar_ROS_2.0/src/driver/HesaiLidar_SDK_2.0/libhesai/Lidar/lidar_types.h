@@ -153,6 +153,8 @@ typedef struct _LidarDecodeConfig {
 #define POINTS_OFFSET                   (SENSOR_TIMESTAMP_OFFSET + SENSOR_TIMESTAMP_LEN)
 #define POINTS_LEN                      (sizeof(PointT) * kMaxPacketNumPerFrame * kMaxPointsNumPerPacket)
 #define CONE_CENTROIDS_OFFSET           (POINTS_OFFSET + POINTS_LEN)
+#define CONE_CENTROIDS_LEN              (sizeof(PointT) * 100)
+#define FILTERED_POINTS_OFFSET          (CONE_CENTROIDS_OFFSET + CONE_CENTROIDS_LEN)
 
 struct PointDecodeData {
   float azimuth;
@@ -172,12 +174,14 @@ class LidarDecodedFrame
         total_memory = new uint8_t[sizeof(PointDecodeData) * kMaxPacketNumPerFrame * kMaxPointsNumPerPacket
                                    + sizeof(uint64_t) * kMaxPacketNumPerFrame
                                    + sizeof(PointT) * kMaxPacketNumPerFrame * kMaxPointsNumPerPacket
+                                   + sizeof(PointT) * kMaxPacketNumPerFrame * kMaxPointsNumPerPacket
                                    + sizeof(PointT) * kMaxConeCentroidsPerFrame];
 
         pointData = reinterpret_cast<PointDecodeData* >(total_memory + POINT_DATA_OFFSET);
         sensor_timestamp = reinterpret_cast<uint64_t* >(total_memory + SENSOR_TIMESTAMP_OFFSET);
         points = reinterpret_cast <PointT* >(total_memory + POINTS_OFFSET);
         cone_centroids = reinterpret_cast <PointT* >(total_memory + CONE_CENTROIDS_OFFSET);
+        filtered_points = reinterpret_cast <PointT* >(total_memory + FILTERED_POINTS_OFFSET);
 
         host_timestamp = 0;
         major_version = 0;
@@ -185,6 +189,8 @@ class LidarDecodedFrame
         return_mode = 0;
         spin_speed = 0;
         points_num = 0;
+        filtered_points_num = 0;
+        cone_centroids_num = 0;
         packet_num = 0;
         block_num = 0;
         laser_num = 0; 
@@ -202,6 +208,8 @@ class LidarDecodedFrame
           total_memory = nullptr;
           sensor_timestamp = nullptr;
           points = nullptr;
+          cone_centroids = nullptr;
+          filtered_points = nullptr;
           pointData = nullptr;
         }
     }
@@ -235,7 +243,9 @@ class LidarDecodedFrame
     uint8_t* total_memory = nullptr;                  
     PointT* points = nullptr;
     uint32_t cone_centroids_num;
-    PointT* cone_centroids;
+    PointT* cone_centroids = nullptr;
+    uint32_t filtered_points_num;
+    PointT* filtered_points = nullptr;
     PointDecodeData* pointData = nullptr;
     uint16_t block_num;
     uint16_t laser_num;

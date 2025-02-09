@@ -48,6 +48,7 @@ public:
         YamlRead<std::string>(config["ros"], "ros_frame_id",               driver_param.input_param.frame_id, "hesai_lidar");
         YamlRead<std::string>(config["ros"], "ros_send_packet_topic",      driver_param.input_param.ros_send_packet_topic, "hesai_packets");
         YamlRead<std::string>(config["ros"], "ros_send_point_cloud_topic", driver_param.input_param.ros_send_point_topic, "hesai_points");
+        YamlRead<std::string>(config["ros"], "ros_send_filtered_topic",    driver_param.input_param.ros_send_filtered_topic, "filtered_points");
         YamlRead<std::string>(config["ros"], "ros_send_cone_topic",        driver_param.input_param.ros_send_cone_topic, "cones");
         YamlRead<std::string>(config["ros"], "ros_recv_packet_topic",      driver_param.input_param.ros_recv_packet_topic, "hesai_packets");
         YamlRead<std::string>(config["ros"], "ros_send_packet_loss_topic", driver_param.input_param.ros_send_packet_loss_topic, NULL_TOPIC);
