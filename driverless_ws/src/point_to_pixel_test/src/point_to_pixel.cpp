@@ -5,6 +5,7 @@
 
 // zed-open-capture library header
 #include <videocapture.hpp>
+#include <ocv_display.hpp>
 
 // Standard Imports
 #include <cstdio>
@@ -339,7 +340,8 @@ void Point_To_Pixel_Node::opencv_callback() {
       // cv::Mat frameBGR_0;
       cv::cvtColor(frameYUV_0,frameBGR,cv::COLOR_YUV2BGR_YUYV);
       // <---- Conversion from YUV 4:2:2 to BGR for visualization
-      cv::imshow("Display Window", frameBGR);
+       sl_oc::tools::showImage( "Stream RGB", frameBGR, sl_oc::video::RESOLUTION::HD720);
+      // cv::imshow("Display Window", frameBGR);
   }
   // Create a pair of pointers to pass both image and canvas into the callback
   std::pair<cv::Mat*, cv::Mat*> params(&frameBGR, &frameBGR);

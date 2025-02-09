@@ -21,6 +21,7 @@ find_package(OpenCV REQUIRED)
 set(LIBRARY_PATH ~/Documents/driverless-packages/zed-open-capture/build)
 
 include_directories(~/Documents/driverless-packages/zed-open-capture/include)
+include_directories(~/Documents/driverless-packages/zed-open-capture/examples/include)
 
 # Point to Pixel Executable
 add_executable(point_to_pixel src/point_to_pixel.cpp)
