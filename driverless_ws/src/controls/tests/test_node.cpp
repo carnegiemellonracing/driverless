@@ -26,7 +26,6 @@
 
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
-#include <model/two_track/codegen/minimal_state_function.h>
 #include <filesystem>
 #include "test_node.hpp"
 #include <cstdlib>
@@ -528,32 +527,6 @@ namespace controls {
         }
 
 
-
-        int model_func(double t, const double state[], double dstatedt[], void* params) {
-            const double yaw = state[2];
-            const double x_world_dot = state[3] * cos(yaw) - state[4] * sin(yaw);
-            const double y_world_dot = state[3] * sin(yaw) + state[4] * cos(yaw);
-            const double yaw_dot = state[5];
-
-            double minimal_state[10];
-            memcpy(minimal_state, &state[3], sizeof(double) * 10);
-
-            auto action_msg = *(ActionMsg*)params;
-            double action[5] = {
-                action_msg.swangle, action_msg.torque_fl, action_msg.torque_fr, action_msg.torque_rl, action_msg.torque_rr
-            };
-
-            double minimal_state_dot[10];
-
-            minimal_state_function(minimal_state, action, minimal_state_dot);
-
-            dstatedt[0] = x_world_dot;
-            dstatedt[1] = y_world_dot;
-            dstatedt[2] = yaw_dot;
-            memcpy(&dstatedt[3], minimal_state_dot, sizeof(minimal_state_dot));
-
-            return GSL_SUCCESS;
-        }
 
         void TestNode::on_sim() {
             ActionMsg adj_msg = m_last_action_msg;
