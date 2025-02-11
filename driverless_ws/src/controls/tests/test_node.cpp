@@ -88,6 +88,11 @@ namespace controls {
 
 
         void detect_all_collisions() {
+            if (g_config_dict["do_collision_detection"] == "false") {
+                std::cout << "Not doing cone collision detection.\n";
+                return;
+            }
+
             std::cout << "Received Ctrl-C order, starting cone detection now...\n";
             std::ofstream collision_log_output;
             std::stack<std::pair<glm::fvec2, std::tuple<glm::fvec2, float, float>>> collisions;
