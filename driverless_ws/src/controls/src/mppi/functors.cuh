@@ -93,14 +93,17 @@ namespace controls {
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
             const float actual_speed_along = world_state[3];
+            (void)actual_speed_along;
             // if (fabsf(approx_speed_along - actual_speed_along) > 1.0f) {
             //     printf("Approx speed along: %f, actual speed along: %f\n", approx_speed_along, actual_speed_along);
             // }
             const float speed_deviation = approx_speed_along - target_speed;
             // const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
             const float speed_cost = speed_off_1mps_cost * (-speed_deviation);
+            (void)speed_cost;
 
             const float distance_cost = offset_1m_cost * cent_curv_pose[state_y_idx];
+            (void) distance_cost;
             const float progress_cost = progress_cost_multiplier * (-progress);
 
 
