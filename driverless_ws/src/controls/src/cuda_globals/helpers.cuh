@@ -30,7 +30,7 @@ namespace controls {
             paranoid_assert(!isnan(parallel_pose.z));
             paranoid_assert(!isnan(parallel_pose.w));
             
-            curv_pose[0] = parallel_pose.x;
+            curv_pose[0] = parallel_pose.x + parallel_pose.z;
             curv_pose[1] = parallel_pose.y;
             curv_pose[2] = yaw - parallel_pose.z;
 

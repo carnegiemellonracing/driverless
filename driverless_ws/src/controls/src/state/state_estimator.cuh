@@ -161,7 +161,9 @@ namespace controls {
             /// in m_curv_frame_lookup_tex_info.
             void gen_tex_info(glm::fvec2 car_pos);
 
-            void render_fake_track();
+            // void render_fake_track();
+            void render_left_fake_track();
+            void render_right_fake_track();
             /**
              * Render the lookup table into m_curv_frame_lookup_fbo
              */
@@ -188,6 +190,8 @@ namespace controls {
             void gen_curv_frame_lookup_framebuffer();
 
             void gen_fake_track();
+            void gen_left_fake_track();
+            void gen_right_fake_track();
 
             /**
              * Creates the buffers to be used, as well as the descriptions of how the buffers are laid out.
@@ -202,6 +206,9 @@ namespace controls {
              * and the triples of vertex indices that represent triangles respectively.
              */
             void fill_path_buffers_cones();
+            
+            void fill_left_path_buffers_spline();
+            void fill_right_path_buffers_spline();
             void fill_path_buffers_spline();
 
             struct Vertex {
@@ -258,8 +265,14 @@ namespace controls {
             GLuint m_curv_frame_lookup_rbo;
 
             GLuint m_fake_track_fbo;
+            GLuint m_left_fake_track_fbo;
+            GLuint m_right_fake_track_fbo;
             GLuint m_fake_track_texture_color;
-            utils::GLObj m_fake_track_path;
+            GLuint m_left_fake_track_texture_color;
+            GLuint m_right_fake_track_texture_color;
+            //utils::GLObj m_fake_track_path;
+            utils::GLObj m_left_fake_track_path;
+            utils::GLObj m_right_fake_track_path;
             GLuint m_fake_track_shader_program; 
 
             /**

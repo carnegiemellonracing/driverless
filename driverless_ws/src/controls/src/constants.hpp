@@ -73,10 +73,10 @@ namespace controls {
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 
     // Cost params
-    constexpr float progress_cost_multiplier = 0.6f;
+    constexpr float progress_cost_multiplier = 40*0.6f;
     /// Reason for not using infinity: reduction uses log of the cost (trading precision for representable range).
     /// This covers the edge case where every trajectory goes out of bounds, allowing us to still extract useful information.
-    constexpr float out_of_bounds_cost = 100.0f; ///< Cost for being out of (fake) track bound as defined by @ref track_width.
+    constexpr float out_of_bounds_cost = 1000.0f; ///< Cost for being out of (fake) track bound as defined by @ref track_width.
     // TODO: use real bounds
 
     // Midline/SVM
@@ -86,7 +86,7 @@ namespace controls {
     constexpr float lookahead_behind_squared = 25.0f;
 
     // AIM communication stuff
-    constexpr float aim_signal_period_ms = 10.0f;
+    constexpr int aim_signal_period_ms = 10;
 
 
     // State Estimation
@@ -110,7 +110,7 @@ namespace controls {
     constexpr float cg_to_front = 0.775; 
     constexpr float cg_to_rear = 0.775; //Also rear of car
     constexpr float cg_to_nose = 2.025f;
-    constexpr float cg_to_side = 0.0f; //ACTUAL .75
+    constexpr float cg_to_side = 0.4f; //ACTUAL .75
     //constexpr float whl_base = 2.0f;
     constexpr float whl_radius = 0.2286;
     /// gear ratio = motor speed / wheel speed = wheel torque / motor torque
