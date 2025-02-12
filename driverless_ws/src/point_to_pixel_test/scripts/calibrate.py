@@ -3,28 +3,56 @@ import os
 import sys
 import cv2
 import yaml
+import argparse
 from dataclasses import dataclass
-from typing import List, Tuple
-
-min_points = 10
-ct = 0.05
+from typing import List, Tuple, Optional
+import tkinter as tk
+from tkinter import ttk, messagebox
+from PIL import Image, ImageTk
+import pyperclip
 
 @dataclass
-class CalibrationPoints:
-    """Store corresponding 2D camera and 3D LiDAR points."""
-    camera_points: List[Tuple[float, float]]
-    lidar_points: List[Tuple[float, float, float]]
-    
-    def __init__(self):
-        self.camera_points = []
-        self.lidar_points = []
-        
-    def __len__(self) -> int:
-        return len(self.camera_points)
-    
-class CalibrationError(Exception):
-    pass
+class CalibrationPoint:
+    camera_x: float
+    camera_y: float
+    lidar_x: float
+    lidar_y: float
+    lidar_z: float
+    index: int
 
+    def as_tuple(self) -> Tuple[Tuple[float, float], Tuple[float, float, float]]:
+        return ((self.camera_x, self.camera_y), (self.lidar_x, self.lidar_y, self.lidar_z))
+
+class CalibrationData:
+    def __init__(self):
+        self.points: List[CalibrationPoint] = []
+        self._next_index = 0
+
+    def add_point(self, camera_point: Tuple[float, float], lidar_point: Tuple[float, float, float]) -> int:
+        point = CalibrationPoint(
+            camera_x=camera_point[0],
+            camera_y=camera_point[1],
+            lidar_x=lidar_point[0],
+            lidar_y=lidar_point[1],
+            lidar_z=lidar_point[2],
+            index=self._next_index
+        )
+        self.points.append(point)
+        self._next_index += 1
+        return point.index
+
+    def remove_point(self, index: int) -> None:
+        self.points = [p for p in self.points if p.index != index]
+
+    def get_arrays(self) -> Tuple[np.ndarray, np.ndarray]:
+        if not self.points:
+            return np.array([]), np.array([])
+        camera_points = np.array([(p.camera_x, p.camera_y) for p in self.points])
+        lidar_points = np.array([(p.lidar_x, p.lidar_y, p.lidar_z) for p in self.points])
+        return camera_points, lidar_points
+
+    def __len__(self) -> int:
+        return len(self.points)
 
 def normalize_points(points_2d: np.ndarray, points_3d: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Hartley normalization for numerical stability."""
@@ -60,13 +88,10 @@ def normalize_points(points_2d: np.ndarray, points_3d: np.ndarray) -> Tuple[np.n
     
     return normalized_2d, normalized_3d, T, U
 
-
-def calculate_projection_matrix(cam_points: np.ndarray, lidar_points: np.ndarray) -> np.ndarray:
-    """
-    Calculate projection matrix using normalized Direct Linear Transform.
-    """
+def calculate_projection_matrix(cam_points: np.ndarray, lidar_points: np.ndarray, min_points: int = 10) -> np.ndarray:
+    """Calculate projection matrix using normalized Direct Linear Transform."""
     if cam_points.shape[0] < min_points:
-        raise CalibrationError(f"At least {min_points} points required")
+        raise ValueError(f"At least {min_points} points required")
     
     # Normalize points
     norm_cam, norm_lidar, T, U = normalize_points(cam_points, lidar_points)
@@ -78,7 +103,7 @@ def calculate_projection_matrix(cam_points: np.ndarray, lidar_points: np.ndarray
         u, v = norm_cam[i]
         mat.append([-X, -Y, -Z, -1, 0, 0, 0, 0, u*X, u*Y, u*Z, u])
         mat.append([0, 0, 0, 0, -X, -Y, -Z, -1, v*X, v*Y, v*Z, v])
-        
+    
     # Solve using SVD
     _, _, Vt = np.linalg.svd(np.array(mat))
     P_normalized = Vt[-1].reshape(3, 4)
@@ -89,103 +114,303 @@ def calculate_projection_matrix(cam_points: np.ndarray, lidar_points: np.ndarray
     
     return P
 
-def get_lidar_input() -> Tuple[float, float, float]:
-    """Get LiDAR coordinates with support for pasted 'x:val' format."""
-    while True:
+class LidarInputDialog:
+    def __init__(self, parent, initial_coords: Optional[Tuple[float, float, float]] = None):
+        self.top = tk.Toplevel(parent)
+        self.top.title("Enter LiDAR Coordinates")
+        self.result = None
+        
+        # Create main frame
+        main_frame = ttk.Frame(self.top, padding="10")
+        main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        # Manual Input Section
+        manual_frame = ttk.LabelFrame(main_frame, text="Manual Input", padding="5")
+        manual_frame.grid(row=0, column=0, padx=5, pady=5, sticky=(tk.W, tk.E))
+        
+        ttk.Label(manual_frame, text="X:").grid(row=0, column=0, padx=5, pady=5)
+        ttk.Label(manual_frame, text="Y:").grid(row=1, column=0, padx=5, pady=5)
+        ttk.Label(manual_frame, text="Z:").grid(row=2, column=0, padx=5, pady=5)
+        
+        self.x_var = tk.StringVar(value=str(initial_coords[0]) if initial_coords else "")
+        self.y_var = tk.StringVar(value=str(initial_coords[1]) if initial_coords else "")
+        self.z_var = tk.StringVar(value=str(initial_coords[2]) if initial_coords else "")
+        
+        ttk.Entry(manual_frame, textvariable=self.x_var).grid(row=0, column=1, padx=5, pady=5)
+        ttk.Entry(manual_frame, textvariable=self.y_var).grid(row=1, column=1, padx=5, pady=5)
+        ttk.Entry(manual_frame, textvariable=self.z_var).grid(row=2, column=1, padx=5, pady=5)
+        
+        # Paste Section
+        paste_frame = ttk.LabelFrame(main_frame, text="Paste Coordinates", padding="5")
+        paste_frame.grid(row=1, column=0, padx=5, pady=5, sticky=(tk.W, tk.E))
+        
+        paste_btn = ttk.Button(paste_frame, text="Paste from Clipboard", command=self.paste_from_clipboard)
+        paste_btn.grid(row=2, column=0, pady=5)
+        
+        # Buttons
+        btn_frame = ttk.Frame(main_frame)
+        btn_frame.grid(row=2, column=0, pady=10)
+        
+        ttk.Button(btn_frame, text="OK", command=self.ok).grid(row=0, column=0, padx=5)
+        ttk.Button(btn_frame, text="Cancel", command=self.cancel).grid(row=0, column=1, padx=5)
+        
+        # Make dialog modal
+        self.top.transient(parent)
+        self.top.wait_visibility()
+        self.top.grab_set()
+        
+    def paste_from_clipboard(self):
+        """Handle pasting coordinates from clipboard."""
         try:
-            # Process x input
-            x_line = input('Enter Lidar Point:').strip()
-            if ':' in x_line:
-                x_str = x_line.split(':', 1)[1].strip()
-            else:
-                x_str = x_line
-            x = float(x_str)
-            
-            # Process y input
-            y_line = input().strip()
-            if ':' in y_line:
-                y_str = y_line.split(':', 1)[1].strip()
-            else:
-                y_str = y_line
-            y = float(y_str)
-            
-            # Process z input
-            z_line = input().strip()
-            if ':' in z_line:
-                z_str = z_line.split(':', 1)[1].strip()
-            else:
-                z_str = z_line
-            z = float(z_str)
-            
-            return (x, y, z)
-        except ValueError as e:
-            print(f"Invalid input: {e}. Please try again.")
+            text = pyperclip.paste()
+            # Try different formats
+            if ':' in text:  # Format: x:val y:val z:val
+                coords = {}
+                for line in text.strip().split('\n'):
+                    if ':' in line:
+                        key, value = line.split(':', 1)
+                        coords[key.strip().lower()] = value.strip()
+                if all(k in coords for k in ['x', 'y', 'z']):
+                    self.x_var.set(coords['x'])
+                    self.y_var.set(coords['y'])
+                    self.z_var.set(coords['z'])
+                    return
+            else:  # Try comma/space separated format
+                values = [float(x.strip()) for x in text.replace(',', ' ').split()]
+                if len(values) >= 3:
+                    self.x_var.set(str(values[0]))
+                    self.y_var.set(str(values[1]))
+                    self.z_var.set(str(values[2]))
+                    return
+            raise ValueError("Invalid format")
+        except Exception as e:
+            tk.messagebox.showerror("Error", f"Could not parse clipboard content: {str(e)}")
+    
+    def ok(self):
+        """Validate and accept the input."""
+        try:
+            x = float(self.x_var.get())
+            y = float(self.y_var.get())
+            z = float(self.z_var.get())
+            self.result = (x, y, z)
+            self.top.destroy()
+        except ValueError:
+            tk.messagebox.showerror("Error", "Please enter valid numbers")
+    
+    def cancel(self):
+        """Cancel the input."""
+        self.top.destroy()
 
-def mouse_callback(event: int, x: int, y: int, flags: int,
-                  calibration_data: CalibrationPoints) -> None:
-    if event != cv2.EVENT_LBUTTONDOWN:
-        return
-    if len(calibration_data) >= min_points:
-        return
-    lidar_coords = get_lidar_input()
-    calibration_data.lidar_points.append(lidar_coords)
-    calibration_data.camera_points.append((float(x), float(y)))
-    print(f'Camera point: {(x, y)} | LiDAR point: {lidar_coords}')
-    print(f'Points collected: {len(calibration_data)}/{min_points}')
+class CalibrationUI:
+    def __init__(self, min_points: int = 6, width=800, height=450, frame_path: str = ""):
+        self.min_points = min_points
+        self.calibration_data = CalibrationData()
+        self.current_frame = None
+        self.dragging_point_index: Optional[int] = None  
+        self.width = width
+        self.height = height
+        self.frame_path = frame_path  # Path to the image you want to use as the frame
+        self.setup_ui()
 
-def collect_calibration_points(window_name: str, camera_id: int) -> CalibrationPoints:
-    calibration_data = CalibrationPoints()
-    cap = cv2.VideoCapture(camera_id)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, (2560*2))
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-    if not cap.isOpened():
-        raise CalibrationError(f"Could not open camera {camera_id}")
-    cv2.namedWindow(window_name)
-    cv2.setMouseCallback(window_name, mouse_callback, calibration_data)
-    try:
-        while len(calibration_data) < min_points:
-            ret, frame = cap.read()
-
-            if frame is None:
-                raise CalibrationError("Failed to grab frame")
-            cv2.imshow(window_name, frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                raise KeyboardInterrupt
-    finally:
-        cap.release()
-        cv2.destroyWindow(window_name)
-    return calibration_data
-
-def main():
-    """Main calibration routine."""
-    try:
-        print("Collecting points for camera 1...")
-        cam1_data = collect_calibration_points("Camera 1", 0)
-        # cam2_data = collect_calibration_points("Camera 2", 2)
+    def setup_ui(self):
+        self.root = tk.Tk()
+        self.root.title("Camera Calibration")
         
-        proj_mat1 = calculate_projection_matrix(
-            np.array(cam1_data.camera_points),
-            np.array(cam1_data.lidar_points)
-        )
-
-        # proj_mat2 =  calculate_projection_matrix(
-        #     np.array(cam2_data.camera_points),
-        #     np.array(cam2_data.lidar_points)
-        # )
+        # Main layout
+        self.left_frame = ttk.Frame(self.root)
+        self.left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         
+        self.right_frame = ttk.Frame(self.root)
+        self.right_frame.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Camera view
+        self.canvas = tk.Canvas(self.left_frame, width=self.width, height=self.height)
+        self.canvas.pack()
+        # Bind for dragging and new point creation
+        self.canvas.bind("<ButtonPress-1>", self.on_canvas_press)
+        self.canvas.bind("<B1-Motion>", self.on_canvas_drag)
+        self.canvas.bind("<ButtonRelease-1>", self.on_canvas_release)
+
+        # Point list
+        self.point_frame = ttk.LabelFrame(self.right_frame, text="Calibration Points")
+        self.point_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+
+        columns = ("Camera X", "Camera Y", "Lidar X", "Lidar Y", "Lidar Z")
+        self.point_list = ttk.Treeview(self.point_frame, columns=columns, show="headings")
+        for col in columns:
+            self.point_list.heading(col, text=col)
+            self.point_list.column(col, width=100)
+        self.point_list.pack(fill=tk.BOTH, expand=True)
+        self.point_list.bind("<Double-1>", self.on_treeview_double_click)
+
+        # Scrollbar for point list
+        scrollbar = ttk.Scrollbar(self.point_frame, orient=tk.VERTICAL, command=self.point_list.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.point_list.configure(yscrollcommand=scrollbar.set)
+
+        # Controls
+        self.control_frame = ttk.Frame(self.right_frame)
+        self.control_frame.pack(fill=tk.X, padx=5, pady=5)
+
+        self.remove_btn = ttk.Button(self.control_frame, text="Remove Point", command=self.remove_selected_point)
+        self.remove_btn.pack(side=tk.LEFT, padx=5)
+
+        self.finish_btn = ttk.Button(self.control_frame, text="Finish Calibration", command=self.finish_calibration)
+        self.finish_btn.pack(side=tk.RIGHT, padx=5)
+
+        # Status
+        self.status_var = tk.StringVar()
+        self.status_var.set(f"Collected 0/{self.min_points} points")
+        self.status_label = ttk.Label(self.right_frame, textvariable=self.status_var)
+        self.status_label.pack(pady=5)
+
+    def update_camera_view(self):
+        # Load the static image from the specified path
+        frame = cv2.imread(self.frame_path)
+        if frame is not None:
+            # Convert OpenCV BGR to RGB for tkinter
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            image_pil = Image.fromarray(frame_rgb)
+            # Resize the image to fit the canvas instead of cropping it
+            canvas_width = self.canvas.winfo_width()
+            canvas_height = self.canvas.winfo_height()
+            image_pil = image_pil.resize((canvas_width, canvas_height))
+            self.current_frame = ImageTk.PhotoImage(image_pil)
+            self.canvas.create_image(0, 0, anchor=tk.NW, image=self.current_frame)
+            
+            # Draw existing points (coordinates may need adjusting if they are relative to image size)
+            for point in self.calibration_data.points:
+                self.canvas.create_oval(point.camera_x-5, point.camera_y-5, point.camera_x+5, point.camera_y+5, fill='red')
+                self.canvas.create_text(point.camera_x+10, point.camera_y+10, text=str(point.index), fill='red')
+        else:
+            print(f"Error: Unable to load image at {self.frame_path}")
+        self.root.after(30, self.update_camera_view)
+
+    def on_canvas_press(self, event):
+        click_point = (event.x, event.y)
+        # Check if click is near an existing camera point 
+        for point in self.calibration_data.points:
+            dist = ((point.camera_x - event.x) ** 2 + (point.camera_y - event.y) ** 2) ** 0.5
+            if dist <= 10:
+                self.dragging_point_index = point.index
+                return
+        # Otherwise, add a new point
+        self.add_new_point(click_point)
+
+    def on_canvas_drag(self, event):
+        if self.dragging_point_index is not None:
+            # Update camera coordinates of the dragged point
+            for point in self.calibration_data.points:
+                if point.index == self.dragging_point_index:
+                    point.camera_x = float(event.x)
+                    point.camera_y = float(event.y)
+                    break
+            self.update_point_list()
+
+    def on_canvas_release(self, event):
+        self.dragging_point_index = None
+
+    def add_new_point(self, camera_point: Tuple[float, float]):
+        # Get LiDAR coordinates through dialog
+        lidar_dialog = LidarInputDialog(self.root)
+        self.root.wait_window(lidar_dialog.top)
+        
+        if lidar_dialog.result:
+            self.calibration_data.add_point(camera_point, lidar_dialog.result)
+            self.update_point_list()
+            self.status_var.set(f"Collected {len(self.calibration_data)}/{self.min_points} points")
+
+    def on_treeview_double_click(self, event):
+        item = self.point_list.identify_row(event.y)
+        if item:
+            index = int(self.point_list.item(item)["text"])
+            # Find the corresponding calibration point
+            for point in self.calibration_data.points:
+                if point.index == index:
+                    selected_point = point
+                    break
+            else:
+                return
+            # Open dialog with current LiDAR values
+            dialog = LidarInputDialog(self.root, initial_coords=(
+                selected_point.lidar_x,
+                selected_point.lidar_y,
+                selected_point.lidar_z,
+            ))
+            self.root.wait_window(dialog.top)
+            if dialog.result:
+                selected_point.lidar_x, selected_point.lidar_y, selected_point.lidar_z = dialog.result
+                self.update_point_list()
+
+    def update_point_list(self):
+        self.point_list.delete(*self.point_list.get_children())
+        for point in self.calibration_data.points:
+            self.point_list.insert("", "end", text=point.index, 
+                                 values=(f"{point.camera_x:.1f}", f"{point.camera_y:.1f}",
+                                        f"{point.lidar_x:.3f}", f"{point.lidar_y:.3f}", 
+                                        f"{point.lidar_z:.3f}"))
+
+    def remove_selected_point(self):
+        selected = self.point_list.selection()
+        if selected:
+            index = int(self.point_list.item(selected[0])["text"])
+            self.calibration_data.remove_point(index)
+            self.update_point_list()
+            self.status_var.set(f"Collected {len(self.calibration_data)}/{self.min_points} points")
+
+    def finish_calibration(self):
+        if len(self.calibration_data) < self.min_points:
+            tk.messagebox.showerror("Error", f"Need at least {self.min_points} points for calibration")
+            return
+
+        camera_points, lidar_points = self.calibration_data.get_arrays()
+        try:
+            proj_matrix = calculate_projection_matrix(camera_points, lidar_points, self.min_points)
+            self.save_calibration(proj_matrix)
+            tk.messagebox.showinfo("Success", "Calibration completed successfully!")
+            self.root.quit()
+        except Exception as e:
+            tk.messagebox.showerror("Error", f"Calibration failed: {str(e)}")
+
+    def save_calibration(self, proj_matrix):
         calibration_data = {
             "point_to_pixel": {
                 "ros__parameters": {
-                    "projection_matrix": proj_mat1.flatten().tolist(),
+                    "projection_matrix": proj_matrix.flatten().tolist(),
                 }
             }
         }
         config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
                                  "config/params.yaml")
+        os.makedirs(os.path.dirname(config_path), exist_ok=True)
         with open(config_path, "w") as f:
             yaml.dump(calibration_data, f)
-        print(f"Calibration completed. Results saved to {config_path}")
-    except (CalibrationError, KeyboardInterrupt) as e:
+            print(f"Calibration saved to: {config_path}")
+
+    def run(self):
+        self.update_camera_view()
+        self.root.mainloop()
+
+
+
+def main():
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description="Run calibration UI with a given image file.")
+    parser.add_argument("-i", "--input", required=True, help="Path to the input image file")
+    args = parser.parse_args()
+
+    # Read the image from the provided file path
+    im = cv2.imread(args.input)
+
+    if im is None:
+        print(f"Error: Unable to load image from path {args.input}", file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        # Initialize CalibrationUI with the image size and file path
+        ui = CalibrationUI(width=im.shape[1], height=im.shape[0], frame_path=args.input)
+        ui.run()
+    except Exception as e:
         print(f"Calibration failed: {e}", file=sys.stderr)
         sys.exit(1)
 
