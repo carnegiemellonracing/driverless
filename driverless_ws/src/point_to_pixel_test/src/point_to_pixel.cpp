@@ -15,6 +15,7 @@
 #include <vector>
 #include <tuple>
 #include <string>
+#include <filesystem>
 
 // ROS2 imports
 #include "rclcpp/rclcpp.hpp"
@@ -166,6 +167,7 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
   //   }
   const sl_oc::video::Frame frame_1 = this->cap_1.getLastFrame();
 
+
   cv::Mat frameBGR_1;
     if (frame_1.data != nullptr){
         // ----> Conversion from YUV 4:2:2 to BGR for visualization
@@ -175,6 +177,8 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
         // cv::Mat frameBGR_1;
         cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
         // <---- Conversion from YUV 4:2:2 to BGR for visualization
+        cv::Mat frame_1_resize;
+        cv::resize(frameBGR_1, frame_1_resize, cv::Size(), 0.6, 0.6);
     }
 
   // if (frame_0.data == nullptr) {
@@ -340,8 +344,15 @@ void Point_To_Pixel_Node::opencv_callback() {
       // cv::Mat frameBGR_0;
       cv::cvtColor(frameYUV_0,frameBGR,cv::COLOR_YUV2BGR_YUYV);
       // <---- Conversion from YUV 4:2:2 to BGR for visualization
-       sl_oc::tools::showImage( "Stream RGB", frameBGR, sl_oc::video::RESOLUTION::HD720);
+      // sl_oc::tools::showImage( "Stream RGB", frameBGR, sl_oc::video::RESOLUTION::HD720);
       // cv::imshow("Display Window", frameBGR);
+
+      cv::Mat frame_1_resize;
+      cv::resize(frameBGR, frame_1_resize, cv::Size(), 0.6, 0.6);
+      cv::Rect roi(0, 0, 1325, 745);
+      frame_1_resize = frame_1_resize(roi);
+      cv::imshow("Display Window", frame_1_resize);
+      cv::imwrite("/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel_test/config/freeze.png", frame_1_resize);
   }
   // Create a pair of pointers to pass both image and canvas into the callback
   std::pair<cv::Mat*, cv::Mat*> params(&frameBGR, &frameBGR);
