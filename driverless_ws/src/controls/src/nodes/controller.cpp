@@ -8,6 +8,8 @@
 #include <state/state_estimator.hpp>
 #include <iostream>
 #include <fstream>
+#include </home/dale/canUsbKvaserTesting/linuxcan/canlib/examples/cmr_can.h>
+#include <chrono>
 
 #ifdef DISPLAY
 #include <display/display.hpp>
@@ -17,14 +19,11 @@
 #include <sstream>
 #include <utils/general_utils.hpp>
 
-void SendControlAction(int16_t a, int16_t b, uint8_t c) {
-    (void) 0;
+// This is to fit into the ROS API
+void send_finished_ignore_error() {
+    std::cout << "I just got terminated lol\n";
+    sendFinishedCommand();
 }
-
-void SendFinished() {
-    (void) 0;
-}
-
 
 namespace controls {
     namespace nodes {
@@ -77,9 +76,7 @@ namespace controls {
                 options);
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
 
-            // start mppi :D
-            // this won't immediately begin publishing, since it waits for the first dirty state
-            m_aim_communication_thread = std::thread(&ControllerNode::aim_communication_loop, this);
+            launch_aim_communication().detach();
         }
 
 
@@ -364,16 +361,24 @@ namespace controls {
                                                      << info_str);
             }
 
-
-            void ControllerNode::aim_communication_loop() {
-                while (rclcpp::ok()) {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
-                    ActionSignal last_action_signal = m_last_action_signal;
-                    SendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
-                }
-                SendFinished();
+            std::thread ControllerNode::launch_aim_communication()
+            {
+                return std::thread{
+                    [this]
+                    {
+                        while (rclcpp::ok)
+                        {
+                            std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
+                            ActionSignal last_action_signal = m_last_action_signal;
+                            auto start = std::chrono::steady_clock::now();
+                            sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
+                            auto end = std::chrono::steady_clock::now();
+                            std::cout << "sendControlAction took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms\n";
+                        }
+                        std::cout << "I just got terminated in another way lol\n";
+                        send_finished_ignore_error();
+                    }};
             }
-        
     }
 }
 
@@ -391,7 +396,7 @@ int main(int argc, char *argv[]) {
     rclcpp::init(argc, argv);
     std::cout << "rclcpp initialized" << std::endl;
 
-    //rclcpp::on_shutdown(SendFinished());
+    // rclcpp::on_shutdown(send_finished_ignore_error); // Need to figure out how to gracefully exit the aim communication threadssl
 
     // instantiate node
     const auto node = std::make_shared<nodes::ControllerNode>(state_estimator, controller);
@@ -428,7 +433,6 @@ int main(int argc, char *argv[]) {
     }};
 
     std::cout << "controller node thread launched" << std::endl;
-
 
 #ifdef DISPLAY
     display::Display display {controller, state_estimator};
