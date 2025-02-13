@@ -134,7 +134,7 @@ namespace controls {
             ActionSignal m_last_action_signal;
             std::thread m_aim_communication_thread;
             std::atomic<bool> m_keep_sending_aim_signal = true;
-            void aim_communication_loop();
+            std::thread launch_aim_communication();
         };
     }
 }

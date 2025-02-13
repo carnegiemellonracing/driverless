@@ -32,6 +32,8 @@ find_package(geometry_msgs REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GSL REQUIRED)
+find_package(Threads REQUIRED)
+# find_package(Math REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/../)
@@ -117,8 +119,16 @@ install(
 
 # ****** Controller *****
 
-add_executable(controller src/nodes/controller.cpp)
-target_link_libraries(controller controls_lib)
+set(CANLIB_INCLUDE "/home/dale/canUsbKvaserTesting/linuxcan/include")
+set(CANLIB_LIBRARIES "/home/dale/canUsbKvaserTesting/linuxcan/canlib")
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+
+
+add_executable(controller src/nodes/controller.cpp "/home/dale/canUsbKvaserTesting/linuxcan/canlib/examples/cmr_can.c")
+
+target_include_directories(controller PUBLIC ${CANLIB_INCLUDE})
+target_link_directories(controller PUBLIC ${CANLIB_LIBRARIES})
+target_link_libraries(controller controls_lib Threads::Threads m canlib)
 ament_target_dependencies(controller rclcpp interfaces builtin_interfaces)
 
 install(
