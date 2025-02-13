@@ -6,6 +6,8 @@
 #include <vector>
 #include <chrono>
 #include <bits/stdc++.h>
+#include <thread>
+#include <atomic>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -243,8 +245,7 @@ inline PointCloud<PointXYZ> computeCentroids(
 
 // DBSCAN that works on a PointCloud<PointXYZ>
 inline PointCloud<PointXYZ> DBSCAN(PointCloud<PointXYZ> &cloud, double epsilon, int min_points) {
-  // visited[i] indicates whether the point has been visited.
-  // cluster[i] = -1 for unclassified, 0 for noise, >0 for cluster ID.
+
   vector<bool> visited(cloud.points.size(), false);
   vector<int> cluster(cloud.points.size(), -1);
 
@@ -304,12 +305,41 @@ inline PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon,
 }
 
 inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alpha, 
-                                    int num_bins, double height_threshold, double epsilon, int min_points, double epsilon2, int min_points2) {
+                                         int num_bins, double height_threshold, 
+                                         double epsilon, int min_points, 
+                                         double epsilon2, int min_points2) {
 
+  // Start overall timer
+  auto start_pipeline = std::chrono::high_resolution_clock::now();
+  
+  // Print the entry size of the cloud
+  printf("Entry Size: %zu\n", cloud.size());                               
 
+  // Time GraceAndConrad step
+  auto start_GNC = std::chrono::high_resolution_clock::now();
   PointCloud<PointXYZ> GNC_cloud = GraceAndConrad(cloud, alpha, num_bins, height_threshold);
+  auto end_GNC = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> duration_GNC = end_GNC - start_GNC;
+  std::cout << "GraceAndConrad time: " << duration_GNC.count() << " ms" << std::endl;
+
+  // Time DBSCAN step
+  auto start_DBSCAN = std::chrono::high_resolution_clock::now();
   PointCloud<PointXYZ> clustered_cloud = DBSCAN(GNC_cloud, epsilon, min_points);
+  auto end_DBSCAN = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> duration_DBSCAN = end_DBSCAN - start_DBSCAN;
+  std::cout << "DBSCAN time: " << duration_DBSCAN.count() << " ms" << std::endl;
+
+  // Time DBSCAN2 step
+  auto start_DBSCAN2 = std::chrono::high_resolution_clock::now();
   PointCloud<PointXYZ> filtered_cloud = DBSCAN2(clustered_cloud, epsilon2, min_points2);
+  auto end_DBSCAN2 = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> duration_DBSCAN2 = end_DBSCAN2 - start_DBSCAN2;
+  std::cout << "DBSCAN2 time: " << duration_DBSCAN2.count() << " ms" << std::endl;
+
+  // Time the overall pipeline
+  auto end_pipeline = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> duration_pipeline = end_pipeline - start_pipeline;
+  std::cout << "Total pipeline time: " << duration_pipeline.count() << " ms" << std::endl;
 
   return filtered_cloud;
 }

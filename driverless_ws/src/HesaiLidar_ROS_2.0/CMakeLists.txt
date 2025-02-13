@@ -162,7 +162,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 # find_package(CUDA REQUIRED)
 find_package(CUDA )
 
-# set(CUDA_FOUND false)
+set(CUDA_FOUND false)
 if(CUDA_FOUND)
   
   message(=============================================================)

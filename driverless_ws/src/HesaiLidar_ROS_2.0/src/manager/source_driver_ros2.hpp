@@ -219,6 +219,7 @@ inline void SourceDriver::SendPacket(const UdpFrame_t& msg, double timestamp)
 inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIRT>& msg)
 {
   pub_->publish(ToRosMsg(msg, frame_id_));
+  std::cout << "here\n";
   cone_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
   // cone_pub_->publish(ToRosMsgConesCUDA(msg, frame_id_));
 }
@@ -245,12 +246,16 @@ inline void SourceDriver::SendFiretime(const double *firetime_correction_)
 
 //CPP Driver Call
 inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id) {
+
+  // Start the timer
+  auto start = std::chrono::high_resolution_clock::now();
+
   sensor_msgs::msg::PointCloud2 ros_msg;
 
   int fields = 3;
   ros_msg.fields.clear();
   ros_msg.fields.reserve(fields);
-  ros_msg.width = frame.cone_centroids_num; 
+  ros_msg.width = frame.points_num; 
   ros_msg.height = 1; 
 
   int offset = 0;
@@ -261,27 +266,14 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarD
   ros_msg.point_step = offset;
   ros_msg.row_step = ros_msg.width * ros_msg.point_step;
   ros_msg.is_dense = false;
-  ros_msg.data.resize(frame.cone_centroids_num * ros_msg.point_step);
+  ros_msg.data.resize(frame.points_num * ros_msg.point_step);
 
   sensor_msgs::PointCloud2Iterator<float> iter_x_(ros_msg, "x");
   sensor_msgs::PointCloud2Iterator<float> iter_y_(ros_msg, "y");
   sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_msg, "z");
-  int num_valid_points = 0;
   float epsilon = 0.1;
   int counter = 0;
   
-  // for (size_t i = 0; i < frame.points_num; i++)
-  // {
-
-  //   LidarPointXYZIRT point = frame.points[i];
-  //   if (std::abs(point.x) < epsilon && std::abs(point.y) < epsilon && std::abs(point.z) < epsilon) {
-  //     continue;
-  //   }
-  //   // counter++;
-  //   // if (counter == 3) {
-  //   //   counter = 0;
-  //   // }
-  // }
   // Define Constants 
   double cpp_alpha = 0.1;
   int cpp_num_bins = 10;
@@ -298,14 +290,13 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarD
     if (std::abs(point.x) < epsilon && std::abs(point.y) < epsilon && std::abs(point.z) < epsilon) {
       continue;
     }
-    num_valid_points++;
     if (counter == 3) {
       filtered_points.push_back(PointXYZ(point.x, point.y, point.z));
       counter = 0;
     }
     counter++;
   }
-
+  
   PointCloud<PointXYZ> filtered_cloud = run_pipeline(filtered_points, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
 
   for (size_t i = 0; i < filtered_cloud.size(); i++) {
@@ -317,12 +308,21 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarD
     ++iter_z_;
   }
 
-  ros_msg.data.resize(num_valid_points * ros_msg.point_step);
-  ros_msg.width = num_valid_points;
+  ros_msg.data.resize(filtered_cloud.size() * ros_msg.point_step);
+  ros_msg.width = filtered_cloud.size();
+
+  std::cout << "number of cones is " << filtered_cloud.size() << "\n";
 
   ros_msg.header.stamp.sec = (uint32_t)floor(frame.points[0].timestamp);
   ros_msg.header.stamp.nanosec = (uint32_t)round((frame.points[0].timestamp - ros_msg.header.stamp.sec) * 1e9);
   ros_msg.header.frame_id = frame_id_;
+  
+  // Stop the timer and calculate the elapsed time
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> duration = end - start;
+
+  std::cout << "Time taken: " << duration.count() << " ms" << std::endl;
+
   return ros_msg;
 }
 
@@ -465,7 +465,7 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsg(const LidarDecodedFr
   // cast the duration into seconds 
   const auto seconds = std::chrono::duration_cast<std::chrono::seconds>(epoch);
   const auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(epoch).count();
-  printf("%lf\n", (double)nanoseconds * 1e-9 - frame.points[frame.points_num - 1].timestamp);
+  // printf("%lf\n", (double)nanoseconds * 1e-9 - frame.points[frame.points_num - 1].timestamp);
   printf("YIPEEEEEEEE\n");
   std::cout.flush();
   ros_msg.header.stamp.sec = (uint32_t)floor(frame.points[0].timestamp);
