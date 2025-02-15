@@ -104,12 +104,15 @@ if($ENV{ROS_VERSION} MATCHES "2")
 
     find_package(ament_cmake REQUIRED)
     find_package(sensor_msgs REQUIRED)
-    find_package(std_msgs REQUIRED)  
+    find_package(interfaces REQUIRED)
+    find_package(std_msgs REQUIRED)
+    find_package(geometry_msgs REQUIRED)
     find_package(rclcpp_action REQUIRED)
     find_package(rosidl_typesupport_c REQUIRED) 
     find_package(rosidl_default_generators REQUIRED)
     find_package(builtin_interfaces REQUIRED)
-    find_package(std_msgs REQUIRED)
+
+    # include_directories(interfaces)
     
     rosidl_generate_interfaces(${PROJECT_NAME}
       "msg/msg_ros2/UdpPacket.msg"
@@ -262,6 +265,8 @@ if($ENV{ROS_VERSION} MATCHES "2")
   "rcutils"
   "std_msgs" 
   "sensor_msgs" 
+  "geometry_msgs" 
+  "interfaces" 
   # "tf2_geometry_msgs"
   )
   rosidl_target_interfaces(hesai_ros_driver_node  ${PROJECT_NAME} "rosidl_typesupport_cpp")
