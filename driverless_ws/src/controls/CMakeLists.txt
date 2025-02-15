@@ -119,16 +119,25 @@ install(
 
 # ****** Controller *****
 
-set(CANLIB_INCLUDE "/home/dale/canUsbKvaserTesting/linuxcan/include")
-set(CANLIB_LIBRARIES "/home/dale/canUsbKvaserTesting/linuxcan/canlib")
-set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(LINUXCAN_PATH $ENV{LINUXCAN_PATH})
+# Check if the path is set
+if(NOT LINUXCAN_PATH)
+    message(FATAL_ERROR "Please set the LINUXCAN_PATH environment variable to /path/to/canUsbKvaserTesting/linuxcan.")
+endif()
 
+set(CANLIB_INCLUDE "${LINUXCAN_PATH}/include")
+set(CANLIB_LIBRARIES "${LINUXCAN_PATH}/canlib/libcanlib.so")
 
-add_executable(controller src/nodes/controller.cpp "/home/dale/canUsbKvaserTesting/linuxcan/canlib/examples/cmr_can.c")
+# Create an imported target
+add_library(can_lib SHARED IMPORTED)
+set_target_properties(can_lib PROPERTIES
+  IMPORTED_LOCATION "${CANLIB_LIBRARIES}"
+)
+target_include_directories(can_lib INTERFACE ${CANLIB_INCLUDE})
 
-target_include_directories(controller PUBLIC ${CANLIB_INCLUDE})
-target_link_directories(controller PUBLIC ${CANLIB_LIBRARIES})
-target_link_libraries(controller controls_lib Threads::Threads m canlib)
+add_executable(controller src/nodes/controller.cpp src/can/cmr_can.c)
+
+target_link_libraries(controller controls_lib Threads::Threads m can_lib)
 ament_target_dependencies(controller rclcpp interfaces builtin_interfaces)
 
 install(
