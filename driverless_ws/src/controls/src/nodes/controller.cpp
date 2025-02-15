@@ -8,7 +8,7 @@
 #include <state/state_estimator.hpp>
 #include <iostream>
 #include <fstream>
-#include </home/dale/canUsbKvaserTesting/linuxcan/canlib/examples/cmr_can.h>
+#include <can/cmr_can.h> // Now it's part of git
 #include <chrono>
 
 #ifdef DISPLAY
