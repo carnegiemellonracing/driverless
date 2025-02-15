@@ -7,15 +7,21 @@
 
 namespace controls {
     namespace mppi {
+        /// Control action that lives on the GPU
+        // TODO: figure out difference between Action (std::array vs struct)
         struct DeviceAction {
             float data[action_dims];
         };
 
+        /// Control action coupled with weight for reduction
         struct ActionWeightTuple {
             DeviceAction action; // weighted average action
             float log_weight; // total weight
         };
 
+        /// Operator Overloads for Device Action
+
+        /// + overload for DeviceAction
         __host__ __device__ static DeviceAction operator+ (const DeviceAction& a1, const DeviceAction& a2) {
             DeviceAction res;
             for (size_t i = 0; i < action_dims; i++) {
@@ -24,6 +30,7 @@ namespace controls {
             return res;
         }
 
+        /// scalar multiple overload for DeviceAction
         template<typename T>
         __host__ __device__ static DeviceAction operator* (T scalar, const DeviceAction& action) {
             DeviceAction res;
@@ -33,11 +40,13 @@ namespace controls {
             return res;
         }
 
+        /// scalar multiple overload for DeviceAction (symmetric)
         template<typename T>
         __host__ __device__ static DeviceAction operator* (const DeviceAction& action, T scalar) {
             return scalar * action;
         }
 
+        /// / overload for DeviceAction
         template<typename T>
         __host__ __device__ static DeviceAction operator/ (const DeviceAction& action, T scalar) {
             DeviceAction res;

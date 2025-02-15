@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class state::StateProjector &mdash; CMR Driverless Controls 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="File functors.cuh" href="../file/functors_cuh.html" />
+    <link rel="prev" title="Class state::StateEstimator_Impl" href="StateEstimator_Impl.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            CMR Driverless Controls
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainerslist.html">Explainers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ControllerNode.html">Class ControllerNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MppiController.html">Class mppi::MppiController</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MppiController_Impl.html">Class mppi::MppiController_Impl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StateEstimator.html">Class state::StateEstimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="StateEstimator_Impl.html">Class state::StateEstimator_Impl</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Class state::StateProjector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N8controls5state14StateProjectorE"><code class="docutils literal notranslate"><span class="pre">StateProjector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector13record_actionE6ActionN6rclcpp4TimeE"><code class="docutils literal notranslate"><span class="pre">StateProjector::record_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector12record_speedEfN6rclcpp4TimeE"><code class="docutils literal notranslate"><span class="pre">StateProjector::record_speed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector11record_poseEfffN6rclcpp4TimeE"><code class="docutils literal notranslate"><span class="pre">StateProjector::record_pose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8controls5state14StateProjector7projectERKN6rclcpp4TimeE10LoggerFunc"><code class="docutils literal notranslate"><span class="pre">StateProjector::project()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8controls5state14StateProjector8is_readyEv"><code class="docutils literal notranslate"><span class="pre">StateProjector::is_ready()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8controls5state14StateProjector13print_historyEv"><code class="docutils literal notranslate"><span class="pre">StateProjector::print_history()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector13m_pose_recordE"><code class="docutils literal notranslate"><span class="pre">StateProjector::m_pose_record</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector20m_history_since_poseE"><code class="docutils literal notranslate"><span class="pre">StateProjector::m_history_since_pose</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector18CompareRecordTimesE"><code class="docutils literal notranslate"><span class="pre">StateProjector::CompareRecordTimes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector6RecordE"><code class="docutils literal notranslate"><span class="pre">StateProjector::Record</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../file/functors_cuh.html">File functors.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/slipless_model.html">File model.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/constants_hpp.html">File constants.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/types_hpp.html">File types.hpp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/types_cuh.html">File types.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/cuda_globals_cuh.html">File cuda_globals.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/cuda_utils_cuh.html">File cuda_utils.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/cuda_constants_cuh.html">File cuda_constants.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/helpers_cuh.html">File helpers.cuh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../file/gl_utils_hpp.html">File gl_utils.hpp</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../explainers/terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">CMR Driverless Controls</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api_reference.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Class state::StateProjector</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/reference/class/StateProjector.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="class-state-stateprojector">
+<h1>Class state::StateProjector<a class="headerlink" href="#class-state-stateprojector" title="Link to this heading"></a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjectorE">
+<span id="_CPPv3N8controls5state14StateProjectorE"></span><span id="_CPPv2N8controls5state14StateProjectorE"></span><span id="controls::state::StateProjector"></span><span class="target" id="classcontrols_1_1state_1_1StateProjector"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StateProjector</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjectorE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector13record_actionE6ActionN6rclcpp4TimeE">
+<span id="_CPPv3N8controls5state14StateProjector13record_actionE6ActionN6rclcpp4TimeE"></span><span id="_CPPv2N8controls5state14StateProjector13record_actionE6ActionN6rclcpp4TimeE"></span><span id="controls::state::StateProjector::record_action__Action.rclcpp::Time"></span><span class="target" id="classcontrols_1_1state_1_1StateProjector_1a256e989c343f63addcc5b34abcf2434b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">record_action</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="../file/types_hpp.html#_CPPv4N8controls6ActionE" title="controls::Action"><span class="n"><span class="pre">Action</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">action</span></span>, <span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector13record_actionE6ActionN6rclcpp4TimeE" title="Link to this definition"></a><br /></dt>
+<dd><p><a class="reference internal" href="#structcontrols_1_1state_1_1StateProjector_1_1Record"><span class="std std-ref">Record</span></a> an action into the history. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> – <strong>[in]</strong> The action to be recorded </p></li>
+<li><p><strong>time</strong> – <strong>[in]</strong> The time at which the action was taken by the actuators. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector12record_speedEfN6rclcpp4TimeE">
+<span id="_CPPv3N8controls5state14StateProjector12record_speedEfN6rclcpp4TimeE"></span><span id="_CPPv2N8controls5state14StateProjector12record_speedEfN6rclcpp4TimeE"></span><span id="controls::state::StateProjector::record_speed__float.rclcpp::Time"></span><span class="target" id="classcontrols_1_1state_1_1StateProjector_1afb1e0be176718115afade11e5ec56ecd"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">record_speed</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">speed</span></span>, <span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector12record_speedEfN6rclcpp4TimeE" title="Link to this definition"></a><br /></dt>
+<dd><p><a class="reference internal" href="#structcontrols_1_1state_1_1StateProjector_1_1Record"><span class="std std-ref">Record</span></a> a speed into the history. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>speed</strong> – <strong>[in]</strong> The speed to be recorded </p></li>
+<li><p><strong>time</strong> – <strong>[in]</strong> The time at which the speed was measured. Should have no latency. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector11record_poseEfffN6rclcpp4TimeE">
+<span id="_CPPv3N8controls5state14StateProjector11record_poseEfffN6rclcpp4TimeE"></span><span id="_CPPv2N8controls5state14StateProjector11record_poseEfffN6rclcpp4TimeE"></span><span id="controls::state::StateProjector::record_pose__float.float.float.rclcpp::Time"></span><span class="target" id="classcontrols_1_1state_1_1StateProjector_1a9cf9e373cc8a0c2064120cb2e96e6181"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">record_pose</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">yaw</span></span>, <span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">time</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector11record_poseEfffN6rclcpp4TimeE" title="Link to this definition"></a><br /></dt>
+<dd><p><a class="reference internal" href="#structcontrols_1_1state_1_1StateProjector_1_1Record"><span class="std std-ref">Record</span></a> a pose into the history. Although pose data itself is not measured, this is called when the spline is updated, and a pose of (0,0,0) is inferred from the spline. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – The x coordinate of the pose </p></li>
+<li><p><strong>y</strong> – The y coordinate of the pose </p></li>
+<li><p><strong>yaw</strong> – The yaw of the vehicle w.r.t. the inertial coordinate frame </p></li>
+<li><p><strong>time</strong> – The time at which the vehicle had the pose. Since the pose is inferred from the spline, this should be when the LIDAR points first came in. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8controls5state14StateProjector7projectERKN6rclcpp4TimeE10LoggerFunc">
+<span id="_CPPv3NK8controls5state14StateProjector7projectERKN6rclcpp4TimeE10LoggerFunc"></span><span id="_CPPv2NK8controls5state14StateProjector7projectERKN6rclcpp4TimeE10LoggerFunc"></span><span id="controls::state::StateProjector::project__rclcpp::TimeCR.LoggerFuncC"></span><span class="target" id="classcontrols_1_1state_1_1StateProjector_1a83fc533ff6dae38c311e22b440724c4b"></span><a class="reference internal" href="../file/types_hpp.html#_CPPv4N8controls5StateE" title="controls::State"><span class="n"><span class="pre">State</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">project</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">time</span></span>, <a class="reference internal" href="../file/types_hpp.html#_CPPv4N8controls10LoggerFuncE" title="controls::LoggerFunc"><span class="n"><span class="pre">LoggerFunc</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">logger</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8controls5state14StateProjector7projectERKN6rclcpp4TimeE10LoggerFunc" title="Link to this definition"></a><br /></dt>
+<dd><p>“main” projection function. Projects the state of the car at a given time, from the most recent pose record and the history of actions and speeds since that pose record. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> – The time at which the state is to be projected </p></li>
+<li><p><strong>logger</strong> – The logger function to be used </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The projected state of the car at the given time </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8controls5state14StateProjector8is_readyEv">
+<span id="_CPPv3NK8controls5state14StateProjector8is_readyEv"></span><span id="_CPPv2NK8controls5state14StateProjector8is_readyEv"></span><span id="controls::state::StateProjector::is_readyC"></span><span class="target" id="classcontrols_1_1state_1_1StateProjector_1a0611d6c0633a8684475a8a8ff1fe41a1"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_ready</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8controls5state14StateProjector8is_readyEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Whether the <a class="reference internal" href="#classcontrols_1_1state_1_1StateProjector"><span class="std std-ref">StateProjector</span></a> is ready to project a state. This is true if there is a pose record, which is every time since the first spline is received. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the <a class="reference internal" href="#classcontrols_1_1state_1_1StateProjector"><span class="std std-ref">StateProjector</span></a> is ready to project a state, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8controls5state14StateProjector13print_historyEv">
+<span id="_CPPv3NK8controls5state14StateProjector13print_historyEv"></span><span id="_CPPv2NK8controls5state14StateProjector13print_historyEv"></span><span id="controls::state::StateProjector::print_historyC"></span><span class="target" id="classcontrols_1_1state_1_1StateProjector_1a7461be037863ff421c91bbf8267ad482"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print_history</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8controls5state14StateProjector13print_historyEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Prints the elements of m_history_since_pose, for debugging purposes. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="classcontrols_1_1state_1_1StateProjector_1a14ca5e0f1a6e01757c6498d1a6cea0d8"></span><span class="sig-name descname"><span class="pre">Record</span> <span class="pre">m_init_action</span>&#160;&#160; <span class="pre">=</span> <span class="pre">{</span> <span class="pre">.action</span> <span class="pre">{},</span> <span class="pre">.time</span> <span class="pre">=</span> <span class="pre">rclcpp::Time(0UL,</span> <span class="pre">default_clock_type),</span> <span class="pre">.type</span> <span class="pre">=</span> <span class="pre">Record::Type::Action}</span></span></dt>
+<dd><p>“Default” action to be used until a recorded action is available </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>m_init_action and m_init_speed should occur &lt;= m_pose_record, if m_pose_record exists </p>
+</div>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp">
+<span class="target" id="classcontrols_1_1state_1_1StateProjector_1a7a6f4836308c8c61c726c78792e9b9a1"></span><span class="sig-name descname"><span class="pre">Record</span> <span class="pre">m_init_speed</span>&#160;&#160; <span class="pre">=</span> <span class="pre">{</span> <span class="pre">.speed</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">.time</span> <span class="pre">=</span> <span class="pre">rclcpp::Time(0UL,</span> <span class="pre">default_clock_type),</span> <span class="pre">.type</span> <span class="pre">=</span> <span class="pre">Record::Type::Speed}</span></span></dt>
+<dd><p>“Default” speed to be used until a recorded speed is available </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>direction of velocity is inferred from swangle </p>
+</div>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector13m_pose_recordE">
+<span id="_CPPv3N8controls5state14StateProjector13m_pose_recordE"></span><span id="_CPPv2N8controls5state14StateProjector13m_pose_recordE"></span><span id="controls::state::StateProjector::m_pose_record__std::optional:Record:"></span><span class="target" id="classcontrols_1_1state_1_1StateProjector_1a9d28521e9cb7370badc9f4fed1f3168e"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector6RecordE" title="controls::state::StateProjector::Record"><span class="n"><span class="pre">Record</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_pose_record</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">nullopt</span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector13m_pose_recordE" title="Link to this definition"></a><br /></dt>
+<dd><p>most recent and only pose (new pose implies a new coord. frame, throw away data in old coord. frame) only nullopt before first pose received </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector20m_history_since_poseE">
+<span id="_CPPv3N8controls5state14StateProjector20m_history_since_poseE"></span><span id="_CPPv2N8controls5state14StateProjector20m_history_since_poseE"></span><span id="controls::state::StateProjector::m_history_since_pose__std::multiset:Record.CompareRecordTimes:"></span><span class="target" id="classcontrols_1_1state_1_1StateProjector_1ac8c501620c31b29b92ef468fabb326eb"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">multiset</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector6RecordE" title="controls::state::StateProjector::Record"><span class="n"><span class="pre">Record</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N8controls5state14StateProjector18CompareRecordTimesE" title="controls::state::StateProjector::CompareRecordTimes"><span class="n"><span class="pre">CompareRecordTimes</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_history_since_pose</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector20m_history_since_poseE" title="Link to this definition"></a><br /></dt>
+<dd><p>Contains all action and speed records since the last pose record. Multiset is used like a self-sorting array.</p>
+<p>Invariants of m_history_since_pose: should only contain Action and Speed records time stamps of each record should be strictly after m_pose_record </p>
+</dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector18CompareRecordTimesE">
+<span id="_CPPv3N8controls5state14StateProjector18CompareRecordTimesE"></span><span id="_CPPv2N8controls5state14StateProjector18CompareRecordTimesE"></span><span id="controls::state::StateProjector::CompareRecordTimes"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1CompareRecordTimes"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CompareRecordTimes</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector18CompareRecordTimesE" title="Link to this definition"></a><br /></dt>
+<dd><p>Helper binary operator for sorting records by time, needed for the multiset. </p>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N8controls5state14StateProjector6RecordE">
+<span id="_CPPv3N8controls5state14StateProjector6RecordE"></span><span id="_CPPv2N8controls5state14StateProjector6RecordE"></span><span id="controls::state::StateProjector::Record"></span><span class="target" id="structcontrols_1_1state_1_1StateProjector_1_1Record"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Record</span></span></span><a class="headerlink" href="#_CPPv4N8controls5state14StateProjector6RecordE" title="Link to this definition"></a><br /></dt>
+<dd><p>Historical record type. </p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="StateEstimator_Impl.html" class="btn btn-neutral float-left" title="Class state::StateEstimator_Impl" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../file/functors_cuh.html" class="btn btn-neutral float-right" title="File functors.cuh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Yip.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
