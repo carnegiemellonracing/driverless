@@ -501,7 +501,8 @@ namespace controls {
             // }
             // float svm_time = 0.0f;
 
-            m_orig_spline_data_stamp = cone_msg.orig_data_stamp;
+
+            m_orig_spline_data_stamp = cone_msg.header.stamp;
 
 #ifdef DISPLAY
             m_all_left_cone_points.clear();
@@ -514,7 +515,7 @@ namespace controls {
 
             if constexpr (reset_pose_on_spline) {
                 // TODO: correct orig_data_stamp
-                m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.orig_data_stamp);
+                m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
             }
             
             m_logger("finished state estimator cone processing");

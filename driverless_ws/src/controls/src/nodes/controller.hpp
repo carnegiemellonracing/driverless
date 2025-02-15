@@ -75,20 +75,6 @@ namespace controls {
              */
             void publish_action(const Action& action);
 
-            /**
-             * Launch MPPI thread, which loops the following routine persistently:
-             *  - Wait to be notified that the state is dirty.
-             *  - Run MPPI and write an action to the write buffer.
-             *  - Swap the read and write buffers.
-             *
-             * @return the launched thread
-             */
-            std::thread launch_mppi();
-
-            /** Notify MPPI thread that the state is dirty, and to refire if waiting. */
-            // todo: time is changing so everything is always changing so state is always dirty. Consider max control frequency instead.
-            void notify_state_dirty();
-
             /// Converts MPPI control action output to a ROS2 message. Affected by drive mode (FWD, RWD, AWD).
             /// @param[in] action Control action - output of MPPI.
             ActionMsg action_to_msg(const Action& action);
