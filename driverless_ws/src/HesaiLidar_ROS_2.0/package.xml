@@ -20,6 +20,8 @@
   <exec_depend condition="$ROS_VERSION == 2">rclcpp</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">sensor_msgs</exec_depend>
   <exec_depend condition="$ROS_VERSION == 2">std_msgs</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 2">geometry_msgs</exec_depend>
+  <depend condition="$ROS_VERSION == 2">interfaces</depend>
   <depend condition="$ROS_VERSION == 2">ament_index_cpp</depend>
   <depend condition="$ROS_VERSION == 2">rclcpp_action</depend>
 

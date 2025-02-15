@@ -32,6 +32,8 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 #include <std_msgs/msg/u_int8_multi_array.hpp>
+#include <interfaces/msg/cone_array.hpp>
+#include <geometry_msgs/msg/point.hpp>
 #include <sstream>
 #include <hesai_ros_driver/msg/udp_frame.hpp>
 #include <hesai_ros_driver/msg/udp_packet.hpp>
@@ -98,7 +100,7 @@ protected:
   // Convert filtered point clouds into ROS messages 
   sensor_msgs::msg::PointCloud2 ToRosMsgFilteredPoints(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id);
   // Convert cone centroids (as point clouds) into ROS messages 
-  sensor_msgs::msg::PointCloud2 ToRosMsgCones(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id);
+  interfaces::msg::ConeArray ToRosMsgCones(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id);
   // Convert packets into ROS messages
   hesai_ros_driver::msg::UdpFrame ToRosMsg(const UdpFrame_t& ros_msg, double timestamp);
   std::string frame_id_;
@@ -108,7 +110,7 @@ protected:
   rclcpp::Publisher<hesai_ros_driver::msg::UdpFrame>::SharedPtr pkt_pub_;
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_;
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr filtered_pub_;
-  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr cone_pub_;
+  rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cone_pub_;
   rclcpp::Publisher<hesai_ros_driver::msg::Firetime>::SharedPtr firetime_pub_;
   rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr crt_pub_;
   rclcpp::Publisher<hesai_ros_driver::msg::LossPacket>::SharedPtr loss_pub_;
@@ -128,7 +130,7 @@ inline void SourceDriver::Init(const YAML::Node& config)
   if (driver_param.input_param.send_point_cloud_ros) {
     pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>(driver_param.input_param.ros_send_point_topic, 100);
     filtered_pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>(driver_param.input_param.ros_send_filtered_topic, 100);
-    cone_pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>(driver_param.input_param.ros_send_cone_topic, 100);
+    cone_pub_ = node_ptr_->create_publisher<interfaces::msg::ConeArray>(driver_param.input_param.ros_send_cone_topic, 100);
   }
 
 
@@ -305,38 +307,37 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgFilteredPoints(const 
   return ros_msg;
 }
 
-inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgCones(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id) {
-  sensor_msgs::msg::PointCloud2 ros_msg;
+inline interfaces::msg::ConeArray SourceDriver::ToRosMsgCones(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id) {
 
+  interfaces::msg::ConeArray ros_msg;
 
+  // int fields = 6;
+  // ros_msg.fields.clear();
+  // ros_msg.fields.reserve(fields);
+  // ros_msg.width = frame.cone_centroids_num; 
+  // ros_msg.height = 1; 
 
-  int fields = 6;
-  ros_msg.fields.clear();
-  ros_msg.fields.reserve(fields);
-  ros_msg.width = frame.cone_centroids_num; 
-  ros_msg.height = 1; 
+  // int offset = 0;
+  // offset = addPointField(ros_msg, "x", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
+  // offset = addPointField(ros_msg, "y", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
+  // offset = addPointField(ros_msg, "z", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
+  // offset = addPointField(ros_msg, "intensity", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
+  // offset = addPointField(ros_msg, "ring", 1, sensor_msgs::msg::PointField::UINT16, offset);
+  // offset = addPointField(ros_msg, "timestamp", 1, sensor_msgs::msg::PointField::FLOAT64, offset);
 
-  int offset = 0;
-  offset = addPointField(ros_msg, "x", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
-  offset = addPointField(ros_msg, "y", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
-  offset = addPointField(ros_msg, "z", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
-  offset = addPointField(ros_msg, "intensity", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
-  offset = addPointField(ros_msg, "ring", 1, sensor_msgs::msg::PointField::UINT16, offset);
-  offset = addPointField(ros_msg, "timestamp", 1, sensor_msgs::msg::PointField::FLOAT64, offset);
+  // ros_msg.point_step = offset;
+  // ros_msg.row_step = ros_msg.width * ros_msg.point_step;
+  // ros_msg.is_dense = false;
+  // ros_msg.data.resize(frame.cone_centroids_num * ros_msg.point_step);
 
-  ros_msg.point_step = offset;
-  ros_msg.row_step = ros_msg.width * ros_msg.point_step;
-  ros_msg.is_dense = false;
-  ros_msg.data.resize(frame.cone_centroids_num * ros_msg.point_step);
-
-  sensor_msgs::PointCloud2Iterator<float> iter_x_(ros_msg, "x");
-  sensor_msgs::PointCloud2Iterator<float> iter_y_(ros_msg, "y");
-  sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_msg, "z");
-  sensor_msgs::PointCloud2Iterator<float> iter_intensity_(ros_msg, "intensity");
-  sensor_msgs::PointCloud2Iterator<uint16_t> iter_ring_(ros_msg, "ring");
-  sensor_msgs::PointCloud2Iterator<double> iter_timestamp_(ros_msg, "timestamp");
-  int num_valid_points = 0;
-  int counter = 0;
+  // sensor_msgs::PointCloud2Iterator<float> iter_x_(ros_msg, "x");
+  // sensor_msgs::PointCloud2Iterator<float> iter_y_(ros_msg, "y");
+  // sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_msg, "z");
+  // sensor_msgs::PointCloud2Iterator<float> iter_intensity_(ros_msg, "intensity");
+  // sensor_msgs::PointCloud2Iterator<uint16_t> iter_ring_(ros_msg, "ring");
+  // sensor_msgs::PointCloud2Iterator<double> iter_timestamp_(ros_msg, "timestamp");
+  // int num_valid_points = 0;
+  // int counter = 0;
   float epsilon = 0.1;
   
   for (size_t i = 0; i < frame.cone_centroids_num; i++)
@@ -345,22 +346,26 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgCones(const LidarDeco
     if (std::abs(point.x) < epsilon && std::abs(point.y) < epsilon && std::abs(point.z) < epsilon) {
       continue;
     }
-    num_valid_points++;
-    *iter_x_ = point.x;
-    *iter_y_ = point.y;
-    *iter_z_ = point.z;
-    *iter_intensity_ = point.intensity;
-    *iter_ring_ = point.ring;
-    *iter_timestamp_ = point.timestamp;
-    ++iter_x_;
-    ++iter_y_;
-    ++iter_z_;
-    ++iter_intensity_;
-    ++iter_ring_;
-    ++iter_timestamp_;
+    geometry_msgs::msg::Point ros_point;
+    ros_point.x = point.x;
+    ros_point.y = point.y;
+    ros_msg.blue_cones.push_back(ros_point);
+    // num_valid_points++;
+    // *iter_x_ = point.x;
+    // *iter_y_ = point.y;
+    // *iter_z_ = point.z;
+    // *iter_intensity_ = point.intensity;
+    // *iter_ring_ = point.ring;
+    // *iter_timestamp_ = point.timestamp;
+    // ++iter_x_;
+    // ++iter_y_;
+    // ++iter_z_;
+    // ++iter_intensity_;
+    // ++iter_ring_;
+    // ++iter_timestamp_;
   }
-  ros_msg.data.resize(num_valid_points * ros_msg.point_step);
-  ros_msg.width = num_valid_points;
+  // ros_msg.data.resize(num_valid_points * ros_msg.point_step);
+  // ros_msg.width = num_valid_points;
   // printf("HesaiLidar Runing Status [standby mode:%u]  |  [speed:%u]\n", frame.work_mode, frame.spin_speed);
 
   ros_msg.header.stamp.sec = (uint32_t)floor(frame.points[0].timestamp);
