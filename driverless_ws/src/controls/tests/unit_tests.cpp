@@ -22,8 +22,7 @@ namespace controls {
         ASSERT_EQ(1, 1);
 
     }
-
-
+}
 
 class ModelTest : public testing::Test {
 protected:

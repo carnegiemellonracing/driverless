@@ -1,3 +1,12 @@
+/**
+ * To-Do list:
+ * - Add drawing of small triangles corresponding to cones
+ * - Automatic zoom-out/pan
+ * - car boundary
+ * 
+ */
+
+
 #ifndef GLM_FORCE_QUAT_DATA_WXYZ
 #define GLM_FORCE_QUAT_DATA_WXYZ
 #endif
@@ -16,19 +25,14 @@
 #include "state_estimator.hpp"
 
 #include <iosfwd>
-#include <iosfwd>
-#include <iosfwd>
-#include <iosfwd>
 #include <vector>
-#include <vector>
-#include <vector>
-#include <vector>
-#include <glm/common.hpp>
-#include <glm/common.hpp>
-#include <glm/common.hpp>
+#include <sstream>
+#include <rclcpp/rclcpp.hpp>
 #include <glm/common.hpp>
 #include <mppi/functors.cuh>
 #include <SDL2/SDL_video.h>
+
+#include <midline/svm_conv.hpp>
 
 
 namespace controls {
@@ -60,6 +64,7 @@ namespace controls {
         void StateProjector::record_action(Action action, rclcpp::Time time) {
             // std::cout << "Recording action " << action[0] << ", " << action[1] << " at time " << time.nanoseconds() << std::endl;
 
+            // change to assert(!m_pose_record.has_value() || time >= m_pose_record.value().time)
             assert(m_pose_record.has_value() && time >= m_pose_record.value().time
                 && "call me marty mcfly the way im time traveling");
 
@@ -146,11 +151,13 @@ namespace controls {
             const float delta_time = (first_time.nanoseconds() - m_pose_record.value().time.nanoseconds()) / 1e9f;
             // std::cout << "delta time: " << delta_time << std::endl;
             assert(delta_time > 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
+            // simulates up to first_time
             ONLINE_DYNAMICS_FUNC(state.data(), m_init_action.action.data(), state.data(), delta_time);
 
             rclcpp::Time sim_time = first_time;
             Action last_action = m_init_action.action;
             for (auto record_iter = m_history_since_pose.begin(); record_iter != m_history_since_pose.end(); ++record_iter) {
+                // checks if we're on last record
                 const auto next_time = std::next(record_iter) == m_history_since_pose.end() ? time : std::next(record_iter)->time;
 
                 const float delta_time = (next_time - sim_time).nanoseconds() / 1e9f;
@@ -193,7 +200,29 @@ namespace controls {
 
         // StateEstimator_Impl helpers
 
-        constexpr const char* vertex_source = R"(
+
+        /**
+         * @brief GPU shader code. In a string because historically, shaders are JIT compiled.
+         * Runs in parallel for every vertex in the VBO, similar to a functor.
+         * Layouts initially specified in gen_gl_path().
+         *
+         * Transforms from vertex IRL position to clip space (rendering coordinate frame) using scale
+         * and center. For now this transformation is unneeded. However, suppose with SLAM, (x,y) from
+         * path planning are from a stationary world perspective, but we want to render to the car's vicinity.
+         *
+         * @note: the z coordinate in gl_Position is how we exploit depth testing to break ties between multiple
+         * overlapping triangles.
+         * note that i_world_pos is a vec2 so the dimensions in gl_Position check out (shader languages are built for vector math)
+         * uniform is similar to __constant__ in CUDA
+         * @note: far_frustrum is for better precision since only relative ordering matters
+         * @note: we don't use the 4th coordinate of gl_Position, but it is needed. Look up homogenous coordinates.
+         *
+         * @param[in] i_world_pos x, y from path planning
+         * @param[in] i_curv_pose progress, offset, heading
+         * @param[out] o_curv_pose same as i_curv_pose, passed along
+         * @return gl_Position
+         */
+        constexpr const char* vertex_source_fake_track = R"(
             #version 330 core
             #extension GL_ARB_explicit_uniform_location : enable
 
@@ -213,7 +242,15 @@ namespace controls {
             }
         )";
 
-        constexpr const char* fragment_source = R"(
+        /**
+         * @brief GPU shader code. "fragment shader"
+         * Runs in parallel for every pixel in the triangles.
+         * We only manually calculated o_curv_pose for the vertices,
+         * interpolation for the pixels in between happens here automatically.
+         * 4th color (1.0f) represents in bounds, compared to background which has -1.0 representing OOB
+         * @return FragColor The color of each foreground pixel
+         */
+        constexpr const char* fragment_source_fake_track = R"(
             #version 330 core
 
             in vec3 o_curv_pose;
@@ -225,10 +262,47 @@ namespace controls {
             }
         )";
 
+        // TODO: I think abs(i_curv_pose.y) is not needed, and hence i_curv_pose is not needed, because glLineStrip
+        // means there will be no overlapping triangles
+        // besides cones don't have offset information
+        constexpr const char *vertex_source = R"(
+            #version 330 core
+            #extension GL_ARB_explicit_uniform_location : enable
+
+            layout (location = 0) in vec2 i_world_pos;
+            layout (location = 1) in vec3 i_curv_pose;
+
+            out vec2 o_world_pose;
+
+            layout (location = 0) uniform float scale;
+            layout (location = 1) uniform vec2 center;
+
+            const float far_frustum = 10.0f;
+
+            void main() {
+                o_world_pose = scale * (i_world_pos - center);
+                gl_Position = vec4(scale * (i_world_pos - center), abs(i_curv_pose.y) / far_frustum, 1.0);
+            }
+        )";
+
+        constexpr const char *fragment_source = R"(
+            #version 330 core
+
+            in vec2 o_world_pose;
+
+            out vec4 FragColor;
+
+            uniform sampler2D fake_track_texture;
+
+            void main() {
+                FragColor = texture(fake_track_texture, o_world_pose / 2.0 + 0.5); // convert from normalized device coordinates to texture coordinates
+            }
+        )";
+
         // methods
 
         StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger)
-            : m_mutex {mutex}, m_logger {logger} {
+            : m_mutex {mutex}, m_logger {logger}, m_logger_obj {rclcpp::get_logger("")} {
             std::lock_guard<std::mutex> guard {mutex};
 
             m_logger("initializing state estimator");
@@ -249,19 +323,18 @@ namespace controls {
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
             m_logger("compiling state estimator shaders");
+            
+            m_fake_track_shader_program = utils::compile_shader(vertex_source_fake_track, fragment_source_fake_track);
             m_gl_path_shader = utils::compile_shader(vertex_source, fragment_source);
 
             m_logger("setting state estimator gl properties");
-            glClearColor(0.0f, 0.0f, 0.0f, -1.0f);
-
-            glEnable(GL_DEPTH_TEST);
-            glDepthFunc(GL_LESS);
 
             glViewport(0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width);
 
             m_logger("generating state estimator gl buffers");
             gen_curv_frame_lookup_framebuffer();
-            gen_gl_path();
+            gen_gl_path(m_gl_path);
+            gen_fake_track();
 
             glFinish();
             utils::make_gl_current_or_except(m_gl_window, nullptr);
@@ -286,10 +359,62 @@ namespace controls {
             if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
                 throw std::runtime_error("Framebuffer is not complete");
             }
+            // reset framebuffer to default
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+
+        void StateEstimator_Impl::gen_fake_track() {
+            // generate the framebuffer for the fake track
+            glGenFramebuffers(1, &m_fake_track_fbo);
+            glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
+
+            // generate texture
+            glGenTextures(1, &m_fake_track_texture_color);
+            glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
+
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width, 0, GL_RGBA, GL_FLOAT, NULL);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glBindTexture(GL_TEXTURE_2D, 0);
+
+            // attach it to currently bound framebuffer object
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_fake_track_texture_color, 0); 
+            
+            GLuint depth_rbo;
+
+            glGenRenderbuffers(1, &depth_rbo);
+            glBindRenderbuffer(GL_RENDERBUFFER, depth_rbo);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, curv_frame_lookup_tex_width,  curv_frame_lookup_tex_width);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rbo);
+
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+                throw std::runtime_error("Fake track framebuffer is not complete");
+            }
+            // reset framebuffer to default
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+            gen_gl_path(m_fake_track_path);
         }
 
         StateEstimator_Impl::~StateEstimator_Impl() {
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        }
+
+        std::vector<glm::fvec2> process_ros_points(std::vector<geometry_msgs::msg::Point,
+                                                               std::allocator<geometry_msgs::msg::Point>>
+                                                       points)
+        {
+            std::vector<glm::fvec2> processed_points;
+            processed_points.reserve(points.size());
+            for (const auto &point : points)
+            {
+                float cone_y = static_cast<float>(point.y);
+                float cone_x = static_cast<float>(point.x);
+                processed_points.push_back(
+                    glm::fvec2(cone_x, cone_y));
+            }
+            assert(processed_points.size() == points.size());
+            return processed_points;
         }
 
         void StateEstimator_Impl::on_spline(const SplineMsg& spline_msg) {
@@ -297,29 +422,71 @@ namespace controls {
 
             m_logger("beginning state estimator spline processing");
 
+            paranoid_assert(spline_msg.frames.size() > 0);
 
-
-            m_spline_frames.clear();
-            m_spline_frames.reserve(spline_msg.frames.size());
-
-            for (const auto& frame : spline_msg.frames) {
-                m_spline_frames.push_back({
-                    static_cast<float>(frame.y),
-                    static_cast<float>(frame.x)
-                });
-            }
-
-            if constexpr (reset_pose_on_spline) {
-                m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
-            }
-
-            m_orig_spline_data_stamp = spline_msg.header.stamp;
-
+            // m_spline_frames = process_ros_points(spline_msg.frames);
 
             m_logger("finished state estimator spline processing");
         }
+        
+
+        float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            paranoid_assert(cone_msg.blue_cones.size() > 0);
+            paranoid_assert(cone_msg.yellow_cones.size() > 0);
+
+            m_logger("beginning state estimator cone processing");
+
+            m_left_cone_points.clear();
+            m_right_cone_points.clear();
+
+            m_left_cone_points = process_ros_points(cone_msg.blue_cones);
+            m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
+
+            midline::Cones cones;
+            for (const auto& cone : m_left_cone_points) {
+                cones.addBlueCone(cone.x, cone.y, 0);
+            }
+            for (const auto& cone : m_right_cone_points) {
+                cones.addYellowCone(cone.x, cone.y, 0);
+            }
+
+            // // TODO: convert this to using std::transform
+            auto svm_start = std::chrono::high_resolution_clock::now();            
+            auto spline_frames = midline::cones_to_midline(cones);
+            auto svm_end = std::chrono::high_resolution_clock::now();
+            float svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
+            m_spline_frames.clear();
+            for (const auto& frame : spline_frames) {
+                paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
+                m_spline_frames.emplace_back(frame.first, frame.second);
+            }
+            // float svm_time = 0.0f;
+
+
+            m_orig_spline_data_stamp = cone_msg.header.stamp;
+
+#ifdef DISPLAY
+            m_all_left_cone_points.clear();
+            m_all_right_cone_points.clear();
+
+            m_all_left_cone_points = process_ros_points(cone_msg.orange_cones);
+            m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
+            m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
+#endif
+
+            if constexpr (reset_pose_on_spline) {
+                // TODO: correct orig_data_stamp
+                m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
+            }
+            
+            m_logger("finished state estimator cone processing");
+            return svm_time;
+        }
 
         void StateEstimator_Impl::on_twist(const TwistMsg &twist_msg, const rclcpp::Time &time) {
+            // TODO: whats up with all these mutexes
             std::lock_guard<std::mutex> guard {m_mutex};
 
             const float speed = std::sqrt(
@@ -346,12 +513,61 @@ namespace controls {
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
+            // record actions in the future (when they are actually requested by the actuator)
             m_state_projector.record_action(action, rclcpp::Time {
                     time.nanoseconds()
                     + static_cast<int64_t>(approx_propogation_delay * 1e9f),
                     default_clock_type
                 }
             );
+        }
+
+        // Used only for the offline controller
+        void StateEstimator_Impl::render_and_sync(State state) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            
+            // enable openGL
+            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
+
+            m_logger("generating spline frame lookup texture info...");
+
+            gen_tex_info({state[state_x_idx], state[state_y_idx]});
+
+            m_logger("filling OpenGL buffers...");
+            // takes car position, places them in the vertices
+            fill_path_buffers_cones();
+            fill_path_buffers_spline();
+
+            m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
+            unmap_curv_frame_lookup();
+
+            // render the lookup table
+            m_logger("rendering curv frame lookup table...");
+            render_fake_track();
+            render_curv_frame_lookup();
+
+            m_logger("mapping OpenGL curv frame texture back to CUDA");
+            map_curv_frame_lookup();
+
+            m_logger("syncing world state to device");
+
+            CUDA_CALL(cudaMemcpyToSymbolAsync(cuda_globals::curr_state, state.data(), state_dims * sizeof(float)));
+
+            m_logger("syncing spline frame lookup texture info to device");
+            sync_tex_info();
+
+            utils::sync_gl_and_unbind_context(m_gl_window);
+        }
+
+        State StateEstimator_Impl::project_state(const rclcpp::Time& time) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            State state = m_state_projector.project(
+                rclcpp::Time{
+                    time.nanoseconds() + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
+                    default_clock_type},
+                m_logger);
+                 
+            return state;
         }
 
         std::vector<std::chrono::milliseconds> StateEstimator_Impl::sync_to_device(const rclcpp::Time& time) {
@@ -369,33 +585,9 @@ namespace controls {
                 }, m_logger
             );
             auto t2 = std::chrono::high_resolution_clock::now();
-
-            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
-
-            m_logger("generating spline frame lookup texture info...");
-            gen_tex_info({state[state_x_idx], state[state_y_idx]});
-
-            m_logger("filling OpenGL buffers...");
-            fill_path_buffers({state[state_x_idx], state[state_y_idx]});
-
-            m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
-            unmap_curv_frame_lookup();
-
-            m_logger("rendering curv frame lookup table...");
-            render_curv_frame_lookup();
-
-            m_logger("mapping OpenGL curv frame texture back to CUDA");
-            map_curv_frame_lookup();
-
-            m_logger("syncing world state to device");
-            m_synced_projected_state = state;
-            sync_world_state();
+            render_and_sync(state);
             auto t3 = std::chrono::high_resolution_clock::now();
 
-            m_logger("syncing spline frame lookup texture info to device");
-            sync_tex_info();
-
-            utils::sync_gl_and_unbind_context(m_gl_window);
             m_logger("finished state estimator device sync");
             return std::vector {std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1), 
             std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2)};
@@ -407,28 +599,90 @@ namespace controls {
             return m_state_projector.is_ready();
         }
 
-        State StateEstimator_Impl::get_projected_state() {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            return m_synced_projected_state;
-        }
-
         void StateEstimator_Impl::set_logger(LoggerFunc logger) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_logger = logger;
         }
 
-#ifdef DISPLAY
-        std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames() {
+        void StateEstimator_Impl::set_logger_obj(rclcpp::Logger logger)
+        {
             std::lock_guard<std::mutex> guard {m_mutex};
+            m_logger_obj = logger;
+        }
 
-            std::vector<glm::fvec2> res (m_spline_frames.size());
-            for (size_t i = 0; i < m_spline_frames.size(); i++) {
+        std::vector<glm::fvec2> StateEstimator_Impl::get_spline_frames()
+        {
+            std::lock_guard<std::mutex> guard{m_mutex};
+
+            std::vector<glm::fvec2> res(m_spline_frames.size());
+            for (size_t i = 0; i < m_spline_frames.size(); i++)
+            {
                 res[i] = {m_spline_frames[i].x, m_spline_frames[i].y};
             }
             return res;
         }
+
+#ifdef DISPLAY
+        std::vector<glm::fvec2> StateEstimator_Impl::get_all_left_cone_points() {
+            std::lock_guard<std::mutex> guard {m_mutex};        
+            return m_all_left_cone_points;
+        }
+
+        std::vector<glm::fvec2> StateEstimator_Impl::get_all_right_cone_points() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            
+            return m_all_right_cone_points;
+        }
+
+        std::vector<glm::fvec2> StateEstimator_Impl::get_left_cone_points() {
+            std::lock_guard<std::mutex> guard {m_mutex};        
+            return m_left_cone_points;
+        }
+
+        std::vector<glm::fvec2> StateEstimator_Impl::get_right_cone_points() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            
+            return m_right_cone_points;
+        }
+
+        // *****REVIEW: not be needed for display
+        std::vector<glm::fvec2> StateEstimator_Impl::get_raceline_points(){
+            std::lock_guard<std::mutex> guard {m_mutex};
+            std::stringstream ss;
+
+            ss << "Raceline points size: " << m_raceline_points.size() << "\n";
+            for (size_t i = 0; i < m_raceline_points.size(); i++)
+            {
+                ss << "Index: " << i << " Point x: " << m_raceline_points[i].x << "Point y: " << m_raceline_points[i].y << "\n";
+            }
+
+            return m_raceline_points;
+        }
+
+
+        std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> StateEstimator_Impl::get_all_cone_points() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            assert(m_all_left_cone_points.size() > 0);
+
+            return std::make_pair(m_all_left_cone_points, m_all_right_cone_points);
+        }
+
+        std::vector<float> StateEstimator_Impl::get_vertices() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            return m_vertices;
+        }
+
+        // std::vector<GLuint> StateEstimator_Impl::get_indices() {
+        //     std::lock_guard<std::mutex> guard {m_mutex};
+
+        //     return m_indices;
+        // }
+
+
+
 
         void StateEstimator_Impl::get_offset_pixels(OffsetImage &offset_image) {
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -438,11 +692,11 @@ namespace controls {
 
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
 
-            offset_image.pixels = std::vector<float>(curv_frame_lookup_tex_width * curv_frame_lookup_tex_width);
+            offset_image.pixels = std::vector<float>(4 * curv_frame_lookup_tex_width * curv_frame_lookup_tex_width);
             glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
             glReadPixels(
                 0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                GL_GREEN, GL_FLOAT,
+                GL_RGBA, GL_FLOAT,
                 offset_image.pixels.data()
             );
 
@@ -455,12 +709,6 @@ namespace controls {
             utils::make_gl_current_or_except(prev_window, prev_context);
         }
 #endif
-
-        void StateEstimator_Impl::sync_world_state() {
-            CUDA_CALL(cudaMemcpyToSymbolAsync(
-                cuda_globals::curr_state, m_synced_projected_state.data(), state_dims * sizeof(float)
-            ));
-        }
 
         void StateEstimator_Impl::sync_tex_info() {
             CUDA_CALL(cudaMemcpyToSymbolAsync(
@@ -486,30 +734,57 @@ namespace controls {
             m_curv_frame_lookup_tex_info.width = std::max(xmax - xmin, ymax - ymin) + car_padding * 2;
         }
 
-        void StateEstimator_Impl::render_curv_frame_lookup() {
-            glBindFramebuffer(GL_FRAMEBUFFER, m_curv_frame_lookup_fbo);
-
+        void StateEstimator_Impl::render_fake_track() {
+            glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glUseProgram(m_gl_path_shader);
+            glEnable(GL_DEPTH_TEST);
+            glDepthFunc(GL_LESS);
+
+            // use a shader program
+            glUseProgram(m_fake_track_shader_program);
+            // set the relevant scale and center uniforms (constants) in the shader program
             glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
             glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
-            glBindVertexArray(m_gl_path.vao);
+            glBindVertexArray(m_fake_track_path.vao);
             glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
 
 #ifdef DISPLAY
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fake_track_fbo);
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
             glBlitFramebuffer(
                 0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
                 0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                GL_COLOR_BUFFER_BIT, GL_NEAREST
-            );
+                GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
             SDL_GL_SwapWindow(m_gl_window);
 #endif
         }
 
+        void StateEstimator_Impl::render_curv_frame_lookup() {
+            // tells OpenGL: this is where I want to render to
+            glBindFramebuffer(GL_FRAMEBUFFER, m_curv_frame_lookup_fbo);
+
+            // set the background color, clears the depth buffer
+            // (technically 2 rendering passes are done - color and depth)
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // TODO: remove depth buffer
+            // use a shader program
+            glUseProgram(m_gl_path_shader);
+            // set the relevant scale and center uniforms (constants) in the shader program
+            glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
+            glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
+
+            glBindVertexArray(m_gl_path.vao);
+            glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
+            glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
+            // glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
+
+
+        }
+
+        // Whole lotta CUDA nonsense. Tread lightly.
         void StateEstimator_Impl::map_curv_frame_lookup() {
             CUDA_CALL(cudaGraphicsGLRegisterImage(&m_curv_frame_lookup_rsc, m_curv_frame_lookup_rbo, GL_RENDERBUFFER, cudaGraphicsRegisterFlagsNone));
 
@@ -537,6 +812,7 @@ namespace controls {
             ));
         }
 
+        /// you can't render to something when it is mapped. have to unmap before rendering
         void StateEstimator_Impl::unmap_curv_frame_lookup() {
             if (!m_curv_frame_lookup_mapped)
                 return;
@@ -545,23 +821,129 @@ namespace controls {
             m_curv_frame_lookup_mapped = false;
         }
 
-        void StateEstimator_Impl::gen_gl_path() {
-            glGenVertexArrays(1, &m_gl_path.vao);
-            glGenBuffers(1, &m_gl_path.vbo);
-            glGenBuffers(1, &m_gl_path.ebo);
 
-            glBindVertexArray(m_gl_path.vao);
-            glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
+        // bind stuff to flags, act on flags, state machine
+
+        /**
+         * Creates the buffers to be used, as well as the descriptions of how the buffers are laid out.
+         * @brief Creates the names for the vao, vbo and ebo.
+         * Specifies how the vbo should be laid out, stores this in the vao.
+         * Lastly, binds to the ebo.
+         */
+        void StateEstimator_Impl::gen_gl_path(utils::GLObj &gl_path) {
+            // Generates the vao, vbo and ebo to be bound later.
+            glGenVertexArrays(1, &gl_path.vao);
+            glGenBuffers(1, &gl_path.vbo);
+            glGenBuffers(1, &gl_path.ebo);
+
+            glBindVertexArray(gl_path.vao);
+            // OpenGL is a state machine, binding here means any relevant function call on a buffer will be on
+            // m_gl_path.vbo until it is unbound.
+            glBindBuffer(GL_ARRAY_BUFFER, gl_path.vbo);
+            // Specifies the layout of the vertex buffer object. world_pos (2) and curv_pose (3).
             glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
             glEnableVertexAttribArray(1);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
+            // vbo unbound here, ebo bound in its place.
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gl_path.ebo);
 
+            // vao is unbound, saving the settings.
             glBindVertexArray(0);
         }
 
-        void StateEstimator_Impl::fill_path_buffers(glm::fvec2 car_pos) {
+        // Track bounds version
+        void StateEstimator_Impl::fill_path_buffers_cones(){
+            const size_t num_left_cones = m_left_cone_points.size();
+            const size_t num_right_cones = m_right_cone_points.size();
+            m_num_triangles = 0;
+            std::vector<StateEstimator_Impl::Vertex> indices;
+            std::vector<StateEstimator_Impl::Vertex> vertices;
+            //vertices.reserve(num_left_cones + num_right_cones);
+            for (size_t i = 0; i < num_left_cones; ++i) {
+                    glm::fvec2 l1 = m_left_cone_points.at(i);
+                    vertices.push_back({{l1.x, l1.y}, {0.0f, 0.3f, 0.0f}});
+            }
+            for (size_t i = 0; i < num_right_cones; ++i) {
+                    glm::fvec2 r1 = m_right_cone_points.at(i);
+                    vertices.push_back({{r1.x, r1.y}, {0.0f, 0.3f, 0.0f}});
+            }
+            float distance2;
+            std::vector<GLuint> temp;
+            for(size_t i = 0; i < num_left_cones; ++i){
+                glm::fvec2 l1 = m_left_cone_points.at(i);
+                distance2 = 0;
+                temp.clear();
+                for(size_t j = 0; j < num_right_cones; ++j){
+                    glm::fvec2 r1 = m_right_cone_points.at(j);
+                    distance2 = (l1.x - r1.x)*(l1.x - r1.x) + (l1.y - r1.y)*(l1.y - r1.y);
+                    if(distance2 < triangle_threshold_squared)
+                    {
+                        temp.push_back(j);
+                    }
+                }
+                if(temp.size() > 1){
+                    for(size_t k = 0; k < temp.size()-1; ++k){
+                        indices.push_back(vertices.at(i));
+                        indices.push_back(vertices.at(temp.at(k)+ num_left_cones));
+                        indices.push_back(vertices.at(temp.at(k+1) + num_left_cones));
+                        m_num_triangles += 1;
+                    }
+                }
+            }
+            for(size_t i = 0; i < num_right_cones; ++i){
+                glm::fvec2 r1 = m_right_cone_points.at(i);
+                distance2 = 0;
+                temp.clear();
+                for(size_t j = 0; j < num_left_cones; j++){
+                    glm::fvec2 l1 = m_left_cone_points.at(j);
+                    distance2 = (l1.x - r1.x)*(l1.x - r1.x) + (l1.y - r1.y)*(l1.y - r1.y);
+                    if(distance2 < triangle_threshold_squared)
+                    {
+                        temp.push_back(j);
+                    }
+                }
+                if(temp.size() > 1){
+                    for(size_t k = 0; k < temp.size()-1; ++k){
+                        indices.push_back(vertices.at(i + num_left_cones));
+                        indices.push_back(vertices.at(temp.at(k)));
+                        indices.push_back(vertices.at(temp.at(k+1)));
+                        m_num_triangles += 1;
+                    }
+                }
+
+            }
+            // TODO: decide whether we are going to keep using glDrawArrays or try to fix glDrawElements
+
+            std::stringstream ss;
+            ss << "Start of right at: " << num_left_cones;
+            for(size_t i = 0; i < indices.size(); i++){
+                ss << "Index: " << i << " Point x: " << indices.at(i).world.x << "Point y: "<< indices.at(i).world.y << "\n";
+            }
+            // if(indices.size() > 2) {
+            //     for(size_t i = 0; i < indices.size()-2; i += 3){
+            //         ss << "Index: " << indices.at(i) << " 2: " << indices.at(i+1) << " 3: " << indices.at(i+2) <<"------";
+            //     }
+            // }
+    
+            RCLCPP_DEBUG(m_logger_obj, ss.str().c_str());
+            glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(StateEstimator_Impl::Vertex) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
+
+            // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
+            // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
+
+        }
+        
+        // Offset from spline version
+        /**
+         * Given spline frames, fills a framebuffer object with the fake track corresponding to the spline. Used for track progress.
+         * The framebuffer object will be used as a texture object to be sampled from the state estimator.
+         */
+        void StateEstimator_Impl::fill_path_buffers_spline() {
+            for (const auto& frame : m_spline_frames) {
+                paranoid_assert(!isnan_vec(frame));
+            }
             struct Vertex {
                 struct {
                     float x;
@@ -575,11 +957,12 @@ namespace controls {
                 } curv;
             };
 
-            const float radius = track_width * 0.5f;
+            const float radius = fake_track_width * 0.5f;
             const size_t n = m_spline_frames.size();
 
             if (n < 2) {
-                throw std::runtime_error("less than 2 spline frames! (bruh andrew and/or deep)");
+                // throw std::runtime_error("less than 2 spline frames! (bruh andrew and/or deep)");
+                return;
             }
 
             std::vector<Vertex> vertices;
@@ -590,14 +973,19 @@ namespace controls {
                 glm::fvec2 p1 = m_spline_frames[i];
                 glm::fvec2 p2 = m_spline_frames[i + 1];
 
+                glm::fvec2 unit_vec = glm::length(p2 - p1) != 0 ? glm::normalize(p2 - p1) : glm::fvec2(0, 0);
+                // This creates a longitudinal buffer at the start and the end of the spline for the fake track to be rendered
                 if (i == 0) {
-                    p1 = p1 - normalize(p2 - p1) * car_padding;
+                    p1 = p1 - unit_vec * car_padding;
                 } else if (i == n - 2) {
-                    p2 = p2 + normalize(p2 - p1) * car_padding;
+                    p2 = p2 + unit_vec * car_padding;
                 }
 
                 glm::fvec2 disp = p2 - p1;
-                float new_progress = glm::length(disp);
+                float new_progress = glm::length(disp); // TODO: figure out a way to normalize without some arbitrary magic number
+                paranoid_assert(!isnan(new_progress));
+                // 1. go through the vector and divide based on total progress
+                // 2. set total progress to be a member variable, then use that as a uniform, thus passing it into the fragment shader
                 float segment_heading = std::atan2(disp.y, disp.x);
 
 
@@ -612,15 +1000,17 @@ namespace controls {
                 glm::fvec2 high1 = p1 + normal * radius;
                 glm::fvec2 high2 = p2 + normal * radius;
 
-                if (i == 0) {
-                    vertices.push_back({{p1.x, p1.y}, {total_progress, 0.0f, segment_heading}});
+                if (i == 0)
+                {
+                    vertices.push_back({{p1.x, p1.y}, {total_progress, 0.0f, 0.0f}});
                 }
-                vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, secant_heading}});
+                vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, 0.0f}});
 
-                vertices.push_back({{low1.x, low1.y}, {total_progress, -radius, segment_heading}});
-                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, -radius, segment_heading}});
-                vertices.push_back({{high1.x, high1.y}, {total_progress, radius, segment_heading}});
-                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, radius, segment_heading}});
+                // I set offset to be 1.0 to prevent plateauing
+                vertices.push_back({{low1.x, low1.y}, {total_progress, radius, 0.0f}});
+                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, radius, 0.0f}});
+                vertices.push_back({{high1.x, high1.y}, {total_progress, radius, 1.0f}});
+                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, radius, 1.0f}});
 
                 const GLuint p1i = i == 0 ? 0 : (i - 1) * 5 + 1;
                 const GLuint p2i = i * 5 + 1;
@@ -661,67 +1051,12 @@ namespace controls {
                 total_progress += new_progress;
             }
 
-            // // allow car to be before first frame
-            // {
-            //     const GLuint ai = 2;
-            //     const GLuint bi = 0;
-            //     const GLuint ci = 4;
-            //
-            //     const glm::fvec2 a = {vertices[ai].world.x, vertices[ai].world.y};
-            //     const glm::fvec2 b = {vertices[bi].world.x, vertices[bi].world.y};
-            //     const glm::fvec2 c = {vertices[ci].world.x, vertices[ci].world.y};
-            //
-            //     const glm::fvec2 ac_unit = glm::normalize(c - a);
-            //     const glm::fvec2 ac_norm = glm::fvec2(ac_unit.y, -ac_unit.x);
-            //
-            //     glm::fvec2 bcar = car_pos - b;
-            //     if (glm::dot(bcar, ac_norm) < car_padding) {
-            //         if (glm::dot(bcar, ac_norm) >= 0) {
-            //             bcar = -ac_norm * car_padding;
-            //         }
-            //         const glm::fvec2 car_parallel_plane = glm::normalize(glm::fvec2(bcar.y, -bcar.x));
-            //         const glm::fvec2 new_edge_center = b + bcar * (glm::length(bcar) + car_padding) / glm::length(bcar);
-            //
-            //         const glm::fvec2 v1_world = new_edge_center - car_parallel_plane * radius;
-            //         const glm::fvec2 v2_world = new_edge_center + car_parallel_plane * radius;
-            //
-            //         const float v1_progress = glm::dot( v1_world - b, ac_norm);
-            //         const float v2_progress = glm::dot(v2_world - b, ac_norm);
-            //
-            //         const float v1_offset = glm::dot(v1_world - b, ac_unit);
-            //         const float v2_offset = glm::dot(v2_world - b, ac_unit);
-            //
-            //         const float v1_heading = vertices[bi].curv.heading;
-            //         const float v2_heading = vertices[bi].curv.heading;
-            //
-            //         Vertex v1 = {{v1_world.x, v1_world.y}, {v1_progress, v1_offset, v1_heading}};
-            //         Vertex v2 = {{v2_world.x, v2_world.y}, {v2_progress, v2_offset, v2_heading}};
-            //         if (glm::dot(bcar, ac_norm) > 0) {
-            //             std::swap(v1, v2);
-            //         }
-            //
-            //         vertices.push_back(v1);
-            //         vertices.push_back(v2);
-            //
-            //         const GLuint v1i = vertices.size() - 2;
-            //         const GLuint v2i = vertices.size() - 1;
-            //
-            //         indices.push_back(v1i);
-            //         indices.push_back(ai);
-            //         indices.push_back(ci);
-            //
-            //         indices.push_back(v1i);
-            //         indices.push_back(ci);
-            //         indices.push_back(v2i);
-            //     }
-            // }
-
-
-            glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, m_fake_track_path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_fake_track_path.ebo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
         }
     }
 }
+
