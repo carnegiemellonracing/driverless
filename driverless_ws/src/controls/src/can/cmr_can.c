@@ -18,7 +18,7 @@
 
 #define READ_WAIT_INFINITE (unsigned long)(-1)
 static unsigned int msgCounter = 0;
-
+static int can_timeout_ms = 50;
 
 
 static void check(char *id, canStatus stat)
@@ -142,7 +142,7 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
     if (stat != canOK) {
         goto ErrorExit;
     }
-    stat = canWriteSync(hnd, 1000);
+    stat = canWriteSync(hnd, can_timeout_ms);
     check("canWriteSync", stat);
     if (stat != canOK) {
         goto ErrorExit;
