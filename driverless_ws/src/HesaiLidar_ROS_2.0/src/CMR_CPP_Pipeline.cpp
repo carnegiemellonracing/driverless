@@ -92,16 +92,18 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
 
   const double angle_min = -0.5 * M_PI;
   const double angle_max = 0.5 * M_PI;
-  const double radius_max = 20;
+  const double radius_max = 15;
   int num_segs = static_cast<int>((angle_max - angle_min) / alpha);
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
+  //&& rd.angle > -4 * (M_PI/9) && rd.angle < 4 * (M_PI/9)
   PointCloud<PointXYZ> output;
 
   // Parse all points from XYZ to radial,Z and separate into bins
   int csize = cloud.points.size();
   for (int i = 0; i < csize; i++) {
-    radial_t rd = point2radial(cloud.points[i]);
-    if (rd.radius < radius_max) {
+    PointXYZ pt = cloud.points[i];
+    radial_t rd = point2radial(pt);
+    if (rd.radius < radius_max && abs(pt.y) < 1.45) {
       int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
       int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
       if (seg_index < 0)
@@ -312,7 +314,7 @@ inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alp
   // Start overall timer
   auto start_pipeline = std::chrono::high_resolution_clock::now();
   
-  // Print the entry size of the cloud
+  // Print the entry sizetime: 36.776 of the cloud
   printf("Entry Size: %zu\n", cloud.size());                               
 
   // Time GraceAndConrad step
@@ -340,6 +342,23 @@ inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alp
   auto end_pipeline = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> duration_pipeline = end_pipeline - start_pipeline;
   std::cout << "Total pipeline time: " << duration_pipeline.count() << " ms" << std::endl;
+
+  std::string out_file = "gnc_output_points.csv";
+  std::string out_file2 = "pipe_output_points.csv";
+  ofstream write_to(out_file);
+  ofstream write_to2(out_file2);
+
+  write_to << "x,y,z\n";
+  write_to2 << "x,y,z\n";
+
+  for (int i = 0; i < GNC_cloud.size(); i++) {
+    write_to << to_string(GNC_cloud.points[i].z) + "," + to_string(GNC_cloud.points[i].x) + "," + to_string(GNC_cloud.points[i].y) + "\n";
+  }
+  for (int i = 0; i < filtered_cloud.size(); i++) {
+    write_to2 << to_string(filtered_cloud.points[i].z) + "," + to_string(filtered_cloud.points[i].x) + "," + to_string(filtered_cloud.points[i].y) + "\n";
+  }
+  write_to.close();
+  write_to2.close();
 
   return filtered_cloud;
 }
