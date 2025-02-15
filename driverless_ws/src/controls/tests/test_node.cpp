@@ -223,11 +223,12 @@ namespace controls {
               m_gps_timer{create_wall_timer(
                   std::chrono::duration<float, std::milli>(gps_period * 1000),
                   [this]
-                  { publish_twist(); })},
+                  { publish_gps(); })},
 
               m_spline_publisher{create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
               m_twist_publisher{create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
               m_cone_publisher{create_publisher<ConeMsg>(cone_topic_name, spline_qos)},
+              m_pose_publisher{create_publisher<PoseMsg>(world_pose_topic_name, spline_qos)},
 
               m_config_dict{config_dict},
               m_all_segments{parse_segments_specification(getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
@@ -627,14 +628,16 @@ namespace controls {
             m_spline_publisher->publish(spline_msg);
             m_cone_publisher->publish(cone_msg);
         }
- 
 
-        void TestNode::publish_twist() {
+        
+
+        TwistMsg TestNode::get_curr_twist(rclcpp::Time time) {
             TwistMsg msg {};
+            const float yaw = m_world_state[2];
+            const float speed = m_world_state[3];
+            msg.twist.linear.x = speed * std::cos(yaw); // + m_twist_jitter_gen(m_rng);
+            msg.twist.linear.y = speed * std::sin(yaw); // + m_twist_jitter_gen(m_rng);
 
-            msg.twist.linear.x = m_world_state[3];
-
-            // const float yaw = m_world_state[2];
             // const float car_xdot = m_world_state[3];
             // const float car_ydot = m_world_state[4];
             // const float yawdot = m_world_state[5];
@@ -647,10 +650,32 @@ namespace controls {
             // msg.twist.angular.y = 0.0;
             // msg.twist.angular.z = yawdot;
 
-            msg.header.stamp = get_clock()->now();
-
-            m_twist_publisher->publish(msg);
+            msg.header.stamp = time;
+            return msg;
         }
+
+        PoseMsg TestNode::get_curr_pose(rclcpp::Time time) {
+            PoseMsg msg {};
+            msg.pose.position.x = m_world_state[0];
+            msg.pose.position.y = m_world_state[1];
+            msg.pose.position.z = m_world_state[2]; // !!!!! Warning this is actually yaw 
+
+            msg.header.stamp = time;
+            return msg;
+        }
+
+
+        void TestNode::publish_gps() {
+            auto curr_time = get_clock()->now();
+            auto twist_msg = get_curr_twist(curr_time);
+
+            m_twist_publisher->publish(twist_msg);
+            auto pose_msg = get_curr_pose(curr_time);
+            m_pose_publisher->publish(pose_msg);
+
+        }
+ 
+
         std::deque<Segment> TestNode::parse_segments_specification(std::string track_specifications_path)
         {
             if (!std::filesystem::exists(track_specifications_path)) {
@@ -713,6 +738,14 @@ namespace controls {
             
             return segments;
         }
+
+
+        void init_noise(){
+            std::normal_distribution<float> m_cone_bearing_jitter_gen = std::normal_distribution<float>(0.0f, std::sqrt(std::stof(g_config_dict["cone_bearing_variance"])));
+            std::normal_distribution<float> m_cone_distance_jitter_gen = std::normal_distribution<float>(0.0f,std::sqrt(std::stof(g_config_dict["cone_distance_variance"])));
+            std::normal_distribution<float> m_position_jitter_gen = std::normal_distribution<float>(0.0f, std::sqrt(std::stof(g_config_dict["position_variance"])));
+            std::normal_distribution<float> m_twist_jitter_gen = std::normal_distribution<float>(0.0f, std::sqrt(std::stof(g_config_dict["twist_variance"])));
+        }
     }
 }
 
@@ -728,6 +761,7 @@ std::string trim(const std::string &str) {
 
     return str.substr(first, length);
 }
+
 
 
 
@@ -777,6 +811,7 @@ int main(int argc, char* argv[]){
 
     controls::tests::g_config_dict = config_dict;
 
+    controls::tests::init_noise();
     // for(const auto & elem : config_dict)
     // {
     //     std::cout << elem.first << " " << elem.second << " " << "\n";

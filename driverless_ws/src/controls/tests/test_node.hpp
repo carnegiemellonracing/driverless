@@ -73,11 +73,14 @@ namespace controls {
 
             void on_sim();
             void on_action(const ActionMsg& msg);
+            TwistMsg get_curr_twist(rclcpp::Time time);
+            PoseMsg get_curr_pose(rclcpp::Time time);
+            void publish_gps();
             void publish_track();
-            void publish_twist();
+
 
             void next_segment();
-
+            void init_noise();
             std::map<std::string, std::string> m_config_dict;
             std::vector<glm::fvec2> arc_segment(float radius, glm::fvec2 start_pos, float start_heading, float end_heading);
             std::vector<glm::fvec2> straight_segment(glm::fvec2 start, float length, float heading);
@@ -93,6 +96,7 @@ namespace controls {
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
             rclcpp::Publisher<TwistMsg>::SharedPtr m_twist_publisher;
             rclcpp::Publisher<ConeMsg>::SharedPtr m_cone_publisher;
+            rclcpp::Publisher<PoseMsg>::SharedPtr m_pose_publisher;
 
             rclcpp::TimerBase::SharedPtr m_track_timer;
             rclcpp::TimerBase::SharedPtr m_gps_timer;
@@ -145,6 +149,14 @@ namespace controls {
             /// For cone jittering
             std::normal_distribution<float> m_straight_jitter_gen {0, 0.25f};
             std::normal_distribution<float> m_arc_jitter_gen {0, 0.25f};
+
+
+            /// for online cone noise
+            std::normal_distribution<float> m_cone_bearing_jitter_gen;
+            std::normal_distribution<float> m_cone_distance_jitter_gen;
+            ///for position and twist noise
+            std::normal_distribution<float> m_position_jitter_gen;
+            std::normal_distribution<float> m_twist_jitter_gen;
             float m_noise_clip = 0.2f;
         };
 
