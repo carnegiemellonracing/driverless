@@ -26,7 +26,7 @@
 using namespace std::chrono_literals;
 using std::placeholders::_1;
 
-#define DEBUG 1
+#define DEBUG 0
 
 class Point_To_Pixel_Node : public rclcpp::Node
 {
@@ -72,11 +72,12 @@ class Point_To_Pixel_Node : public rclcpp::Node
 
 // Constructor definition
 Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
+                                              params([]() {sl_oc::video::VideoParams p; p.res = sl_oc::video::RESOLUTION::HD720; p.fps = sl_oc::video::FPS::FPS_60; return p;}()),
                                               cap_0(sl_oc::video::VideoCapture(params)),
                                               cap_1(sl_oc::video::VideoCapture(params))
 {
-  params.res = sl_oc::video::RESOLUTION::HD720;
-  params.fps = sl_oc::video::FPS::FPS_60;
+  // params.res = sl_oc::video::RESOLUTION::HD720;
+  // params.fps = sl_oc::video::FPS::FPS_60;
   // if( !(this->cap_0).initializeVideo(0) )
   // {
   //   RCLCPP_ERROR(this->get_logger(), "Cannot open camera 0 video capture");
@@ -119,9 +120,30 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
   // Get parameters
   std::vector<double> param = this->get_parameter("projection_matrix").as_double_array();
-  Eigen::Map<Eigen::Matrix<double, 3, 4>> projection_matrix(param.data());
+  this->projection_matrix = Eigen::Map<Eigen::Matrix<double, 3, 4, Eigen::RowMajor>>(param.data());
+
 
   this->CONFIDENCE_THRESHOLD = this->get_parameter("confidence_threshold").as_double();
+
+  std::chrono::seconds duration(2);
+  rclcpp::sleep_for(duration);
+
+
+  const sl_oc::video::Frame frame_1 = this->cap_1.getLastFrame();
+
+  cv::Mat frameBGR_1;
+    if (frame_1.data != nullptr){
+        // ----> Conversion from YUV 4:2:2 to BGR for visualization
+        // cv::Mat frameYUV_1 = cv::Mat(1280, 720, CV_8UC2, frame_0.data);
+        cv::Mat frameYUV_1 = cv::Mat(frame_1.height, frame_1.width, CV_8UC2, frame_1.data);
+        // cv::Mat frameBGR_1;
+        cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
+        // <---- Conversion from YUV 4:2:2 to BGR for visualization
+        cv::Rect roi(0, 0, 1280, 720);
+        frameBGR_1 = frameBGR_1(roi);
+    }
+  cv::imwrite("/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel_test/config/freeze.png", frameBGR_1);
+
 
   RCLCPP_INFO(this->get_logger(), "Point to Pixel Node INITIALIZED");
 
@@ -129,14 +151,28 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   // this->canvas = this->cap_0.getLastFrame();
 };
 
-
 // Point to pixel transform
 // returns 0 for blue cone, 1 for yellow cone, and 2 for orange cone
 int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
 {
+  // Create a stringstream to log the matrix
+        std::stringstream ss;
+
+        // Iterate over the rows and columns of the matrix and format the output
+        for (int i = 0; i < this->projection_matrix.rows(); ++i)
+        {
+            for (int j = 0; j < this->projection_matrix.cols(); ++j)
+            {
+                ss << this->projection_matrix(i, j) << " ";
+            }
+            ss << "\n";
+        }
+
+        // Log the projection_matrix using ROS 2 logger
+        RCLCPP_INFO(this->get_logger(), "3x4 projection_matrix:\n%s", ss.str().c_str());
   #if !DEBUG
   // Convert point from topic type (geometry_msgs/msg/Vector3) to Eigen Vector3d
-  Eigen::Vector4d lidar_pt(point.x, point.y, point.z, 1);
+  Eigen::Vector4d lidar_pt(point.x, point.y, point.z, 1.0);
 
   // Apply projection matrix to LiDAR point
   Eigen::Vector3d transformed = this->projection_matrix * lidar_pt;
@@ -146,7 +182,7 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
 
   // const sl_oc::video::Frame frame_0 = this->cap_0.getLastFrame();
 
-  RCLCPP_INFO(this->get_logger(), "%d, %d \n", pixel_1(0), pixel_1(1));
+  // RCLCPP_INFO(this->get_logger(), "%d, %d \n", pixel_1(0), pixel_1(1));
   
   #endif
 
@@ -172,13 +208,12 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
     if (frame_1.data != nullptr){
         // ----> Conversion from YUV 4:2:2 to BGR for visualization
         // cv::Mat frameYUV_1 = cv::Mat(1280, 720, CV_8UC2, frame_0.data);
-        RCLCPP_INFO(this->get_logger(), "%d, %d", frame_1.height, frame_1.width);
         cv::Mat frameYUV_1 = cv::Mat(frame_1.height, frame_1.width, CV_8UC2, frame_1.data);
         // cv::Mat frameBGR_1;
         cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
         // <---- Conversion from YUV 4:2:2 to BGR for visualization
-        cv::Mat frame_1_resize;
-        cv::resize(frameBGR_1, frame_1_resize, cv::Size(), 0.6, 0.6);
+        cv::Rect roi(0, 0, 1280, 720);
+        frameBGR_1 = frameBGR_1(roi);
     }
 
   // if (frame_0.data == nullptr) {
@@ -192,7 +227,19 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
 
   std::tuple<int, float> ppm = this->identify_color(pixel_1, frameBGR_1);
 
-  RCLCPP_INFO(this->get_logger(), "Transformed Cone: %d, %f", std::get<0>(ppm), std::get<1>(ppm));
+  cv::drawMarker(frameBGR_1, cv::Point(pixel_1(0), pixel_1(1)), 'red');
+  cv::imshow("Transformed Point", frameBGR_1);
+
+  while (true) {
+        int key = cv::waitKey(0); // Wait indefinitely for a key press
+        if (key == 27) { // ASCII value for ESC key
+            break; // Exit the loop if ESC is pressed
+        }
+    }
+
+  cv::destroyAllWindows();
+  
+  RCLCPP_INFO(this->get_logger(), "x: %f, y: %f, color: %d, conf: %f", pixel_1(0), pixel_1(1), std::get<0>(ppm), std::get<1>(ppm));
   
   return std::get<0>(ppm);
 }
@@ -292,7 +339,6 @@ std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pix
 // Topic callback definition
 void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
 {
-  printf("read topic");
   RCLCPP_INFO(this->get_logger(), "Received message with %zu cones", msg->cone_array.size());
 
   interfaces::msg::ConeList message = interfaces::msg::ConeList();
@@ -313,10 +359,13 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     switch (cone_class){
       case 0:
         message.orange_cones.push_back(point_msg);
+        break;
       case 1:
         message.yellow_cones.push_back(point_msg);
+        break;
       case 2:
         message.blue_cones.push_back(point_msg);
+        break;
       default:
         break;
     }
@@ -348,8 +397,8 @@ void Point_To_Pixel_Node::opencv_callback() {
       // cv::imshow("Display Window", frameBGR);
 
       cv::Mat frame_1_resize;
-      cv::resize(frameBGR, frame_1_resize, cv::Size(), 0.6, 0.6);
-      cv::Rect roi(0, 0, 1325, 745);
+      cv::resize(frameBGR, frame_1_resize, cv::Size(), 1., 1.);
+      cv::Rect roi(0, 0, 1280, 720);
       frame_1_resize = frame_1_resize(roi);
       cv::imshow("Display Window", frame_1_resize);
       cv::imwrite("/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel_test/config/freeze.png", frame_1_resize);
