@@ -374,7 +374,7 @@ class CalibrationUI:
 
     def save_calibration(self, proj_matrix):
         calibration_data = {
-            "point_to_pixel": {
+            "/point_to_pixel": {
                 "ros__parameters": {
                     "projection_matrix": proj_matrix.flatten().tolist(),
                 }
@@ -394,21 +394,22 @@ class CalibrationUI:
 
 
 def main():
-    # Set up argument parser
-    parser = argparse.ArgumentParser(description="Run calibration UI with a given image file.")
-    parser.add_argument("-i", "--input", required=True, help="Path to the input image file")
-    args = parser.parse_args()
+    # # Set up argument parser
+    # parser = argparse.ArgumentParser(description="Run calibration UI with a given image file.")
+    # parser.add_argument("-i", "--input", required=True, help="Path to the input image file")
+    # args = parser.parse_args()
 
     # Read the image from the provided file path
-    im = cv2.imread(args.input)
+    path = "/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel_test/config/freeze.png"
+    im = cv2.imread(path)
 
     if im is None:
-        print(f"Error: Unable to load image from path {args.input}", file=sys.stderr)
+        print(f"Error: Unable to load image from path {path}", file=sys.stderr)
         sys.exit(1)
 
     try:
         # Initialize CalibrationUI with the image size and file path
-        ui = CalibrationUI(width=im.shape[1], height=im.shape[0], frame_path=args.input)
+        ui = CalibrationUI(width=im.shape[1], height=im.shape[0], frame_path=path)
         ui.run()
     except Exception as e:
         print(f"Calibration failed: {e}", file=sys.stderr)
