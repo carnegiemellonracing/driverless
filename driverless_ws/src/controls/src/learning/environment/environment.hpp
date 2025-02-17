@@ -1,5 +1,3 @@
-#include <tuple>
-#include <iostream>
 #include <fstream>
 #include <unordered_map>
 #include <tuple>
@@ -11,79 +9,80 @@
 using Reward = double;
 
 namespace controls {
-    // A std::shared_ptr<std::shared_ptr<Action>> class implementing an abstract action type
-    class Action {
+    // An abstract Action type
+    struct Action {
         virtual ~Action() = default;
     };
 
-    // A std::shared_ptr<Observation> class implementing an abstract observation type
-    class Observation {
+    // An abstract Observation type
+    struct Observation {
         virtual ~Observation() = default;
     };
 
     class ObservationSpace {   
         public:
             ObservationSpace(
-                std::shared_ptr<Observation> initialObservation, 
-                std::shared_ptr<Observation> (*transitionFunction)(std::shared_ptr<Observation>, std::shared_ptr<Action>),
-                bool (*isTerminal)(std::shared_ptr<Observation>), 
-                bool (*isTruncated)(std::shared_ptr<Observation>)
+                Observation initialObservation, 
+                Observation (*transitionFunction)(Observation, Action),
+                bool (*isTerminal)(Observation), 
+                bool (*isTruncated)(Observation)
             );
 
-            std::shared_ptr<Observation> observe() {
+            Observation observe() {
                 return this->currState;
             };
 
-            std::tuple<std::shared_ptr<Observation>, bool, bool> step(std::shared_ptr<Action> a);
+            std::tuple<Observation, bool, bool> step(Action a);
 
             // Resets the ObservationSpace, returning an initial observation
-            std::shared_ptr<Observation> reset();
+            Observation reset();
             
             // Returns [true] if [Observation o] is terminal
-            bool isTerminalObservation(std::shared_ptr<Observation> o);
+            bool isTerminalObservation(Observation o);
 
             // Returns [true] if [Observation o] has been truncated
-            bool isTruncatedObservation(std::shared_ptr<Observation> o);
+            bool isTruncatedObservation(Observation o);
 
         private:
-            std::shared_ptr<Observation> initialState;
-            std::shared_ptr<Observation> currState;
-            std::shared_ptr<Observation> (*transitionFunction)(std::shared_ptr<Observation>, std::shared_ptr<Action>);
-            bool (*isTerminal)(std::shared_ptr<Observation>);
-            bool (*isTruncated)(std::shared_ptr<Observation>);
+            Observation initialState;
+            Observation currState;
+            Observation (*transitionFunction)(Observation, Action);
+            bool (*isTerminal)(Observation);
+            bool (*isTruncated)(Observation);
     };
 
     // A class for rewards functions. 
     class RewardFunction {
         public:
-            RewardFunction(Reward (*rewardFunction)(std::shared_ptr<Observation>, std::shared_ptr<Action>, std::shared_ptr<Observation>));
-            Reward getRewards(std::shared_ptr<Observation> s_curr, std::shared_ptr<Action> a, std::shared_ptr<Observation> s_next);
+            RewardFunction(Reward (*rewardFunction)(Observation, Action, Observation));
+            Reward getRewards(Observation s_curr, Action a, Observation s_next);
 
         private:
-            Reward (*rewardFunction)(std::shared_ptr<Observation>, std::shared_ptr<Action>, std::shared_ptr<Observation>);
+            Reward (*rewardFunction)(Observation, Action, Observation);
     };
 
     class Environment {
         public:
             std::unordered_map<std::string, std::string> info;
 
+            // <c_o, s_o, transition function, terminal state checker, truncated episode checker, reward function>
             Environment(
-                std::shared_ptr<Observation> initialState,
-                std::shared_ptr<Observation> (*transitionFunction)(std::shared_ptr<Observation>, std::shared_ptr<Action>),
-                bool (*isTerminal)(std::shared_ptr<Observation>), 
-                bool (*isTruncated)(std::shared_ptr<Observation>),
-                Reward (*rewardFunction)(std::shared_ptr<Observation>, std::shared_ptr<Action>, std::shared_ptr<Observation>)
+                Observation initialState,
+                Observation (*transitionFunction)(Observation, Action),
+                bool (*isTerminal)(Observation), 
+                bool (*isTruncated)(Observation),
+                Reward (*rewardFunction)(Observation, Action, Observation)
             ); 
 
             // ===== Environment Methods =====
             // Steps the ObservationSpace and returns a tuple of <s', R, truncatedState, terminalState>
-            std::tuple<std::shared_ptr<Observation>, Reward, bool, bool> step(std::shared_ptr<Action> a); 
+            std::tuple<Observation, Reward, bool, bool> step(Action a); 
 
             // Invokes the rewardFunction, returing Reward for <s, a, s'> tuple.
-            Reward getRewards(std::shared_ptr<Observation> s_curr, std::shared_ptr<Action> a, std::shared_ptr<Observation> s_next);
+            Reward getRewards(Observation s_curr, Action a, Observation s_next);
 
             // Resets the ObservationSpace, returning an initial observation and some info dictionary
-            std::pair<std::shared_ptr<Observation>, std::unordered_map<std::string, std::string>> reset();
+            std::pair<Observation, std::unordered_map<std::string, std::string>> reset();
             
             // ===== ObservationSpace setters & getters =====
             void setObservationSpace(ObservationSpace observationSpace);
