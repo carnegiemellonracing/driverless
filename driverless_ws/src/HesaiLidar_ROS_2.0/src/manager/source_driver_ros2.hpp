@@ -272,12 +272,11 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarD
   sensor_msgs::PointCloud2Iterator<float> iter_y_(ros_msg, "y");
   sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_msg, "z");
   float epsilon = 0.1;
-  int counter = 0;
   
   // Define Constants 
   double cpp_alpha = 0.1;
   int cpp_num_bins = 10;
-  double cpp_height_threshold = 0.13;
+  double cpp_height_threshold = 0.07;
   double cpp_epsilon = 0.2;
   int cpp_min_points = 3;
   double cpp_epsilon2 = 3;
@@ -290,11 +289,8 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarD
     if (std::abs(point.x) < epsilon && std::abs(point.y) < epsilon && std::abs(point.z) < epsilon) {
       continue;
     }
-    if (counter == 3) {
-      filtered_points.push_back(PointXYZ(point.x, point.y, point.z));
-      counter = 0;
-    }
-    counter++;
+
+    filtered_points.push_back(PointXYZ(point.x, point.y, point.z));
   }
   
   PointCloud<PointXYZ> filtered_cloud = run_pipeline(filtered_points, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);

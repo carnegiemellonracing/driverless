@@ -88,11 +88,11 @@ inline radial_t min_height(vector<radial_t> bin) {
 inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double alpha, 
                                     int num_bins, double height_threshold) {
 
-  double upper_height_threshold = 0.4;
+  double upper_height_threshold = 0.2;
 
   const double angle_min = -0.5 * M_PI;
   const double angle_max = 0.5 * M_PI;
-  const double radius_max = 15;
+  const double radius_max = 20;
   int num_segs = static_cast<int>((angle_max - angle_min) / alpha);
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
   //&& rd.angle > -4 * (M_PI/9) && rd.angle < 4 * (M_PI/9)
@@ -103,7 +103,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
   for (int i = 0; i < csize; i++) {
     PointXYZ pt = cloud.points[i];
     radial_t rd = point2radial(pt);
-    if (rd.radius < radius_max && abs(pt.y) < 1.45) {
+    if (rd.radius < radius_max/* && abs(pt.y) < 1.45*/) {
       int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
       int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
       if (seg_index < 0)
