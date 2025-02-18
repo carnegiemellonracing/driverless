@@ -155,6 +155,18 @@ std::vector<Chunk*>* generateChunks(std::vector<std::tuple<double,double,int>> b
     std::vector<ParameterizedSpline> yellowRacetrackSplines = yellow.first;
     std::vector<double> yellowCumulativeLen = yellow.second;
 
+    // swap yellow and blue if curr blue is not the inside
+    bool blueIsInside = blueCumulativeLen[blueCumulativeLen.size() - 1] <= yellowCumulativeLen[yellowCumulativeLen.size() - 1];
+
+    if (!blueIsInside) {
+        std::vector<ParameterizedSpline> tempRaceSplines = blueRacetrackSplines;
+        std::vector<double> tempLen = blueCumulativeLen;
+        blueRacetrackSplines = yellowRacetrackSplines;
+        blueCumulativeLen = yellowCumulativeLen;
+        yellowRacetrackSplines = tempRaceSplines;
+        yellowCumulativeLen = tempLen;
+    }
+
     // create a chunk
     Chunk* chunk = new Chunk();
     chunk->minThirdDer = blueRacetrackSplines[0].get_third_der(0);
