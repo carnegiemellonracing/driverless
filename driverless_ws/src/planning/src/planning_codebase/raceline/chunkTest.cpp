@@ -247,7 +247,7 @@ int main() {
     for (size_t i = 0; i<100; ++i) {
         std::cout << "===========================" << std::endl;
     	auto start_chunking = std::chrono::high_resolution_clock::now();
-        std::vector<Chunk*> chunks = *generateChunks(yellow_cones, blue_cones);
+        std::vector<Chunk*> chunks = *generateChunks(blue_cones, yellow_cones);
         auto end_chunking = std::chrono::high_resolution_clock::now();
         auto dur_chunking = std::chrono::duration_cast<std::chrono::microseconds>(end_chunking - start_chunking);
         std::cout << "Chunking time: " << dur_chunking.count() << std::endl;
