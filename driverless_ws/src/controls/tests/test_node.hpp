@@ -93,6 +93,7 @@ namespace controls {
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
             rclcpp::Publisher<TwistMsg>::SharedPtr m_twist_publisher;
             rclcpp::Publisher<ConeMsg>::SharedPtr m_cone_publisher;
+            rclcpp::Publisher<PoseMsg>::SharedPtr m_globalPose_publisher;
 
             rclcpp::TimerBase::SharedPtr m_track_timer;
             rclcpp::TimerBase::SharedPtr m_gps_timer;

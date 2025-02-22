@@ -228,6 +228,7 @@ namespace controls {
               m_spline_publisher{create_publisher<SplineMsg>(spline_topic_name, spline_qos)},
               m_twist_publisher{create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
               m_cone_publisher{create_publisher<ConeMsg>(cone_topic_name, spline_qos)},
+              m_globalPose_publisher{create_publisher<PoseMsg>(global_pose_topic_name, global_pose_qos)},
 
               m_config_dict{config_dict},
               m_all_segments{parse_segments_specification(getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
@@ -350,7 +351,6 @@ namespace controls {
             bool within_start = false;
             bool within_end = false;
         
-
             if (!m_is_loop) { //track is not a loop
                 within_start = is_within_line(curr_pos, m_start_line, 0.5f);
                 within_end = is_within_line(curr_pos, m_end_line, 1.0f);
@@ -584,9 +584,11 @@ namespace controls {
         void TestNode::publish_track() {
             SplineMsg spline_msg {};
             ConeMsg cone_msg {};
+            PoseMsg global_pose {};
 
             const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
             const float car_heading = m_world_state[2];
+            
 
             // transformation from world to car frame
             auto gen_point = [&car_pos, car_heading](const glm::fvec2& point) {
@@ -616,16 +618,28 @@ namespace controls {
             for (const glm::fvec2& point : m_raceline_points) {
                 cone_msg.big_orange_cones.push_back(gen_point(point));
             }
-    
+            
+            global_pose_msg.pose.position.x = car_pos.x;
+            global_pose_msg.pose.position.y = car_pos.y;
+
+            global_pose_msg.pose.orientation.x = 0.0;
+            global_pose_msg.pose.orientation.y = 0.0;
+            global_pose_msg.pose.orientation.z = std::sin(car_heading / 2.0);
+            global_pose_msg.pose.orientation.w = std::cos(car_heading / 2.0);
         
             auto curr_time = get_clock()->now();
             spline_msg.header.stamp = curr_time;
             cone_msg.header.stamp = curr_time;
             spline_msg.orig_data_stamp = curr_time;
             cone_msg.orig_data_stamp = curr_time;
+            global_pose_msg.header.stamp =curr_time;
+            
+            global_pose_msg.header.frame_id = "world";
+            
 
             m_spline_publisher->publish(spline_msg);
             m_cone_publisher->publish(cone_msg);
+            m_globalPose_publisher->publish(global_pose_msg);
         }
  
 
