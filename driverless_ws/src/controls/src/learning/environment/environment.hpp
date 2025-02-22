@@ -21,6 +21,8 @@ namespace controls {
 
     class ObservationSpace {   
         public:
+            ObservationSpace();
+
             ObservationSpace(
                 Observation initialObservation, 
                 Observation (*transitionFunction)(Observation, Action),

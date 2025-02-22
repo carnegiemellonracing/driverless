@@ -18,6 +18,9 @@ namespace controls {
 
     class ObservationSpace {  
         public:
+
+            ObservationSpace() {};
+
             ObservationSpace(
                 Observation initialObservation, 
                 Observation (*transitionFunction)(Observation, Action),
@@ -87,7 +90,14 @@ namespace controls {
     class Environment {
         public:
             std::unordered_map<std::string, std::string> info;
-
+            Environment(
+                ObservationSpace stateSpace,
+                Reward (*rewardFunction)(Observation, Action, Observation)
+            ) :
+                stateSpace{stateSpace},
+                rewardFunction{rewardFunction}
+            {};
+            
             Environment(
                 Observation initialState,
                 Observation (*transitionFunction)(Observation, Action),
@@ -95,7 +105,7 @@ namespace controls {
                 bool (*isTruncated)(Observation),
                 Reward (*rewardFunction)(Observation, Action, Observation)
             ) :
-                stateSpace{initialState, transitionFunction, isTerminal, isTruncated},
+                stateSpace{ObservationSpace(initialState, transitionFunction, isTerminal, isTruncated)},
                 rewardFunction{rewardFunction}
             {}; 
 
@@ -105,7 +115,7 @@ namespace controls {
                 auto [nextState, truncatedState, terminalState] = (this->stateSpace).step(a);
                 Reward r = getRewards(currState, a, nextState);
                 return std::make_tuple(nextState, r, truncatedState, terminalState);
-            }; 
+            };
 
             // Invokes the rewardFunction, returing Reward for <s, a, s'> tuple.
             Reward getRewards(Observation s_curr, Action a, Observation s_next) {

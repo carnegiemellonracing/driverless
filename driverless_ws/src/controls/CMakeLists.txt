@@ -20,6 +20,11 @@ endif()
 
 set(CMAKE_PREFIX_PATH "~/driverless/driverless_ws/install/interfaces/share/interfaces/cmake")
 
+# CMAKE STUFF FOR LIBTORCH (REFERENCE)
+# set(CMAKE_PREFIX_PATH "~/driverless/driverless_ws/install/libtorch/share/cmake/Torch")
+# set(CMAKE_PREFIX_PATH "~/driverless/driverless_ws/install/libtorch/share/cmake/ATen")
+
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -32,6 +37,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GSL REQUIRED)
+find_package(Torch REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/../)
@@ -112,8 +118,8 @@ install(
         EXPORT controls_libExport
         DESTINATION lib/${PROJECT_NAME}
 )
-
-
+# ****** Pytorch ******
+add_library(controls_lib SHARED ${TORCH_LIBRARIES})
 
 # ****** Controller *****
 
