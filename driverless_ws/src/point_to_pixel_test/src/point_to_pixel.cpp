@@ -136,24 +136,22 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   int sn = this->cap_1.getSerialNumber();
 
   // ----> Retrieve calibration file from Stereolabs server
-    std::string calibration_file;
-    // ZED Calibration
-    unsigned int serial_number = sn;
-    // Download camera calibration file
-    if( !sl_oc::tools::downloadCalibrationFile(serial_number, calibration_file) )
-    {
-        std::cerr << "Could not load calibration file from Stereolabs servers" << std::endl;
-    }
-
-    // ----> Frame size
-    int w,h;
-    this->cap_1.getFrameSize(w,h);
-    // <---- Frame size
-    // ----> Initialize calibration
-
-    cv::Mat cameraMatrix_left, cameraMatrix_right;
-    sl_oc::tools::initCalibration(calibration_file, cv::Size(w/2,h), this->map_left_x, this->map_left_y, this->map_right_x, this->map_right_y,
-                    cameraMatrix_left, cameraMatrix_right);
+  std::string calibration_file;
+  // ZED Calibration
+  unsigned int serial_number = sn;
+  // Download camera calibration file
+  if( !sl_oc::tools::downloadCalibrationFile(serial_number, calibration_file) )
+  {
+      std::cerr << "Could not load calibration file from Stereolabs servers" << std::endl;
+  }
+  // ----> Frame size
+  int w,h;
+  this->cap_1.getFrameSize(w,h);
+  // <---- Frame size
+  // ----> Initialize calibration
+  cv::Mat cameraMatrix_left, cameraMatrix_right;
+  sl_oc::tools::initCalibration(calibration_file, cv::Size(w/2,h), this->map_left_x, this->map_left_y, this->map_right_x, this->map_right_y,
+                                cameraMatrix_left, cameraMatrix_right);
 
   // END TEST
 
@@ -167,8 +165,8 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
         // cv::Mat frameBGR_1;
         cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
         // <---- Conversion from YUV 4:2:2 to BGR for visualization
-        cv::Rect roi(0, 0, 1280, 720);
-        frameBGR_1 = frameBGR_1(roi);
+        // cv::Rect roi(0, 0, 1280, 720);
+        // frameBGR_1 = frameBGR_1(roi);
 
         // ----> Extract left and right images from side-by-side
         left_raw = frameBGR_1(cv::Rect(0, 0, frameBGR_1.cols / 2, frameBGR_1.rows));
@@ -182,8 +180,10 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
         frameBGR_1(cv::Rect(frameBGR_1.cols / 2, 0, frameBGR_1.cols / 2, frameBGR_1.rows)) = right_rect;
         
     }
-  cv::imwrite("/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel_test/config/freeze.png", frameBGR_1);
 
+    cv::imwrite("/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel_test/config/freeze.png", left_rect);
+
+  
 
   RCLCPP_INFO(this->get_logger(), "Point to Pixel Node INITIALIZED");
 
@@ -263,8 +263,10 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
         cv::remap(left_raw, left_rect, this->map_left_x, this->map_left_y, cv::INTER_LINEAR );
         cv::remap(right_raw, right_rect, this->map_right_x, this->map_right_y, cv::INTER_LINEAR );
         
-        frameBGR_1(cv::Rect(0, 0, frameBGR_1.cols / 2, frameBGR_1.rows)) = left_rect;
-        frameBGR_1(cv::Rect(frameBGR_1.cols / 2, 0, frameBGR_1.cols / 2, frameBGR_1.rows)) = right_rect;
+        // frameBGR_1(cv::Rect(0, 0, frameBGR_1.cols / 2, frameBGR_1.rows)) = left_rect;
+        // frameBGR_1(cv::Rect(frameBGR_1.cols / 2, 0, frameBGR_1.cols / 2, frameBGR_1.rows)) = right_rect;
+
+        frameBGR_1 = left_rect;
 
     }
 
@@ -279,7 +281,7 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
 
   std::tuple<int, float> ppm = this->identify_color(pixel_1, frameBGR_1);
 
-  cv::drawMarker(frameBGR_1, cv::Point(pixel_1(0), pixel_1(1)), 'red');
+  cv::drawMarker(frameBGR_1, cv::Point(pixel_1(0), pixel_1(1)), 'r');
   cv::imshow("Transformed Point", frameBGR_1);
 
   while (true) {

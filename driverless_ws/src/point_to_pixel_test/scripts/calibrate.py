@@ -93,24 +93,25 @@ def calculate_projection_matrix(cam_points: np.ndarray, lidar_points: np.ndarray
     if cam_points.shape[0] < min_points:
         raise ValueError(f"At least {min_points} points required")
     
-    # Normalize points
-    norm_cam, norm_lidar, T, U = normalize_points(cam_points, lidar_points)
+    # # Normalize points
+    # norm_cam, norm_lidar, T, U = normalize_points(cam_points, lidar_points)
     
     # Build DLT matrix with normalized coordinates
     mat = []
-    for i in range(norm_cam.shape[0]):
-        X, Y, Z = norm_lidar[i]
-        u, v = norm_cam[i]
+    for i in range(lidar_points.shape[0]):
+        X, Y, Z = lidar_points[i]
+        u, v = cam_points[i]
         mat.append([-X, -Y, -Z, -1, 0, 0, 0, 0, u*X, u*Y, u*Z, u])
         mat.append([0, 0, 0, 0, -X, -Y, -Z, -1, v*X, v*Y, v*Z, v])
     
     # Solve using SVD
     _, _, Vt = np.linalg.svd(np.array(mat))
-    P_normalized = Vt[-1].reshape(3, 4)
+    P = Vt[-1].reshape(3, 4)
+    # P_normalized = Vt[-1].reshape(3, 4)
     
     # Denormalize the projection matrix
-    T_inv = np.linalg.inv(T)
-    P = T_inv @ P_normalized @ U
+    # T_inv = np.linalg.inv(T)
+    # P = T_inv @ P_normalized @ U
     
     return P
 
@@ -202,7 +203,7 @@ class LidarInputDialog:
         self.top.destroy()
 
 class CalibrationUI:
-    def __init__(self, min_points: int = 6, width=800, height=450, frame_path: str = ""):
+    def __init__(self, min_points: int = 12, width=800, height=450, frame_path: str = ""):
         self.min_points = min_points
         self.calibration_data = CalibrationData()
         self.current_frame = None
