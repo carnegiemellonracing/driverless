@@ -1,0 +1,704 @@
+[INFO] [1739659185.085980521] [slam_validation]: 
+Sync Callback
+[INFO] [1739659185.192104654] [slam_validation]: 
+Sync Callback
+[INFO] [1739659185.192238302] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659185.192284195] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659185.192294321] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659185.192300945] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659185.192307476] [slam_validation]: Running SLAM
+[INFO] [1739659185.192732171] [slam_validation]: Processing first pose
+[INFO] [1739659185.192770324] [slam_validation]: Finished processing first pose
+[INFO] [1739659185.201960025] [slam_validation]: update_poses time: 9
+[INFO] [1739659185.202016576] [slam_validation]: Bearing of first pose from cur_pose: 0.000000
+[INFO] [1739659185.202141356] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659185.202156576] [slam_validation]: close_to_start: true
+[INFO] [1739659185.202163156] [slam_validation]: heading_like_start: true | cur_heading: 1.539243, start_heading 1.539243
+[INFO] [1739659185.202171199] [slam_validation]: loop closure time: 0
+[INFO] [1739659185.202180751] [slam_validation]: est_retrieval time: 0
+[INFO] [1739659185.202372770] [slam_validation]: Data association time: 0
+[INFO] [1739659185.206211065] [slam_validation]: update_landmarks time: 3
+[INFO] [1739659185.207777742] [slam_validation]: vis_setup time: 1
+[INFO] [1739659185.207799910] [slam_validation]: SLAM run step | Step call time: 15
+
+[INFO] [1739659185.207807321] [slam_validation]: pose_num: 0 | n_landmarks: 24
+
+
+[INFO] [1739659185.292211564] [slam_validation]: 
+Sync Callback
+[INFO] [1739659185.292289144] [slam_validation]: 	Time between sync_callbacks: 84
+[INFO] [1739659185.292328848] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659185.292346377] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659185.292356713] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659185.292364331] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659185.292372465] [slam_validation]: Running SLAM
+[INFO] [1739659185.292801044] [slam_validation]: End of prev step to cur step: 85
+[INFO] [1739659185.292835661] [slam_validation]: ||velocity|| = 9.583548
+[INFO] [1739659185.292847440] [slam_validation]: Car is moving
+[INFO] [1739659185.292854452] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659185.292872003] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659185.292881552] [slam_validation]: prev_pose: 0.349232 13.756425 1.539243
+[INFO] [1739659185.292892577] [slam_validation]: new_pose: 0.386013 14.713499 1.532384
+[INFO] [1739659185.292902094] [slam_validation]: odometry: 0.036781 0.957074 -0.006859
+[INFO] [1739659185.292911151] [slam_validation]: imu_offset_global_odom: 0.376547 14.415585 1.532384
+[INFO] [1739659185.292920770] [slam_validation]: 
+
+[INFO] [1739659185.293125008] [slam_validation]: update_poses time: 0
+[INFO] [1739659185.293155358] [slam_validation]: Bearing of first pose from cur_pose: 3.129516
+[INFO] [1739659185.293167562] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659185.293175616] [slam_validation]: close_to_start: false
+[INFO] [1739659185.293183527] [slam_validation]: heading_like_start: true | cur_heading: 1.532384, start_heading 1.539243
+[INFO] [1739659185.293192174] [slam_validation]: loop closure time: 0
+[INFO] [1739659185.294817971] [slam_validation]: est_retrieval time: 1
+[INFO] [1739659185.297451810] [slam_validation]: Data association time: 2
+[INFO] [1739659185.300795850] [slam_validation]: update_landmarks time: 3
+[INFO] [1739659185.318669781] [slam_validation]: vis_setup time: 17
+[INFO] [1739659185.318702413] [slam_validation]: SLAM run step | Step call time: 25
+
+[INFO] [1739659185.318710408] [slam_validation]: pose_num: 1 | n_landmarks: 24
+
+
+[INFO] [1739659185.385823717] [slam_validation]: 
+Sync Callback
+[INFO] [1739659185.385865486] [slam_validation]: 	Time between sync_callbacks: 67
+[INFO] [1739659185.385901801] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659185.385916844] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659185.385962405] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659185.385975691] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659185.385986088] [slam_validation]: Running SLAM
+[INFO] [1739659185.386394102] [slam_validation]: End of prev step to cur step: 67
+[INFO] [1739659185.386424275] [slam_validation]: ||velocity|| = 9.511129
+[INFO] [1739659185.386435625] [slam_validation]: Car is moving
+[INFO] [1739659185.386441935] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659185.386459453] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659185.386469277] [slam_validation]: prev_pose: 0.386013 14.713499 1.532384
+[INFO] [1739659185.386479678] [slam_validation]: new_pose: 0.428893 15.663337 1.525682
+[INFO] [1739659185.386488926] [slam_validation]: odometry: 0.042880 0.949839 -0.006702
+[INFO] [1739659185.386497322] [slam_validation]: imu_offset_global_odom: 0.419989 15.367036 1.525682
+[INFO] [1739659185.386506742] [slam_validation]: 
+
+[INFO] [1739659185.387300550] [slam_validation]: update_poses time: 0
+[INFO] [1739659185.387393262] [slam_validation]: Bearing of first pose from cur_pose: 3.123932
+[INFO] [1739659185.387406566] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659185.387415214] [slam_validation]: close_to_start: false
+[INFO] [1739659185.387422097] [slam_validation]: heading_like_start: true | cur_heading: 1.525682, start_heading 1.539243
+[INFO] [1739659185.387430532] [slam_validation]: loop closure time: 0
+[INFO] [1739659185.389407288] [slam_validation]: est_retrieval time: 1
+[INFO] [1739659185.392549704] [slam_validation]: Data association time: 2
+[INFO] [1739659185.395044253] [slam_validation]: update_landmarks time: 2
+[INFO] [1739659185.396039778] [slam_validation]: vis_setup time: 0
+[INFO] [1739659185.396057957] [slam_validation]: SLAM run step | Step call time: 9
+
+[INFO] [1739659185.396066220] [slam_validation]: pose_num: 2 | n_landmarks: 25
+
+
+[INFO] [1739659185.492554910] [slam_validation]: 
+Sync Callback
+[INFO] [1739659185.492634748] [slam_validation]: 	Time between sync_callbacks: 96
+[INFO] [1739659185.492683194] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659185.492708083] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659185.492717074] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659185.492725082] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659185.492732901] [slam_validation]: Running SLAM
+[INFO] [1739659185.493199960] [slam_validation]: End of prev step to cur step: 97
+[INFO] [1739659185.493242268] [slam_validation]: ||velocity|| = 9.562661
+[INFO] [1739659185.493262704] [slam_validation]: Car is moving
+[INFO] [1739659185.493273054] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659185.493300256] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659185.493310660] [slam_validation]: prev_pose: 0.428893 15.663337 1.525682
+[INFO] [1739659185.493321308] [slam_validation]: new_pose: 0.473950 16.618365 1.523653
+[INFO] [1739659185.493334346] [slam_validation]: odometry: 0.045057 0.955028 -0.002029
+[INFO] [1739659185.493345278] [slam_validation]: imu_offset_global_odom: 0.465161 16.313737 1.523653
+[INFO] [1739659185.493355737] [slam_validation]: 
+
+[INFO] [1739659185.494807883] [slam_validation]: update_poses time: 1
+[INFO] [1739659185.494878284] [slam_validation]: Bearing of first pose from cur_pose: 3.123015
+[INFO] [1739659185.494902992] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659185.494921748] [slam_validation]: close_to_start: false
+[INFO] [1739659185.494933807] [slam_validation]: heading_like_start: true | cur_heading: 1.523653, start_heading 1.539243
+[INFO] [1739659185.494961136] [slam_validation]: loop closure time: 0
+[INFO] [1739659185.497762191] [slam_validation]: est_retrieval time: 2
+[INFO] [1739659185.500604582] [slam_validation]: Data association time: 2
+[INFO] [1739659185.504037711] [slam_validation]: update_landmarks time: 3
+[INFO] [1739659185.505711387] [slam_validation]: vis_setup time: 1
+[INFO] [1739659185.505748048] [slam_validation]: SLAM run step | Step call time: 12
+
+[INFO] [1739659185.505760910] [slam_validation]: pose_num: 3 | n_landmarks: 49
+
+
+[INFO] [1739659185.585804442] [slam_validation]: 
+Sync Callback
+[INFO] [1739659185.585847864] [slam_validation]: 	Time between sync_callbacks: 80
+[INFO] [1739659185.585883512] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659185.585901366] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659185.585910005] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659185.585917693] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659185.585924993] [slam_validation]: Running SLAM
+[INFO] [1739659185.586344524] [slam_validation]: End of prev step to cur step: 80
+[INFO] [1739659185.586375898] [slam_validation]: ||velocity|| = 9.614111
+[INFO] [1739659185.586387529] [slam_validation]: Car is moving
+[INFO] [1739659185.586393804] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659185.586413486] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659185.586423483] [slam_validation]: prev_pose: 0.473950 16.618365 1.523653
+[INFO] [1739659185.586434240] [slam_validation]: new_pose: 0.511569 17.579175 1.531663
+[INFO] [1739659185.586443197] [slam_validation]: odometry: 0.037619 0.960810 0.008011
+[INFO] [1739659185.586455658] [slam_validation]: imu_offset_global_odom: 0.505251 17.271868 1.531663
+[INFO] [1739659185.586464909] [slam_validation]: 
+
+[INFO] [1739659185.586793817] [slam_validation]: update_poses time: 0
+[INFO] [1739659185.586966659] [slam_validation]: Bearing of first pose from cur_pose: 3.131594
+[INFO] [1739659185.586980358] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659185.586988346] [slam_validation]: close_to_start: false
+[INFO] [1739659185.586996172] [slam_validation]: heading_like_start: true | cur_heading: 1.531663, start_heading 1.539243
+[INFO] [1739659185.587004644] [slam_validation]: loop closure time: 0
+[INFO] [1739659185.591084477] [slam_validation]: est_retrieval time: 4
+[INFO] [1739659185.596955543] [slam_validation]: Data association time: 5
+[INFO] [1739659185.599872848] [slam_validation]: update_landmarks time: 2
+[INFO] [1739659185.601501644] [slam_validation]: vis_setup time: 1
+[INFO] [1739659185.601521014] [slam_validation]: SLAM run step | Step call time: 15
+
+[INFO] [1739659185.601529505] [slam_validation]: pose_num: 4 | n_landmarks: 50
+
+
+[INFO] [1739659185.685808954] [slam_validation]: 
+Sync Callback
+[INFO] [1739659185.685854218] [slam_validation]: 	Time between sync_callbacks: 84
+[INFO] [1739659185.685893559] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659185.685908744] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659185.685917121] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659185.685924304] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659185.685931479] [slam_validation]: Running SLAM
+[INFO] [1739659185.686368925] [slam_validation]: End of prev step to cur step: 84
+[INFO] [1739659185.686398882] [slam_validation]: ||velocity|| = 9.640720
+[INFO] [1739659185.686415309] [slam_validation]: Car is moving
+[INFO] [1739659185.686422022] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659185.686439551] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659185.686449368] [slam_validation]: prev_pose: 0.511569 17.579175 1.531664
+[INFO] [1739659185.686460614] [slam_validation]: new_pose: 0.539633 18.543165 1.541692
+[INFO] [1739659185.686470718] [slam_validation]: odometry: 0.028064 0.963989 0.010029
+[INFO] [1739659185.686479114] [slam_validation]: imu_offset_global_odom: 0.529530 18.236254 1.541692
+[INFO] [1739659185.686487689] [slam_validation]: 
+
+[INFO] [1739659185.687026589] [slam_validation]: update_poses time: 0
+[INFO] [1739659185.687132418] [slam_validation]: Bearing of first pose from cur_pose: 3.141564
+[INFO] [1739659185.687145737] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659185.687154191] [slam_validation]: close_to_start: false
+[INFO] [1739659185.687175697] [slam_validation]: heading_like_start: true | cur_heading: 1.541692, start_heading 1.539243
+[INFO] [1739659185.687188416] [slam_validation]: loop closure time: 0
+[INFO] [1739659185.692826904] [slam_validation]: est_retrieval time: 5
+[INFO] [1739659185.698443774] [slam_validation]: Data association time: 5
+[INFO] [1739659185.705970324] [slam_validation]: update_landmarks time: 7
+[INFO] [1739659185.707894788] [slam_validation]: vis_setup time: 1
+[INFO] [1739659185.707917299] [slam_validation]: SLAM run step | Step call time: 21
+
+[INFO] [1739659185.707925059] [slam_validation]: pose_num: 5 | n_landmarks: 52
+
+
+[INFO] [1739659185.785891055] [slam_validation]: 
+Sync Callback
+[INFO] [1739659185.785932977] [slam_validation]: 	Time between sync_callbacks: 77
+[INFO] [1739659185.785969835] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659185.785983879] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659185.785991853] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659185.786021698] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659185.786030895] [slam_validation]: Running SLAM
+[INFO] [1739659185.786448527] [slam_validation]: End of prev step to cur step: 78
+[INFO] [1739659185.786479183] [slam_validation]: ||velocity|| = 9.716900
+[INFO] [1739659185.786490039] [slam_validation]: Car is moving
+[INFO] [1739659185.786497195] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659185.786516293] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659185.786527657] [slam_validation]: prev_pose: 0.539633 18.543165 1.541692
+[INFO] [1739659185.786538918] [slam_validation]: new_pose: 0.580126 19.514095 1.529115
+[INFO] [1739659185.786548987] [slam_validation]: odometry: 0.040493 0.970931 -0.012577
+[INFO] [1739659185.786558309] [slam_validation]: imu_offset_global_odom: 0.572173 19.205876 1.529115
+[INFO] [1739659185.786568557] [slam_validation]: 
+
+[INFO] [1739659185.787014188] [slam_validation]: update_poses time: 0
+[INFO] [1739659185.787041000] [slam_validation]: Bearing of first pose from cur_pose: 3.129659
+[INFO] [1739659185.787054525] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659185.787064524] [slam_validation]: close_to_start: false
+[INFO] [1739659185.787071574] [slam_validation]: heading_like_start: true | cur_heading: 1.529115, start_heading 1.539243
+[INFO] [1739659185.787080092] [slam_validation]: loop closure time: 0
+[INFO] [1739659185.814043029] [slam_validation]: est_retrieval time: 26
+[INFO] [1739659185.820056196] [slam_validation]: Data association time: 5
+[INFO] [1739659185.828288759] [slam_validation]: update_landmarks time: 8
+[INFO] [1739659185.830557146] [slam_validation]: vis_setup time: 2
+[INFO] [1739659185.830578461] [slam_validation]: SLAM run step | Step call time: 44
+
+[INFO] [1739659185.830586804] [slam_validation]: pose_num: 6 | n_landmarks: 52
+
+
+[INFO] [1739659185.892766611] [slam_validation]: 
+Sync Callback
+[INFO] [1739659185.892820127] [slam_validation]: 	Time between sync_callbacks: 62
+[INFO] [1739659185.892868184] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659185.892891834] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659185.892900519] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659185.892908891] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659185.892916963] [slam_validation]: Running SLAM
+[INFO] [1739659185.893342266] [slam_validation]: End of prev step to cur step: 62
+[INFO] [1739659185.893373071] [slam_validation]: ||velocity|| = 9.718922
+[INFO] [1739659185.893384558] [slam_validation]: Car is moving
+[INFO] [1739659185.893390896] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659185.893409066] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659185.893418664] [slam_validation]: prev_pose: 0.580126 19.514095 1.529115
+[INFO] [1739659185.893429449] [slam_validation]: new_pose: 0.646620 20.483638 1.502321
+[INFO] [1739659185.893439695] [slam_validation]: odometry: 0.066494 0.969543 -0.026794
+[INFO] [1739659185.893448897] [slam_validation]: imu_offset_global_odom: 0.629696 20.179642 1.502321
+[INFO] [1739659185.893471352] [slam_validation]: 
+
+[INFO] [1739659185.896627066] [slam_validation]: update_poses time: 3
+[INFO] [1739659185.896668737] [slam_validation]: Bearing of first pose from cur_pose: 3.104674
+[INFO] [1739659185.896683595] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659185.896693326] [slam_validation]: close_to_start: false
+[INFO] [1739659185.896701394] [slam_validation]: heading_like_start: true | cur_heading: 1.502321, start_heading 1.539243
+[INFO] [1739659185.896711251] [slam_validation]: loop closure time: 0
+[INFO] [1739659185.926006626] [slam_validation]: est_retrieval time: 29
+[INFO] [1739659185.932011690] [slam_validation]: Data association time: 5
+[INFO] [1739659185.941783850] [slam_validation]: update_landmarks time: 9
+[INFO] [1739659185.944332219] [slam_validation]: vis_setup time: 2
+[INFO] [1739659185.944353389] [slam_validation]: SLAM run step | Step call time: 50
+
+[INFO] [1739659185.944361282] [slam_validation]: pose_num: 7 | n_landmarks: 55
+
+
+[INFO] [1739659185.986026478] [slam_validation]: 
+Sync Callback
+[INFO] [1739659185.986091123] [slam_validation]: 	Time between sync_callbacks: 41
+[INFO] [1739659185.986136437] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659185.986154049] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659185.986173497] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659185.986181308] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659185.986189329] [slam_validation]: Running SLAM
+[INFO] [1739659185.986624364] [slam_validation]: End of prev step to cur step: 42
+[INFO] [1739659185.986655671] [slam_validation]: ||velocity|| = 9.597088
+[INFO] [1739659185.986667448] [slam_validation]: Car is moving
+[INFO] [1739659185.986674787] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659185.986693484] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659185.986703786] [slam_validation]: prev_pose: 0.646620 20.483638 1.502321
+[INFO] [1739659185.986715189] [slam_validation]: new_pose: 0.771969 21.436213 1.439958
+[INFO] [1739659185.986725831] [slam_validation]: odometry: 0.125349 0.952575 -0.062363
+[INFO] [1739659185.986735293] [slam_validation]: imu_offset_global_odom: 0.764069 21.132769 1.439958
+[INFO] [1739659185.986745249] [slam_validation]: 
+
+[INFO] [1739659185.986921014] [slam_validation]: update_poses time: 0
+[INFO] [1739659185.986957724] [slam_validation]: Bearing of first pose from cur_pose: 3.046690
+[INFO] [1739659185.986977246] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659185.986994640] [slam_validation]: close_to_start: false
+[INFO] [1739659185.987009607] [slam_validation]: heading_like_start: true | cur_heading: 1.439958, start_heading 1.539243
+[INFO] [1739659185.987019745] [slam_validation]: loop closure time: 0
+[INFO] [1739659186.022041759] [slam_validation]: est_retrieval time: 35
+[INFO] [1739659186.028842989] [slam_validation]: Data association time: 6
+[INFO] [1739659186.041807388] [slam_validation]: update_landmarks time: 12
+[INFO] [1739659186.044929713] [slam_validation]: vis_setup time: 2
+[INFO] [1739659186.044951549] [slam_validation]: SLAM run step | Step call time: 58
+
+[INFO] [1739659186.044960415] [slam_validation]: pose_num: 8 | n_landmarks: 57
+
+
+[INFO] [1739659186.086000100] [slam_validation]: 
+Sync Callback
+[INFO] [1739659186.086039198] [slam_validation]: 	Time between sync_callbacks: 41
+[INFO] [1739659186.086076854] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659186.086118451] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659186.086130967] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659186.086138656] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659186.086145374] [slam_validation]: Running SLAM
+[INFO] [1739659186.086578426] [slam_validation]: End of prev step to cur step: 41
+[INFO] [1739659186.086616267] [slam_validation]: ||velocity|| = 9.623816
+[INFO] [1739659186.086628600] [slam_validation]: Car is moving
+[INFO] [1739659186.086635930] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659186.086668690] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659186.086682145] [slam_validation]: prev_pose: 0.771969 21.436214 1.439958
+[INFO] [1739659186.086693469] [slam_validation]: new_pose: 0.866198 22.393550 1.472684
+[INFO] [1739659186.086702938] [slam_validation]: odometry: 0.094229 0.957337 0.032726
+[INFO] [1739659186.086715894] [slam_validation]: imu_offset_global_odom: 0.857858 22.090626 1.472684
+[INFO] [1739659186.086725889] [slam_validation]: 
+
+[INFO] [1739659186.087145956] [slam_validation]: update_poses time: 0
+[INFO] [1739659186.087171068] [slam_validation]: Bearing of first pose from cur_pose: 3.082048
+[INFO] [1739659186.087182046] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659186.087189386] [slam_validation]: close_to_start: false
+[INFO] [1739659186.087196280] [slam_validation]: heading_like_start: true | cur_heading: 1.472684, start_heading 1.539243
+[INFO] [1739659186.087205048] [slam_validation]: loop closure time: 0
+[INFO] [1739659186.122122266] [slam_validation]: est_retrieval time: 34
+[INFO] [1739659186.129144476] [slam_validation]: Data association time: 6
+[INFO] [1739659186.151811638] [slam_validation]: update_landmarks time: 22
+[INFO] [1739659186.155392311] [slam_validation]: vis_setup time: 3
+[INFO] [1739659186.155419599] [slam_validation]: SLAM run step | Step call time: 68
+
+[INFO] [1739659186.155428237] [slam_validation]: pose_num: 9 | n_landmarks: 58
+
+
+[INFO] [1739659186.185945953] [slam_validation]: 
+Sync Callback
+[INFO] [1739659186.185997171] [slam_validation]: 	Time between sync_callbacks: 30
+[INFO] [1739659186.186036354] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659186.186054443] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659186.186064611] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659186.186073090] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659186.186081438] [slam_validation]: Running SLAM
+[INFO] [1739659186.186578551] [slam_validation]: End of prev step to cur step: 31
+[INFO] [1739659186.186611869] [slam_validation]: ||velocity|| = 9.526576
+[INFO] [1739659186.186624159] [slam_validation]: Car is moving
+[INFO] [1739659186.186632409] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659186.186652009] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659186.186662491] [slam_validation]: prev_pose: 0.866198 22.393550 1.472684
+[INFO] [1739659186.186674837] [slam_validation]: new_pose: 0.928002 23.344274 1.505880
+[INFO] [1739659186.186685402] [slam_validation]: odometry: 0.061804 0.950724 0.033195
+[INFO] [1739659186.186703503] [slam_validation]: imu_offset_global_odom: 0.922094 23.043320 1.505880
+[INFO] [1739659186.186715012] [slam_validation]: 
+
+[INFO] [1739659186.190692023] [slam_validation]: update_poses time: 4
+[INFO] [1739659186.190730205] [slam_validation]: Bearing of first pose from cur_pose: 3.116304
+[INFO] [1739659186.190746939] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659186.190758904] [slam_validation]: close_to_start: false
+[INFO] [1739659186.190768079] [slam_validation]: heading_like_start: true | cur_heading: 1.505880, start_heading 1.539243
+[INFO] [1739659186.190778488] [slam_validation]: loop closure time: 0
+[INFO] [1739659186.240662230] [slam_validation]: est_retrieval time: 49
+[INFO] [1739659186.249228621] [slam_validation]: Data association time: 8
+[INFO] [1739659186.273224892] [slam_validation]: update_landmarks time: 23
+[INFO] [1739659186.277145248] [slam_validation]: vis_setup time: 3
+[INFO] [1739659186.277167445] [slam_validation]: SLAM run step | Step call time: 90
+
+[INFO] [1739659186.277176033] [slam_validation]: pose_num: 10 | n_landmarks: 60
+
+
+[INFO] [1739659186.285855192] [slam_validation]: 
+Sync Callback
+[INFO] [1739659186.285891667] [slam_validation]: 	Time between sync_callbacks: 8
+[INFO] [1739659186.285927074] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659186.285941007] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659186.285979658] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659186.285990279] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659186.285998556] [slam_validation]: Running SLAM
+[INFO] [1739659186.286477924] [slam_validation]: End of prev step to cur step: 9
+[INFO] [1739659186.286509628] [slam_validation]: ||velocity|| = 9.553201
+[INFO] [1739659186.286521716] [slam_validation]: Car is moving
+[INFO] [1739659186.286529827] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659186.286548116] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659186.286557829] [slam_validation]: prev_pose: 0.928002 23.344274 1.505880
+[INFO] [1739659186.286569793] [slam_validation]: new_pose: 0.937074 24.299529 1.561300
+[INFO] [1739659186.286580185] [slam_validation]: odometry: 0.009072 0.955255 0.055420
+[INFO] [1739659186.286590015] [slam_validation]: imu_offset_global_odom: 0.935126 23.998445 1.561300
+[INFO] [1739659186.286600478] [slam_validation]: 
+
+[INFO] [1739659186.286768787] [slam_validation]: update_poses time: 0
+[INFO] [1739659186.286797032] [slam_validation]: Bearing of first pose from cur_pose: 3.112630
+[INFO] [1739659186.286810019] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659186.286818287] [slam_validation]: close_to_start: false
+[INFO] [1739659186.286824777] [slam_validation]: heading_like_start: true | cur_heading: 1.561300, start_heading 1.539243
+[INFO] [1739659186.286832885] [slam_validation]: loop closure time: 0
+[INFO] [1739659186.346728954] [slam_validation]: est_retrieval time: 59
+[INFO] [1739659186.356162071] [slam_validation]: Data association time: 9
+[INFO] [1739659186.382830841] [slam_validation]: update_landmarks time: 26
+[INFO] [1739659186.386680628] [slam_validation]: vis_setup time: 3
+[INFO] [1739659186.386707795] [slam_validation]: SLAM run step | Step call time: 100
+
+[INFO] [1739659186.386715980] [slam_validation]: pose_num: 11 | n_landmarks: 63
+
+
+[INFO] [1739659186.387663210] [slam_validation]: 
+Sync Callback
+[INFO] [1739659186.387683869] [slam_validation]: 	Time between sync_callbacks: 0
+[INFO] [1739659186.387716030] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659186.387726012] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659186.387733590] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659186.387740024] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659186.387746483] [slam_validation]: Running SLAM
+[INFO] [1739659186.388171501] [slam_validation]: End of prev step to cur step: 1
+[INFO] [1739659186.388195446] [slam_validation]: ||velocity|| = 9.406912
+[INFO] [1739659186.388206863] [slam_validation]: Car is moving
+[INFO] [1739659186.388215011] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659186.388229701] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659186.388238981] [slam_validation]: prev_pose: 0.937074 24.299529 1.561300
+[INFO] [1739659186.388253717] [slam_validation]: new_pose: 0.865648 25.237466 1.646802
+[INFO] [1739659186.388264197] [slam_validation]: odometry: -0.071426 0.937937 0.085503
+[INFO] [1739659186.388273041] [slam_validation]: imu_offset_global_odom: 0.858222 24.940977 1.646802
+[INFO] [1739659186.388282075] [slam_validation]: 
+
+[INFO] [1739659186.388438452] [slam_validation]: update_poses time: 0
+[INFO] [1739659186.388462332] [slam_validation]: Bearing of first pose from cur_pose: 3.031332
+[INFO] [1739659186.388477428] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659186.388486714] [slam_validation]: close_to_start: false
+[INFO] [1739659186.388494661] [slam_validation]: heading_like_start: true | cur_heading: 1.646802, start_heading 1.539243
+[INFO] [1739659186.388503526] [slam_validation]: loop closure time: 0
+[INFO] [1739659186.452004163] [slam_validation]: est_retrieval time: 63
+[INFO] [1739659186.461960785] [slam_validation]: Data association time: 9
+[INFO] [1739659186.496749659] [slam_validation]: update_landmarks time: 34
+[INFO] [1739659186.500835850] [slam_validation]: vis_setup time: 4
+[INFO] [1739659186.500865575] [slam_validation]: SLAM run step | Step call time: 112
+
+[INFO] [1739659186.500887774] [slam_validation]: pose_num: 12 | n_landmarks: 63
+
+
+[INFO] [1739659186.502163216] [slam_validation]: 
+Sync Callback
+[INFO] [1739659186.502185747] [slam_validation]: 	Time between sync_callbacks: 1
+[INFO] [1739659186.502219896] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659186.502231661] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659186.502240009] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659186.502247378] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659186.502254353] [slam_validation]: Running SLAM
+[INFO] [1739659186.502685059] [slam_validation]: End of prev step to cur step: 1
+[INFO] [1739659186.502710203] [slam_validation]: ||velocity|| = 9.278247
+[INFO] [1739659186.502721131] [slam_validation]: Car is moving
+[INFO] [1739659186.502729274] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659186.502745984] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659186.502766106] [slam_validation]: prev_pose: 0.865648 25.237466 1.646802
+[INFO] [1739659186.502778465] [slam_validation]: new_pose: 0.753094 26.158427 1.692407
+[INFO] [1739659186.502789024] [slam_validation]: odometry: -0.112554 0.920960 0.045605
+[INFO] [1739659186.502799184] [slam_validation]: imu_offset_global_odom: 0.742938 25.865969 1.692407
+[INFO] [1739659186.502808983] [slam_validation]: 
+
+[INFO] [1739659186.511359941] [slam_validation]: update_poses time: 8
+[INFO] [1739659186.511398940] [slam_validation]: Bearing of first pose from cur_pose: 2.991169
+[INFO] [1739659186.511415181] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659186.511425436] [slam_validation]: close_to_start: false
+[INFO] [1739659186.511433626] [slam_validation]: heading_like_start: true | cur_heading: 1.692407, start_heading 1.539243
+[INFO] [1739659186.511443855] [slam_validation]: loop closure time: 0
+[INFO] [1739659186.612053630] [slam_validation]: est_retrieval time: 100
+[INFO] [1739659186.620859289] [slam_validation]: Data association time: 8
+[INFO] [1739659186.659028590] [slam_validation]: update_landmarks time: 38
+[INFO] [1739659186.664000894] [slam_validation]: vis_setup time: 4
+[INFO] [1739659186.664041124] [slam_validation]: SLAM run step | Step call time: 161
+
+[INFO] [1739659186.664050971] [slam_validation]: pose_num: 13 | n_landmarks: 65
+
+
+[INFO] [1739659186.665428554] [slam_validation]: 
+Sync Callback
+[INFO] [1739659186.665471617] [slam_validation]: 	Time between sync_callbacks: 1
+[INFO] [1739659186.665510615] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659186.665546107] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659186.665558004] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659186.665567268] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659186.665575332] [slam_validation]: Running SLAM
+[INFO] [1739659186.666150875] [slam_validation]: End of prev step to cur step: 2
+[INFO] [1739659186.666196509] [slam_validation]: ||velocity|| = 9.178107
+[INFO] [1739659186.666211703] [slam_validation]: Car is moving
+[INFO] [1739659186.666219437] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659186.666239359] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659186.666251421] [slam_validation]: prev_pose: 0.753094 26.158427 1.692407
+[INFO] [1739659186.666263902] [slam_validation]: new_pose: 0.611514 27.066510 1.725461
+[INFO] [1739659186.666290262] [slam_validation]: odometry: -0.141580 0.908083 0.033054
+[INFO] [1739659186.666301357] [slam_validation]: imu_offset_global_odom: 0.603746 26.779179 1.725461
+[INFO] [1739659186.666312485] [slam_validation]: 
+
+[INFO] [1739659186.666552294] [slam_validation]: update_poses time: 0
+[INFO] [1739659186.666579493] [slam_validation]: Bearing of first pose from cur_pose: 2.964240
+[INFO] [1739659186.666595900] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659186.666620832] [slam_validation]: close_to_start: false
+[INFO] [1739659186.666629107] [slam_validation]: heading_like_start: true | cur_heading: 1.725461, start_heading 1.539243
+[INFO] [1739659186.666655859] [slam_validation]: loop closure time: 0
+[INFO] [1739659186.753896136] [slam_validation]: est_retrieval time: 87
+[INFO] [1739659186.764813776] [slam_validation]: Data association time: 10
+[INFO] [1739659186.805886608] [slam_validation]: update_landmarks time: 41
+[INFO] [1739659186.810582316] [slam_validation]: vis_setup time: 4
+[INFO] [1739659186.810610357] [slam_validation]: SLAM run step | Step call time: 144
+
+[INFO] [1739659186.810619735] [slam_validation]: pose_num: 14 | n_landmarks: 68
+
+
+[INFO] [1739659186.811617990] [slam_validation]: 
+Sync Callback
+[INFO] [1739659186.811642058] [slam_validation]: 	Time between sync_callbacks: 0
+[INFO] [1739659186.811687180] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659186.811699612] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659186.811708735] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659186.811716412] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659186.811724154] [slam_validation]: Running SLAM
+[INFO] [1739659186.812169762] [slam_validation]: End of prev step to cur step: 1
+[INFO] [1739659186.812197691] [slam_validation]: ||velocity|| = 9.056316
+[INFO] [1739659186.812210166] [slam_validation]: Car is moving
+[INFO] [1739659186.812218227] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659186.812235042] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659186.812245856] [slam_validation]: prev_pose: 0.611514 27.066510 1.725461
+[INFO] [1739659186.812258373] [slam_validation]: new_pose: 0.428709 27.952633 1.774240
+[INFO] [1739659186.812270054] [slam_validation]: odometry: -0.182805 0.886123 0.048779
+[INFO] [1739659186.812282701] [slam_validation]: imu_offset_global_odom: 0.416067 27.668391 1.774240
+[INFO] [1739659186.812294589] [slam_validation]: 
+
+[INFO] [1739659186.812448423] [slam_validation]: update_poses time: 0
+[INFO] [1739659186.812477201] [slam_validation]: Bearing of first pose from cur_pose: 2.922641
+[INFO] [1739659186.812490931] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659186.812501670] [slam_validation]: close_to_start: false
+[INFO] [1739659186.812509357] [slam_validation]: heading_like_start: true | cur_heading: 1.774240, start_heading 1.539243
+[INFO] [1739659186.812520360] [slam_validation]: loop closure time: 0
+[INFO] [1739659186.912400768] [slam_validation]: est_retrieval time: 99
+[INFO] [1739659186.922578917] [slam_validation]: Data association time: 10
+[INFO] [1739659186.969860375] [slam_validation]: update_landmarks time: 47
+[INFO] [1739659186.975720456] [slam_validation]: vis_setup time: 5
+[INFO] [1739659186.975760838] [slam_validation]: SLAM run step | Step call time: 163
+
+[INFO] [1739659186.975771751] [slam_validation]: pose_num: 15 | n_landmarks: 68
+
+
+[INFO] [1739659186.977434623] [slam_validation]: 
+Sync Callback
+[INFO] [1739659186.977456968] [slam_validation]: 	Time between sync_callbacks: 1
+[INFO] [1739659186.977516116] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659186.977529828] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659186.977538082] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659186.977545049] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659186.977551952] [slam_validation]: Running SLAM
+[INFO] [1739659186.978056320] [slam_validation]: End of prev step to cur step: 2
+[INFO] [1739659186.978093607] [slam_validation]: ||velocity|| = 9.035229
+[INFO] [1739659186.978107964] [slam_validation]: Car is moving
+[INFO] [1739659186.978115816] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659186.978133146] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659186.978143516] [slam_validation]: prev_pose: 0.428709 27.952633 1.774240
+[INFO] [1739659186.978155708] [slam_validation]: new_pose: -0.140908 29.667554 1.891485
+[INFO] [1739659186.978183180] [slam_validation]: odometry: -0.569617 1.714920 0.117245
+[INFO] [1739659186.978193865] [slam_validation]: imu_offset_global_odom: -0.093436 29.401719 1.891485
+[INFO] [1739659186.978217727] [slam_validation]: 
+
+[INFO] [1739659186.983282580] [slam_validation]: update_poses time: 5
+[INFO] [1739659186.983321813] [slam_validation]: Bearing of first pose from cur_pose: 2.825290
+[INFO] [1739659186.983354518] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659186.983365897] [slam_validation]: close_to_start: false
+[INFO] [1739659186.983374980] [slam_validation]: heading_like_start: true | cur_heading: 1.891485, start_heading 1.539243
+[INFO] [1739659186.983385599] [slam_validation]: loop closure time: 0
+[INFO] [1739659187.090502566] [slam_validation]: est_retrieval time: 107
+[INFO] [1739659187.101272953] [slam_validation]: Data association time: 10
+[INFO] [1739659187.162241929] [slam_validation]: update_landmarks time: 60
+[INFO] [1739659187.168646730] [slam_validation]: vis_setup time: 6
+[INFO] [1739659187.168674672] [slam_validation]: SLAM run step | Step call time: 190
+
+[INFO] [1739659187.168683971] [slam_validation]: pose_num: 16 | n_landmarks: 71
+
+
+[INFO] [1739659187.170846167] [slam_validation]: 
+Sync Callback
+[INFO] [1739659187.170884602] [slam_validation]: 	Time between sync_callbacks: 2
+[INFO] [1739659187.170920568] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659187.170932473] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659187.170953852] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659187.170962509] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659187.170970883] [slam_validation]: Running SLAM
+[INFO] [1739659187.171502900] [slam_validation]: End of prev step to cur step: 2
+[INFO] [1739659187.171541548] [slam_validation]: ||velocity|| = 9.012342
+[INFO] [1739659187.171556043] [slam_validation]: Car is moving
+[INFO] [1739659187.171564649] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659187.171582332] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659187.171593443] [slam_validation]: prev_pose: -0.140908 29.667554 1.891485
+[INFO] [1739659187.171618260] [slam_validation]: new_pose: -0.493885 30.497054 1.973115
+[INFO] [1739659187.171630368] [slam_validation]: odometry: -0.352977 0.829501 0.081631
+[INFO] [1739659187.171640784] [slam_validation]: imu_offset_global_odom: -0.448221 30.230755 1.973115
+[INFO] [1739659187.171650762] [slam_validation]: 
+
+[INFO] [1739659187.171824970] [slam_validation]: update_poses time: 0
+[INFO] [1739659187.171851785] [slam_validation]: Bearing of first pose from cur_pose: 2.755002
+[INFO] [1739659187.171896274] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659187.171907179] [slam_validation]: close_to_start: false
+[INFO] [1739659187.171916227] [slam_validation]: heading_like_start: true | cur_heading: 1.973115, start_heading 1.539243
+[INFO] [1739659187.171926481] [slam_validation]: loop closure time: 0
+[INFO] [1739659187.312165061] [slam_validation]: est_retrieval time: 140
+[INFO] [1739659187.323035923] [slam_validation]: Data association time: 10
+[INFO] [1739659187.379203759] [slam_validation]: update_landmarks time: 56
+[INFO] [1739659187.385278358] [slam_validation]: vis_setup time: 6
+[INFO] [1739659187.385315130] [slam_validation]: SLAM run step | Step call time: 213
+
+[INFO] [1739659187.385341362] [slam_validation]: pose_num: 17 | n_landmarks: 72
+
+
+[INFO] [1739659187.386238272] [slam_validation]: 
+Sync Callback
+[INFO] [1739659187.386267660] [slam_validation]: 	Time between sync_callbacks: 0
+[INFO] [1739659187.386303579] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659187.386314912] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659187.386323345] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659187.386331136] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659187.386338203] [slam_validation]: Running SLAM
+[INFO] [1739659187.386800338] [slam_validation]: End of prev step to cur step: 1
+[INFO] [1739659187.386828198] [slam_validation]: ||velocity|| = 9.038688
+[INFO] [1739659187.386840080] [slam_validation]: Car is moving
+[INFO] [1739659187.386847926] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659187.386882987] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659187.386898658] [slam_validation]: prev_pose: -0.493885 30.497054 1.973115
+[INFO] [1739659187.386912115] [slam_validation]: new_pose: -0.912830 31.297582 2.052938
+[INFO] [1739659187.386923749] [slam_validation]: odometry: -0.418945 0.800528 0.079823
+[INFO] [1739659187.386934633] [slam_validation]: imu_offset_global_odom: -0.871411 31.028413 2.052938
+[INFO] [1739659187.386945946] [slam_validation]: 
+
+[INFO] [1739659187.397295954] [slam_validation]: update_poses time: 10
+[INFO] [1739659187.397340232] [slam_validation]: Bearing of first pose from cur_pose: 2.688033
+[INFO] [1739659187.397355903] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659187.397365999] [slam_validation]: close_to_start: false
+[INFO] [1739659187.397374689] [slam_validation]: heading_like_start: true | cur_heading: 2.052938, start_heading 1.539243
+[INFO] [1739659187.397385138] [slam_validation]: loop closure time: 0
+[INFO] [1739659187.586114560] [slam_validation]: est_retrieval time: 188
+[INFO] [1739659187.597509345] [slam_validation]: Data association time: 11
+[INFO] [1739659187.701972624] [slam_validation]: update_landmarks time: 104
+[INFO] [1739659187.708005382] [slam_validation]: vis_setup time: 5
+[INFO] [1739659187.708058130] [slam_validation]: SLAM run step | Step call time: 321
+
+[INFO] [1739659187.708067357] [slam_validation]: pose_num: 18 | n_landmarks: 75
+
+
+[INFO] [1739659187.709380594] [slam_validation]: 
+Sync Callback
+[INFO] [1739659187.709401882] [slam_validation]: 	Time between sync_callbacks: 1
+[INFO] [1739659187.709435037] [slam_validation]: 	Cone callback time: 0
+[INFO] [1739659187.709446461] [slam_validation]: 	Position callback time: 0
+[INFO] [1739659187.709454573] [slam_validation]: 	Velocity callback time: 0
+[INFO] [1739659187.709461114] [slam_validation]: 	Sync callback time: 0 
+
+[INFO] [1739659187.709468254] [slam_validation]: Running SLAM
+[INFO] [1739659187.709898760] [slam_validation]: End of prev step to cur step: 1
+[INFO] [1739659187.709923302] [slam_validation]: ||velocity|| = 8.795305
+[INFO] [1739659187.709934876] [slam_validation]: Car is moving
+[INFO] [1739659187.709942247] [slam_validation]: |angular velocity| = 0.000000
+[INFO] [1739659187.709959811] [slam_validation]: 	LOGGING UPDATE_POSES POSE2 VARIABLES:
+[INFO] [1739659187.709969647] [slam_validation]: prev_pose: -0.912830 31.297582 2.052938
+[INFO] [1739659187.709981012] [slam_validation]: new_pose: -2.726522 33.553099 2.248041
+[INFO] [1739659187.709991310] [slam_validation]: odometry: -1.813692 2.255517 0.195103
+[INFO] [1739659187.710000736] [slam_validation]: imu_offset_global_odom: -2.560037 33.439217 2.248041
+[INFO] [1739659187.710010640] [slam_validation]: 
+
+[INFO] [1739659187.710163833] [slam_validation]: update_poses time: 0
+[INFO] [1739659187.710191429] [slam_validation]: Bearing of first pose from cur_pose: 2.544437
+[INFO] [1739659187.710205445] [slam_validation]: 
+Loop closure detection results: 
+[INFO] [1739659187.710214628] [slam_validation]: close_to_start: false
+[INFO] [1739659187.710222540] [slam_validation]: heading_like_start: true | cur_heading: 2.248041, start_heading 1.539243
+[INFO] [1739659187.710232870] [slam_validation]: loop closure time: 0
+[INFO] [1739659187.756692520] [rclcpp]: signal_handler(signal_value=2)

@@ -1,0 +1,8 @@
+1740249397.7129164 [INFO] [launch]: All log files can be found below /home/chip/Documents/driverless/logs/2025-02-22-13-36-37-711911-chip-11811
+1740249397.7130461 [INFO] [launch]: Default logging verbosity is set to INFO
+1740249397.8050511 [INFO] [rosbridge_websocket-1]: process started with pid [11815]
+1740249397.8052018 [INFO] [rosapi_node-2]: process started with pid [11817]
+1740249429.0238216 [WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+1740249429.0255842 [rosapi_node-2] Exiting due to SIGINT
+1740249429.0721893 [INFO] [rosapi_node-2]: process has finished cleanly [pid 11817]
+1740249429.0755019 [INFO] [rosbridge_websocket-1]: process has finished cleanly [pid 11815]

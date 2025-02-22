@@ -1,0 +1,3 @@
+[INFO] [1739662129.534784780] [rosbag2_storage]: Opened database 'fourth-run-mock-demo-stamped.db3' for READ_ONLY.
+[WARN] [1739662129.665930408] [rosbag2_transport]: Ignoring a topic '/actuators_info', reason: package 'interfaces' not found, searching: [/opt/ros/foxy].
+[WARN] [1739662129.665967933] [rosbag2_transport]: Ignoring a topic '/controller_info', reason: package 'interfaces' not found, searching: [/opt/ros/foxy].

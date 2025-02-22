@@ -1,0 +1,27 @@
+[INFO] [1739830803.639756238] [point_to_pixel]: Connected to ZED camera. /dev/video0
+[INFO] [1739830805.689021509] [point_to_pixel]: Point to Pixel Node INITIALIZED
+[INFO] [1739830810.353219578] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739830810.353290179] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739830810.354109563] [point_to_pixel]: x: 1.129842, y: 0.763961, color: -1, conf: 0.001538
+[INFO] [1739830810.354135085] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739830827.591673542] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739830827.591766456] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739830827.592897001] [point_to_pixel]: x: 0.930968, y: 0.642311, color: -1, conf: 0.000000
+[INFO] [1739830827.592932092] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739830845.427786880] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739830845.427852051] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739830845.428932329] [point_to_pixel]: x: 1.129842, y: 0.763961, color: -1, conf: 0.001538
+[INFO] [1739830845.428970785] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739831104.521319437] [rclcpp]: signal_handler(signal_value=2)

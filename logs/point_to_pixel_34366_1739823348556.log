@@ -1,0 +1,3 @@
+[INFO] [1739823348.595326126] [point_to_pixel]: Connected to ZED camera. /dev/video0
+[INFO] [1739823348.596546186] [point_to_pixel]: Point to Pixel Node INITIALIZED
+[INFO] [1739823556.810419645] [rclcpp]: signal_handler(signal_value=2)

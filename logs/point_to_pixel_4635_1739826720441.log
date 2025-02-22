@@ -1,0 +1,22 @@
+[INFO] [1739826720.475130304] [point_to_pixel]: Connected to ZED camera. /dev/video0
+[INFO] [1739826722.478788505] [point_to_pixel]: 720, 2560
+[INFO] [1739826722.540412279] [point_to_pixel]: Point to Pixel Node INITIALIZED
+[INFO] [1739826953.348775762] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739826953.348943319] [point_to_pixel]: 1683137917, 1904050880 
+
+[INFO] [1739826953.349024353] [point_to_pixel]: 720, 2560
+[INFO] [1739826953.351207112] [point_to_pixel]: Transformed Cone: -1, 0.000000
+[INFO] [1739826953.355861578] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739826970.625284985] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739826970.625428841] [point_to_pixel]: 1683137917, 1904050880 
+
+[INFO] [1739826970.625478443] [point_to_pixel]: 720, 2560
+[INFO] [1739826970.627614062] [point_to_pixel]: Transformed Cone: -1, 0.000000
+[INFO] [1739826970.627697154] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739826983.894402349] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739826983.894558464] [point_to_pixel]: 1683137917, 1904050880 
+
+[INFO] [1739826983.894608709] [point_to_pixel]: 720, 2560
+[INFO] [1739826983.895925886] [point_to_pixel]: Transformed Cone: -1, 0.000000
+[INFO] [1739826983.895999022] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739827180.211270746] [rclcpp]: signal_handler(signal_value=2)

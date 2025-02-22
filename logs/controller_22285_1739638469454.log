@@ -1,0 +1,5661 @@
+[INFO] [1739638511.393309013] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0297299
+  torque_fl (Nm): 1.25876
+  torque_fr (Nm): 1.25876
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0
+  y (m): 0
+  yaw (rad): 1.5708
+  speed (m/s): 0
+SVM Latency (ms): 3
+State Projection Latency (ms): 28
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 16
+Controls Latency (ms): 48
+Total Latency (ms): 48
+
+
+[INFO] [1739638511.490048876] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0646943
+  torque_fl (Nm): 1.58544
+  torque_fr (Nm): 1.58544
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -6.92904e-06
+  y (m): 0.000465996
+  yaw (rad): 1.57081
+  speed (m/s): 0.0147291
+SVM Latency (ms): 7
+State Projection Latency (ms): 31
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 44
+Total Latency (ms): 45
+
+
+[INFO] [1739638511.583388905] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.113592
+  torque_fl (Nm): 1.53327
+  torque_fr (Nm): 1.53327
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -7.31707e-05
+  y (m): 0.00225889
+  yaw (rad): 1.57089
+  speed (m/s): 0.0567692
+SVM Latency (ms): 9
+State Projection Latency (ms): 21
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638511.679740620] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.132163
+  torque_fl (Nm): 2.43702
+  torque_fr (Nm): 2.43702
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000290721
+  y (m): 0.00508239
+  yaw (rad): 1.57117
+  speed (m/s): 0.107721
+SVM Latency (ms): 12
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 34
+Total Latency (ms): 34
+
+
+[INFO] [1739638511.810318946] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.131615
+  torque_fl (Nm): 0.298577
+  torque_fr (Nm): 0.298577
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000545739
+  y (m): 0.00816844
+  yaw (rad): 1.5715
+  speed (m/s): 0.173302
+SVM Latency (ms): 12
+State Projection Latency (ms): 45
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 64
+Total Latency (ms): 65
+
+
+[INFO] [1739638511.862337108] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.179479
+  torque_fl (Nm): 2.03125
+  torque_fr (Nm): 2.03125
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000598463
+  y (m): 0.00898866
+  yaw (rad): 1.57156
+  speed (m/s): 0.195976
+SVM Latency (ms): 4
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 17
+Total Latency (ms): 17
+
+
+[INFO] [1739638512.010135223] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.184574
+  torque_fl (Nm): 1.24326
+  torque_fr (Nm): 1.24326
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00125686
+  y (m): 0.0137304
+  yaw (rad): 1.5724
+  speed (m/s): 0.273435
+SVM Latency (ms): 13
+State Projection Latency (ms): 44
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 64
+Total Latency (ms): 65
+
+
+[INFO] [1739638512.062579345] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.114768
+  torque_fl (Nm): 0.382726
+  torque_fr (Nm): 0.382726
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00129529
+  y (m): 0.0137527
+  yaw (rad): 1.57245
+  speed (m/s): 0.321037
+SVM Latency (ms): 3
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 17
+Total Latency (ms): 17
+
+
+[INFO] [1739638512.183492166] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0739815
+  torque_fl (Nm): 3.93436
+  torque_fr (Nm): 3.93436
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00096949
+  y (m): 0.0166392
+  yaw (rad): 1.57203
+  speed (m/s): 0.318675
+SVM Latency (ms): 11
+State Projection Latency (ms): 20
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638512.290326203] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.123869
+  torque_fl (Nm): 3.51203
+  torque_fr (Nm): 3.51203
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000745097
+  y (m): 0.0198366
+  yaw (rad): 1.57174
+  speed (m/s): 0.361549
+SVM Latency (ms): 17
+State Projection Latency (ms): 20
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 44
+Total Latency (ms): 45
+
+
+[INFO] [1739638512.371255510] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.290798
+  torque_fl (Nm): 1.84398
+  torque_fr (Nm): 1.84398
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00118511
+  y (m): 0.0188095
+  yaw (rad): 1.56929
+  speed (m/s): 0.42804
+SVM Latency (ms): 5
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 26
+Total Latency (ms): 26
+
+
+[INFO] [1739638512.464476496] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.259835
+  torque_fl (Nm): 3.57561
+  torque_fr (Nm): 3.57561
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00312225
+  y (m): 0.0205844
+  yaw (rad): 1.56682
+  speed (m/s): 0.495972
+SVM Latency (ms): 3
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 19
+Total Latency (ms): 19
+
+
+[INFO] [1739638512.558141369] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.208332
+  torque_fl (Nm): 2.49984
+  torque_fr (Nm): 2.49984
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00322452
+  y (m): 0.0238835
+  yaw (rad): 1.5667
+  speed (m/s): 0.569099
+SVM Latency (ms): 3
+State Projection Latency (ms): 1
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 13
+Total Latency (ms): 13
+
+
+[INFO] [1739638512.664640157] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.167521
+  torque_fl (Nm): 3.57466
+  torque_fr (Nm): 3.57466
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00294737
+  y (m): 0.0273952
+  yaw (rad): 1.56706
+  speed (m/s): 0.644741
+SVM Latency (ms): 3
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 19
+Total Latency (ms): 19
+
+
+[INFO] [1739638512.757810179] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.185791
+  torque_fl (Nm): 3.9624
+  torque_fr (Nm): 3.9624
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0026441
+  y (m): 0.0306599
+  yaw (rad): 1.56745
+  speed (m/s): 0.720322
+SVM Latency (ms): 3
+State Projection Latency (ms): 1
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 12
+Total Latency (ms): 12
+
+
+[INFO] [1739638512.894278046] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.172162
+  torque_fl (Nm): 3.75527
+  torque_fr (Nm): 3.75527
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00480836
+  y (m): 0.0495653
+  yaw (rad): 1.56478
+  speed (m/s): 0.810808
+SVM Latency (ms): 22
+State Projection Latency (ms): 15
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 48
+Total Latency (ms): 49
+
+
+[INFO] [1739638512.970836114] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.16138
+  torque_fl (Nm): 3.9624
+  torque_fr (Nm): 3.9624
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00349771
+  y (m): 0.039227
+  yaw (rad): 1.56639
+  speed (m/s): 0.873463
+SVM Latency (ms): 5
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638513.065923039] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.125111
+  torque_fl (Nm): 3.9624
+  torque_fr (Nm): 3.9624
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00350435
+  y (m): 0.0419081
+  yaw (rad): 1.56639
+  speed (m/s): 0.94855
+SVM Latency (ms): 4
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 8
+Controls Latency (ms): 20
+Total Latency (ms): 21
+
+
+[INFO] [1739638513.171299307] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0931418
+  torque_fl (Nm): 3.9624
+  torque_fr (Nm): 3.9624
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00292853
+  y (m): 0.0452452
+  yaw (rad): 1.56712
+  speed (m/s): 1.02436
+SVM Latency (ms): 4
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 26
+Total Latency (ms): 26
+
+
+[INFO] [1739638513.279147668] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0141737
+  torque_fl (Nm): 3.9624
+  torque_fr (Nm): 3.9624
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00276309
+  y (m): 0.0570583
+  yaw (rad): 1.56736
+  speed (m/s): 1.10615
+SVM Latency (ms): 12
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 33
+Total Latency (ms): 34
+
+
+[INFO] [1739638513.357479596] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.078033
+  torque_fl (Nm): 2.28379
+  torque_fr (Nm): 2.28379
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000368911
+  y (m): 0.050213
+  yaw (rad): 1.57126
+  speed (m/s): 1.17525
+SVM Latency (ms): 3
+State Projection Latency (ms): 1
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 12
+Total Latency (ms): 12
+
+
+[INFO] [1739638513.463098455] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0638152
+  torque_fl (Nm): 3.89367
+  torque_fr (Nm): 3.89367
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00216972
+  y (m): 0.0536511
+  yaw (rad): 1.5735
+  speed (m/s): 1.25148
+SVM Latency (ms): 3
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 18
+Total Latency (ms): 18
+
+
+[INFO] [1739638513.569649246] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0651289
+  torque_fl (Nm): 3.79591
+  torque_fr (Nm): 3.79591
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00190396
+  y (m): 0.0574611
+  yaw (rad): 1.56843
+  speed (m/s): 1.32786
+SVM Latency (ms): 3
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 24
+
+
+[INFO] [1739638513.663809590] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0845304
+  torque_fl (Nm): 3.9624
+  torque_fr (Nm): 3.9624
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.002061
+  y (m): 0.0608087
+  yaw (rad): 1.56824
+  speed (m/s): 1.40402
+SVM Latency (ms): 3
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 18
+Total Latency (ms): 18
+
+
+[INFO] [1739638513.769830589] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00404797
+  torque_fl (Nm): 3.05759
+  torque_fr (Nm): 3.05759
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00285635
+  y (m): 0.0647133
+  yaw (rad): 1.56726
+  speed (m/s): 1.48042
+SVM Latency (ms): 4
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 24
+
+
+[INFO] [1739638513.864258013] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0552611
+  torque_fl (Nm): 3.75029
+  torque_fr (Nm): 3.75029
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000148651
+  y (m): 0.0734443
+  yaw (rad): 1.57099
+  speed (m/s): 1.55915
+SVM Latency (ms): 7
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 18
+Total Latency (ms): 19
+
+
+[INFO] [1739638513.957789400] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.286389
+  torque_fl (Nm): 3.76809
+  torque_fr (Nm): 3.76809
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00204176
+  y (m): 0.0706172
+  yaw (rad): 1.57332
+  speed (m/s): 1.63234
+SVM Latency (ms): 3
+State Projection Latency (ms): 1
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 12
+Total Latency (ms): 12
+
+
+[INFO] [1739638514.064117412] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.267387
+  torque_fl (Nm): 3.80401
+  torque_fr (Nm): 3.80401
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0111909
+  y (m): 0.0725288
+  yaw (rad): 1.58459
+  speed (m/s): 1.70736
+SVM Latency (ms): 3
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 18
+Total Latency (ms): 19
+
+
+[INFO] [1739638514.185005926] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.228882
+  torque_fl (Nm): 3.85641
+  torque_fr (Nm): 3.85641
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0178379
+  y (m): 0.120635
+  yaw (rad): 1.59215
+  speed (m/s): 1.80144
+SVM Latency (ms): 28
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 39
+Total Latency (ms): 39
+
+
+[INFO] [1739638514.264072965] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.181618
+  torque_fl (Nm): 3.8168
+  torque_fr (Nm): 3.8168
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0101507
+  y (m): 0.0826686
+  yaw (rad): 1.58323
+  speed (m/s): 1.85911
+SVM Latency (ms): 4
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 18
+Total Latency (ms): 19
+
+
+[INFO] [1739638514.369925988] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.147567
+  torque_fl (Nm): 3.90453
+  torque_fr (Nm): 3.90453
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00828958
+  y (m): 0.0855173
+  yaw (rad): 1.58093
+  speed (m/s): 1.93438
+SVM Latency (ms): 4
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638514.464138148] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0301077
+  torque_fl (Nm): 3.82753
+  torque_fr (Nm): 3.82753
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00708777
+  y (m): 0.0900914
+  yaw (rad): 1.57944
+  speed (m/s): 2.01058
+SVM Latency (ms): 5
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 18
+Total Latency (ms): 19
+
+
+[INFO] [1739638514.571077337] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0305702
+  torque_fl (Nm): 3.67605
+  torque_fr (Nm): 3.67605
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00170141
+  y (m): 0.105856
+  yaw (rad): 1.57285
+  speed (m/s): 2.09108
+SVM Latency (ms): 10
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638514.717237650] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.00420487
+  torque_fl (Nm): 3.78324
+  torque_fr (Nm): 3.78324
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00157241
+  y (m): 0.096713
+  yaw (rad): 1.5727
+  speed (m/s): 2.16265
+SVM Latency (ms): 4
+State Projection Latency (ms): 60
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 71
+Total Latency (ms): 72
+
+
+[INFO] [1739638514.769780652] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0168176
+  torque_fl (Nm): 3.83929
+  torque_fr (Nm): 3.83929
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.000241668
+  y (m): 0.104496
+  yaw (rad): 1.57051
+  speed (m/s): 2.24031
+SVM Latency (ms): 6
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 24
+
+
+[INFO] [1739638514.863689855] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0108267
+  torque_fl (Nm): 3.91706
+  torque_fr (Nm): 3.91706
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.000920875
+  y (m): 0.102971
+  yaw (rad): 1.56968
+  speed (m/s): 2.31484
+SVM Latency (ms): 4
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 18
+Total Latency (ms): 18
+
+
+[INFO] [1739638514.970814401] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0289693
+  torque_fl (Nm): 3.94632
+  torque_fr (Nm): 3.94632
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000624334
+  y (m): 0.107446
+  yaw (rad): 1.57155
+  speed (m/s): 2.39137
+SVM Latency (ms): 4
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638515.064700447] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0678029
+  torque_fl (Nm): 3.8568
+  torque_fr (Nm): 3.8568
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00171372
+  y (m): 0.110356
+  yaw (rad): 1.56873
+  speed (m/s): 2.46739
+SVM Latency (ms): 4
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 19
+Total Latency (ms): 19
+
+
+[INFO] [1739638515.185020164] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0376802
+  torque_fl (Nm): 3.85916
+  torque_fr (Nm): 3.85916
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00588564
+  y (m): 0.157338
+  yaw (rad): 1.5639
+  speed (m/s): 2.55656
+SVM Latency (ms): 21
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 39
+Total Latency (ms): 39
+
+
+[INFO] [1739638515.277739495] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0158358
+  torque_fl (Nm): 3.77832
+  torque_fr (Nm): 3.77832
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00271515
+  y (m): 0.132732
+  yaw (rad): 1.56757
+  speed (m/s): 2.62417
+SVM Latency (ms): 10
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 32
+Total Latency (ms): 32
+
+
+[INFO] [1739638515.372049535] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0401358
+  torque_fl (Nm): 3.93335
+  torque_fr (Nm): 3.93335
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00117565
+  y (m): 0.13668
+  yaw (rad): 1.57219
+  speed (m/s): 2.70036
+SVM Latency (ms): 10
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 8
+Controls Latency (ms): 26
+Total Latency (ms): 27
+
+
+[INFO] [1739638515.465253285] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0178048
+  torque_fl (Nm): 3.82478
+  torque_fr (Nm): 3.82478
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00266007
+  y (m): 0.122739
+  yaw (rad): 1.57398
+  speed (m/s): 2.77166
+SVM Latency (ms): 4
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 8
+Controls Latency (ms): 20
+Total Latency (ms): 20
+
+
+[INFO] [1739638515.570631698] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0158218
+  torque_fl (Nm): 3.93739
+  torque_fr (Nm): 3.93739
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00122541
+  y (m): 0.127145
+  yaw (rad): 1.56934
+  speed (m/s): 2.84809
+SVM Latency (ms): 4
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638515.664699029] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0107745
+  torque_fl (Nm): 3.93805
+  torque_fr (Nm): 3.93805
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00111788
+  y (m): 0.130227
+  yaw (rad): 1.56947
+  speed (m/s): 2.92422
+SVM Latency (ms): 4
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 19
+Total Latency (ms): 19
+
+
+[INFO] [1739638515.770885085] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0279755
+  torque_fl (Nm): 3.82665
+  torque_fr (Nm): 3.82665
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000780548
+  y (m): 0.133742
+  yaw (rad): 1.57173
+  speed (m/s): 3.00043
+SVM Latency (ms): 4
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638515.864018569] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00670196
+  torque_fl (Nm): 3.7846
+  torque_fr (Nm): 3.7846
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00210229
+  y (m): 0.137983
+  yaw (rad): 1.57329
+  speed (m/s): 3.07682
+SVM Latency (ms): 4
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 18
+Total Latency (ms): 18
+
+
+[INFO] [1739638515.970624189] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0188608
+  torque_fl (Nm): 3.82075
+  torque_fr (Nm): 3.82075
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000515763
+  y (m): 0.141571
+  yaw (rad): 1.57141
+  speed (m/s): 3.15304
+SVM Latency (ms): 4
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638516.064575460] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0202884
+  torque_fl (Nm): 3.75463
+  torque_fr (Nm): 3.75463
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00148608
+  y (m): 0.144063
+  yaw (rad): 1.57255
+  speed (m/s): 3.229
+SVM Latency (ms): 4
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 19
+Total Latency (ms): 19
+
+
+[INFO] [1739638516.171596843] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0693775
+  torque_fl (Nm): 3.81103
+  torque_fr (Nm): 3.81103
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00178718
+  y (m): 0.159547
+  yaw (rad): 1.56871
+  speed (m/s): 3.30796
+SVM Latency (ms): 8
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 26
+Total Latency (ms): 26
+
+
+[INFO] [1739638516.264583066] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0853197
+  torque_fl (Nm): 3.88596
+  torque_fr (Nm): 3.88596
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00601349
+  y (m): 0.15714
+  yaw (rad): 1.56375
+  speed (m/s): 3.38277
+SVM Latency (ms): 6
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 19
+Total Latency (ms): 19
+
+
+[INFO] [1739638516.371038249] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.087315
+  torque_fl (Nm): 3.78755
+  torque_fr (Nm): 3.78755
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0074245
+  y (m): 0.157573
+  yaw (rad): 1.5621
+  speed (m/s): 3.4582
+SVM Latency (ms): 5
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638516.464127532] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.100386
+  torque_fl (Nm): 3.94497
+  torque_fr (Nm): 3.94497
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00804167
+  y (m): 0.165925
+  yaw (rad): 1.56142
+  speed (m/s): 3.53531
+SVM Latency (ms): 6
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 18
+Total Latency (ms): 19
+
+
+[INFO] [1739638516.584060676] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.131263
+  torque_fl (Nm): 3.76462
+  torque_fr (Nm): 3.76462
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0119549
+  y (m): 0.209077
+  yaw (rad): 1.5572
+  speed (m/s): 3.61969
+SVM Latency (ms): 17
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638516.664990498] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0986881
+  torque_fl (Nm): 3.9026
+  torque_fr (Nm): 3.9026
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0120645
+  y (m): 0.165091
+  yaw (rad): 1.55673
+  speed (m/s): 3.68573
+SVM Latency (ms): 4
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 19
+Total Latency (ms): 19
+
+
+[INFO] [1739638516.771610420] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0206433
+  torque_fl (Nm): 3.85278
+  torque_fr (Nm): 3.85278
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0104132
+  y (m): 0.187579
+  yaw (rad): 1.55881
+  speed (m/s): 3.76554
+SVM Latency (ms): 9
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 26
+Total Latency (ms): 26
+
+
+[INFO] [1739638516.864319078] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0791061
+  torque_fl (Nm): 3.81304
+  torque_fr (Nm): 3.81304
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00201995
+  y (m): 0.175731
+  yaw (rad): 1.56846
+  speed (m/s): 3.83854
+SVM Latency (ms): 5
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 18
+Total Latency (ms): 19
+
+
+[INFO] [1739638516.970928891] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.036851
+  torque_fl (Nm): 3.27969
+  torque_fr (Nm): 3.27969
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00811727
+  y (m): 0.183121
+  yaw (rad): 1.58016
+  speed (m/s): 3.91544
+SVM Latency (ms): 6
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638517.078669353] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0327643
+  torque_fl (Nm): 3.8246
+  torque_fr (Nm): 3.8246
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00508429
+  y (m): 0.23896
+  yaw (rad): 1.57648
+  speed (m/s): 4.00153
+SVM Latency (ms): 19
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 33
+Total Latency (ms): 33
+
+
+[INFO] [1739638517.184062804] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0590535
+  torque_fl (Nm): 3.76446
+  torque_fr (Nm): 3.76446
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00490084
+  y (m): 0.256555
+  yaw (rad): 1.57622
+  speed (m/s): 4.08014
+SVM Latency (ms): 22
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638517.264023402] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0513262
+  torque_fl (Nm): 3.8075
+  torque_fr (Nm): 3.8075
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00677912
+  y (m): 0.202766
+  yaw (rad): 1.57853
+  speed (m/s): 4.14555
+SVM Latency (ms): 8
+State Projection Latency (ms): 2
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 18
+Total Latency (ms): 18
+
+
+[INFO] [1739638517.397632211] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0327774
+  torque_fl (Nm): 3.87293
+  torque_fr (Nm): 3.87293
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00897442
+  y (m): 0.293694
+  yaw (rad): 1.58053
+  speed (m/s): 4.23739
+SVM Latency (ms): 29
+State Projection Latency (ms): 15
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 51
+Total Latency (ms): 52
+
+
+[INFO] [1739638517.463708968] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0388297
+  torque_fl (Nm): 3.77366
+  torque_fr (Nm): 3.77366
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00397967
+  y (m): 0.213347
+  yaw (rad): 1.57531
+  speed (m/s): 4.2984
+SVM Latency (ms): 9
+State Projection Latency (ms): 1
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 18
+Total Latency (ms): 18
+
+
+[INFO] [1739638517.570990327] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00303616
+  torque_fl (Nm): 3.83802
+  torque_fr (Nm): 3.83802
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00512385
+  y (m): 0.229734
+  yaw (rad): 1.57655
+  speed (m/s): 4.37674
+SVM Latency (ms): 12
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638517.678042471] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0225302
+  torque_fl (Nm): 3.65569
+  torque_fr (Nm): 3.65569
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000441216
+  y (m): 0.250551
+  yaw (rad): 1.57129
+  speed (m/s): 4.45581
+SVM Latency (ms): 16
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 32
+Total Latency (ms): 32
+
+
+[INFO] [1739638517.770533046] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0060552
+  torque_fl (Nm): 3.66154
+  torque_fr (Nm): 3.66154
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00283965
+  y (m): 0.220735
+  yaw (rad): 1.56759
+  speed (m/s): 4.52627
+SVM Latency (ms): 8
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638517.877335450] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0134365
+  torque_fl (Nm): 3.86749
+  torque_fr (Nm): 3.86749
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.000822155
+  y (m): 0.236274
+  yaw (rad): 1.56987
+  speed (m/s): 4.6044
+SVM Latency (ms): 11
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638517.971425292] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0195792
+  torque_fl (Nm): 3.79869
+  torque_fr (Nm): 3.79869
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00201705
+  y (m): 0.257236
+  yaw (rad): 1.56857
+  speed (m/s): 4.68337
+SVM Latency (ms): 14
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638518.090816881] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00389234
+  torque_fl (Nm): 3.7875
+  torque_fr (Nm): 3.7875
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00424346
+  y (m): 0.352929
+  yaw (rad): 1.56634
+  speed (m/s): 4.77419
+SVM Latency (ms): 33
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 44
+Total Latency (ms): 45
+
+
+[INFO] [1739638518.185056842] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00166095
+  torque_fl (Nm): 3.77271
+  torque_fr (Nm): 3.77271
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00070395
+  y (m): 0.300729
+  yaw (rad): 1.57155
+  speed (m/s): 4.84128
+SVM Latency (ms): 22
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 39
+Total Latency (ms): 39
+
+
+[INFO] [1739638518.290649137] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.000208517
+  torque_fl (Nm): 3.73053
+  torque_fr (Nm): 3.73053
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000324747
+  y (m): 0.324061
+  yaw (rad): 1.57114
+  speed (m/s): 4.92033
+SVM Latency (ms): 25
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 44
+Total Latency (ms): 45
+
+
+[INFO] [1739638518.370676639] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.00447257
+  torque_fl (Nm): 3.72026
+  torque_fr (Nm): 3.72026
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 2.61456e-05
+  y (m): 0.250777
+  yaw (rad): 1.57076
+  speed (m/s): 4.98455
+SVM Latency (ms): 10
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638518.477154990] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0165805
+  torque_fl (Nm): 3.7817
+  torque_fr (Nm): 3.7817
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.000671278
+  y (m): 0.253989
+  yaw (rad): 1.57006
+  speed (m/s): 5.06068
+SVM Latency (ms): 10
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638518.572463091] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0173478
+  torque_fl (Nm): 3.89689
+  torque_fr (Nm): 3.89689
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00285622
+  y (m): 0.290061
+  yaw (rad): 1.56769
+  speed (m/s): 5.14164
+SVM Latency (ms): 16
+State Projection Latency (ms): 1
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 8
+Controls Latency (ms): 27
+Total Latency (ms): 27
+
+
+[INFO] [1739638518.677132348] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0252036
+  torque_fl (Nm): 3.80399
+  torque_fr (Nm): 3.80399
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00267087
+  y (m): 0.263075
+  yaw (rad): 1.56785
+  speed (m/s): 5.21326
+SVM Latency (ms): 10
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638518.784073716] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0186643
+  torque_fl (Nm): 3.83628
+  torque_fr (Nm): 3.83628
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00546553
+  y (m): 0.353066
+  yaw (rad): 1.57654
+  speed (m/s): 5.30184
+SVM Latency (ms): 26
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638518.917754031] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0434016
+  torque_fl (Nm): 3.81351
+  torque_fr (Nm): 3.81351
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00651797
+  y (m): 0.522288
+  yaw (rad): 1.57709
+  speed (m/s): 5.40123
+SVM Latency (ms): 56
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 71
+Total Latency (ms): 72
+
+
+[INFO] [1739638518.970781348] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0203098
+  torque_fl (Nm): 3.85834
+  torque_fr (Nm): 3.85834
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00789089
+  y (m): 0.303801
+  yaw (rad): 1.57931
+  speed (m/s): 5.44594
+SVM Latency (ms): 15
+State Projection Latency (ms): 2
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638519.077349855] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.00483383
+  torque_fl (Nm): 3.84705
+  torque_fr (Nm): 3.84705
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00346197
+  y (m): 0.287572
+  yaw (rad): 1.57457
+  speed (m/s): 5.51925
+SVM Latency (ms): 12
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 32
+Total Latency (ms): 32
+
+
+[INFO] [1739638519.171927039] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00358192
+  torque_fl (Nm): 3.9276
+  torque_fr (Nm): 3.9276
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.000894307
+  y (m): 0.306755
+  yaw (rad): 1.56984
+  speed (m/s): 5.5975
+SVM Latency (ms): 14
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 8
+Controls Latency (ms): 26
+Total Latency (ms): 26
+
+
+[INFO] [1739638519.303911186] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0216319
+  torque_fl (Nm): 3.78884
+  torque_fr (Nm): 3.78884
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00109098
+  y (m): 0.465142
+  yaw (rad): 1.57187
+  speed (m/s): 5.69437
+SVM Latency (ms): 41
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 58
+Total Latency (ms): 58
+
+
+[INFO] [1739638519.371991509] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.031624
+  torque_fl (Nm): 3.77828
+  torque_fr (Nm): 3.77828
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0038582
+  y (m): 0.299019
+  yaw (rad): 1.56662
+  speed (m/s): 5.74777
+SVM Latency (ms): 11
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 26
+Total Latency (ms): 26
+
+
+[INFO] [1739638519.476964044] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.000872393
+  torque_fl (Nm): 3.92108
+  torque_fr (Nm): 3.92108
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00579272
+  y (m): 0.305836
+  yaw (rad): 1.56455
+  speed (m/s): 5.82431
+SVM Latency (ms): 12
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638519.584530830] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0221862
+  torque_fl (Nm): 3.77375
+  torque_fr (Nm): 3.77375
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.000174612
+  y (m): 0.400305
+  yaw (rad): 1.57057
+  speed (m/s): 5.91216
+SVM Latency (ms): 27
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 39
+
+
+[INFO] [1739638519.690465203] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0702179
+  torque_fl (Nm): 3.82336
+  torque_fr (Nm): 3.82336
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00531812
+  y (m): 0.384001
+  yaw (rad): 1.57629
+  speed (m/s): 5.98562
+SVM Latency (ms): 24
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 44
+Total Latency (ms): 45
+
+
+[INFO] [1739638519.783916132] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0251623
+  torque_fl (Nm): 3.29796
+  torque_fr (Nm): 3.29796
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0151973
+  y (m): 0.352041
+  yaw (rad): 1.58678
+  speed (m/s): 6.05717
+SVM Latency (ms): 18
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638519.877430931] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0544525
+  torque_fl (Nm): 3.76357
+  torque_fr (Nm): 3.76357
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00555451
+  y (m): 0.358542
+  yaw (rad): 1.57662
+  speed (m/s): 6.13354
+SVM Latency (ms): 18
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638519.971053700] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0120956
+  torque_fl (Nm): 3.94542
+  torque_fr (Nm): 3.94542
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0105961
+  y (m): 0.321895
+  yaw (rad): 1.58212
+  speed (m/s): 6.20468
+SVM Latency (ms): 11
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638520.104449259] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0372379
+  torque_fl (Nm): 3.7852
+  torque_fr (Nm): 3.7852
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00404223
+  y (m): 0.504175
+  yaw (rad): 1.56686
+  speed (m/s): 6.30243
+SVM Latency (ms): 39
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 58
+Total Latency (ms): 59
+
+
+[INFO] [1739638520.197527157] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00411789
+  torque_fl (Nm): 3.87553
+  torque_fr (Nm): 3.87553
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0121891
+  y (m): 0.49575
+  yaw (rad): 1.58271
+  speed (m/s): 6.3769
+SVM Latency (ms): 37
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 51
+Total Latency (ms): 52
+
+
+[INFO] [1739638520.277191920] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0449403
+  torque_fl (Nm): 3.75846
+  torque_fr (Nm): 3.75846
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000815691
+  y (m): 0.330788
+  yaw (rad): 1.57168
+  speed (m/s): 6.43286
+SVM Latency (ms): 11
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638520.397377502] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0316775
+  torque_fl (Nm): 3.05564
+  torque_fr (Nm): 3.05564
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0163206
+  y (m): 0.538533
+  yaw (rad): 1.58642
+  speed (m/s): 6.53282
+SVM Latency (ms): 42
+State Projection Latency (ms): 2
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 51
+Total Latency (ms): 52
+
+
+[INFO] [1739638520.477142227] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.162573
+  torque_fl (Nm): 2.69692
+  torque_fr (Nm): 2.69692
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00680434
+  y (m): 0.350312
+  yaw (rad): 1.57796
+  speed (m/s): 6.58656
+SVM Latency (ms): 13
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638520.583927088] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0572016
+  torque_fl (Nm): 1.21047
+  torque_fr (Nm): 1.21047
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0465976
+  y (m): 0.441202
+  yaw (rad): 1.61759
+  speed (m/s): 6.67262
+SVM Latency (ms): 26
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638520.676980472] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.212889
+  torque_fl (Nm): 3.16273
+  torque_fr (Nm): 3.16273
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0132111
+  y (m): 0.372025
+  yaw (rad): 1.58454
+  speed (m/s): 6.7086
+SVM Latency (ms): 15
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638520.770942594] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0111288
+  torque_fl (Nm): 1.47999
+  torque_fr (Nm): 1.47999
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0473772
+  y (m): 0.355405
+  yaw (rad): 1.62052
+  speed (m/s): 6.76591
+SVM Latency (ms): 12
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638520.877153055] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.192102
+  torque_fl (Nm): 0.489511
+  torque_fr (Nm): 0.489511
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00246875
+  y (m): 0.360108
+  yaw (rad): 1.57338
+  speed (m/s): 6.81889
+SVM Latency (ms): 12
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638520.970498961] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0645438
+  torque_fl (Nm): -1.67589
+  torque_fr (Nm): -1.67589
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0412254
+  y (m): 0.345708
+  yaw (rad): 1.61428
+  speed (m/s): 6.82507
+SVM Latency (ms): 10
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638521.077211236] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0187278
+  torque_fl (Nm): -3.26966
+  torque_fr (Nm): -3.26966
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0138435
+  y (m): 0.349468
+  yaw (rad): 1.58537
+  speed (m/s): 6.71071
+SVM Latency (ms): 11
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638521.170573587] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.102412
+  torque_fl (Nm): -3.45787
+  torque_fr (Nm): -3.45787
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00407695
+  y (m): 0.35422
+  yaw (rad): 1.56652
+  speed (m/s): 6.54325
+SVM Latency (ms): 13
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638521.277294791] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.244553
+  torque_fl (Nm): 0.855781
+  torque_fr (Nm): 0.855781
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0217417
+  y (m): 0.345701
+  yaw (rad): 1.59373
+  speed (m/s): 6.37156
+SVM Latency (ms): 13
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638521.370312356] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0153648
+  torque_fl (Nm): -2.56421
+  torque_fr (Nm): -2.56421
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0480818
+  y (m): 0.318438
+  yaw (rad): 1.62225
+  speed (m/s): 6.31319
+SVM Latency (ms): 10
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638521.477145916] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.137649
+  torque_fl (Nm): -3.9624
+  torque_fr (Nm): -3.9624
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00294359
+  y (m): 0.318175
+  yaw (rad): 1.57395
+  speed (m/s): 6.19302
+SVM Latency (ms): 10
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638521.571129264] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.144118
+  torque_fl (Nm): -3.9624
+  torque_fr (Nm): -3.9624
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0279337
+  y (m): 0.331782
+  yaw (rad): 1.60048
+  speed (m/s): 6.01509
+SVM Latency (ms): 14
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638521.691122762] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.282456
+  torque_fl (Nm): -1.20395
+  torque_fr (Nm): -1.20395
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0333454
+  y (m): 0.370343
+  yaw (rad): 1.53607
+  speed (m/s): 5.8298
+SVM Latency (ms): 22
+State Projection Latency (ms): 15
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 45
+Total Latency (ms): 45
+
+
+[INFO] [1739638521.783953311] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0640366
+  torque_fl (Nm): -3.19849
+  torque_fr (Nm): -3.19849
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0561672
+  y (m): 0.319272
+  yaw (rad): 1.63087
+  speed (m/s): 5.69774
+SVM Latency (ms): 16
+State Projection Latency (ms): 15
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638521.876969415] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0635359
+  torque_fl (Nm): -3.87857
+  torque_fr (Nm): -3.87857
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0118827
+  y (m): 0.308944
+  yaw (rad): 1.58358
+  speed (m/s): 5.54502
+SVM Latency (ms): 14
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638521.983982908] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.24141
+  torque_fl (Nm): -3.58869
+  torque_fr (Nm): -3.58869
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0121912
+  y (m): 0.317943
+  yaw (rad): 1.58385
+  speed (m/s): 5.36777
+SVM Latency (ms): 18
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638522.076916762] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0216504
+  torque_fl (Nm): -3.81696
+  torque_fr (Nm): -3.81696
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0438671
+  y (m): 0.297858
+  yaw (rad): 1.61827
+  speed (m/s): 5.19926
+SVM Latency (ms): 17
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638522.197296189] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.296814
+  torque_fl (Nm): -2.08163
+  torque_fr (Nm): -2.08163
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00544736
+  y (m): 0.399874
+  yaw (rad): 1.56521
+  speed (m/s): 4.99095
+SVM Latency (ms): 38
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 51
+Total Latency (ms): 51
+
+
+[INFO] [1739638522.277173518] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.131467
+  torque_fl (Nm): -2.90087
+  torque_fr (Nm): -2.90087
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0491579
+  y (m): 0.27212
+  yaw (rad): 1.62474
+  speed (m/s): 4.85919
+SVM Latency (ms): 16
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638522.370639309] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.207158
+  torque_fl (Nm): -2.15747
+  torque_fr (Nm): -2.15747
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.020648
+  y (m): 0.266282
+  yaw (rad): 1.59353
+  speed (m/s): 4.68815
+SVM Latency (ms): 16
+State Projection Latency (ms): 2
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638522.477025308] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0614022
+  torque_fl (Nm): -0.853878
+  torque_fr (Nm): -0.853878
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0285639
+  y (m): 0.235505
+  yaw (rad): 1.60279
+  speed (m/s): 4.52489
+SVM Latency (ms): 11
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638522.610505246] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.188414
+  torque_fl (Nm): 3.06299
+  torque_fr (Nm): 3.06299
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0139739
+  y (m): 0.367392
+  yaw (rad): 1.58537
+  speed (m/s): 4.36556
+SVM Latency (ms): 42
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 64
+Total Latency (ms): 65
+
+
+[INFO] [1739638522.677199699] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.311453
+  torque_fl (Nm): 3.82333
+  torque_fr (Nm): 3.82333
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0252254
+  y (m): 0.23004
+  yaw (rad): 1.59914
+  speed (m/s): 4.38887
+SVM Latency (ms): 12
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638522.783601586] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.212722
+  torque_fl (Nm): 3.77052
+  torque_fr (Nm): 3.77052
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0464134
+  y (m): 0.24745
+  yaw (rad): 1.62243
+  speed (m/s): 4.43174
+SVM Latency (ms): 16
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 37
+Total Latency (ms): 38
+
+
+[INFO] [1739638522.877371787] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.249996
+  torque_fl (Nm): 3.70069
+  torque_fr (Nm): 3.70069
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0308579
+  y (m): 0.246058
+  yaw (rad): 1.60515
+  speed (m/s): 4.50565
+SVM Latency (ms): 14
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638522.971085597] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.201288
+  torque_fl (Nm): 3.70012
+  torque_fr (Nm): 3.70012
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0366102
+  y (m): 0.246645
+  yaw (rad): 1.61154
+  speed (m/s): 4.58054
+SVM Latency (ms): 14
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638523.078605793] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.151736
+  torque_fl (Nm): 3.01671
+  torque_fr (Nm): 3.01671
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0330993
+  y (m): 0.274945
+  yaw (rad): 1.60707
+  speed (m/s): 4.65984
+SVM Latency (ms): 19
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 32
+Total Latency (ms): 33
+
+
+[INFO] [1739638523.197523292] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.118896
+  torque_fl (Nm): 3.75845
+  torque_fr (Nm): 3.75845
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0316408
+  y (m): 0.33904
+  yaw (rad): 1.60429
+  speed (m/s): 4.74506
+SVM Latency (ms): 31
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 51
+Total Latency (ms): 52
+
+
+[INFO] [1739638523.277181377] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.203087
+  torque_fl (Nm): 3.72752
+  torque_fr (Nm): 3.72752
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0166246
+  y (m): 0.240752
+  yaw (rad): 1.58936
+  speed (m/s): 4.80448
+SVM Latency (ms): 10
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638523.383934962] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.111113
+  torque_fl (Nm): 3.64764
+  torque_fr (Nm): 3.64764
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0332408
+  y (m): 0.273775
+  yaw (rad): 1.60725
+  speed (m/s): 4.88493
+SVM Latency (ms): 16
+State Projection Latency (ms): 15
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638523.477237734] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.179791
+  torque_fl (Nm): 3.4235
+  torque_fr (Nm): 3.4235
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0173162
+  y (m): 0.26493
+  yaw (rad): 1.58988
+  speed (m/s): 4.95855
+SVM Latency (ms): 13
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638523.583735280] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.157379
+  torque_fl (Nm): 2.08517
+  torque_fr (Nm): 2.08517
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0348553
+  y (m): 0.317657
+  yaw (rad): 1.60812
+  speed (m/s): 5.04187
+SVM Latency (ms): 22
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 37
+Total Latency (ms): 38
+
+
+[INFO] [1739638523.677304983] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.12968
+  torque_fl (Nm): 3.42822
+  torque_fr (Nm): 3.42822
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0254402
+  y (m): 0.272351
+  yaw (rad): 1.59871
+  speed (m/s): 5.11012
+SVM Latency (ms): 13
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638523.771429680] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.129281
+  torque_fl (Nm): 3.40868
+  torque_fr (Nm): 3.40868
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0198967
+  y (m): 0.260947
+  yaw (rad): 1.59277
+  speed (m/s): 5.18368
+SVM Latency (ms): 10
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638523.864643368] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.00098768
+  torque_fl (Nm): 3.61113
+  torque_fr (Nm): 3.61113
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0190505
+  y (m): 0.2519
+  yaw (rad): 1.59194
+  speed (m/s): 5.25775
+SVM Latency (ms): 7
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 19
+Total Latency (ms): 19
+
+
+[INFO] [1739638523.970618912] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.17822
+  torque_fl (Nm): 3.41632
+  torque_fr (Nm): 3.41632
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00013119
+  y (m): 0.265652
+  yaw (rad): 1.57063
+  speed (m/s): 5.33523
+SVM Latency (ms): 9
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638524.077458947] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.126832
+  torque_fl (Nm): 3.6247
+  torque_fr (Nm): 3.6247
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0305499
+  y (m): 0.28587
+  yaw (rad): 1.60407
+  speed (m/s): 5.41361
+SVM Latency (ms): 12
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638524.171604478] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.150991
+  torque_fl (Nm): 3.93282
+  torque_fr (Nm): 3.93282
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0206028
+  y (m): 0.274318
+  yaw (rad): 1.59338
+  speed (m/s): 5.48718
+SVM Latency (ms): 9
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638524.265447971] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.119632
+  torque_fl (Nm): 3.92274
+  torque_fr (Nm): 3.92274
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0237309
+  y (m): 0.265951
+  yaw (rad): 1.59693
+  speed (m/s): 5.56144
+SVM Latency (ms): 7
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 8
+Controls Latency (ms): 19
+Total Latency (ms): 20
+
+
+[INFO] [1739638524.383961220] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.103151
+  torque_fl (Nm): 3.90904
+  torque_fr (Nm): 3.90904
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0232294
+  y (m): 0.320053
+  yaw (rad): 1.59564
+  speed (m/s): 5.64411
+SVM Latency (ms): 16
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638524.477372313] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0382795
+  torque_fl (Nm): 3.89283
+  torque_fr (Nm): 3.89283
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0176944
+  y (m): 0.288109
+  yaw (rad): 1.59005
+  speed (m/s): 5.71528
+SVM Latency (ms): 10
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638524.571193654] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.106327
+  torque_fl (Nm): 3.73363
+  torque_fr (Nm): 3.73363
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00662283
+  y (m): 0.291163
+  yaw (rad): 1.57799
+  speed (m/s): 5.79123
+SVM Latency (ms): 10
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638524.677301934] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.107544
+  torque_fl (Nm): 3.83025
+  torque_fr (Nm): 3.83025
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0186141
+  y (m): 0.293142
+  yaw (rad): 1.59099
+  speed (m/s): 5.86712
+SVM Latency (ms): 9
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638524.784867597] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0804156
+  torque_fl (Nm): 3.69249
+  torque_fr (Nm): 3.69249
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0236463
+  y (m): 0.355951
+  yaw (rad): 1.59561
+  speed (m/s): 5.95071
+SVM Latency (ms): 19
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 39
+
+
+[INFO] [1739638524.877383664] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.13554
+  torque_fl (Nm): 3.71964
+  torque_fr (Nm): 3.71964
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0167335
+  y (m): 0.34036
+  yaw (rad): 1.5885
+  speed (m/s): 6.02416
+SVM Latency (ms): 16
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638524.983939861] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0532403
+  torque_fl (Nm): 3.77753
+  torque_fr (Nm): 3.77753
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0298168
+  y (m): 0.355267
+  yaw (rad): 1.60209
+  speed (m/s): 6.10155
+SVM Latency (ms): 18
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638525.077257159] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0691835
+  torque_fl (Nm): 3.73727
+  torque_fr (Nm): 3.73727
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0115897
+  y (m): 0.354031
+  yaw (rad): 1.58297
+  speed (m/s): 6.17682
+SVM Latency (ms): 17
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638525.170830428] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0520317
+  torque_fl (Nm): 3.84187
+  torque_fr (Nm): 3.84187
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.013931
+  y (m): 0.331192
+  yaw (rad): 1.58561
+  speed (m/s): 6.24963
+SVM Latency (ms): 12
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638525.277470368] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00759258
+  torque_fl (Nm): 3.88141
+  torque_fr (Nm): 3.88141
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0110682
+  y (m): 0.347202
+  yaw (rad): 1.58246
+  speed (m/s): 6.32722
+SVM Latency (ms): 14
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638525.371498544] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00554082
+  torque_fl (Nm): 3.84705
+  torque_fr (Nm): 3.84705
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00152388
+  y (m): 0.330892
+  yaw (rad): 1.57242
+  speed (m/s): 6.40093
+SVM Latency (ms): 11
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638525.490882903] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0622227
+  torque_fl (Nm): 3.54121
+  torque_fr (Nm): 3.54121
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00158583
+  y (m): 0.446021
+  yaw (rad): 1.57239
+  speed (m/s): 6.49019
+SVM Latency (ms): 28
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 45
+Total Latency (ms): 45
+
+
+[INFO] [1739638525.571514324] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0581364
+  torque_fl (Nm): 3.00022
+  torque_fr (Nm): 3.00022
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0140385
+  y (m): 0.364695
+  yaw (rad): 1.55613
+  speed (m/s): 6.55633
+SVM Latency (ms): 15
+State Projection Latency (ms): 2
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638525.677228340] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0628061
+  torque_fl (Nm): 2.24911
+  torque_fr (Nm): 2.24911
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0130147
+  y (m): 0.362389
+  yaw (rad): 1.55719
+  speed (m/s): 6.63171
+SVM Latency (ms): 14
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638525.784637435] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.081913
+  torque_fl (Nm): 0.995666
+  torque_fr (Nm): 0.995666
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0186129
+  y (m): 0.456967
+  yaw (rad): 1.55225
+  speed (m/s): 6.71811
+SVM Latency (ms): 27
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 39
+
+
+[INFO] [1739638525.877359013] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.00988796
+  torque_fl (Nm): -2.42337
+  torque_fr (Nm): -2.42337
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0193563
+  y (m): 0.378756
+  yaw (rad): 1.55073
+  speed (m/s): 6.74425
+SVM Latency (ms): 15
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638525.971661534] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.176823
+  torque_fl (Nm): -0.200832
+  torque_fr (Nm): -0.200832
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00216579
+  y (m): 0.356792
+  yaw (rad): 1.56852
+  speed (m/s): 6.64055
+SVM Latency (ms): 12
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638526.117149384] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0846816
+  torque_fl (Nm): -1.5969
+  torque_fr (Nm): -1.5969
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0723108
+  y (m): 0.585107
+  yaw (rad): 1.50309
+  speed (m/s): 6.52877
+SVM Latency (ms): 49
+State Projection Latency (ms): 15
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 70
+Total Latency (ms): 71
+
+
+[INFO] [1739638526.169514996] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.127027
+  torque_fl (Nm): -2.96222
+  torque_fr (Nm): -2.96222
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0184396
+  y (m): 0.35359
+  yaw (rad): 1.55142
+  speed (m/s): 6.44225
+SVM Latency (ms): 14
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 23
+Total Latency (ms): 24
+
+
+[INFO] [1739638526.277116001] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0863483
+  torque_fl (Nm): -2.69991
+  torque_fr (Nm): -2.69991
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0261878
+  y (m): 0.336573
+  yaw (rad): 1.54304
+  speed (m/s): 6.30589
+SVM Latency (ms): 12
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638526.371057814] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.196071
+  torque_fl (Nm): 2.63992
+  torque_fr (Nm): 2.63992
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0180207
+  y (m): 0.341081
+  yaw (rad): 1.55174
+  speed (m/s): 6.13092
+SVM Latency (ms): 14
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638526.490616191] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0721559
+  torque_fl (Nm): 2.17674
+  torque_fr (Nm): 2.17674
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0501394
+  y (m): 0.400016
+  yaw (rad): 1.51938
+  speed (m/s): 6.1535
+SVM Latency (ms): 25
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 44
+Total Latency (ms): 45
+
+
+[INFO] [1739638526.584592064] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.105776
+  torque_fl (Nm): 1.88725
+  torque_fr (Nm): 1.88725
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0184777
+  y (m): 0.405139
+  yaw (rad): 1.5519
+  speed (m/s): 6.22912
+SVM Latency (ms): 25
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 39
+
+
+[INFO] [1739638526.691391558] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0600473
+  torque_fl (Nm): 2.30247
+  torque_fr (Nm): 2.30247
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0286103
+  y (m): 0.422989
+  yaw (rad): 1.5418
+  speed (m/s): 6.30224
+SVM Latency (ms): 27
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 45
+Total Latency (ms): 45
+
+
+[INFO] [1739638526.797304073] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.128266
+  torque_fl (Nm): 3.13308
+  torque_fr (Nm): 3.13308
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0180034
+  y (m): 0.461378
+  yaw (rad): 1.5529
+  speed (m/s): 6.38036
+SVM Latency (ms): 32
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 51
+Total Latency (ms): 51
+
+
+[INFO] [1739638526.877077738] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.172493
+  torque_fl (Nm): 3.38805
+  torque_fr (Nm): 3.38805
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0308699
+  y (m): 0.383297
+  yaw (rad): 1.53886
+  speed (m/s): 6.44665
+SVM Latency (ms): 19
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638526.984061907] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0915694
+  torque_fl (Nm): 3.18445
+  torque_fr (Nm): 3.18445
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0467094
+  y (m): 0.420637
+  yaw (rad): 1.5234
+  speed (m/s): 6.52642
+SVM Latency (ms): 24
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638527.104041369] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.094761
+  torque_fl (Nm): 3.61893
+  torque_fr (Nm): 3.61893
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0332328
+  y (m): 0.537032
+  yaw (rad): 1.53895
+  speed (m/s): 6.61506
+SVM Latency (ms): 40
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 57
+Total Latency (ms): 58
+
+
+[INFO] [1739638527.170575418] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.169149
+  torque_fl (Nm): 3.71006
+  torque_fr (Nm): 3.71006
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0197456
+  y (m): 0.340468
+  yaw (rad): 1.54991
+  speed (m/s): 6.66799
+SVM Latency (ms): 10
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638527.290739897] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.029579
+  torque_fl (Nm): 3.63006
+  torque_fr (Nm): 3.63006
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0497186
+  y (m): 0.450008
+  yaw (rad): 1.52109
+  speed (m/s): 6.75592
+SVM Latency (ms): 26
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 44
+Total Latency (ms): 45
+
+
+[INFO] [1739638527.397321687] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0599996
+  torque_fl (Nm): 3.42284
+  torque_fr (Nm): 3.42284
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00962862
+  y (m): 0.493575
+  yaw (rad): 1.56137
+  speed (m/s): 6.83595
+SVM Latency (ms): 32
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 51
+Total Latency (ms): 51
+
+
+[INFO] [1739638527.517278222] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.141019
+  torque_fl (Nm): 3.91132
+  torque_fr (Nm): 3.91132
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0284843
+  y (m): 0.663649
+  yaw (rad): 1.54506
+  speed (m/s): 6.93026
+SVM Latency (ms): 55
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 70
+Total Latency (ms): 71
+
+
+[INFO] [1739638527.570640408] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0813007
+  torque_fl (Nm): 3.95234
+  torque_fr (Nm): 3.95234
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0336915
+  y (m): 0.380509
+  yaw (rad): 1.5359
+  speed (m/s): 6.97474
+SVM Latency (ms): 14
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638527.677942361] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0870031
+  torque_fl (Nm): 3.76944
+  torque_fr (Nm): 3.76944
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0205938
+  y (m): 0.401313
+  yaw (rad): 1.54969
+  speed (m/s): 7.0525
+SVM Latency (ms): 16
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 32
+Total Latency (ms): 32
+
+
+[INFO] [1739638527.783984455] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0116272
+  torque_fl (Nm): 3.77707
+  torque_fr (Nm): 3.77707
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.024425
+  y (m): 0.436662
+  yaw (rad): 1.54621
+  speed (m/s): 7.13194
+SVM Latency (ms): 21
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638527.891542898] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0699022
+  torque_fl (Nm): 3.69823
+  torque_fr (Nm): 3.69823
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00427291
+  y (m): 0.543617
+  yaw (rad): 1.57487
+  speed (m/s): 7.21883
+SVM Latency (ms): 34
+State Projection Latency (ms): 2
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 45
+Total Latency (ms): 46
+
+
+[INFO] [1739638527.970417299] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0962963
+  torque_fl (Nm): 3.93521
+  torque_fr (Nm): 3.93521
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0165198
+  y (m): 0.379013
+  yaw (rad): 1.58792
+  speed (m/s): 7.2772
+SVM Latency (ms): 11
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 24
+
+
+[INFO] [1739638528.077861611] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0346753
+  torque_fl (Nm): 3.9256
+  torque_fr (Nm): 3.9256
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0250654
+  y (m): 0.410087
+  yaw (rad): 1.54522
+  speed (m/s): 7.35611
+SVM Latency (ms): 15
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638528.185073746] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0286988
+  torque_fl (Nm): 3.78329
+  torque_fr (Nm): 3.78329
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0109251
+  y (m): 0.480743
+  yaw (rad): 1.56004
+  speed (m/s): 7.43898
+SVM Latency (ms): 24
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 39
+
+
+[INFO] [1739638528.277380733] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0655788
+  torque_fl (Nm): 2.87234
+  torque_fr (Nm): 2.87234
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00681712
+  y (m): 0.381206
+  yaw (rad): 1.57786
+  speed (m/s): 7.50453
+SVM Latency (ms): 10
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638528.387320626] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0567067
+  torque_fl (Nm): 2.31177
+  torque_fr (Nm): 2.31177
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0221207
+  y (m): 0.507299
+  yaw (rad): 1.5923
+  speed (m/s): 7.593
+SVM Latency (ms): 26
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 40
+Total Latency (ms): 41
+
+
+[INFO] [1739638528.478074642] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0745704
+  torque_fl (Nm): 2.02197
+  torque_fr (Nm): 2.02197
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.015368
+  y (m): 0.424833
+  yaw (rad): 1.58636
+  speed (m/s): 7.66043
+SVM Latency (ms): 15
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 32
+Total Latency (ms): 32
+
+
+[INFO] [1739638528.571260591] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0452596
+  torque_fl (Nm): 1.16781
+  torque_fr (Nm): 1.16781
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0198802
+  y (m): 0.418793
+  yaw (rad): 1.59099
+  speed (m/s): 7.73555
+SVM Latency (ms): 13
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638528.690684129] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0704811
+  torque_fl (Nm): -2.70028
+  torque_fr (Nm): -2.70028
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0161358
+  y (m): 0.530674
+  yaw (rad): 1.58631
+  speed (m/s): 7.77747
+SVM Latency (ms): 27
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 44
+Total Latency (ms): 45
+
+
+[INFO] [1739638528.784775152] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0271608
+  torque_fl (Nm): -3.90132
+  torque_fr (Nm): -3.90132
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0209518
+  y (m): 0.457957
+  yaw (rad): 1.59166
+  speed (m/s): 7.68393
+SVM Latency (ms): 18
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 39
+
+
+[INFO] [1739638528.904011405] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0706276
+  torque_fl (Nm): -3.18702
+  torque_fr (Nm): -3.18702
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0112936
+  y (m): 0.599544
+  yaw (rad): 1.58131
+  speed (m/s): 7.47791
+SVM Latency (ms): 38
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 57
+Total Latency (ms): 58
+
+
+[INFO] [1739638528.997391436] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0642988
+  torque_fl (Nm): -3.9624
+  torque_fr (Nm): -3.9624
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0266604
+  y (m): 0.554719
+  yaw (rad): 1.59613
+  speed (m/s): 7.31372
+SVM Latency (ms): 34
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 50
+Total Latency (ms): 51
+
+
+[INFO] [1739638529.077373394] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0138632
+  torque_fl (Nm): -3.94248
+  torque_fr (Nm): -3.94248
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0165526
+  y (m): 0.407077
+  yaw (rad): 1.58771
+  speed (m/s): 7.17467
+SVM Latency (ms): 15
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638529.171752613] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0949271
+  torque_fl (Nm): -3.94485
+  torque_fr (Nm): -3.94485
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00343565
+  y (m): 0.394678
+  yaw (rad): 1.56727
+  speed (m/s): 7.00403
+SVM Latency (ms): 15
+State Projection Latency (ms): 2
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638529.277292136] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.123715
+  torque_fl (Nm): 3.85803
+  torque_fr (Nm): 3.85803
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0221761
+  y (m): 0.374853
+  yaw (rad): 1.59384
+  speed (m/s): 6.83509
+SVM Latency (ms): 14
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638529.384636971] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.153373
+  torque_fl (Nm): 3.46583
+  torque_fr (Nm): 3.46583
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0332029
+  y (m): 0.419681
+  yaw (rad): 1.60451
+  speed (m/s): 6.8288
+SVM Latency (ms): 21
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 39
+
+
+[INFO] [1739638529.477321390] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0384939
+  torque_fl (Nm): 3.7177
+  torque_fr (Nm): 3.7177
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0363305
+  y (m): 0.377323
+  yaw (rad): 1.60849
+  speed (m/s): 6.89954
+SVM Latency (ms): 14
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638529.570416735] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.130028
+  torque_fl (Nm): 3.86418
+  torque_fr (Nm): 3.86418
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00907686
+  y (m): 0.378774
+  yaw (rad): 1.58021
+  speed (m/s): 6.97513
+SVM Latency (ms): 14
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 24
+
+
+[INFO] [1739638529.718087282] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.134494
+  torque_fl (Nm): 3.7172
+  torque_fr (Nm): 3.7172
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0625784
+  y (m): 0.667297
+  yaw (rad): 1.62723
+  speed (m/s): 7.082
+SVM Latency (ms): 54
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 71
+Total Latency (ms): 72
+
+
+[INFO] [1739638529.770642182] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0609562
+  torque_fl (Nm): 3.72232
+  torque_fr (Nm): 3.72232
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0312773
+  y (m): 0.372266
+  yaw (rad): 1.60334
+  speed (m/s): 7.12563
+SVM Latency (ms): 12
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638529.877275129] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0481634
+  torque_fl (Nm): 3.78088
+  torque_fr (Nm): 3.78088
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0139639
+  y (m): 0.369413
+  yaw (rad): 1.58535
+  speed (m/s): 7.20086
+SVM Latency (ms): 11
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638529.971074011] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.082461
+  torque_fl (Nm): 3.8303
+  torque_fr (Nm): 3.8303
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0111494
+  y (m): 0.37286
+  yaw (rad): 1.5592
+  speed (m/s): 7.27694
+SVM Latency (ms): 11
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638530.077305169] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0274586
+  torque_fl (Nm): 3.73055
+  torque_fr (Nm): 3.73055
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0211186
+  y (m): 0.404964
+  yaw (rad): 1.5924
+  speed (m/s): 7.35601
+SVM Latency (ms): 14
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638530.170834203] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.00551971
+  torque_fl (Nm): 3.92892
+  torque_fr (Nm): 3.92892
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00654371
+  y (m): 0.382183
+  yaw (rad): 1.57757
+  speed (m/s): 7.42934
+SVM Latency (ms): 11
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638530.277359918] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0438258
+  torque_fl (Nm): 3.75226
+  torque_fr (Nm): 3.75226
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00135233
+  y (m): 0.392963
+  yaw (rad): 1.5694
+  speed (m/s): 7.50619
+SVM Latency (ms): 12
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638530.371772599] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0669464
+  torque_fl (Nm): 3.78713
+  torque_fr (Nm): 3.78713
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0106325
+  y (m): 0.38782
+  yaw (rad): 1.55982
+  speed (m/s): 7.58149
+SVM Latency (ms): 10
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638530.479325925] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0259758
+  torque_fl (Nm): 3.51634
+  torque_fr (Nm): 3.51634
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0164928
+  y (m): 0.392438
+  yaw (rad): 1.58778
+  speed (m/s): 7.6577
+SVM Latency (ms): 10
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 33
+Total Latency (ms): 33
+
+
+[INFO] [1739638530.572254951] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00749607
+  torque_fl (Nm): 3.72634
+  torque_fr (Nm): 3.72634
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00614188
+  y (m): 0.379705
+  yaw (rad): 1.57716
+  speed (m/s): 7.73221
+SVM Latency (ms): 8
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 8
+Controls Latency (ms): 26
+Total Latency (ms): 26
+
+
+[INFO] [1739638530.679017650] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.00580273
+  torque_fl (Nm): 3.87883
+  torque_fr (Nm): 3.87883
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00188187
+  y (m): 0.400151
+  yaw (rad): 1.57273
+  speed (m/s): 7.81
+SVM Latency (ms): 10
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 32
+Total Latency (ms): 33
+
+
+[INFO] [1739638530.772315971] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.000279369
+  torque_fl (Nm): 3.69888
+  torque_fr (Nm): 3.69888
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0015497
+  y (m): 0.418884
+  yaw (rad): 1.56923
+  speed (m/s): 7.88762
+SVM Latency (ms): 12
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 8
+Controls Latency (ms): 26
+Total Latency (ms): 26
+
+
+[INFO] [1739638530.877201364] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.07855
+  torque_fl (Nm): 3.35943
+  torque_fr (Nm): 3.35943
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -5.97745e-05
+  y (m): 0.427926
+  yaw (rad): 1.57087
+  speed (m/s): 7.96434
+SVM Latency (ms): 13
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638530.970641115] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0867245
+  torque_fl (Nm): 3.54908
+  torque_fr (Nm): 3.54908
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0197387
+  y (m): 0.398732
+  yaw (rad): 1.59105
+  speed (m/s): 8.03734
+SVM Latency (ms): 9
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638531.077355124] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0918116
+  torque_fl (Nm): 3.42624
+  torque_fr (Nm): 3.42624
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0233017
+  y (m): 0.421215
+  yaw (rad): 1.59444
+  speed (m/s): 8.1152
+SVM Latency (ms): 11
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638531.170658633] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0608443
+  torque_fl (Nm): 3.84482
+  torque_fr (Nm): 3.84482
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0233742
+  y (m): 0.402745
+  yaw (rad): 1.59474
+  speed (m/s): 8.18915
+SVM Latency (ms): 9
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638531.264561175] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.10503
+  torque_fl (Nm): 3.03756
+  torque_fr (Nm): 3.03756
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0154197
+  y (m): 0.401877
+  yaw (rad): 1.5866
+  speed (m/s): 8.26483
+SVM Latency (ms): 8
+State Projection Latency (ms): 2
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 18
+Total Latency (ms): 18
+
+
+[INFO] [1739638531.397808166] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.106948
+  torque_fl (Nm): 2.33898
+  torque_fr (Nm): 2.33898
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0438857
+  y (m): 0.599496
+  yaw (rad): 1.61162
+  speed (m/s): 8.35865
+SVM Latency (ms): 31
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 51
+Total Latency (ms): 52
+
+
+[INFO] [1739638531.477310031] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0484673
+  torque_fl (Nm): 2.74019
+  torque_fr (Nm): 2.74019
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0285789
+  y (m): 0.418753
+  yaw (rad): 1.59983
+  speed (m/s): 8.41782
+SVM Latency (ms): 9
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638531.586758815] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.055613
+  torque_fl (Nm): 2.54463
+  torque_fr (Nm): 2.54463
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0166688
+  y (m): 0.5156
+  yaw (rad): 1.58694
+  speed (m/s): 8.50219
+SVM Latency (ms): 20
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 40
+Total Latency (ms): 41
+
+
+[INFO] [1739638531.679063969] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0455542
+  torque_fl (Nm): -0.234565
+  torque_fr (Nm): -0.234565
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0177601
+  y (m): 0.485657
+  yaw (rad): 1.58824
+  speed (m/s): 8.57526
+SVM Latency (ms): 16
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 33
+Total Latency (ms): 33
+
+
+[INFO] [1739638531.772134530] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.000534455
+  torque_fl (Nm): -3.34268
+  torque_fr (Nm): -3.34268
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0124207
+  y (m): 0.427149
+  yaw (rad): 1.58336
+  speed (m/s): 8.56331
+SVM Latency (ms): 9
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 26
+Total Latency (ms): 26
+
+
+[INFO] [1739638531.877139114] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.127552
+  torque_fl (Nm): 0.85289
+  torque_fr (Nm): 0.85289
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000112805
+  y (m): 0.42213
+  yaw (rad): 1.57094
+  speed (m/s): 8.42476
+SVM Latency (ms): 9
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638531.971835984] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0555179
+  torque_fl (Nm): 0.528472
+  torque_fr (Nm): 0.528472
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0384005
+  y (m): 0.460867
+  yaw (rad): 1.60898
+  speed (m/s): 8.35956
+SVM Latency (ms): 14
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638532.090870004] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.147384
+  torque_fl (Nm): 3.89229
+  torque_fr (Nm): 3.89229
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0208914
+  y (m): 0.553715
+  yaw (rad): 1.59066
+  speed (m/s): 8.34832
+SVM Latency (ms): 25
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 44
+Total Latency (ms): 45
+
+
+[INFO] [1739638532.171486278] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0383179
+  torque_fl (Nm): 3.95751
+  torque_fr (Nm): 3.95751
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0398032
+  y (m): 0.420896
+  yaw (rad): 1.61118
+  speed (m/s): 8.38175
+SVM Latency (ms): 10
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638532.277421120] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0546892
+  torque_fl (Nm): 3.20041
+  torque_fr (Nm): 3.20041
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0102735
+  y (m): 0.421387
+  yaw (rad): 1.58122
+  speed (m/s): 8.45737
+SVM Latency (ms): 9
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638532.385983555] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.139591
+  torque_fl (Nm): 3.47637
+  torque_fr (Nm): 3.47637
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0175574
+  y (m): 0.487741
+  yaw (rad): 1.58803
+  speed (m/s): 8.5391
+SVM Latency (ms): 16
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 39
+Total Latency (ms): 40
+
+
+[INFO] [1739638532.492957788] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0724195
+  torque_fl (Nm): 2.83606
+  torque_fr (Nm): 2.83606
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0559807
+  y (m): 0.578738
+  yaw (rad): 1.62338
+  speed (m/s): 8.62297
+SVM Latency (ms): 27
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 46
+Total Latency (ms): 47
+
+
+[INFO] [1739638532.571767271] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0861837
+  torque_fl (Nm): 3.38558
+  torque_fr (Nm): 3.38558
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0204664
+  y (m): 0.439397
+  yaw (rad): 1.59137
+  speed (m/s): 8.68617
+SVM Latency (ms): 10
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638532.704711442] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0205306
+  torque_fl (Nm): 3.4602
+  torque_fr (Nm): 3.4602
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0409474
+  y (m): 0.663105
+  yaw (rad): 1.6078
+  speed (m/s): 8.78139
+SVM Latency (ms): 34
+State Projection Latency (ms): 15
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 57
+Total Latency (ms): 59
+
+
+[INFO] [1739638532.773855640] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0879815
+  torque_fl (Nm): 3.69718
+  torque_fr (Nm): 3.69718
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00561437
+  y (m): 0.428512
+  yaw (rad): 1.57647
+  speed (m/s): 8.83673
+SVM Latency (ms): 8
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 27
+Total Latency (ms): 28
+
+
+[INFO] [1739638532.894412091] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0428784
+  torque_fl (Nm): 3.61711
+  torque_fr (Nm): 3.61711
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0354471
+  y (m): 0.583353
+  yaw (rad): 1.60403
+  speed (m/s): 8.92582
+SVM Latency (ms): 25
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 48
+Total Latency (ms): 48
+
+
+[INFO] [1739638532.971671308] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0895603
+  torque_fl (Nm): 3.85031
+  torque_fr (Nm): 3.85031
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0133563
+  y (m): 0.476189
+  yaw (rad): 1.55761
+  speed (m/s): 8.9924
+SVM Latency (ms): 12
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638533.076672042] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.040178
+  torque_fl (Nm): 3.79739
+  torque_fr (Nm): 3.79739
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0303902
+  y (m): 0.50905
+  yaw (rad): 1.60031
+  speed (m/s): 9.07096
+SVM Latency (ms): 15
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 30
+Total Latency (ms): 30
+
+
+[INFO] [1739638533.169720212] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.034485
+  torque_fl (Nm): 3.82064
+  torque_fr (Nm): 3.82064
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0125888
+  y (m): 0.478525
+  yaw (rad): 1.58321
+  speed (m/s): 9.14411
+SVM Latency (ms): 11
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 23
+Total Latency (ms): 24
+
+
+[INFO] [1739638533.278247515] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0705928
+  torque_fl (Nm): 3.90631
+  torque_fr (Nm): 3.90631
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0104878
+  y (m): 0.467158
+  yaw (rad): 1.5604
+  speed (m/s): 9.21904
+SVM Latency (ms): 10
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 32
+Total Latency (ms): 32
+
+
+[INFO] [1739638533.371237382] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0347999
+  torque_fl (Nm): 3.72389
+  torque_fr (Nm): 3.72389
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0200517
+  y (m): 0.441271
+  yaw (rad): 1.59094
+  speed (m/s): 9.29276
+SVM Latency (ms): 7
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638533.477552269] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0630863
+  torque_fl (Nm): 3.28236
+  torque_fr (Nm): 3.28236
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0114282
+  y (m): 0.497014
+  yaw (rad): 1.58196
+  speed (m/s): 9.37311
+SVM Latency (ms): 12
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 30
+Total Latency (ms): 31
+
+
+[INFO] [1739638533.571653548] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0207907
+  torque_fl (Nm): 3.23334
+  torque_fr (Nm): 3.23334
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0192292
+  y (m): 0.467531
+  yaw (rad): 1.58986
+  speed (m/s): 9.4466
+SVM Latency (ms): 9
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638533.679716412] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0253854
+  torque_fl (Nm): 3.66846
+  torque_fr (Nm): 3.66846
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00687186
+  y (m): 0.499829
+  yaw (rad): 1.5775
+  speed (m/s): 9.525
+SVM Latency (ms): 12
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 33
+Total Latency (ms): 33
+
+
+[INFO] [1739638533.771847588] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0461044
+  torque_fl (Nm): 3.95941
+  torque_fr (Nm): 3.95941
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00843699
+  y (m): 0.502037
+  yaw (rad): 1.57902
+  speed (m/s): 9.60107
+SVM Latency (ms): 12
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638533.877436877] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.10507
+  torque_fl (Nm): 3.87767
+  torque_fr (Nm): 3.87767
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0155807
+  y (m): 0.508482
+  yaw (rad): 1.58593
+  speed (m/s): 9.67743
+SVM Latency (ms): 11
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 30
+Total Latency (ms): 31
+
+
+[INFO] [1739638533.985573253] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.00895778
+  torque_fl (Nm): 3.70223
+  torque_fr (Nm): 3.70223
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0398869
+  y (m): 0.555988
+  yaw (rad): 1.60867
+  speed (m/s): 9.75701
+SVM Latency (ms): 16
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 39
+Total Latency (ms): 39
+
+
+[INFO] [1739638534.078084941] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.00748534
+  torque_fl (Nm): 3.59871
+  torque_fr (Nm): 3.59871
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00311465
+  y (m): 0.520387
+  yaw (rad): 1.56779
+  speed (m/s): 9.82991
+SVM Latency (ms): 12
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638534.171798258] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.000644579
+  torque_fl (Nm): 3.47281
+  torque_fr (Nm): 3.47281
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00219065
+  y (m): 0.4534
+  yaw (rad): 1.56861
+  speed (m/s): 9.90064
+SVM Latency (ms): 5
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638534.294495261] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0165127
+  torque_fl (Nm): 3.63562
+  torque_fr (Nm): 3.63562
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.000376607
+  y (m): 0.723814
+  yaw (rad): 1.5705
+  speed (m/s): 9.9972
+SVM Latency (ms): 31
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 47
+Total Latency (ms): 48
+
+
+[INFO] [1739638534.384768436] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.065526
+  torque_fl (Nm): 3.59438
+  torque_fr (Nm): 3.59438
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00635463
+  y (m): 0.564292
+  yaw (rad): 1.57681
+  speed (m/s): 10.0609
+SVM Latency (ms): 15
+State Projection Latency (ms): 15
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638534.504895235] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0215124
+  torque_fl (Nm): 3.68913
+  torque_fr (Nm): 3.68913
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0374988
+  y (m): 0.764714
+  yaw (rad): 1.60319
+  speed (m/s): 10.1518
+SVM Latency (ms): 34
+State Projection Latency (ms): 15
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 58
+Total Latency (ms): 59
+
+
+[INFO] [1739638534.572007126] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.040084
+  torque_fl (Nm): 3.88914
+  torque_fr (Nm): 3.88914
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00713391
+  y (m): 0.501064
+  yaw (rad): 1.57775
+  speed (m/s): 10.2079
+SVM Latency (ms): 8
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638534.664705119] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00121537
+  torque_fl (Nm): 3.8894
+  torque_fr (Nm): 3.8894
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0131438
+  y (m): 0.496409
+  yaw (rad): 1.58364
+  speed (m/s): 10.2834
+SVM Latency (ms): 8
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 18
+Total Latency (ms): 18
+
+
+[INFO] [1739638534.770754557] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0331986
+  torque_fl (Nm): 3.34291
+  torque_fr (Nm): 3.34291
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000374796
+  y (m): 0.491669
+  yaw (rad): 1.57118
+  speed (m/s): 10.359
+SVM Latency (ms): 7
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638534.864115337] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0148651
+  torque_fl (Nm): 3.77817
+  torque_fr (Nm): 3.77817
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.01091
+  y (m): 0.497318
+  yaw (rad): 1.58145
+  speed (m/s): 10.4353
+SVM Latency (ms): 7
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 18
+Total Latency (ms): 18
+
+
+[INFO] [1739638534.985661282] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0424364
+  torque_fl (Nm): 3.60926
+  torque_fr (Nm): 3.60926
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00755444
+  y (m): 0.700274
+  yaw (rad): 1.57751
+  speed (m/s): 10.5259
+SVM Latency (ms): 25
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 38
+Total Latency (ms): 39
+
+
+[INFO] [1739638535.090218136] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0234797
+  torque_fl (Nm): 3.78736
+  torque_fr (Nm): 3.78736
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0240412
+  y (m): 0.759682
+  yaw (rad): 1.59161
+  speed (m/s): 10.606
+SVM Latency (ms): 30
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 43
+Total Latency (ms): 44
+
+
+[INFO] [1739638535.182979081] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0379603
+  torque_fl (Nm): 3.72274
+  torque_fr (Nm): 3.72274
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0101457
+  y (m): 0.61776
+  yaw (rad): 1.58016
+  speed (m/s): 10.6717
+SVM Latency (ms): 16
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 36
+Total Latency (ms): 37
+
+
+[INFO] [1739638535.278383147] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0076952
+  torque_fl (Nm): 3.69089
+  torque_fr (Nm): 3.69089
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0136345
+  y (m): 0.533985
+  yaw (rad): 1.58388
+  speed (m/s): 10.7416
+SVM Latency (ms): 9
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 32
+Total Latency (ms): 32
+
+
+[INFO] [1739638535.386175660] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0412368
+  torque_fl (Nm): 3.66885
+  torque_fr (Nm): 3.66885
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00329517
+  y (m): 0.613025
+  yaw (rad): 1.56775
+  speed (m/s): 10.8231
+SVM Latency (ms): 16
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 39
+Total Latency (ms): 40
+
+
+[INFO] [1739638535.477785396] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00180987
+  torque_fl (Nm): 1.97392
+  torque_fr (Nm): 1.97392
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.019766
+  y (m): 0.669066
+  yaw (rad): 1.58861
+  speed (m/s): 10.9028
+SVM Latency (ms): 20
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 30
+Total Latency (ms): 31
+
+
+[INFO] [1739638535.583078230] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0661338
+  torque_fl (Nm): 3.44293
+  torque_fr (Nm): 3.44293
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.000868867
+  y (m): 0.678099
+  yaw (rad): 1.57159
+  speed (m/s): 10.979
+SVM Latency (ms): 20
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 36
+Total Latency (ms): 37
+
+
+[INFO] [1739638535.679478242] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0475678
+  torque_fl (Nm): 3.54997
+  torque_fr (Nm): 3.54997
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0295927
+  y (m): 0.633863
+  yaw (rad): 1.5979
+  speed (m/s): 11.0517
+SVM Latency (ms): 17
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 33
+Total Latency (ms): 33
+
+
+[INFO] [1739638535.773101260] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0816437
+  torque_fl (Nm): 3.65983
+  torque_fr (Nm): 3.65983
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0185854
+  y (m): 0.570597
+  yaw (rad): 1.55327
+  speed (m/s): 11.1232
+SVM Latency (ms): 10
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 26
+Total Latency (ms): 27
+
+
+[INFO] [1739638535.879616078] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0148397
+  torque_fl (Nm): 3.74702
+  torque_fr (Nm): 3.74702
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0340825
+  y (m): 0.600019
+  yaw (rad): 1.6025
+  speed (m/s): 11.2011
+SVM Latency (ms): 13
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 33
+Total Latency (ms): 33
+
+
+[INFO] [1739638535.971093589] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0390102
+  torque_fl (Nm): 3.32266
+  torque_fr (Nm): 3.32266
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00557778
+  y (m): 0.553684
+  yaw (rad): 1.56549
+  speed (m/s): 11.2738
+SVM Latency (ms): 8
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638536.107711320] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0119018
+  torque_fl (Nm): 3.23496
+  torque_fr (Nm): 3.23496
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0271093
+  y (m): 0.884251
+  yaw (rad): 1.59307
+  speed (m/s): 11.3719
+SVM Latency (ms): 36
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 60
+Total Latency (ms): 61
+
+
+[INFO] [1739638536.171654038] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00439064
+  torque_fl (Nm): 2.55237
+  torque_fr (Nm): 2.55237
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00500608
+  y (m): 0.605104
+  yaw (rad): 1.57544
+  speed (m/s): 11.429
+SVM Latency (ms): 12
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638536.277724228] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.00368651
+  torque_fl (Nm): 2.52765
+  torque_fr (Nm): 2.52765
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0019941
+  y (m): 0.63996
+  yaw (rad): 1.57261
+  speed (m/s): 11.5073
+SVM Latency (ms): 15
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638536.371890261] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0265401
+  torque_fl (Nm): 3.37615
+  torque_fr (Nm): 3.37615
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00162832
+  y (m): 0.625065
+  yaw (rad): 1.56931
+  speed (m/s): 11.5822
+SVM Latency (ms): 13
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 25
+Total Latency (ms): 26
+
+
+[INFO] [1739638536.477900879] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.104397
+  torque_fl (Nm): 3.93873
+  torque_fr (Nm): 3.93873
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0114455
+  y (m): 0.616842
+  yaw (rad): 1.58136
+  speed (m/s): 11.6576
+SVM Latency (ms): 12
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638536.584996540] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0145289
+  torque_fl (Nm): 2.27494
+  torque_fr (Nm): 2.27494
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0549453
+  y (m): 0.716048
+  yaw (rad): 1.61928
+  speed (m/s): 11.74
+SVM Latency (ms): 20
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 39
+
+
+[INFO] [1739638536.677429620] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0337008
+  torque_fl (Nm): 3.87397
+  torque_fr (Nm): 3.87397
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0064859
+  y (m): 0.633686
+  yaw (rad): 1.56486
+  speed (m/s): 11.8104
+SVM Latency (ms): 13
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638536.771766464] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00860947
+  torque_fl (Nm): -2.12608
+  torque_fr (Nm): -2.12608
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0146174
+  y (m): 0.619494
+  yaw (rad): 1.58427
+  speed (m/s): 11.8854
+SVM Latency (ms): 11
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638536.877970290] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0542237
+  torque_fl (Nm): -1.07659
+  torque_fr (Nm): -1.07659
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00365181
+  y (m): 0.609
+  yaw (rad): 1.57418
+  speed (m/s): 11.7839
+SVM Latency (ms): 11
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638536.971597217] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.139834
+  torque_fl (Nm): -2.0705
+  torque_fr (Nm): -2.0705
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0239181
+  y (m): 0.627194
+  yaw (rad): 1.54883
+  speed (m/s): 11.6447
+SVM Latency (ms): 13
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 25
+Total Latency (ms): 25
+
+
+[INFO] [1739638537.104611999] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.014357
+  torque_fl (Nm): -3.96225
+  torque_fr (Nm): -3.96225
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.112987
+  y (m): 0.97895
+  yaw (rad): 1.66009
+  speed (m/s): 11.4337
+SVM Latency (ms): 44
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 57
+Total Latency (ms): 58
+
+
+[INFO] [1739638537.211169579] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.00547902
+  torque_fl (Nm): -3.91178
+  torque_fr (Nm): -3.91178
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0112035
+  y (m): 0.962729
+  yaw (rad): 1.57971
+  speed (m/s): 11.2636
+SVM Latency (ms): 43
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 64
+Total Latency (ms): 65
+
+
+[INFO] [1739638537.277920807] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.123516
+  torque_fl (Nm): -2.31935
+  torque_fr (Nm): -2.31935
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.00225923
+  y (m): 0.59694
+  yaw (rad): 1.57291
+  speed (m/s): 11.1464
+SVM Latency (ms): 12
+State Projection Latency (ms): 11
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638537.384554247] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0269116
+  torque_fl (Nm): -0.710686
+  torque_fr (Nm): -0.710686
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0545886
+  y (m): 0.625265
+  yaw (rad): 1.52062
+  speed (m/s): 10.9689
+SVM Latency (ms): 16
+State Projection Latency (ms): 14
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638537.507854988] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0591027
+  torque_fl (Nm): 3.75018
+  torque_fr (Nm): 3.75018
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0204899
+  y (m): 0.945455
+  yaw (rad): 1.58722
+  speed (m/s): 10.823
+SVM Latency (ms): 45
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 5
+Controls Latency (ms): 60
+Total Latency (ms): 61
+
+
+[INFO] [1739638537.584584618] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0818343
+  torque_fl (Nm): 3.56938
+  torque_fr (Nm): 3.56938
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0297663
+  y (m): 0.694412
+  yaw (rad): 1.59732
+  speed (m/s): 10.8599
+SVM Latency (ms): 23
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638537.677899916] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0468004
+  torque_fl (Nm): 3.96221
+  torque_fr (Nm): 3.96221
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0360549
+  y (m): 0.625739
+  yaw (rad): 1.60394
+  speed (m/s): 10.8974
+SVM Latency (ms): 17
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638537.784559327] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.150396
+  torque_fl (Nm): 2.62809
+  torque_fr (Nm): 2.62809
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0222586
+  y (m): 0.664965
+  yaw (rad): 1.5507
+  speed (m/s): 10.9759
+SVM Latency (ms): 20
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638537.891163280] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.15605
+  torque_fl (Nm): 1.5837
+  torque_fr (Nm): 1.5837
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0847877
+  y (m): 0.750749
+  yaw (rad): 1.64447
+  speed (m/s): 11.0578
+SVM Latency (ms): 28
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 44
+Total Latency (ms): 45
+
+
+[INFO] [1739638538.026461643] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.200383
+  torque_fl (Nm): -0.199665
+  torque_fr (Nm): -0.199665
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.166338
+  y (m): 1.18726
+  yaw (rad): 1.69218
+  speed (m/s): 11.1368
+SVM Latency (ms): 66
+State Projection Latency (ms): 3
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 79
+Total Latency (ms): 80
+
+
+[INFO] [1739638538.077657478] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.323516
+  torque_fl (Nm): 1.44206
+  torque_fr (Nm): 1.44206
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0939679
+  y (m): 0.649997
+  yaw (rad): 1.65623
+  speed (m/s): 11.098
+SVM Latency (ms): 18
+State Projection Latency (ms): 5
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 31
+
+
+[INFO] [1739638538.184956124] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.3268
+  torque_fl (Nm): 0.461785
+  torque_fr (Nm): 0.461785
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.149489
+  y (m): 0.625137
+  yaw (rad): 1.70803
+  speed (m/s): 11.1511
+SVM Latency (ms): 17
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 39
+
+
+[INFO] [1739638538.277924847] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.322404
+  torque_fl (Nm): -3.09341
+  torque_fr (Nm): -3.09341
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.132615
+  y (m): 0.565115
+  yaw (rad): 1.69603
+  speed (m/s): 11.1526
+SVM Latency (ms): 11
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 31
+Total Latency (ms): 32
+
+
+[INFO] [1739638538.371262082] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0905746
+  torque_fl (Nm): -0.315439
+  torque_fr (Nm): -0.315439
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.134517
+  y (m): 0.578077
+  yaw (rad): 1.69705
+  speed (m/s): 11.0374
+SVM Latency (ms): 13
+State Projection Latency (ms): 4
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 24
+Total Latency (ms): 25
+
+
+[INFO] [1739638538.478226825] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0326322
+  torque_fl (Nm): -3.26759
+  torque_fr (Nm): -3.26759
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0373609
+  y (m): 0.594103
+  yaw (rad): 1.53595
+  speed (m/s): 10.9425
+SVM Latency (ms): 13
+State Projection Latency (ms): 10
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 32
+Total Latency (ms): 32
+
+
+[INFO] [1739638538.598507569] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0808215
+  torque_fl (Nm): -3.14021
+  torque_fr (Nm): -3.14021
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0229464
+  y (m): 0.892127
+  yaw (rad): 1.552
+  speed (m/s): 10.7601
+SVM Latency (ms): 41
+State Projection Latency (ms): 2
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 51
+Total Latency (ms): 52
+
+
+[INFO] [1739638538.704879631] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.102103
+  torque_fl (Nm): -3.31299
+  torque_fr (Nm): -3.31299
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0565899
+  y (m): 0.887305
+  yaw (rad): 1.61722
+  speed (m/s): 10.587
+SVM Latency (ms): 42
+State Projection Latency (ms): 7
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 57
+Total Latency (ms): 58
+
+
+[INFO] [1739638538.798177389] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.00109072
+  torque_fl (Nm): -3.93965
+  torque_fr (Nm): -3.93965
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.0614644
+  y (m): 0.792324
+  yaw (rad): 1.62327
+  speed (m/s): 10.4288
+SVM Latency (ms): 34
+State Projection Latency (ms): 8
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 51
+Total Latency (ms): 52
+
+
+[INFO] [1739638538.917805066] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0382521
+  torque_fl (Nm): 3.17517
+  torque_fr (Nm): 3.17517
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.000871425
+  y (m): 0.976627
+  yaw (rad): 1.57011
+  speed (m/s): 10.2249
+SVM Latency (ms): 53
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 70
+Total Latency (ms): 71
+
+
+[INFO] [1739638538.998148556] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.046603
+  torque_fl (Nm): 3.41597
+  torque_fr (Nm): 3.41597
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0210213
+  y (m): 0.742542
+  yaw (rad): 1.55246
+  speed (m/s): 10.2711
+SVM Latency (ms): 32
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 51
+Total Latency (ms): 52
+
+
+[INFO] [1739638539.133471871] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0665961
+  torque_fl (Nm): 3.38025
+  torque_fr (Nm): 3.38025
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): -0.042422
+  y (m): 1.07397
+  yaw (rad): 1.60313
+  speed (m/s): 10.2975
+SVM Latency (ms): 63
+State Projection Latency (ms): 13
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 9
+Controls Latency (ms): 86
+Total Latency (ms): 87
+
+
+[INFO] [1739638539.184565448] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.0137078
+  torque_fl (Nm): 3.81156
+  torque_fr (Nm): 3.81156
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.0223577
+  y (m): 0.640292
+  yaw (rad): 1.54892
+  speed (m/s): 10.3412
+SVM Latency (ms): 21
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638539.291125490] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.271005
+  torque_fl (Nm): 3.35672
+  torque_fr (Nm): 3.35672
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.00716747
+  y (m): 0.715307
+  yaw (rad): 1.56447
+  speed (m/s): 10.4224
+SVM Latency (ms): 28
+State Projection Latency (ms): 9
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 44
+Total Latency (ms): 45
+
+
+[INFO] [1739638539.384800078] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.288839
+  torque_fl (Nm): 3.91695
+  torque_fr (Nm): 3.91695
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.135056
+  y (m): 0.670432
+  yaw (rad): 1.4493
+  speed (m/s): 10.4953
+SVM Latency (ms): 24
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 38
+
+
+[INFO] [1739638539.518905072] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.298567
+  torque_fl (Nm): 3.33284
+  torque_fr (Nm): 3.33284
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.251241
+  y (m): 1.00224
+  yaw (rad): 1.37455
+  speed (m/s): 10.5948
+SVM Latency (ms): 56
+State Projection Latency (ms): 6
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 71
+Total Latency (ms): 72
+
+
+[INFO] [1739638539.585063763] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): -0.326608
+  torque_fl (Nm): 3.30354
+  torque_fr (Nm): 3.30354
+  torque_rl (Nm): 0
+  torque_rr (Nm): 0
+Projected State:
+  x (m): 0.13223
+  y (m): 0.608847
+  yaw (rad): 1.44845
+  speed (m/s): 10.6402
+SVM Latency (ms): 18
+State Projection Latency (ms): 12
+OpenGL Render Latency (ms): 0
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 38
+Total Latency (ms): 39
+
+
+[INFO] [1739640722.036829906] [rclcpp]: signal_handler(signal_value=2)

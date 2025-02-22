@@ -1,0 +1,3 @@
+[INFO] [1740091557.543303292] [rosbridge_websocket]: Rosbridge WebSocket server started on port 9090
+[INFO] [1740091561.274003068] [rosbridge_websocket]: Client connected. 1 clients total.
+[ERROR] [1740091561.352610413] [rosbridge_websocket]: [Client 309710ba-b207-4adb-9427-7411cc4625e4] [id: subscribe:/lidar_points2:2] subscribe: Cannot infer topic type for topic /lidar_points2 as it is not yet advertised

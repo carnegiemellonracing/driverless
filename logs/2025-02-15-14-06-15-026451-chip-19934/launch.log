@@ -1,0 +1,15 @@
+1739646375.0272911 [INFO] [launch]: All log files can be found below /home/chip/Documents/driverless/logs/2025-02-15-14-06-15-026451-chip-19934
+1739646375.0274160 [INFO] [launch]: Default logging verbosity is set to INFO
+1739646375.1133354 [INFO] [rosbridge_websocket-1]: process started with pid [19936]
+1739646375.1135156 [INFO] [rosapi_node-2]: process started with pid [19938]
+1739646395.1119637 [WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+1739646395.1134429 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1739646395.1135495 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1739646395.1136105 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1739646395.1136730 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1739646395.1137216 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1739646395.1137679 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1739646395.1138134 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1739646395.1143823 [rosapi_node-2] Exiting due to SIGINT
+1739646395.1656723 [INFO] [rosapi_node-2]: process has finished cleanly [pid 19938]
+1739646395.1707366 [INFO] [rosbridge_websocket-1]: process has finished cleanly [pid 19936]

@@ -1,0 +1,33 @@
+[INFO] [1739835456.184382403] [point_to_pixel]: Connected to ZED camera. /dev/video0
+[INFO] [1739835458.241702845] [point_to_pixel]: Point to Pixel Node INITIALIZED
+[INFO] [1739835477.015095362] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739835477.015193471] [point_to_pixel]: 3x4 projection_matrix:
+-31.4158 17.5137 40.9734 4.51739 
+-2.07963 7.19439 -20.0929 -26.0993 
+-0.00607442 0.016342 -0.100975 -0.05181 
+
+[INFO] [1739835477.015212180] [point_to_pixel]: x: 1.574318, y: 0.720327, z: -0.049774
+[INFO] [1739835477.015234220] [point_to_pixel]: Transformed Points : -34.364921, -23.190915, -0.044576
+[INFO] [1739835477.116222639] [point_to_pixel]: x: 770.935587, y: 520.260237, color: 2, conf: 0.065200
+[INFO] [1739835477.116339624] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739835495.397180388] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739835495.397255991] [point_to_pixel]: 3x4 projection_matrix:
+-31.4158 17.5137 40.9734 4.51739 
+-2.07963 7.19439 -20.0929 -26.0993 
+-0.00607442 0.016342 -0.100975 -0.05181 
+
+[INFO] [1739835495.397273367] [point_to_pixel]: x: 1.574318, y: 0.720327, z: -0.049774
+[INFO] [1739835495.397294545] [point_to_pixel]: Transformed Points : -34.364921, -23.190915, -0.044576
+[INFO] [1739835495.398563247] [point_to_pixel]: x: 770.935587, y: 520.260237, color: 2, conf: 0.062800
+[INFO] [1739835495.398617556] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739835598.404494356] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739835598.404610214] [point_to_pixel]: 3x4 projection_matrix:
+-31.4158 17.5137 40.9734 4.51739 
+-2.07963 7.19439 -20.0929 -26.0993 
+-0.00607442 0.016342 -0.100975 -0.05181 
+
+[INFO] [1739835598.404647132] [point_to_pixel]: x: 1.574318, y: 0.720327, z: -0.049774
+[INFO] [1739835598.404665521] [point_to_pixel]: Transformed Points : -34.364921, -23.190915, -0.044576
+[INFO] [1739835598.406553102] [point_to_pixel]: x: 770.935587, y: 520.260237, color: 2, conf: 0.060800
+[INFO] [1739835598.406587820] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739835601.579676899] [rclcpp]: signal_handler(signal_value=2)

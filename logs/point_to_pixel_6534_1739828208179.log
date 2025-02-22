@@ -1,0 +1,92 @@
+[INFO] [1739828208.215062792] [point_to_pixel]: Connected to ZED camera. /dev/video0
+[INFO] [1739828210.218067996] [point_to_pixel]: 720, 2560
+[INFO] [1739828210.278024140] [point_to_pixel]: Point to Pixel Node INITIALIZED
+[INFO] [1739828493.619822904] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739828493.623007675] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739828493.623128097] [point_to_pixel]: 1511552381, -1875417136 
+
+[INFO] [1739828493.623176326] [point_to_pixel]: 720, 2560
+[INFO] [1739828493.629367598] [point_to_pixel]: Transformed Cone: -1, 0.000000
+[INFO] [1739828493.629465011] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739828494.618716618] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739828494.618911352] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739828494.618986959] [point_to_pixel]: 1511552381, -1875417136 
+
+[INFO] [1739828494.619030793] [point_to_pixel]: 720, 2560
+[INFO] [1739828494.620514655] [point_to_pixel]: Transformed Cone: -1, 0.000000
+[INFO] [1739828494.620575276] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739828495.618688845] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739828495.618886525] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739828495.618962867] [point_to_pixel]: 1511552381, -1875417136 
+
+[INFO] [1739828495.619320676] [point_to_pixel]: 720, 2560
+[INFO] [1739828495.621740664] [point_to_pixel]: Transformed Cone: -1, 0.000000
+[INFO] [1739828495.621809988] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739828496.618615155] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739828496.618793127] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739828496.618860550] [point_to_pixel]: 1511552381, -1875417136 
+
+[INFO] [1739828496.619185913] [point_to_pixel]: 720, 2560
+[INFO] [1739828496.620602746] [point_to_pixel]: Transformed Cone: -1, 0.000000
+[INFO] [1739828496.620656187] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739828497.618709844] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739828497.618905411] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739828497.618982642] [point_to_pixel]: 1511552381, -1875417136 
+
+[INFO] [1739828497.619411652] [point_to_pixel]: 720, 2560
+[INFO] [1739828497.621033886] [point_to_pixel]: Transformed Cone: -1, 0.000000
+[INFO] [1739828497.621102844] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739828498.618233603] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739828498.618387211] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739828498.618449056] [point_to_pixel]: 1511552381, -1875417136 
+
+[INFO] [1739828498.618962682] [point_to_pixel]: 720, 2560
+[INFO] [1739828498.620195463] [point_to_pixel]: Transformed Cone: -1, 0.000000
+[INFO] [1739828498.620228175] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739828499.618675616] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739828499.618950720] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739828499.619064295] [point_to_pixel]: 1511552381, -1875417136 
+
+[INFO] [1739828499.619327752] [point_to_pixel]: 720, 2560
+[INFO] [1739828499.620995186] [point_to_pixel]: Transformed Cone: -1, 0.000000
+[INFO] [1739828499.621111292] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739828636.259311432] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739828636.259507769] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739828636.259587800] [point_to_pixel]: 1511552381, -1875417136 
+
+[INFO] [1739828636.260122683] [point_to_pixel]: 720, 2560
+[INFO] [1739828636.261622227] [point_to_pixel]: Transformed Cone: -1, 0.001538
+[INFO] [1739828636.261687508] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739828736.675195856] [rclcpp]: signal_handler(signal_value=2)

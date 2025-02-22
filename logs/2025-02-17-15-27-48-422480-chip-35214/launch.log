@@ -1,0 +1,4 @@
+1739824068.4234693 [INFO] [launch]: All log files can be found below /home/chip/Documents/driverless/logs/2025-02-17-15-27-48-422480-chip-35214
+1739824068.4236207 [INFO] [launch]: Default logging verbosity is set to INFO
+1739824068.5257854 [INFO] [rosbridge_websocket-1]: process started with pid [35216]
+1739824068.5259438 [INFO] [rosapi_node-2]: process started with pid [35218]

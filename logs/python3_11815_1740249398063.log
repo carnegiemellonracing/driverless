@@ -1,0 +1,4 @@
+[INFO] [1740249398.127237567] [rosbridge_websocket]: Rosbridge WebSocket server started on port 9090
+[INFO] [1740249398.354547812] [rosbridge_websocket]: Client connected. 1 clients total.
+[INFO] [1740249411.154349733] [rosbridge_websocket]: Client disconnected. 0 clients total.
+[INFO] [1740249411.223997493] [rosbridge_websocket]: Client connected. 1 clients total.

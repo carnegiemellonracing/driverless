@@ -1,0 +1,43 @@
+[INFO] [1739830347.812586061] [point_to_pixel]: Connected to ZED camera. /dev/video0
+[INFO] [1739830349.873329546] [point_to_pixel]: Point to Pixel Node INITIALIZED
+[INFO] [1739830361.923250455] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739830361.923384023] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739830361.924528500] [point_to_pixel]: x: 0.821722, y: 0.664314, color: -1, conf: 0.000000
+[INFO] [1739830361.924557046] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739830385.266379841] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739830385.266497164] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739830385.267925749] [point_to_pixel]: x: 1.312394, y: 0.895654, color: -1, conf: 0.000000
+[INFO] [1739830385.267972410] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739830488.167112644] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739830488.167213849] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739830488.168497360] [point_to_pixel]: x: 0.821722, y: 0.664314, color: -1, conf: 0.000000
+[INFO] [1739830488.168531079] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739830513.184492604] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739830513.184575763] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739830513.185686948] [point_to_pixel]: x: 0.930968, y: 0.642311, color: -1, conf: 0.001600
+[INFO] [1739830513.185716335] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739830586.149815176] [point_to_pixel]: Received message with 1 cones
+[INFO] [1739830586.149937484] [point_to_pixel]: 3x4 projection_matrix:
+-106.134 -96.1537 -25.7727 -0.0615972 
+-91.2001 -51.0701 -114.854 -0.242685 
+-164.455 -20.7153 -0.141658 -0.168317 
+
+[INFO] [1739830586.151235894] [point_to_pixel]: x: 1.129842, y: 0.763961, color: -1, conf: 0.000000
+[INFO] [1739830586.151280913] [point_to_pixel]: Transform callback triggered.
+[INFO] [1739830786.399063833] [rclcpp]: signal_handler(signal_value=2)

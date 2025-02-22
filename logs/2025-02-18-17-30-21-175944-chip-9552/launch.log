@@ -1,0 +1,5 @@
+1739917821.1767349 [INFO] [launch]: All log files can be found below /home/chip/Documents/driverless/logs/2025-02-18-17-30-21-175944-chip-9552
+1739917821.1768634 [INFO] [launch]: Default logging verbosity is set to INFO
+1739917821.2596009 [INFO] [rosbridge_websocket-1]: process started with pid [9554]
+1739917821.2598093 [INFO] [rosapi_node-2]: process started with pid [9556]
+1739917904.0418854 [ERROR] [rosbridge_websocket-1]: process has died [pid 9554, exit code -9, cmd '/opt/ros/foxy/lib/rosbridge_server/rosbridge_websocket --ros-args -r __node:=rosbridge_websocket --params-file /tmp/launch_params_3pxfzvi8 --params-file /tmp/launch_params_59qusfzz --params-file /tmp/launch_params_sx443u7l --params-file /tmp/launch_params_0zel_xw2 --params-file /tmp/launch_params_dim4e4kq --params-file /tmp/launch_params_93ckavey --params-file /tmp/launch_params_sggoqw4m --params-file /tmp/launch_params_cv926h3u --params-file /tmp/launch_params_kxanaoa1 --params-file /tmp/launch_params_f9zbbpkc --params-file /tmp/launch_params_a1uejkgf --params-file /tmp/launch_params_vk1kvedo'].

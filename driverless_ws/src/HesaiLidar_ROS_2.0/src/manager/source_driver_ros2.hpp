@@ -420,7 +420,6 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsg(const LidarDecodedFr
   sensor_msgs::PointCloud2Iterator<uint16_t> iter_ring_(ros_msg, "ring");
   sensor_msgs::PointCloud2Iterator<double> iter_timestamp_(ros_msg, "timestamp");
   int num_valid_points = 0;
-  int counter = 0;
   float epsilon = 0.1;
   
   for (size_t i = 0; i < frame.points_num; i++)
@@ -430,23 +429,20 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsg(const LidarDecodedFr
     if (std::abs(point.x) < epsilon && std::abs(point.y) < epsilon && std::abs(point.z) < epsilon) {
       continue;
     }
-    counter++;
-    if (counter == 3) {
-      num_valid_points++;
-      *iter_x_ = point.x;
-      *iter_y_ = point.y;
-      *iter_z_ = point.z;
-      *iter_intensity_ = point.intensity;
-      *iter_ring_ = point.ring;
-      *iter_timestamp_ = point.timestamp;
-      ++iter_x_;
-      ++iter_y_;
-      ++iter_z_;
-      ++iter_intensity_;
-      ++iter_ring_;
-      ++iter_timestamp_;
-      counter = 0;
-    }
+
+    num_valid_points++;
+    *iter_x_ = point.x;
+    *iter_y_ = point.y;
+    *iter_z_ = point.z;
+    *iter_intensity_ = point.intensity;
+    *iter_ring_ = point.ring;
+    *iter_timestamp_ = point.timestamp;
+    ++iter_x_;
+    ++iter_y_;
+    ++iter_z_;
+    ++iter_intensity_;
+    ++iter_ring_;
+    ++iter_timestamp_;
   }
   ros_msg.data.resize(num_valid_points * ros_msg.point_step);
   ros_msg.width = num_valid_points;

@@ -1,0 +1,8 @@
+1739917050.7094188 [INFO] [launch]: All log files can be found below /home/chip/Documents/driverless/logs/2025-02-18-17-17-30-708549-chip-5148
+1739917050.7095335 [INFO] [launch]: Default logging verbosity is set to INFO
+1739917050.7875283 [INFO] [rosbridge_websocket-1]: process started with pid [5150]
+1739917050.7877333 [INFO] [rosapi_node-2]: process started with pid [5152]
+1739917797.5460575 [WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+1739917797.5519588 [rosapi_node-2] Exiting due to SIGINT
+1739917797.6084352 [INFO] [rosapi_node-2]: process has finished cleanly [pid 5152]
+1739917797.6107562 [ERROR] [rosbridge_websocket-1]: process has died [pid 5150, exit code -2, cmd '/opt/ros/foxy/lib/rosbridge_server/rosbridge_websocket --ros-args -r __node:=rosbridge_websocket --params-file /tmp/launch_params_rukj2hen --params-file /tmp/launch_params_08574qt5 --params-file /tmp/launch_params_158bbvzs --params-file /tmp/launch_params_ye7xb9k_ --params-file /tmp/launch_params_mixfv8mw --params-file /tmp/launch_params_v0nikuh4 --params-file /tmp/launch_params_ntp2tcvy --params-file /tmp/launch_params_7km5ymtq --params-file /tmp/launch_params_nx6m3jk9 --params-file /tmp/launch_params_1soxq8fm --params-file /tmp/launch_params_bl7kc1_y --params-file /tmp/launch_params_dqbzej3a'].

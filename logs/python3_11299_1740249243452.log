@@ -1,0 +1,7 @@
+[INFO] [1740249243.510768050] [rosbridge_websocket]: Rosbridge WebSocket server started on port 9090
+[INFO] [1740249258.369553081] [rosbridge_websocket]: Client connected. 1 clients total.
+[ERROR] [1740249259.070491941] [rosbridge_websocket]: [Client c471b1f9-cf08-4474-89fb-509fc7113339] [id: subscribe:/lidar_points2:13] subscribe: Cannot infer topic type for topic /lidar_points2 as it is not yet advertised
+[INFO] [1740249263.367635348] [rosbridge_websocket]: [Client c471b1f9-cf08-4474-89fb-509fc7113339] Unsubscribed from /lidar_points2
+[ERROR] [1740249263.752783869] [rosbridge_websocket]: [Client c471b1f9-cf08-4474-89fb-509fc7113339] [id: subscribe:/lidar_points2:20] subscribe: Cannot infer topic type for topic /lidar_points2 as it is not yet advertised
+[ERROR] [1740249264.728786571] [rosbridge_websocket]: [Client c471b1f9-cf08-4474-89fb-509fc7113339] [id: subscribe:/cones:22] subscribe: Cannot infer topic type for topic /cones as it is not yet advertised
+[INFO] [1740249265.108570178] [rosbridge_websocket]: [Client c471b1f9-cf08-4474-89fb-509fc7113339] Unsubscribed from /cones
