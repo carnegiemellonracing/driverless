@@ -373,7 +373,7 @@ namespace controls {
                             auto start = std::chrono::steady_clock::now();
                             sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
                             auto end = std::chrono::steady_clock::now();
-                            RCLCPP_DEBUG(get_logger(), "sendControlAction took %f ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+                            RCLCPP_DEBUG(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
                         }
                         std::cout << "I just got terminated in another way lol\n";
                         send_finished_ignore_error();
