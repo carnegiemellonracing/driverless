@@ -112,7 +112,7 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
     hnd = canOpenChannel(channel,
                          canOPEN_EXCLUSIVE | canOPEN_REQUIRE_EXTENDED | canOPEN_ACCEPT_VIRTUAL);
     if (hnd < 0) {
-        printf("canOpenChannel %d", channel);
+        // printf("canOpenChannel %d", channel);
         check("", hnd);
         return -1;
     }
@@ -229,7 +229,7 @@ int cmr_can_rx(int channel, long id, bool verbose)
    
     if(verbose) {
         if (hnd < 0) {
-        printf("canOpenChannel %d", channel);
+        // printf("canOpenChannel %d", channel);
         check("", hnd);
         return -1;
     }
