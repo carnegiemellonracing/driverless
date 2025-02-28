@@ -538,7 +538,9 @@ namespace controls {
             // render the lookup table
             m_logger("rendering curv frame lookup table...");
             render_fake_track();
-            render_curv_frame_lookup();
+            if (!follow_midline_only) {
+                render_curv_frame_lookup();
+            }
 
             m_logger("mapping OpenGL curv frame texture back to CUDA");
             map_curv_frame_lookup();
@@ -730,6 +732,13 @@ namespace controls {
 
         void StateEstimator_Impl::render_fake_track() {
             glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
+
+            if (follow_midline_only) {
+                // ^ Replaces the texture with the render buffer (the final target)
+                // Explanation: If we are only following the midline, we don't need track bounds, so we can skip the second rendering step
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_curv_frame_lookup_rbo);
+            }
+
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glEnable(GL_DEPTH_TEST);

@@ -74,7 +74,7 @@ namespace controls {
     constexpr float action_momentum = 0.0f; ///< How much of last action taken to retain in calculation of next action.
 
     // DEPRECATED
-    constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline DEPRECATED
+    constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
     constexpr float target_speed = 10.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 

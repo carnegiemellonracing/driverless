@@ -103,10 +103,14 @@ namespace controls {
             (void)speed_cost;
 
             const float distance_cost = offset_1m_cost * cent_curv_pose[state_y_idx];
-            (void) distance_cost;
             const float progress_cost = progress_cost_multiplier * (-progress);
 
-
+            float total_cost;
+            if (follow_midline_only) {
+                total_cost = progress_cost + distance_cost;
+            } else {
+                total_cost = progress_cost;
+            }
 
             //TODO: delete?
             // const float deriv_cost = first ?
@@ -114,7 +118,7 @@ namespace controls {
             //   + fabsf(action[action_swangle_idx] - last_taken_action[action_swangle_idx]) / controller_period * swangle_1radps_cost
             //   : 0;
             // return speed_cost;
-            return progress_cost;
+            return total_cost;
             // + fabsf(action[action_torque_idx]) * 0.05f;// + deriv_cost;
         }
 
