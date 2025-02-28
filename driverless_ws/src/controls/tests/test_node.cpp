@@ -629,8 +629,6 @@ namespace controls {
             auto curr_time = get_clock()->now();
             spline_msg.header.stamp = curr_time;
             cone_msg.header.stamp = curr_time;
-            spline_msg.orig_data_stamp = curr_time;
-            cone_msg.orig_data_stamp = curr_time;
 
             m_spline_publisher->publish(spline_msg);
             m_cone_publisher->publish(cone_msg);
