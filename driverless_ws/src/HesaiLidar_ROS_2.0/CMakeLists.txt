@@ -7,7 +7,7 @@ project(hesai_ros_driver)
 #=======================================
 set(VERSION_MAJOR 2)
 set(VERSION_MINOR 0)
-set(VERSION_TINY  7)
+set(VERSION_TINY  8)
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/Version.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/Version.h"
@@ -105,11 +105,12 @@ if($ENV{ROS_VERSION} MATCHES "2")
     find_package(ament_cmake REQUIRED)
     find_package(sensor_msgs REQUIRED)
     find_package(std_msgs REQUIRED)  
+    find_package(geometry_msgs REQUIRED)  
+    find_package(interfaces REQUIRED)  
     find_package(rclcpp_action REQUIRED)
     find_package(rosidl_typesupport_c REQUIRED) 
     find_package(rosidl_default_generators REQUIRED)
     find_package(builtin_interfaces REQUIRED)
-    find_package(std_msgs REQUIRED)
     
     rosidl_generate_interfaces(${PROJECT_NAME}
       "msg/msg_ros2/UdpPacket.msg"
@@ -157,7 +158,6 @@ link_directories(${Boost_LIBRARY_DIRS})
 # find_package(CUDA REQUIRED)
 find_package(CUDA )
 
-set(CUDA_FOUND false)
 if(CUDA_FOUND)
   
   message(=============================================================)
@@ -257,6 +257,8 @@ if($ENV{ROS_VERSION} MATCHES "2")
   "rclcpp" 
   "rcutils"
   "std_msgs" 
+  "geometry_msgs" 
+  "interfaces" 
   "sensor_msgs" 
   # "tf2_geometry_msgs"
   )
