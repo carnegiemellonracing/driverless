@@ -245,7 +245,8 @@ namespace controls {
             // m_lookahead = std::stof(m_config_dict["look_ahead"]);
             // m_lookahead_squared = m_lookahead * m_lookahead;
             
-            glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
+            glm::fvec2 curr_pos {0, 0}; // TODO: this is just to test what happens if the car starts OOB
+            // glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
             float curr_heading = m_world_state[2];
             for (const auto& seg : m_all_segments) {
                 if (seg.type == SegmentType::ARC) {
@@ -309,13 +310,20 @@ namespace controls {
         }
 
         static size_t find_closest_point(const std::vector<glm::fvec2>& points, glm::fvec2 position, float lookahead_squared, size_t prev_closest) {
+            int counter = 0;
             while (get_squared_distance(points.at(prev_closest), position) >= lookahead_squared) {
                 prev_closest = (prev_closest + 1) % points.size();
+                counter++;
+                if (counter > points.size()) {
+                    // we are in an infinite loop, just return the old value
+                    return prev_closest;
+                }
             }
             return prev_closest;
         }
 
         static size_t find_furthest_point(const std::vector<glm::fvec2>& points, glm::fvec2 position, float lookahead_squared, size_t prev_furthest, size_t prev_closest) {
+            // this will eventually terminate if prev_closest is sane
             while (get_squared_distance(points.at(prev_furthest), position) < lookahead_squared) {
                 prev_furthest = (prev_furthest + 1) % points.size();
                 if (prev_furthest == prev_closest) {
