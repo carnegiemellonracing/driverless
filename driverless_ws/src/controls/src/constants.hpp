@@ -49,6 +49,11 @@ namespace controls {
 
     constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
 
+    // Testing stuff
+
+    constexpr bool ingest_midline = false;
+    
+
 
     // MPPI stuff
 

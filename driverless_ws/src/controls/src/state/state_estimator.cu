@@ -424,7 +424,9 @@ namespace controls {
 
             paranoid_assert(spline_msg.frames.size() > 0);
 
-            // m_spline_frames = process_ros_points(spline_msg.frames);
+            if constexpr (ingest_midline) {
+                m_spline_frames = process_ros_points(spline_msg.frames);
+            }
 
             m_logger("finished state estimator spline processing");
         }
@@ -444,26 +446,31 @@ namespace controls {
             m_left_cone_points = process_ros_points(cone_msg.blue_cones);
             m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
 
-            midline::Cones cones;
-            for (const auto& cone : m_left_cone_points) {
-                cones.addBlueCone(cone.x, cone.y, 0);
-            }
-            for (const auto& cone : m_right_cone_points) {
-                cones.addYellowCone(cone.x, cone.y, 0);
-            }
+            float svm_time = 0.0f;
 
-            // // TODO: convert this to using std::transform
-            auto svm_start = std::chrono::high_resolution_clock::now();            
-            auto spline_frames = midline::svm_fast::cones_to_midline(cones);
-            auto _ = midline::svm_slow::cones_to_midline(cones);\
-            auto svm_end = std::chrono::high_resolution_clock::now();
-            float svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
-            m_spline_frames.clear();
-            for (const auto& frame : spline_frames) {
-                paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
-                m_spline_frames.emplace_back(frame.first, frame.second);
+            if constexpr (!ingest_midline) {
+
+                midline::Cones cones;
+                for (const auto& cone : m_left_cone_points) {
+                    cones.addBlueCone(cone.x, cone.y, 0);
+                }
+                for (const auto& cone : m_right_cone_points) {
+                    cones.addYellowCone(cone.x, cone.y, 0);
+                }
+
+                // // TODO: convert this to using std::transform
+                auto svm_start = std::chrono::high_resolution_clock::now();            
+                auto spline_frames = midline::svm_fast::cones_to_midline(cones);
+                auto _ = midline::svm_slow::cones_to_midline(cones);\
+                auto svm_end = std::chrono::high_resolution_clock::now();
+                svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
+                m_spline_frames.clear();
+                for (const auto& frame : spline_frames) {
+                    paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
+                    m_spline_frames.emplace_back(frame.first, frame.second);
+                }   
+
             }
-            // float svm_time = 0.0f;
 
 
             m_orig_spline_data_stamp = cone_msg.header.stamp;
