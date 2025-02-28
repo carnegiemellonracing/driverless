@@ -118,7 +118,7 @@ namespace controls {
 
             /// Stores the current state of the car (in Thomas model coordinates)
             // std::array<double, 13> m_world_state {0, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
-            std::array<float, 4> m_world_state {15, 0, M_PI_2, 0};
+            std::array<float, 4> m_world_state {6, 0, M_PI_2, 0};
 
             rclcpp::Time m_time;
             std::mt19937 m_rng;
