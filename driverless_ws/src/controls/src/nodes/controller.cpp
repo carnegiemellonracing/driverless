@@ -119,7 +119,7 @@ namespace controls {
                 RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
 
                 // save for info publishing later, since might be changed during iteration
-                rclcpp::Time orig_spline_data_stamp = cone_msg.orig_data_stamp;
+                rclcpp::Time cone_arrival_time = cone_msg.header.stamp;
 
                 // send state to device (i.e. cuda globals)
                 // (also serves to lock state since nothing else updates gpu state)
@@ -220,7 +220,7 @@ namespace controls {
                     finish_time - start_time);
 
                 // can't use high res clock since need to be aligned with other nodes
-                auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_spline_data_stamp.nanoseconds()) / 1000000;
+                auto total_time_elapsed = (get_clock()->now().nanoseconds() - cone_arrival_time.nanoseconds()) / 1000000;
 
                 interfaces::msg::ControllerInfo info{};
                 info.action = action_to_msg(action);
@@ -279,9 +279,6 @@ namespace controls {
 
             ActionMsg ControllerNode::action_to_msg(const Action &action) {
                 interfaces::msg::ControlAction msg;
-
-                //TODO: why not current time?
-                msg.orig_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
 
                 msg.swangle = action[action_swangle_idx];
                 msg.torque_fl = action[action_torque_idx] / 4;
@@ -370,6 +367,9 @@ namespace controls {
                         {
                             std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
                             ActionSignal last_action_signal = m_last_action_signal;
+
+
+                            
                             auto start = std::chrono::steady_clock::now();
                             sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
                             auto end = std::chrono::steady_clock::now();

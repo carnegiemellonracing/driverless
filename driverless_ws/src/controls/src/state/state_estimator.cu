@@ -473,8 +473,6 @@ namespace controls {
             }
 
 
-            m_orig_spline_data_stamp = cone_msg.header.stamp;
-
 #ifdef DISPLAY
             m_all_left_cone_points.clear();
             m_all_right_cone_points.clear();
@@ -485,7 +483,6 @@ namespace controls {
 #endif
 
             if constexpr (reset_pose_on_cone) {
-                // TODO: correct orig_data_stamp
                 m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
             }
             
@@ -512,11 +509,6 @@ namespace controls {
                 pose_msg.header.stamp);
         }
 
-        rclcpp::Time StateEstimator_Impl::get_orig_spline_data_stamp() {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            return m_orig_spline_data_stamp;
-        }
 
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
