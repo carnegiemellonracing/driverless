@@ -1068,8 +1068,8 @@ compute_xyzs_v4_3_impl<<<frame.packet_num, frame.block_num * frame.laser_num>>>(
   free(num_filtered);
   cudaDeviceSynchronize();
   std::cout << "Number of clusters: " << cone_clusters.size() << std::endl;
-  frame.cone_centroids_num = cone_clusters.size();
-  std::memcpy(frame.cone_centroids, cone_clusters.data(), cone_clusters.size() * sizeof(T_Point));
+  frame.cones_num = cone_clusters.size();
+  std::memcpy(frame.cones, cone_clusters.data(), cone_clusters.size() * sizeof(T_Point));
 
 
   free(filtered_points);
