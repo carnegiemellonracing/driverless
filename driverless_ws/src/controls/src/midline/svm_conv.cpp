@@ -19,6 +19,8 @@
 namespace controls {
     namespace midline {
 
+namespace svm_slow {
+
 /* takes a vector of points and the current point,
    returns the index of the closest point and the distance between that point and the current point */ 
         std::pair<size_t, double> getClosestPointIdx(const conesList& points, const std::pair<double, double>& curr_point) {
@@ -250,7 +252,7 @@ namespace controls {
             auto prep_start = high_resolution_clock::now();
             // augment dataset to make it better for SVM training
             cones.supplementCones();
-            cones = cones.augmentConesCircle(cones, 30, 1.2);
+            cones = cones.augmentConesCircle(cones, cone_augmentation_angle, 1.2);
 
             // acquire the feature matrix and label vector
             std::pair<std::vector<std::vector<double>>, std::vector<double>> xy = cones.conesToXY(cones);
@@ -543,5 +545,6 @@ namespace controls {
             return 0;
         }
 
+}
     }
 }
