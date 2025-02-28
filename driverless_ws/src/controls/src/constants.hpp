@@ -52,6 +52,7 @@ namespace controls {
     // Testing stuff
 
     constexpr bool ingest_midline = false;
+    constexpr bool follow_midline_only = false;
     
 
 
