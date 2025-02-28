@@ -350,12 +350,6 @@ namespace controls {
             glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA32F, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_curv_frame_lookup_rbo);
 
-            GLuint depth_rbo;
-            glGenRenderbuffers(1, &depth_rbo);
-            glBindRenderbuffer(GL_RENDERBUFFER, depth_rbo);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, curv_frame_lookup_tex_width,  curv_frame_lookup_tex_width);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rbo);
-
             if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
                 throw std::runtime_error("Framebuffer is not complete");
             }
@@ -769,7 +763,7 @@ namespace controls {
             // set the background color, clears the depth buffer
             // (technically 2 rendering passes are done - color and depth)
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // TODO: remove depth buffer
+            glClear(GL_COLOR_BUFFER_BIT); // TODO: remove depth buffer
             // use a shader program
             glUseProgram(m_gl_path_shader);
             // set the relevant scale and center uniforms (constants) in the shader program
