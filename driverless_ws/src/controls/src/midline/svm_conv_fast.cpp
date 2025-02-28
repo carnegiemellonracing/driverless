@@ -535,7 +535,7 @@ conesList cones_to_midline(Cones cones)
     // Print timing breakdown with percentages
     std::cout << "\n=== Timing Breakdown (LAZY) ===\n";
     std::cout << "Number of cones trained on: " << prob.l << "\n";
-    std::cout << "Mesh grid size:             " << xx.size() << " x " << yy.size() << "\n";
+    std::cout << "Mesh grid size:             " << xx.size() << " x " << xx[0].size() << "\n";
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "Data preparation:     " << prep_ms << " ms (" << (prep_ms / total_ms * 100.0) << "%)\n";
     std::cout << "SVM setup:           " << setup_ms << " ms (" << (setup_ms / total_ms * 100.0) << "%)\n";
