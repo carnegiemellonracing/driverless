@@ -105,7 +105,7 @@ namespace controls {
     // mppi simulates a lot of shitty trajectories (naive brownian guess)
     /// Represents space the car occupies, used to calculate the size of the curvilinear lookup table.
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * fake_track_width);
-    constexpr bool reset_pose_on_spline = true; ///< Sets pose to 0 vector for new spline (sensor POV)
+    constexpr bool reset_pose_on_cone = true; ///< Sets pose to 0 vector for new cone (sensor POV)
      // triangle threshold is the max distance between cones on opposing sides that we will use for triangle drawing
     constexpr float triangle_threshold_squared = 64.0f;
 

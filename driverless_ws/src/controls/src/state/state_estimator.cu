@@ -484,7 +484,7 @@ namespace controls {
             m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
 #endif
 
-            if constexpr (reset_pose_on_spline) {
+            if constexpr (reset_pose_on_cone) {
                 // TODO: correct orig_data_stamp
                 m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
             }
@@ -787,7 +787,6 @@ namespace controls {
             glBindVertexArray(m_gl_path.vao);
             glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
             glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
-            // glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
 
 
         }
