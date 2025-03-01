@@ -76,7 +76,7 @@ class Point_To_Pixel_Node : public rclcpp::Node
 
 // Constructor definition
 Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
-                                              params([]() {sl_oc::video::VideoParams p; p.res = sl_oc::video::RESOLUTION::HD720; p.fps = sl_oc::video::FPS::FPS_60; return p;}()),
+                                              params([]() {sl_oc::video::VideoParams p; p.res = sl_oc::video::RESOLUTION::HD1080; p.fps = sl_oc::video::FPS::FPS_30; return p;}()),
                                               cap_0(sl_oc::video::VideoCapture(params)),
                                               cap_1(sl_oc::video::VideoCapture(params))
 {
@@ -90,7 +90,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   
   // RCLCPP_INFO(this->get_logger(), "Connected to ZED camera. %s", (this->cap_0).getDeviceName().c_str());
 
-  if( !(this->cap_1).initializeVideo(0) )
+  if(!(this->cap_1).initializeVideo(0))
   {
     RCLCPP_ERROR(this->get_logger(), "Cannot open camera 1 video capture");
     rclcpp::shutdown(); // Shutdown node
@@ -452,7 +452,7 @@ void Point_To_Pixel_Node::opencv_callback() {
 
       cv::Mat frame_1_resize;
       cv::resize(frameBGR, frame_1_resize, cv::Size(), 1., 1.);
-      cv::Rect roi(0, 0, 1280, 720);
+      cv::Rect roi(0, 0, 1920, 1080);
       frame_1_resize = frame_1_resize(roi);
       cv::imshow("Display Window", frame_1_resize);
       cv::imwrite("/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel_test/config/freeze.png", frame_1_resize);
