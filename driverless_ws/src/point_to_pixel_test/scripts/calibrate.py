@@ -26,7 +26,7 @@ class CalibrationPoint:
 class CalibrationData:
     def __init__(self):
         self.points: List[CalibrationPoint] = []
-        self._next_index = 0
+        self._next_index = 1
 
     def add_point(self, camera_point: Tuple[float, float], lidar_point: Tuple[float, float, float]) -> int:
         point = CalibrationPoint(
@@ -203,7 +203,7 @@ class LidarInputDialog:
         self.top.destroy()
 
 class CalibrationUI:
-    def __init__(self, min_points: int = 12, width=800, height=450, frame_path: str = ""):
+    def __init__(self, min_points: int = 10, width=800, height=450, frame_path: str = ""):
         self.min_points = min_points
         self.calibration_data = CalibrationData()
         self.current_frame = None
@@ -211,6 +211,7 @@ class CalibrationUI:
         self.width = width
         self.height = height
         self.frame_path = frame_path  # Path to the image you want to use as the frame
+        self.scaling_factor = 1280 /1920
         self.setup_ui()
 
     def setup_ui(self):
@@ -231,6 +232,9 @@ class CalibrationUI:
         self.canvas.bind("<ButtonPress-1>", self.on_canvas_press)
         self.canvas.bind("<B1-Motion>", self.on_canvas_drag)
         self.canvas.bind("<ButtonRelease-1>", self.on_canvas_release)
+
+        # F for finish!
+        self.root.bind('<f>', self.finish_calibration_with_key)
 
         # Point list
         self.point_frame = ttk.LabelFrame(self.right_frame, text="Calibration Points")
@@ -265,6 +269,15 @@ class CalibrationUI:
         self.status_label = ttk.Label(self.right_frame, textvariable=self.status_var)
         self.status_label.pack(pady=5)
 
+    def finish_calibration_with_key(self, event=None):
+        self.finish_calibration()
+    
+    def upsize(self, n):
+        return n / self.scaling_factor
+
+    def downsize(self, n):
+        return n * self.scaling_factor
+
     def update_camera_view(self):
         # Load the static image from the specified path
         frame = cv2.imread(self.frame_path)
@@ -280,18 +293,19 @@ class CalibrationUI:
             self.canvas.create_image(0, 0, anchor=tk.NW, image=self.current_frame)
             
             # Draw existing points (coordinates may need adjusting if they are relative to image size)
-            for point in self.calibration_data.points:
-                self.canvas.create_oval(point.camera_x-5, point.camera_y-5, point.camera_x+5, point.camera_y+5, fill='red')
-                self.canvas.create_text(point.camera_x+10, point.camera_y+10, text=str(point.index), fill='red')
+            for i in range(len(self.calibration_data.points)):
+                point = self.calibration_data.points[i]
+                self.canvas.create_oval( self.downsize(point.camera_x) - 2, self.downsize(point.camera_y)- 2, self.downsize(point.camera_x) +2, self.downsize(point.camera_y)+ 2, fill='red')
+                self.canvas.create_text(self.downsize(point.camera_x) + 6, self.downsize(point.camera_y) + 6, text=str(i + 1), fill='red')
         else:
             print(f"Error: Unable to load image at {self.frame_path}")
         self.root.after(30, self.update_camera_view)
 
     def on_canvas_press(self, event):
-        click_point = (event.x, event.y)
+        click_point = (self.upsize(event.x), self.upsize(event.y))
         # Check if click is near an existing camera point 
         for point in self.calibration_data.points:
-            dist = ((point.camera_x - event.x) ** 2 + (point.camera_y - event.y) ** 2) ** 0.5
+            dist = ((point.camera_x - click_point[0]) ** 2 + (point.camera_y - click_point[1]) ** 2) ** 0.5
             if dist <= 10:
                 self.dragging_point_index = point.index
                 return
@@ -303,8 +317,8 @@ class CalibrationUI:
             # Update camera coordinates of the dragged point
             for point in self.calibration_data.points:
                 if point.index == self.dragging_point_index:
-                    point.camera_x = float(event.x)
-                    point.camera_y = float(event.y)
+                    point.camera_x = self.upsize(float(event.x))
+                    point.camera_y = self.upsize(float(event.y))
                     break
             self.update_point_list()
 
@@ -365,6 +379,11 @@ class CalibrationUI:
             return
 
         camera_points, lidar_points = self.calibration_data.get_arrays()
+
+        for i in range(len(camera_points)):
+            print (camera_points[i], lidar_points[i])
+
+
         try:
             proj_matrix = calculate_projection_matrix(camera_points, lidar_points, self.min_points)
             self.save_calibration(proj_matrix)
@@ -410,7 +429,8 @@ def main():
 
     try:
         # Initialize CalibrationUI with the image size and file path
-        ui = CalibrationUI(width=im.shape[1], height=im.shape[0], frame_path=path)
+        print(im.shape)
+        ui = CalibrationUI(width=1280, height=720, frame_path=path)
         ui.run()
     except Exception as e:
         print(f"Calibration failed: {e}", file=sys.stderr)
