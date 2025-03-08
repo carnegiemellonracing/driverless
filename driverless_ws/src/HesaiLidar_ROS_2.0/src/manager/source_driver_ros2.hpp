@@ -49,6 +49,8 @@
 #include <boost/thread.hpp>
 #include "source_drive_common.hpp"
 
+#include <../CMR_CPP_Pipeline.cpp>
+
 class SourceDriver
 {
 public:
@@ -99,6 +101,9 @@ protected:
   sensor_msgs::msg::PointCloud2 ToRosMsg(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id);
   sensor_msgs::msg::PointCloud2 ToRosMsgFiltered(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id);
   interfaces::msg::ConeArray ToRosMsgCones(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id);
+
+  sensor_msgs::msg::PointCloud2 ToRosMsgConesCPP(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id);
+
   // Convert packets into ROS messages
   hesai_ros_driver::msg::UdpFrame ToRosMsg(const UdpFrame_t& ros_msg, double timestamp);
   std::string frame_id_;
@@ -218,6 +223,7 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
 {
   pub_->publish(ToRosMsg(msg, frame_id_));
   // filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));
+  cones_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
 }
 
 inline void SourceDriver::SendCorrection(const u8Array_t& msg)
@@ -238,6 +244,84 @@ inline void SourceDriver::SendPTP(const uint8_t& ptp_lock_offset, const u8Array_
 inline void SourceDriver::SendFiretime(const double *firetime_correction_)
 {
   firetime_pub_->publish(ToRosMsg(firetime_correction_));
+}
+
+//CPP Driver Call
+inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsgConesCPP(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id) {
+
+  // Start the timer
+  auto start = std::chrono::high_resolution_clock::now();
+
+  sensor_msgs::msg::PointCloud2 ros_msg;
+
+  int fields = 3;
+  ros_msg.fields.clear();
+  ros_msg.fields.reserve(fields);
+  ros_msg.width = frame.points_num; 
+  ros_msg.height = 1; 
+
+  int offset = 0;
+  offset = addPointField(ros_msg, "x", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
+  offset = addPointField(ros_msg, "y", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
+  offset = addPointField(ros_msg, "z", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
+
+  ros_msg.point_step = offset;
+  ros_msg.row_step = ros_msg.width * ros_msg.point_step;
+  ros_msg.is_dense = false;
+  ros_msg.data.resize(frame.points_num * ros_msg.point_step);
+
+  sensor_msgs::PointCloud2Iterator<float> iter_x_(ros_msg, "x");
+  sensor_msgs::PointCloud2Iterator<float> iter_y_(ros_msg, "y");
+  sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_msg, "z");
+  float epsilon = 0.1;
+  
+  // Define Constants 
+  double cpp_alpha = 0.1;
+  int cpp_num_bins = 10;
+  double cpp_height_threshold = 0.07;
+  double cpp_epsilon = 0.2;
+  int cpp_min_points = 3;
+  double cpp_epsilon2 = 3;
+  int cpp_min_points2 = 3;
+
+  PointCloud<PointXYZ> filtered_points;
+
+  for (size_t i = 0; i < frame.points_num; i++) {
+    LidarPointXYZIRT point = frame.points[i];
+    if (std::abs(point.x) < epsilon && std::abs(point.y) < epsilon && std::abs(point.z) < epsilon) {
+      continue;
+    }
+
+    filtered_points.push_back(PointXYZ(point.x, point.y, point.z));
+  }
+  
+  PointCloud<PointXYZ> filtered_cloud = run_pipeline(filtered_points, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
+
+  for (size_t i = 0; i < filtered_cloud.size(); i++) {
+    *iter_x_ = filtered_cloud.points[i].x;
+    *iter_y_ = filtered_cloud.points[i].y;
+    *iter_z_ = filtered_cloud.points[i].z;
+    ++iter_x_;
+    ++iter_y_;
+    ++iter_z_;
+  }
+
+  ros_msg.data.resize(filtered_cloud.size() * ros_msg.point_step);
+  ros_msg.width = filtered_cloud.size();
+
+  std::cout << "number of cones is " << filtered_cloud.size() << "\n";
+
+  ros_msg.header.stamp.sec = (uint32_t)floor(frame.points[0].timestamp);
+  ros_msg.header.stamp.nanosec = (uint32_t)round((frame.points[0].timestamp - ros_msg.header.stamp.sec) * 1e9);
+  ros_msg.header.frame_id = frame_id_;
+  
+  // Stop the timer and calculate the elapsed time
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> duration = end - start;
+
+  std::cout << "Time taken: " << duration.count() << " ms" << std::endl;
+
+  return ros_msg;
 }
 
 inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsg(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id)
