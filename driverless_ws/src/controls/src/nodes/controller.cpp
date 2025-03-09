@@ -29,7 +29,11 @@ namespace controls {
     namespace nodes {
         ControllerNode::ControllerNode(
             std::shared_ptr<state::StateEstimator> state_estimator,
-            std::shared_ptr<mppi::MppiController> mppi_controller)
+            std::shared_ptr<mppi::MppiController> mppi_controller,
+            int arg1,
+            int arg2,
+            int arg3,
+            int arg4)
             : Node{controller_node_name},
 
               m_state_estimator{std::move(state_estimator)},
@@ -46,6 +50,10 @@ namespace controls {
                       controller_info_topic_name,
                       controller_info_qos)
               },
+              m_arg1{arg1},
+              m_arg2{arg2},
+              m_arg3{arg3},
+              m_arg4{arg4},
 
               m_data_trajectory_log {"mppi_inputs.txt", std::ios::out}
         {
@@ -139,7 +147,7 @@ namespace controls {
 
                 // we don't need the host state anymore, so release the lock and let state callbacks proceed
 
-                // run mppi, and write action to the write buffer
+                // run mppi, and write action to the write bufferControllerNode
                 auto gen_action_start = std::chrono::high_resolution_clock::now();
                 Action action = m_mppi_controller->generate_action();
                 auto gen_action_end = std::chrono::high_resolution_clock::now();
@@ -149,7 +157,7 @@ namespace controls {
 
 #ifdef DATA
                 std::stringstream parameters_ss;
-                parameters_ss << "Swangle range: " << 19 * M_PI / 180 * 2 << "\nThrottle range: " << saturating_motor_torque * 2 << "\n";
+                parameters_ss << "Swangle range: " << 19 * M_PI / 180ControllerNode * 2 << "\nThrottle range: " << saturating_motor_torque * 2 << "\n";
                 RCLCPP_WARN_ONCE(get_logger(), parameters_ss.str().c_str());
 
                 std::vector<Action> percentage_diff_trajectory = m_mppi_controller->m_percentage_diff_trajectory;
@@ -157,10 +165,7 @@ namespace controls {
                 std::vector<Action> last_action_trajectory = m_mppi_controller->m_last_action_trajectory_logging;
                 auto diff_statistics = m_mppi_controller->m_diff_statistics;
 
-                // write the spline
-                std::vector<glm::fvec2> frames = m_state_estimator->get_spline_frames();
-                std::vector<glm::fvec2> left_cones = m_state_estimator->get_left_cone_points();
-                std::vector<glm::fvec2> right_cones = m_state_estimator->get_right_cone_points();
+                // write the splineControllerNodeor->get_right_cone_points();
 
                 // create debugging string
                 ss.clear();
@@ -171,7 +176,7 @@ namespace controls {
                 ss << "Right cones (MPPI Input): \n";
                 ss << points_to_string(right_cones) << "\n";
                 ss << "Last action_trajectory (MPPI Input/Guess): \n";
-                for (const auto &action : last_action_trajectory)
+                for (const auto &action : last_action_trajectory)ControllerNode
                 {
                     ss << "[" << action[0] << ", " << action[1] << "], ";
                 }
@@ -368,12 +373,39 @@ namespace controls {
                     {
                         while (rclcpp::ok)
                         {
-                            std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
+                            auto current_time = std::chrono::high_resolution_clock::now();
+                            int epoch_ms = std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count();
+                            if (epoch_ms % 100 < 5) {
+                            // std::this_thread::sleep_for(std::chrono::milliseconds(24));
                             ActionSignal last_action_signal = m_last_action_signal;
                             auto start = std::chrono::steady_clock::now();
-                            sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
+                            /**
+                             * swangle -13 (-0.227 rad) deg -> 2450
+                             * 13 deg (0.227rad) -> 4000
+                             * 
+                             * 
+                             * 
+                             * 
+                            */
+                            // sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
+                            // sendControlAction(default_)
+                            int period_ms = 5000;
+                            float sine_input = epoch_ms % period_ms;
+                            float amplitude = 13.0f;
+                            float swangle_deg = amplitude * std::sin((2 * M_PI * sine_input) / static_cast<float>(period_ms));
+                            float swangle_deg_clipped = std::max(-13.0f, std::min(13.0f, swangle_deg));
+                            float swangle_can_input = (((swangle_deg_clipped - (-13.0f)) / 26.0f) * (4000.0f - 2450.0f)) + 2450.0f;
+                            uint16_t swangle_can_adc = static_cast<uint16_t>(swangle_can_input);
+                            
+                            int arg1 = 0;
+                            int arg2 = 0;
+                            int arg3 = 0;
+                            // int arg4 = ;
+                            sendControlAction(0, 0, 0, m_arg4);
                             auto end = std::chrono::steady_clock::now();
-                            std::cout << "sendControlAction took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms\n";
+                            std::cout << "sendControlAction (" << m_arg1 << ", " << m_arg2 << 
+                            ", " << m_arg3 << ", " << m_arg4 << ") took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms\n";
+                            }
                         }
                         std::cout << "I just got terminated in another way lol\n";
                         send_finished_ignore_error();
@@ -399,13 +431,21 @@ int main(int argc, char *argv[]) {
     // rclcpp::on_shutdown(send_finished_ignore_error); // Need to figure out how to gracefully exit the aim communication threadssl
 
     // instantiate node
-    const auto node = std::make_shared<nodes::ControllerNode>(state_estimator, controller);
+    int arg1, arg2, arg3, arg4;
+    arg1 = std::strtol(argv[1], nullptr, 10);
+    arg2 = std::strtol(argv[2], nullptr, 10);
+    arg3 = std::strtol(argv[3], nullptr, 10);
+    arg4 = std::strtol(argv[4], nullptr, 10);
+ 
+    const auto node = std::make_shared<nodes::ControllerNode>(state_estimator, controller, arg1, arg2, arg3, arg4);
     std::cout << "controller node created" << std::endl;
 
     rclcpp::Logger logger = node->get_logger();
     LoggerFunc logger_func = [logger](const std::string& msg) {
         RCLCPP_DEBUG(logger, msg.c_str());
     };
+
+
 
     //TODO why is this not a nullptr
     state_estimator->set_logger(logger_func);

@@ -36,7 +36,11 @@ namespace controls {
              */
             ControllerNode (
                 std::shared_ptr<state::StateEstimator> state_estimator,
-                std::shared_ptr<mppi::MppiController> mppi_controller
+                std::shared_ptr<mppi::MppiController> mppi_controller,
+                int arg1,
+                int arg2,
+                int arg3,
+                int arg4
             );
 
 
@@ -111,7 +115,10 @@ namespace controls {
              * state estimator or waiting on `m_state_cond_var`
              */
             std::mutex m_state_mut;
-
+            int m_arg1;
+            int m_arg2;
+            int m_arg3;
+            int m_arg4;
             /**
              * Condition variable for notifying state dirty-ing. MPPI waits on this variable while state and spline
              * callbacks notify it. `m_state_mut` must be acquired before waiting on this.
