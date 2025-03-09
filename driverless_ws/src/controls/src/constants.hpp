@@ -8,6 +8,13 @@
 
 namespace controls {
     /* ROS moments */
+    constexpr int default_front_torque = 0;
+    constexpr int default_rear_torque = 0;
+    constexpr int default_wheel_setpoint = 0;
+    constexpr int default_rack_displacement = 3250;
+    
+    // sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
+
 
     constexpr const char *controller_node_name = "controller";
     constexpr const char *control_action_topic_name = "control_action";

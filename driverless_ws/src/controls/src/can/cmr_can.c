@@ -18,6 +18,7 @@
 
 #define READ_WAIT_INFINITE (unsigned long)(-1)
 static unsigned int msgCounter = 0;
+static unsigned int can_tx_timeout = 30;
 
 
 
@@ -110,7 +111,7 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
 
     /* Open channel, set parameters and go on bus */
     hnd = canOpenChannel(channel,
-                         canOPEN_EXCLUSIVE | canOPEN_REQUIRE_EXTENDED | canOPEN_ACCEPT_VIRTUAL);
+                         canOPEN_EXCLUSIVE /*| canOPEN_REQUIRE_EXTENDED*/ | canOPEN_ACCEPT_VIRTUAL);
     if (hnd < 0) {
         printf("canOpenChannel %d", channel);
         check("", hnd);
@@ -142,7 +143,7 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
     if (stat != canOK) {
         goto ErrorExit;
     }
-    stat = canWriteSync(hnd, 1000);
+    stat = canWriteSync(hnd, can_tx_timeout);
     check("canWriteSync", stat);
     if (stat != canOK) {
         goto ErrorExit;
@@ -171,18 +172,32 @@ ErrorExit:
 
 @returns 0 on success else error occured
 */
-int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint8_t rackDisplacement_mm){
+int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t velocity_rpm /*divide by ~13 for wheelspeed*/, uint16_t rackDisplacement_adc /*2450 -> 4050*/){
     long controlActionID = 0x190;
 
     //defines our message
-    unsigned char msg[5];
-    msg[0] = (unsigned char) frontTorque_mNm >> 8; //8 MSB of frontTorque
-    msg[1] = (unsigned char) frontTorque_mNm; // 8 LSB of frontTorque
-    msg[2] = (unsigned char) rearTorque_mNm >> 8; // 8 MSB of rearTorque
-    msg[3] = (unsigned char) rearTorque_mNm; // 8 LSB of rearTorque
-    msg[4] = (unsigned char) rackDisplacement_mm;
+    unsigned char msg[8];
+    msg[1] = (unsigned char) (frontTorque_mNm >> 8); //8 MSB of frontTorque
+    msg[0] = (unsigned char) frontTorque_mNm; // 8 LSB of frontTorque
+    msg[3] = (unsigned char) (rearTorque_mNm >> 8); // 8 MSB of rearTorque
+    msg[2] = (unsigned char) rearTorque_mNm; // 8 LSB of rearTorque
+    msg[5] = (unsigned char) (velocity_rpm >> 8);
+    msg[4] = (unsigned char) velocity_rpm;
+    msg[7] = (unsigned char) (rackDisplacement_adc >> 8);
+    msg[6] = (unsigned char) rackDisplacement_adc;
 
-    return cmr_can_tx(0, controlActionID, &msg, 5, false);
+    return cmr_can_tx(0, controlActionID, &msg, 8, false);
+}
+
+int sendPIDConstants(float p, float feedforward) {
+    long pidID = 0x548;
+
+    //defines our message
+    unsigned char msg[8];
+    *(float*)msg = p;
+    *(float*)(&msg[4]) = feedforward;
+
+    return cmr_can_tx(0, pidID, &msg, 8, false);
 }
 
 /*
