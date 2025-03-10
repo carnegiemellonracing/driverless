@@ -49,6 +49,8 @@
 #include <boost/thread.hpp>
 #include "source_drive_common.hpp"
 
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
 #include <../CMR_CPP_Pipeline.cpp>
 
 class SourceDriver
@@ -114,6 +116,8 @@ protected:
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_;
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr filtered_pub_;
   rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cones_pub_;
+    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr cone_pub_;
+    
   rclcpp::Publisher<hesai_ros_driver::msg::Firetime>::SharedPtr firetime_pub_;
   rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr crt_pub_;
   rclcpp::Publisher<hesai_ros_driver::msg::LossPacket>::SharedPtr loss_pub_;
@@ -134,6 +138,7 @@ inline void SourceDriver::Init(const YAML::Node& config)
     pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>(driver_param.input_param.ros_send_point_topic, 100);
     filtered_pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>("/filtered_points", 100);
     cones_pub_ = node_ptr_->create_publisher<interfaces::msg::ConeArray>("/cones", 100);
+    cone_pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>("/cpp_cones", 100);
   }
 
 
@@ -223,7 +228,8 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
 {
   pub_->publish(ToRosMsg(msg, frame_id_));
   // filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));
-  cones_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
+  // cones_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
+  cone_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
 }
 
 inline void SourceDriver::SendCorrection(const u8Array_t& msg)
