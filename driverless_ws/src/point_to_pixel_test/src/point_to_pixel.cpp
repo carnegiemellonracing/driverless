@@ -99,11 +99,11 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   RCLCPP_INFO(this->get_logger(), "Connected to ZED camera. %s", (this->cap_1).getDeviceName().c_str());
 
   // Publisher that returns colored cones
-  publisher_ = this->create_publisher<interfaces::msg::ConeList>("colored_cones", 10);
+  publisher_ = this->create_publisher<interfaces::msg::ConeList>("/colored_cones", 10);
   
   // Subscriber that reads the input topic that contains an array of cone_point arrays from LiDAR stack
   subscriber_ = this->create_subscription<interfaces::msg::PPMConeArray>(
-    "cone_array", 
+    "/cpp_cones", 
     10, 
     [this](const interfaces::msg::PPMConeArray::SharedPtr msg) {this->topic_callback(msg);}
   );
@@ -281,8 +281,8 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
 
   std::tuple<int, float> ppm = this->identify_color(pixel_1, frameBGR_1);
 
-  cv::drawMarker(frameBGR_1, cv::Point(pixel_1(0), pixel_1(1)), 'r');
-  cv::imshow("Transformed Point", frameBGR_1);
+  // cv::drawMarker(frameBGR_1, cv::Point(pixel_1(0), pixel_1(1)), 'r');
+  // cv::imshow("Transformed Point", frameBGR_1);
 
   while (true) {
         int key = cv::waitKey(0); // Wait indefinitely for a key press
@@ -412,12 +412,15 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
 
     switch (cone_class){
       case 0:
+        std::cout << "orange\n" ;
         message.orange_cones.push_back(point_msg);
         break;
       case 1:
+        std::cout << "yellow\n" ;
         message.yellow_cones.push_back(point_msg);
         break;
       case 2:
+        std::cout << "blue\n" ;
         message.blue_cones.push_back(point_msg);
         break;
       default:
