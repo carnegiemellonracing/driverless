@@ -38,8 +38,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "safe_call.cuh"
 #include "return_code.h"
 
-#define MAX_DISTANCE 10.0f // Maximum allowable distance
-#define ERROR_MARGIN 0.15f  // Outlier threshold
+#define MAX_DISTANCE 25.0f // Maximum allowable distance
+#define ERROR_MARGIN 0.2f  // Outlier threshold
 #define MAX_HEIGHT 0.4f
 
 
@@ -1052,7 +1052,7 @@ compute_xyzs_v4_3_impl<<<frame.packet_num, frame.block_num * frame.laser_num>>>(
   //           << "time taken to copy data from gpu is " << std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count() << "\n"
   //           << "time taken to copy cpu to cpu is " << std::chrono::duration_cast<std::chrono::microseconds>(t5 - t4).count() << "\n";
 
-  float alpha = 0.1f;
+  float alpha = 1.5f;
   int num_bins = 10;
   int* num_filtered = (int*)malloc(sizeof(int));
   auto filtered_points = GraceAndConrad(frame.points, frame.block_num * frame.laser_num * frame.packet_num, alpha, num_bins, num_filtered);
