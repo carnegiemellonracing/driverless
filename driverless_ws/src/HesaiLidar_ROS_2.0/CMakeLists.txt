@@ -18,6 +18,11 @@ configure_file(
 #=======================================
 set(POINT_TYPE XYZI)
 
+find_package(PCL 1.3 REQUIRED)
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
 #=======================================
 # Compile setup (ORIGINAL, CATKIN, COLCON)
 #=======================================
@@ -156,7 +161,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 # if install different cuda version, set the cuda path, like cuda-11.4
 # set(CUDA_TOOLKIT_ROOT_DIR /usr/local/cuda-11.4/)
 # find_package(CUDA REQUIRED)
-find_package(CUDA )
+# find_package(CUDA )
 
 if(CUDA_FOUND)
   
@@ -277,5 +282,4 @@ if($ENV{ROS_VERSION} MATCHES "2")
   ament_package()
 
 endif($ENV{ROS_VERSION} MATCHES "2")
-
 
