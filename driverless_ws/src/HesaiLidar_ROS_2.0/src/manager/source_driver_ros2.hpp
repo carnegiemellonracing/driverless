@@ -227,9 +227,12 @@ inline void SourceDriver::SendPacket(const UdpFrame_t& msg, double timestamp)
 inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIRT>& msg)
 {
   pub_->publish(ToRosMsg(msg, frame_id_));
-  filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));
-  cones_pub_->publish(ToRosMsgCones(msg, frame_id_));
-  // cone_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
+  #ifdef __CUDACC__
+    filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));
+    cones_pub_->publish(ToRosMsgCones(msg, frame_id_));
+  #else
+    cone_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
+  #endif
 }
 
 inline void SourceDriver::SendCorrection(const u8Array_t& msg)
