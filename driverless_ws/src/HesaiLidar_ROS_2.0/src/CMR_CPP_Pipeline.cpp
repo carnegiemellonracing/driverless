@@ -103,7 +103,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
   for (int i = 0; i < csize; i++) {
     PointXYZ pt = cloud.points[i];
     radial_t rd = point2radial(pt);
-    if (rd.radius < radius_max && abs(pt.y) < 1.37) {
+    if (rd.radius < radius_max && (pt.y) < 1 && pt.y > -1.7) {
       int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
       int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
       if (seg_index < 0)
