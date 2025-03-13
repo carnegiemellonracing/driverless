@@ -39,15 +39,18 @@ class Point_To_Pixel_Node : public rclcpp::Node
 
   private:
     // Functions
-    int transform(geometry_msgs::msg::Vector3& point); 
+    int transform(geometry_msgs::msg::Vector3& point, rclcpp::Time callbackTimer); 
+    cv::Mat getCameraFrame(rclcpp::Time callbackTime);
+
+    // Image Deque
+    std::deque<std::pair<rclcpp::Time, cv::Mat>> img_deque;
 
     // Parameters
     Eigen::Matrix<double, 3, 4> projection_matrix;
 
     // Callbacks/helper functions
     void topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
-    
-
+    void camera_callback();
     void opencv_callback();
 
     // Parameters
@@ -67,6 +70,11 @@ class Point_To_Pixel_Node : public rclcpp::Node
     // ROS2 Objects
     rclcpp::Publisher<interfaces::msg::ConeList>::SharedPtr publisher_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr subscriber_;
+
+    // Camera Callback(10 frames per second)
+    rclcpp::TimerBase::SharedPtr camera_timer_;
+
+    // Timer callback for coloring algorithm debugging
     rclcpp::TimerBase::SharedPtr opencv_timer_;
 
     
@@ -80,16 +88,6 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
                                               cap_0(sl_oc::video::VideoCapture(params)),
                                               cap_1(sl_oc::video::VideoCapture(params))
 {
-  // params.res = sl_oc::video::RESOLUTION::HD720;
-  // params.fps = sl_oc::video::FPS::FPS_60;
-  // if( !(this->cap_0).initializeVideo(0) )
-  // {
-  //   RCLCPP_ERROR(this->get_logger(), "Cannot open camera 0 video capture");
-  //   rclcpp::shutdown(); // Shutdown node
-  // }
-  
-  // RCLCPP_INFO(this->get_logger(), "Connected to ZED camera. %s", (this->cap_0).getDeviceName().c_str());
-
   if(!(this->cap_1).initializeVideo(0))
   {
     RCLCPP_ERROR(this->get_logger(), "Cannot open camera 1 video capture");
@@ -108,6 +106,12 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
     [this](const interfaces::msg::PPMConeArray::SharedPtr msg) {this->topic_callback(msg);}
   );
 
+  // Camera Callback (10 fps)
+  camera_timer_ = this->create_wall_timer(
+    std::chrono::milliseconds(10),
+    [this](){this->camera_callback();}
+  );
+
   #if DEBUG
   // Timer for Opencv
   opencv_timer_ = this->create_wall_timer(
@@ -115,12 +119,14 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
     [this](){this->opencv_callback();}
   );
   #endif
+  // Initialize Parameter
+  this->img_deque = {};
 
   // Set Parameters
   std::vector<double> param_default(12, 1.0f); // Projection matrix that takes LiDAR points to pixels
   this->declare_parameter("projection_matrix", param_default);
 
-  this->declare_parameter("confidence_threshold", .5); // Threshold that determines whether it reports the color on a cone or not
+  this->declare_parameter("confidence_threshold", .15); // Threshold that determines whether it reports the color on a cone or not
 
   // Get parameters
   std::vector<double> param = this->get_parameter("projection_matrix").as_double_array();
@@ -132,7 +138,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   std::chrono::seconds duration(2);
   rclcpp::sleep_for(duration);
 
-  // TEST RECTIFY
+  // Rectify Image
   int sn = this->cap_1.getSerialNumber();
 
   // ----> Retrieve calibration file from Stereolabs server
@@ -153,10 +159,9 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   sl_oc::tools::initCalibration(calibration_file, cv::Size(w/2,h), this->map_left_x, this->map_left_y, this->map_right_x, this->map_right_y,
                                 cameraMatrix_left, cameraMatrix_right);
 
-  // END TEST
-
   const sl_oc::video::Frame frame_1 = this->cap_1.getLastFrame();
 
+  //Get Freeze Image for Calibration
   cv::Mat frameBGR_1, left_raw, left_rect, right_raw, right_rect;
     if (frame_1.data != nullptr){
         // ----> Conversion from YUV 4:2:2 to BGR for visualization
@@ -193,7 +198,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
 // Point to pixel transform
 // returns 0 for blue cone, 1 for yellow cone, and 2 for orange cone
-int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
+int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point,rclcpp::Time callbackTime)
 {
   // Create a stringstream to log the matrix
         std::stringstream ss;
@@ -210,6 +215,7 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
 
         // Log the projection_matrix using ROS 2 logger
         RCLCPP_INFO(this->get_logger(), "3x4 projection_matrix:\n%s", ss.str().c_str());
+
   #if !DEBUG
   // Convert point from topic type (geometry_msgs/msg/Vector3) to Eigen Vector3d
   Eigen::Vector4d lidar_pt(point.x, point.y, point.z, 1.0);
@@ -221,7 +227,6 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
   Eigen::Vector2d pixel_1 (transformed(0)/transformed(2), transformed(1)/transformed(2));
 
   // const sl_oc::video::Frame frame_0 = this->cap_0.getLastFrame();
-
   // RCLCPP_INFO(this->get_logger(), "%d, %d \n", pixel_1(0), pixel_1(1));
   
   #endif
@@ -241,61 +246,69 @@ int Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
   //       cv::cvtColor(frameYUV_0,frameBGR_0,cv::COLOR_YUV2BGR_YUYV);
   //       // <---- Conversion from YUV 4:2:2 to BGR for visualization);
   //   }
-  const sl_oc::video::Frame frame_1 = this->cap_1.getLastFrame();
-
-
-  cv::Mat frameBGR_1, left_raw, left_rect, right_raw, right_rect;
-    if (frame_1.data != nullptr){
-        // ----> Conversion from YUV 4:2:2 to BGR for visualization
-        // cv::Mat frameYUV_1 = cv::Mat(1280, 720, CV_8UC2, frame_0.data);
-        cv::Mat frameYUV_1 = cv::Mat(frame_1.height, frame_1.width, CV_8UC2, frame_1.data);
-        // cv::Mat frameBGR_1;
-        cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
-        // <---- Conversion from YUV 4:2:2 to BGR for visualization
-        // cv::Rect roi(0, 0, 1280, 720);
-        // frameBGR_1 = frameBGR_1(roi);
-
-        // ----> Extract left and right images from side-by-side
-        left_raw = frameBGR_1(cv::Rect(0, 0, frameBGR_1.cols / 2, frameBGR_1.rows));
-        right_raw = frameBGR_1(cv::Rect(frameBGR_1.cols / 2, 0, frameBGR_1.cols / 2, frameBGR_1.rows));
-
-        // ----> Apply rectification
-        cv::remap(left_raw, left_rect, this->map_left_x, this->map_left_y, cv::INTER_LINEAR );
-        cv::remap(right_raw, right_rect, this->map_right_x, this->map_right_y, cv::INTER_LINEAR );
-        
-        // frameBGR_1(cv::Rect(0, 0, frameBGR_1.cols / 2, frameBGR_1.rows)) = left_rect;
-        // frameBGR_1(cv::Rect(frameBGR_1.cols / 2, 0, frameBGR_1.cols / 2, frameBGR_1.rows)) = right_rect;
-
-        frameBGR_1 = left_rect;
-
-    }
-
-  // if (frame_0.data == nullptr) {
-  //   RCLCPP_ERROR(this->get_logger(), "Failed to capture frame from camera 0.");
-  //   return 0;
-  // }
-  if (frame_1.data == nullptr) {
-      RCLCPP_ERROR(this->get_logger(), "Failed to capture frame from camera 1.");
-      return 0;
-  }
+  cv::Mat frameBGR_1 = this->getCameraFrame(callbackTime);
 
   std::tuple<int, float> ppm = this->identify_color(pixel_1, frameBGR_1);
 
   // cv::drawMarker(frameBGR_1, cv::Point(pixel_1(0), pixel_1(1)), 'r');
   // cv::imshow("Transformed Point", frameBGR_1);
 
-  while (true) {
-        int key = cv::waitKey(0); // Wait indefinitely for a key press
-        if (key == 27) { // ASCII value for ESC key
-            break; // Exit the loop if ESC is pressed
-        }
-    }
+  // while (true) {
+  //       int key = cv::waitKey(0); // Wait indefinitely for a key press
+  //       if (key == 27) { // ASCII value for ESC key
+  //           break; // Exit the loop if ESC is pressed
+  //       }
+  //   }
 
-  cv::destroyAllWindows();
+  // cv::destroyAllWindows();
   
   RCLCPP_INFO(this->get_logger(), "x: %f, y: %f, color: %d, conf: %f", pixel_1(0), pixel_1(1), std::get<0>(ppm), std::get<1>(ppm));
   
   return std::get<0>(ppm);
+}
+
+// Returns closest frame to callback time
+cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
+{
+  // Set as max
+  int64 bestDiff = INT64_MAX;
+  // Returned Frame
+  cv::Mat closestFrame;
+  // Debugging Stuff
+  int index = 0;
+  int bestFrameIndex = 0;
+
+  // RCLCPP_INFO(this->get_logger(), "getCameraFrame called with time: %ld", 
+  //                                 callbackTime.nanoseconds());
+  
+  if (this->img_deque.empty()) {
+    RCLCPP_ERROR(this->get_logger(), "Image deque is empty! Cannot find matching frame.");
+    return cv::Mat(); // Return empty matrix
+  }
+
+
+  for (const auto& frame: this->img_deque) {
+    int64 timeDiff = abs(frame.first.nanoseconds() - callbackTime.nanoseconds());
+
+    if (timeDiff < bestDiff) {
+      closestFrame = frame.second;
+      bestDiff = timeDiff;
+      bestFrameIndex = index;
+      // RCLCPP_INFO(this->get_logger(), "camera frame: %ld", frame.first.nanoseconds());
+    }
+    index++;
+  }
+  
+  // Set threshhold
+  if (closestFrame.empty()) {
+    // RCLCPP_ERROR(this->get_logger(), "Could not get frame");
+    return cv::Mat();
+  }
+  
+  // RCLCPP_INFO(this->get_logger(), "Best frame:%d | REQ-FRAME Time diff: %ld nanoseconds", 
+              // bestFrameIndex, bestDiff);
+  
+  return closestFrame;
 }
 
 
@@ -402,9 +415,9 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   geometry_msgs::msg::Point point_msg;
 
   // std::cout << "msg->cone_array: " << typeid(msg->cone_array[0][0]).name() << std::endl;
-
+  
   for (int i = 0; i < msg->cone_array.size(); i++){
-    int cone_class = this->transform(msg->cone_array[i].cone_points[0]);
+    int cone_class = this->transform(msg->cone_array[i].cone_points[0], msg->header.stamp); // Should be msg->header.stamp but i cant test that
 
     point_msg.x = msg->cone_array[i].cone_points[0].x;
     point_msg.y = msg->cone_array[i].cone_points[0].y;
@@ -426,14 +439,53 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
       default:
         break;
     }
-    
   }
-  
-  RCLCPP_INFO(this->get_logger(), "Transform callback triggered.");
 
+  int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
+  int yellow_cones = message.yellow_cones.size();
+  int blue_cones = message.blue_cones.size();
+  int orange_cones = message.orange_cones.size();
+  
+  RCLCPP_INFO(this->get_logger(), "Transform callback triggered. Published %d cones. %d yellow, %d blue, and %d orange.", cones_published, yellow_cones, blue_cones, orange_cones);
   
   publisher_->publish(message);
 };
+
+// Camera Callback (Populates and maintain deque)
+void Point_To_Pixel_Node::camera_callback()
+{
+  this->frame_1 = this->cap_1.getLastFrame();
+
+  cv::Mat frameBGR_1, left_raw, left_rect, right_raw, right_rect;
+  if (frame_1.data != nullptr){
+      cv::Mat frameYUV_1 = cv::Mat(frame_1.height, frame_1.width, CV_8UC2, frame_1.data);
+      cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
+
+      left_raw = frameBGR_1(cv::Rect(0, 0, frameBGR_1.cols / 2, frameBGR_1.rows));
+      right_raw = frameBGR_1(cv::Rect(frameBGR_1.cols / 2, 0, frameBGR_1.cols / 2, frameBGR_1.rows));
+
+      // ----> Apply rectification
+      cv::remap(left_raw, left_rect, this->map_left_x, this->map_left_y, cv::INTER_LINEAR );
+      cv::remap(right_raw, right_rect, this->map_right_x, this->map_right_y, cv::INTER_LINEAR );
+
+      frameBGR_1 = left_rect;
+  }
+  else {
+      RCLCPP_ERROR(this->get_logger(), "Failed to capture frame from camera 1.");
+  }
+
+  // Deque Management and Updating
+  if (img_deque.size() < 10) {
+    rclcpp::Time time = this->get_clock()->now();
+    this->img_deque.push_back(std::make_pair(time, frameBGR_1));
+  }
+  else
+  {
+    this->img_deque.pop_front();
+    this->img_deque.push_back(std::make_pair(this->get_clock()->now(), frameBGR_1));
+  }
+  // RCLCPP_INFO(this->get_logger(), "Timer Callback. Yippeee %d", img_deque.size());
+}
 
 void Point_To_Pixel_Node::opencv_callback() {
   this->frame_0 = this->cap_1.getLastFrame();
@@ -505,7 +557,7 @@ void Point_To_Pixel_Node::mouse_callback(int event, int x, int y, int flags, voi
         // Choose color based on the identified color
         switch (std::get<0>(out)) {
             case 0:
-                color = cv::Scalar(0, 165, 255);  // Orange in BGR
+                color = cv::Scalar(0, 165, 255);  // Orange in BGR40272345
                 break;
             case 1:
                 color = cv::Scalar(0, 255, 255);  // Yellow in BGR
