@@ -132,12 +132,12 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
   // Include calibration?
 
-  std::vector<int> ly_filter_default{0, 0, 0};
-  std::vector<int> uy_filter_default{0, 0, 0};
-  std::vector<int> lb_filter_default{0, 0, 0};
-  std::vector<int> ub_filter_default{255, 255, 255};
-  std::vector<int> lo_filter_default{255, 255, 255};
-  std::vector<int> uo_filter_default{255, 255, 255};
+  std::vector<int> ly_filter_default(0, 0, 0};
+  std::vector<int> uy_filter_default(0, 0, 0);
+  std::vector<int> lb_filter_default(0, 0, 0);
+  std::vector<int> ub_filter_default(255, 255, 255);
+  std::vector<int> lo_filter_default(255, 255, 255);
+  std::vector<int> uo_filter_default(255, 255, 255);
 
   // Color Parameters
   this->declare_parameter("yellow_filter_high", ly_filter_default);
@@ -454,8 +454,8 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   RCLCPP_INFO(this->get_logger(), "Received message with %zu cones", msg->cone_array.size());
 
   interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
-  message.header = msg.header;
-  message.orig_data_stamp = msg.header.stamp; // Will be deprecated when code is refactored to use time in header
+  message.header = msg->header;
+  message.orig_data_stamp = msg->header.stamp; // Will be deprecated when code is refactored to use time in header
   message.blue_cones = std::vector<geometry_msgs::msg::Point> {};
   message.yellow_cones = std::vector<geometry_msgs::msg::Point> {};
   message.orange_cones = std::vector<geometry_msgs::msg::Point> {};
