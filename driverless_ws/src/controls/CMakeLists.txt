@@ -18,6 +18,8 @@ if(NOT CMAKE_CUDA_STANDARD)
   set(CMAKE_CUDA_STANDARD 17)
 endif()
 
+set(CMAKE_PREFIX_PATH "~/driverless/driverless_ws/install/interfaces/share/interfaces/cmake")
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -30,6 +32,8 @@ find_package(geometry_msgs REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GSL REQUIRED)
+find_package(Threads REQUIRED)
+# find_package(Math REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/../)
@@ -45,6 +49,23 @@ if (PARANOID)
   add_compile_options(-DPARANOID)
 endif()
 
+if (DATA)
+  message("HELLO DATA IS ON")
+  add_compile_options(-DDATA)
+  add_executable(offline_controller src/data_generation/offline_controller.cpp)
+  target_link_libraries(offline_controller controls_lib)
+  ament_target_dependencies(offline_controller rclcpp interfaces builtin_interfaces)
+  target_compile_definitions(offline_controller PRIVATE DATA)
+  set_target_properties(offline_controller PROPERTIES
+          CUDA_SEPARABLE_COMPILATION ON
+          CUDA_ARCHITECTURES ${CUDA_ARCH}
+  )
+  install(
+        TARGETS offline_controller
+        DESTINATION lib/${PROJECT_NAME}
+  )
+endif()
+
 
 # **** Controls Lib *****
 
@@ -57,6 +78,10 @@ set(LIB_SOURCES
         extern/src/glad.c
         src/utils/gl_utils.cpp
         ${TWO_TRACK_SRCS}
+        src/midline/svm.cpp
+        src/midline/svm_conv.cpp
+        src/midline/svm_conv_fast.cpp
+        src/midline/cones.cpp
 )
 
 if (DISPLAY)
@@ -66,12 +91,13 @@ if (DISPLAY)
 endif()
 
 add_library(controls_lib SHARED ${LIB_SOURCES})
+
 ament_target_dependencies(controls_lib rclcpp std_msgs interfaces glm)
 target_link_libraries(controls_lib CUDA::curand OpenGL::GL OpenGL::GLU ${SDL2_LIBRARIES})
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
-          -g --generate-line-info
+          -g -G
           >)
 else ()
   add_compile_options(-O3)
@@ -94,8 +120,25 @@ install(
 
 # ****** Controller *****
 
-add_executable(controller src/nodes/controller.cpp)
-target_link_libraries(controller controls_lib)
+set(LINUXCAN_PATH $ENV{LINUXCAN_PATH})
+# Check if the path is set
+if(NOT LINUXCAN_PATH)
+    message(FATAL_ERROR "Please set the LINUXCAN_PATH environment variable to /path/to/canUsbKvaserTesting/linuxcan.")
+endif()
+
+set(CANLIB_INCLUDE "${LINUXCAN_PATH}/include")
+set(CANLIB_LIBRARIES "${LINUXCAN_PATH}/canlib/libcanlib.so")
+
+# Create an imported target
+add_library(can_lib SHARED IMPORTED)
+set_target_properties(can_lib PROPERTIES
+  IMPORTED_LOCATION "${CANLIB_LIBRARIES}"
+)
+target_include_directories(can_lib INTERFACE ${CANLIB_INCLUDE})
+
+add_executable(controller src/nodes/controller.cpp src/can/cmr_can.c)
+
+target_link_libraries(controller controls_lib Threads::Threads m can_lib)
 ament_target_dependencies(controller rclcpp interfaces builtin_interfaces)
 
 install(
@@ -116,17 +159,21 @@ if(BUILD_TESTING)
   add_executable(controls_test_node tests/test_node.cpp)
   target_link_libraries(controls_test_node controls_lib GSL::gsl)
 
+  add_executable(controls_echo_node tests/echo_node/echo_node.cpp)
+
   add_executable(model_wrapper tests/model/model_wrapper.cu)
   target_link_libraries(model_wrapper controls_lib)
+  set_target_properties(model_wrapper PROPERTIES CUDA_ARCHITECTURES ${CUDA_ARCH})
 
   add_executable(null_gps_spoofer tests/null_gps_spoofer.cpp)
   target_link_libraries(null_gps_spoofer controls_lib)
 
+  ament_target_dependencies(controls_echo_node rclcpp glm interfaces std_msgs)
   ament_target_dependencies(controls_test_node rclcpp glm interfaces std_msgs)
   ament_target_dependencies(null_gps_spoofer rclcpp glm interfaces std_msgs)
 
   install(
-      TARGETS controls_test_node null_gps_spoofer
+      TARGETS controls_test_node null_gps_spoofer controls_echo_node
       DESTINATION lib/${PROJECT_NAME}
   )
 endif()

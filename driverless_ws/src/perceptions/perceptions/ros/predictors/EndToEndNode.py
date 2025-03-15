@@ -34,7 +34,7 @@ from perc22a.mergers.merger_factory import \
     create_all_merger, \
     create_any_merger
 
-from interfaces.msg import SplineFrames, EndToEndDebug
+from interfaces.msg import SplineFrames, EndToEndDebug, ConeArray
 from geometry_msgs.msg import Point
 
 import perceptions.ros.utils.conversions as conv
@@ -72,6 +72,10 @@ class EndToEndNode(Node):
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
                                                  topic="/spline",
                                                  qos_profile=BEST_EFFORT_QOS_PROFILE)
+        
+        self.cones_pub = self.create_publisher(msg_type=ConeArray,
+                                               topic="/perc_cones",
+                                               qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         self.endToEndDebug_pub = self.create_publisher(msg_type= EndToEndDebug,
                                                  topic="/endToEndDebug",
@@ -88,7 +92,7 @@ class EndToEndNode(Node):
         self.curr_quat = None
 
         # debugging utilities
-        self.vis = Vis2D()
+        # self.vis = Vis2D()
         self.timer = Timer()
         return
     
@@ -136,6 +140,9 @@ class EndToEndNode(Node):
         # TODO: should separately update cones and then return cones relevant for svm
         cones = self.cone_state.update(cones, mi)
         time_state = self.timer.end("merge+color+state", ret=True)
+        cone_msg = conv.cones_to_msg(cones)
+        cone_msg.header.stamp = msg.header.stamp
+        self.cones_pub.publish(conv.cones_to_msg(cones))
 
         # spline
         self.timer.start("spline")
@@ -154,10 +161,10 @@ class EndToEndNode(Node):
             new_point.z = float(0)
             points.append(new_point)
 
-        self.vis.set_cones(cones)
-        if len(downsampled_boundary_points) > 0:
-            self.vis.set_points(downsampled_boundary_points)
-        self.vis.update()
+        # self.vis.set_cones(cones)
+        # if len(downsampled_boundary_points) > 0:
+        #     self.vis.set_points(downsampled_boundary_points)
+        # self.vis.update()
 
         if len(points) < 2:
             print(f"LESS THAN 2 FRAMES {len(cones)}")

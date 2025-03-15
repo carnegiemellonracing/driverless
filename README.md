@@ -11,5 +11,5 @@ git clone --recurse-submodules https://github.com/carnegiemellonracing/driverles
 
 If you have already cloned the repo, initialize submodules using:
 ```sh
-git submodules update --init --recursive
+git submodule update --init --recursive
 ```
