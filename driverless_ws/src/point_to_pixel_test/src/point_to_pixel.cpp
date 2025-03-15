@@ -132,7 +132,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
   // Include calibration?
 
-  std::vector<int> ly_filter_default(0, 0, 0};
+  std::vector<int> ly_filter_default(0, 0, 0);
   std::vector<int> uy_filter_default(0, 0, 0);
   std::vector<int> lb_filter_default(0, 0, 0);
   std::vector<int> ub_filter_default(255, 255, 255);
