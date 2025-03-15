@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import argparse
+import argparse 
 import os
 
 if __name__ == "__main__":
@@ -8,6 +8,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--asserts", action="store_true")
     parser.add_argument("-d", "--debug", action="store_true")
     parser.add_argument("-D", "--display", action="store_true")
+    parser.add_argument("-c", "--data_collection", action="store_true")
     parser.add_argument("-e", "--export", action="store_true", help="export compile commands")
 
     args = parser.parse_args()
@@ -20,6 +21,8 @@ if __name__ == "__main__":
         command += " -DDISPLAY=ON"
     if args.export:
         command += " -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+    if args.data_collection:
+        command += " -DDATA=ON"
 
     os.system(command)
 

@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <gsl/gsl_odeiv2.h>
 #include <mppi/types.cuh>
+#include <utils/general_utils.hpp>
 
 
 using namespace std::chrono_literals;
@@ -25,7 +26,7 @@ namespace controls {
             void main()
             {
                vec2 sae_coords = (aPos - camPos) / camScale;
-               gl_Position = vec4(sae_coords.x, -sae_coords.y, 0.0f, 1.0f);
+               gl_Position = vec4(sae_coords.x, sae_coords.y, 0.0f, 1.0f);
             }
         )";
 
@@ -61,7 +62,7 @@ namespace controls {
             void main()
             {
                 vec2 sae_coords = (aPos * imgWidth * 0.5f + imgCenter - camPos) / camScale;
-                gl_Position = vec4(sae_coords.x, -sae_coords.y, 0.0f, 1.0f);
+                gl_Position = vec4(sae_coords.x, sae_coords.y, 0.0f, 1.0f);
                 texCoord = i_texCoord;
             }
         )";
@@ -78,12 +79,12 @@ namespace controls {
 
             void main()
             {
-               FragColor = vec4(0.0f, 0.0f, abs(texture(img, texCoord).x), 0.0f);
+               FragColor = texture(img, texCoord);
             }
         )";
 
 
-        Display::Trajectory::Trajectory(glm::fvec4 color, float thickness, GLuint program)
+        Display::DrawableLine::DrawableLine(glm::fvec4 color, float thickness, GLuint program)
             : color(color), program(program), thickness(thickness) {
 
             glGenVertexArrays(1, &VAO);
@@ -98,7 +99,7 @@ namespace controls {
             color_loc = glGetUniformLocation(program, "col");
         }
 
-        void Display::Trajectory::draw() {
+        void Display::DrawableLine::draw() {
             glUniform4f(color_loc, color.x, color.y, color.z, color.w);
             glLineWidth(thickness);
 
@@ -109,6 +110,45 @@ namespace controls {
 
             assert(vertex_buf.size() % 2 == 0);
             glDrawArrays(GL_LINE_STRIP, 0, vertex_buf.size() / 2);
+        }
+
+        
+        void Display::DrawableLine::draw_points() {
+            std::vector<float> triangle_points_buf = fill_triangle_points();
+            glUniform4f(color_loc, color.x, color.y, color.z, color.w);
+            //glLineWidth(thickness);
+
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * triangle_points_buf.size(), triangle_points_buf.data(), GL_DYNAMIC_DRAW);
+
+            glBindVertexArray(VAO);
+            assert(triangle_points_buf.size() % 6 == 0);
+            glDrawArrays(GL_TRIANGLES, 0, triangle_points_buf.size()/2);
+        }
+
+        std::vector<float> Display::DrawableLine::fill_triangle_points(){
+            constexpr float radius = .25;
+            constexpr float sqr3b2 = .866;
+            std::vector<float> output_triangle_points;
+            output_triangle_points.reserve(vertex_buf.size() * 3);
+            
+            for (size_t i = 0; i < vertex_buf.size()/2; i++) {
+                output_triangle_points.push_back(vertex_buf[2*i]-radius*sqr3b2);
+                output_triangle_points.push_back(vertex_buf[2*i+1]-radius/2);
+                output_triangle_points.push_back(vertex_buf[2*i]+radius*sqr3b2);
+                output_triangle_points.push_back(vertex_buf[2*i+1]-radius/2);
+                output_triangle_points.push_back(vertex_buf[2*i]);
+                output_triangle_points.push_back(vertex_buf[2*i+1]+radius);
+                //Draw cone triangle points
+                // output_triangle_points[6*i] = ;
+                // output_triangle_points[6*i + 1] = ;
+                // output_triangle_points[6*i + 2] = vertex_buf[2*i]+radius*sqr3b2;
+                // output_triangle_points[6*i + 3] = vertex_buf[2*i+1]-radius/2;
+                // output_triangle_points[6*i + 4] = vertex_buf[2*i];
+                // output_triangle_points[6*i + 5] = vertex_buf[2*i+1]+radius;
+                
+            }
+            return output_triangle_points;
         }
 
         Display::Display(
@@ -128,6 +168,29 @@ namespace controls {
             glDisable(GL_CULL_FACE);
         }
 
+        //*******************************NEW */
+        void Display::init_raceline() {
+            m_raceline_line = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 0.0f, 1.0f, 1.0f}, 6, m_trajectory_shader_program);
+        }
+
+
+        //TODO: FIX POSITIONING
+        // void Display::update_raceline() {
+        //     glm::fvec2 car_pos = m_state_estimator->get_raceline_points();
+
+
+        //     //not necessary. just have it so that there aren't any duplicates
+        //     const float minimum_distance = 0.1f;  // so the raceline doesn't get too dense with points
+        //     if (m_raceline.empty() || glm::distance(car_pos, m_race_line.back()) > minimum_distance) {
+        //         m_raceline.push_back(car_pos);
+
+        //         // if (m_raceline.size() > car_pos.size) {
+        //         //     m_raceline.erase(m_raceline.begin(), m_raceline.begin() + m_raceline.size() - car_pos.size);
+        //         // }
+        //     }
+        // }
+
+
         void Display::init_trajectories() {
             for (uint32_t i = 0; i < num_samples_to_draw; i++) {
                 m_trajectories.emplace_back(glm::fvec4 {1.0f, 0.0f, 0.0f, 0.0f}, 1, m_trajectory_shader_program);
@@ -135,12 +198,15 @@ namespace controls {
         }
 
         void Display::init_spline() {
-            m_spline = std::make_unique<Trajectory>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_trajectory_shader_program);
+            m_spline = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_trajectory_shader_program);
+            m_left_cone_trajectory = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 0.0f, 1.0f, 1.0f}, 3, m_trajectory_shader_program);
+            m_right_cone_trajectory = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 1.0f, 0.0f, 1.0f}, 3, m_trajectory_shader_program);
         }
 
         void Display::init_best_guess() {
-            m_best_guess = std::make_unique<Trajectory>(glm::fvec4 {0.0f, 1.0f, 0.0f, 1.0f}, 5, m_trajectory_shader_program);
+            m_best_guess = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 1.0f, 0.0f, 1.0f}, 5, m_trajectory_shader_program);
         }
+        
 
         void Display::init_img() {
             constexpr float vertices[] = {
@@ -182,6 +248,24 @@ namespace controls {
             glUniform1i(img_shader_img_tex_loc, 0);
         }
 
+        void Display::draw_raceline() {
+            assert(m_raceline_line!=nullptr);
+            m_raceline_line->vertex_buf = std::vector<float>(m_raceline_points.size() * 2);
+
+            for (size_t i = 0; i < m_raceline_points.size(); i++) {
+                m_raceline_line->vertex_buf[2 * i] = m_raceline_points[i].x;
+                m_raceline_line->vertex_buf[2 * i + 1] = m_raceline_points[i].y;
+
+                // as raceline ages changes color
+                // float alpha = static_cast<float>(i) / m_raceline_points.size();
+                // m_raceline_line->color.w = alpha;
+            }
+
+            m_raceline_line->draw();
+
+        }
+
+
         void Display::fill_trajectories() {
             using namespace glm;
 
@@ -203,7 +287,7 @@ namespace controls {
         void Display::draw_trajectories() {
             glUseProgram(m_trajectory_shader_program);
             for (uint32_t i = 0; i < num_samples_to_draw; i++) {
-                Trajectory& t = m_trajectories[i];
+                DrawableLine& t = m_trajectories[i];
                 t.draw();
             }
         }
@@ -221,6 +305,33 @@ namespace controls {
             m_spline->draw();
         }
 
+        void Display::draw_cones()
+        {
+            assert(m_left_cone_trajectory != nullptr);
+            assert(m_right_cone_trajectory != nullptr);
+            const auto& left_cone_points = m_all_left_cone_points;
+            const auto& right_cone_points = m_all_right_cone_points;
+            m_left_cone_trajectory->vertex_buf = std::vector<float>(left_cone_points.size() * 2);
+            for (size_t i = 0; i < left_cone_points.size(); i++) {
+                //Draw trajectory line
+                m_left_cone_trajectory->vertex_buf[2 * i] = m_all_left_cone_points[i].x;
+                m_left_cone_trajectory->vertex_buf[2 * i + 1] = m_all_left_cone_points[i].y;
+            }
+
+            m_right_cone_trajectory->vertex_buf = std::vector<float>(right_cone_points.size() * 2);
+            for (size_t i = 0; i < right_cone_points.size(); i++) {
+                // Draw trajectory line
+                m_right_cone_trajectory->vertex_buf[2 * i] = right_cone_points[i].x;
+                m_right_cone_trajectory->vertex_buf[2 * i + 1] = right_cone_points[i].y;
+            }
+
+
+            m_left_cone_trajectory->draw();
+            m_right_cone_trajectory->draw();
+            m_left_cone_trajectory->draw_points();
+            m_right_cone_trajectory->draw_points();
+        }
+
         void Display::draw_best_guess() {
             const auto& frames = m_last_reduced_state_trajectory;
 
@@ -235,14 +346,21 @@ namespace controls {
         }
 
         void Display::draw_offset_image() {
-            const auto& offset_image = m_offset_image;
+            // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+            auto& offset_image = m_offset_image;
+            // auto max = std::max_element(offset_image.pixels.begin(), offset_image.pixels.end());
+
+            // for (int i = 0; i < offset_image.pixels.size(); i++) {
+            //     offset_image.pixels[i] /= *max;
+            // }
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, m_offset_img_tex);
             glTexImage2D(
-                GL_TEXTURE_2D, 0, GL_R32F,
+                GL_TEXTURE_2D, 0, GL_RGBA,
                 offset_image.pix_width, offset_image.pix_height,
-                0, GL_RED, GL_FLOAT, offset_image.pixels.data()
+                0, GL_RGBA, GL_FLOAT, offset_image.pixels.data()
             );
 
             glUseProgram(m_img_shader_program);
@@ -254,6 +372,56 @@ namespace controls {
             glBindVertexArray(m_offset_img_obj.vao);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
             glBindVertexArray(0);
+
+            // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
+        void Display::draw_triangles() {
+            std::vector<float> triangle_vertices = m_state_estimator->get_vertices();
+            unsigned int VAO;
+            unsigned int VBO;
+            glGenBuffers(1,&VBO);
+            glGenVertexArrays(1,&VAO);
+            // glUniform4f(color_loc, color.x, color.y, color.z, color.w);
+            // glLineWidth(thickness);
+            glUseProgram(m_img_shader_program);
+            glBindVertexArray(VAO);
+
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * triangle_vertices.size(), triangle_vertices.data(), GL_DYNAMIC_DRAW);
+
+            assert(triangle_vertices.size() % 3 == 0);
+            glDrawArrays(GL_TRIANGLES, 0, triangle_vertices.size() / 3);
+        }
+
+        void Display::draw_car(){
+            //Make sure a line exists
+            assert(m_best_guess != nullptr);
+            assert(m_best_guess->vertex_buf.size() != 0);
+            //In (x,y) coords, (0,1) is front left, (2,3) is front right, (4,5) is back left, (6,7) is back right
+            std::vector<float> carpts = std::vector<float>(8);
+            carpts.push_back(cg_to_nose);
+            carpts.push_back(cg_to_side);
+            carpts.push_back(cg_to_nose);
+            carpts.push_back(-cg_to_side);
+            carpts.push_back(-cg_to_rear);
+            carpts.push_back(cg_to_side);
+            carpts.push_back(-cg_to_rear);
+            carpts.push_back(-cg_to_side);
+            unsigned int VAO;
+            unsigned int VBO;
+            glGenBuffers(1,&VBO);
+            glGenVertexArrays(1,&VAO);
+            GLint color_loc = glGetUniformLocation(m_img_shader_program, "col");
+            glUniform4f(color_loc, 1, 0, 0, 1);
+            glUseProgram(m_img_shader_program);
+            glBindVertexArray(VAO);
+
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * carpts.size(), carpts.data(), GL_DYNAMIC_DRAW);
+
+            //assert(triangle_vertices.size() % 3 == 0);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 2);
+
         }
 
         void Display::run() {
@@ -263,6 +431,8 @@ namespace controls {
             init_spline();
             init_best_guess();
             init_img();
+
+            init_raceline();
 
             update_loop(window);
         }
@@ -293,10 +463,10 @@ namespace controls {
                     m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(1,0);
                 }
                 if (keyboard_state[SDL_SCANCODE_UP]) {
-                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,-1);
+                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,1);
                 }
                 if (keyboard_state[SDL_SCANCODE_DOWN]) {
-                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,1);
+                    m_cam_pos += m_cam_scale * strafe_speed * delta_time * glm::fvec2(0,-1);
                 }
 
                 if (keyboard_state[SDL_SCANCODE_S]) {
@@ -313,9 +483,29 @@ namespace controls {
                 glClear(GL_COLOR_BUFFER_BIT);
 
                 m_spline_frames = m_state_estimator->get_spline_frames();
+                m_all_left_cone_points = m_state_estimator->get_all_left_cone_points();
+                m_all_right_cone_points = m_state_estimator->get_all_right_cone_points();
+
+                m_left_cone_points = m_state_estimator->get_left_cone_points();
+                m_right_cone_points = m_state_estimator->get_right_cone_points();
+                m_raceline_points = m_state_estimator->get_raceline_points();
+
                 m_state_estimator->get_offset_pixels(m_offset_image);
                 m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();
                 m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);
+                
+                m_left_cone_trajectory->vertex_buf = std::vector<float>(m_left_cone_points.size() * 2);
+                for (size_t i = 0; i < m_left_cone_points.size(); i++) {
+                    m_left_cone_trajectory->vertex_buf[2 * i] = m_left_cone_points[i].x;
+                    m_left_cone_trajectory->vertex_buf[2 * i + 1] = m_left_cone_points[i].y;
+                }
+
+                m_right_cone_trajectory->vertex_buf = std::vector<float>(m_right_cone_points.size() * 2);
+                for (size_t i = 0; i < m_right_cone_points.size(); i++) {
+                    m_right_cone_trajectory->vertex_buf[2 * i] = m_right_cone_points[i].x;
+                    m_right_cone_trajectory->vertex_buf[2 * i + 1] = m_right_cone_points[i].y;
+                }
+
 
                 draw_offset_image();
 
@@ -323,7 +513,12 @@ namespace controls {
                 draw_trajectories();
 
                 draw_spline();
+                draw_cones();
                 draw_best_guess();
+                //draw_car();
+
+                draw_raceline();
+                //update_raceline();
 
                 SDL_GL_SwapWindow(window);
 

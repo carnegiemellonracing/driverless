@@ -50,6 +50,17 @@ namespace controls {
             CURAND_CALL(curandDestroyGenerator(m_rng));
         }
 
+        void MppiController_Impl::hardcode_last_action_trajectory(std::vector<Action> actions) {
+            if (m_last_action_trajectory.size() != actions.size()) {
+                throw std::runtime_error("Last action trajectory size does not match actions size");
+            }
+            for (size_t i = 0; i < m_last_action_trajectory.size(); i++) {
+                Action action = actions[i];
+                m_last_action_trajectory[i] = DeviceAction {action[0], action[1]};
+            }
+        };
+
+
         Action MppiController_Impl::generate_action() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
@@ -67,9 +78,9 @@ namespace controls {
             generate_action_weight_tuples();
 
             m_logger("reducing actions");
-            // not actually on device, just still in a device action struct
             thrust::device_vector<DeviceAction> averaged_trajectory = reduce_actions();
 
+            // not actually on device, just still in a device action struct
             DeviceAction host_action = m_last_action * action_momentum + (1 - action_momentum) * averaged_trajectory[0];
 
             Action result_action;
@@ -78,11 +89,51 @@ namespace controls {
                 result_action.begin()
             );
 
-            thrust::copy(
-                averaged_trajectory.begin() + 1,
-                averaged_trajectory.end(),
-                m_last_action_trajectory.begin()
-            );
+#ifdef DATA
+            // we want to compare the first num_timesteps - 1 elements of averaged_trajectory and m_last_action_trajectory
+            thrust::device_vector<Action> diff(num_timesteps - 1);
+            thrust::transform(averaged_trajectory.begin(), averaged_trajectory.end() - 1, m_last_action_trajectory.begin(), diff.begin(), AbsoluteError {});
+
+            thrust::host_vector<Action> host_diff = diff;                       
+
+            m_percentage_diff_trajectory.assign(host_diff.begin(), host_diff.end());
+            float sum_swangle = 0;
+            float sum_throttle = 0;
+            float max_swangle = 0;
+            float max_throttle = 0;
+            for (int i = 0; i < m_percentage_diff_trajectory.size(); i++) {
+                sum_swangle += m_percentage_diff_trajectory[i][0];
+                sum_throttle += m_percentage_diff_trajectory[i][1];
+                if (m_percentage_diff_trajectory[i][0] > max_swangle) {
+                    max_swangle = m_percentage_diff_trajectory[i][0];
+                }
+                if (m_percentage_diff_trajectory[i][1] > max_throttle) {
+                    max_throttle = m_percentage_diff_trajectory[i][1];
+                }
+            }
+            m_diff_statistics.mean_swangle = sum_swangle / m_percentage_diff_trajectory.size();
+            m_diff_statistics.mean_throttle = sum_throttle / m_percentage_diff_trajectory.size();
+            m_diff_statistics.max_swangle = max_swangle;
+            m_diff_statistics.max_throttle = max_throttle;
+
+            m_averaged_trajectory.clear();
+            m_averaged_trajectory.reserve(averaged_trajectory.size());
+            for (const DeviceAction& device_action : averaged_trajectory) {
+                m_averaged_trajectory.push_back(Action {device_action.data[0], device_action.data[1]});
+            }
+            m_last_action_trajectory_logging.clear();
+            m_last_action_trajectory_logging.reserve(m_last_action_trajectory.size());
+            for (const DeviceAction &device_action : m_last_action_trajectory)
+            {
+                m_last_action_trajectory_logging.push_back(Action{device_action.data[0], device_action.data[1]});
+            }
+
+#endif
+
+                thrust::copy(
+                    averaged_trajectory.begin() + 1,
+                    averaged_trajectory.end(),
+                    m_last_action_trajectory.begin());
 
             m_last_action = host_action;
 
@@ -142,6 +193,8 @@ namespace controls {
 #endif
 
         // Private member functions of the controller
+        // wrapper to do a prefix scan over the timesteps (middle) dimension of the n x m x q tensor
+        ///@note only works on n x m x q I think
         void prefix_scan(thrust::device_ptr<float> normal) {
             auto actions = thrust::device_pointer_cast((DeviceAction*)normal.get());
             auto keys = thrust::make_transform_iterator(thrust::make_counting_iterator(0), DivBy<num_timesteps> {});
@@ -160,6 +213,7 @@ namespace controls {
             // make the normals brownian
             thrust::counting_iterator<size_t> indices {0};
             thrust::for_each(indices, indices + num_action_trajectories, TransformStdNormal {m_action_trajectories.data()});
+            /// TODO: why the prefix scan at the end?
             prefix_scan(m_action_trajectories.data());
         }
 
@@ -175,28 +229,6 @@ namespace controls {
         }
 
 
-        thrust::device_vector<DeviceAction> MppiController_Impl::reduce_actions() {
-            // averaged_actions is where the weighted averages are stored
-            // initialize it to 0 
-            thrust::device_vector<DeviceAction> averaged_actions (num_timesteps);
-            thrust::device_vector<ActionWeightTuple> averaged_awts(num_timesteps);
-            thrust::device_vector<uint32_t> keys_out (num_timesteps);
-            thrust::counting_iterator<uint32_t> indices {0};
-            auto keys = thrust::make_transform_iterator(indices, DivBy<num_samples> {});
-
-            // for_each applies the ReduceTimestep functor to every idx in the range [0, num_timesteps)
-            thrust::reduce_by_key(
-                keys, keys + num_samples * num_timesteps, m_action_weight_tuples.begin(),
-                keys_out.begin(), averaged_awts.begin()
-            );
-
-            thrust::transform(
-                averaged_awts.begin(), averaged_awts.end(), averaged_actions.begin(),
-                ActionWeightTupleToAction {}
-            );
-
-            return averaged_actions;
-        }
 
         void MppiController_Impl::populate_cost() {
             thrust::counting_iterator<uint32_t> indices {0};
@@ -210,12 +242,34 @@ namespace controls {
                 m_cost_to_gos.data(),
                 m_log_prob_densities.data(), 
                 m_last_action_trajectory.data(),
-                m_last_action
+                m_last_action,
+                m_follow_midline_only
             };
-
+            // populates cost for each sample trajectory
             thrust::for_each(indices, indices + num_samples, populate_cost);
         }
 
+        thrust::device_vector<DeviceAction> MppiController_Impl::reduce_actions() {
+            // averaged_actions is where the weighted averages are stored
+            // initialize it to 0
+            thrust::device_vector<DeviceAction> averaged_actions (num_timesteps);
+            thrust::device_vector<ActionWeightTuple> averaged_awts(num_timesteps);
+            thrust::device_vector<uint32_t> keys_out (num_timesteps);
+            thrust::counting_iterator<uint32_t> indices {0};
+            auto keys = thrust::make_transform_iterator(indices, DivBy<num_samples> {});
+
+            thrust::reduce_by_key(
+                    keys, keys + num_samples * num_timesteps, m_action_weight_tuples.begin(),
+                    keys_out.begin(), averaged_awts.begin()
+            );
+
+            thrust::transform(
+                    averaged_awts.begin(), averaged_awts.end(), averaged_actions.begin(),
+                    ActionWeightTupleToAction {}
+            );
+
+            return averaged_actions;
+        }
         void MppiController_Impl::generate_action_weight_tuples() {
             thrust::counting_iterator<uint32_t> indices {0};
 

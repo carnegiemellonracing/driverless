@@ -38,15 +38,18 @@ namespace controls {
             void run();
 
         private:
-            class Trajectory {
+            class DrawableLine {
             public:
-                Trajectory(glm::fvec4 color, float thickness, GLuint program);
+                DrawableLine(glm::fvec4 color, float thickness, GLuint program);
 
                 void draw();
+                void draw_points();
 
                 std::vector<float> vertex_buf;
 
             private:
+                std::vector<float> fill_triangle_points();
+
                 glm::fvec4 color;
                 float thickness;
                 GLuint program;
@@ -60,26 +63,43 @@ namespace controls {
             void init_trajectories();
             void init_spline();
             void init_best_guess();
+            void init_raceline();
 
             void fill_trajectories();
             void draw_trajectories();
 
             void draw_spline();
+            void draw_cones();
             void draw_best_guess();
 
             void draw_offset_image();
+            void draw_triangles();
+
+            void draw_car();
+
+            void draw_raceline();
+            void update_raceline();
 
             void update_loop(SDL_Window* window);
 
             glm::fvec2 m_cam_pos {0.0f, 0.0f};
-            float m_cam_scale = 1.0f;
+            float m_cam_scale = 10.0f;
 
             GLuint m_trajectory_shader_program;
             GLuint m_img_shader_program;
 
-            std::vector<Trajectory> m_trajectories;
-            std::unique_ptr<Trajectory> m_spline = nullptr;
-            std::unique_ptr<Trajectory> m_best_guess = nullptr;
+            std::vector<DrawableLine> m_trajectories;
+            std::unique_ptr<DrawableLine> m_spline = nullptr;
+			std::unique_ptr<DrawableLine> m_left_cone_trajectory = nullptr;
+			std::unique_ptr<DrawableLine> m_right_cone_trajectory = nullptr;
+            std::unique_ptr<DrawableLine> m_left_cone_trajectory_visible = nullptr;
+            std::unique_ptr<DrawableLine> m_right_cone_trajectory_visible = nullptr;
+            std::unique_ptr<DrawableLine> m_best_guess = nullptr;
+
+
+            std::vector<glm::fvec2> m_raceline_points;
+            std::unique_ptr<DrawableLine> m_raceline_line = nullptr;
+
 
             utils::GLObj m_offset_img_obj;
             GLuint m_offset_img_tex;
@@ -88,6 +108,11 @@ namespace controls {
             std::shared_ptr<state::StateEstimator> m_state_estimator;
 
             std::vector<glm::fvec2> m_spline_frames;
+            std::vector<glm::fvec2> m_all_left_cone_points;
+            std::vector<glm::fvec2> m_all_right_cone_points;
+            std::vector<glm::fvec2> m_left_cone_points;
+            std::vector<glm::fvec2> m_right_cone_points;
+            
             std::vector<glm::fvec2> m_last_reduced_state_trajectory;
             std::vector<float> m_last_state_trajectories;
             state::StateEstimator::OffsetImage m_offset_image;
