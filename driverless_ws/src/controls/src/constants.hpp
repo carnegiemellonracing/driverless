@@ -8,13 +8,6 @@
 
 namespace controls {
     /* ROS moments */
-    constexpr int default_front_torque = 0;
-    constexpr int default_rear_torque = 0;
-    constexpr int default_wheel_setpoint = 0;
-    constexpr int default_rack_displacement = 3250;
-    
-    // sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
-
 
     constexpr const char *controller_node_name = "controller";
     constexpr const char *control_action_topic_name = "control_action";
@@ -56,6 +49,11 @@ namespace controls {
 
     constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
 
+    // Testing stuff
+
+    constexpr bool ingest_midline = false;
+    constexpr bool follow_midline_only = false;
+    constexpr uint16_t can_max_velocity_rpm = 3000;
 
     // MPPI stuff
 
@@ -75,7 +73,7 @@ namespace controls {
     constexpr float action_momentum = 0.0f; ///< How much of last action taken to retain in calculation of next action.
 
     // DEPRECATED
-    constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline DEPRECATED
+    constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
     constexpr float target_speed = 10.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 
@@ -87,13 +85,14 @@ namespace controls {
     // TODO: use real bounds
 
     // Midline/SVM
-    constexpr float mesh_grid_spacing = 0.5f; //m
+    constexpr float mesh_grid_spacing = 0.2f; //m
     constexpr float max_spline_length = 200.0f;
+    constexpr int cone_augmentation_angle = 30;
 
     constexpr float lookahead_behind_squared = 25.0f;
 
     // AIM communication stuff
-    constexpr int aim_signal_period_ms = 10;
+    constexpr int aim_signal_period_ms = 1000;
 
 
     // State Estimation
@@ -106,7 +105,7 @@ namespace controls {
     // mppi simulates a lot of shitty trajectories (naive brownian guess)
     /// Represents space the car occupies, used to calculate the size of the curvilinear lookup table.
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * fake_track_width);
-    constexpr bool reset_pose_on_spline = true; ///< Sets pose to 0 vector for new spline (sensor POV)
+    constexpr bool reset_pose_on_cone = true; ///< Sets pose to 0 vector for new cone (sensor POV)
      // triangle threshold is the max distance between cones on opposing sides that we will use for triangle drawing
     constexpr float triangle_threshold_squared = 64.0f;
 
@@ -117,7 +116,7 @@ namespace controls {
     constexpr float cg_to_front = 0.775; 
     constexpr float cg_to_rear = 0.775; //Also rear of car
     constexpr float cg_to_nose = 2.025f;
-    constexpr float cg_to_side = 0.0f; //ACTUAL .75
+    constexpr float cg_to_side = 0.75f; //ACTUAL .75
     //constexpr float whl_base = 2.0f;
     constexpr float whl_radius = 0.2286;
     /// gear ratio = motor speed / wheel speed = wheel torque / motor torque
