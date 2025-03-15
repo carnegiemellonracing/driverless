@@ -19,6 +19,7 @@
 #include <sstream>
 #include <utils/general_utils.hpp>
 
+
 // This is to fit into the ROS API
 void send_finished_ignore_error() {
     std::cout << "I just got terminated lol\n";
@@ -94,6 +95,11 @@ namespace controls {
 #endif
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
+
+                m_mppi_controller->set_follow_midline_only(follow_midline_only);
+                m_state_estimator->set_follow_midline_only(follow_midline_only);
+
+                                
                 std::stringstream ss;
                 ss << "Received cones: " << std::endl;
                 ss << "Length of blue cones: " << cone_msg.blue_cones.size() << std::endl;
@@ -365,15 +371,16 @@ namespace controls {
                     {
                         while (rclcpp::ok)
                         {
-                            std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
-                            ActionSignal last_action_signal = m_last_action_signal;
-
-
-                            
-                            auto start = std::chrono::steady_clock::now();
-                            sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
-                            auto end = std::chrono::steady_clock::now();
-                            RCLCPP_DEBUG(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+                            // std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
+                            auto current_time = std::chrono::high_resolution_clock::now();
+                            std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() / 100 << std::endl;
+                            // if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() / 100 < 5) {
+                                auto start = std::chrono::steady_clock::now();
+                                ActionSignal last_action_signal = m_last_action_signal;
+                                sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
+                                auto end = std::chrono::steady_clock::now();
+                                RCLCPP_WARN(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+                            // }
                         }
                         std::cout << "I just got terminated in another way lol\n";
                         send_finished_ignore_error();

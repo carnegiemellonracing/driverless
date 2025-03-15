@@ -454,8 +454,8 @@ namespace controls {
 
                 // // TODO: convert this to using std::transform
                 auto svm_start = std::chrono::high_resolution_clock::now();            
-                auto spline_frames = midline::svm_fast::cones_to_midline(cones);
-                auto _ = midline::svm_slow::cones_to_midline(cones);\
+                // auto spline_frames = midline::svm_fast::cones_to_midline(cones);
+                auto spline_frames = midline::svm_slow::cones_to_midline(cones);
                 auto svm_end = std::chrono::high_resolution_clock::now();
                 svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
                 m_spline_frames.clear();
@@ -538,7 +538,7 @@ namespace controls {
             // render the lookup table
             m_logger("rendering curv frame lookup table...");
             render_fake_track();
-            if (!follow_midline_only) {
+            if (!m_follow_midline_only) {
                 render_curv_frame_lookup();
             }
 
@@ -733,7 +733,7 @@ namespace controls {
         void StateEstimator_Impl::render_fake_track() {
             glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
 
-            if (follow_midline_only) {
+            if (m_follow_midline_only) {
                 // ^ Replaces the texture with the render buffer (the final target)
                 // Explanation: If we are only following the midline, we don't need track bounds, so we can skip the second rendering step
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_curv_frame_lookup_rbo);
