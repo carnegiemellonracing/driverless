@@ -435,8 +435,8 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   RCLCPP_INFO(this->get_logger(), "Received message with %zu cones", msg->cone_array.size());
 
   interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
-  message.header = msg.header;
-  message.orig_data_stamp = msg.header.stamp; // Will be deprecated when code is refactored to use time in header
+  message.header = msg->header;
+  message.orig_data_stamp = msg->header.stamp; // Will be deprecated when code is refactored to use time in header
   message.blue_cones = std::vector<geometry_msgs::msg::Point> {};
   message.yellow_cones = std::vector<geometry_msgs::msg::Point> {};
   message.orange_cones = std::vector<geometry_msgs::msg::Point> {};
