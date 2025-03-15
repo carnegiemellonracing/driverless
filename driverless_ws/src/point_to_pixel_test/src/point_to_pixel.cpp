@@ -146,7 +146,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   // ---------------------------------------------------------------------------
   
   // Publisher that returns colored cones
-  publisher_ = this->create_publisher<interfaces::msg::ConeList>("/colored_cones", 10);
+  publisher_ = this->create_publisher<interfaces::msg::ConeArray>("/perc_cones", 10);
   
   // Subscriber that reads the input topic that contains an array of cone_point arrays from LiDAR stack
   subscriber_ = this->create_subscription<interfaces::msg::PPMConeArray>(
@@ -286,6 +286,7 @@ int Point_To_Pixel_Node::transform(
 
   return std::get<0>(ppm);
 }
+
 
 // Returns closest frame to callback time
 cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
@@ -434,7 +435,9 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
 {
   RCLCPP_INFO(this->get_logger(), "Received message with %zu cones", msg->cone_array.size());
 
-  interfaces::msg::ConeList message = interfaces::msg::ConeList();
+  interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
+  message.header = msg.header;
+  message.orig_data_stamp = msg.header.stamp; // Will be deprecated when code is refactored to use time in header
   message.blue_cones = std::vector<geometry_msgs::msg::Point> {};
   message.yellow_cones = std::vector<geometry_msgs::msg::Point> {};
   message.orange_cones = std::vector<geometry_msgs::msg::Point> {};
@@ -560,6 +563,7 @@ void Point_To_Pixel_Node::opencv_callback()
 
   cv::waitKey(1);
 }
+
 
 // OpenCV Callback Helper
 void drawTransparentRectangle(cv::Mat& image, int x_min, int x_max, int y_min, int y_max, cv::Scalar color, double alpha) 
