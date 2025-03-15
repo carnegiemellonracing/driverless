@@ -28,7 +28,7 @@ using namespace std::chrono_literals;
 using std::placeholders::_1;
 
 // Flags for additional functionality
-#define VIZ 1 // if 1 will output an additional topic without std_msgs/Header header
+#define DEBUG 1 // should output transformed points using opencv
 #define VERBOSE 1 // Prints outputs and transform matrix
 
 class Point_To_Pixel_Node : public rclcpp::Node
@@ -49,6 +49,7 @@ class Point_To_Pixel_Node : public rclcpp::Node
     // Callbacks/helper functions
     void topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
     void camera_callback();
+    void opencv_callback();
     int transform(geometry_msgs::msg::Vector3& point, rclcpp::Time callbackTimer); 
     cv::Mat getCameraFrame(rclcpp::Time callbackTime);
 
@@ -69,9 +70,13 @@ class Point_To_Pixel_Node : public rclcpp::Node
     // ROS2 Objects
     rclcpp::Publisher<interfaces::msg::ConeList>::SharedPtr publisher_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr subscriber_;
-    
+
     // Camera Callback(10 frames per second)
     rclcpp::TimerBase::SharedPtr camera_timer_;
+
+    // Timer callback for coloring algorithm debugging
+    rclcpp::TimerBase::SharedPtr opencv_timer_;
+
     
 };
 
@@ -155,6 +160,14 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
     std::chrono::milliseconds(10),
     [this](){this->camera_callback();}
   );
+
+  #if DEBUG
+  // Timer for Opencv
+  opencv_timer_ = this->create_wall_timer(
+    std::chrono::milliseconds(100),
+    [this](){this->opencv_callback();}
+  );
+  #endif
   
   // ---------------------------------------------------------------------------
   //                  INITIALIZE CAMERA RECTIFICATION MATRIX
@@ -238,6 +251,7 @@ int Point_To_Pixel_Node::transform(
     RCLCPP_INFO(this->get_logger(), "3x4 projection_matrix:\n%s", ss.str().c_str());
   #endif
 
+  #if !DEBUG
   // Convert point from topic type (geometry_msgs/msg/Vector3) to Eigen Vector3d
   Eigen::Vector4d lidar_pt(point.x, point.y, point.z, 1.0);
 
@@ -246,12 +260,27 @@ int Point_To_Pixel_Node::transform(
 
   // Divide by z coordinate for Euclidean normalization
   Eigen::Vector2d pixel_1 (transformed(0)/transformed(2), transformed(1)/transformed(2));
+  #endif
 
   // Get camera frame that is closest to time of LiDAR point
   cv::Mat frameBGR_1 = this->getCameraFrame(callbackTime);
 
   // Identify the color at the transformed image pixel
   std::tuple<int, float> ppm = this->identify_color(pixel_1, frameBGR_1);
+
+  #if DEBUG
+  cv::drawMarker(frameBGR_1, cv::Point(pixel_1(0), pixel_1(1)), 'r');
+  cv::imshow("Transformed Point", frameBGR_1);
+
+  while (true) {
+        int key = cv::waitKey(0); // Wait indefinitely for a key press
+        if (key == 27) { // ASCII value for ESC key
+            break; // Exit the loop if ESC is pressed
+        }
+    }
+
+  cv::destroyAllWindows();
+  #endif
   
   RCLCPP_INFO(this->get_logger(), "x: %f, y: %f, color: %d, conf: %f", pixel_1(0), pixel_1(1), std::get<0>(ppm), std::get<1>(ppm));
 
@@ -496,6 +525,106 @@ void Point_To_Pixel_Node::camera_callback()
     this->img_deque.pop_front();
     this->img_deque.push_back(std::make_pair(this->get_clock()->now(), frameBGR_1));
   }
+}
+
+
+// OpenCV Callback (for debugging)
+void Point_To_Pixel_Node::opencv_callback() 
+{
+  this->frame_0 = this->cap_1.getLastFrame();
+  cv::Mat frameBGR;
+
+
+  
+  if (frame_0.data != nullptr){
+    // RCLCPP_INFO(this->get_logger(), "inside");
+
+      // ----> Conversion from YUV 4:2:2 to BGR for visualization
+      // cv::Mat frameYUV_0 = cv::Mat(1280, 720, CV_8UC2, frame_0.data); 
+      cv::Mat frameYUV_0 = cv::Mat(frame_0.height, frame_0.width, CV_8UC2, frame_0.data);
+      // cv::Mat frameBGR_0;
+      cv::cvtColor(frameYUV_0,frameBGR,cv::COLOR_YUV2BGR_YUYV);
+      // <---- Conversion from YUV 4:2:2 to BGR for visualization
+      // sl_oc::tools::showImage( "Stream RGB", frameBGR, sl_oc::video::RESOLUTION::HD720);
+      // cv::imshow("Display Window", frameBGR);
+
+      cv::Mat frame_1_resize;
+      cv::resize(frameBGR, frame_1_resize, cv::Size(), 1., 1.);
+      cv::Rect roi(0, 0, 1920, 1080);
+      frame_1_resize = frame_1_resize(roi);
+      cv::imshow("Display Window", frame_1_resize);
+      cv::imwrite("/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel_test/config/freeze.png", frame_1_resize);
+  }
+  // Create a pair of pointers to pass both image and canvas into the callback
+  std::pair<cv::Mat*, cv::Mat*> params(&frameBGR, &frameBGR);
+
+  // Set mouse callback with the parameters
+  cv::setMouseCallback("Display Window", mouse_callback, &params);
+
+  cv::waitKey(1);
+}
+
+
+// OpenCV Callback Helper
+void drawTransparentRectangle(cv::Mat& image, int x_min, int x_max, int y_min, int y_max, cv::Scalar color, double alpha) 
+{
+    // Create a transparent overlay (using a transparent color with alpha channel)
+    cv::Mat overlay;
+    image.copyTo(overlay); // Create a copy of the image to overlay the rectangle on
+
+    // Draw a rectangle on the overlay with the desired transparency
+    cv::rectangle(overlay, cv::Point(x_min, y_min), cv::Point(x_max, y_max), color, -1); // Green rectangle
+
+    // Blend the rectangle onto the original image
+    cv::addWeighted(overlay, alpha, image, 1 - alpha, 0, image);
+}
+
+
+// OpenCV Callback Helper
+void Point_To_Pixel_Node::mouse_callback(int event, int x, int y, int flags, void* param)
+{
+    if (event == cv::EVENT_LBUTTONDOWN){
+        // Unpack parameters: first is the original image, second is the canvas
+        auto* params = static_cast<std::pair<cv::Mat*, cv::Mat*>*>(param);
+        cv::Mat* image = params->first;
+        cv::Mat* canvas = params->second;
+
+        Eigen::Vector2d pix(x, y);
+        std::tuple<int, double> out = Point_To_Pixel_Node::identify_color(pix, *image);  // Pass the original image to identify_color
+        std::cout << std::get<0>(out) << std::endl << std::get<1>(out) << std::endl;
+        std::cout << x << std::endl << y << std::endl;
+
+        // Draw transparent rectangle around the ROI for the identified color
+        int side_length = 25;
+        int x_min_blue = static_cast<int>(pix(0)) - side_length;
+        int x_max_blue = static_cast<int>(pix(0)) + side_length;
+        int y_min_blue = static_cast<int>(pix(1)) - side_length;
+        int y_max_blue = static_cast<int>(pix(1)) + side_length;
+
+        cv::Scalar color;
+
+        // Choose color based on the identified color
+        switch (std::get<0>(out)) {
+            case 0:
+                color = cv::Scalar(0, 165, 255);  // Orange in BGR40272345
+                break;
+            case 1:
+                color = cv::Scalar(0, 255, 255);  // Yellow in BGR
+                break;
+            case 2:
+                color = cv::Scalar(255, 0, 0);    // Blue in BGR
+                break;
+            case -1:
+                color = cv::Scalar(0, 255, 0);    // Green (no cone detected)
+                break;
+        }
+
+        // Modify the canvas with the rectangle
+        drawTransparentRectangle(*canvas, x_min_blue, x_max_blue, y_min_blue, y_max_blue, color, 0.5); // 30% transparency
+
+        // Display the updated canvas (not the original image)
+        cv::imshow("Display Window", *canvas);
+    }
 }
 
 
