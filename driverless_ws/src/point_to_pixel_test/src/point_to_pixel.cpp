@@ -374,7 +374,7 @@ std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pix
     // Define HSV color ranges
     std::vector<std::pair<cv::Scalar, cv::Scalar>> yellow_ranges = {
       this->yellow_filter_low, this->yellow_filter_high
-    }
+    };
     // {
     //     {cv::Scalar(18, 50, 50), cv::Scalar(35, 255, 255)},
     //     {cv::Scalar(22, 40, 40), cv::Scalar(38, 255, 255)},
@@ -382,7 +382,7 @@ std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pix
     // };
     std::vector<std::pair<cv::Scalar, cv::Scalar>> blue_ranges = {
       this->blue_filter_low, this->blue_filter_high
-    }
+    };
     // {
     //     {cv::Scalar(100, 50, 50), cv::Scalar(130, 255, 255)},
     //     {cv::Scalar(110, 50, 50), cv::Scalar(130, 255, 255)},
@@ -391,7 +391,7 @@ std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pix
     // };
     std::vector<std::pair<cv::Scalar, cv::Scalar>> orange_ranges = {
       this->orange_filter_low, this->orange_filter_high
-    }
+    };
     // {
     //     {cv::Scalar(0, 100, 100), cv::Scalar(15, 255, 255)},
     //     {cv::Scalar(160, 100, 100), cv::Scalar(179, 255, 255)},
