@@ -1,0 +1,3 @@
+ros2 run controls controls_echo_node 1714503078.033534469 & ros2 bag play third-run-demo-practice-five-laps/ --topic /filter/twist /spline --remap spline:=old_spline
+
+ros2 run controls controller

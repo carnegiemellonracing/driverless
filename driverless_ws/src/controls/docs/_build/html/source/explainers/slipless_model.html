@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model Overview &mdash; CMR Driverless Controls 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="File Structure" href="file_structure.html" />
+    <link rel="prev" title="MPPI Algorithm Overview" href="mppi_algorithm.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            CMR Driverless Controls
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../explainerslist.html">Explainers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="controller.html">Controller Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="state_estimation.html">State Estimation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mppi_algorithm.html">MPPI Algorithm Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Model Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#notation">Notation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#specification">Specification</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html">File Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="file_structure.html#namespaces">Namespaces</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">CMR Driverless Controls</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../explainerslist.html">Explainers</a></li>
+      <li class="breadcrumb-item active">Model Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source/explainers/slipless_model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="model-overview">
+<h1>Model Overview<a class="headerlink" href="#model-overview" title="Link to this heading"></a></h1>
+<p>Our dynamics model takes in state and control input and outputs
+the next state after a given timestep. We make a Markov assumption that the future state depends only on the current state and control input.</p>
+<section id="notation">
+<h2>Notation<a class="headerlink" href="#notation" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\vec{x}\)</span>: state vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{u}\)</span>: control action vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta t\)</span>: model timestep</p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{x_{next}}\)</span>: state vector after timestep</p></li>
+<li><p><span class="math notranslate nohighlight">\(\vec{f}\)</span>: dynamics function</p></li>
+<li><p><span class="math notranslate nohighlight">\(x\)</span>: x position in inertial frame</p></li>
+<li><p><span class="math notranslate nohighlight">\(y\)</span>: y position in inertial frame</p></li>
+<li><p><span class="math notranslate nohighlight">\(\psi\)</span>: yaw angle from x-axis</p></li>
+<li><p><span class="math notranslate nohighlight">\(v\)</span>: scalar speed of the car</p></li>
+<li><p><span class="math notranslate nohighlight">\(\delta\)</span>: steering angle</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{motor}\)</span>: total motor torque</p></li>
+<li><p><span class="math notranslate nohighlight">\(m\)</span>: mass of the car</p></li>
+<li><p><span class="math notranslate nohighlight">\(R\)</span>: wheel radius</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{\delta}\)</span>: kinematic steering angle (explained later)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\kappa\)</span>: understeer gradient</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha\)</span>: slip angle (angle between velocity vector and car body)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\omega\)</span>: angular velocity of the car</p></li>
+<li><p><span class="math notranslate nohighlight">\(r\)</span>: turning radius</p></li>
+<li><p><span class="math notranslate nohighlight">\(r_{rear}\)</span>: distance from rear wheel to center of turning circle</p></li>
+<li><p><span class="math notranslate nohighlight">\(r_{front}\)</span>: distance from front wheel to center of turning circle</p></li>
+<li><p><span class="math notranslate nohighlight">\(L_{front}\)</span>: distance between front wheel and center of mass</p></li>
+<li><p><span class="math notranslate nohighlight">\(L_{rear}\)</span>: distance between rear wheel and center of mass</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{front}\)</span>: torque on front wheel</p></li>
+<li><p><span class="math notranslate nohighlight">\(\tau_{rear}\)</span>: torque on rear wheel</p></li>
+<li><p><span class="math notranslate nohighlight">\(F_{front}\)</span>: force on front wheel</p></li>
+<li><p><span class="math notranslate nohighlight">\(F_{rear}\)</span>: force on rear wheel</p></li>
+<li><p><span class="math notranslate nohighlight">\(F_{drag}\)</span>: drag force (rolling and air resistance)</p></li>
+<li><p><span class="math notranslate nohighlight">\(F_{net}\)</span>: net force on car</p></li>
+</ul>
+</section>
+<section id="specification">
+<h2>Specification<a class="headerlink" href="#specification" title="Link to this heading"></a></h2>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{split}\text{Given $\vec{x}$ } &amp;= \begin{bmatrix}
+    x \\
+    y \\
+    \psi \\
+    v \\
+\end{bmatrix} \text{ and } \vec{u} = \begin{bmatrix}
+    \delta \\
+    \tau_{motor} \\
+\end{bmatrix}\end{split}\\\text{Define the dynamics function $\vec{f}$ such that: }\\\vec{x_{next}} = \vec{f}(\vec{x}, \vec{u}, \Delta t)\\\begin{split}\text{where } \vec{x_{next}} = \begin{bmatrix}
+    x_{next} \\
+    y_{next} \\
+    \psi_{next} \\
+    v_{next} \\
+\end{bmatrix}\end{split}\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <span class="math notranslate nohighlight">\(x\)</span> axis points forward and the <span class="math notranslate nohighlight">\(y\)</span> axis points to the right. The car starts facing the positive x direction.
+A positive yaw or steering angle means the car is turning clockwise.</p>
+</div>
+<p>We use a modified bicycle model that introduces a couple of assumptions:</p>
+<ol class="arabic simple numbered-list">
+<li><p>There is no lateral slip on the tires.</p></li>
+<li><p>Between model timesteps, the car moves in approximately uniform circular motion.</p></li>
+<li><p>There is no longitudinal slip on the tires.</p></li>
+<li><p>The angular inertia of the wheels is negligible compared to the inertia of the car and the torque being applied.</p></li>
+</ol>
+<p>This assumption holds true unless the car is cornering <strong>very</strong> fast.</p>
+<p>We will refer to the assumptions as [1], [2], [3] and [4].</p>
+<p>During cornering, the car is modeled as such:</p>
+<img alt="../../_images/model.png" class="align-center" src="../../_images/model.png" />
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The car is not necessarily aligned to the x and y axes.</p>
+</div>
+<p>From [1], both tires move parallel to themselves with no sideway slip. Thus, given solely by the steering angle,
+the turning radius and center should be calculable.</p>
+<p>However, as speed increases, the car understeers more. The steering wheel needs to be turned more to achieve the same
+turning radius. This is a consequence of our slipless assumption.</p>
+<p>We characterize this with a tunable parameter called the understeer gradient <span class="math notranslate nohighlight">\(\kappa\)</span>, and define the
+kinematic steering angle <span class="math notranslate nohighlight">\(\hat{\delta} = \frac{\delta}{1 + \kappa v}\)</span>, which is used to determine turning
+radius and center.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The understeer gradient can be empirically measured by doing skidpad at various speeds and comparing the
+steering angle to the turning radius.</p>
+</div>
+<p>Calculate the slip angle <span class="math notranslate nohighlight">\(\alpha\)</span>, which is the angle between the car’s velocity vector and the car’s body.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}r_{rear} = (L_{front} + L_{rear}) / tan(\hat{\delta})\\\alpha = tan^{-1}(\frac{L_{rear}}{r_{rear}})\end{aligned}\end{align} \]</div>
+<p>We calculate the higher order terms of <span class="math notranslate nohighlight">\(\vec{x_{next}}\)</span> first - speed.</p>
+<p>From [2], the car’s velocity is perpendicular to the turning axis. Thus, to find <span class="math notranslate nohighlight">\(\delta v\)</span>, we need to find the
+net force on the car in the direction of <span class="math notranslate nohighlight">\(\vec{v}\)</span>.</p>
+<div class="center math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{gathered}
+\tau_{front} \text{ and } \tau_{rear} \text{ are derived from } \tau_{motor}, \text{ gear ratio and drive mode.}\\\text{Because of [3] and [4], all torque goes into force on the wheels}\\F_{front} = \frac{\tau_{front}}{R} \text{ and } F_{rear} = \frac{\tau_{rear}}{R}\\F_{net} = F_{front}cos(\delta - \alpha) + F_{rear}cos(\alpha) - F_{drag}\\\delta v = \frac{F_{net}}{m} \Delta t\\v_{next} = | \vec{v} + \delta v |, \text{ since the car can't go backwards (negative torque is regenerative braking)}
+\end{gathered}\end{aligned}\end{align} \]</div>
+<p>Actual steering angle is used here since that determines the direction of the forces.</p>
+<p>Over the model timestep, the average speed <span class="math notranslate nohighlight">\(\bar{v} = \frac{v + v_{next}}{2}\)</span>. Use this to recalculate <span class="math notranslate nohighlight">\(\hat{\delta}, r, \alpha\)</span>.</p>
+<p>Angular speed <span class="math notranslate nohighlight">\(\omega = \frac{\bar{v}}{r}\)</span>, and because of [2], <span class="math notranslate nohighlight">\(\frac{d\psi}{dt} = \omega\)</span>.</p>
+<p>Thus, the new yaw angle <span class="math notranslate nohighlight">\(\psi_{next} = \psi + \omega \Delta t\)</span>.</p>
+<p>Finally, calculate the new position of the car. Because of [2], instead of extrapolating <span class="math notranslate nohighlight">\(\bar{v}\)</span> into the future,
+we can find its position by moving it along the circular path.</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}x_{next} = x + r_{rear}(sin(\psi_{next}) - sin(\psi)) + L_{rear}(cos(\psi_{next}) - cos(\psi))\\y_{next} = y - r_{rear}(cos(\psi_{next}) - cos(\psi)) + L_{rear}(sin(\psi_{next}) - sin(\psi))\end{aligned}\end{align} \]</div>
+<p>We use <span class="math notranslate nohighlight">\(r_{rear}\)</span> instead of <span class="math notranslate nohighlight">\(r\)</span> because the car body is perpendicular not to the turning axis, but the line
+connecting the rear wheel to the center of the turning circle.</p>
+<p>The model is now complete.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\vec{f}(\vec{x}, \vec{u}, \Delta t) = \begin{bmatrix}
+    x_{next} \\
+    y_{next} \\
+    \psi_{next} \\
+    v_{next} \\
+\end{bmatrix} = \begin{bmatrix}
+    x + r_{rear}(sin(\psi_{next}) - sin(\psi)) + L_{rear}(cos(\psi_{next}) - cos(\psi)) \\
+    y - r_{rear}(cos(\psi_{next}) - cos(\psi)) + L_{rear}(sin(\psi_{next}) - sin(\psi)) \\
+    \psi + \omega \Delta t \\
+    | \vec{v} + \delta v \Delta t |
+\end{bmatrix}\end{split}\]</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mppi_algorithm.html" class="btn btn-neutral float-left" title="MPPI Algorithm Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="file_structure.html" class="btn btn-neutral float-right" title="File Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Anthony Yip.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
