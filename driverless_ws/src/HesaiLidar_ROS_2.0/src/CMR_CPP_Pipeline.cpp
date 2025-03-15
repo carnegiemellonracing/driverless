@@ -287,6 +287,7 @@ inline PointCloud<PointXYZ> DBSCAN(PointCloud<PointXYZ> &cloud, double epsilon, 
 
     int cluster_id = 0;
 
+    // Goes through all points, finds cluster points, and expands them to create clusters
     for (size_t i = 0; i < cloud.points.size(); ++i) {
         if (visited[i]) {
             continue;
@@ -318,6 +319,7 @@ inline PointCloud<PointXYZ> DBSCAN(PointCloud<PointXYZ> &cloud, double epsilon, 
  * @param cloud: The input point cloud
  * @param epsilon: The minimum distance between points
  * @param min_points: The minimum number of points to form a cluster
+ * @return Filtered
  */
 inline PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon, int min_points) {
     // visited[i] indicates whether the point has been visited.
@@ -393,6 +395,7 @@ inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alp
     std::chrono::duration<double, std::milli> duration_pipeline = end_pipeline - start_pipeline;
     std::cout << "Total pipeline time: " << duration_pipeline.count() << " ms" << std::endl;
 
+    // Writes the points to the output file
     std::string out_file = "gnc_output_points.csv";
     std::string out_file2 = "pipe_output_points.csv";
     ofstream write_to(out_file);
