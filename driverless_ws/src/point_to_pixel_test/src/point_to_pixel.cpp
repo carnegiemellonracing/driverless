@@ -43,8 +43,13 @@ class Point_To_Pixel_Node : public rclcpp::Node
     // Image Deque
     std::deque<std::pair<rclcpp::Time, cv::Mat>> img_deque;
 
-    // Parameters
+    // ROS2 Parameters
     Eigen::Matrix<double, 3, 4> projection_matrix;
+    double CONFIDENCE_THRESHOLD;
+    cv::scalar yellow_filter;
+    cv::scalar blue_filter;
+    cv::scalar orange_filter;
+
 
     // Callbacks/helper functions
     void topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
@@ -53,8 +58,6 @@ class Point_To_Pixel_Node : public rclcpp::Node
     cv::Mat getCameraFrame(rclcpp::Time callbackTime);
 
     // Parameters
-    double CONFIDENCE_THRESHOLD;
-
     sl_oc::video::VideoParams params;
     sl_oc::video::VideoCapture cap_0;
     sl_oc::video::VideoCapture cap_1;
@@ -69,7 +72,7 @@ class Point_To_Pixel_Node : public rclcpp::Node
     // ROS2 Objects
     rclcpp::Publisher<interfaces::msg::ConeList>::SharedPtr publisher_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr subscriber_;
-    
+
     // Camera Callback(10 frames per second)
     rclcpp::TimerBase::SharedPtr camera_timer_;
     
@@ -126,12 +129,44 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
   // Include calibration?
 
+  std::vector<int> ly_filter_default{0, 0, 0};
+  std::vector<int> uy_filter_default{0, 0, 0};
+  std::vector<int> lb_filter_default{0, 0, 0};
+  std::vector<int> ub_filter_default{255, 255, 255};
+  std::vector<int> lo_filter_default{255, 255, 255};
+  std::vector<int> uo_filter_default{255, 255, 255};
+
+  // Color Parameters
+  this->declare_parameter("yellow_filter_high", ly_filter_default);
+  this->declare_parameter("yellow_filter_low", uy_filter_default);
+  this->declare_parameter("blue_filter_high", lb_filter_default);
+  this->declare_parameter("blue_filter_low", ub_filter_default);
+  this->declare_parameter("orange_filter_high", lo_filter_default);
+  this->declare_parameter("orange_filter_low", uo_filter_default);
+
   // Get parameters
+
+  // Load Projection Matrix
   std::vector<double> param = this->get_parameter("projection_matrix").as_double_array();
   this->projection_matrix = Eigen::Map<Eigen::Matrix<double, 3, 4, Eigen::RowMajor>>(param.data());
 
-
+  // Load Confidence Threshold
   this->CONFIDENCE_THRESHOLD = this->get_parameter("confidence_threshold").as_double();
+
+  // Load Color Filter Params
+  std::vector<int> ly_filt_arr = this->get_param("yellow_filte_high").as_int_array();
+  std::vector<int> uy_filt_arr = this->get_param("yellow_filte_low").as_int_array();
+  std::vector<int> lb_filt_arr = this->get_param("blue_filter_high").as_int_array();
+  std::vector<int> ub_filt_arr = this->get_param("blue_filter_low").as_int_array();
+  std::vector<int> lo_filt_arr = this->get_param("orange_filter_high").as_int_array();
+  std::vector<int> uo_filt_arr = this->get_param("orange_filter_low").as_int_array();
+
+  this->yellow_filter_high = cv::scalar(uy_filt_arr[0], uy_filt_arr[1], uy_filt_arr[2]);
+  this->yellow_filter_low = cv::scalar(ly_filt_arr[0], ly_filt_arr[1], ly_filt_arr[2]);
+  this->blue_filter_high = cv::scalar(ub_filt_arr[0], ub_filt_arr[1], ub_filt_arr[2]);
+  this->blue_filter_low = cv::scalar(lb_filt_arr[0], lb_filt_arr[1], lb_filt_arr[2]);
+  this->orange_filter_high = cv::scalar(ub_filt_arr[0], ub_filt_arr[1], ub_filt_arr[2]);
+  this->orange_filter_low = cv::scalar(lb_filt_arr[0], lb_filt_arr[1], lb_filt_arr[2]);
 
   std::chrono::seconds duration(2);
   rclcpp::sleep_for(duration);
@@ -272,7 +307,7 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
   int bestFrameIndex = 0;
 
   #if VERBOSE
-  RCLCPP_INFO(this->get_logger(), "getCameraFrame called with time: %ld", 
+    RCLCPP_INFO(this->get_logger(), "getCameraFrame called with time: %ld", 
                                   callbackTime.nanoseconds());
   #endif
   
@@ -301,7 +336,7 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
   }
   
   #if VERBOSE
-  RCLCPP_INFO(this->get_logger(), "Best frame:%d | REQ-FRAME Time diff: %ld nanoseconds", 
+    RCLCPP_INFO(this->get_logger(), "Best frame:%d | REQ-FRAME Time diff: %ld nanoseconds", 
               bestFrameIndex, bestDiff);
   #endif
   
@@ -335,21 +370,30 @@ std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pix
 
     // Define HSV color ranges
     std::vector<std::pair<cv::Scalar, cv::Scalar>> yellow_ranges = {
-        {cv::Scalar(18, 50, 50), cv::Scalar(35, 255, 255)},
-        {cv::Scalar(22, 40, 40), cv::Scalar(38, 255, 255)},
-        {cv::Scalar(25, 30, 30), cv::Scalar(35, 255, 255)}
-    };
+      this->yellow_filter_low, this->yellow_filter_high
+    }
+    // {
+    //     {cv::Scalar(18, 50, 50), cv::Scalar(35, 255, 255)},
+    //     {cv::Scalar(22, 40, 40), cv::Scalar(38, 255, 255)},
+    //     {cv::Scalar(25, 30, 30), cv::Scalar(35, 255, 255)}
+    // };
     std::vector<std::pair<cv::Scalar, cv::Scalar>> blue_ranges = {
-        {cv::Scalar(100, 50, 50), cv::Scalar(130, 255, 255)},
-        {cv::Scalar(110, 50, 50), cv::Scalar(130, 255, 255)},
-        {cv::Scalar(90, 50, 50), cv::Scalar(110, 255, 255)},
-        {cv::Scalar(105, 30, 30), cv::Scalar(125, 255, 255)}
-    };
+      this->blue_filter_low, this->blue_filter_high
+    }
+    // {
+    //     {cv::Scalar(100, 50, 50), cv::Scalar(130, 255, 255)},
+    //     {cv::Scalar(110, 50, 50), cv::Scalar(130, 255, 255)},
+    //     {cv::Scalar(90, 50, 50), cv::Scalar(110, 255, 255)},
+    //     {cv::Scalar(105, 30, 30), cv::Scalar(125, 255, 255)}
+    // };
     std::vector<std::pair<cv::Scalar, cv::Scalar>> orange_ranges = {
-        {cv::Scalar(0, 100, 100), cv::Scalar(15, 255, 255)},
-        {cv::Scalar(160, 100, 100), cv::Scalar(179, 255, 255)},
-        {cv::Scalar(5, 120, 120), cv::Scalar(15, 255, 255)}
-    };
+      this->orange_filter_low, this->orange_filter-high
+    }
+    // {
+    //     {cv::Scalar(0, 100, 100), cv::Scalar(15, 255, 255)},
+    //     {cv::Scalar(160, 100, 100), cv::Scalar(179, 255, 255)},
+    //     {cv::Scalar(5, 120, 120), cv::Scalar(15, 255, 255)}
+    // };
 
     // Create color masks
     cv::Mat yellow_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
