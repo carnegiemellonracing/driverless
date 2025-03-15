@@ -517,7 +517,8 @@ void Point_To_Pixel_Node::camera_callback()
 {
   this->frame_1 = this->cap_1.getLastFrame();
 
-  cv::Mat frameBGR_1, left_raw, left_rect //, right_raw, right_rect;
+  cv::Mat frameBGR_1, left_raw, left_rect; //, right_raw, right_rect;
+
   if (frame_1.data != nullptr){
     cv::Mat frameYUV_1 = cv::Mat(frame_1.height, frame_1.width, CV_8UC2, frame_1.data);
     cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
@@ -528,8 +529,7 @@ void Point_To_Pixel_Node::camera_callback()
     cv::remap(left_raw, left_rect, this->map_left_x, this->map_left_y, cv::INTER_LINEAR);
     // cv::remap(right_raw, right_rect, this->map_right_x, this->map_right_y, cv::INTER_LINEAR);
     frameBGR_1 = left_rect;
-  }
-  else {
+  } else {
     RCLCPP_ERROR(this->get_logger(), "Failed to capture frame from camera 1.");
   }
 
@@ -537,8 +537,7 @@ void Point_To_Pixel_Node::camera_callback()
   if (img_deque.size() < 10) {
     rclcpp::Time time = this->get_clock()->now();
     this->img_deque.push_back(std::make_pair(time, frameBGR_1));
-  }
-  else
+  } else
   {
     this->img_deque.pop_front();
     this->img_deque.push_back(std::make_pair(this->get_clock()->now(), frameBGR_1));
