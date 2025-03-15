@@ -48,9 +48,9 @@ class Point_To_Pixel_Node : public rclcpp::Node
     // ROS2 Parameters
     Eigen::Matrix<double, 3, 4> projection_matrix;
     double CONFIDENCE_THRESHOLD;
-    cv::scalar yellow_filter;
-    cv::scalar blue_filter;
-    cv::scalar orange_filter;
+    cv::Scalar yellow_filter;
+    cv::Scalar blue_filter;
+    cv::Scalar orange_filter;
 
 
     // Callbacks/helper functions
@@ -72,7 +72,7 @@ class Point_To_Pixel_Node : public rclcpp::Node
     cv::Mat map_right_x, map_right_y;
 
     // ROS2 Objects
-    rclcpp::Publisher<interfaces::msg::ConeList>::SharedPtr publisher_;
+    rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr publisher_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr subscriber_;
 
     // Camera Callback(10 frames per second)
@@ -163,12 +163,12 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   std::vector<int> lo_filt_arr = this->get_param("orange_filter_high").as_int_array();
   std::vector<int> uo_filt_arr = this->get_param("orange_filter_low").as_int_array();
 
-  this->yellow_filter_high = cv::scalar(uy_filt_arr[0], uy_filt_arr[1], uy_filt_arr[2]);
-  this->yellow_filter_low = cv::scalar(ly_filt_arr[0], ly_filt_arr[1], ly_filt_arr[2]);
-  this->blue_filter_high = cv::scalar(ub_filt_arr[0], ub_filt_arr[1], ub_filt_arr[2]);
-  this->blue_filter_low = cv::scalar(lb_filt_arr[0], lb_filt_arr[1], lb_filt_arr[2]);
-  this->orange_filter_high = cv::scalar(ub_filt_arr[0], ub_filt_arr[1], ub_filt_arr[2]);
-  this->orange_filter_low = cv::scalar(lb_filt_arr[0], lb_filt_arr[1], lb_filt_arr[2]);
+  this->yellow_filter_high = cv::Scalar(uy_filt_arr[0], uy_filt_arr[1], uy_filt_arr[2]);
+  this->yellow_filter_low = cv::Scalar(ly_filt_arr[0], ly_filt_arr[1], ly_filt_arr[2]);
+  this->blue_filter_high = cv::Scalar(ub_filt_arr[0], ub_filt_arr[1], ub_filt_arr[2]);
+  this->blue_filter_low = cv::Scalar(lb_filt_arr[0], lb_filt_arr[1], lb_filt_arr[2]);
+  this->orange_filter_high = cv::Scalar(ub_filt_arr[0], ub_filt_arr[1], ub_filt_arr[2]);
+  this->orange_filter_low = cv::Scalar(lb_filt_arr[0], lb_filt_arr[1], lb_filt_arr[2]);
 
   std::chrono::seconds duration(2);
   rclcpp::sleep_for(duration);
