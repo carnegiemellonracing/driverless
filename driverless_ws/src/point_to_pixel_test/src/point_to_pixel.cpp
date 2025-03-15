@@ -38,9 +38,6 @@ class Point_To_Pixel_Node : public rclcpp::Node
   public:
     Point_To_Pixel_Node(); // Constructor declaration
 
-    static std::tuple<int, double> identify_color(Eigen::Vector2d& pixel, cv::Mat image);
-    static void mouse_callback(int event, int x, int y, int flags, void* param);
-
   private:
     // Image Deque
     std::deque<std::pair<rclcpp::Time, cv::Mat>> img_deque;
@@ -60,6 +57,7 @@ class Point_To_Pixel_Node : public rclcpp::Node
     void topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
     void camera_callback();
     int transform(geometry_msgs::msg::Vector3& point, rclcpp::Time callbackTimer); 
+    std::tuple<int, double> identify_color(Eigen::Vector2d& pixel, cv::Mat image);
     cv::Mat getCameraFrame(rclcpp::Time callbackTime);
 
     // Parameters
@@ -159,12 +157,12 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   this->CONFIDENCE_THRESHOLD = this->get_parameter("confidence_threshold").as_double();
 
   // Load Color Filter Params
-  std::vector<int> ly_filt_arr = this->get_parameter("yellow_filter_high").as_integer_array();
-  std::vector<int> uy_filt_arr = this->get_parameter("yellow_filter_low").as_integer_array();
-  std::vector<int> lb_filt_arr = this->get_parameter("blue_filter_high").as_integer_array();
-  std::vector<int> ub_filt_arr = this->get_parameter("blue_filter_low").as_integer_array();
-  std::vector<int> lo_filt_arr = this->get_parameter("orange_filter_high").as_integer_array();
-  std::vector<int> uo_filt_arr = this->get_parameter("orange_filter_low").as_integer_array();
+  std::vector<long int> ly_filt_arr = this->get_parameter("yellow_filter_high").as_integer_array();
+  std::vector<long int> uy_filt_arr = this->get_parameter("yellow_filter_low").as_integer_array();
+  std::vector<long int> lb_filt_arr = this->get_parameter("blue_filter_high").as_integer_array();
+  std::vector<long int> ub_filt_arr = this->get_parameter("blue_filter_low").as_integer_array();
+  std::vector<long int> lo_filt_arr = this->get_parameter("orange_filter_high").as_integer_array();
+  std::vector<long int> uo_filt_arr = this->get_parameter("orange_filter_low").as_integer_array();
 
   this->yellow_filter_high = cv::Scalar(uy_filt_arr[0], uy_filt_arr[1], uy_filt_arr[2]);
   this->yellow_filter_low = cv::Scalar(ly_filt_arr[0], ly_filt_arr[1], ly_filt_arr[2]);
@@ -392,7 +390,7 @@ std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pix
     //     {cv::Scalar(105, 30, 30), cv::Scalar(125, 255, 255)}
     // };
     std::vector<std::pair<cv::Scalar, cv::Scalar>> orange_ranges = {
-      this->orange_filter_low, this->orange_filter-high
+      this->orange_filter_low, this->orange_filter_high
     }
     // {
     //     {cv::Scalar(0, 100, 100), cv::Scalar(15, 255, 255)},
