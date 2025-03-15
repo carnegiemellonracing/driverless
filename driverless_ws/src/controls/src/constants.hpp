@@ -53,8 +53,6 @@ namespace controls {
 
     constexpr bool ingest_midline = false;
     constexpr bool follow_midline_only = false;
-    
-
 
     // MPPI stuff
 
@@ -86,14 +84,14 @@ namespace controls {
     // TODO: use real bounds
 
     // Midline/SVM
-    constexpr float mesh_grid_spacing = 0.5f; //m
+    constexpr float mesh_grid_spacing = 0.2f; //m
     constexpr float max_spline_length = 200.0f;
     constexpr int cone_augmentation_angle = 30;
 
     constexpr float lookahead_behind_squared = 25.0f;
 
     // AIM communication stuff
-    constexpr int aim_signal_period_ms = 10;
+    constexpr int aim_signal_period_ms = 1000;
 
 
     // State Estimation
@@ -117,7 +115,7 @@ namespace controls {
     constexpr float cg_to_front = 0.775; 
     constexpr float cg_to_rear = 0.775; //Also rear of car
     constexpr float cg_to_nose = 2.025f;
-    constexpr float cg_to_side = 0.0f; //ACTUAL .75
+    constexpr float cg_to_side = 0.75f; //ACTUAL .75
     //constexpr float whl_base = 2.0f;
     constexpr float whl_radius = 0.2286;
     /// gear ratio = motor speed / wheel speed = wheel torque / motor torque

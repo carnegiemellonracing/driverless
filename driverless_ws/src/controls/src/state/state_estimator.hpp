@@ -26,6 +26,11 @@ namespace controls {
           */
 
          static std::shared_ptr<StateEstimator> create(std::mutex& mutex, LoggerFunc logger = no_log);
+            bool m_follow_midline_only = false;
+            void set_follow_midline_only(bool follow_midline_only) {
+                m_follow_midline_only = follow_midline_only;
+            }
+            
             virtual State project_state(const rclcpp::Time &time) =0;
 
             /**
