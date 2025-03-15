@@ -159,12 +159,12 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   this->CONFIDENCE_THRESHOLD = this->get_parameter("confidence_threshold").as_double();
 
   // Load Color Filter Params
-  std::vector<int> ly_filt_arr = this->get_parameter("yellow_filter_high").as_int_array();
-  std::vector<int> uy_filt_arr = this->get_parameter("yellow_filter_low").as_int_array();
-  std::vector<int> lb_filt_arr = this->get_parameter("blue_filter_high").as_int_array();
-  std::vector<int> ub_filt_arr = this->get_parameter("blue_filter_low").as_int_array();
-  std::vector<int> lo_filt_arr = this->get_parameter("orange_filter_high").as_int_array();
-  std::vector<int> uo_filt_arr = this->get_parameter("orange_filter_low").as_int_array();
+  std::vector<int> ly_filt_arr = this->get_parameter("yellow_filter_high").as_integer_array();
+  std::vector<int> uy_filt_arr = this->get_parameter("yellow_filter_low").as_integer_array();
+  std::vector<int> lb_filt_arr = this->get_parameter("blue_filter_high").as_integer_array();
+  std::vector<int> ub_filt_arr = this->get_parameter("blue_filter_low").as_integer_array();
+  std::vector<int> lo_filt_arr = this->get_parameter("orange_filter_high").as_integer_array();
+  std::vector<int> uo_filt_arr = this->get_parameter("orange_filter_low").as_integer_array();
 
   this->yellow_filter_high = cv::Scalar(uy_filt_arr[0], uy_filt_arr[1], uy_filt_arr[2]);
   this->yellow_filter_low = cv::Scalar(ly_filt_arr[0], ly_filt_arr[1], ly_filt_arr[2]);
