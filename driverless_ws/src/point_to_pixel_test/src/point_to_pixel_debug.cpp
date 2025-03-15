@@ -69,7 +69,7 @@ class Point_To_Pixel_Node : public rclcpp::Node
     cv::Mat map_right_x, map_right_y;
 
     // ROS2 Objects
-    rclcpp::Publisher<interfaces::msg::ConeList>::SharedPtr publisher_;
+    rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr publisher_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr subscriber_;
 
     // Camera Callback(10 frames per second)
@@ -252,7 +252,6 @@ int Point_To_Pixel_Node::transform(
     RCLCPP_INFO(this->get_logger(), "3x4 projection_matrix:\n%s", ss.str().c_str());
   #endif
 
-  #if !DEBUG
   // Convert point from topic type (geometry_msgs/msg/Vector3) to Eigen Vector3d
   Eigen::Vector4d lidar_pt(point.x, point.y, point.z, 1.0);
 
@@ -261,7 +260,6 @@ int Point_To_Pixel_Node::transform(
 
   // Divide by z coordinate for Euclidean normalization
   Eigen::Vector2d pixel_1 (transformed(0)/transformed(2), transformed(1)/transformed(2));
-  #endif
 
   // Get camera frame that is closest to time of LiDAR point
   cv::Mat frameBGR_1 = this->getCameraFrame(callbackTime);
