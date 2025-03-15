@@ -168,8 +168,8 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   this->yellow_filter_low = cv::Scalar(ly_filt_arr[0], ly_filt_arr[1], ly_filt_arr[2]);
   this->blue_filter_high = cv::Scalar(ub_filt_arr[0], ub_filt_arr[1], ub_filt_arr[2]);
   this->blue_filter_low = cv::Scalar(lb_filt_arr[0], lb_filt_arr[1], lb_filt_arr[2]);
-  this->orange_filter_high = cv::Scalar(ub_filt_arr[0], ub_filt_arr[1], ub_filt_arr[2]);
-  this->orange_filter_low = cv::Scalar(lb_filt_arr[0], lb_filt_arr[1], lb_filt_arr[2]);
+  this->orange_filter_high = cv::Scalar(uo_filt_arr[0], uo_filt_arr[1], uo_filt_arr[2]);
+  this->orange_filter_low = cv::Scalar(lo_filt_arr[0], lo_filt_arr[1], lo_filt_arr[2]);
 
   std::chrono::seconds duration(2);
   rclcpp::sleep_for(duration);
@@ -373,7 +373,7 @@ std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pix
 
     // Define HSV color ranges
     std::vector<std::pair<cv::Scalar, cv::Scalar>> yellow_ranges = {
-      this->yellow_filter_low, this->yellow_filter_high
+      {this->yellow_filter_low, this->yellow_filter_high}
     };
     // {
     //     {cv::Scalar(18, 50, 50), cv::Scalar(35, 255, 255)},
@@ -381,7 +381,7 @@ std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pix
     //     {cv::Scalar(25, 30, 30), cv::Scalar(35, 255, 255)}
     // };
     std::vector<std::pair<cv::Scalar, cv::Scalar>> blue_ranges = {
-      this->blue_filter_low, this->blue_filter_high
+      {this->blue_filter_low, this->blue_filter_high}
     };
     // {
     //     {cv::Scalar(100, 50, 50), cv::Scalar(130, 255, 255)},
@@ -390,7 +390,7 @@ std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pix
     //     {cv::Scalar(105, 30, 30), cv::Scalar(125, 255, 255)}
     // };
     std::vector<std::pair<cv::Scalar, cv::Scalar>> orange_ranges = {
-      this->orange_filter_low, this->orange_filter_high
+      {this->orange_filter_low, this->orange_filter_high}
     };
     // {
     //     {cv::Scalar(0, 100, 100), cv::Scalar(15, 255, 255)},
