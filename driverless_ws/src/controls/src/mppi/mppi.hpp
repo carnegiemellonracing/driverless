@@ -34,6 +34,10 @@ namespace controls {
              */
             static std::shared_ptr<MppiController> create(std::mutex& mutex, LoggerFunc logger = no_log);
 
+            bool m_follow_midline_only = false;
+            void set_follow_midline_only(bool follow_midline_only) {
+                m_follow_midline_only = follow_midline_only;
+            }
             /**
              * @brief Generates an action based on state and spline (both are cuda globals), returns it.
              * Tunable parameters in @file constants.hpp and @file cuda_globals/cuda_globals.cuh.

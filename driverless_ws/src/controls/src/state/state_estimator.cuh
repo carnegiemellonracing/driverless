@@ -129,7 +129,6 @@ namespace controls {
             void set_logger(LoggerFunc logger) override;
             void set_logger_obj(rclcpp::Logger logger) override;
 
-            rclcpp::Time get_orig_spline_data_stamp() override;
             void record_control_action(const Action &action, const rclcpp::Time &time) override;
 
             std::vector<glm::fvec2> get_spline_frames() override;
@@ -234,8 +233,6 @@ namespace controls {
             std::vector<GLuint> m_triangles;
 
             int m_num_triangles;
-            /// Stores the exact time the spline should be accurate from (i.e. when cones were identified by LIDAR)
-            rclcpp::Time m_orig_spline_data_stamp;
 
             /// The owned StateProjector to estimate the current state.
             StateProjector m_state_projector;
