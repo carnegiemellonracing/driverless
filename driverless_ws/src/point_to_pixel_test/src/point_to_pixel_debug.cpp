@@ -23,6 +23,7 @@
 #include "geometry_msgs/msg/point.hpp"
 #include "interfaces/msg/ppm_cone_array.hpp"
 #include "interfaces/msg/cone_list.hpp"
+#include "interfaces/msg/cone_array.hpp"
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
