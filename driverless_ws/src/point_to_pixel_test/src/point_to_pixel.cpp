@@ -132,12 +132,12 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
   // Include calibration?
 
-  std::vector<int> ly_filter_default(0, 0, 0);
-  std::vector<int> uy_filter_default(0, 0, 0);
-  std::vector<int> lb_filter_default(0, 0, 0);
-  std::vector<int> ub_filter_default(255, 255, 255);
-  std::vector<int> lo_filter_default(255, 255, 255);
-  std::vector<int> uo_filter_default(255, 255, 255);
+  std::vector<long int> ly_filter_default{0, 0, 0};
+  std::vector<long int> uy_filter_default{0, 0, 0};
+  std::vector<long int> lb_filter_default{0, 0, 0};
+  std::vector<long int> ub_filter_default{255, 255, 255};
+  std::vector<long int> lo_filter_default{255, 255, 255};
+  std::vector<long int> uo_filter_default{255, 255, 255};
 
   // Color Parameters
   this->declare_parameter("yellow_filter_high", ly_filter_default);
