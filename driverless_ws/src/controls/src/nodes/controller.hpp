@@ -126,7 +126,8 @@ namespace controls {
             struct ActionSignal {
                 int16_t front_torque_mNm = 0;
                 int16_t back_torque_mNm = 0;
-                uint8_t rack_displacement_mm = 0;
+                uint16_t velocity_rpm = 0;
+                uint16_t rack_displacement_adc = 0;
             };
 
             ActionSignal action_to_signal(Action action);

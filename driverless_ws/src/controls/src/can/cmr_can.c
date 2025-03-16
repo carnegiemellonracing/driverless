@@ -15,21 +15,11 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include "cmr_can.h"
-#include <stdarg.h>
 
 #define READ_WAIT_INFINITE (unsigned long)(-1)
 static unsigned int msgCounter = 0;
+static unsigned int can_tx_timeout = 30;
 
-static bool debug = false;
-
-static void debug_printf(const char *format, ...) {
-    if (debug) {
-        va_list args;
-        va_start(args, format);
-        vprintf(format, args);
-        va_end(args);
-    }
-}
 
 
 static void check(char *id, canStatus stat)
@@ -38,13 +28,13 @@ static void check(char *id, canStatus stat)
         char buf[50];
         buf[0] = '\0';
         canGetErrorText(stat, buf, sizeof(buf));
-        debug_printf("%s: failed, stat=%d (%s)\n", id, (int)stat, buf);
+        printf("%s: failed, stat=%d (%s)\n", id, (int)stat, buf);
     }
 }
 
 static void printUsageAndExit(char *prgName)
 {
-    debug_printf("Usage: '%s <channel>'\n", prgName);
+    printf("Usage: '%s <channel>'\n", prgName);
     exit(1);
 }
 
@@ -79,19 +69,19 @@ void notifyCallback(canNotifyData *data)
 {
     switch (data->eventType) {
     case canEVENT_STATUS:
-        debug_printf("CAN Status Event: %s\n", busStatToStr(data->info.status.busStatus));
+        printf("CAN Status Event: %s\n", busStatToStr(data->info.status.busStatus));
         break;
 
     case canEVENT_ERROR:
-        debug_printf("CAN Error Event\n");
+        printf("CAN Error Event\n");
         break;
 
     case canEVENT_TX:
-        debug_printf("CAN Tx Event\n");
+        printf("CAN Tx Event\n");
         break;
 
     case canEVENT_RX:
-        debug_printf("CAN Rx Event\n");
+        printf("CAN Rx Event\n");
         break;
     }
     return;
@@ -114,16 +104,16 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
     }
 
     if(verbose){
-        debug_printf("Sending a CAN message on channel %d\n", channel);
+        printf("Sending a CAN message on channel %d\n", channel);
     }
 
     canInitializeLibrary();
 
     /* Open channel, set parameters and go on bus */
     hnd = canOpenChannel(channel,
-                         canOPEN_EXCLUSIVE | canOPEN_REQUIRE_EXTENDED | canOPEN_ACCEPT_VIRTUAL);
+                         canOPEN_EXCLUSIVE /*| canOPEN_REQUIRE_EXTENDED*/ | canOPEN_ACCEPT_VIRTUAL);
     if (hnd < 0) {
-        debug_printf("canOpenChannel %d", channel);
+        printf("canOpenChannel %d", channel);
         check("", hnd);
         return -1;
     }
@@ -153,7 +143,7 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
     if (stat != canOK) {
         goto ErrorExit;
     }
-    stat = canWriteSync(hnd, 1000);
+    stat = canWriteSync(hnd, can_tx_timeout);
     check("canWriteSync", stat);
     if (stat != canOK) {
         goto ErrorExit;
@@ -182,18 +172,32 @@ ErrorExit:
 
 @returns 0 on success else error occured
 */
-int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint8_t rackDisplacement_mm){
+int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t velocity_rpm /*divide by ~13 for wheelspeed*/, uint16_t rackDisplacement_adc /*2450 -> 4050*/){
     long controlActionID = 0x190;
 
     //defines our message
-    unsigned char msg[5];
-    msg[0] = (unsigned char) frontTorque_mNm >> 8; //8 MSB of frontTorque
-    msg[1] = (unsigned char) frontTorque_mNm; // 8 LSB of frontTorque
-    msg[2] = (unsigned char) rearTorque_mNm >> 8; // 8 MSB of rearTorque
-    msg[3] = (unsigned char) rearTorque_mNm; // 8 LSB of rearTorque
-    msg[4] = (unsigned char) rackDisplacement_mm;
+    unsigned char msg[8];
+    msg[1] = (unsigned char) (frontTorque_mNm >> 8); //8 MSB of frontTorque
+    msg[0] = (unsigned char) frontTorque_mNm; // 8 LSB of frontTorque
+    msg[3] = (unsigned char) (rearTorque_mNm >> 8); // 8 MSB of rearTorque
+    msg[2] = (unsigned char) rearTorque_mNm; // 8 LSB of rearTorque
+    msg[5] = (unsigned char) (velocity_rpm >> 8);
+    msg[4] = (unsigned char) velocity_rpm;
+    msg[7] = (unsigned char) (rackDisplacement_adc >> 8);
+    msg[6] = (unsigned char) rackDisplacement_adc;
 
-    return cmr_can_tx(0, controlActionID, &msg, 5, false);
+    return cmr_can_tx(0, controlActionID, &msg, 8, false);
+}
+
+int sendPIDConstants(float p, float feedforward) {
+    long pidID = 0x548;
+
+    //defines our message
+    unsigned char msg[8];
+    *(float*)msg = p;
+    *(float*)(&msg[4]) = feedforward;
+
+    return cmr_can_tx(0, pidID, &msg, 8, false);
 }
 
 /*
@@ -229,7 +233,7 @@ int cmr_can_rx(int channel, long id, bool verbose)
     }
 
     if(verbose){
-        debug_printf("Reading CAN messages on channel %d\n", channel);
+        printf("Reading CAN messages on channel %d\n", channel);
     }
 
     canInitializeLibrary();
@@ -240,7 +244,7 @@ int cmr_can_rx(int channel, long id, bool verbose)
    
     if(verbose) {
         if (hnd < 0) {
-        debug_printf("canOpenChannel %d", channel);
+        printf("canOpenChannel %d", channel);
         check("", hnd);
         return -1;
     }
@@ -279,23 +283,23 @@ int cmr_can_rx(int channel, long id, bool verbose)
         if (stat == canOK) {
             msgCounter++;
             if (flag & canMSG_ERROR_FRAME) {
-                debug_printf("(%u) ERROR FRAME", msgCounter);
+                printf("(%u) ERROR FRAME", msgCounter);
             } else {
                 unsigned j;
 
                 if(curId == id) {
                     seen = true;
-                    debug_printf("(%u) id:%ld dlc:%u data: ", msgCounter, id, dlc);
+                    printf("(%u) id:%ld dlc:%u data: ", msgCounter, id, dlc);
                     if (dlc > 8) {
                         dlc = 8;
                     }
                     for (j = 0; j < dlc; j++) {
-                        debug_printf("%2.2x ", msg[j]);
+                        printf("%2.2x ", msg[j]);
                     }
                 }
 
             }
-            debug_printf(" flags:0x%x time:%lu\n", flag, time);
+            printf(" flags:0x%x time:%lu\n", flag, time);
         } else {
             if (errno == 0) {
                 check("\ncanReadWait", stat);

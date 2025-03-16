@@ -1,0 +1,4 @@
+[INFO] [1738434017.696906667] [rosbridge_websocket]: Rosbridge WebSocket server started on port 9090
+[INFO] [1738434797.828193243] [rosbridge_websocket]: Client connected. 1 clients total.
+[INFO] [1738434798.626664386] [rosbridge_websocket]: [Client 2ba14a79-301b-487e-9ea9-4a0a2cde62b3] Subscribed to /tf
+[INFO] [1738434798.665915589] [rosbridge_websocket]: [Client 2ba14a79-301b-487e-9ea9-4a0a2cde62b3] Subscribed to /lidar_points

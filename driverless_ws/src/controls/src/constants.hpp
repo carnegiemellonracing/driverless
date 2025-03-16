@@ -53,6 +53,7 @@ namespace controls {
 
     constexpr bool ingest_midline = false;
     constexpr bool follow_midline_only = false;
+    constexpr uint16_t can_max_velocity_rpm = 3000;
 
     // MPPI stuff
 
