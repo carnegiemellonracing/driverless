@@ -31,6 +31,7 @@ namespace controls {
     using StateMsg = interfaces::msg::ControlsState; ///< p=4 dimensional state: x, y, yaw, speed. Derived from twist and pose.
     using InfoMsg = interfaces::msg::ControllerInfo; ///< State, control action, latency info
     using ConeMsg = interfaces::msg::ConeArray; /// Array of coloured cone positions
+    using SlamMsg = interfaces::msg::SLAMChunk; /// Array of blue cone positions, array of yellow cone positions, chunk id 
     /// Logging function type.
     using LoggerFunc = std::function<void(const char*)>;
     /// Instance of LoggerFunc that doesn't log anything.

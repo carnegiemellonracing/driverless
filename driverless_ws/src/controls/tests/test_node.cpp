@@ -310,8 +310,13 @@ namespace controls {
         }
 
         static size_t find_closest_point(const std::vector<glm::fvec2>& points, glm::fvec2 position, float lookahead_squared, size_t prev_closest) {
+            int counter =0;
             while (get_squared_distance(points.at(prev_closest), position) >= lookahead_squared) {
                 prev_closest = (prev_closest + 1) % points.size();
+            }
+            couner++;
+            if (counter>points.size()){
+                return prev_closest;
             }
             return prev_closest;
         }

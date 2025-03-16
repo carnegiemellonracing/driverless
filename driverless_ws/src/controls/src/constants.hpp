@@ -17,6 +17,7 @@ namespace controls {
     constexpr const char *world_twist_topic_name = "filter/twist";
     constexpr const char *world_quat_topic_name = "filter/quaternion";
     constexpr const char *world_pose_topic_name = "filter/pose";
+    constexpr const char *slam_pose_topic_name  "slam_pose";
     constexpr const char *controller_info_topic_name = "controller_info";
 
     // TODO: Ask Ankit what is this, why did we choose it
@@ -45,6 +46,7 @@ namespace controls {
     const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1)); 
     const rclcpp::QoS world_pose_qos (rclcpp::KeepLast(1));
+    const rclcpp::QoS slam_pose_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS controller_info_qos = best_effort_qos;
 
     constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
@@ -99,7 +101,7 @@ namespace controls {
     // mppi simulates a lot of shitty trajectories (naive brownian guess)
     /// Represents space the car occupies, used to calculate the size of the curvilinear lookup table.
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * fake_track_width);
-    constexpr bool reset_pose_on_spline = true; ///< Sets pose to 0 vector for new spline (sensor POV)
+    constexpr bool reset_pose_on_cone = false; ///< Sets pose to 0 vector for new spline (sensor POV)
      // triangle threshold is the max distance between cones on opposing sides that we will use for triangle drawing
     constexpr float triangle_threshold_squared = 64.0f;
 
