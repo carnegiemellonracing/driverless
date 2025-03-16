@@ -271,13 +271,31 @@ namespace controls {
                 return 0;
             }
 
+            static uint16_t swangle_to_adc(float swangle)
+            {
+
+                int modulus = 4096;
+                float swangle_in_degrees = swangle * 180 / M_PI;
+                int zero_adc = 3159;
+                int min_adc = 2010;
+                int max_adc = modulus + 212;
+                float min_deg = -21.04;
+                float max_deg = 23.6;
+                float adc_deg_ratio = static_cast<float>(max_adc - min_adc) / (max_deg - min_deg);
+                int desired_adc = static_cast<int>(swangle_in_degrees * adc_deg_ratio) + zero_adc;
+                std::cout << "desired_adc: " << desired_adc << std::endl;
+                assert(min_adc < desired_adc && desired_adc < max_adc);
+                uint16_t desired_adc_modded = static_cast<uint16_t>(desired_adc % modulus);
+                return desired_adc_modded;
+            }
+
             ControllerNode::ActionSignal ControllerNode::action_to_signal(Action action) {
                 ActionSignal action_signal;
 
                 action_signal.front_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
                 action_signal.back_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
-                action_signal.rack_displacement_mm = swangle_to_rackdisplacement(action[action_swangle_idx]);
-
+                action_signal.velocity_rpm = can_max_velocity_rpm;
+                action_signal.rack_displacement_adc = swangle_to_adc(action[action_swangle_idx]);
                 return action_signal;   
             }
 
@@ -377,7 +395,7 @@ namespace controls {
                             // if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() / 100 < 5) {
                                 auto start = std::chrono::steady_clock::now();
                                 ActionSignal last_action_signal = m_last_action_signal;
-                                sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
+                                sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                 auto end = std::chrono::steady_clock::now();
                                 RCLCPP_WARN(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
                             // }
@@ -388,7 +406,6 @@ namespace controls {
             }
     }
 }
-
 
 int main(int argc, char *argv[]) {
     using namespace controls;

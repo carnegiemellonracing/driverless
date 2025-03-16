@@ -8,7 +8,8 @@ extern "C" { // Ensures compatibility with C++ compilers
 
 #include <stdint.h>
 
-int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint8_t rackDisplacement_mm);
+int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t velocity_rpm, uint16_t rackDisplacement_adc);
+int sendPIDConstants(float p, float feedforward);
 int sendFinishedCommand();
 
 int cmr_can_rx(int channel, long id, bool verbose);
