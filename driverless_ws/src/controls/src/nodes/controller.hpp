@@ -104,6 +104,7 @@ namespace controls {
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription; ///< Subscribes to intertial quaternion
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
             rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;
+            rclcpp::Subscription<SlamMsg>::SharedPtr m_slam_subscription; ///< Subscribes to SLAM chunks
             // ConeArray = /lidar_node_cones
 
             /**

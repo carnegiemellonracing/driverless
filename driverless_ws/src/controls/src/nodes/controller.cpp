@@ -69,11 +69,18 @@ namespace controls {
                     options
                 );
 
-            m_world_pose_subscription = create_subscription<PoseMsg>(
-                world_pose_topic_name, world_pose_qos,
-                [this](const PoseMsg::SharedPtr msg)
-                { world_pose_callback(*msg); },
-                options);
+                m_world_pose_subscription = create_subscription<PoseMsg>(
+                    world_pose_topic_name, world_pose_qos,
+                    [this](const PoseMsg::SharedPtr msg)
+                    { world_pose_callback(*msg); },
+                    options);
+                
+                m_slam_subscription = create_subscription<SlamMsg>(
+                    slam_pose_topic_name, slam_pose_qos,
+                    [this](const SlamMsg::SharedPtr msg)
+                    { slam_callback(*msg); },
+                    options);
+            
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
 
             launch_aim_communication().detach();
