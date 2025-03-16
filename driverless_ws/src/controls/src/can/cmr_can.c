@@ -23,7 +23,7 @@
 #define READ_WAIT_INFINITE (unsigned long)(-1)
 static unsigned int msgCounter = 0;
 
-static bool debug = true;
+static bool debug = false;
 
 static void debug_printf(const char *format, ...) {
     if (debug) {
@@ -44,13 +44,13 @@ static void check(char *id, canStatus stat)
         char buf[50];
         buf[0] = '\0';
         canGetErrorText(stat, buf, sizeof(buf));
-        printf("%s: failed, stat=%d (%s)\n", id, (int)stat, buf);
+        debug_printf("%s: failed, stat=%d (%s)\n", id, (int)stat, buf);
     }
 }
 
 static void printUsageAndExit(char *prgName)
 {
-    printf("Usage: '%s <channel>'\n", prgName);
+    debug_printf("Usage: '%s <channel>'\n", prgName);
     exit(1);
 }
 
@@ -91,19 +91,19 @@ void notifyCallback(canNotifyData *data)
 {
     switch (data->eventType) {
     case canEVENT_STATUS:
-        printf("CAN Status Event: %s\n", busStatToStr(data->info.status.busStatus));
+        debug_printf("CAN Status Event: %s\n", busStatToStr(data->info.status.busStatus));
         break;
 
     case canEVENT_ERROR:
-        printf("CAN Error Event\n");
+        debug_printf("CAN Error Event\n");
         break;
 
     case canEVENT_TX:
-        printf("CAN Tx Event\n");
+        debug_printf("CAN Tx Event\n");
         break;
 
     case canEVENT_RX:
-        printf("CAN Rx Event\n");
+        debug_printf("CAN Rx Event\n");
         break;
     }
     return;
@@ -144,7 +144,7 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
     debug_printf("Blocking sigint\n");
 
     if(verbose){
-        printf("Sending a CAN message on channel %d\n", channel);
+        debug_printf("Sending a CAN message on channel %d\n", channel);
     }
 
     canInitializeLibrary();
@@ -153,7 +153,7 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
     hnd = canOpenChannel(channel,
                          canOPEN_EXCLUSIVE /*| canOPEN_REQUIRE_EXTENDED*/ | canOPEN_ACCEPT_VIRTUAL);
     if (hnd < 0) {
-        printf("canOpenChannel %d", channel);
+        debug_printf("canOpenChannel %d", channel);
         check("", hnd);
         sigact.sa_sigaction = exitOnSignal;
         if (sigaction(SIGINT, &sigact, NULL) != 0)
@@ -300,7 +300,7 @@ int cmr_can_rx(int channel, long id, bool verbose)
     }
 
     if(verbose){
-        printf("Reading CAN messages on channel %d\n", channel);
+        debug_printf("Reading CAN messages on channel %d\n", channel);
     }
 
     canInitializeLibrary();
@@ -311,7 +311,7 @@ int cmr_can_rx(int channel, long id, bool verbose)
    
     if(verbose) {
         if (hnd < 0) {
-        printf("canOpenChannel %d", channel);
+        debug_printf("canOpenChannel %d", channel);
         check("", hnd);
         return -1;
     }
@@ -350,23 +350,23 @@ int cmr_can_rx(int channel, long id, bool verbose)
         if (stat == canOK) {
             msgCounter++;
             if (flag & canMSG_ERROR_FRAME) {
-                printf("(%u) ERROR FRAME", msgCounter);
+                debug_printf("(%u) ERROR FRAME", msgCounter);
             } else {
                 unsigned j;
 
                 if(curId == id) {
                     seen = true;
-                    printf("(%u) id:%ld dlc:%u data: ", msgCounter, id, dlc);
+                    debug_printf("(%u) id:%ld dlc:%u data: ", msgCounter, id, dlc);
                     if (dlc > 8) {
                         dlc = 8;
                     }
                     for (j = 0; j < dlc; j++) {
-                        printf("%2.2x ", msg[j]);
+                        debug_printf("%2.2x ", msg[j]);
                     }
                 }
 
             }
-            printf(" flags:0x%x time:%lu\n", flag, time);
+            debug_printf(" flags:0x%x time:%lu\n", flag, time);
         } else {
             if (errno == 0) {
                 check("\ncanReadWait", stat);
