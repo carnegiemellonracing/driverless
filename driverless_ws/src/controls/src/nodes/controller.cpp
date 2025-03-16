@@ -271,23 +271,7 @@ namespace controls {
                 return 0;
             }
 
-            static uint16_t swangle_to_adc(float swangle)
-            {
 
-                int modulus = 4096;
-                float swangle_in_degrees = swangle * 180 / M_PI;
-                int zero_adc = 3159;
-                int min_adc = 2010;
-                int max_adc = modulus + 212;
-                float min_deg = -21.04;
-                float max_deg = 23.6;
-                float adc_deg_ratio = static_cast<float>(max_adc - min_adc) / (max_deg - min_deg);
-                int desired_adc = static_cast<int>(swangle_in_degrees * adc_deg_ratio) + zero_adc;
-                std::cout << "desired_adc: " << desired_adc << std::endl;
-                assert(min_adc < desired_adc && desired_adc < max_adc);
-                uint16_t desired_adc_modded = static_cast<uint16_t>(desired_adc % modulus);
-                return desired_adc_modded;
-            }
 
             ControllerNode::ActionSignal ControllerNode::action_to_signal(Action action) {
                 ActionSignal action_signal;
