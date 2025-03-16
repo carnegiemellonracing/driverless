@@ -14,10 +14,22 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include "cmr_can.h"
 
 #define READ_WAIT_INFINITE (unsigned long)(-1)
 static unsigned int msgCounter = 0;
+
+static bool debug = true;
+
+static void debug_printf(const char *format, ...) {
+    if (debug) {
+        va_list args;
+        va_start(args, format);
+        vprintf(format, args);
+        va_end(args);
+    }
+}
 static unsigned int can_tx_timeout = 30;
 
 
@@ -43,7 +55,13 @@ static void sighand(int sig, siginfo_t *info, void *ucontext)
     (void)sig;
     (void)info;
     (void)ucontext;
-}
+ }
+
+ static void exitOnSignal(int sig, siginfo_t *info, void *ucontext)
+ {
+     exit(1);
+ }
+ 
 
 static const char *busStatToStr(const unsigned long flag)
 {
@@ -87,6 +105,7 @@ void notifyCallback(canNotifyData *data)
     return;
 }
 
+
 //CMR TX
 //Channel should default to 0
 static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool verbose){
@@ -102,6 +121,7 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
         perror("sigaction SIGINT failed");
         return -1;
     }
+    debug_printf("Blocking sigint\n");
 
     if(verbose){
         printf("Sending a CAN message on channel %d\n", channel);
@@ -115,6 +135,19 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
     if (hnd < 0) {
         printf("canOpenChannel %d", channel);
         check("", hnd);
+        sigact.sa_sigaction = exitOnSignal;
+        if (sigaction(SIGINT, &sigact, NULL) != 0)
+        {
+            perror("sigaction SIGINT failed");
+            return -1;
+        }
+        debug_printf("Unblocked sigint\n");
+        sigset_t pending_set;
+        sigpending(&pending_set);
+        if (sigismember(&pending_set, SIGINT))
+        {
+            exitOnSignal(SIGINT, NULL, NULL);
+        }
         return -1;
     }
 
@@ -157,6 +190,20 @@ ErrorExit:
     check("canClose", stat);
     stat = canUnloadLibrary();
     check("canUnloadLibrary", stat);
+
+    sigact.sa_sigaction = exitOnSignal;
+    if (sigaction(SIGINT, &sigact, NULL) != 0)
+    {
+        perror("sigaction SIGINT failed");
+        return -1;
+    }
+    debug_printf("Unblocked sigint\n");
+    sigset_t pending_set;
+    sigpending(&pending_set);
+    if (sigismember(&pending_set, SIGINT))
+    {
+        exitOnSignal(SIGINT, NULL, NULL);
+    }
 
     return 0;
 }
