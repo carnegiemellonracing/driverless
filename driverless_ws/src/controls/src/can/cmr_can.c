@@ -37,6 +37,7 @@ static unsigned int can_tx_timeout = 30;
 
 
 
+
 static void check(char *id, canStatus stat)
 {
     if (stat != canOK) {
