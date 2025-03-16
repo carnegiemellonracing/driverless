@@ -16,6 +16,9 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include "cmr_can.h"
+#include <math.h>
+#include <assert.h>
+
 
 #define READ_WAIT_INFINITE (unsigned long)(-1)
 static unsigned int msgCounter = 0;
@@ -105,6 +108,22 @@ void notifyCallback(canNotifyData *data)
     return;
 }
 
+uint16_t swangle_to_adc(float swangle)
+{
+
+    int modulus = 4096;
+    float swangle_in_degrees = swangle * 180 / (float) M_PI;
+    int zero_adc = 3159;
+    int min_adc = 2010;
+    int max_adc = modulus + 212;
+    float min_deg = -21.04;
+    float max_deg = 23.6;
+    float adc_deg_ratio = ((float)(max_adc - min_adc)) / ((max_deg - min_deg));
+    int desired_adc = (int)(swangle_in_degrees * adc_deg_ratio) + zero_adc;
+    assert(min_adc < desired_adc && desired_adc < max_adc);
+    uint16_t desired_adc_modded = (uint16_t)(desired_adc % modulus);
+    return desired_adc_modded;
+}
 
 //CMR TX
 //Channel should default to 0
