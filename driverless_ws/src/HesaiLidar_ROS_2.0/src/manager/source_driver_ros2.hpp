@@ -344,8 +344,8 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
   PointCloud<PointXYZ> filtered_cloud = run_pipeline(filtered_points, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
 
   for (size_t i = 0; i < filtered_cloud.size(); i++) {
-    *iter_x_ = filtered_cloud.points[i].x;
-    *iter_y_ = filtered_cloud.points[i].y;
+    *iter_x_ = -filtered_cloud.points[i].y;
+    *iter_y_ = filtered_cloud.points[i].x;
     *iter_z_ = filtered_cloud.points[i].z;
     ++iter_x_;
     ++iter_y_;
@@ -355,8 +355,8 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
 
     geometry_msgs::msg::Vector3 centroid;
     
-    centroid.x = filtered_cloud.points[i].x;
-    centroid.y = filtered_cloud.points[i].y;
+    centroid.x = -filtered_cloud.points[i].y;
+    centroid.y = filtered_cloud.points[i].x;
     centroid.z = filtered_cloud.points[i].z;
 
     conePoints.cone_points.push_back(centroid);
@@ -420,8 +420,8 @@ inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsg(const LidarDecodedFr
   for (size_t i = 0; i < frame.points_num; i++)
   {
     LidarPointXYZIRT point = frame.points[i];
-    *iter_x_ = point.x;
-    *iter_y_ = point.y;
+    *iter_x_ = -point.y;
+    *iter_y_ = point.x;
     *iter_z_ = point.z;
     *iter_intensity_ = point.intensity;
     *iter_ring_ = point.ring;
