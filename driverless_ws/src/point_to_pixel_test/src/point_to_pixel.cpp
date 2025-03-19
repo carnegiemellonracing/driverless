@@ -30,8 +30,8 @@ using namespace std::chrono_literals;
 using std::placeholders::_1;
 
 // Flags for additional functionality
-#define VIZ 1 // if 1 will output an additional topic without std_msgs/Header header
-#define VERBOSE 1 // Prints outputs and transform matrix
+#define VIZ 0 // if 1 will output an additional topic without std_msgs/Header header
+#define VERBOSE 0 // Prints outputs and transform matrix
 
 class Point_To_Pixel_Node : public rclcpp::Node
 {
@@ -346,105 +346,118 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
   return closestFrame;
 }
 
+#if VIZ
+  std::string pairToString(std::pair<cv::Scalar, cv::Scalar>& p) {
+    std::stringstream ss;
+    ss << "([" << std::to_string(p.first[0]) << ", " << std::to_string(p.first[1])<< ", " << std::to_string(p.first[2]) << "], [" << std::to_string(p.second[0]) <<  ", " << std::to_string(p.second[1]) << ", " << std::to_string(p.second[2]) << "])";
+    return ss.str();
+  }
+#endif
 
 // Identifies Color from a camera pixel
 std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pixel, cv::Mat img)
 {
+  // Setup region of interest
+  int side_length = 25;
+  int x = static_cast<int>(pixel(0));
+  int y = static_cast<int>(pixel(1));
+  int height = img.rows;
+  int width = img.cols;
+  int x_min = std::max(0, x - side_length);
+  int x_max = std::min(width, x + side_length);
+  int y_min = std::max(0, y - side_length);
+  int y_max = std::min(height, y + side_length);
 
-    // Setup region of interest
-    int side_length = 25;
-    int x = static_cast<int>(pixel(0));
-    int y = static_cast<int>(pixel(1));
-    int height = img.rows;
-    int width = img.cols;
-    int x_min = std::max(0, x - side_length);
-    int x_max = std::min(width, x + side_length);
-    int y_min = std::max(0, y - side_length);
-    int y_max = std::min(height, y + side_length);
-    if (x_min >= x_max || y_min >= y_max) {
-        return std::make_tuple(-1, 0.0);
-    }
+  #if VIZ
+    std::pair<cv::Scalar, cv::Scalar> _y = {this->yellow_filter_low, this->yellow_filter_high};
+    std::cout << pairToString(_y) << std::endl;
+    RCLCPP_INFO(this->get_logger(), "point out of frame? (y_min >= y_max): %d, %d, %s", y_min, y_max, y_min >= y_max ? "true": "false");
+    RCLCPP_INFO(this->get_logger(), "point out of frame? (x_min >= x_max): %d, %d, %s", x_min, x_max, x_min >= x_max ? "true": "false");
+  #endif
 
+  
 
-    // Extract ROI and convert to HSV
-    cv::Mat roi = img(cv::Range(y_min, y_max), cv::Range(x_min, x_max));
-    cv::Mat hsv_roi;
-    cv::cvtColor(roi, hsv_roi, cv::COLOR_BGR2HSV);
+  if (x_min >= x_max || y_min >= y_max) {
+      return std::make_tuple(-1, 0.0);
+  }
 
-    // Define HSV color ranges
-    std::vector<std::pair<cv::Scalar, cv::Scalar>> yellow_ranges = {
-      {this->yellow_filter_low, this->yellow_filter_high}
-    };
-    // {
-    //     {cv::Scalar(18, 50, 50), cv::Scalar(35, 255, 255)},
-    //     {cv::Scalar(22, 40, 40), cv::Scalar(38, 255, 255)},
-    //     {cv::Scalar(25, 30, 30), cv::Scalar(35, 255, 255)}
-    // };
-    std::vector<std::pair<cv::Scalar, cv::Scalar>> blue_ranges = {
-      {this->blue_filter_low, this->blue_filter_high}
-    };
-    // {
-    //     {cv::Scalar(100, 50, 50), cv::Scalar(130, 255, 255)},
-    //     {cv::Scalar(110, 50, 50), cv::Scalar(130, 255, 255)},
-    //     {cv::Scalar(90, 50, 50), cv::Scalar(110, 255, 255)},
-    //     {cv::Scalar(105, 30, 30), cv::Scalar(125, 255, 255)}
-    // };
-    std::vector<std::pair<cv::Scalar, cv::Scalar>> orange_ranges = {
-      {this->orange_filter_low, this->orange_filter_high}
-    };
-    // {
-    //     {cv::Scalar(0, 100, 100), cv::Scalar(15, 255, 255)},
-    //     {cv::Scalar(160, 100, 100), cv::Scalar(179, 255, 255)},
-    //     {cv::Scalar(5, 120, 120), cv::Scalar(15, 255, 255)}
-    // };
+  // Extract ROI and convert to HSV
+  cv::Mat roi = img(cv::Range(y_min, y_max), cv::Range(x_min, x_max));
+  cv::Mat hsv_roi;
+  cv::cvtColor(roi, hsv_roi, cv::COLOR_BGR2HSV);
 
-    // Create color masks
-    cv::Mat yellow_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
-    cv::Mat blue_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
-    cv::Mat orange_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
-    cv::Mat temp_mask;
+  // Define HSV color ranges
+  std::vector<std::pair<cv::Scalar, cv::Scalar>> yellow_ranges = {
+    {this->yellow_filter_low, this->yellow_filter_high}
+  };
+  // {
+  //     {cv::Scalar(18, 50, 50), cv::Scalar(35, 255, 255)},
+  //     {cv::Scalar(22, 40, 40), cv::Scalar(38, 255, 255)},
+  //     {cv::Scalar(25, 30, 30), cv::Scalar(35, 255, 255)}
+  // };
+  std::vector<std::pair<cv::Scalar, cv::Scalar>> blue_ranges = {
+    {this->blue_filter_low, this->blue_filter_high}
+  };
+  // {
+  //     {cv::Scalar(100, 50, 50), cv::Scalar(130, 255, 255)},
+  //     {cv::Scalar(110, 50, 50), cv::Scalar(130, 255, 255)},
+  //     {cv::Scalar(90, 50, 50), cv::Scalar(110, 255, 255)},
+  //     {cv::Scalar(105, 30, 30), cv::Scalar(125, 255, 255)}
+  // };
+  std::vector<std::pair<cv::Scalar, cv::Scalar>> orange_ranges = {
+    {this->orange_filter_low, this->orange_filter_high}
+  };
+  // {
+  //     {cv::Scalar(0, 100, 100), cv::Scalar(15, 255, 255)},
+  //     {cv::Scalar(160, 100, 100), cv::Scalar(179, 255, 255)},
+  //     {cv::Scalar(5, 120, 120), cv::Scalar(15, 255, 255)}
+  // };
 
-    // Apply color masks
-    for (const auto& range : yellow_ranges) {
-        cv::inRange(hsv_roi, range.first, range.second, temp_mask);
-        cv::bitwise_or(yellow_mask, temp_mask, yellow_mask);
-    }
-    for (const auto& range : blue_ranges) {
-        cv::inRange(hsv_roi, range.first, range.second, temp_mask);
-        cv::bitwise_or(blue_mask, temp_mask, blue_mask);
-    }
-    for (const auto& range : orange_ranges) {
-        cv::inRange(hsv_roi, range.first, range.second, temp_mask);
-        cv::bitwise_or(orange_mask, temp_mask, orange_mask);
-    }
+  // Create color masks
+  cv::Mat yellow_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
+  cv::Mat blue_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
+  cv::Mat orange_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
+  cv::Mat temp_mask;
 
-    // Calculate color percentages
-    double total_pixels = (y_max - y_min) * (x_max - x_min);
-    double yellow_pixels = cv::countNonZero(yellow_mask);
-    double blue_pixels = cv::countNonZero(blue_mask);
-    double orange_pixels = cv::countNonZero(orange_mask);
-    double yellow_percentage = yellow_pixels / total_pixels;
-    double blue_percentage = blue_pixels / total_pixels;
-    double orange_percentage = orange_pixels / total_pixels;
+  // Apply color masks
+  for (const auto& range : yellow_ranges) {
+      cv::inRange(hsv_roi, range.first, range.second, temp_mask);
+      cv::bitwise_or(yellow_mask, temp_mask, yellow_mask);
+  }
+  for (const auto& range : blue_ranges) {
+      cv::inRange(hsv_roi, range.first, range.second, temp_mask);
+      cv::bitwise_or(blue_mask, temp_mask, blue_mask);
+  }
+  for (const auto& range : orange_ranges) {
+      cv::inRange(hsv_roi, range.first, range.second, temp_mask);
+      cv::bitwise_or(orange_mask, temp_mask, orange_mask);
+  }
 
-    // Print out the color percentages
-    std::cout << "Yellow Percentage: " << yellow_percentage * 100 << "%" << std::endl;
-    std::cout << "Blue Percentage: " << blue_percentage * 100 << "%" << std::endl;
-    std::cout << "Orange Percentage: " << orange_percentage * 100 << "%" << std::endl;
+  // Calculate color percentages
+  double total_pixels = (y_max - y_min) * (x_max - x_min);
+  double yellow_pixels = cv::countNonZero(yellow_mask);
+  double blue_pixels = cv::countNonZero(blue_mask);
+  double orange_pixels = cv::countNonZero(orange_mask);
+  double yellow_percentage = yellow_pixels / total_pixels;
+  double blue_percentage = blue_pixels / total_pixels;
+  double orange_percentage = orange_pixels / total_pixels;
 
+  // Print out the color percentages
+  std::cout << "Yellow Percentage: " << yellow_percentage * 100 << "%" << std::endl;
+  std::cout << "Blue Percentage: " << blue_percentage * 100 << "%" << std::endl;
+  std::cout << "Orange Percentage: " << orange_percentage * 100 << "%" << std::endl;
+  const double MIN_CONFIDENCE = 0.05;
+  const double RATIO_THRESHOLD = 1.5;
 
-    const double MIN_CONFIDENCE = 0.05;
-    const double RATIO_THRESHOLD = 1.5;
-
-    // Determine cone color
-    if (orange_percentage > MIN_CONFIDENCE && orange_percentage > std::max(yellow_percentage, blue_percentage) * RATIO_THRESHOLD) {
-        return std::make_tuple(0, orange_percentage);
-    } else if (yellow_percentage > MIN_CONFIDENCE && yellow_percentage > std::max(blue_percentage, orange_percentage) * RATIO_THRESHOLD) {
-        return std::make_tuple(1, yellow_percentage);
-    } else if (blue_percentage > MIN_CONFIDENCE && blue_percentage > std::max(yellow_percentage, orange_percentage) * RATIO_THRESHOLD) {
-        return std::make_tuple(2, blue_percentage);
-    }
-    return std::make_tuple(-1, std::max({yellow_percentage, blue_percentage, orange_percentage}));
+  // Determine cone color
+  if (orange_percentage > MIN_CONFIDENCE && orange_percentage > std::max(yellow_percentage, blue_percentage) * RATIO_THRESHOLD) {
+      return std::make_tuple(0, orange_percentage);
+  } else if (yellow_percentage > MIN_CONFIDENCE && yellow_percentage > std::max(blue_percentage, orange_percentage) * RATIO_THRESHOLD) {
+      return std::make_tuple(1, yellow_percentage);
+  } else if (blue_percentage > MIN_CONFIDENCE && blue_percentage > std::max(yellow_percentage, orange_percentage) * RATIO_THRESHOLD) {
+      return std::make_tuple(2, blue_percentage);
+  }
+  return std::make_tuple(-1, std::max({yellow_percentage, blue_percentage, orange_percentage}));
 }
 
 
