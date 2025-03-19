@@ -38,25 +38,29 @@ class Point_To_Pixel_Node : public rclcpp::Node
   public:
     Point_To_Pixel_Node(); // Constructor declaration
 
-    static std::tuple<int, double> identify_color(Eigen::Vector2d& pixel, cv::Mat image);
-    static void mouse_callback(int event, int x, int y, int flags, void* param);
-
   private:
     // Image Deque
     std::deque<std::pair<rclcpp::Time, cv::Mat>> img_deque;
 
-    // Parameters
+    // ROS2 Parameters
     Eigen::Matrix<double, 3, 4> projection_matrix;
+    double CONFIDENCE_THRESHOLD;
+    cv::Scalar yellow_filter_high;
+    cv::Scalar yellow_filter_low;
+    cv::Scalar blue_filter_high;
+    cv::Scalar blue_filter_low;
+    cv::Scalar orange_filter_high;
+    cv::Scalar orange_filter_low;
+
 
     // Callbacks/helper functions
     void topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
     void camera_callback();
     int transform(geometry_msgs::msg::Vector3& point, rclcpp::Time callbackTimer); 
+    std::tuple<int, double> identify_color(Eigen::Vector2d& pixel, cv::Mat image);
     cv::Mat getCameraFrame(rclcpp::Time callbackTime);
 
     // Parameters
-    double CONFIDENCE_THRESHOLD;
-
     sl_oc::video::VideoParams params;
     sl_oc::video::VideoCapture cap_0;
     sl_oc::video::VideoCapture cap_1;
@@ -69,9 +73,9 @@ class Point_To_Pixel_Node : public rclcpp::Node
     cv::Mat map_right_x, map_right_y;
 
     // ROS2 Objects
-    rclcpp::Publisher<interfaces::msg::ConeList>::SharedPtr publisher_;
+    rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr publisher_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr subscriber_;
-    
+
     // Camera Callback(10 frames per second)
     rclcpp::TimerBase::SharedPtr camera_timer_;
     
@@ -128,12 +132,44 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
   // Include calibration?
 
+  std::vector<long int> ly_filter_default{0, 0, 0};
+  std::vector<long int> uy_filter_default{0, 0, 0};
+  std::vector<long int> lb_filter_default{0, 0, 0};
+  std::vector<long int> ub_filter_default{255, 255, 255};
+  std::vector<long int> lo_filter_default{255, 255, 255};
+  std::vector<long int> uo_filter_default{255, 255, 255};
+
+  // Color Parameters
+  this->declare_parameter("yellow_filter_high", ly_filter_default);
+  this->declare_parameter("yellow_filter_low", uy_filter_default);
+  this->declare_parameter("blue_filter_high", lb_filter_default);
+  this->declare_parameter("blue_filter_low", ub_filter_default);
+  this->declare_parameter("orange_filter_high", lo_filter_default);
+  this->declare_parameter("orange_filter_low", uo_filter_default);
+
   // Get parameters
+
+  // Load Projection Matrix
   std::vector<double> param = this->get_parameter("projection_matrix").as_double_array();
   this->projection_matrix = Eigen::Map<Eigen::Matrix<double, 3, 4, Eigen::RowMajor>>(param.data());
 
-
+  // Load Confidence Threshold
   this->CONFIDENCE_THRESHOLD = this->get_parameter("confidence_threshold").as_double();
+
+  // Load Color Filter Params
+  std::vector<long int> uy_filt_arr = this->get_parameter("yellow_filter_high").as_integer_array();
+  std::vector<long int> ly_filt_arr = this->get_parameter("yellow_filter_low").as_integer_array();
+  std::vector<long int> lb_filt_arr = this->get_parameter("blue_filter_low").as_integer_array();
+  std::vector<long int> ub_filt_arr = this->get_parameter("blue_filter_high").as_integer_array();
+  std::vector<long int> lo_filt_arr = this->get_parameter("orange_filter_low").as_integer_array();
+  std::vector<long int> uo_filt_arr = this->get_parameter("orange_filter_high").as_integer_array();
+
+  this->yellow_filter_high = cv::Scalar(uy_filt_arr[0], uy_filt_arr[1], uy_filt_arr[2]);
+  this->yellow_filter_low = cv::Scalar(ly_filt_arr[0], ly_filt_arr[1], ly_filt_arr[2]);
+  this->blue_filter_high = cv::Scalar(ub_filt_arr[0], ub_filt_arr[1], ub_filt_arr[2]);
+  this->blue_filter_low = cv::Scalar(lb_filt_arr[0], lb_filt_arr[1], lb_filt_arr[2]);
+  this->orange_filter_high = cv::Scalar(uo_filt_arr[0], uo_filt_arr[1], uo_filt_arr[2]);
+  this->orange_filter_low = cv::Scalar(lo_filt_arr[0], lo_filt_arr[1], lo_filt_arr[2]);
 
   std::chrono::seconds duration(2);
   rclcpp::sleep_for(duration);
@@ -274,7 +310,7 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
   int bestFrameIndex = 0;
 
   #if VERBOSE
-  RCLCPP_INFO(this->get_logger(), "getCameraFrame called with time: %ld", 
+    RCLCPP_INFO(this->get_logger(), "getCameraFrame called with time: %ld", 
                                   callbackTime.nanoseconds());
   #endif
   
@@ -303,7 +339,7 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
   }
   
   #if VERBOSE
-  RCLCPP_INFO(this->get_logger(), "Best frame:%d | REQ-FRAME Time diff: %ld nanoseconds", 
+    RCLCPP_INFO(this->get_logger(), "Best frame:%d | REQ-FRAME Time diff: %ld nanoseconds", 
               bestFrameIndex, bestDiff);
   #endif
   
@@ -337,21 +373,30 @@ std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pix
 
     // Define HSV color ranges
     std::vector<std::pair<cv::Scalar, cv::Scalar>> yellow_ranges = {
-        {cv::Scalar(18, 50, 50), cv::Scalar(35, 255, 255)},
-        {cv::Scalar(22, 40, 40), cv::Scalar(38, 255, 255)},
-        {cv::Scalar(25, 30, 30), cv::Scalar(35, 255, 255)}
+      {this->yellow_filter_low, this->yellow_filter_high}
     };
+    // {
+    //     {cv::Scalar(18, 50, 50), cv::Scalar(35, 255, 255)},
+    //     {cv::Scalar(22, 40, 40), cv::Scalar(38, 255, 255)},
+    //     {cv::Scalar(25, 30, 30), cv::Scalar(35, 255, 255)}
+    // };
     std::vector<std::pair<cv::Scalar, cv::Scalar>> blue_ranges = {
-        {cv::Scalar(100, 50, 50), cv::Scalar(130, 255, 255)},
-        {cv::Scalar(110, 50, 50), cv::Scalar(130, 255, 255)},
-        {cv::Scalar(90, 50, 50), cv::Scalar(110, 255, 255)},
-        {cv::Scalar(105, 30, 30), cv::Scalar(125, 255, 255)}
+      {this->blue_filter_low, this->blue_filter_high}
     };
+    // {
+    //     {cv::Scalar(100, 50, 50), cv::Scalar(130, 255, 255)},
+    //     {cv::Scalar(110, 50, 50), cv::Scalar(130, 255, 255)},
+    //     {cv::Scalar(90, 50, 50), cv::Scalar(110, 255, 255)},
+    //     {cv::Scalar(105, 30, 30), cv::Scalar(125, 255, 255)}
+    // };
     std::vector<std::pair<cv::Scalar, cv::Scalar>> orange_ranges = {
-        {cv::Scalar(0, 100, 100), cv::Scalar(15, 255, 255)},
-        {cv::Scalar(160, 100, 100), cv::Scalar(179, 255, 255)},
-        {cv::Scalar(5, 120, 120), cv::Scalar(15, 255, 255)}
+      {this->orange_filter_low, this->orange_filter_high}
     };
+    // {
+    //     {cv::Scalar(0, 100, 100), cv::Scalar(15, 255, 255)},
+    //     {cv::Scalar(160, 100, 100), cv::Scalar(179, 255, 255)},
+    //     {cv::Scalar(5, 120, 120), cv::Scalar(15, 255, 255)}
+    // };
 
     // Create color masks
     cv::Mat yellow_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
@@ -409,8 +454,8 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   RCLCPP_INFO(this->get_logger(), "Received message with %zu cones", msg->cone_array.size());
 
   interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
-  message.header = msg.header;
-  message.orig_data_stamp = msg.header.stamp; // Will be deprecated when code is refactored to use time in header
+  message.header = msg->header;
+  message.orig_data_stamp = msg->header.stamp; // Will be deprecated when code is refactored to use time in header
   message.blue_cones = std::vector<geometry_msgs::msg::Point> {};
   message.yellow_cones = std::vector<geometry_msgs::msg::Point> {};
   message.orange_cones = std::vector<geometry_msgs::msg::Point> {};
@@ -472,7 +517,8 @@ void Point_To_Pixel_Node::camera_callback()
 {
   this->frame_1 = this->cap_1.getLastFrame();
 
-  cv::Mat frameBGR_1, left_raw, left_rect //, right_raw, right_rect;
+  cv::Mat frameBGR_1, left_raw, left_rect; //, right_raw, right_rect;
+
   if (frame_1.data != nullptr){
     cv::Mat frameYUV_1 = cv::Mat(frame_1.height, frame_1.width, CV_8UC2, frame_1.data);
     cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
@@ -483,8 +529,7 @@ void Point_To_Pixel_Node::camera_callback()
     cv::remap(left_raw, left_rect, this->map_left_x, this->map_left_y, cv::INTER_LINEAR);
     // cv::remap(right_raw, right_rect, this->map_right_x, this->map_right_y, cv::INTER_LINEAR);
     frameBGR_1 = left_rect;
-  }
-  else {
+  } else {
     RCLCPP_ERROR(this->get_logger(), "Failed to capture frame from camera 1.");
   }
 
@@ -492,8 +537,7 @@ void Point_To_Pixel_Node::camera_callback()
   if (img_deque.size() < 10) {
     rclcpp::Time time = this->get_clock()->now();
     this->img_deque.push_back(std::make_pair(time, frameBGR_1));
-  }
-  else
+  } else
   {
     this->img_deque.pop_front();
     this->img_deque.push_back(std::make_pair(this->get_clock()->now(), frameBGR_1));

@@ -69,7 +69,7 @@ class Point_To_Pixel_Node : public rclcpp::Node
     cv::Mat map_right_x, map_right_y;
 
     // ROS2 Objects
-    rclcpp::Publisher<interfaces::msg::ConeList>::SharedPtr publisher_;
+    rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr publisher_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr subscriber_;
 
     // Camera Callback(10 frames per second)
@@ -252,7 +252,6 @@ int Point_To_Pixel_Node::transform(
     RCLCPP_INFO(this->get_logger(), "3x4 projection_matrix:\n%s", ss.str().c_str());
   #endif
 
-  #if !DEBUG
   // Convert point from topic type (geometry_msgs/msg/Vector3) to Eigen Vector3d
   Eigen::Vector4d lidar_pt(point.x, point.y, point.z, 1.0);
 
@@ -261,7 +260,6 @@ int Point_To_Pixel_Node::transform(
 
   // Divide by z coordinate for Euclidean normalization
   Eigen::Vector2d pixel_1 (transformed(0)/transformed(2), transformed(1)/transformed(2));
-  #endif
 
   // Get camera frame that is closest to time of LiDAR point
   cv::Mat frameBGR_1 = this->getCameraFrame(callbackTime);
@@ -437,8 +435,8 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   RCLCPP_INFO(this->get_logger(), "Received message with %zu cones", msg->cone_array.size());
 
   interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
-  message.header = msg.header;
-  message.orig_data_stamp = msg.header.stamp; // Will be deprecated when code is refactored to use time in header
+  message.header = msg->header;
+  message.orig_data_stamp = msg->header.stamp; // Will be deprecated when code is refactored to use time in header
   message.blue_cones = std::vector<geometry_msgs::msg::Point> {};
   message.yellow_cones = std::vector<geometry_msgs::msg::Point> {};
   message.orange_cones = std::vector<geometry_msgs::msg::Point> {};
@@ -500,7 +498,7 @@ void Point_To_Pixel_Node::camera_callback()
 {
   this->frame_1 = this->cap_1.getLastFrame();
 
-  cv::Mat frameBGR_1, left_raw, left_rect //, right_raw, right_rect;
+  cv::Mat frameBGR_1, left_raw, left_rect; //, right_raw, right_rect;
   if (frame_1.data != nullptr){
     cv::Mat frameYUV_1 = cv::Mat(frame_1.height, frame_1.width, CV_8UC2, frame_1.data);
     cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
