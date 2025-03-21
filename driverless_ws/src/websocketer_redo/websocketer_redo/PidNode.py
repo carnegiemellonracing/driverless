@@ -53,13 +53,15 @@ class PIDTuning(Node):
 
         try:
             message = self.loop.run_until_complete(self.websocket.recv())
+            if ('=' in message): return
             self.get_logger().info(f'yipeeee: {message}')
+
 
             data = json.loads(message)
 
-            p = float(data['P'])
-            i = float(data['I'])
-            d = float(data['D'])
+            p = float(data['values']['P'])
+            i = float(data['values']['I'])
+            d = float(data['values']['D'])
             
             point_msg = Point()
             point_msg.x = p
