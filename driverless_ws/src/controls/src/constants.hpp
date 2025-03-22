@@ -6,7 +6,7 @@
 
 //TODO: these should all be inline constexpr (not currently broken because not ODR-used)
 
-namespace controls {
+namespace controls { 
     /* ROS moments */
 
     constexpr const char *controller_node_name = "controller";
@@ -18,6 +18,7 @@ namespace controls {
     constexpr const char *world_quat_topic_name = "filter/quaternion";
     constexpr const char *world_pose_topic_name = "filter/pose";
     constexpr const char *controller_info_topic_name = "controller_info";
+    constexpr const char *pid_topic_name = "pid_values";
 
     // TODO: Ask Ankit what is this, why did we choose it
     /// Profile for best effort communication
@@ -46,6 +47,7 @@ namespace controls {
     const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1)); 
     const rclcpp::QoS world_pose_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS controller_info_qos = best_effort_qos;
+    const rclcpp::QoS pid_qos (rclcpp::KeepLast(1));
 
     constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
 

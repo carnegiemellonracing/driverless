@@ -49,6 +49,7 @@ namespace controls {
               },
 
               m_data_trajectory_log {"mppi_inputs.txt", std::ios::out}
+              m_p_value {0.1};
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
             rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group{
@@ -75,6 +76,14 @@ namespace controls {
                 [this](const PoseMsg::SharedPtr msg)
                 { world_pose_callback(*msg); },
                 options);
+
+            m_pid_subscription = create_subscription<PIDMsg>(
+                pid_topic_name, pid_qos,
+                [this](const PIDMsg::SharedPtr msg)
+                { pid_callback(*msg); },
+                options);  
+                
+            
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
 
             launch_aim_communication().detach();
@@ -262,6 +271,10 @@ namespace controls {
 
             }
 
+            void ControllerNode::pid_callback(const PIDMsg& pid_msg) {
+                m_p_value = pid_msg.x;
+            }
+
             void ControllerNode::publish_action(const Action& action) {
                 const auto msg = action_to_msg(action);
                 m_action_publisher->publish(msg);
@@ -382,6 +395,9 @@ namespace controls {
                                 sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                 auto end = std::chrono::steady_clock::now();
                                 RCLCPP_WARN(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+
+                                sendPIDConstants(m_p_value, 0);
+                                RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
                             }
                         }
                         std::cout << "I just got terminated in another way lol\n";
