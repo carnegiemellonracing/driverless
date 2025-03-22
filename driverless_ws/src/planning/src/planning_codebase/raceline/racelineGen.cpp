@@ -43,6 +43,22 @@ std::vector<Eigen::VectorXd> solve(const std::vector<Point>& points, double k_x,
     return {X.segment(0, 4), X.segment(4, 4), Y.segment(0, 4), Y.segment(4, 4)};
 }
 
+// coeffs is coefficients fo the spline ax^3 + bx^2 + cx + d
+bool is_curve(const std::vector<double>& coeffs, double x, double threshold) {
+    double a = coeffs[0], b = coeffs[1], c = coeffs[2];
+
+    // Compute first derivative: f'(x) = 3ax^2 + 2bx + c
+    double f_prime = 3 * a * x * x + 2 * b * x + c;
+
+    // Compute second derivative: f''(x) = 6ax + 2b
+    double f_double_prime = 6 * a * x + 2 * b;
+
+    // Compute curvature: kappa = |f''(x)| / (1 + (f'(x))^2)^(3/2)
+    double denominator = std::pow(1 + f_prime * f_prime, 1.5);
+
+    return (std::abs(f_double_prime) / denominator) < threshold;
+}
+
 //Function to find raceline
 std::tuple<std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>> 
 runOptimizer(Chunk& chunk, double d1, double d2, double d3) {
@@ -85,6 +101,32 @@ runOptimizer(Chunk& chunk, double d1, double d2, double d3) {
 
 double calculateEnd(Chunk& chunk, double start) {
     return 0.5;
+}
+
+void fillSplines(Chunk& chunks, std::vector<std::vector<double>> racelineSplines, double dstart) {
+    int max_indiv_raceline_gen_time = std::numeric_limits<int>::min();
+    auto start_raceline_gen = std::chrono::high_resolution_clock::now();
+    for (size_t i = 0; i < chunks.size(); ++i) {
+        // Define param2 and param4 dynamically for each chunk
+        double dend = calculateEnd(*chunks[i],dstart);
+        auto start_cur_raceline_gen =std::chrono::high_resolution_clock::now();
+        auto [X1, X2, Y1, Y2] = runOptimizer(*chunks[i], dstart, 0.5, dend);	
+        // Combine all coefficients into one vector (16 coefficients per chunk)
+        racelineSplines[i] = {
+            X1[0], X1[1], X1[2], X1[3],  // First X spline (first half)
+            X2[0], X2[1], X2[2], X2[3],  // Second X spline (second half)
+            Y1[0], Y1[1], Y1[2], Y1[3],  // First Y spline (first half)
+            Y2[0], Y2[1], Y2[2], Y2[3]   // Second Y spline (second half)
+        };
+        dstart = dend;
+        auto end_cur_raceline_gen = std::chrono::high_resolution_clock::now();
+        auto dur_cur_raceline_gen = std::chrono::duration_cast<std::chrono::microseconds>(end_cur_raceline_gen - start_cur_raceline_gen);
+    
+        if (max_indiv_raceline_gen_time < dur_cur_raceline_gen.count()) {
+            max_indiv_raceline_gen_time = dur_cur_raceline_gen.count();
+        }
+        // std::cout << "\t Current raceline gen time: " << dur_cur_raceline_gen.count() << " microseconds" << std::endl;
+    }
 }
 
 int main() {
@@ -177,31 +219,9 @@ int main() {
 
     	double dstart = 0.5; 
     	// Vector to hold results: one vector for each chunk, with 16 coefficients (4 X1, 4 X2, 4 Y1, 4 Y2)
-        int max_indiv_raceline_gen_time = std::numeric_limits<int>::min();
         std::vector<std::vector<double>> racelineSplines(chunks.size());
-    	auto start_raceline_gen = std::chrono::high_resolution_clock::now();
-    	for (size_t i = 0; i < chunks.size(); ++i) {
-    	    // Define param2 and param4 dynamically for each chunk
-    	    double dend = calculateEnd(*chunks[i],dstart);
-    	    auto start_cur_raceline_gen =std::chrono::high_resolution_clock::now();
-    	    auto [X1, X2, Y1, Y2] = runOptimizer(*chunks[i], dstart, 0.5, dend);	
-    	    // Combine all coefficients into one vector (16 coefficients per chunk)
-    	    racelineSplines[i] = {
-    	        X1[0], X1[1], X1[2], X1[3],  // First X spline (first half)
-    	        X2[0], X2[1], X2[2], X2[3],  // Second X spline (second half)
-    	        Y1[0], Y1[1], Y1[2], Y1[3],  // First Y spline (first half)
-    	        Y2[0], Y2[1], Y2[2], Y2[3]   // Second Y spline (second half)
-    	    };
-    	    dstart = dend;
-    	    auto end_cur_raceline_gen = std::chrono::high_resolution_clock::now();
-    	    auto dur_cur_raceline_gen = std::chrono::duration_cast<std::chrono::microseconds>(end_cur_raceline_gen - start_cur_raceline_gen);
-
-            if (max_indiv_raceline_gen_time < dur_cur_raceline_gen.count()) {
-                max_indiv_raceline_gen_time = dur_cur_raceline_gen.count();
-            }
-    	    // std::cout << "\t Current raceline gen time: " << dur_cur_raceline_gen.count() << " microseconds" << std::endl;
-
-    	}
+        // Function that takes in dstart and racelineSplines
+    	racelineSplines = fillSplines(chunks, racelineSplines, dstart);
 
         if (i == 0) {
             sample_raceline_splines = racelineSplines;
