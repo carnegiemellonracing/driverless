@@ -242,7 +242,8 @@ namespace controls {
                 m_cost_to_gos.data(),
                 m_log_prob_densities.data(), 
                 m_last_action_trajectory.data(),
-                m_last_action
+                m_last_action,
+                m_follow_midline_only
             };
             // populates cost for each sample trajectory
             thrust::for_each(indices, indices + num_samples, populate_cost);

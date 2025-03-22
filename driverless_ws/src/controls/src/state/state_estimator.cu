@@ -350,12 +350,6 @@ namespace controls {
             glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA32F, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_curv_frame_lookup_rbo);
 
-            GLuint depth_rbo;
-            glGenRenderbuffers(1, &depth_rbo);
-            glBindRenderbuffer(GL_RENDERBUFFER, depth_rbo);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, curv_frame_lookup_tex_width,  curv_frame_lookup_tex_width);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rbo);
-
             if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
                 throw std::runtime_error("Framebuffer is not complete");
             }
@@ -424,7 +418,9 @@ namespace controls {
 
             paranoid_assert(spline_msg.frames.size() > 0);
 
-            // m_spline_frames = process_ros_points(spline_msg.frames);
+            if constexpr (ingest_midline) {
+                m_spline_frames = process_ros_points(spline_msg.frames);
+            }
 
             m_logger("finished state estimator spline processing");
         }
@@ -444,28 +440,32 @@ namespace controls {
             m_left_cone_points = process_ros_points(cone_msg.blue_cones);
             m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
 
-            midline::Cones cones;
-            for (const auto& cone : m_left_cone_points) {
-                cones.addBlueCone(cone.x, cone.y, 0);
-            }
-            for (const auto& cone : m_right_cone_points) {
-                cones.addYellowCone(cone.x, cone.y, 0);
+            float svm_time = 0.0f;
+
+            if constexpr (!ingest_midline) {
+
+                midline::Cones cones;
+                for (const auto& cone : m_left_cone_points) {
+                    cones.addBlueCone(cone.x, cone.y, 0);
+                }
+                for (const auto& cone : m_right_cone_points) {
+                    cones.addYellowCone(cone.x, cone.y, 0);
+                }
+
+                // // TODO: convert this to using std::transform
+                auto svm_start = std::chrono::high_resolution_clock::now();            
+                // auto spline_frames = midline::svm_fast::cones_to_midline(cones);
+                auto spline_frames = midline::svm_slow::cones_to_midline(cones);
+                auto svm_end = std::chrono::high_resolution_clock::now();
+                svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
+                m_spline_frames.clear();
+                for (const auto& frame : spline_frames) {
+                    paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
+                    m_spline_frames.emplace_back(frame.first, frame.second);
+                }   
+
             }
 
-            // // TODO: convert this to using std::transform
-            auto svm_start = std::chrono::high_resolution_clock::now();            
-            auto spline_frames = midline::cones_to_midline(cones);
-            auto svm_end = std::chrono::high_resolution_clock::now();
-            float svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
-            m_spline_frames.clear();
-            for (const auto& frame : spline_frames) {
-                paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
-                m_spline_frames.emplace_back(frame.first, frame.second);
-            }
-            // float svm_time = 0.0f;
-
-
-            m_orig_spline_data_stamp = cone_msg.header.stamp;
 
 #ifdef DISPLAY
             m_all_left_cone_points.clear();
@@ -475,11 +475,8 @@ namespace controls {
             m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
             m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
 #endif
-            m_state_projector.record_pose()
-            // 
+
             if constexpr (reset_pose_on_cone) {
-                // TODO: correct orig_data_stamp
-                // ! This is different from controls docs because we changed the coordinate system of the controller to Cartesian coordinates
                 m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
             }
             
@@ -506,11 +503,6 @@ namespace controls {
                 pose_msg.header.stamp);
         }
 
-        rclcpp::Time StateEstimator_Impl::get_orig_spline_data_stamp() {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            return m_orig_spline_data_stamp;
-        }
 
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -546,7 +538,9 @@ namespace controls {
             // render the lookup table
             m_logger("rendering curv frame lookup table...");
             render_fake_track();
-            render_curv_frame_lookup();
+            if (!m_follow_midline_only) {
+                render_curv_frame_lookup();
+            }
 
             m_logger("mapping OpenGL curv frame texture back to CUDA");
             map_curv_frame_lookup();
@@ -738,6 +732,13 @@ namespace controls {
 
         void StateEstimator_Impl::render_fake_track() {
             glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
+
+            if (m_follow_midline_only) {
+                // ^ Replaces the texture with the render buffer (the final target)
+                // Explanation: If we are only following the midline, we don't need track bounds, so we can skip the second rendering step
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_curv_frame_lookup_rbo);
+            }
+
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glEnable(GL_DEPTH_TEST);
@@ -771,7 +772,7 @@ namespace controls {
             // set the background color, clears the depth buffer
             // (technically 2 rendering passes are done - color and depth)
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // TODO: remove depth buffer
+            glClear(GL_COLOR_BUFFER_BIT); // TODO: remove depth buffer
             // use a shader program
             glUseProgram(m_gl_path_shader);
             // set the relevant scale and center uniforms (constants) in the shader program
@@ -781,7 +782,6 @@ namespace controls {
             glBindVertexArray(m_gl_path.vao);
             glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
             glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
-            // glDrawElements(GL_TRIANGLES, m_num_triangles, GL_UNSIGNED_INT, nullptr);
 
 
         }

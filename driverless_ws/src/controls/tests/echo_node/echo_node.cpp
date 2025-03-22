@@ -26,12 +26,7 @@ namespace controls {
               }
 
         void EchoNode::echo(const SplineMsg& msg) {
-            if (!m_orig_time) {
-                m_orig_time = rclcpp::Time(msg.orig_data_stamp).seconds();
-                m_curr_time = get_clock()->now().seconds() - 0.1;
-            }
             SplineMsg new_msg = msg;
-            new_msg.orig_data_stamp = rclcpp::Time(msg.orig_data_stamp) + rclcpp::Duration::from_seconds(m_curr_time - m_orig_time.value());
             m_spline_publisher->publish(new_msg);
         }
     }

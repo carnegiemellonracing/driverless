@@ -19,6 +19,8 @@
 namespace controls {
     namespace midline {
 
+namespace svm_slow {
+
 /* takes a vector of points and the current point,
    returns the index of the closest point and the distance between that point and the current point */ 
         std::pair<size_t, double> getClosestPointIdx(const conesList& points, const std::pair<double, double>& curr_point) {
@@ -236,6 +238,9 @@ namespace controls {
 
 
         conesList cones_to_midline(Cones cones) {
+            using namespace std::chrono;
+            auto total_start = high_resolution_clock::now();
+
             // check if there are no blue or yellow cones
             const auto& blue_cones = cones.getBlueCones();
             const auto& yellow_cones = cones.getYellowCones();
@@ -244,14 +249,22 @@ namespace controls {
                 return conesList(); 
             }
 
+            auto prep_start = high_resolution_clock::now();
             // augment dataset to make it better for SVM training
             cones.supplementCones();
-            cones = cones.augmentConesCircle(cones, 30, 1.2);
+            cones = cones.augmentConesCircle(cones, cone_augmentation_angle, 1.2);
 
             // acquire the feature matrix and label vector
             std::pair<std::vector<std::vector<double>>, std::vector<double>> xy = cones.conesToXY(cones);
             std::vector<std::vector<double>> X = xy.first;
             std::vector<double> y = xy.second;
+
+            auto prep_end = high_resolution_clock::now();
+            auto prep_duration = duration_cast<microseconds>(prep_end - prep_start);
+            auto prep_ms = prep_duration.count() / 1000.0;
+
+            // SVM setup timing
+            auto setup_start = high_resolution_clock::now();
 
             // prepare SVM data
             svm_problem prob;
@@ -325,8 +338,22 @@ namespace controls {
                 return std::vector<std::pair<double, double>>(); 
             }
 
+            auto setup_end = high_resolution_clock::now();
+            auto setup_duration = duration_cast<microseconds>(setup_end - setup_start);
+            auto setup_ms = setup_duration.count() / 1000.0;
+
+            // SVM training timing
+            auto train_start = high_resolution_clock::now();
+
             // train the SVM model
             svm_model* model = svm_train(&prob, &param);
+
+            auto train_end = high_resolution_clock::now();
+            auto train_duration = duration_cast<microseconds>(train_end - train_start);
+            auto train_ms = train_duration.count() / 1000.0;
+
+            // Mesh grid and prediction timing
+            auto mesh_start = high_resolution_clock::now();
 
             // create meshgrid
             std::pair<std::vector<std::vector<double>>, std::vector<std::vector<double>>> XY = createMeshGrid(X);
@@ -352,6 +379,13 @@ namespace controls {
             // reshape Z to match the shape of xx and yy
             std::vector<std::vector<double>> Z = reshapeOutput(svm_output, xx);
 
+            auto mesh_end = high_resolution_clock::now();
+            auto mesh_duration = duration_cast<microseconds>(mesh_end - mesh_start);
+            auto mesh_ms = mesh_duration.count() / 1000.0;
+
+            // Boundary detection and post-processing timing
+            auto boundary_start = high_resolution_clock::now();
+
             // boundary detection
             conesList boundary_points = boundaryDetection(Z, xx, yy);
 
@@ -366,6 +400,10 @@ namespace controls {
             // downsample boundary points
             conesList downsampled = downsamplePoints(boundary_points);
 
+            auto boundary_end = high_resolution_clock::now();
+            auto boundary_duration = duration_cast<microseconds>(boundary_end - boundary_start);
+            auto boundary_ms = boundary_duration.count() / 1000.0;
+
             // free allocated memory
             for (int i = 0; i < prob.l; ++i) {
                 delete[] prob.x[i];
@@ -374,6 +412,25 @@ namespace controls {
             delete[] prob.y;
 
             svm_free_and_destroy_model(&model);
+
+            auto total_end = high_resolution_clock::now();
+            auto total_duration = duration_cast<microseconds>(total_end - total_start);
+            auto total_ms = total_duration.count() / 1000.0;
+
+            
+            // Print timing breakdown with percentages
+            std::cout << "\n=== Timing Breakdown (NORMAL) ===\n";
+            std::cout << "Number of cones trained on: " << prob.l << "\n";
+            std::cout << "Mesh grid size:             " << xx.size() << " x " << xx[0].size() << "\n";
+            std::cout << std::fixed << std::setprecision(2);
+            std::cout << "Data preparation:     " << prep_ms << " ms (" << (prep_ms / total_ms * 100.0) << "%)\n";
+            std::cout << "SVM setup:           " << setup_ms << " ms (" << (setup_ms / total_ms * 100.0) << "%)\n";
+            std::cout << "SVM training:        " << train_ms << " ms (" << (train_ms / total_ms * 100.0) << "%)\n";
+            std::cout << "Mesh grid/predict:   " << mesh_ms << " ms (" << (mesh_ms / total_ms * 100.0) << "%)\n";
+            std::cout << "Boundary processing: " << boundary_ms << " ms (" << (boundary_ms / total_ms * 100.0) << "%)\n";
+            std::cout << "Total execution:     " << total_ms << " ms (100%)\n";
+            std::cout << "=====================\n\n";
+
 
             return downsampled;
         }
@@ -488,5 +545,6 @@ namespace controls {
             return 0;
         }
 
+}
     }
 }

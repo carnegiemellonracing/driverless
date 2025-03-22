@@ -43,6 +43,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ConeList.msg"
   "msg/ConePositions.msg"
   "msg/DataFrame.msg"
+  "msg/PPMConeArray.msg"
+  "msg/PPMConePoints.msg"
   "msg/PairROT.msg"
   "msg/Points.msg"
   "msg/Spline.msg"

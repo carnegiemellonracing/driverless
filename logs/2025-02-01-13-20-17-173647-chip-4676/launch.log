@@ -1,0 +1,35 @@
+1738434017.1789100 [INFO] [launch]: All log files can be found below /home/chip/Documents/driverless/logs/2025-02-01-13-20-17-173647-chip-4676
+1738434017.1790228 [INFO] [launch]: Default logging verbosity is set to INFO
+1738434017.2886868 [INFO] [rosbridge_websocket-1]: process started with pid [4678]
+1738434017.2888234 [INFO] [rosapi_node-2]: process started with pid [4680]
+1738435799.0650585 [WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+1738435799.0684841 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0687451 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0689240 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0690746 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0692208 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0693586 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0695014 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0696383 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0697720 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0699034 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0700336 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0701685 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0703030 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0704367 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0706980 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0708404 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0709796 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0711129 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0712793 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0714159 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0715492 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0716846 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0718186 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0719514 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0720825 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0722377 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0723779 [rosapi_node-2] Error processing '// generated from rosidl_adapter/resource/msg.idl.em' of 'hesai_ros_driver/LossPacket': '//'
+1738435799.0729485 [rosapi_node-2] Exiting due to SIGINT
+1738435799.1326077 [INFO] [rosapi_node-2]: process has finished cleanly [pid 4680]
+1738435799.1362429 [INFO] [rosbridge_websocket-1]: process has finished cleanly [pid 4678]

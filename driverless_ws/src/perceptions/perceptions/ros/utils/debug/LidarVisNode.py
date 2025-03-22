@@ -33,7 +33,7 @@ class LidarVisNode(Node):
     def __init__(self):
         super().__init__("lidar_vis_node")
 
-        self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.point_subscriber = self.create_subscription(PointCloud2, "/filtered_points", self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.window = vis.init_visualizer_window()
 
                 
