@@ -19,6 +19,7 @@
 #include <sstream>
 #include <utils/general_utils.hpp>
 
+
 // This is to fit into the ROS API
 void send_finished_ignore_error() {
     std::cout << "I just got terminated lol\n";
@@ -47,7 +48,8 @@ namespace controls {
                       controller_info_qos)
               },
 
-              m_data_trajectory_log {"mppi_inputs.txt", std::ios::out}
+              m_data_trajectory_log {"mppi_inputs.txt", std::ios::out},
+              m_p_value {0.1}
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
             rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group{
@@ -74,6 +76,14 @@ namespace controls {
                     [this](const PoseMsg::SharedPtr msg)
                     { world_pose_callback(*msg); },
                     options);
+
+            m_pid_subscription = create_subscription<PIDMsg>(
+                pid_topic_name, pid_qos,
+                [this](const PIDMsg::SharedPtr msg)
+                { pid_callback(*msg); },
+                options);  
+                
+            
                 
                 m_slam_subscription = create_subscription<SlamMsg>(
                     slam_pose_topic_name, slam_pose_qos,
@@ -101,6 +111,11 @@ namespace controls {
 #endif
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
+
+                m_mppi_controller->set_follow_midline_only(follow_midline_only);
+                m_state_estimator->set_follow_midline_only(follow_midline_only);
+
+                                
                 std::stringstream ss;
                 ss << "Received cones: " << std::endl;
                 ss << "Length of blue cones: " << cone_msg.blue_cones.size() << std::endl;
@@ -126,7 +141,7 @@ namespace controls {
                 RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
 
                 // save for info publishing later, since might be changed during iteration
-                rclcpp::Time orig_spline_data_stamp = cone_msg.orig_data_stamp;
+                rclcpp::Time cone_arrival_time = cone_msg.header.stamp;
 
                 // send state to device (i.e. cuda globals)
                 // (also serves to lock state since nothing else updates gpu state)
@@ -227,7 +242,7 @@ namespace controls {
                     finish_time - start_time);
 
                 // can't use high res clock since need to be aligned with other nodes
-                auto total_time_elapsed = (get_clock()->now().nanoseconds() - orig_spline_data_stamp.nanoseconds()) / 1000000;
+                auto total_time_elapsed = (get_clock()->now().nanoseconds() - cone_arrival_time.nanoseconds()) / 1000000;
 
                 interfaces::msg::ControllerInfo info{};
                 info.action = action_to_msg(action);
@@ -263,6 +278,10 @@ namespace controls {
 
             }
 
+            void ControllerNode::pid_callback(const PIDMsg& pid_msg) {
+                m_p_value = pid_msg.x;
+            }
+
             void ControllerNode::publish_action(const Action& action) {
                 const auto msg = action_to_msg(action);
                 m_action_publisher->publish(msg);
@@ -272,13 +291,15 @@ namespace controls {
                 return 0;
             }
 
+
+
             ControllerNode::ActionSignal ControllerNode::action_to_signal(Action action) {
                 ActionSignal action_signal;
 
                 action_signal.front_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
                 action_signal.back_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
-                action_signal.rack_displacement_mm = swangle_to_rackdisplacement(action[action_swangle_idx]);
-
+                action_signal.velocity_rpm = can_max_velocity_rpm;
+                action_signal.rack_displacement_adc = swangle_to_adc(action[action_swangle_idx]);
                 return action_signal;   
             }
 
@@ -286,9 +307,6 @@ namespace controls {
 
             ActionMsg ControllerNode::action_to_msg(const Action &action) {
                 interfaces::msg::ControlAction msg;
-
-                //TODO: why not current time?
-                msg.orig_data_stamp = m_state_estimator->get_orig_spline_data_stamp();
 
                 msg.swangle = action[action_swangle_idx];
                 msg.torque_fl = action[action_torque_idx] / 4;
@@ -375,12 +393,19 @@ namespace controls {
                     {
                         while (rclcpp::ok)
                         {
-                            std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
-                            ActionSignal last_action_signal = m_last_action_signal;
-                            auto start = std::chrono::steady_clock::now();
-                            sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.rack_displacement_mm);
-                            auto end = std::chrono::steady_clock::now();
-                            std::cout << "sendControlAction took " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms\n";
+                            // std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
+                            auto current_time = std::chrono::high_resolution_clock::now();
+                            // std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 << std::endl;
+                            if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
+                                auto start = std::chrono::steady_clock::now();
+                                ActionSignal last_action_signal = m_last_action_signal;
+                                sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
+                                auto end = std::chrono::steady_clock::now();
+                                RCLCPP_WARN(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+
+                                sendPIDConstants(m_p_value, 0);
+                                RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
+                            }
                         }
                         std::cout << "I just got terminated in another way lol\n";
                         send_finished_ignore_error();
@@ -388,7 +413,6 @@ namespace controls {
             }
     }
 }
-
 
 int main(int argc, char *argv[]) {
     using namespace controls;
