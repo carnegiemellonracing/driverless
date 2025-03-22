@@ -93,7 +93,8 @@ namespace controls {
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
             rclcpp::Publisher<TwistMsg>::SharedPtr m_twist_publisher;
             rclcpp::Publisher<ConeMsg>::SharedPtr m_cone_publisher;
-            rclcpp::Publisher<PoseMsg>::SharedPtr m_globalPose_publisher;
+            rclcpp::Publisher<SlamPoseMsg>::SharedPtr m_slam_pose_publisher;
+            rcpcpp::Publisher<SlamMsg>::SharedPtr m_slam_publisher;
 
             rclcpp::TimerBase::SharedPtr m_track_timer;
             rclcpp::TimerBase::SharedPtr m_gps_timer;
@@ -119,7 +120,6 @@ namespace controls {
 
             /// Stores the current state of the car (in Thomas model coordinates)
             // std::array<double, 13> m_world_state {0, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
-            std::array<float, 4> m_world_state {0, 0, M_PI_2, 0};
 
             rclcpp::Time m_time;
             std::mt19937 m_rng;
@@ -131,6 +131,7 @@ namespace controls {
             Visibility m_initial_visible_indices;
             float m_spline_end_heading = 0;
             ActionMsg m_last_action_msg;
+            std::unordered_map<size_t,  std::pair<glm::fvec2, glm::fvec2>> m_slam_chunks;
 
             /// For lap tracking
             std::vector<glm::fvec2> m_start_line;
