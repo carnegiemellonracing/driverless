@@ -18,6 +18,12 @@
 #include <tuple>
 #include <string>
 #include <filesystem>
+#include <cmath>
+
+using std::chrono::duration;
+using std::chrono::duration_cast;
+using std::chrono::high_resolution_clock;
+using std::chrono::milliseconds;
 
 // ROS2 imports
 #include "rclcpp/rclcpp.hpp"
@@ -31,8 +37,10 @@ using namespace std::chrono_literals;
 using std::placeholders::_1;
 
 // Flags for additional functionality
-#define VIZ 0 // if 1 will output an additional topic without std_msgs/Header header
+#define VIZ 1 // if 1 will output an additional topic without std_msgs/Header header
 #define VERBOSE 0 // Prints outputs and transform matrix
+#define YOLO 1 // Controls whether we use Yolo or not for coloring
+#define TIMING 0
 
 class Point_To_Pixel_Node : public rclcpp::Node
 {
@@ -43,8 +51,10 @@ class Point_To_Pixel_Node : public rclcpp::Node
     // Image Deque
     std::deque<std::pair<rclcpp::Time, cv::Mat>> img_deque;
 
-    // YOLO Model
-    cv::dnn::Net yolo;
+    #if YOLO
+      // YOLO Model
+      cv::dnn::Net yolo;
+    #endif
 
     // ROS2 Parameters
     Eigen::Matrix<double, 3, 4> projection_matrix;
@@ -63,7 +73,9 @@ class Point_To_Pixel_Node : public rclcpp::Node
     int transform(geometry_msgs::msg::Vector3& point, rclcpp::Time callbackTimer); 
 
     // Coloring Functions
+    #if YOLO
     std::pair<int, double> get_yolo_color(Eigen::Vector2d& pixel, cv::Mat image);
+    #endif
     std::pair<int, double> get_hsv_color(Eigen::Vector2d& pixel, cv::Mat image);
     
     cv::Mat getCameraFrame(rclcpp::Time callbackTime);
@@ -134,19 +146,21 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   // Threshold that determines whether it reports the color on a cone or not
   this->declare_parameter("confidence_threshold", .15); 
 
-  // YOLO Stuff
-  this->yolo = cv::dnn::readNetFromONNX("/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/best164.onnx");
+  #if YOLO
+    // YOLO Stuff
+    this->yolo = cv::dnn::readNetFromONNX("src/point_to_pixel/config/best164.onnx");
 
-  if (this->yolo.empty()) {
-    RCLCPP_ERROR(this->get_logger(), "Error Loading YOLO Model");
-    rclcpp::shutdown();
-  }
+    if (this->yolo.empty()) {
+      RCLCPP_ERROR(this->get_logger(), "Error Loading YOLO Model");
+      rclcpp::shutdown();
+    }
 
-  RCLCPP_INFO(this->get_logger(), "YOLO Model %s", (this->cap_1).getDeviceName().c_str());
-  
-  // Change preferable backend if we want to run on GPU
-  this->yolo.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-  this->yolo.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+    RCLCPP_INFO(this->get_logger(), "YOLO Model %s", (this->cap_1).getDeviceName().c_str());
+    
+    // Change preferable backend if we want to run on GPU
+    this->yolo.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+    this->yolo.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+  #endif
 
   // **TO BE IMPLEMENTED **
   // Deque size and refresh rate 
@@ -280,7 +294,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 int Point_To_Pixel_Node::transform(
   geometry_msgs::msg::Vector3& point, 
   rclcpp::Time callbackTime
-)
+  )
 {
   #if VERBOSE
   // Create a stringstream to log the matrix
@@ -310,7 +324,12 @@ int Point_To_Pixel_Node::transform(
   cv::Mat frameBGR_1 = this->getCameraFrame(callbackTime);
 
   // Identify the color at the transformed image pixel
-  std::pair<int, float> ppm = this->get_hsv_color(pixel_1, frameBGR_1);
+  #if !YOLO
+    std::pair<int, float> ppm = this->get_hsv_color(pixel_1, frameBGR_1);
+  #else
+    std::pair<int, float> ppm = this->get_yolo_color(pixel_1, frameBGR_1);
+  #endif
+
   
   // RCLCPP_INFO(this->get_logger(), "x: %f, y: %f, color: %d, conf: %f", pixel_1(0), pixel_1(1), std::get<0>(ppm), std::get<1>(ppm));
 
@@ -375,80 +394,82 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
   }
 #endif
 
-std::pair<int, double> Point_To_Pixel_Node::get_yolo_color(Eigen::Vector2d& pixel, cv::Mat img)
-{
-  int x = static_cast<int>(pixel(0));
-  int y = static_cast<int>(pixel(1));
-
-  // Pre-Processing 
-  cv::Mat blob;
-  cv::dnn::blobFromImage(img, blob, 1/255.0, cv::Size(640, 640), cv::Scalar(), true, false);
-  this->yolo.setInput(blob);
-
-  std::vector<cv::Mat> outputs;
-  this->yolo.forward(outputs, this->yolo.getUnconnectedOutLayersNames());
-
-  // Post Processing
-  const float x_factor = img.cols / 640.0;
-  const float y_factor = img.rows / 640.0;
-  
-  // Process detections
-  cv::Mat detections = outputs[0];
-  // Loop through all detection
-  for (int i = 0; i < detections.rows; ++i) 
+#if YOLO
+  std::pair<int, double> Point_To_Pixel_Node::get_yolo_color(Eigen::Vector2d& pixel, cv::Mat img)
   {
-    float confidence = detections.at<float>(i, 4);
+    int x = static_cast<int>(pixel(0));
+    int y = static_cast<int>(pixel(1));
+
+    // Pre-Processing 
+    cv::Mat blob;
+    cv::dnn::blobFromImage(img, blob, 1/255.0, cv::Size(640, 640), cv::Scalar(), true, false);
+    this->yolo.setInput(blob);
+
+    std::vector<cv::Mat> outputs;
+    this->yolo.forward(outputs, this->yolo.getUnconnectedOutLayersNames());
+
+    // Post Processing
+    const float x_factor = img.cols / 640.0;
+    const float y_factor = img.rows / 640.0;
     
-    if (confidence >= this->CONFIDENCE_THRESHOLD)
+    // Process detections
+    cv::Mat detections = outputs[0];
+    // Loop through all detection
+    for (int i = 0; i < detections.rows; ++i) 
     {
-      // Get bounding box coordinates
-      float cx = detections.at<float>(i, 0) * x_factor;
-      float cy = detections.at<float>(i, 1) * y_factor;
-      float width = detections.at<float>(i, 2) * x_factor;
-      float height = detections.at<float>(i, 3) * y_factor;
+      float confidence = detections.at<float>(i, 4);
       
-      // Calculate the bounding box corners
-      float left = cx - width/2;
-      float top = cy - height/2;
-      float right = cx + width/2;
-      float bottom = cy + height/2;
-      
-      // If pixel is inside the bounding box
-      if (left <= x && x <= right && top <= y && y <= bottom)
+      if (confidence >= this->CONFIDENCE_THRESHOLD)
       {
-        // Find the highest class score
-        float max_class_score = 0;
-        int class_id = -1;
+        // Get bounding box coordinates
+        float cx = detections.at<float>(i, 0) * x_factor;
+        float cy = detections.at<float>(i, 1) * y_factor;
+        float width = detections.at<float>(i, 2) * x_factor;
+        float height = detections.at<float>(i, 3) * y_factor;
         
-        // Assuming class scores start after index 5 (++j)
-        for (int j = 5; j < detections.cols; ++j) 
+        // Calculate the bounding box corners
+        float left = cx - width/2;
+        float top = cy - height/2;
+        float right = cx + width/2;
+        float bottom = cy + height/2;
+        
+        // If pixel is inside the bounding box
+        if (left <= x && x <= right && top <= y && y <= bottom)
         {
-          float class_score = detections.at<float>(i, j);
-          if (class_score > max_class_score) 
+          // Find the highest class score
+          float max_class_score = 0;
+          int class_id = -1;
+          
+          // Assuming class scores start after index 5 (++j)
+          for (int j = 5; j < detections.cols; ++j) 
           {
-            max_class_score = class_score;
-            class_id = j - 5;  // Adjust index to get the actual class ID
+            float class_score = detections.at<float>(i, j);
+            if (class_score > max_class_score) 
+            {
+              max_class_score = class_score;
+              class_id = j - 5;  // Adjust index to get the actual class ID
+            }
           }
-        }
-        
-        // Map class_id to cone color IDK WHAT THE CLASS_ID'S ARE
-        int cone_color = -1;
-        if (class_id >= 0) {
-          switch(class_id) {
-            case 0: cone_color = 0; break;  // Orange cone
-            case 1: cone_color = 1; break;  // Yellow cone
-            case 2: cone_color = 2; break;  // Blue cone
-            default: cone_color = -1; break; // Unknown
+          
+          // Map class_id to cone color IDK WHAT THE CLASS_ID'S ARE
+          int cone_color = -1;
+          if (class_id >= 0) {
+            switch(class_id) {
+              case 0: cone_color = 0; break;  // Orange cone
+              case 1: cone_color = 1; break;  // Yellow cone
+              case 2: cone_color = 2; break;  // Blue cone
+              default: cone_color = -1; break; // Unknown
+            }
+            return std::make_pair(cone_color, confidence);
           }
-          return std::make_pair(cone_color, confidence);
         }
       }
     }
+    
+    // No detection 
+    return std::make_pair(-1, 0.0);
   }
-  
-  // No detection 
-  return std::make_pair(-1, 0.0);
-}
+#endif
 
 
 // Identifies Color from a camera pixel
@@ -561,6 +582,10 @@ std::pair<int, double> Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel
 // Topic callback definition
 void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
 {
+  #if TIMING
+    auto start_time = high_resolution_clock::now();
+  #endif
+
   RCLCPP_INFO(this->get_logger(), "Received message with %zu cones", msg->cone_array.size());
 
   interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
@@ -621,9 +646,26 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     RCLCPP_INFO(this->get_logger(), "Transform callback triggered");
   #endif
 
+  #if TIMING
+    auto end_time = high_resolution_clock::now();
+    auto stamp_time = msg->header.stamp.nanoseconds() * cmath::pow(10, 3);
+
+    /* Getting number of milliseconds as an integer. */
+    auto ms_int = duration_cast<milliseconds>(end_time - start_time);
+
+    /* Getting number of milliseconds as a double. */
+    duration<double, std::milli> ms_double = end_time - start_time;
+    duration<double, std::milli> ms_time_since_lidar = end_time - stamp_time;
+
+
+    RCLCPP_INFO(this->get_logger(), "Time from start to end of callback. as int: %u ms. as double: %lf ms", ms_int, ms_double);
+    RCLCPP_INFO(this->get_logger(), "Time from start to end of callback. as int: %u ms. as double: %lf ms", ms_int, ms_double);
+    
+
+  #endif
   
-  publisher_->publish(message);
-};
+  this->publisher_->publish(message);
+}
 
 
 // Camera Callback (Populates and maintain deque)
