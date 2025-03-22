@@ -45,10 +45,10 @@ ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torq
   RCLCPP_INFO(this->get_logger(), "  feedforward: %.2f", feedforward_);
 }
 
-ControlSenderNode::ControlSenderNode(int16_t torque_mNm, uint16_t velocity_rpm, float angle_degrees, float period_seconds, float pvalue, float feedforward)
+ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torque_mNm, uint16_t velocity_rpm, float angle_degrees, float period_seconds, float pvalue, float feedforward)
 : Node("control_sender"),
-  front_torque_mNm_(torque_mNm),
-  back_torque_mNm_(torque_mNm),
+  front_torque_mNm_(front_torque_mNm),
+  back_torque_mNm_(back_torque_mNm),
   velocity_rpm_(velocity_rpm),
   rack_displacement_adc_(0), // Will be calculated in timer callback
   sinusoid_mode_(true),
@@ -63,10 +63,12 @@ ControlSenderNode::ControlSenderNode(int16_t torque_mNm, uint16_t velocity_rpm, 
     100ms, std::bind(&ControlSenderNode::timer_callback, this));
   
   // Convert from mNm to Nm for display
-  float torque_Nm = torque_mNm / 1000.0f;
+  float front_torque_Nm = front_torque_mNm_ / 1000.0f;
+  float back_torque_Nm = back_torque_mNm_ / 1000.0f;
   
   RCLCPP_INFO(this->get_logger(), "Starting control sender in SINUSOIDAL mode with parameters:");
-  RCLCPP_INFO(this->get_logger(), "  torque_Nm: %.3f", torque_Nm);
+  RCLCPP_INFO(this->get_logger(), "  front_torque_Nm: %.3f", front_torque_Nm);
+  RCLCPP_INFO(this->get_logger(), "  back_torque_Nm: %.3f", back_torque_Nm);
   RCLCPP_INFO(this->get_logger(), "  velocity_rpm: %u", velocity_rpm_);
   RCLCPP_INFO(this->get_logger(), "  angle_degrees: %.2f", angle_degrees_);
   RCLCPP_INFO(this->get_logger(), "  period_seconds: %.2f", period_seconds_);
@@ -137,7 +139,7 @@ void ControlSenderNode::timer_callback()
 void print_usage(const char* prog_name) {
   fprintf(stderr, "Usage:\n");
   fprintf(stderr, "  %s --straight <front_torque_Nm> <back_torque_Nm> <velocity_rpm> <angle_degrees> --pvalue <pvalue> --feedforward <feedforward>\n", prog_name);
-  fprintf(stderr, "  %s --sinusoid <torque_Nm> <velocity_rpm> <angle_degrees> <period_seconds> --pvalue <pvalue> --feedforward <feedforward>\n", prog_name);
+  fprintf(stderr, "  %s --sinusoid <front_torque_Nm> <back_torque_Nm> <velocity_rpm> <angle_degrees> <period_seconds> --pvalue <pvalue> --feedforward <feedforward>\n", prog_name);
   fprintf(stderr, "  %s --help\n", prog_name);
 }
 
@@ -159,13 +161,14 @@ void print_help() {
   printf("\n2. SINUSOIDAL MODE (--sinusoid):\n");
   printf("   Sends a constant torque but varies the steering angle in a sinusoidal pattern.\n");
   printf("   Parameters:\n");
-  printf("   - torque_Nm: Constant torque for both front and back in Newton-meters [float]\n");
+  printf("   - front_torque_Nm: Front torque in Newton-meters [float]\n");
+  printf("   - back_torque_Nm: Back torque in Newton-meters [float]\n");
   printf("   - velocity_rpm: Maximum velocity in RPM [uint16]\n");
   printf("   - angle_degrees: Maximum steering angle in degrees (oscillates between -angle and +angle) [float]\n");
   printf("   - period_seconds: Period of the sinusoidal oscillation in seconds [float]\n");
   printf("   - pvalue: Initial proportional value for the steering PID [float]. Prefix this with --pvalue\n");
   printf("   - feedforward: Initial feedforward value for the steering PID [float]. Prefix this with --feedforward\n");
-  printf("   Example: --sinusoid 0.1 3000 10.0 2.5 --pvalue 0.1 --feedforward 0.0\n");
+  printf("   Example: --sinusoid 0.1 0.1 3000 10.5 2.5 --pvalue 0.1 --feedforward 0.0\n");
   
   printf("\nHELP OPTION (--help):\n");
   printf("   Displays this help message.\n\n");
@@ -222,24 +225,27 @@ int main(int argc, char * argv[])
     );
   } else if (mode == "--sinusoid") {
     // Check if we have the correct number of arguments
-    if (argc != 10 || std::string(argv[6]) != "--pvalue" || std::string(argv[8]) != "--feedforward") {
+    if (argc != 11 || std::string(argv[7]) != "--pvalue" || std::string(argv[9]) != "--feedforward") {
       RCLCPP_ERROR(rclcpp::get_logger("control_sender"), 
-                  "Sinusoid mode requires 6 arguments: <torque_Nm> <velocity_rpm> <angle_degrees> <period_seconds> --pvalue <pvalue> --feedforward <feedforward>");
+                  "Sinusoid mode requires 7 arguments: <front_torque_Nm> <back_torque_Nm> <velocity_rpm> <angle_degrees> <period_seconds> --pvalue <pvalue> --feedforward <feedforward>");
       print_usage(argv[0]);
       return 1;
     }
     
     // Parse command line arguments and convert Nm to mNm
-    float torque_Nm = std::stof(argv[2]);
-    int16_t torque_mNm = static_cast<int16_t>(torque_Nm * 1000.0f);
-    uint16_t velocity_rpm = static_cast<uint16_t>(std::stoi(argv[3]));
-    float angle_degrees = std::stof(argv[4]);
-    float period_seconds = std::stof(argv[5]);
-    float pvalue = std::stof(argv[7]);
-    float feedforward = std::stof(argv[9]);
+    float front_torque_Nm = std::stof(argv[2]);
+    float back_torque_Nm = std::stof(argv[3]);
+    int16_t front_torque_mNm = static_cast<int16_t>(front_torque_Nm * 1000.0f);
+    int16_t back_torque_mNm = static_cast<int16_t>(back_torque_Nm * 1000.0f);
+    uint16_t velocity_rpm = static_cast<uint16_t>(std::stoi(argv[4]));
+    float angle_degrees = std::stof(argv[5]);
+    float period_seconds = std::stof(argv[6]);
+    float pvalue = std::stof(argv[8]);
+    float feedforward = std::stof(argv[10]);
     // Create and run the node in sinusoidal mode
     node = std::make_shared<ControlSenderNode>(
-      torque_mNm,
+      front_torque_mNm,
+      back_torque_mNm,
       velocity_rpm,
       angle_degrees,
       period_seconds,

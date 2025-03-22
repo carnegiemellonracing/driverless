@@ -36,7 +36,7 @@ public:
    * @param period_seconds Period of the sinusoidal oscillation in seconds
    * @param pvalue Initial proportional value for the steering PID
    */
-  ControlSenderNode(int16_t torque_mNm, uint16_t velocity_rpm, float angle_degrees, float period_seconds, float pvalue, float feedforward);
+  ControlSenderNode(int16_t front_torque_mNm, int16_t back_torque_mNm, uint16_t velocity_rpm, float angle_degrees, float period_seconds, float pvalue, float feedforward);
 
 private:
   /**
