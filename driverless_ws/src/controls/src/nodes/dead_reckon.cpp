@@ -14,13 +14,14 @@ using namespace std::chrono_literals;
  * 1. Straight mode: Constant torque and steering angle
  * 2. Sinusoidal mode: Constant torque with oscillating steering angle
  */
-ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torque_mNm, uint16_t velocity_rpm, float angle_degrees)
+ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torque_mNm, uint16_t velocity_rpm, float angle_degrees, float pvalue)
 : Node("control_sender"), 
   front_torque_mNm_(front_torque_mNm),
   back_torque_mNm_(back_torque_mNm),
   velocity_rpm_(velocity_rpm),
   angle_degrees_(angle_degrees),
-  sinusoid_mode_(false)
+  sinusoid_mode_(false),
+  pvalue_(pvalue)
 {
   // Convert angle from degrees to radians, then to ADC value
   float angle_rad = angle_degrees * M_PI / 180.0f;
@@ -39,9 +40,10 @@ ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torq
   RCLCPP_INFO(this->get_logger(), "  back_torque_Nm: %.3f", back_torque_Nm);
   RCLCPP_INFO(this->get_logger(), "  velocity_rpm: %u", velocity_rpm_);
   RCLCPP_INFO(this->get_logger(), "  angle_degrees: %.2f (ADC: %u)", angle_degrees_, rack_displacement_adc_);
+  RCLCPP_INFO(this->get_logger(), "  pvalue: %.2f", pvalue_);
 }
 
-ControlSenderNode::ControlSenderNode(int16_t torque_mNm, uint16_t velocity_rpm, float angle_degrees, float period_seconds)
+ControlSenderNode::ControlSenderNode(int16_t torque_mNm, uint16_t velocity_rpm, float angle_degrees, float period_seconds, float pvalue)
 : Node("control_sender"),
   front_torque_mNm_(torque_mNm),
   back_torque_mNm_(torque_mNm),
@@ -50,6 +52,7 @@ ControlSenderNode::ControlSenderNode(int16_t torque_mNm, uint16_t velocity_rpm, 
   sinusoid_mode_(true),
   angle_degrees_(angle_degrees),
   period_seconds_(period_seconds),
+  pvalue_(pvalue),
   start_time_(this->now())
 {
   // Create a timer that triggers every 100ms (10Hz)
@@ -64,6 +67,7 @@ ControlSenderNode::ControlSenderNode(int16_t torque_mNm, uint16_t velocity_rpm, 
   RCLCPP_INFO(this->get_logger(), "  velocity_rpm: %u", velocity_rpm_);
   RCLCPP_INFO(this->get_logger(), "  angle_degrees: %.2f", angle_degrees_);
   RCLCPP_INFO(this->get_logger(), "  period_seconds: %.2f", period_seconds_);
+  RCLCPP_INFO(this->get_logger(), "  pvalue: %.2f", pvalue_);
 }
 
 float ControlSenderNode::calculate_steering_angle() {
@@ -102,29 +106,35 @@ void ControlSenderNode::timer_callback()
     rack_displacement_adc_
   );
   
-  // Convert from mNm to Nm for display
-  float front_torque_Nm = front_torque_mNm_ / 1000.0f;
-  float back_torque_Nm = back_torque_mNm_ / 1000.0f;
-  
-  RCLCPP_INFO(this->get_logger(), "Sending control action with parameters: front_torque_Nm: %.3f, back_torque_Nm: %.3f, velocity_rpm: %u, rack_displacement_adc: %u", 
-              front_torque_Nm, back_torque_Nm, velocity_rpm_, rack_displacement_adc_);
+
+  RCLCPP_INFO(this->get_logger(), "Sending control action with parameters: front_torque_mNm: %d, back_torque_mNm: %d, velocity_rpm: %u, rack_displacement_adc: %u", 
+              front_torque_mNm_, back_torque_mNm_, velocity_rpm_, rack_displacement_adc_);
   
   if (result != 0) {
     RCLCPP_ERROR(this->get_logger(), "Failed to send control action, error code: %d", result);
   } else {
-    if (sinusoid_mode_) {
-      RCLCPP_DEBUG(this->get_logger(), "Sent sinusoidal control action, angle: %f rad, ADC: %u", 
-                  calculate_steering_angle(), rack_displacement_adc_);
-    } else {
-      RCLCPP_DEBUG(this->get_logger(), "Control action sent successfully");
-    }
+    RCLCPP_INFO(this->get_logger(), "Control action sent successfully");
+  }
+
+  constexpr float feedforward = 0.0f;
+  int p_result = sendPIDConstants(
+    pvalue_,
+    feedforward
+  );
+
+  RCLCPP_INFO(this->get_logger(), "Sending PID constants with parameters: pvalue: %.2f, feedforward: %.2f", pvalue_, feedforward);
+
+  if (p_result != 0) {
+    RCLCPP_ERROR(this->get_logger(), "Failed to send PID constants, error code: %d", p_result);
+  } else {
+    RCLCPP_INFO(this->get_logger(), "PID constants sent successfully");
   }
 }
 
 void print_usage(const char* prog_name) {
   fprintf(stderr, "Usage:\n");
-  fprintf(stderr, "  %s --straight <front_torque_Nm> <back_torque_Nm> <velocity_rpm> <angle_degrees>\n", prog_name);
-  fprintf(stderr, "  %s --sinusoid <torque_Nm> <velocity_rpm> <angle_degrees> <period_seconds>\n", prog_name);
+  fprintf(stderr, "  %s --straight <front_torque_Nm> <back_torque_Nm> <velocity_rpm> <angle_degrees> --pvalue <pvalue>\n", prog_name);
+  fprintf(stderr, "  %s --sinusoid <torque_Nm> <velocity_rpm> <angle_degrees> <period_seconds> --pvalue <pvalue>\n", prog_name);
   fprintf(stderr, "  %s --help\n", prog_name);
 }
 
@@ -139,7 +149,8 @@ void print_help() {
   printf("   - back_torque_Nm: Back torque in Newton-meters [float]\n");
   printf("   - velocity_rpm: Maximum velocity in RPM [uint16]\n");
   printf("   - angle_degrees: Steering wheel angle in degrees [float]\n");
-  printf("   Example: --straight 0.1 0.1 3000 10.5\n");
+  printf("   - pvalue: Initial proportional value for the steering PID [float]. Prefix this with --pvalue\n");
+  printf("   Example: --straight 0.1 0.1 3000 10.5 --pvalue 0.1 \n");
   
   printf("\n2. SINUSOIDAL MODE (--sinusoid):\n");
   printf("   Sends a constant torque but varies the steering angle in a sinusoidal pattern.\n");
@@ -148,7 +159,8 @@ void print_help() {
   printf("   - velocity_rpm: Maximum velocity in RPM [uint16]\n");
   printf("   - angle_degrees: Maximum steering angle in degrees (oscillates between -angle and +angle) [float]\n");
   printf("   - period_seconds: Period of the sinusoidal oscillation in seconds [float]\n");
-  printf("   Example: --sinusoid 0.1 3000 10.0 2.5\n");
+  printf("   - pvalue: Initial proportional value for the steering PID [float]. Prefix this with --pvalue\n");
+  printf("   Example: --sinusoid 0.1 3000 10.0 2.5 --pvalue 0.1\n");
   
   printf("\nHELP OPTION (--help):\n");
   printf("   Displays this help message.\n\n");
@@ -178,9 +190,9 @@ int main(int argc, char * argv[])
   
   if (mode == "--straight") {
     // Check if we have the correct number of arguments
-    if (argc != 6) {
+    if (argc != 8 || std::string(argv[6]) != "--pvalue") {
       RCLCPP_ERROR(rclcpp::get_logger("control_sender"), 
-                  "Straight mode requires 4 arguments: <front_torque_Nm> <back_torque_Nm> <velocity_rpm> <angle_degrees>");
+                  "Straight mode requires 4 arguments: <front_torque_Nm> <back_torque_Nm> <velocity_rpm> <angle_degrees> --pvalue <pvalue>");
       print_usage(argv[0]);
       return 1;
     }
@@ -192,17 +204,19 @@ int main(int argc, char * argv[])
     int16_t back_torque_mNm = static_cast<int16_t>(back_torque_Nm * 1000.0f);
     uint16_t velocity_rpm = static_cast<uint16_t>(std::stoi(argv[4]));
     float angle_degrees = std::stof(argv[5]);
-    
+    float pvalue = std::stof(argv[7]);
+
     // Create and run the node in straight mode
     node = std::make_shared<ControlSenderNode>(
       front_torque_mNm,
       back_torque_mNm,
       velocity_rpm,
-      angle_degrees
+      angle_degrees,
+      pvalue
     );
   } else if (mode == "--sinusoid") {
     // Check if we have the correct number of arguments
-    if (argc != 6) {
+    if (argc != 8 || std::string(argv[6]) != "--pvalue") {
       RCLCPP_ERROR(rclcpp::get_logger("control_sender"), 
                   "Sinusoid mode requires 4 arguments: <torque_Nm> <velocity_rpm> <angle_degrees> <period_seconds>");
       print_usage(argv[0]);
@@ -215,13 +229,14 @@ int main(int argc, char * argv[])
     uint16_t velocity_rpm = static_cast<uint16_t>(std::stoi(argv[3]));
     float angle_degrees = std::stof(argv[4]);
     float period_seconds = std::stof(argv[5]);
-    
+    float pvalue = std::stof(argv[7]);
     // Create and run the node in sinusoidal mode
     node = std::make_shared<ControlSenderNode>(
       torque_mNm,
       velocity_rpm,
       angle_degrees,
-      period_seconds
+      period_seconds,
+      pvalue
     );
   } else {
     RCLCPP_ERROR(rclcpp::get_logger("control_sender"), "Invalid mode: %s. Must be --straight, --sinusoid, or --help", mode.c_str());
