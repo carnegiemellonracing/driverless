@@ -25,7 +25,7 @@ public:
    * @param angle_degrees Steering wheel angle in degrees
    * @param pvalue Initial proportional value for the steering PID
    */
-  ControlSenderNode(int16_t front_torque_mNm, int16_t back_torque_mNm, uint16_t velocity_rpm, float angle_degrees, float pvalue);
+  ControlSenderNode(int16_t front_torque_mNm, int16_t back_torque_mNm, uint16_t velocity_rpm, float angle_degrees, float pvalue, float feedforward);
 
   /**
    * Constructor for the ControlSenderNode in sinusoidal mode
@@ -36,7 +36,7 @@ public:
    * @param period_seconds Period of the sinusoidal oscillation in seconds
    * @param pvalue Initial proportional value for the steering PID
    */
-  ControlSenderNode(int16_t torque_mNm, uint16_t velocity_rpm, float angle_degrees, float period_seconds, float pvalue);
+  ControlSenderNode(int16_t torque_mNm, uint16_t velocity_rpm, float angle_degrees, float period_seconds, float pvalue, float feedforward);
 
 private:
   /**
@@ -57,6 +57,7 @@ private:
   uint16_t velocity_rpm_;
   uint16_t rack_displacement_adc_;
   float pvalue_;    
+  float feedforward_;
   // Additional parameters for sinusoidal mode
   bool sinusoid_mode_ = false;
   float angle_degrees_ = 0.0f;
