@@ -48,8 +48,8 @@ namespace controls {
                       controller_info_qos)
               },
 
-              m_data_trajectory_log {"mppi_inputs.txt", std::ios::out}
-              m_p_value {0.1};
+              m_data_trajectory_log {"mppi_inputs.txt", std::ios::out},
+              m_p_value {0.1}
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
             rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group{
