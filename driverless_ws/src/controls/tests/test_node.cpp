@@ -229,6 +229,8 @@ namespace controls {
               m_twist_publisher{create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
               m_cone_publisher{create_publisher<ConeMsg>(cone_topic_name, spline_qos)},
               m_globalPose_publisher{create_publisher<PoseMsg>(state_topic_name, state_qos)},
+              m_slam_pose_publisher{create_publisher<SlamPoseMsg>(slam_pose_topic_name, slam_pose_qos)},
+              m_slam_publisher{create_publisher<SlamMsg>(slam_chunk_topic_name, slam_chunk_qos)},
 
               m_config_dict{config_dict},
               m_all_segments{parse_segments_specification(getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
@@ -239,7 +241,8 @@ namespace controls {
               m_log_file{getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_logs"], std::ios_base::trunc},
 
               m_is_loop{m_config_dict["is_loop"] == "true"}
-        {
+              m_slam_chunks{0},
+        {   
             std::cout << m_lookahead << std::endl;
             std::cout << m_all_segments.size() << std::endl;
             // m_all_segmentsd = parse_segments_specification(m_config_dict["root_dir"] + m_config_dict["track_specs"]);
@@ -248,10 +251,15 @@ namespace controls {
             
             glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
             float curr_heading = m_world_state[2];
+            int chunk_id = 0;
             for (const auto& seg : m_all_segments) {
+                SlamMsg chunk_info;
+                chunk_id = chunk++;
                 if (seg.type == SegmentType::ARC) {
+                    
                     float next_heading = arc_rad_adjusted(curr_heading + seg.heading_change);
                     const auto& [spline, left, right] = arc_segment_with_cones(seg.radius, curr_pos, curr_heading, next_heading);
+                    
                     m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
                     m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
                     m_all_spline.insert(m_all_spline.end(), spline.begin(), spline.end());
@@ -260,6 +268,13 @@ namespace controls {
                     
                     curr_pos = spline.back();
                     curr_heading = next_heading;
+
+                    chunk_info.chunk_id = chunk_id;
+                    chunk_info.blue_cones = left;
+                    chunk_info.yellow_cones = right;
+                    m_slam_publisher->publish(chunk_info);
+
+                    m_slam_chunks[chunk_id] = std::make_pair(left, right);
                 } else if (seg.type == SegmentType::STRAIGHT) {
                     const auto& [spline, left, right] = straight_segment_with_cones(curr_pos, seg.length, curr_heading);
                     m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
@@ -269,6 +284,13 @@ namespace controls {
                     g_cones.insert(g_cones.end(), right.begin(), right.end());
 
                     curr_pos = spline.back();
+
+                    chunk_info.chunk_id = chunk_id;
+                    chunk_info.blue_cones = left;
+                    chunk_info.yellow_cones = right;
+                    m_slam_publisher->publish(chunk_info);
+
+                    m_slam_chunks[chunk_id] = std::make_pair(left, right);
                 }
             }
             m_finish_line = curr_pos;
@@ -277,6 +299,12 @@ namespace controls {
 
             m_time = get_clock()->now();
 
+            // populate left and right cones using hashmap of slam chunks
+            // for (const auto& chunk : m_slam_chunks) {
+            //     const auto& [left, right] = chunk.second;
+            //     m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
+            //     m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
+            // }
             // timing track stuff
             m_start_line.push_back(m_all_left_cones[0]);
             m_start_line.push_back(m_all_right_cones[0]);
