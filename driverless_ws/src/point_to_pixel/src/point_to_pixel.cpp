@@ -70,11 +70,11 @@ class Point_To_Pixel_Node : public rclcpp::Node
     // Callbacks / Transform functions
     void topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
     void camera_callback();
-    int transform(geometry_msgs::msg::Vector3& point, rclcpp::Time callbackTimer); 
+    int transform(geometry_msgs::msg::Vector3 &point, cv::Mat frameBGR_1, cv::Mat detections);
 
     // Coloring Functions
     #if YOLO
-    std::pair<int, double> get_yolo_color(Eigen::Vector2d& pixel, cv::Mat image);
+    std::pair<int, double> get_yolo_color(Eigen::Vector2d& pixel, cv::Mat image, int cols, int rows);
     #endif
     std::pair<int, double> get_hsv_color(Eigen::Vector2d& pixel, cv::Mat image);
     
@@ -287,13 +287,22 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
   // Initialization complete msg
   RCLCPP_INFO(this->get_logger(), "Point to Pixel Node INITIALIZED");
+  #if VERBOSE
+    RCLCPP_INFO(this->get_logger(), "Verbose Logging On");
+  #endif
+  #if YOLO
+      RCLCPP_INFO(this->get_logger(), "Using YOLO Color Detection");
+  #else
+      RCLCPP_INFO(this->get_logger(), "Using HSV Color Detection");
+  #endif
 };
 
 // Point to Pixel coordinate transform
 // returns 0 for blue cone, 1 for yellow cone, and 2 for orange cone
 int Point_To_Pixel_Node::transform(
   geometry_msgs::msg::Vector3& point, 
-  rclcpp::Time callbackTime
+  cv::Mat frameBGR_1,
+  cv::Mat detections
   )
 {
   #if VERBOSE
@@ -320,14 +329,11 @@ int Point_To_Pixel_Node::transform(
   // Divide by z coordinate for Euclidean normalization
   Eigen::Vector2d pixel_1 (transformed(0)/transformed(2), transformed(1)/transformed(2));
 
-  // Get camera frame that is closest to time of LiDAR point
-  cv::Mat frameBGR_1 = this->getCameraFrame(callbackTime);
-
   // Identify the color at the transformed image pixel
   #if !YOLO
     std::pair<int, float> ppm = this->get_hsv_color(pixel_1, frameBGR_1);
   #else
-    std::pair<int, float> ppm = this->get_yolo_color(pixel_1, frameBGR_1);
+    std::pair<int, float> ppm = this->get_yolo_color(pixel_1, detections, frameBGR_1.cols, frameBGR_1.rows);
   #endif
 
   
@@ -395,25 +401,15 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
 #endif
 
 #if YOLO
-  std::pair<int, double> Point_To_Pixel_Node::get_yolo_color(Eigen::Vector2d& pixel, cv::Mat img)
+  std::pair<int, double> Point_To_Pixel_Node::get_yolo_color(Eigen::Vector2d& pixel, cv::Mat detections, int cols, int rows)
   {
     int x = static_cast<int>(pixel(0));
     int y = static_cast<int>(pixel(1));
 
-    // Pre-Processing 
-    cv::Mat blob;
-    cv::dnn::blobFromImage(img, blob, 1/255.0, cv::Size(640, 640), cv::Scalar(), true, false);
-    this->yolo.setInput(blob);
-
-    std::vector<cv::Mat> outputs;
-    this->yolo.forward(outputs, this->yolo.getUnconnectedOutLayersNames());
-
     // Post Processing
-    const float x_factor = img.cols / 640.0;
-    const float y_factor = img.rows / 640.0;
-    
-    // Process detections
-    cv::Mat detections = outputs[0];
+    const float x_factor = cols / 640.0;
+    const float y_factor = rows / 640.0;
+
     // Loop through all detection
     for (int i = 0; i < detections.rows; ++i) 
     {
@@ -561,9 +557,12 @@ std::pair<int, double> Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel
   double orange_percentage = orange_pixels / total_pixels;
 
   // Print out the color percentages
-  std::cout << "Yellow Percentage: " << yellow_percentage * 100 << "%" << std::endl;
-  std::cout << "Blue Percentage: " << blue_percentage * 100 << "%" << std::endl;
-  std::cout << "Orange Percentage: " << orange_percentage * 100 << "%" << std::endl;
+  #if VERBOSE
+    std::cout << "Yellow Percentage: " << yellow_percentage * 100 << "%" << std::endl;
+    std::cout << "Blue Percentage: " << blue_percentage * 100 << "%" << std::endl;
+    std::cout << "Orange Percentage: " << orange_percentage * 100 << "%" << std::endl;
+  #endif
+
   const double MIN_CONFIDENCE = 0.05;
   const double RATIO_THRESHOLD = 1.5;
 
@@ -596,9 +595,33 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   message.orange_cones = std::vector<geometry_msgs::msg::Point> {};
   message.unknown_color_cones = std::vector<geometry_msgs::msg::Point> {};
   geometry_msgs::msg::Point point_msg;
-  
+
+  // Get camera frame that is closest to time of LiDAR point
+  cv::Mat frameBGR_1 = this->getCameraFrame(msg->header.stamp);
+
+  #if YOLO
+    // Pre-Processing
+    cv::Mat blob;
+    cv::dnn::blobFromImage(frameBGR_1, blob, 1 / 255.0, cv::Size(640, 640), cv::Scalar(), true, false);
+    this->yolo.setInput(blob);
+
+    std::vector<cv::Mat> outputs;
+    this->yolo.forward(outputs, this->yolo.getUnconnectedOutLayersNames());
+
+    // Process detections
+    cv::Mat detections = outputs[0];
+  #endif
+
   for (int i = 0; i < msg->cone_array.size(); i++){
-    int cone_class = this->transform(msg->cone_array[i].cone_points[0], msg->header.stamp);
+    #if YOLO
+      int cone_class = this->transform(msg->cone_array[i].cone_points[0], frameBGR_1, detections);
+    #else 
+      // Pass in empty detections matrix if using coloring algorithm
+      int cone_class = this->transform(msg->cone_array[i].cone_points[0], frameBGR_1, cv::Mat::zeros(1, 1, CV_64F));
+#endif
+
+
+
 
     point_msg.x = msg->cone_array[i].cone_points[0].x;
     point_msg.y = msg->cone_array[i].cone_points[0].y;
