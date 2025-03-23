@@ -39,7 +39,7 @@ using std::placeholders::_1;
 // Flags for additional functionality
 #define VIZ 0 // if 1 will output an additional topic without std_msgs/Header header
 #define VERBOSE 0 // Prints outputs and transform matrix
-#define YOLO 1 // Controls whether we use Yolo or not for coloring
+#define YOLO 0 // Controls whether we use Yolo or not for coloring
 #define TIMING 1
 
 class Point_To_Pixel_Node : public rclcpp::Node
@@ -76,7 +76,7 @@ class Point_To_Pixel_Node : public rclcpp::Node
     #if YOLO
     std::pair<int, double> get_yolo_color(Eigen::Vector2d& pixel, cv::Mat image, int cols, int rows);
     #endif
-    std::pair<int, double> get_hsv_color(Eigen::Vector2d& pixel, cv::Mat image);
+    std::pair<int, double> get_hsv_color(Eigen::Vector2d& pixel, cv::Mat image, double depth);
     
     cv::Mat getCameraFrame(rclcpp::Time callbackTime);
 
@@ -305,6 +305,10 @@ int Point_To_Pixel_Node::transform(
   cv::Mat detections
   )
 {
+  // #if TIMING
+  //   auto start_time = high_resolution_clock::now();
+  // #endif
+
   #if VERBOSE
   // Create a stringstream to log the matrix
   std::stringstream ss;
@@ -331,13 +335,22 @@ int Point_To_Pixel_Node::transform(
 
   // Identify the color at the transformed image pixel
   #if !YOLO
-    std::pair<int, float> ppm = this->get_hsv_color(pixel_1, frameBGR_1);
+    std::pair<int, float> ppm = this->get_hsv_color(pixel_1, frameBGR_1, transformed(2));
   #else
     std::pair<int, float> ppm = this->get_yolo_color(pixel_1, detections, frameBGR_1.cols, frameBGR_1.rows);
   #endif
 
   
   // RCLCPP_INFO(this->get_logger(), "x: %f, y: %f, color: %d, conf: %f", pixel_1(0), pixel_1(1), std::get<0>(ppm), std::get<1>(ppm));
+  
+  // #if TIMING
+  //   auto end_time = high_resolution_clock::now();
+
+  //   /* Getting number of milliseconds as an integer. */
+  //   duration<double, std::milli> ms_double = end_time - start_time;
+
+  //   RCLCPP_INFO(this->get_logger(), "Time for transform. as double: %lf ms.", ms_double);
+  // #endif
 
   return ppm.first;
 }
@@ -469,7 +482,7 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
 
 
 // Identifies Color from a camera pixel
-std::pair<int, double> Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img)
+std::pair<int, double> Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img, double depth)
 {
   // Setup region of interest
   int side_length = 25;
@@ -489,7 +502,9 @@ std::pair<int, double> Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel
     RCLCPP_INFO(this->get_logger(), "point out of frame? (x_min >= x_max): %d, %d, %s", x_min, x_max, x_min >= x_max ? "true": "false");
   #endif
 
-  
+  // #if TIMING
+  //   auto start_time = high_resolution_clock::now();
+  // #endif
 
   if (x_min >= x_max || y_min >= y_max) {
       return std::make_pair(-1, 0.0);
@@ -566,6 +581,15 @@ std::pair<int, double> Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel
   const double MIN_CONFIDENCE = 0.05;
   const double RATIO_THRESHOLD = 1.5;
 
+  // #if TIMING
+  //   auto end_time = high_resolution_clock::now();
+
+  //   /* Getting number of milliseconds as an integer. */
+  //   duration<double, std::milli> ms_double = end_time - start_time;
+
+  //   RCLCPP_INFO(this->get_logger(), "Time for Coloring: %lf ms. Y: %lf, B: %lf, O: %lf", ms_double, yellow_pixels, blue_pixels, orange_pixels);
+  // #endif
+
   // Determine cone color
   if (orange_percentage > MIN_CONFIDENCE && orange_percentage > std::max(yellow_percentage, blue_percentage) * RATIO_THRESHOLD) {
       return std::make_pair(0, orange_percentage);
@@ -618,7 +642,7 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     #else 
       // Pass in empty detections matrix if using coloring algorithm
       int cone_class = this->transform(msg->cone_array[i].cone_points[0], frameBGR_1, cv::Mat::zeros(1, 1, CV_64F));
-#endif
+    #endif
 
 
 
@@ -667,8 +691,6 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
       "Transform callback triggered. Published %d cones. %d yellow, %d blue, and %d orange.", 
       cones_published, yellow_cones, blue_cones, orange_cones
     );
-  #else
-    RCLCPP_INFO(this->get_logger(), "Transform callback triggered");
   #endif
 
   #if TIMING
@@ -685,8 +707,6 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
 
     RCLCPP_INFO(this->get_logger(), "Time from start to end of callback. as int: %u ms. as double: %lf ms", ms_int, ms_double);
     RCLCPP_INFO(this->get_logger(), "Time from lidar to colored cone  %u ms.", ms_time_since_lidar.nanoseconds() / pow(10, 3));
-    
-
   #endif
   
   this->publisher_->publish(message);

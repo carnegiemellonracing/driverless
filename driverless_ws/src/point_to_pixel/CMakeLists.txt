@@ -54,7 +54,7 @@ target_link_libraries(zed_node
   ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so)  # Link ZED SDK library
 
 target_link_libraries(point_to_pixel
-  /home/dale/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so)  # Link ZED SDK library
+  ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so)  # Link ZED SDK library
 target_compile_definitions(point_to_pixel PUBLIC VIDEO_MOD_AVAILABLE)
 
 target_link_libraries(point_to_pixel_debug
