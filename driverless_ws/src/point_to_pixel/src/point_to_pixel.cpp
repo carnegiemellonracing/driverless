@@ -37,10 +37,10 @@ using namespace std::chrono_literals;
 using std::placeholders::_1;
 
 // Flags for additional functionality
-#define VIZ 1 // if 1 will output an additional topic without std_msgs/Header header
+#define VIZ 0 // if 1 will output an additional topic without std_msgs/Header header
 #define VERBOSE 0 // Prints outputs and transform matrix
 #define YOLO 1 // Controls whether we use Yolo or not for coloring
-#define TIMING 0
+#define TIMING 1
 
 class Point_To_Pixel_Node : public rclcpp::Node
 {
@@ -158,8 +158,8 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
     RCLCPP_INFO(this->get_logger(), "YOLO Model %s", (this->cap_1).getDeviceName().c_str());
     
     // Change preferable backend if we want to run on GPU
-    this->yolo.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-    this->yolo.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+    this->yolo.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
+    this->yolo.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
   #endif
 
   // **TO BE IMPLEMENTED **
@@ -418,7 +418,7 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
     for (int i = 0; i < detections.rows; ++i) 
     {
       float confidence = detections.at<float>(i, 4);
-      
+
       if (confidence >= this->CONFIDENCE_THRESHOLD)
       {
         // Get bounding box coordinates
@@ -604,7 +604,9 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     point_msg.y = msg->cone_array[i].cone_points[0].y;
     point_msg.z = 0.0;
   
-    RCLCPP_INFO(this->get_logger(), "%d", cone_class);
+    #if VIZ
+      RCLCPP_INFO(this->get_logger(), "%d", cone_class);
+    #endif
 
     switch (cone_class){
       case 0:
@@ -648,18 +650,18 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
 
   #if TIMING
     auto end_time = high_resolution_clock::now();
-    auto stamp_time = msg->header.stamp.nanoseconds() * cmath::pow(10, 3);
+    auto stamp_time = msg->header.stamp;
 
     /* Getting number of milliseconds as an integer. */
     auto ms_int = duration_cast<milliseconds>(end_time - start_time);
 
     /* Getting number of milliseconds as a double. */
     duration<double, std::milli> ms_double = end_time - start_time;
-    duration<double, std::milli> ms_time_since_lidar = end_time - stamp_time;
+    rclcpp::Duration ms_time_since_lidar = this->get_clock()->now() - stamp_time;
 
 
     RCLCPP_INFO(this->get_logger(), "Time from start to end of callback. as int: %u ms. as double: %lf ms", ms_int, ms_double);
-    RCLCPP_INFO(this->get_logger(), "Time from start to end of callback. as int: %u ms. as double: %lf ms", ms_int, ms_double);
+    RCLCPP_INFO(this->get_logger(), "Time from lidar to colored cone  %u ms.", ms_time_since_lidar.nanoseconds() / pow(10, 3));
     
 
   #endif
