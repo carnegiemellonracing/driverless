@@ -37,10 +37,10 @@ using namespace std::chrono_literals;
 using std::placeholders::_1;
 
 // Flags for additional functionality
-#define VIZ 0 // if 1 will output an additional topic without std_msgs/Header header
-#define VERBOSE 0 // Prints outputs and transform matrix
+#define VIZ 1 // if 1 will output an additional topic without std_msgs/Header header
+#define VERBOSE 1 // Prints outputs and transform matrix
 #define YOLO 0 // Controls whether we use Yolo or not for coloring
-#define TIMING 1
+#define TIMING 0
 
 class Point_To_Pixel_Node : public rclcpp::Node
 {
@@ -257,6 +257,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   // ---------------------------------------------------------------------------
   //               GRAB ONE FREEZE FRAME FOR CALIBRATION.PY SCRIPT
   // ---------------------------------------------------------------------------
+  this->cap_1.setAECAGC(true);
 
   const sl_oc::video::Frame frame_1 = this->cap_1.getLastFrame();
 
@@ -340,9 +341,10 @@ int Point_To_Pixel_Node::transform(
     std::pair<int, float> ppm = this->get_yolo_color(pixel_1, detections, frameBGR_1.cols, frameBGR_1.rows);
   #endif
 
-  
-  // RCLCPP_INFO(this->get_logger(), "x: %f, y: %f, color: %d, conf: %f", pixel_1(0), pixel_1(1), std::get<0>(ppm), std::get<1>(ppm));
-  
+  #if VIZ
+    RCLCPP_INFO(this->get_logger(), "x: %f, y: %f, color: %d, conf: %f", pixel_1(0), pixel_1(1), std::get<0>(ppm), std::get<1>(ppm));
+  #endif
+
   // #if TIMING
   //   auto end_time = high_resolution_clock::now();
 
@@ -637,6 +639,7 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   #endif
 
   for (int i = 0; i < msg->cone_array.size(); i++){
+    RCLCPP_INFO(this->get_logger(), "point cloud x y z is %f %f %f", msg->cone_array[i].cone_points[0].x, msg->cone_array[i].cone_points[0].y, msg->cone_array[i].cone_points[0].z);
     #if YOLO
       int cone_class = this->transform(msg->cone_array[i].cone_points[0], frameBGR_1, detections);
     #else 
@@ -680,18 +683,17 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     }
   }
 
-  #if VERBOSE
-    int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
-    int yellow_cones = message.yellow_cones.size();
-    int blue_cones = message.blue_cones.size();
-    int orange_cones = message.orange_cones.size();
-    
-    RCLCPP_INFO(
-      this->get_logger(), 
-      "Transform callback triggered. Published %d cones. %d yellow, %d blue, and %d orange.", 
-      cones_published, yellow_cones, blue_cones, orange_cones
-    );
-  #endif
+  int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
+  int yellow_cones = message.yellow_cones.size();
+  int blue_cones = message.blue_cones.size();
+  int orange_cones = message.orange_cones.size();
+  int unknown_color_cones = message.unknown_color_cones.size();
+  
+  RCLCPP_INFO(
+    this->get_logger(), 
+    "Transform callback triggered. Published %d cones. %d yellow, %d blue, %d orange, and %d unknown.", 
+    cones_published, yellow_cones, blue_cones, orange_cones, unknown_color_cones
+  );
 
   #if TIMING
     auto end_time = high_resolution_clock::now();

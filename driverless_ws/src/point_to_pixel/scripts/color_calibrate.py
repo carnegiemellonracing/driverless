@@ -161,7 +161,10 @@ class HSVCalibrationUI:
                 "lower": [vars["lh"].get(), vars["ls"].get(), vars["lv"].get()],
                 "upper": [vars["uh"].get(), vars["us"].get(), vars["uv"].get()]
             }
-        filename = "hsv_calibration.yaml"
+        config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
+                                 "config/params.yaml")
+        os.makedirs(os.path.dirname(config_path), exist_ok=True)
+        
         try:
             with open(filename, 'r') as file:
                 data = yaml.safe_load(file)
@@ -182,7 +185,7 @@ class HSVCalibrationUI:
     def run(self):
         self.root.mainloop()
 def main():
-    path = "/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel_test/config/freeze.png"  # Update this path as needed.
+    path = "/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/freeze.png"  # Update this path as needed.
     if not os.path.exists(path):
         print(f"Error: Image not found: {path}", file=sys.stderr)
         sys.exit(1)

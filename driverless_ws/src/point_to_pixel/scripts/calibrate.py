@@ -420,7 +420,7 @@ def main():
     # args = parser.parse_args()
 
     # Read the image from the provided file path
-    path = "/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel_test/config/freeze.png"
+    path = "/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/freeze.png"
     im = cv2.imread(path)
 
     if im is None:
