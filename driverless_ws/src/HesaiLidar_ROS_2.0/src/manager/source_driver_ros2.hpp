@@ -57,6 +57,18 @@
 #include <pcl/point_types.h>
 #include <../CMR_CPP_Pipeline.cpp>
 
+
+// CPP Driver Constants
+
+#define CPP_ALPHA 0.1
+#define CPP_NUM_BINS 10
+#define CPP_HEIGHT_THRESHOLD 0.07
+#define CPP_EPSILON 0.2
+#define CPP_MIN_POINTS 3
+#define CPP_EPSILON2 3
+#define CPP_MIN_POINTS2 3
+
+
 class SourceDriver
 {
 public:
@@ -320,15 +332,6 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
   sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_vis_msg, "z");
 
   float epsilon = 0.1;
-  
-  // Define Constants 
-  double cpp_alpha = 0.1;
-  int cpp_num_bins = 10;
-  double cpp_height_threshold = 0.07;
-  double cpp_epsilon = 0.2;
-  int cpp_min_points = 3;
-  double cpp_epsilon2 = 3;
-  int cpp_min_points2 = 3;
 
   PointCloud<PointXYZ> filtered_points;
 
@@ -341,7 +344,7 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
     filtered_points.push_back(PointXYZ(point.x, point.y, point.z));
   }
   
-  PointCloud<PointXYZ> filtered_cloud = run_pipeline(filtered_points, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
+  PointCloud<PointXYZ> filtered_cloud = run_pipeline(filtered_points, CPP_ALPHA, CPP_NUM_BINS, CPP_HEIGHT_THRESHOLD, CPP_EPSILON, CPP_MIN_POINTS, CPP_EPSILON2, CPP_MIN_POINTS2);
 
   for (size_t i = 0; i < filtered_cloud.size(); i++) {
     *iter_x_ = -filtered_cloud.points[i].y;
@@ -370,10 +373,6 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
 
   cone_vis_pub_->publish(ros_vis_msg);
 
-  // ros_msg.data.resize(filtered_cloud.size() * ros_msg.point_step);
-  // ros_msg.width = filtered_cloud.size();
-
-  // std::cout << "number of cones is " << filtered_cloud.size() << "\n";
 
   ros_msg.header.stamp.sec = (uint32_t)floor(frame.points[0].timestamp);
   ros_msg.header.stamp.nanosec = (uint32_t)round((frame.points[0].timestamp - ros_msg.header.stamp.sec) * 1e9);
