@@ -38,9 +38,9 @@ using std::placeholders::_1;
 
 // Flags for additional functionality
 #define VIZ 1 // if 1 will output an additional topic without std_msgs/Header header
-#define VERBOSE 1 // Prints outputs and transform matrix
+#define VERBOSE 0 // Prints outputs and transform matrix
 #define YOLO 0 // Controls whether we use Yolo or not for coloring
-#define TIMING 0
+#define TIMING 1
 
 class Point_To_Pixel_Node : public rclcpp::Node
 {
@@ -70,13 +70,13 @@ class Point_To_Pixel_Node : public rclcpp::Node
     // Callbacks / Transform functions
     void topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
     void camera_callback();
-    int transform(geometry_msgs::msg::Vector3 &point, cv::Mat frameBGR_1, cv::Mat detections);
+    Eigen::Vector2d transform(geometry_msgs::msg::Vector3 &point, cv::Mat detections);
 
     // Coloring Functions
     #if YOLO
-    std::pair<int, double> get_yolo_color(Eigen::Vector2d& pixel, cv::Mat image, int cols, int rows);
+    int get_yolo_color(Eigen::Vector2d& pixel, cv::Mat image, int cols, int rows);
     #endif
-    std::pair<int, double> get_hsv_color(Eigen::Vector2d& pixel, cv::Mat image, double depth);
+    int get_hsv_color(Eigen::Vector2d& pixel, cv::Mat image);
     
     cv::Mat getCameraFrame(rclcpp::Time callbackTime);
 
@@ -225,7 +225,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
   // Camera Callback (10 fps)
   camera_timer_ = this->create_wall_timer(
-    std::chrono::milliseconds(10),
+    std::chrono::milliseconds(40),
     [this](){this->camera_callback();}
   );
   
@@ -300,15 +300,11 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
 // Point to Pixel coordinate transform
 // returns 0 for blue cone, 1 for yellow cone, and 2 for orange cone
-int Point_To_Pixel_Node::transform(
+Eigen::Vector2d Point_To_Pixel_Node::transform(
   geometry_msgs::msg::Vector3& point, 
-  cv::Mat frameBGR_1,
   cv::Mat detections
   )
 {
-  // #if TIMING
-  //   auto start_time = high_resolution_clock::now();
-  // #endif
 
   #if VERBOSE
   // Create a stringstream to log the matrix
@@ -334,27 +330,7 @@ int Point_To_Pixel_Node::transform(
   // Divide by z coordinate for Euclidean normalization
   Eigen::Vector2d pixel_1 (transformed(0)/transformed(2), transformed(1)/transformed(2));
 
-  // Identify the color at the transformed image pixel
-  #if !YOLO
-    std::pair<int, float> ppm = this->get_hsv_color(pixel_1, frameBGR_1, transformed(2));
-  #else
-    std::pair<int, float> ppm = this->get_yolo_color(pixel_1, detections, frameBGR_1.cols, frameBGR_1.rows);
-  #endif
-
-  #if VIZ
-    RCLCPP_INFO(this->get_logger(), "x: %f, y: %f, color: %d, conf: %f", pixel_1(0), pixel_1(1), std::get<0>(ppm), std::get<1>(ppm));
-  #endif
-
-  // #if TIMING
-  //   auto end_time = high_resolution_clock::now();
-
-  //   /* Getting number of milliseconds as an integer. */
-  //   duration<double, std::milli> ms_double = end_time - start_time;
-
-  //   RCLCPP_INFO(this->get_logger(), "Time for transform. as double: %lf ms.", ms_double);
-  // #endif
-
-  return ppm.first;
+  return pixel_1;
 }
 
 
@@ -416,7 +392,7 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
 #endif
 
 #if YOLO
-  std::pair<int, double> Point_To_Pixel_Node::get_yolo_color(Eigen::Vector2d& pixel, cv::Mat detections, int cols, int rows)
+  int Point_To_Pixel_Node::get_yolo_color(Eigen::Vector2d& pixel, cv::Mat detections, int cols, int rows)
   {
     int x = static_cast<int>(pixel(0));
     int y = static_cast<int>(pixel(1));
@@ -484,7 +460,7 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
 
 
 // Identifies Color from a camera pixel
-std::pair<int, double> Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img, double depth)
+int Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img)
 {
   // Setup region of interest
   int side_length = 25;
@@ -509,7 +485,7 @@ std::pair<int, double> Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel
   // #endif
 
   if (x_min >= x_max || y_min >= y_max) {
-      return std::make_pair(-1, 0.0);
+      return -1;
   }
 
   // Extract ROI and convert to HSV
@@ -594,13 +570,13 @@ std::pair<int, double> Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel
 
   // Determine cone color
   if (orange_percentage > MIN_CONFIDENCE && orange_percentage > std::max(yellow_percentage, blue_percentage) * RATIO_THRESHOLD) {
-      return std::make_pair(0, orange_percentage);
+      return 0;
   } else if (yellow_percentage > MIN_CONFIDENCE && yellow_percentage > std::max(blue_percentage, orange_percentage) * RATIO_THRESHOLD) {
-      return std::make_pair(1, yellow_percentage);
+      return 1;
   } else if (blue_percentage > MIN_CONFIDENCE && blue_percentage > std::max(yellow_percentage, orange_percentage) * RATIO_THRESHOLD) {
-      return std::make_pair(2, blue_percentage);
+      return 2;
   }
-  return std::make_pair(-1, std::max({yellow_percentage, blue_percentage, orange_percentage}));
+  return -1;
 }
 
 
@@ -609,6 +585,7 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
 {
   #if TIMING
     auto start_time = high_resolution_clock::now();
+    int64_t ms_time_since_lidar_2 = (this->get_clock()->now().nanoseconds() - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1000;
   #endif
 
   RCLCPP_INFO(this->get_logger(), "Received message with %zu cones", msg->cone_array.size());
@@ -625,6 +602,10 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   // Get camera frame that is closest to time of LiDAR point
   cv::Mat frameBGR_1 = this->getCameraFrame(msg->header.stamp);
 
+  #if TIMING
+    auto camera_time = high_resolution_clock::now();
+  #endif
+
   #if YOLO
     // Pre-Processing
     cv::Mat blob;
@@ -638,17 +619,37 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     cv::Mat detections = outputs[0];
   #endif
 
+  #if TIMING
+    int transform_time = 0;
+    int coloring_time = 0;
+  #endif
+
   for (int i = 0; i < msg->cone_array.size(); i++){
-    RCLCPP_INFO(this->get_logger(), "point cloud x y z is %f %f %f", msg->cone_array[i].cone_points[0].x, msg->cone_array[i].cone_points[0].y, msg->cone_array[i].cone_points[0].z);
-    #if YOLO
-      int cone_class = this->transform(msg->cone_array[i].cone_points[0], frameBGR_1, detections);
-    #else 
-      // Pass in empty detections matrix if using coloring algorithm
-      int cone_class = this->transform(msg->cone_array[i].cone_points[0], frameBGR_1, cv::Mat::zeros(1, 1, CV_64F));
+    #if TIMING
+      auto loop_start = high_resolution_clock::now();
     #endif
 
+    RCLCPP_INFO(this->get_logger(), "point cloud x y z is %f %f %f", msg->cone_array[i].cone_points[0].x, msg->cone_array[i].cone_points[0].y, msg->cone_array[i].cone_points[0].z);
+      
+    // Transform Point
+    Eigen::Vector2d pixel_1 = this->transform(msg->cone_array[i].cone_points[0], frameBGR_1);
 
+    #if TIMING
+      auto loop_transform = high_resolution_clock::now();
+      transform_time = transform_time + std::chrono::duration_cast<std::chrono::microseconds>(loop_transform - loop_start).count();
+    #endif
 
+    // Identify the color at the transformed image pixel
+    #if !YOLO
+      int cone_class = this->get_hsv_color(pixel_1, frameBGR_1);
+    #else
+      int cone_class = this->get_yolo_color(pixel_1, detections, frameBGR_1.cols, frameBGR_1.rows);
+    #endif
+
+    #if TIMING
+      auto loop_coloring = high_resolution_clock::now();
+      coloring_time = transform_time + std::chrono::duration_cast<std::chrono::microseconds>(loop_coloring - loop_transform).count();
+    #endif
 
     point_msg.x = msg->cone_array[i].cone_points[0].x;
     point_msg.y = msg->cone_array[i].cone_points[0].y;
@@ -683,6 +684,10 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     }
   }
 
+  #if TIMING
+    auto transform_coloring_time = high_resolution_clock::now();
+  #endif
+
   int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
   int yellow_cones = message.yellow_cones.size();
   int blue_cones = message.blue_cones.size();
@@ -698,17 +703,18 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   #if TIMING
     auto end_time = high_resolution_clock::now();
     auto stamp_time = msg->header.stamp;
+    auto ms_time_since_lidar = this->get_clock()->now() - stamp_time;
 
-    /* Getting number of milliseconds as an integer. */
-    auto ms_int = duration_cast<milliseconds>(end_time - start_time);
+    RCLCPP_INFO(this->get_logger(), "Get Camera Frame  %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(camera_time - start_time).count());
+    RCLCPP_INFO(this->get_logger(), "Total Transform and Coloring Time  %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(transform_coloring_time - camera_time).count());
+    RCLCPP_INFO(this->get_logger(), "--Total Transform Time  %ld microseconds.", transform_time);
+    RCLCPP_INFO(this->get_logger(), "--Total Coloring Time  %ld microseconds.", coloring_time);
+    RCLCPP_INFO(this->get_logger(), "Total Transform and Coloring Time  %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(transform_coloring_time - camera_time));
+    auto time_diff = end_time - start_time;
+    RCLCPP_INFO(this->get_logger(), "Total PPM Time %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(time_diff).count());
+    RCLCPP_INFO(this->get_logger(), "Total Time from Lidar  %ld microseconds.", ms_time_since_lidar.nanoseconds() / 1000);
+    RCLCPP_INFO(this->get_logger(), "Total Time from Lidar to start  %ld microseconds.", ms_time_since_lidar_2);
 
-    /* Getting number of milliseconds as a double. */
-    duration<double, std::milli> ms_double = end_time - start_time;
-    rclcpp::Duration ms_time_since_lidar = this->get_clock()->now() - stamp_time;
-
-
-    RCLCPP_INFO(this->get_logger(), "Time from start to end of callback. as int: %u ms. as double: %lf ms", ms_int, ms_double);
-    RCLCPP_INFO(this->get_logger(), "Time from lidar to colored cone  %u ms.", ms_time_since_lidar.nanoseconds() / pow(10, 3));
   #endif
   
   this->publisher_->publish(message);
@@ -751,7 +757,11 @@ void Point_To_Pixel_Node::camera_callback()
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<Point_To_Pixel_Node>());
+
+  rclcpp::executors::MultiThreadedExecutor executor;
+  rclcpp::Node::SharedPtr node = std::make_shared<Point_To_Pixel_Node>();
+  executor.add_node(node);
+  executor.spin();
   rclcpp::shutdown();
   return 0;
 }
