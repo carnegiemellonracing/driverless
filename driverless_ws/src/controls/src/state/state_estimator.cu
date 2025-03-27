@@ -547,7 +547,7 @@ namespace controls {
 
             m_logger("syncing world state to device");
 
-            CUDA_CALL(cudaMemcpyToSymbolAsync(cuda_globals::curr_state, state.data(), state_dims * sizeof(float)));
+            CUDA_CALL(cudaMemcpyToSymbol(cuda_globals::curr_state, state.data(), state_dims * sizeof(float)));
 
             m_logger("syncing spline frame lookup texture info to device");
             sync_tex_info();
