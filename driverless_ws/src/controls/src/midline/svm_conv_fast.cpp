@@ -486,13 +486,6 @@ conesList cones_to_midline(Cones cones)
 
     // boundary detection
     conesList boundary_points = boundaryDetection(xx, yy, model);
-    std::cout << "boundary points size after detecting: " << boundary_points.size() << std::endl;
-    std::cout << "before sorting: " << std::endl;
-
-    for (const auto &p : boundary_points)
-    {
-        std::cout << "(" << p.first << ", " << p.second << ")," << std::endl;
-    }
 
     // sort boundary points
     if (boundary_points.empty())
@@ -502,17 +495,9 @@ conesList cones_to_midline(Cones cones)
     }
 
     boundary_points = sortBoundaryPoints(boundary_points);
-    std::cout << "boundary points size after sorting: " << boundary_points.size() << std::endl;
-    std::cout << "before downsampling: " << std::endl;
-
-    for (const auto &p : boundary_points)
-    {
-        std::cout << "(" << p.first << ", " << p.second << ")," << std::endl;
-    }
 
     // downsample boundary points
     conesList downsampled = downsamplePoints(boundary_points);
-    std::cout << "boundary points size after downsampling: " << downsampled.size() << std::endl;
 
     auto boundary_end = high_resolution_clock::now();
     auto boundary_duration = duration_cast<microseconds>(boundary_end - boundary_start);
@@ -536,6 +521,7 @@ conesList cones_to_midline(Cones cones)
     std::cout << "\n=== Timing Breakdown (LAZY) ===\n";
     std::cout << "Number of cones trained on: " << prob.l << "\n";
     std::cout << "Mesh grid size:             " << xx.size() << " x " << xx[0].size() << "\n";
+    std::cout << "Boundary points size: " << boundary_points.size() << "\n";
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "Data preparation:     " << prep_ms << " ms (" << (prep_ms / total_ms * 100.0) << "%)\n";
     std::cout << "SVM setup:           " << setup_ms << " ms (" << (setup_ms / total_ms * 100.0) << "%)\n";
@@ -682,13 +668,6 @@ int main()
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
     std::cout << "Elapsed time: " << elapsed.count() << " seconds" << std::endl;
-
-    std::cout << "straight points" << std::endl;
-
-    for (const auto &p : overallAns2)
-    {
-        std::cout << "(" << p.first << ", " << p.second << ")," << std::endl;
-    }
     /*
     Cones conesList2;
     conesList2.addMultipleBlue(blue_list);

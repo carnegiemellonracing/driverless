@@ -97,7 +97,7 @@ namespace controls {
             std::ofstream collision_log_output;
             std::stack<std::pair<glm::fvec2, std::tuple<glm::fvec2, float, float>>> collisions;
 
-            std::string collision_log_path = getenv("HOME") + g_config_dict["root_dir"] + g_config_dict["collision_logs"];
+            std::string collision_log_path = getenv("DRIVERLESS") + g_config_dict["root_dir"] + g_config_dict["collision_logs"];
             bool output_file_exists = std::filesystem::exists(collision_log_path);
             if (output_file_exists)
             {
@@ -230,12 +230,12 @@ namespace controls {
               m_cone_publisher{create_publisher<ConeMsg>(cone_topic_name, spline_qos)},
 
               m_config_dict{config_dict},
-              m_all_segments{parse_segments_specification(getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
+              m_all_segments{parse_segments_specification(getenv("DRIVERLESS") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
 
               m_lookahead{std::stof(m_config_dict["look_ahead"])},
               m_lookahead_squared{m_lookahead * m_lookahead},
 
-              m_log_file{getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_logs"], std::ios_base::trunc},
+              m_log_file{getenv("DRIVERLESS") + m_config_dict["root_dir"] + m_config_dict["track_logs"], std::ios_base::trunc},
 
               m_is_loop{m_config_dict["is_loop"] == "true"}
         {
@@ -749,7 +749,7 @@ int main(int argc, char* argv[]){
         config_file_path = argv[1];
     }
     
-    std::string config_file_base_path = std::string {getenv("HOME")} + "/driverless/driverless_ws/src/controls/tests/sim_configs/";
+    std::string config_file_base_path = std::string {getenv("DRIVERLESS")} + "/driverless_ws/src/controls/tests/sim_configs/";
     std::string config_file_full_path = config_file_base_path + config_file_path;
     
     std::map<std::string, std::string> config_dict;

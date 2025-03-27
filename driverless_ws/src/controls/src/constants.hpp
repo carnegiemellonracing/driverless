@@ -89,7 +89,7 @@ namespace controls {
     // Midline/SVM
     constexpr float mesh_grid_spacing = 0.2f; //m
     constexpr float max_spline_length = 200.0f;
-    constexpr int cone_augmentation_angle = 30;
+    constexpr int cone_augmentation_angle = 180;
 
     constexpr float lookahead_behind_squared = 25.0f;
 

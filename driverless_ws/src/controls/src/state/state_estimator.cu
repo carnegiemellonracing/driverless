@@ -454,8 +454,8 @@ namespace controls {
 
                 // // TODO: convert this to using std::transform
                 auto svm_start = std::chrono::high_resolution_clock::now();            
-                // auto spline_frames = midline::svm_fast::cones_to_midline(cones);
-                auto spline_frames = midline::svm_slow::cones_to_midline(cones);
+                auto spline_frames = midline::svm_fast::cones_to_midline(cones);
+                // auto spline_frames = midline::svm_slow::cones_to_midline(cones);
                 auto svm_end = std::chrono::high_resolution_clock::now();
                 svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
                 m_spline_frames.clear();
@@ -547,7 +547,7 @@ namespace controls {
 
             m_logger("syncing world state to device");
 
-            CUDA_CALL(cudaMemcpyToSymbolAsync(cuda_globals::curr_state, state.data(), state_dims * sizeof(float)));
+            CUDA_CALL(cudaMemcpyToSymbol(cuda_globals::curr_state, state.data(), state_dims * sizeof(float)));
 
             m_logger("syncing spline frame lookup texture info to device");
             sync_tex_info();
