@@ -309,13 +309,14 @@ namespace controls {
         {
             assert(m_left_cone_trajectory != nullptr);
             assert(m_right_cone_trajectory != nullptr);
-            const auto& left_cone_points = m_all_left_cone_points;
-            const auto& right_cone_points = m_all_right_cone_points;
+            bool real_life = (m_all_left_cone_points.size() == 0);
+            const auto& left_cone_points = (real_life ? m_left_cone_points : m_all_left_cone_points);
+            const auto& right_cone_points = (real_life ? m_right_cone_points : m_all_right_cone_points);
             m_left_cone_trajectory->vertex_buf = std::vector<float>(left_cone_points.size() * 2);
             for (size_t i = 0; i < left_cone_points.size(); i++) {
                 //Draw trajectory line
-                m_left_cone_trajectory->vertex_buf[2 * i] = m_all_left_cone_points[i].x;
-                m_left_cone_trajectory->vertex_buf[2 * i + 1] = m_all_left_cone_points[i].y;
+                m_left_cone_trajectory->vertex_buf[2 * i] = left_cone_points[i].x;
+                m_left_cone_trajectory->vertex_buf[2 * i + 1] = left_cone_points[i].y;
             }
 
             m_right_cone_trajectory->vertex_buf = std::vector<float>(right_cone_points.size() * 2);

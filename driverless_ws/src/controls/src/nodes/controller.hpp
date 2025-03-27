@@ -68,6 +68,8 @@ namespace controls {
              */
             void world_pose_callback(const PoseMsg& pose_msg);
 
+            void pid_callback(const PIDMsg& pid_msg);
+
             /**
              * Publishes a control action to the `control_action` topic.
              *
@@ -104,6 +106,7 @@ namespace controls {
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription; ///< Subscribes to intertial quaternion
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
             rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;
+            rclcpp::Subscription<PIDMsg>::SharedPtr m_pid_subscription;
             // ConeArray = /lidar_node_cones
 
             /**
@@ -136,6 +139,7 @@ namespace controls {
             std::thread m_aim_communication_thread;
             std::atomic<bool> m_keep_sending_aim_signal = true;
             std::thread launch_aim_communication();
+            float m_p_value;
         };
     }
 }

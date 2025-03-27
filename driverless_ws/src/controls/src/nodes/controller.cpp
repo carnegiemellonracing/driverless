@@ -48,7 +48,8 @@ namespace controls {
                       controller_info_qos)
               },
 
-              m_data_trajectory_log {"mppi_inputs.txt", std::ios::out}
+              m_data_trajectory_log {"mppi_inputs.txt", std::ios::out},
+              m_p_value {0.1}
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
             rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group{
@@ -75,6 +76,14 @@ namespace controls {
                 [this](const PoseMsg::SharedPtr msg)
                 { world_pose_callback(*msg); },
                 options);
+
+            m_pid_subscription = create_subscription<PIDMsg>(
+                pid_topic_name, pid_qos,
+                [this](const PIDMsg::SharedPtr msg)
+                { pid_callback(*msg); },
+                options);  
+                
+            
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
 
             launch_aim_communication().detach();
@@ -262,6 +271,10 @@ namespace controls {
 
             }
 
+            void ControllerNode::pid_callback(const PIDMsg& pid_msg) {
+                m_p_value = pid_msg.x;
+            }
+
             void ControllerNode::publish_action(const Action& action) {
                 const auto msg = action_to_msg(action);
                 m_action_publisher->publish(msg);
@@ -271,23 +284,7 @@ namespace controls {
                 return 0;
             }
 
-            static uint16_t swangle_to_adc(float swangle)
-            {
 
-                int modulus = 4096;
-                float swangle_in_degrees = swangle * 180 / M_PI;
-                int zero_adc = 3159;
-                int min_adc = 2010;
-                int max_adc = modulus + 212;
-                float min_deg = -21.04;
-                float max_deg = 23.6;
-                float adc_deg_ratio = static_cast<float>(max_adc - min_adc) / (max_deg - min_deg);
-                int desired_adc = static_cast<int>(swangle_in_degrees * adc_deg_ratio) + zero_adc;
-                std::cout << "desired_adc: " << desired_adc << std::endl;
-                assert(min_adc < desired_adc && desired_adc < max_adc);
-                uint16_t desired_adc_modded = static_cast<uint16_t>(desired_adc % modulus);
-                return desired_adc_modded;
-            }
 
             ControllerNode::ActionSignal ControllerNode::action_to_signal(Action action) {
                 ActionSignal action_signal;
@@ -391,14 +388,17 @@ namespace controls {
                         {
                             // std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
                             auto current_time = std::chrono::high_resolution_clock::now();
-                            std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() / 100 << std::endl;
-                            // if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() / 100 < 5) {
+                            // std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 << std::endl;
+                            if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
                                 auto start = std::chrono::steady_clock::now();
                                 ActionSignal last_action_signal = m_last_action_signal;
                                 sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                 auto end = std::chrono::steady_clock::now();
                                 RCLCPP_WARN(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
-                            // }
+
+                                sendPIDConstants(m_p_value, 0);
+                                RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
+                            }
                         }
                         std::cout << "I just got terminated in another way lol\n";
                         send_finished_ignore_error();
