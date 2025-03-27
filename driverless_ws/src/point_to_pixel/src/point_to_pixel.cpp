@@ -36,25 +36,24 @@ using std::chrono::milliseconds;
 using namespace std::chrono_literals;
 using std::placeholders::_1;
 
-// Flags for additional functionality
-#define VIZ 1 // if 1 will output an additional topic without std_msgs/Header header
-#define VERBOSE 0 // Prints outputs and transform matrix
-#define YOLO 0 // Controls whether we use Yolo or not for coloring
-#define TIMING 1
+// ---------------------------------------------------------------------------
+//    FLAGS
+// ---------------------------------------------------------------------------
+#define VIZ 1 // Prints color detection outputs of every point
+#define VERBOSE 0 // Prints transform matrix and transformed pixel of every point
+#define YOLO 0 // 0: HSV Coloring | 1: YOLO Coloring
+#define TIMING 1 // Prints timing suite at end of every callback
+
 
 class Point_To_Pixel_Node : public rclcpp::Node
 {
   public:
-    Point_To_Pixel_Node(); // Constructor declaration
+    // Constructor declaration
+    Point_To_Pixel_Node(); 
 
   private:
     // Image Deque
     std::deque<std::pair<rclcpp::Time, cv::Mat>> img_deque;
-
-    #if YOLO
-      // YOLO Model
-      cv::dnn::Net yolo;
-    #endif
 
     // ROS2 Parameters
     Eigen::Matrix<double, 3, 4> projection_matrix;
@@ -67,20 +66,25 @@ class Point_To_Pixel_Node : public rclcpp::Node
     cv::Scalar orange_filter_low;
 
 
-    // Callbacks / Transform functions
-    void topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
+    // Topic Callback Functions
+    void topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg); 
+    Eigen::Vector2d transform(geometry_msgs::msg::Vector3 &point);
+
+    // Camera Callback Functions
     void camera_callback();
-    Eigen::Vector2d transform(geometry_msgs::msg::Vector3 &point, cv::Mat detections);
+    rclcpp::TimerBase::SharedPtr camera_timer_;
+    cv::Mat getCameraFrame(rclcpp::Time callbackTime);
+    
 
     // Coloring Functions
     #if YOLO
-    int get_yolo_color(Eigen::Vector2d& pixel, cv::Mat image, int cols, int rows);
+          cv::dnn::Net net; // YOLO Model
+      int get_yolo_color(Eigen::Vector2d& pixel, cv::Mat image, int cols, int rows);
+    #else
+      int get_hsv_color(Eigen::Vector2d& pixel, cv::Mat image);
     #endif
-    int get_hsv_color(Eigen::Vector2d& pixel, cv::Mat image);
-    
-    cv::Mat getCameraFrame(rclcpp::Time callbackTime);
 
-    // Parameters
+    // Camera Objects and Parameters
     sl_oc::video::VideoParams params;
     sl_oc::video::VideoCapture cap_0;
     sl_oc::video::VideoCapture cap_1;
@@ -92,13 +96,9 @@ class Point_To_Pixel_Node : public rclcpp::Node
     cv::Mat map_left_x, map_left_y;
     cv::Mat map_right_x, map_right_y;
 
-    // ROS2 Objects
+    // ROS2 Publisher and Subscribers
     rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr publisher_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr subscriber_;
-
-    // Camera Callback(10 frames per second)
-    rclcpp::TimerBase::SharedPtr camera_timer_;
-    
 };
 
 // TODO: FIX ZED static ID per this forum https://github.com/stereolabs/zed-ros-wrapper/issues/94
@@ -110,9 +110,10 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
                                               cap_1(sl_oc::video::VideoCapture(params))
 {
   // ---------------------------------------------------------------------------
-  //    CONFIRM CAMERAS ARE ACCESSIBLE AND PROPERLY DECLARED AND INITIALIZED
+  //                                 CAMERAS
   // ---------------------------------------------------------------------------
 
+  // Second Camera Code
   // // Checks if the video capture object was properly declared and initialized
   // if(!(this->cap_0).initializeVideo(0))
   // {
@@ -120,52 +121,71 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   //   rclcpp::shutdown(); // Shutdown node
   // }
 
-  // RCLCPP_INFO(this->get_logger(), "Connected to ZED camera. %s", (this->cap_0).getDeviceName().c_str());
+  // RCLCPP_INFO(this->get_logger(), "Connected to ZED camera 0. %s", (this->cap_0).getDeviceName().c_str());
 
   // Checks if the video capture object was properly declared and initialized
+
   if(!(this->cap_1).initializeVideo(0))
   {
     RCLCPP_ERROR(this->get_logger(), "Cannot open camera 1 video capture");
     rclcpp::shutdown(); // Shutdown node
   }
 
-  RCLCPP_INFO(this->get_logger(), "Connected to ZED camera. %s", (this->cap_1).getDeviceName().c_str());
+  // Rectify Image
+  int sn = this->cap_1.getSerialNumber();
+
+  // ----> Retrieve calibration file from Stereolabs server
+  std::string calibration_file;
+  // ZED Calibration
+  unsigned int serial_number = sn;
+  // Download camera calibration file
+  if (!sl_oc::tools::downloadCalibrationFile(serial_number, calibration_file))
+  {
+    std::cerr << "Could not load calibration file from Stereolabs servers" << std::endl;
+  }
+
+  // Get Frame size
+  int w, h;
+  this->cap_1.getFrameSize(w, h);
+
+  // Initialize calibration
+  cv::Mat cameraMatrix_left, cameraMatrix_right;
+  sl_oc::tools::initCalibration(calibration_file, cv::Size(w / 2, h), 
+                                this->map_left_x, this->map_left_y, this->map_right_x, this->map_right_y,
+                                cameraMatrix_left, cameraMatrix_right);
+  // Set auto exposure and brightness
+  this->cap_1.setAECAGC(true);
+
+  RCLCPP_INFO(this->get_logger(), "ZED Camera 1 Ready. %s", (this->cap_1).getDeviceName().c_str());
 
   // ---------------------------------------------------------------------------
-  //                           ROS2 PARAMETER INIT
+  //                               PARAMETERS
   // ---------------------------------------------------------------------------
 
+  // Initialize Empty IMG Deque
   this->img_deque = {};
 
-  // Set Parameters
-
   // Projection matrix that takes LiDAR points to pixels
-  std::vector<double> param_default(12, 1.0f); 
+  std::vector<double> param_default(12, 1.0f); // NEED TO CHANGE TO RETRIEVE WHEN BUILDING
   this->declare_parameter("projection_matrix", param_default);
 
   // Threshold that determines whether it reports the color on a cone or not
-  this->declare_parameter("confidence_threshold", .15); 
+  this->declare_parameter("confidence_threshold", 0.05); 
 
   #if YOLO
     // YOLO Stuff
-    this->yolo = cv::dnn::readNetFromONNX("src/point_to_pixel/config/best164.onnx");
+    this->net = cv::dnn::readNetFromONNX("src/point_to_pixel/config/best164.onnx");
 
-    if (this->yolo.empty()) {
+    if (this->net.empty()) {
       RCLCPP_ERROR(this->get_logger(), "Error Loading YOLO Model");
       rclcpp::shutdown();
     }
 
-    RCLCPP_INFO(this->get_logger(), "YOLO Model %s", (this->cap_1).getDeviceName().c_str());
+    RCLCPP_INFO(this->get_logger(), "YOLO Model %s");
     
-    // Change preferable backend if we want to run on GPU
-    this->yolo.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
-    this->yolo.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+    this->net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
+    this->net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
   #endif
-
-  // **TO BE IMPLEMENTED **
-  // Deque size and refresh rate 
-  // Single or dual camera mode
-  // Include calibration? 
 
   std::vector<long int> ly_filter_default{0, 0, 0};
   std::vector<long int> uy_filter_default{0, 0, 0};
@@ -181,8 +201,6 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   this->declare_parameter("blue_filter_low", ub_filter_default);
   this->declare_parameter("orange_filter_high", lo_filter_default);
   this->declare_parameter("orange_filter_low", uo_filter_default);
-
-  // Get parameters
 
   // Load Projection Matrix
   std::vector<double> param = this->get_parameter("projection_matrix").as_double_array();
@@ -210,7 +228,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   rclcpp::sleep_for(duration);
 
   // ---------------------------------------------------------------------------
-  //                            ROS2 OBJECTS SETUP
+  //                              ROS2 OBJECTS
   // ---------------------------------------------------------------------------
   
   // Publisher that returns colored cones
@@ -228,49 +246,18 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
     std::chrono::milliseconds(40),
     [this](){this->camera_callback();}
   );
-  
-  // ---------------------------------------------------------------------------
-  //                  INITIALIZE CAMERA RECTIFICATION MATRIX
-  // ---------------------------------------------------------------------------
-  
-  // Rectify Image
-  int sn = this->cap_1.getSerialNumber();
-
-  // ----> Retrieve calibration file from Stereolabs server
-  std::string calibration_file;
-  // ZED Calibration
-  unsigned int serial_number = sn;
-  // Download camera calibration file
-  if( !sl_oc::tools::downloadCalibrationFile(serial_number, calibration_file) )
-  {
-      std::cerr << "Could not load calibration file from Stereolabs servers" << std::endl;
-  }
-  // ----> Frame size
-  int w,h;
-  this->cap_1.getFrameSize(w,h);
-  // <---- Frame size
-  // ----> Initialize calibration
-  cv::Mat cameraMatrix_left, cameraMatrix_right;
-  sl_oc::tools::initCalibration(calibration_file, cv::Size(w/2,h), this->map_left_x, this->map_left_y, this->map_right_x, this->map_right_y,
-                                cameraMatrix_left, cameraMatrix_right);
 
   // ---------------------------------------------------------------------------
-  //               GRAB ONE FREEZE FRAME FOR CALIBRATION.PY SCRIPT
+  //                       INITIALIZATION COMPLETE SEQUENCE
   // ---------------------------------------------------------------------------
-  this->cap_1.setAECAGC(true);
-
+  // Retrieve freeze frame for calibration
   const sl_oc::video::Frame frame_1 = this->cap_1.getLastFrame();
 
   cv::Mat frameBGR_1, left_raw, left_rect, right_raw, right_rect;
   if (frame_1.data != nullptr){
-      // ----> Conversion from YUV 4:2:2 to BGR for visualization
-      // cv::Mat frameYUV_0 = cv::Mat(frame_0.height, frame_0.width, CV_8UC2, frame_0.data);
       cv::Mat frameYUV_1 = cv::Mat(frame_1.height, frame_1.width, CV_8UC2, frame_1.data);
 
       cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
-      // <---- Conversion from YUV 4:2:2 to BGR for visualization
-      // cv::Rect roi(0, 0, 1280, 720);
-      // frameBGR_1 = frameBGR_1(roi);
 
       // ----> Extract left and right images from side-by-side
       left_raw = frameBGR_1(cv::Rect(0, 0, frameBGR_1.cols / 2, frameBGR_1.rows));
@@ -283,10 +270,11 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
       frameBGR_1(cv::Rect(frameBGR_1.cols / 2, 0, frameBGR_1.cols / 2, frameBGR_1.rows)) = right_rect;
       
   }
-
+  // Save freeze.png
   cv::imwrite("/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/freeze.png", left_rect);
 
-  // Initialization complete msg
+
+  // Initialization Complete Message Suite
   RCLCPP_INFO(this->get_logger(), "Point to Pixel Node INITIALIZED");
   #if VERBOSE
     RCLCPP_INFO(this->get_logger(), "Verbose Logging On");
@@ -298,12 +286,8 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   #endif
 };
 
-// Point to Pixel coordinate transform
-// returns 0 for blue cone, 1 for yellow cone, and 2 for orange cone
-Eigen::Vector2d Point_To_Pixel_Node::transform(
-  geometry_msgs::msg::Vector3& point, 
-  cv::Mat detections
-  )
+// Maps 3D point to 2D Pixel
+Eigen::Vector2d Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
 {
 
   #if VERBOSE
@@ -337,61 +321,31 @@ Eigen::Vector2d Point_To_Pixel_Node::transform(
 // Returns closest frame to callback time
 cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
 {
-  // Set as int max
+  // Initialize Variables
   int64 bestDiff = INT64_MAX;
-  // Returned Frame
   cv::Mat closestFrame;
   
-  // For debugging
-  int index = 0;
-  int bestFrameIndex = 0;
-
-  #if VERBOSE
-    RCLCPP_INFO(this->get_logger(), "getCameraFrame called with time: %ld", 
-                                  callbackTime.nanoseconds());
-  #endif
-  
-  // If Deque is empty we have nothing to transform to
+  // Check if deque empty
   if (this->img_deque.empty()) {
     RCLCPP_ERROR(this->get_logger(), "Image deque is empty! Cannot find matching frame.");
     return cv::Mat(); // Return empty matrix
   }
 
-  // Iterate through deque
+  // Iterate through deque, simple best diff calculation
   for (const auto& frame: this->img_deque) {
     int64 timeDiff = abs(frame.first.nanoseconds() - callbackTime.nanoseconds());
 
     if (timeDiff < bestDiff) {
       closestFrame = frame.second;
       bestDiff = timeDiff;
-      bestFrameIndex = index;
     }
-    index++;
   }
-  
-  // Set threshold
-  if (closestFrame.empty()) {
-    RCLCPP_ERROR(this->get_logger(), "Could not get frame");
-    return cv::Mat();
-  }
-  
-  #if VERBOSE
-    RCLCPP_INFO(this->get_logger(), "Best frame:%d | REQ-FRAME Time diff: %ld nanoseconds", 
-              bestFrameIndex, bestDiff);
-  #endif
   
   return closestFrame;
 }
 
-#if VIZ
-  std::string pairToString(std::pair<cv::Scalar, cv::Scalar>& p) {
-    std::stringstream ss;
-    ss << "([" << std::to_string(p.first[0]) << ", " << std::to_string(p.first[1])<< ", " << std::to_string(p.first[2]) << "], [" << std::to_string(p.second[0]) <<  ", " << std::to_string(p.second[1]) << ", " << std::to_string(p.second[2]) << "])";
-    return ss.str();
-  }
-#endif
-
 #if YOLO
+  // Checks if pixel in bounding box, returns bounding box with highest score
   int Point_To_Pixel_Node::get_yolo_color(Eigen::Vector2d& pixel, cv::Mat detections, int cols, int rows)
   {
     int x = static_cast<int>(pixel(0));
@@ -458,10 +412,13 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
   }
 #endif
 
-
-// Identifies Color from a camera pixel
+// Applies HSV Filter to image frame
+// Returns max of all colored pixels within ROI 
 int Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img)
 {
+  // Ratio of color in relation to all other colors
+  const double RATIO_THRESHOLD = 1.5;
+
   // Setup region of interest
   int side_length = 25;
   int x = static_cast<int>(pixel(0));
@@ -474,16 +431,12 @@ int Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img)
   int y_max = std::min(height, y + side_length);
 
   #if VIZ
-    std::pair<cv::Scalar, cv::Scalar> _y = {this->yellow_filter_low, this->yellow_filter_high};
-    std::cout << pairToString(_y) << std::endl;
+    // Checks if transformed point is out of Frame
     RCLCPP_INFO(this->get_logger(), "point out of frame? (y_min >= y_max): %d, %d, %s", y_min, y_max, y_min >= y_max ? "true": "false");
     RCLCPP_INFO(this->get_logger(), "point out of frame? (x_min >= x_max): %d, %d, %s", x_min, x_max, x_min >= x_max ? "true": "false");
   #endif
 
-  // #if TIMING
-  //   auto start_time = high_resolution_clock::now();
-  // #endif
-
+  // Transformed point out of frame
   if (x_min >= x_max || y_min >= y_max) {
       return -1;
   }
@@ -497,28 +450,15 @@ int Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img)
   std::vector<std::pair<cv::Scalar, cv::Scalar>> yellow_ranges = {
     {this->yellow_filter_low, this->yellow_filter_high}
   };
-  // {
-  //     {cv::Scalar(18, 50, 50), cv::Scalar(35, 255, 255)},
-  //     {cv::Scalar(22, 40, 40), cv::Scalar(38, 255, 255)},
-  //     {cv::Scalar(25, 30, 30), cv::Scalar(35, 255, 255)}
-  // };
+
   std::vector<std::pair<cv::Scalar, cv::Scalar>> blue_ranges = {
     {this->blue_filter_low, this->blue_filter_high}
   };
-  // {
-  //     {cv::Scalar(100, 50, 50), cv::Scalar(130, 255, 255)},
-  //     {cv::Scalar(110, 50, 50), cv::Scalar(130, 255, 255)},
-  //     {cv::Scalar(90, 50, 50), cv::Scalar(110, 255, 255)},
-  //     {cv::Scalar(105, 30, 30), cv::Scalar(125, 255, 255)}
-  // };
+
   std::vector<std::pair<cv::Scalar, cv::Scalar>> orange_ranges = {
     {this->orange_filter_low, this->orange_filter_high}
   };
-  // {
-  //     {cv::Scalar(0, 100, 100), cv::Scalar(15, 255, 255)},
-  //     {cv::Scalar(160, 100, 100), cv::Scalar(179, 255, 255)},
-  //     {cv::Scalar(5, 120, 120), cv::Scalar(15, 255, 255)}
-  // };
+
 
   // Create color masks
   cv::Mat yellow_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
@@ -550,30 +490,18 @@ int Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img)
   double orange_percentage = orange_pixels / total_pixels;
 
   // Print out the color percentages
-  #if VERBOSE
+  #if VIZ
     std::cout << "Yellow Percentage: " << yellow_percentage * 100 << "%" << std::endl;
     std::cout << "Blue Percentage: " << blue_percentage * 100 << "%" << std::endl;
     std::cout << "Orange Percentage: " << orange_percentage * 100 << "%" << std::endl;
   #endif
 
-  const double MIN_CONFIDENCE = 0.05;
-  const double RATIO_THRESHOLD = 1.5;
-
-  // #if TIMING
-  //   auto end_time = high_resolution_clock::now();
-
-  //   /* Getting number of milliseconds as an integer. */
-  //   duration<double, std::milli> ms_double = end_time - start_time;
-
-  //   RCLCPP_INFO(this->get_logger(), "Time for Coloring: %lf ms. Y: %lf, B: %lf, O: %lf", ms_double, yellow_pixels, blue_pixels, orange_pixels);
-  // #endif
-
   // Determine cone color
-  if (orange_percentage > MIN_CONFIDENCE && orange_percentage > std::max(yellow_percentage, blue_percentage) * RATIO_THRESHOLD) {
+  if (orange_percentage > this->CONFIDENCE_THRESHOLD && orange_percentage > std::max(yellow_percentage, blue_percentage) * RATIO_THRESHOLD) {
       return 0;
-  } else if (yellow_percentage > MIN_CONFIDENCE && yellow_percentage > std::max(blue_percentage, orange_percentage) * RATIO_THRESHOLD) {
+  } else if (yellow_percentage > this->CONFIDENCE_THRESHOLD && yellow_percentage > std::max(blue_percentage, orange_percentage) * RATIO_THRESHOLD) {
       return 1;
-  } else if (blue_percentage > MIN_CONFIDENCE && blue_percentage > std::max(yellow_percentage, orange_percentage) * RATIO_THRESHOLD) {
+  } else if (blue_percentage > this->CONFIDENCE_THRESHOLD && blue_percentage > std::max(yellow_percentage, orange_percentage) * RATIO_THRESHOLD) {
       return 2;
   }
   return -1;
@@ -583,13 +511,14 @@ int Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img)
 // Topic callback definition
 void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
 {
+  // Logging Actions
   #if TIMING
     auto start_time = high_resolution_clock::now();
     int64_t ms_time_since_lidar_2 = (this->get_clock()->now().nanoseconds() - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1000;
   #endif
-
   RCLCPP_INFO(this->get_logger(), "Received message with %zu cones", msg->cone_array.size());
 
+  // Message Definition
   interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
   message.header = msg->header;
   message.orig_data_stamp = msg->header.stamp; 
@@ -599,7 +528,7 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   message.unknown_color_cones = std::vector<geometry_msgs::msg::Point> {};
   geometry_msgs::msg::Point point_msg;
 
-  // Get camera frame that is closest to time of LiDAR point
+  // Retrieve Camera Frame
   cv::Mat frameBGR_1 = this->getCameraFrame(msg->header.stamp);
 
   #if TIMING
@@ -607,34 +536,36 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   #endif
 
   #if YOLO
-    // Pre-Processing
+    // YOLO Pre-Processing
     cv::Mat blob;
     cv::dnn::blobFromImage(frameBGR_1, blob, 1 / 255.0, cv::Size(640, 640), cv::Scalar(), true, false);
-    this->yolo.setInput(blob);
+    this->net.setInput(blob);
 
+    // Forward blob through model
     std::vector<cv::Mat> outputs;
-    this->yolo.forward(outputs, this->yolo.getUnconnectedOutLayersNames());
+    this->net.forward(outputs, this->net.getUnconnectedOutLayersNames());
 
-    // Process detections
+    // Isolate detection outputs
     cv::Mat detections = outputs[0];
   #endif
 
+  // Timing Variables
   #if TIMING
     int transform_time = 0;
     int coloring_time = 0;
   #endif
 
+  // Iterate through all points in /cpp_cones message
   for (int i = 0; i < msg->cone_array.size(); i++){
     #if TIMING
       auto loop_start = high_resolution_clock::now();
     #endif
-
-    RCLCPP_INFO(this->get_logger(), "point cloud x y z is %f %f %f", msg->cone_array[i].cone_points[0].x, msg->cone_array[i].cone_points[0].y, msg->cone_array[i].cone_points[0].z);
       
     // Transform Point
-    Eigen::Vector2d pixel_1 = this->transform(msg->cone_array[i].cone_points[0], frameBGR_1);
+    Eigen::Vector2d pixel_1 = this->transform(msg->cone_array[i].cone_points[0]);
 
     #if TIMING
+      // Time for transform
       auto loop_transform = high_resolution_clock::now();
       transform_time = transform_time + std::chrono::duration_cast<std::chrono::microseconds>(loop_transform - loop_start).count();
     #endif
@@ -647,6 +578,7 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     #endif
 
     #if TIMING
+      // Time for coloring
       auto loop_coloring = high_resolution_clock::now();
       coloring_time = transform_time + std::chrono::duration_cast<std::chrono::microseconds>(loop_coloring - loop_transform).count();
     #endif
@@ -656,29 +588,34 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     point_msg.z = 0.0;
   
     #if VIZ
-      RCLCPP_INFO(this->get_logger(), "%d", cone_class);
+    RCLCPP_INFO(this->get_logger(), "Cone: Color %d, 2D[ x:%lf y:%lf ] from 3D[ x:%lf y:%lf z:%lf ]",
+                cone_class, pixel_1[0], pixel_1[1],
+                msg->cone_array[i].cone_points[0].x, msg->cone_array[i].cone_points[0].y, msg->cone_array[i].cone_points[0].z);
     #endif
 
     switch (cone_class){
       case 0:
-        #if VERBOSE
+        #if VIZ
           std::cout << "orange\n" ;
         #endif
         message.orange_cones.push_back(point_msg);
         break;
       case 1:
-        #if VERBOSE
+        #if VIZ
           std::cout << "yellow\n" ;
         #endif
         message.yellow_cones.push_back(point_msg);
         break;
       case 2:
-        #if VERBOSE
+        #if VIZ
           std::cout << "blue\n" ;
         #endif
         message.blue_cones.push_back(point_msg);
         break;
       default:
+        #if VIZ
+          std::cout << "unknown\n";
+        #endif
         message.unknown_color_cones.push_back(point_msg);
         break;
     }
@@ -724,26 +661,26 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
 // Camera Callback (Populates and maintain deque)
 void Point_To_Pixel_Node::camera_callback()
 {
+  int MAX_DEQUE_SIZE = 10;
   this->frame_1 = this->cap_1.getLastFrame();
 
-  cv::Mat frameBGR_1, left_raw, left_rect; //, right_raw, right_rect;
+  cv::Mat frameBGR_1, left_raw, left_rect;
 
-  if (frame_1.data != nullptr){
+  // Format Frame
+  if (frame_1.data != nullptr) {
     cv::Mat frameYUV_1 = cv::Mat(frame_1.height, frame_1.width, CV_8UC2, frame_1.data);
     cv::cvtColor(frameYUV_1,frameBGR_1,cv::COLOR_YUV2BGR_YUYV);
     left_raw = frameBGR_1(cv::Rect(0, 0, frameBGR_1.cols / 2, frameBGR_1.rows));
-    // right_raw = frameBGR_1(cv::Rect(frameBGR_1.cols / 2, 0, frameBGR_1.cols / 2, frameBGR_1.rows));
     
     // ----> Apply rectification
     cv::remap(left_raw, left_rect, this->map_left_x, this->map_left_y, cv::INTER_LINEAR);
-    // cv::remap(right_raw, right_rect, this->map_right_x, this->map_right_y, cv::INTER_LINEAR);
     frameBGR_1 = left_rect;
   } else {
     RCLCPP_ERROR(this->get_logger(), "Failed to capture frame from camera 1.");
   }
 
   // Deque Management and Updating
-  if (img_deque.size() < 10) {
+  if (img_deque.size() < MAX_DEQUE_SIZE) {
     rclcpp::Time time = this->get_clock()->now();
     this->img_deque.push_back(std::make_pair(time, frameBGR_1));
   } else
@@ -757,7 +694,7 @@ void Point_To_Pixel_Node::camera_callback()
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-
+  // Multithreading for timer callback
   rclcpp::executors::MultiThreadedExecutor executor;
   rclcpp::Node::SharedPtr node = std::make_shared<Point_To_Pixel_Node>();
   executor.add_node(node);
