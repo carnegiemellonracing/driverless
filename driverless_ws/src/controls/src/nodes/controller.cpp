@@ -394,10 +394,10 @@ namespace controls {
                                 ActionSignal last_action_signal = m_last_action_signal;
                                 sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                 auto end = std::chrono::steady_clock::now();
-                                RCLCPP_WARN(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+                                RCLCPP_DEBUG(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
 
                                 sendPIDConstants(m_p_value, 0);
-                                RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
+                                RCLCPP_DEBUG(get_logger(), "send Kp %f", m_p_value);
                             }
                         }
                         std::cout << "I just got terminated in another way lol\n";

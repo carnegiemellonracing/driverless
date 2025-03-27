@@ -327,6 +327,8 @@ conesList cones_to_midline(Cones cones)
     // check if there are no blue or yellow cones
     const auto &blue_cones = cones.getBlueCones();
     const auto &yellow_cones = cones.getYellowCones();
+    int original_blue_cone_count = blue_cones.size();
+    int original_yellow_cone_count = yellow_cones.size();
 
     if (blue_cones.empty() && yellow_cones.empty())
     {
@@ -337,8 +339,6 @@ conesList cones_to_midline(Cones cones)
     // augment dataset to make it better for SVM training
     cones.supplementCones();
     cones = cones.augmentConesCircle(cones, cone_augmentation_angle, 1.2);
-    std::cout << "blue cones size after augmenting: " << cones.getBlueCones().size() << std::endl;
-    std::cout << "yellow cones size after augmenting: " << cones.getYellowCones().size() << std::endl;
 
     // acquire the feature matrix and label vector
     std::pair<std::vector<std::vector<double>>, std::vector<double>> xy = cones.conesToXY(cones);
@@ -517,19 +517,27 @@ conesList cones_to_midline(Cones cones)
     auto total_duration = duration_cast<microseconds>(total_end - total_start);
     auto total_ms = total_duration.count() / 1000.0;
 
-    // Print timing breakdown with percentages
-    std::cout << "\n=== Timing Breakdown (LAZY) ===\n";
-    std::cout << "Number of cones trained on: " << prob.l << "\n";
-    std::cout << "Mesh grid size:             " << xx.size() << " x " << xx[0].size() << "\n";
-    std::cout << "Boundary points size: " << boundary_points.size() << "\n";
-    std::cout << std::fixed << std::setprecision(2);
-    std::cout << "Data preparation:     " << prep_ms << " ms (" << (prep_ms / total_ms * 100.0) << "%)\n";
-    std::cout << "SVM setup:           " << setup_ms << " ms (" << (setup_ms / total_ms * 100.0) << "%)\n";
-    std::cout << "SVM training:        " << train_ms << " ms (" << (train_ms / total_ms * 100.0) << "%)\n";
-    std::cout << "Mesh grid/predict:   " << mesh_ms << " ms (" << (mesh_ms / total_ms * 100.0) << "%)\n";
-    std::cout << "Boundary processing: " << boundary_ms << " ms (" << (boundary_ms / total_ms * 100.0) << "%)\n";
-    std::cout << "Total execution:     " << total_ms << " ms (100%)\n";
-    std::cout << "=====================\n\n";
+    if constexpr (print_svm_timing) {
+
+        // Print timing breakdown with percentages
+        std::cout << "\n=== Timing Breakdown (LAZY) ===\n";
+        std::cout << "blue cones size before augmenting: " << original_blue_cone_count << std::endl;
+        std::cout << "yellow cones size before augmenting: " << original_yellow_cone_count << std::endl;
+        std::cout << "blue cones size after augmenting: " << cones.getBlueCones().size() << std::endl;
+        std::cout << "yellow cones size after augmenting: " << cones.getYellowCones().size() << std::endl;
+        std::cout << "Number of cones trained on: " << prob.l << "\n";
+        std::cout << "Mesh grid size:             " << xx.size() << " x " << xx[0].size() << "\n";
+        std::cout << "Boundary points size: " << boundary_points.size() << "\n";
+        std::cout << std::fixed << std::setprecision(2);
+        std::cout << "Data preparation:     " << prep_ms << " ms (" << (prep_ms / total_ms * 100.0) << "%)\n";
+        std::cout << "SVM setup:           " << setup_ms << " ms (" << (setup_ms / total_ms * 100.0) << "%)\n";
+        std::cout << "SVM training:        " << train_ms << " ms (" << (train_ms / total_ms * 100.0) << "%)\n";
+        std::cout << "Mesh grid/predict:   " << mesh_ms << " ms (" << (mesh_ms / total_ms * 100.0) << "%)\n";
+        std::cout << "Boundary processing: " << boundary_ms << " ms (" << (boundary_ms / total_ms * 100.0) << "%)\n";
+        std::cout << "Total execution:     " << total_ms << " ms (100%)\n";
+        std::cout << "=====================\n\n";
+
+    }
 
     return downsampled;
 }
