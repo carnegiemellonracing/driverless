@@ -19,6 +19,8 @@
 #include <string>
 #include <filesystem>
 #include <cmath>
+#include <unordered_set>
+#include <algorithm>
 
 using std::chrono::duration;
 using std::chrono::duration_cast;
@@ -44,6 +46,13 @@ using std::placeholders::_1;
 #define YOLO 0 // 0: HSV Coloring | 1: YOLO Coloring
 #define TIMING 1 // Prints timing suite at end of every callback
 
+struct Cone {
+    geometry_msgs::msg::Point point;
+    double distance
+    Cone(const geometry_msgs::msg::Point& p) : point(p) {
+        distance = std::sqrt(p.x * p.x + p.y * p.y);
+    }
+};
 
 class Point_To_Pixel_Node : public rclcpp::Node
 {
@@ -99,6 +108,10 @@ class Point_To_Pixel_Node : public rclcpp::Node
     // ROS2 Publisher and Subscribers
     rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr publisher_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr subscriber_;
+
+    Cone findClosestCone(const std::vector<Cone>& cones);
+    double calculateAngle(const Cone& from, const Cone& to);
+    std::vector<Cone> orderConesByPathDirection(const std::vector<Cone>& unordered_cones);
 };
 
 // TODO: FIX ZED static ID per this forum https://github.com/stereolabs/zed-ros-wrapper/issues/94
@@ -507,6 +520,72 @@ int Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img)
   return -1;
 }
 
+Cone Point_To_Pixel_Node::findClosestCone(const std::vector<Cone>& cones) {
+    if (cones.empty()) {
+        throw std::runtime_error("Empty cone list");
+    }
+    
+    return *std::min_element(cones.begin(), cones.end(),
+        [](const Cone& a, const Cone& b) {
+            return a.distance < b.distance;
+        });
+}
+
+double Point_To_Pixel_Node::calculateAngle(const Cone& from, const Cone& to) {
+    return std::atan2(to.point.y - from.point.y, to.point.x - from.point.x);
+}
+
+std::vector<Cone> Point_To_Pixel_Node::orderConesByPathDirection(const std::vector<Cone>& unordered_cones) {
+    if (unordered_cones.size() <= 1) {
+        return unordered_cones;
+    }
+
+    std::vector<Cone> ordered_cones;
+    std::vector<Cone> remaining_cones = unordered_cones;
+    
+    // Start with the closest cone to origin
+    Cone current_cone = findClosestCone(remaining_cones);
+    ordered_cones.push_back(current_cone);
+    
+    // Remove the first cone from remaining cones
+    remaining_cones.erase(
+        std::remove_if(remaining_cones.begin(), remaining_cones.end(),
+            [&current_cone](const Cone& c) {
+                return c.point.x == current_cone.point.x && 
+                       c.point.y == current_cone.point.y;
+            }), 
+        remaining_cones.end());
+
+    double prev_angle = std::atan2(current_cone.point.y, current_cone.point.x);
+
+    while (!remaining_cones.empty()) {
+        // Find next best cone based on distance and angle continuation
+        auto next_cone_it = std::min_element(remaining_cones.begin(), remaining_cones.end(),
+            [&](const Cone& a, const Cone& b) {
+                double angle_a = calculateAngle(current_cone, a);
+                double angle_b = calculateAngle(current_cone, b);
+                
+                // Calculate angle differences
+                double angle_diff_a = std::abs(angle_a - prev_angle);
+                double angle_diff_b = std::abs(angle_b - prev_angle);
+                
+                // Combine distance and angle criteria
+                double score_a = 0.7 * (a.distance / current_cone.distance) + 
+                               0.3 * angle_diff_a;
+                double score_b = 0.7 * (b.distance / current_cone.distance) + 
+                               0.3 * angle_diff_b;
+                
+                return score_a < score_b;
+            });
+
+        current_cone = *next_cone_it;
+        ordered_cones.push_back(current_cone);
+        prev_angle = calculateAngle(ordered_cones[ordered_cones.size()-2], current_cone);
+        remaining_cones.erase(next_cone_it);
+    }
+
+    return ordered_cones;
+}
 
 // Topic callback definition
 void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
@@ -554,6 +633,9 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     int transform_time = 0;
     int coloring_time = 0;
   #endif
+
+  std::vector<Cone> unordered_yellow_cones;
+  std::vector<Cone> unordered_blue_cones;
 
   // Iterate through all points in /cpp_cones message
   for (int i = 0; i < msg->cone_array.size(); i++){
@@ -604,13 +686,13 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
         #if VIZ
           std::cout << "yellow\n" ;
         #endif
-        message.yellow_cones.push_back(point_msg);
+        unordered_yellow_cones.push_back(Cone(point_msg));
         break;
       case 2:
         #if VIZ
           std::cout << "blue\n" ;
         #endif
-        message.blue_cones.push_back(point_msg);
+        unordered_blue_cones.push_back(Cone(point_msg));
         break;
       default:
         #if VIZ
@@ -636,6 +718,20 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     "Transform callback triggered. Published %d cones. %d yellow, %d blue, %d orange, and %d unknown.", 
     cones_published, yellow_cones, blue_cones, orange_cones, unknown_color_cones
   );
+
+  if (!unordered_yellow_cones.empty()) {
+    std::vector<Cone> ordered_yellow = orderConesByPathDirection(unordered_yellow_cones);
+    for (const auto& cone : ordered_yellow) {
+      message.yellow_cones.push_back(cone.point);
+    }
+  }
+
+  if (!unordered_blue_cones.empty()) {
+    std::vector<Cone> ordered_blue = orderConesByPathDirection(unordered_blue_cones);
+    for (const auto& cone : ordered_blue) {
+      message.blue_cones.push_back(cone.point);
+    }
+  }
 
   #if TIMING
     auto end_time = high_resolution_clock::now();
