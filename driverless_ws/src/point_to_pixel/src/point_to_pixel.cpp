@@ -39,7 +39,7 @@ using std::placeholders::_1;
 // ---------------------------------------------------------------------------
 //    FLAGS
 // ---------------------------------------------------------------------------
-#define VIZ 1 // Prints color detection outputs of every point
+#define VIZ 0 // Prints color detection outputs of every point
 #define VERBOSE 0 // Prints transform matrix and transformed pixel of every point
 #define YOLO 0 // 0: HSV Coloring | 1: YOLO Coloring
 #define TIMING 1 // Prints timing suite at end of every callback

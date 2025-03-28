@@ -66,6 +66,21 @@ target_compile_definitions(zed_node PUBLIC VIDEO_MOD_AVAILABLE)
 install(TARGETS point_to_pixel zed_node
   DESTINATION lib/${PROJECT_NAME})
 
+# Install wrapper script
+install(
+  FILES scripts/p2p.sh
+  DESTINATION lib/${PROJECT_NAME}
+  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+)
+
+# Install config files
+install(
+  DIRECTORY 
+  config/
+  DESTINATION share/${PROJECT_NAME}/config
+)
+
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
