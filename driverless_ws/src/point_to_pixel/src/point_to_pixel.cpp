@@ -48,7 +48,7 @@ using std::placeholders::_1;
 
 struct Cone {
     geometry_msgs::msg::Point point;
-    double distance
+    double distance;
     Cone(const geometry_msgs::msg::Point& p) : point(p) {
         distance = std::sqrt(p.x * p.x + p.y * p.y);
     }
