@@ -99,7 +99,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
   PointCloud<PointXYZ> output;
 
   // Parse all points from XYZ to radial,Z and separate into bins
-  int csize = cloud.points.size();
+  int csize = cloud.points.size();git 
   for (int i = 0; i < csize; i++) {
     PointXYZ pt = cloud.points[i];
     radial_t rd = point2radial(pt);
