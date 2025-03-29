@@ -111,9 +111,9 @@ inline PointCloud<PointXYZ> GraceAndConrad(const LidarDecodedFrame<LidarPointXYZ
     }
 
     // Post-filter output
-    radial_t rd = radial(point.x, point.y, point.z);
+    radial_t rd = radial_t(point.x, point.y, point.z);
 
-    if (rd.radius < radius_max && (pt.y) < 0.5 && pt.y > -1.5) {
+    if (rd.radius < radius_max) {
       int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
       int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
       if (seg_index < 0)
