@@ -45,6 +45,9 @@ using std::placeholders::_1;
 #define TIMING 1 // Prints timing suite at end of every callback
 #define INNER 1 // Uses inner lens of ZEDS (if 0 uses the outer lens)
 
+static constexpr int yolo_h 640;
+static constexpr int yolo_w 640;
+static constexpr int max_deque_size = 10;
 
 class Point_To_Pixel_Node : public rclcpp::Node
 {
@@ -61,7 +64,7 @@ class Point_To_Pixel_Node : public rclcpp::Node
     Eigen::Matrix<double, 3, 4> projection_matrix0;
     Eigen::Matrix<double, 3, 4> projection_matrix1;
 
-    double CONFIDENCE_THRESHOLD;
+    double confidence_threshold;
     cv::Scalar yellow_filter_high;
     cv::Scalar yellow_filter_low;
     cv::Scalar blue_filter_high;
@@ -189,11 +192,10 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   this->img_deque1 = {};
 
   // Projection matrix that takes LiDAR points to pixels
-  std::vector<double> param_default0(12, 1.0f); 
-  std::vector<double> param_default1(12, 1.0f);
+  std::vector<double> param_default(12, 1.0f); 
 
-  this->declare_parameter("projection_matrix0", param_default0);
-  this->declare_parameter("projection_matrix1", param_default1);
+  this->declare_parameter("projection_matrix0", param_default);
+  this->declare_parameter("projection_matrix1", param_default);
 
   // Threshold that determines whether it reports the color on a cone or not
   this->declare_parameter("confidence_threshold", 0.05);
@@ -233,8 +235,27 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   this->projection_matrix0 = Eigen::Map<Eigen::Matrix<double, 3, 4, Eigen::RowMajor>>(param0.data());
   this->projection_matrix1 = Eigen::Map<Eigen::Matrix<double, 3, 4, Eigen::RowMajor>>(param1.data());
 
+  #if VERBOSE
+    // Create a stringstream to log the matrix
+    std::stringstream ss0;
+    std::stringstream ss1;
+
+    // Iterate over the rows and columns of the matrix and format the output
+    for (int i = 0; i < this->projection_matrix0.rows(); ++i){
+      for (int j = 0; j < this->projection_matrix0.cols(); ++j){
+        ss0 << this->projection_matrix0(i, j) << " ";
+        ss1 << this->projection_matrix1(i, j) << " ";
+      }
+      ss0 << "\n";
+      ss1 << "\n";
+    }
+    // Log the projection_matrix using ROS 2 logger
+    RCLCPP_INFO(this->get_logger(), "Projection Matrix 0:\n%s", ss0.str().c_str());
+    RCLCPP_INFO(this->get_logger(), "Projection Matrix 1:\n%s", ss1.str().c_str());
+  #endif
+
   // Load Confidence Threshold
-  this->CONFIDENCE_THRESHOLD = this->get_parameter("confidence_threshold").as_double();
+  this->confidence_threshold = this->get_parameter("confidence_threshold").as_double();
 
   // Load Color Filter Params
   std::vector<long int> uy_filt_arr = this->get_parameter("yellow_filter_high").as_integer_array();
@@ -344,26 +365,6 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 // Maps 3D point to 2D Pixel
 std::pair<Eigen::Vector2d, Eigen::Vector2d> Point_To_Pixel_Node::transform(geometry_msgs::msg::Vector3& point)
 {
-
-  #if VERBOSE
-    // Create a stringstream to log the matrix
-    std::stringstream ss0;
-    std::stringstream ss1;
-
-    // Iterate over the rows and columns of the matrix and format the output
-    for (int i = 0; i < this->projection_matrix0.rows(); ++i){
-      for (int j = 0; j < this->projection_matrix0.cols(); ++j){
-        ss0 << this->projection_matrix0(i, j) << " ";
-        ss1 << this->projection_matrix1(i, j) << " ";
-      }
-      ss0 << "\n";
-      ss1 << "\n";
-    }
-    // Log the projection_matrix using ROS 2 logger
-    RCLCPP_INFO(this->get_logger(), "Projection Matrix 0:\n%s", ss0.str().c_str());
-    RCLCPP_INFO(this->get_logger(), "Projection Matrix 1:\n%s", ss1.str().c_str());
-  #endif
-
   // Convert point from topic type (geometry_msgs/msg/Vector3) to Eigen Vector3d
   Eigen::Vector4d lidar_pt(point.x, point.y, point.z, 1.0);
 
@@ -383,8 +384,8 @@ std::pair<Eigen::Vector2d, Eigen::Vector2d> Point_To_Pixel_Node::transform(geome
 std::pair<cv::Mat, cv::Mat> Point_To_Pixel_Node::get_camera_frame(rclcpp::Time callbackTime)
 {
   // Initialize Variables
-  int64 bestDiff0 = INT64_MAX;
-  int64 bestDiff1 = INT64_MAX;
+  int64_t bestDiff0 = INT64_MAX;
+  int64_t bestDiff1 = INT64_MAX;
 
   cv::Mat closestFrame0;
   cv::Mat closestFrame1;
@@ -434,150 +435,138 @@ std::pair<cv::Mat, cv::Mat> Point_To_Pixel_Node::get_camera_frame(rclcpp::Time c
 }
 
 #if YOLO
-  // Checks if pixel in bounding box, returns bounding box with highest score
-  std::pair<int, double> Point_To_Pixel_Node::get_yolo_color(Eigen::Vector2d& pixel, cv::Mat detection, int cols, int rows)
+// Checks if pixel in bounding box, returns bounding box with highest score
+std::pair<int, double> Point_To_Pixel_Node::get_yolo_color(Eigen::Vector2d& pixel, cv::Mat detection, int cols, int rows)
+{
+  int x = static_cast<int>(pixel(0));
+  int y = static_cast<int>(pixel(1));
+
+  // Post Processing
+  const float x_factor = cols / static_cast<float>(yolo_w);
+  const float y_factor = rows / static_cast<float>(yolo_h);
+
+  // Loop through all detection
+  for (int i = 0; i < detection.rows; ++i) 
   {
-    int x = static_cast<int>(pixel(0));
-    int y = static_cast<int>(pixel(1));
+    double confidence = detection.at<double>(i, 4);
 
-    // Post Processing
-    const float x_factor = cols / 640.0;
-    const float y_factor = rows / 640.0;
-
-    // Loop through all detection
-    for (int i = 0; i < detection.rows; ++i) 
+    if (confidence >= this->confidence_threshold)
     {
-      double confidence = detection.at<double>(i, 4);
-
-      if (confidence >= this->CONFIDENCE_THRESHOLD)
+      // Get bounding box coordinates
+      float cx = detection.at<float>(i, 0) * x_factor;
+      float cy = detection.at<float>(i, 1) * y_factor;
+      float width = detection.at<float>(i, 2) * x_factor;
+      float height = detection.at<float>(i, 3) * y_factor;
+      
+      // Calculate the bounding box corners
+      float left = cx - width/2;
+      float top = cy - height/2;
+      float right = cx + width/2;
+      float bottom = cy + height/2;
+      
+      // If pixel is inside the bounding box
+      if (left <= x && x <= right && top <= y && y <= bottom)
       {
-        // Get bounding box coordinates
-        float cx = detection.at<float>(i, 0) * x_factor;
-        float cy = detection.at<float>(i, 1) * y_factor;
-        float width = detection.at<float>(i, 2) * x_factor;
-        float height = detection.at<float>(i, 3) * y_factor;
+        // Find the highest class score
+        double max_class_score = 0;
+        int class_id = -1;
         
-        // Calculate the bounding box corners
-        float left = cx - width/2;
-        float top = cy - height/2;
-        float right = cx + width/2;
-        float bottom = cy + height/2;
-        
-        // If pixel is inside the bounding box
-        if (left <= x && x <= right && top <= y && y <= bottom)
+        // Assuming class scores start after index 5 (++j)
+        for (int j = 5; j < detection.cols; ++j) 
         {
-          // Find the highest class score
-          double max_class_score = 0;
-          int class_id = -1;
-          
-          // Assuming class scores start after index 5 (++j)
-          for (int j = 5; j < detection.cols; ++j) 
+          double class_score = detection.at<float>(i, j);
+          if (class_score > max_class_score) 
           {
-            double class_score = detection.at<float>(i, j);
-            if (class_score > max_class_score) 
-            {
-              max_class_score = class_score;
-              class_id = j - 5;  // Adjust index to get the actual class ID
-            }
+            max_class_score = class_score;
+            class_id = j - 5;  // Adjust index to get the actual class ID
           }
-          
-          // Map class_id to cone color IDK WHAT THE CLASS_ID'S ARE
-          int cone_color = -1;
-          if (class_id >= 0) {
-            switch(class_id) {
-              case 0: cone_color = 0; break;  // Orange cone
-              case 1: cone_color = 1; break;  // Yellow cone
-              case 2: cone_color = 2; break;  // Blue cone
-              default: cone_color = -1; break; // Unknown
-            }
-            return std::make_pair(cone_color, confidence);
+        }
+        
+        // Map class_id to cone color IDK WHAT THE CLASS_ID'S ARE
+        int cone_color = -1;
+        if (class_id >= 0) {
+          switch(class_id) {
+            case 0: cone_color = 0; break;  // Orange cone
+            case 1: cone_color = 1; break;  // Yellow cone
+            case 2: cone_color = 2; break;  // Blue cone
+            default: cone_color = -1; break; // Unknown
           }
+          return std::make_pair(cone_color, confidence);
         }
       }
     }
-    
-    // No detection 
-    return std::make_pair(-1, 0.0);
   }
+  
+  // No detection 
+  return std::make_pair(-1, 0.0);
+}
 #else
-  // Applies HSV Filter to image frame
-  // Returns max of all colored pixels within ROI 
-  std::pair<int, double> Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img)
-  {
-    // Ratio of color in relation to all other colors
-    const double RATIO_THRESHOLD = 1.5;
+// Applies HSV Filter to image frame
+// Returns max of all colored pixels within ROI 
+std::pair<int, double> Point_To_Pixel_Node::get_hsv_color(Eigen::Vector2d& pixel, cv::Mat img)
+{
+  // Ratio of color in relation to all other colors
+  const double RATIO_THRESHOLD = 1.5;
 
-    // Setup region of interest
-    int side_length = 25;
-    int x = static_cast<int>(pixel(0));
-    int y = static_cast<int>(pixel(1));
-    int height = img.rows;
-    int width = img.cols;
-    int x_min = std::max(0, x - side_length);
-    int x_max = std::min(width, x + side_length);
-    int y_min = std::max(0, y - side_length);
-    int y_max = std::min(height, y + side_length);
+  // Setup region of interest
+  int side_length = 25;
+  int x = static_cast<int>(pixel(0));
+  int y = static_cast<int>(pixel(1));
+  int height = img.rows;
+  int width = img.cols;
+  int x_min = std::max(0, x - side_length);
+  int x_max = std::min(width, x + side_length);
+  int y_min = std::max(0, y - side_length);
+  int y_max = std::min(height, y + side_length);
 
-    // Transformed point out of frame
-    if (x_min >= x_max || y_min >= y_max) {
-      return std::make_pair(-1, 1.0);
-    }
-
-    // Extract ROI and convert to HSV
-    cv::Mat roi = img(cv::Range(y_min, y_max), cv::Range(x_min, x_max));
-    cv::Mat hsv_roi;
-    cv::cvtColor(roi, hsv_roi, cv::COLOR_BGR2HSV);
-
-    // Define HSV color ranges
-    std::pair<cv::Scalar, cv::Scalar> yellow_range = {this->yellow_filter_low, this->yellow_filter_high};
-
-    std::pair<cv::Scalar, cv::Scalar> blue_range = {this->blue_filter_low, this->blue_filter_high};
-
-    std::pair<cv::Scalar, cv::Scalar> orange_range = {this->orange_filter_low, this->orange_filter_high};
-
-
-    // Create color masks
-    cv::Mat yellow_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
-    cv::Mat blue_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
-    cv::Mat orange_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
-    cv::Mat temp_mask;
-
-    // Apply color masks
-    cv::inRange(hsv_roi, yellow_range.first, yellow_range.second, temp_mask);
-    cv::bitwise_or(yellow_mask, temp_mask, yellow_mask);
-
-    cv::inRange(hsv_roi, blue_range.first, blue_range.second, temp_mask);
-    cv::bitwise_or(blue_mask, temp_mask, blue_mask);
-
-    cv::inRange(hsv_roi, orange_range.first, orange_range.second, temp_mask);
-    cv::bitwise_or(orange_mask, temp_mask, orange_mask);
-
-    // Calculate color percentages
-    double total_pixels = (y_max - y_min) * (x_max - x_min);
-    double yellow_pixels = cv::countNonZero(yellow_mask);
-    double blue_pixels = cv::countNonZero(blue_mask);
-    double orange_pixels = cv::countNonZero(orange_mask);
-    double yellow_percentage = yellow_pixels / total_pixels;
-    double blue_percentage = blue_pixels / total_pixels;
-    double orange_percentage = orange_pixels / total_pixels;
-
-    // Print out the color percentages
-    #if VIZ
-      std::cout << "Yellow Percentage: " << yellow_percentage * 100 << "%" << std::endl;
-      std::cout << "Blue Percentage: " << blue_percentage * 100 << "%" << std::endl;
-      std::cout << "Orange Percentage: " << orange_percentage * 100 << "%" << std::endl;
-    #endif
-
-    // Determine cone color
-    if (orange_percentage > this->CONFIDENCE_THRESHOLD && orange_percentage > std::max(yellow_percentage, blue_percentage) * RATIO_THRESHOLD) {
-        return std::make_pair(0, orange_percentage);
-    } else if (yellow_percentage > this->CONFIDENCE_THRESHOLD && yellow_percentage > std::max(blue_percentage, orange_percentage) * RATIO_THRESHOLD) {
-        return std::make_pair(1, yellow_percentage);
-    } else if (blue_percentage > this->CONFIDENCE_THRESHOLD && blue_percentage > std::max(yellow_percentage, orange_percentage) * RATIO_THRESHOLD) {
-        return std::make_pair(1, blue_percentage);
-    }
+  // Transformed point out of frame
+  if (x_min >= x_max || y_min >= y_max) {
     return std::make_pair(-1, 1.0);
   }
+  // Extract ROI and convert to HSV
+  cv::Mat roi = img(cv::Range(y_min, y_max), cv::Range(x_min, x_max));
+  cv::Mat hsv_roi;
+  cv::cvtColor(roi, hsv_roi, cv::COLOR_BGR2HSV);
+  // Define HSV color ranges
+  std::pair<cv::Scalar, cv::Scalar> yellow_range = {this->yellow_filter_low, this->yellow_filter_high};
+  std::pair<cv::Scalar, cv::Scalar> blue_range = {this->blue_filter_low, this->blue_filter_high};
+  std::pair<cv::Scalar, cv::Scalar> orange_range = {this->orange_filter_low, this->orange_filter_high};
+  // Create color masks
+  cv::Mat yellow_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
+  cv::Mat blue_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
+  cv::Mat orange_mask = cv::Mat::zeros(hsv_roi.size(), CV_8UC1);
+  cv::Mat temp_mask;
+  // Apply color masks
+  cv::inRange(hsv_roi, yellow_range.first, yellow_range.second, temp_mask);
+  cv::bitwise_or(yellow_mask, temp_mask, yellow_mask);
+  cv::inRange(hsv_roi, blue_range.first, blue_range.second, temp_mask);
+  cv::bitwise_or(blue_mask, temp_mask, blue_mask);
+  cv::inRange(hsv_roi, orange_range.first, orange_range.second, temp_mask);
+  cv::bitwise_or(orange_mask, temp_mask, orange_mask);
+  // Calculate color percentages
+  double total_pixels = (y_max - y_min) * (x_max - x_min);
+  double yellow_pixels = cv::countNonZero(yellow_mask);
+  double blue_pixels = cv::countNonZero(blue_mask);
+  double orange_pixels = cv::countNonZero(orange_mask);
+  double yellow_percentage = yellow_pixels / total_pixels;
+  double blue_percentage = blue_pixels / total_pixels;
+  double orange_percentage = orange_pixels / total_pixels;
+  // Print out the color percentages
+  #if VIZ
+    std::cout << "Yellow Percentage: " << yellow_percentage * 100 << "%" << std::endl;
+    std::cout << "Blue Percentage: " << blue_percentage * 100 << "%" << std::endl;
+    std::cout << "Orange Percentage: " << orange_percentage * 100 << "%" << std::endl;
+  #endif
+  // Determine cone color
+  if (orange_percentage > this->confidence_threshold && orange_percentage > std::max(yellow_percentage, blue_percentage) * RATIO_THRESHOLD) {
+      return std::make_pair(0, orange_percentage);
+  } else if (yellow_percentage > this->confidence_threshold && yellow_percentage > std::max(blue_percentage, orange_percentage) * RATIO_THRESHOLD) {
+      return std::make_pair(1, yellow_percentage);
+  } else if (blue_percentage > this->confidence_threshold && blue_percentage > std::max(yellow_percentage, orange_percentage) * RATIO_THRESHOLD) {
+      return std::make_pair(1, blue_percentage);
+  }
+  return std::make_pair(-1, 1.0);
+}
 #endif
 
 int Point_To_Pixel_Node::get_cone_class(std::pair<Eigen::Vector2d, Eigen::Vector2d> pixel_pair,
@@ -591,25 +580,25 @@ int Point_To_Pixel_Node::get_cone_class(std::pair<Eigen::Vector2d, Eigen::Vector
 
   // Identify the color at the transformed image pixel
   #if YOLO
-    pixel0 = this->get_yolo_color(pixel_pair.first, detection_pair.first, frame_pair.first.cols, frame_pair.first.rows);
-    pixel1 = this->get_yolo_color(pixel_pair.second, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows);
+  pixel0 = this->get_yolo_color(pixel_pair.first, detection_pair.first, frame_pair.first.cols, frame_pair.first.rows);
+  pixel1 = this->get_yolo_color(pixel_pair.second, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows);
   #else
-    pixel0 = this->get_hsv_color(pixel_pair.first, frame_pair.first);
-    pixel1 = this->get_hsv_color(pixel_pair.second, frame_pair.second);
+  pixel0 = this->get_hsv_color(pixel_pair.first, frame_pair.first);
+  pixel1 = this->get_hsv_color(pixel_pair.second, frame_pair.second);
   #endif
 
   // Logic for handling detection results
 
   // Return 0 if 1 did not detect color
-  if (pixel0.first != -1 && pixel1.first == -1) {return pixel0.first;}
+  if (pixel0.first != -1 && pixel1.first == -1) return pixel0.first;
   // Return 1 if 0 did not detect color
-  else if (pixel0.first == -1 && pixel1.first != -1) {return pixel1.first;}
+  else if (pixel0.first == -1 && pixel1.first != -1) return pixel1.first;
   // Return result with highest confidence if both detect color
   else if (pixel0.first != -1 && pixel1.first != -1) {
     if (pixel0.second > pixel1.second) return pixel0.first;
     else return pixel1.first;
   }
-  else{return -1;}
+  else return -1;
 }
 
 // Topic callback definition
@@ -646,22 +635,23 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     cv::Mat blob0;
     cv::Mat blob1;
 
-    cv::dnn::blobFromImage(frameBGR_0, blob0, 1 / 255.0, cv::Size(640, 640), cv::Scalar(), true, false);
-    cv::dnn::blobFromImage(frameBGR_1, blobget_cone
-    this->net.setInput(blob1);
-
     // Forward blob through model
     std::vector<cv::Mat> outputs0;
     std::vector<cv::Mat> outputs1;
 
+    cv::dnn::blobFromImage(frameBGR_0, blob0, 1 / 255.0, cv::Size(yolo_h, yolo_w), cv::Scalar(), true, false);
+    this->net.setInput(blob0);
     this->net.forward(outputs0, this->net.getUnconnectedOutLayersNames());
+
+    cv::dnn::blobFromImage(frameBGR_1, blob1, 1 / 255.0, cv::Size(yolo_h, yolo_w), cv::Scalar(), true, false);
+    this->net.setInput(blob1);
     this->net.forward(outputs1, this->net.getUnconnectedOutLayersNames());
 
     // Isolate detection outputs
     cv::Mat detection0 = outputs0[0];
     cv::Mat detection1 = outputs1[0];
     std::pair<cv::Mat, cv::Mat> detection_pair = std::make_pair(detection0, detection1);
-#else
+  #else
     // Initialize empty matrix if not YOLO
     std::pair<cv::Mat, cv::Mat> detection_pair = std::make_pair(cv::Mat(), cv::Mat());
   #endif
@@ -750,7 +740,6 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     RCLCPP_INFO(this->get_logger(), "Total PPM Time %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(time_diff).count());
     RCLCPP_INFO(this->get_logger(), "Total Time from Lidar  %ld microseconds.", ms_time_since_lidar.nanoseconds() / 1000);
     RCLCPP_INFO(this->get_logger(), "Total Time from Lidar to start  %ld microseconds.", ms_time_since_lidar_2);
-
   #endif
   
   this->publisher_->publish(message);
@@ -760,9 +749,6 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
 // Camera Callback (Populates and maintain deque)
 void Point_To_Pixel_Node::camera_callback()
 {
-  // Controls Max Deque Size
-  int MAX_DEQUE_SIZE = 10;
-
   // Capture Frame and Time
   this->frame_0 = this->cap_1.getLastFrame();
   rclcpp::Time time0 = this->get_clock()->now();
@@ -803,12 +789,12 @@ void Point_To_Pixel_Node::camera_callback()
   }
 
   // Deque Management and Updating
-  if (img_deque0.size() >= MAX_DEQUE_SIZE) 
+  while (img_deque0.size() >= max_deque_size) 
   {
     this->img_deque0.pop_front();
   }
 
-  if (img_deque1.size() >= MAX_DEQUE_SIZE)
+  while (img_deque1.size() >= max_deque_size)
   {
     this->img_deque1.pop_front();
   }
