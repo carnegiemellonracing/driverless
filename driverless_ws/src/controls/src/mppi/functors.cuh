@@ -62,7 +62,7 @@ namespace controls {
          */
         __device__ static float cost(
             const float world_state[state_dims], const float action[], const float last_taken_action[],
-            float start_progress, float time_since_traj_start, bool first) {
+            float start_progress, float time_since_traj_start, bool first, bool follow_midline_only) {
 
             float cent_curv_pose[3];
             bool cent_out_of_bounds;
@@ -93,17 +93,24 @@ namespace controls {
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
             const float actual_speed_along = world_state[3];
+            (void)actual_speed_along;
             // if (fabsf(approx_speed_along - actual_speed_along) > 1.0f) {
             //     printf("Approx speed along: %f, actual speed along: %f\n", approx_speed_along, actual_speed_along);
             // }
             const float speed_deviation = approx_speed_along - target_speed;
             // const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
             const float speed_cost = speed_off_1mps_cost * (-speed_deviation);
+            (void)speed_cost;
 
             const float distance_cost = offset_1m_cost * cent_curv_pose[state_y_idx];
             const float progress_cost = progress_cost_multiplier * (-progress);
 
-
+            float total_cost;
+            if (follow_midline_only) {
+                total_cost = progress_cost + distance_cost;
+            } else {
+                total_cost = progress_cost;
+            }
 
             //TODO: delete?
             // const float deriv_cost = first ?
@@ -111,7 +118,7 @@ namespace controls {
             //   + fabsf(action[action_swangle_idx] - last_taken_action[action_swangle_idx]) / controller_period * swangle_1radps_cost
             //   : 0;
             // return speed_cost;
-            return progress_cost;
+            return total_cost;
             // + fabsf(action[action_torque_idx]) * 0.05f;// + deriv_cost;
         }
 
@@ -216,6 +223,7 @@ namespace controls {
             float* cost_to_gos;
             float* log_prob_densities;
             DeviceAction last_taken_action;
+            bool follow_midline_only;
 
             const DeviceAction* action_trajectory_base;
 
@@ -227,7 +235,8 @@ namespace controls {
                          thrust::device_ptr<float> cost_to_gos,
                          thrust::device_ptr<float> log_prob_densities,
                          const thrust::device_ptr<DeviceAction>& action_trajectory_base,
-                         DeviceAction last_taken_action)
+                         DeviceAction last_taken_action,
+                         bool follow_midline_only)
                     : brownians {brownians.get()},
                       sampled_action_trajectories {sampled_action_trajectories.get()},
 #ifdef DISPLAY
@@ -236,7 +245,9 @@ namespace controls {
                       cost_to_gos {cost_to_gos.get()},
                       log_prob_densities {log_prob_densities.get()},
                       action_trajectory_base {action_trajectory_base.get()},
-                      last_taken_action {last_taken_action} {}
+                      last_taken_action {last_taken_action},
+                      follow_midline_only {follow_midline_only}
+                      {}
 
                       // i iterates over num_samples
             __device__ void operator() (uint32_t i) const {
@@ -299,7 +310,7 @@ namespace controls {
                     memcpy(world_state, x_curr, sizeof(float) * state_dims);
 #endif
                     // COST CALCULATION DONE HERE
-                    const float c = cost(x_curr, u_ij, last_taken_action.data, init_curv_pose[0], controller_period * (j + 1), j == 0);
+                    const float c = cost(x_curr, u_ij, last_taken_action.data, init_curv_pose[0], controller_period * (j + 1), j == 0, follow_midline_only);
                     // Converts D and J Matrices to To-Go
                     // ALSO VERY CURSED FOR 2 REASONS:
                     // REASON 1: We have decided to not lower-triangularize the cost-to-gos, but also the log prob

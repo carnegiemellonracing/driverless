@@ -11,7 +11,6 @@
 #include <limits>
 #include <cassert>
 #include "svm.hpp" // libSVM headers
-#include <chrono>
 
 #include "svm_conv.hpp"
 #include "cones.hpp"
@@ -19,6 +18,8 @@
 
 namespace controls {
     namespace midline {
+
+namespace svm_slow {
 
 /* takes a vector of points and the current point,
    returns the index of the closest point and the distance between that point and the current point */ 
@@ -248,18 +249,16 @@ namespace controls {
                 return conesList(); 
             }
 
-            // Data preparation timing
             auto prep_start = high_resolution_clock::now();
-            
             // augment dataset to make it better for SVM training
             cones.supplementCones();
-            cones = cones.augmentConesCircle(cones, 30, 1.2);
+            cones = cones.augmentConesCircle(cones, cone_augmentation_angle, 1.2);
 
             // acquire the feature matrix and label vector
             std::pair<std::vector<std::vector<double>>, std::vector<double>> xy = cones.conesToXY(cones);
             std::vector<std::vector<double>> X = xy.first;
             std::vector<double> y = xy.second;
-            
+
             auto prep_end = high_resolution_clock::now();
             auto prep_duration = duration_cast<microseconds>(prep_end - prep_start);
             auto prep_ms = prep_duration.count() / 1000.0;
@@ -312,7 +311,7 @@ namespace controls {
                 }
             }
             double var_all = sum_var / (N * d);
-    
+
             // calculate gamma_scale to match scikit-learn
             double gamma_scale = 1.0 / (d * var_all);
 
@@ -345,7 +344,7 @@ namespace controls {
 
             // SVM training timing
             auto train_start = high_resolution_clock::now();
-            
+
             // train the SVM model
             svm_model* model = svm_train(&prob, &param);
 
@@ -372,14 +371,13 @@ namespace controls {
                     node[i].index = i + 1;
                     node[i].value = input[i];
                 }
-                node[input.size()].index = -1;
-                auto t1 = std::chrono::high_resolution_clock::now();
+                node[input.size()].index = -1; 
                 svm_output.push_back(svm_predict(model, node));
-                auto t2 = std::chrono::high_resolution_clock::now();
-                auto duration = duration_cast<std::chrono::nanoseconds>(t2 - t1);
-                // std::cout << "Prediction time: " << duration.count() << " nanoseconds" << std::endl;
                 delete[] node;
             }
+
+            // reshape Z to match the shape of xx and yy
+            std::vector<std::vector<double>> Z = reshapeOutput(svm_output, xx);
 
             auto mesh_end = high_resolution_clock::now();
             auto mesh_duration = duration_cast<microseconds>(mesh_end - mesh_start);
@@ -387,9 +385,6 @@ namespace controls {
 
             // Boundary detection and post-processing timing
             auto boundary_start = high_resolution_clock::now();
-
-            // reshape Z to match the shape of xx and yy
-            std::vector<std::vector<double>> Z = reshapeOutput(svm_output, xx);
 
             // boundary detection
             conesList boundary_points = boundaryDetection(Z, xx, yy);
@@ -409,7 +404,7 @@ namespace controls {
             auto boundary_duration = duration_cast<microseconds>(boundary_end - boundary_start);
             auto boundary_ms = boundary_duration.count() / 1000.0;
 
-            // Cleanup
+            // free allocated memory
             for (int i = 0; i < prob.l; ++i) {
                 delete[] prob.x[i];
             }
@@ -422,21 +417,19 @@ namespace controls {
             auto total_duration = duration_cast<microseconds>(total_end - total_start);
             auto total_ms = total_duration.count() / 1000.0;
 
-            // if (total_ms > 10.0) {
-                // Print timing breakdown with percentages
-                std::cout << "\n=== Timing Breakdown ===\n";
-                std::cout << "Number of cones trained on: " << prob.l << "\n";
-                std::cout << "Mesh grid size:             " << xx.size() << " x " << yy.size() << "\n";
-                std::cout << std::fixed << std::setprecision(2);
-                std::cout << "Data preparation:     " << prep_ms << " ms (" << (prep_ms / total_ms * 100.0) << "%)\n";
-                std::cout << "SVM setup:           " << setup_ms << " ms (" << (setup_ms / total_ms * 100.0) << "%)\n";
-                std::cout << "SVM training:        " << train_ms << " ms (" << (train_ms / total_ms * 100.0) << "%)\n";
-                std::cout << "Mesh grid/predict:   " << mesh_ms << " ms (" << (mesh_ms / total_ms * 100.0) << "%)\n";
-                std::cout << "Boundary processing: " << boundary_ms << " ms (" << (boundary_ms / total_ms * 100.0) << "%)\n";
-                std::cout << "Total execution:     " << total_ms << " ms (100%)\n";
-                std::cout << "=====================\n\n";
-            // }
-
+            
+            // Print timing breakdown with percentages
+            std::cout << "\n=== Timing Breakdown (NORMAL) ===\n";
+            std::cout << "Number of cones trained on: " << prob.l << "\n";
+            std::cout << "Mesh grid size:             " << xx.size() << " x " << xx[0].size() << "\n";
+            std::cout << std::fixed << std::setprecision(2);
+            std::cout << "Data preparation:     " << prep_ms << " ms (" << (prep_ms / total_ms * 100.0) << "%)\n";
+            std::cout << "SVM setup:           " << setup_ms << " ms (" << (setup_ms / total_ms * 100.0) << "%)\n";
+            std::cout << "SVM training:        " << train_ms << " ms (" << (train_ms / total_ms * 100.0) << "%)\n";
+            std::cout << "Mesh grid/predict:   " << mesh_ms << " ms (" << (mesh_ms / total_ms * 100.0) << "%)\n";
+            std::cout << "Boundary processing: " << boundary_ms << " ms (" << (boundary_ms / total_ms * 100.0) << "%)\n";
+            std::cout << "Total execution:     " << total_ms << " ms (100%)\n";
+            std::cout << "=====================\n\n";
 
 
             return downsampled;
@@ -552,5 +545,6 @@ namespace controls {
             return 0;
         }
 
+}
     }
 }

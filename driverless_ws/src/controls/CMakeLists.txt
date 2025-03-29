@@ -32,6 +32,8 @@ find_package(geometry_msgs REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GSL REQUIRED)
+find_package(Threads REQUIRED)
+# find_package(Math REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/../)
@@ -78,6 +80,7 @@ set(LIB_SOURCES
         ${TWO_TRACK_SRCS}
         src/midline/svm.cpp
         src/midline/svm_conv.cpp
+        src/midline/svm_conv_fast.cpp
         src/midline/cones.cpp
 )
 
@@ -117,8 +120,25 @@ install(
 
 # ****** Controller *****
 
-add_executable(controller src/nodes/controller.cpp)
-target_link_libraries(controller controls_lib)
+set(LINUXCAN_PATH $ENV{LINUXCAN_PATH})
+# Check if the path is set
+if(NOT LINUXCAN_PATH)
+    message(FATAL_ERROR "Please set the LINUXCAN_PATH environment variable to /path/to/canUsbKvaserTesting/linuxcan.")
+endif()
+
+set(CANLIB_INCLUDE "${LINUXCAN_PATH}/include")
+set(CANLIB_LIBRARIES "${LINUXCAN_PATH}/canlib/libcanlib.so")
+
+# Create an imported target
+add_library(can_lib SHARED IMPORTED)
+set_target_properties(can_lib PROPERTIES
+  IMPORTED_LOCATION "${CANLIB_LIBRARIES}"
+)
+target_include_directories(can_lib INTERFACE ${CANLIB_INCLUDE})
+
+add_executable(controller src/nodes/controller.cpp src/can/cmr_can.c)
+
+target_link_libraries(controller controls_lib Threads::Threads m can_lib)
 ament_target_dependencies(controller rclcpp interfaces builtin_interfaces)
 
 install(
@@ -126,10 +146,22 @@ install(
         DESTINATION lib/${PROJECT_NAME}
 )
 
+# ***** Dead Reckon Node *****
+add_executable(dead_reckon 
+        src/nodes/dead_reckon.cpp 
+        src/can/cmr_can.c)
+
+target_link_libraries(dead_reckon Threads::Threads m can_lib)
+ament_target_dependencies(dead_reckon rclcpp interfaces builtin_interfaces)
+
+install(
+        TARGETS dead_reckon
+        DESTINATION lib/${PROJECT_NAME}
+)
 
 # ***** Shared options *****
 
-set_target_properties(controls_lib controller PROPERTIES
+set_target_properties(controls_lib controller dead_reckon PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON
         CUDA_ARCHITECTURES ${CUDA_ARCH}
 )

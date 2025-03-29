@@ -11,17 +11,16 @@
 
 #include "offline_controller.hpp"
 #include <fstream>
-#include <midline/svm_conv.hpp>
 
 namespace controls
 {
     OfflineController::OfflineController(
-        // std::shared_ptr<state::StateEstimator> state_estimator,
-        // std::shared_ptr<mppi::MppiController> mppi_controller,
+        std::shared_ptr<state::StateEstimator> state_estimator,
+        std::shared_ptr<mppi::MppiController> mppi_controller,
         const std::string& input_file)
-        : Node("offline_controller")
-        //   m_state_estimator{std::move(state_estimator)},
-        //   m_mppi_controller{std::move(mppi_controller)}
+        : Node("offline_controller"),
+          m_state_estimator{std::move(state_estimator)},
+          m_mppi_controller{std::move(mppi_controller)}
     {
         std::cout << "Processing input file: " << input_file << " with " << num_samples << " samples" << std::endl;
         process_file(input_file, std::to_string(num_samples) + "_offline_output_" + input_file);
@@ -38,23 +37,6 @@ namespace controls
         }
 
         return tokens;
-    }
-
-    static std::vector<glm::fvec2> process_ros_points(std::vector<geometry_msgs::msg::Point,
-                                                            std::allocator<geometry_msgs::msg::Point>>
-                                                    points)
-    {
-        std::vector<glm::fvec2> processed_points;
-        processed_points.reserve(points.size());
-        for (const auto &point : points)
-        {
-            float cone_y = static_cast<float>(point.y);
-            float cone_x = static_cast<float>(point.x);
-            processed_points.push_back(
-                glm::fvec2(cone_x, cone_y));
-        }
-        assert(processed_points.size() == points.size());
-        return processed_points;
     }
 
     static std::vector<geometry_msgs::msg::Point,
@@ -83,7 +65,6 @@ namespace controls
 
         std::string line;
 
-        int iteration_count = 0;
         while (std::getline(file, line)) {
             std::vector<std::string> parameters = split(line, '|');
             std::vector<std::string> state_fields = split(parameters[0], ',');
@@ -111,52 +92,25 @@ namespace controls
             // parse line into spline, state and best guess messages
             // construct spline and twist "messages" then pass them to state estimator
 
-            // m_state_estimator->on_spline(spline_msg);
-            std::vector<glm::fvec2> m_left_cone_points;
-            std::vector<glm::fvec2> m_right_cone_points;
+            m_state_estimator->on_spline(spline_msg);
+            m_state_estimator->on_cone(cone_msg);
 
-            m_left_cone_points.clear();
-            m_right_cone_points.clear();
-
-            m_left_cone_points = process_ros_points(cone_msg.blue_cones);
-            m_right_cone_points = process_ros_points(cone_msg.yellow_cones);
-
-            midline::Cones cones;
-            for (const auto& cone : m_left_cone_points) {
-                cones.addBlueCone(cone.x, cone.y, 0);
-            }
-            for (const auto& cone : m_right_cone_points) {
-                cones.addYellowCone(cone.x, cone.y, 0);
-            }
-
-            // // TODO: convert this to using std::transform
-            std::cout << "iteration: " << iteration_count << std::endl;
-            if (iteration_count == 551 || iteration_count == 552) {
-               auto svm_start = std::chrono::high_resolution_clock::now();            
-                auto spline_frames = midline::cones_to_midline(cones);
-                auto svm_end = std::chrono::high_resolution_clock::now();
-                float svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();             
-            }
-
-
-            iteration_count++;
-
-            // m_state_estimator->render_and_sync(state);
+            m_state_estimator->render_and_sync(state);
 
             // send state to device (i.e. cuda globals)
             // (also serves to lock state since nothing else updates gpu state)
-            // m_mppi_controller->hardcode_last_action_trajectory(last_action_trajectory);
+            m_mppi_controller->hardcode_last_action_trajectory(last_action_trajectory);
 
             // run mppi, and write action to the write buffer
-            // m_mppi_controller->generate_action();
+            m_mppi_controller->generate_action();
 
             // parameters_ss << "Swangle range: " << 19 * M_PI / 180 * 2 << "\nThrottle range: " << saturating_motor_torque * 2 << "\n";
 
-            // std::vector<Action> averaged_trajectory = m_mppi_controller->m_averaged_trajectory;
-            // for (Action action : averaged_trajectory) {
-            //     output << action[0] << ";" << action[1] << ",";
-            // }
-            // output << "\n";
+            std::vector<Action> averaged_trajectory = m_mppi_controller->m_averaged_trajectory;
+            for (Action action : averaged_trajectory) {
+                output << action[0] << ";" << action[1] << ",";
+            }
+            output << "\n";
         }
     }
 }
@@ -174,12 +128,12 @@ int main(int argc, char *argv[])
     std::mutex state_mutex;
 
     // create resources
-    // std::shared_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create(state_mutex);
-    // std::shared_ptr<mppi::MppiController> controller = mppi::MppiController::create(mppi_mutex);
+    std::shared_ptr<state::StateEstimator> state_estimator = state::StateEstimator::create(state_mutex);
+    std::shared_ptr<mppi::MppiController> controller = mppi::MppiController::create(mppi_mutex);
 
     // create a condition variable to notify main thread when either display or node dies
     rclcpp::init(argc, argv);
-    auto node = std::make_shared<OfflineController>(argv[1]);
+    auto node = std::make_shared<OfflineController>(state_estimator, controller, argv[1]);
     rclcpp::spin(node);
     rclcpp::shutdown();
     return 0;

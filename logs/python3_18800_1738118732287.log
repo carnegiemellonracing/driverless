@@ -1,0 +1,13 @@
+[INFO] [1738118732.377077110] [rosbridge_websocket]: Rosbridge WebSocket server started on port 9090
+[INFO] [1738118771.048198125] [rosbridge_websocket]: Client connected. 1 clients total.
+[INFO] [1738118771.391428825] [rosbridge_websocket]: [Client 75e425d7-f33f-450a-96aa-b09ab69bd2c7] Subscribed to /tf
+[INFO] [1738118775.918578318] [rosbridge_websocket]: [Client 75e425d7-f33f-450a-96aa-b09ab69bd2c7] Subscribed to /lidar_points
+[INFO] [1738118784.277262734] [rosbridge_websocket]: Client disconnected. 0 clients total.
+[INFO] [1738118791.509571535] [rosbridge_websocket]: Client connected. 1 clients total.
+[INFO] [1738118791.915148687] [rosbridge_websocket]: [Client 23f336d2-d58b-4581-a710-d8ab232ef053] Subscribed to /tf
+[INFO] [1738118791.916017995] [rosbridge_websocket]: [Client 23f336d2-d58b-4581-a710-d8ab232ef053] Subscribed to /lidar_points
+[INFO] [1738127016.029605421] [rosbridge_websocket]: Client disconnected. 0 clients total.
+[WARN] [1738127016.030499946] [rosbridge_websocket]: WebSocketClosedError: Tried to write to a closed websocket
+[WARN] [1738127017.086657474] [rosbridge_websocket]: WebSocketClosedError: Tried to write to a closed websocket
+[WARN] [1738127018.091226450] [rosbridge_websocket]: WebSocketClosedError: Tried to write to a closed websocket
+[WARN] [1738127019.129218935] [rosbridge_websocket]: WebSocketClosedError: Tried to write to a closed websocket

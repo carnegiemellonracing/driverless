@@ -26,6 +26,11 @@ namespace controls {
           */
 
          static std::shared_ptr<StateEstimator> create(std::mutex& mutex, LoggerFunc logger = no_log);
+            bool m_follow_midline_only = false;
+            void set_follow_midline_only(bool follow_midline_only) {
+                m_follow_midline_only = follow_midline_only;
+            }
+            
             virtual State project_state(const rclcpp::Time &time) =0;
 
             /**
@@ -42,7 +47,6 @@ namespace controls {
              * @brief Callback for spline messages. Updates the state estimator with the new spline. Used for both
              * state projection and curvilinear state lookup table generation.
              * @param spline_msg The spline message
-             * @note Time does not need to be passed in since that is encoded in the spline message (@c spline_orig_data_stamp), and is inaccessible to the caller anyway.
              */
             virtual void on_spline(const SplineMsg& spline_msg) =0;
 
@@ -80,12 +84,6 @@ namespace controls {
           * @param logger The logger object to be bound.
           */
          virtual void set_logger_obj(rclcpp::Logger logger) =0;
-            /**
-             * @brief Returns the timestamp of the last spline message received. This is accurate to when the sensor
-             * (i.e. LIDAR) information was received, not when the spline was calculated.
-             * @return The timestamp of the last spline message received.
-             */
-            virtual rclcpp::Time get_orig_spline_data_stamp() =0;
             /**
              * @brief Records a control action for state projection purposes.
              * @param action The control action to record

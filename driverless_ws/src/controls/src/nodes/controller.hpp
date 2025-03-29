@@ -68,26 +68,14 @@ namespace controls {
              */
             void world_pose_callback(const PoseMsg& pose_msg);
 
+            void pid_callback(const PIDMsg& pid_msg);
+
             /**
              * Publishes a control action to the `control_action` topic.
              *
              * @param action Action to publish
              */
             void publish_action(const Action& action);
-
-            /**
-             * Launch MPPI thread, which loops the following routine persistently:
-             *  - Wait to be notified that the state is dirty.
-             *  - Run MPPI and write an action to the write buffer.
-             *  - Swap the read and write buffers.
-             *
-             * @return the launched thread
-             */
-            std::thread launch_mppi();
-
-            /** Notify MPPI thread that the state is dirty, and to refire if waiting. */
-            // todo: time is changing so everything is always changing so state is always dirty. Consider max control frequency instead.
-            void notify_state_dirty();
 
             /// Converts MPPI control action output to a ROS2 message. Affected by drive mode (FWD, RWD, AWD).
             /// @param[in] action Control action - output of MPPI.
@@ -118,6 +106,7 @@ namespace controls {
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription; ///< Subscribes to intertial quaternion
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
             rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;
+            rclcpp::Subscription<PIDMsg>::SharedPtr m_pid_subscription;
             // ConeArray = /lidar_node_cones
 
             /**
@@ -140,7 +129,8 @@ namespace controls {
             struct ActionSignal {
                 int16_t front_torque_mNm = 0;
                 int16_t back_torque_mNm = 0;
-                uint8_t rack_displacement_mm = 0;
+                uint16_t velocity_rpm = 0;
+                uint16_t rack_displacement_adc = 0;
             };
 
             ActionSignal action_to_signal(Action action);
@@ -148,7 +138,8 @@ namespace controls {
             ActionSignal m_last_action_signal;
             std::thread m_aim_communication_thread;
             std::atomic<bool> m_keep_sending_aim_signal = true;
-            void aim_communication_loop();
+            std::thread launch_aim_communication();
+            float m_p_value;
         };
     }
 }
