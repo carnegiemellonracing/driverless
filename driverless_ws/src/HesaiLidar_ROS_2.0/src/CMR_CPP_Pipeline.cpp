@@ -111,9 +111,9 @@ inline PointCloud<PointXYZ> GraceAndConrad(const LidarDecodedFrame<LidarPointXYZ
     }
 
     // Post-filter output
-    radial_t rd = radial_t(point.x, point.y, point.z);
+    radial_t rd = {point.x, point.y, point.z};
 
-    if (rd.radius < radius_max) {
+    if (rd.radius < radius_max/* && (pt.y) < 0.5 && pt.y > -1.5*/) {
       int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
       int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
       if (seg_index < 0)
@@ -193,7 +193,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(const LidarDecodedFrame<LidarPointXYZ
         radial_t pt = segments[seg][bin][j];
         double low_cutoff = slope * pt.radius + intercept + height_threshold;
         double high_cutoff = slope * pt.radius + intercept + upper_height_threshold;
-        if (pt.z > low_cutoff & pt.z < high_cutoff) {
+        if (pt.z > low_cutoff && pt.z < high_cutoff) {
           output.points.push_back(radial2point(pt));
         }
       }
