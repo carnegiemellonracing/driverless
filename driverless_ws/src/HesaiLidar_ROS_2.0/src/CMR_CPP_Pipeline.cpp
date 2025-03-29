@@ -101,6 +101,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(const LidarDecodedFrame<LidarPointXYZ
 
   // NEW CODE begin
   // x is distance, y is angle, z is elevation
+  /*
   for (size_t i = 0; i < frame.points_num; ++i) {
     // Filtering code (from source_driver_ros2.hpp)
     float epsilon = 0.1;
@@ -113,7 +114,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(const LidarDecodedFrame<LidarPointXYZ
     // Post-filter output
     radial_t rd = {point.x, point.y, point.z};
 
-    if (rd.radius < radius_max/* && (pt.y) < 0.5 && pt.y > -1.5*/) {
+    if (rd.radius < radius_max/* && (pt.y) < 0.5 && pt.y > -1.5*//*) {
       int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
       int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
       if (seg_index < 0)
@@ -123,8 +124,9 @@ inline PointCloud<PointXYZ> GraceAndConrad(const LidarDecodedFrame<LidarPointXYZ
       segments[seg_index][bin_index].push_back(rd);   // This line is doubling the execution time of sector 1
     }
   }
+  */
   
-  /* OLD CODE:
+  /* OLD CODE:*/
   // Parse all points from XYZ to radial,Z and separate into bins
   for (size_t i = 0; i < frame.points_num; ++i) {
     // Filtering code (from source_driver_ros2.hpp)
@@ -148,7 +150,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(const LidarDecodedFrame<LidarPointXYZ
       segments[seg_index][bin_index].push_back(rd);   // This line is doubling the execution time of sector 1
     }
   }
-  */
+  /**/
 
   // Grace and Conrad Algorithm
   for (int seg = 0; seg < num_segs; seg++) {

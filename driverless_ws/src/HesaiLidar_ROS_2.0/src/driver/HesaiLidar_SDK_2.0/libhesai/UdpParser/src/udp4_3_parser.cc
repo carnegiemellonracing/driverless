@@ -329,12 +329,14 @@ int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int pa
       // NEW CODE begin
       // x will be distance, y angle, z elevation
       // I don't know if azimuth is in radians or degrees (presumably radians)
+      /*
       setX(frame.points[point_index], distance);
       setY(frame.points[point_index], azimuth);
       setZ(frame.points[point_index], elevation);
+      */
       // NEW CODE end
 
-      /* OLD CODE:
+      /* OLD CODE:*/
       float xyDistance = distance * this->cos_all_angle_[(elevation)];
       float x = xyDistance * this->sin_all_angle_[(azimuth)];
       float y = xyDistance * this->cos_all_angle_[(azimuth)];
@@ -343,7 +345,7 @@ int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int pa
       setX(frame.points[point_index], x);
       setY(frame.points[point_index], y);
       setZ(frame.points[point_index], z);
-      */
+      /**/
       setIntensity(frame.points[point_index], frame.pointData[point_index].reflectivities);
       setConfidence(frame.points[point_index], frame.pointData[point_index].confidence);
       setTimestamp(frame.points[point_index], double(frame.sensor_timestamp[packet_index]) / kMicrosecondToSecond);
