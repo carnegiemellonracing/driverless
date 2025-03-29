@@ -789,13 +789,11 @@ void Point_To_Pixel_Node::camera_callback()
   }
 
   // Deque Management and Updating
-  while (img_deque0.size() >= max_deque_size) 
-  {
+  while (img_deque0.size() >= max_deque_size) {
     this->img_deque0.pop_front();
   }
 
-  while (img_deque1.size() >= max_deque_size)
-  {
+  while (img_deque1.size() >= max_deque_size) {
     this->img_deque1.pop_front();
   }
 
