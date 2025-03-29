@@ -79,7 +79,7 @@ inline radial_t min_height(vector<radial_t> bin) {
 
 /**
  * Function implementing the GraceAndConrad algorithm
- * @param cloud: The input vector of rectangular points to parse
+ * @param frame: The input Lidar frame
  * @param alpha: The size of each segment (radians)
  * @param num_bins: The number of bins per segment
  * @param height_threshold: Keep all points this distance above the best fit line
@@ -98,7 +98,33 @@ inline PointCloud<PointXYZ> GraceAndConrad(const LidarDecodedFrame<LidarPointXYZ
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
   //&& rd.angle > -4 * (M_PI/9) && rd.angle < 4 * (M_PI/9)
   PointCloud<PointXYZ> output;
+
+  // NEW CODE begin
+  // x is distance, y is angle, z is elevation
+  for (size_t i = 0; i < frame.points_num; ++i) {
+    // Filtering code (from source_driver_ros2.hpp)
+    float epsilon = 0.1;
+    LidarPointXYZIRT point = frame.points[i];
+    // Filter only on distance and elevation
+    if (std::abs(point.x) < epsilon && std::abs(point.z) < epsilon) {
+      continue;
+    }
+
+    // Post-filter output
+    radial_t rd = radial(point.x, point.y, point.z);
+
+    if (rd.radius < radius_max && (pt.y) < 0.5 && pt.y > -1.5) {
+      int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
+      int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
+      if (seg_index < 0)
+      seg_index = 0;
+      if (seg_index >= num_segs)
+      seg_index = num_segs - 1;
+      segments[seg_index][bin_index].push_back(rd);   // This line is doubling the execution time of sector 1
+    }
+  }
   
+  /* OLD CODE:
   // Parse all points from XYZ to radial,Z and separate into bins
   for (size_t i = 0; i < frame.points_num; ++i) {
     // Filtering code (from source_driver_ros2.hpp)
@@ -122,6 +148,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(const LidarDecodedFrame<LidarPointXYZ
       segments[seg_index][bin_index].push_back(rd);   // This line is doubling the execution time of sector 1
     }
   }
+  */
 
   // Grace and Conrad Algorithm
   for (int seg = 0; seg < num_segs; seg++) {

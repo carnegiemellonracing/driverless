@@ -330,8 +330,8 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
   sensor_msgs::PointCloud2Iterator<float> iter_x_(ros_vis_msg, "x");
   sensor_msgs::PointCloud2Iterator<float> iter_y_(ros_vis_msg, "y");
   sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_vis_msg, "z");
-
-  float epsilon = 0.1;
+  
+  // Moved filtering to GAC loop
   
   PointCloud<PointXYZ> filtered_cloud = run_pipeline(frame, CPP_ALPHA, CPP_NUM_BINS, CPP_HEIGHT_THRESHOLD, CPP_EPSILON, CPP_MIN_POINTS, CPP_EPSILON2, CPP_MIN_POINTS2);
 
