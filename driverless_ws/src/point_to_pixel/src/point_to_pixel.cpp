@@ -34,6 +34,8 @@ using std::chrono::milliseconds;
 #include "interfaces/msg/cone_list.hpp"
 #include "interfaces/msg/cone_array.hpp"
 
+#include "geometry_msgs/msg/TwistStamped.hpp"
+#include "geometry_msgs/msg/QuaternionStamped.hpp"
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -108,6 +110,9 @@ class Point_To_Pixel_Node : public rclcpp::Node
     // ROS2 Publisher and Subscribers
     rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr publisher_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr subscriber_;
+
+    // rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr twist_subscriber_;
+    // rclcpp::Subscription<geometry_msgs::msg::QuaternionStamped>::SharedPtr quat_subscriber_;
 
     Cone findClosestCone(const std::vector<Cone>& cones);
     double calculateAngle(const Cone& from, const Cone& to);
@@ -240,6 +245,9 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   std::chrono::seconds duration(2);
   rclcpp::sleep_for(duration);
 
+  // this->twist = geometry_msgs::msg::TwistStamped();
+  // this->quat = geometry_msgs::msg::QuaternionStamped();
+
   // ---------------------------------------------------------------------------
   //                              ROS2 OBJECTS
   // ---------------------------------------------------------------------------
@@ -253,6 +261,18 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
     10, 
     [this](const interfaces::msg::PPMConeArray::SharedPtr msg) {this->topic_callback(msg);}
   );
+
+  // twist_subscriber_ = this->create_subscription<geometry_msgs::msg::TwistStamped>(
+  //   "/filter/twist",
+  //   10,
+  //   [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg) {this->twist_callback(msg);}
+  // );
+
+  // quat_subscriber_ = this->create_subscription<geometry_msgs::msg::QuaternionStamped>(
+  //   "/filter/quat",
+  //   10,
+  //   [this](const geometry_msgs::msg::QuaternionStamped::SharedPtr msg) {this->quat_callback(msg);}
+  // );
 
   // Camera Callback (10 fps)
   camera_timer_ = this->create_wall_timer(
@@ -753,6 +773,13 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
   this->publisher_->publish(message);
 }
 
+// void Point_To_Pixel_Node::twist_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg) {
+//   this->twist = msg;
+// }
+
+// void Point_To_Pixel_Node::quat_callback(const geometry_msgs::msg::QuaternionStamped::SharedPtr msg) {
+//   this->quat = msg;
+// }
 
 // Camera Callback (Populates and maintain deque)
 void Point_To_Pixel_Node::camera_callback()
@@ -784,6 +811,87 @@ void Point_To_Pixel_Node::camera_callback()
     this->img_deque.pop_front();
     this->img_deque.push_back(std::make_pair(this->get_clock()->now(), frameBGR_1));
   }
+}
+
+// First attempt to motion model the LiDAR points to the camera timestamp
+interfaces::msg::PPMConeArray::SharedPtr Point_To_Pixel_Node::motion_model(
+  Eigen::Vector3d LiDAR_linear,
+  Eigen::Quaterniond LiDAR_quat,
+  Eigen::Vector3d Camera_linear,
+  Eigen::Quaterniond Camera_quat,
+  rclcpp::Time timestamp_camera, 
+  rclcpp::Time timestamp_lidar, 
+  const interfaces::msg::PPMConeArray::SharedPtr LiDAR_cones) {
+  // Get the time difference between the camera and lidar timestamps
+  double time_diff = (timestamp_camera - timestamp_lidar).seconds();
+
+  // Compute rotation matrix from quaternion to convert sensor frame points to global frame
+  Eigen::Matrix3d get_sensor_to_global(Eigen::Quaterniond quat) {
+    double q0 = quat.w();
+    double q1 = quat.x(); 
+    double q2 = quat.y();
+    double q3 = quat.z();
+
+    Eigen::Matrix3d rot_matrix;
+    rot_matrix << 2*(q0*q0 + q1*q1) - 1, 2*(q1*q2 - q0*q3), 2*(q1*q3 + q0*q2),
+                  2*(q1*q2 + q0*q3), 2*(q0*q0 + q2*q2) - 1, 2*(q2*q3 - q0*q1),
+                  2*(q1*q3 - q0*q2), 2*(q2*q3 + q0*q1), 2*(q0*q0 + q3*q3) - 1;
+    
+    return rot_matrix;
+  }
+
+  // Compute rotation matrix to convert global frame points to sensor frame
+  Eigen::Matrix3d get_global_to_sensor(Eigen::Quaterniond quat) {
+    return get_sensor_to_global(quat).inverse();
+  }
+
+  // Compute translation between two timestamps using average velocity
+  // dt is the time difference between the camera and lidar timestamps
+  Eigen::Vector3d get_translation_to(Eigen::Vector3d LiDAR_linear, Eigen::Vector3d Camera_linear) {
+    // average linear twist information between the two motion infos
+    // multiply by dt to get translation
+    return (LiDAR_linear + Camera_linear) * (time_diff / 2);
+  }
+
+  // Convert points to Eigen matrix format
+  // This should be a 3xN matrix
+  Eigen::MatrixXd points_matrix(3, LiDAR_cones->cone_array.size());
+  for(size_t i = 0; i < LiDAR_cones->cone_array.size(); i++) {
+    points_matrix.col(i) << LiDAR_cones->cone_array[i].cone_points[0].x, LiDAR_cones->cone_array[i].cone_points[0].y, LiDAR_cones->cone_array[i].cone_points[0].z;
+  }
+
+  // (1) Convert heading to global frame
+  // This should be a 3x3 matrix
+  Eigen::Matrix3d curr_sensor_to_global = get_sensor_to_global(LiDAR_quat);
+  // This should be a 3xN matrix
+  Eigen::MatrixXd curr_in_global = curr_sensor_to_global * points_matrix;
+
+  // (2) Translate points to camera timestamp's global frame
+  // This should be a 3x1 matrix
+  Eigen::Vector3d translation = get_translation_to(LiDAR_linear, Camera_linear);
+  // Broadcasting translation to all points by subtracting from each column
+  // This should be a 3xN matrix
+  Eigen::MatrixXd other_in_global = curr_in_global.colwise() - translation;
+
+  // (3) Convert back to sensor frame at camera timestamp
+  // This should be a 3x3 matrix
+  Eigen::Matrix3d other_global_to_sensor = get_global_to_sensor(Camera_quat);
+  // This should be a 3xN matrix
+  Eigen::MatrixXd points_in_other = other_global_to_sensor * other_in_global;
+
+  // Convert back to PPMConeArray message
+  auto transformed_msg = std::make_shared<interfaces::msg::PPMConeArray>();
+  transformed_msg->header = LiDAR_cones->header;
+  transformed_msg->cone_array.resize(points_in_other.cols());
+
+  for(size_t i = 0; i < points_in_other.cols(); i++) {
+    transformed_msg->cone_array[i].cone_points.resize(1);
+    transformed_msg->cone_array[i].cone_points[0].x = points_in_other.col(i)[0];
+    transformed_msg->cone_array[i].cone_points[0].y = points_in_other.col(i)[1]; 
+    transformed_msg->cone_array[i].cone_points[0].z = points_in_other.col(i)[2];
+  }
+
+  return transformed_msg;
 }
 
 
