@@ -1,8 +1,8 @@
 import os
 import sys
+import numpy as np
 import cv2
 import yaml
-import numpy as np
 import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter.ttk import Notebook
@@ -166,7 +166,7 @@ class HSVCalibrationUI:
         os.makedirs(os.path.dirname(config_path), exist_ok=True)
         
         try:
-            with open(filename, 'r') as file:
+            with open(config_path, 'r') as file:
                 data = yaml.safe_load(file)
 
                 curr = data['/point_to_pixel']['ros__parameters']
@@ -176,16 +176,16 @@ class HSVCalibrationUI:
                     curr[f"{color}_filter_low"] = [vars["lh"].get(), vars["ls"].get(), vars["lv"].get()]
                     curr[f"{color}_filter_high"] = [vars["uh"].get(), vars["us"].get(), vars["uv"].get()]
 
-            with open(filename, "w") as f:
+            with open(config_path, "w") as f:
                 yaml.dump(data, f)
-            messagebox.showinfo("Calibration Saved", f"Calibration data saved to {filename}")
+            messagebox.showinfo("Calibration Saved", f"Calibration data saved to {config_path}")
         except Exception as e:
 
             messagebox.showerror("Error", f"Failed to save calibration: {str(e)}")
     def run(self):
         self.root.mainloop()
 def main():
-    path = "/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/freeze.png"  # Update this path as needed.
+    path = os.path.join(os.path.dirname(os.getcwd()), "config/freeze.png")  # Update this path as needed.
     if not os.path.exists(path):
         print(f"Error: Image not found: {path}", file=sys.stderr)
         sys.exit(1)

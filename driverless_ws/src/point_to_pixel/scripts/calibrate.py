@@ -10,6 +10,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 import pyperclip
+import argparse
 
 @dataclass
 class CalibrationPoint:
@@ -415,12 +416,14 @@ class CalibrationUI:
 
 def main():
     # # Set up argument parser
-    # parser = argparse.ArgumentParser(description="Run calibration UI with a given image file.")
-    # parser.add_argument("-i", "--input", required=True, help="Path to the input image file")
-    # args = parser.parse_args()
+    parser = argparse.ArgumentParser(description="Specify which camera you're calibrating for (0->left or 1->right).")
+    parser.add_argument("-c", "--camera", required=True, help="camera (either 0 or 1)", type=int)
+    args = parser.parse_args()
+
+    ext = 1 if args.camera else 0
 
     # Read the image from the provided file path
-    path = "/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/freeze.png"
+    path = f"/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/freeze{ext}.png"
     im = cv2.imread(path)
 
     if im is None:
