@@ -639,8 +639,12 @@ namespace controls {
 
         TwistMsg TestNode::get_curr_twist(rclcpp::Time time) {
             TwistMsg msg {};
-            const float yaw = m_world_state[2];
             const float speed = m_world_state[3];
+            double kinematic_steering_angle = controls::model::slipless::kinematic_swangle(speed, m_last_action_msg.swangle);
+            /* We need to retrieve the slip angle */
+            double slip_angle = controls::model::slipless::slip_angle(kinematic_steering_angle);
+            const float yaw = m_world_state[2] + slip_angle;
+            
             msg.twist.linear.x = speed * std::cos(yaw); // + m_twist_jitter_gen(m_rng);
             msg.twist.linear.y = speed * std::sin(yaw); // + m_twist_jitter_gen(m_rng);
 
