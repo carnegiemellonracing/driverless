@@ -97,7 +97,7 @@ namespace controls {
             std::ofstream collision_log_output;
             std::stack<std::pair<glm::fvec2, std::tuple<glm::fvec2, float, float>>> collisions;
 
-            std::string collision_log_path = getenv("HOME") + g_config_dict["root_dir"] + g_config_dict["collision_logs"];
+            std::string collision_log_path = getenv("DRIVERLESS") + g_config_dict["root_dir"] + g_config_dict["collision_logs"];
             bool output_file_exists = std::filesystem::exists(collision_log_path);
             if (output_file_exists)
             {
@@ -231,12 +231,12 @@ namespace controls {
               m_pose_publisher{create_publisher<PoseMsg>(world_pose_topic_name, spline_qos)},
 
               m_config_dict{config_dict},
-              m_all_segments{parse_segments_specification(getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
+              m_all_segments{parse_segments_specification(getenv("DRIVERLESS") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
 
               m_lookahead{std::stof(m_config_dict["look_ahead"])},
               m_lookahead_squared{m_lookahead * m_lookahead},
 
-              m_log_file{getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_logs"], std::ios_base::trunc},
+              m_log_file{getenv("DRIVERLESS") + m_config_dict["root_dir"] + m_config_dict["track_logs"], std::ios_base::trunc},
 
               m_is_loop{m_config_dict["is_loop"] == "true"}
         {
@@ -246,7 +246,8 @@ namespace controls {
             // m_lookahead = std::stof(m_config_dict["look_ahead"]);
             // m_lookahead_squared = m_lookahead * m_lookahead;
             
-            glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
+            glm::fvec2 curr_pos {0, 0}; // TODO: this is just to test what happens if the car starts OOB
+            // glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
             float curr_heading = m_world_state[2];
             for (const auto& seg : m_all_segments) {
                 if (seg.type == SegmentType::ARC) {
@@ -310,13 +311,20 @@ namespace controls {
         }
 
         static size_t find_closest_point(const std::vector<glm::fvec2>& points, glm::fvec2 position, float lookahead_squared, size_t prev_closest) {
+            int counter = 0;
             while (get_squared_distance(points.at(prev_closest), position) >= lookahead_squared) {
                 prev_closest = (prev_closest + 1) % points.size();
+                counter++;
+                if (counter > points.size()) {
+                    // we are in an infinite loop, just return the old value
+                    return prev_closest;
+                }
             }
             return prev_closest;
         }
 
         static size_t find_furthest_point(const std::vector<glm::fvec2>& points, glm::fvec2 position, float lookahead_squared, size_t prev_furthest, size_t prev_closest) {
+            // this will eventually terminate if prev_closest is sane
             while (get_squared_distance(points.at(prev_furthest), position) < lookahead_squared) {
                 prev_furthest = (prev_furthest + 1) % points.size();
                 if (prev_furthest == prev_closest) {
@@ -622,8 +630,6 @@ namespace controls {
             auto curr_time = get_clock()->now();
             spline_msg.header.stamp = curr_time;
             cone_msg.header.stamp = curr_time;
-            spline_msg.orig_data_stamp = curr_time;
-            cone_msg.orig_data_stamp = curr_time;
 
             m_spline_publisher->publish(spline_msg);
             m_cone_publisher->publish(cone_msg);
@@ -777,7 +783,7 @@ int main(int argc, char* argv[]){
         config_file_path = argv[1];
     }
     
-    std::string config_file_base_path = std::string {getenv("HOME")} + "/driverless/driverless_ws/src/controls/tests/sim_configs/";
+    std::string config_file_base_path = std::string {getenv("DRIVERLESS")} + "/driverless_ws/src/controls/tests/sim_configs/";
     std::string config_file_full_path = config_file_base_path + config_file_path;
     
     std::map<std::string, std::string> config_dict;

@@ -24,6 +24,7 @@ driverless_ws/src/Model/model.dSYM/Contents/Resources/DWARF/model
 driverless_ws/src/Model/model.dSYM/Contents/Info.plist
 driverless_ws/src/Model/model
 
+*.log
 driverless_ws/src/controls/**/*.txt
 logs/**
 

@@ -80,6 +80,7 @@ set(LIB_SOURCES
         ${TWO_TRACK_SRCS}
         src/midline/svm.cpp
         src/midline/svm_conv.cpp
+        src/midline/svm_conv_fast.cpp
         src/midline/cones.cpp
 )
 
@@ -145,10 +146,22 @@ install(
         DESTINATION lib/${PROJECT_NAME}
 )
 
+# ***** Dead Reckon Node *****
+add_executable(dead_reckon 
+        src/nodes/dead_reckon.cpp 
+        src/can/cmr_can.c)
+
+target_link_libraries(dead_reckon Threads::Threads m can_lib)
+ament_target_dependencies(dead_reckon rclcpp interfaces builtin_interfaces)
+
+install(
+        TARGETS dead_reckon
+        DESTINATION lib/${PROJECT_NAME}
+)
 
 # ***** Shared options *****
 
-set_target_properties(controls_lib controller PROPERTIES
+set_target_properties(controls_lib controller dead_reckon PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON
         CUDA_ARCHITECTURES ${CUDA_ARCH}
 )

@@ -7,7 +7,7 @@ project(hesai_ros_driver)
 #=======================================
 set(VERSION_MAJOR 2)
 set(VERSION_MINOR 0)
-set(VERSION_TINY  7)
+set(VERSION_TINY  8)
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/Version.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/Version.h"
@@ -17,6 +17,11 @@ configure_file(
 # Custom Point Type (XYZI, XYZIRT)
 #=======================================
 set(POINT_TYPE XYZI)
+
+find_package(PCL 1.3 REQUIRED)
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
 
 #=======================================
 # Compile setup (ORIGINAL, CATKIN, COLCON)
@@ -105,11 +110,12 @@ if($ENV{ROS_VERSION} MATCHES "2")
     find_package(ament_cmake REQUIRED)
     find_package(sensor_msgs REQUIRED)
     find_package(std_msgs REQUIRED)  
+    find_package(geometry_msgs REQUIRED)  
+    find_package(interfaces REQUIRED)  
     find_package(rclcpp_action REQUIRED)
     find_package(rosidl_typesupport_c REQUIRED) 
     find_package(rosidl_default_generators REQUIRED)
     find_package(builtin_interfaces REQUIRED)
-    find_package(std_msgs REQUIRED)
     
     rosidl_generate_interfaces(${PROJECT_NAME}
       "msg/msg_ros2/UdpPacket.msg"
@@ -155,9 +161,8 @@ link_directories(${Boost_LIBRARY_DIRS})
 # if install different cuda version, set the cuda path, like cuda-11.4
 # set(CUDA_TOOLKIT_ROOT_DIR /usr/local/cuda-11.4/)
 # find_package(CUDA REQUIRED)
-find_package(CUDA )
+# find_package(CUDA )
 
-# set(CUDA_FOUND false)
 if(CUDA_FOUND)
   
   message(=============================================================)
@@ -165,7 +170,7 @@ if(CUDA_FOUND)
   message(=============================================================)
 
   link_directories($ENV{CUDA_PATH}/lib/x64)
-  set(CUDA_NVCC_FLAGS "-arch=sm_75;-O2;-g;-G")#根据具体GPU性能更改算力参数
+  set(CUDA_NVCC_FLAGS "-arch=sm_75;-O2")#根据具体GPU性能更改算力参数
   set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -rdc=true")
   list(APPEND CUDA_NVCC_FLAGS -Xcompiler -fPIC)
 
@@ -187,10 +192,6 @@ if(CUDA_FOUND)
                 ${CUDA_LIBS}
                 # libhesai
     )
-  
-  # target_compile_options(hesai_ros_driver_node $<$<COMPILE_LANGUAGE:CUDA>:
-  #       -g -G
-  #       >)
 else(CUDA_FOUND)
 
   message(=============================================================)
@@ -261,6 +262,8 @@ if($ENV{ROS_VERSION} MATCHES "2")
   "rclcpp" 
   "rcutils"
   "std_msgs" 
+  "geometry_msgs" 
+  "interfaces" 
   "sensor_msgs" 
   # "tf2_geometry_msgs"
   )
@@ -279,5 +282,4 @@ if($ENV{ROS_VERSION} MATCHES "2")
   ament_package()
 
 endif($ENV{ROS_VERSION} MATCHES "2")
-
 

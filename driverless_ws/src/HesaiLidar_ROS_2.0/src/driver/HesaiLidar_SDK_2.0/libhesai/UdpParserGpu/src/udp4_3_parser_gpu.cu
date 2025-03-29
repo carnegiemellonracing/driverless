@@ -38,8 +38,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "safe_call.cuh"
 #include "return_code.h"
 
-#define MAX_DISTANCE 5.0f // Maximum allowable distance
-#define ERROR_MARGIN 0.15f  // Outlier threshold
+#define MAX_DISTANCE 25.0f // Maximum allowable distance
+#define ERROR_MARGIN 0.2f  // Outlier threshold
 #define MAX_HEIGHT 0.4f
 
 
@@ -623,7 +623,7 @@ __global__ void populateLowestPoints(
         // printf("index = %d, points[index].z = %f, z_val = %f, cell_idx = %d\n", index, points[index].z, z_val, cell_idx);
         assert(points[index].z == z_val);
         lowest_points[cell_idx] = points[index];
-        printf("The lowest z in bin %d is %f: \n", cell_idx, lowest_points[cell_idx].z);
+        // printf("The lowest z in bin %d is %f: \n", cell_idx, lowest_points[cell_idx].z);
     } else {
         // printf("cell index %d was never cas'd\n", cell_idx);
         T_Point default_point = {0, 0, FLT_MAX, 0, 0, 0};
@@ -689,7 +689,7 @@ T_Point* processPointsCUDA(
 
 
     cudaEventRecord(start);
-    assignToGrid<<<grid, block>>>(d_points, d_segments, d_bins, num_points, 0.0f, 2*M_PI, 0.0f, MAX_DISTANCE, num_segments, num_bins);
+    assignToGrid<<<grid, block>>>(d_points, d_segments, d_bins, num_points, 0.0f, M_PI / 10, 0.0f, MAX_DISTANCE, num_segments, num_bins);
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
     cudaEventElapsedTime(&assignToGridTime, start, stop);
@@ -1052,8 +1052,8 @@ compute_xyzs_v4_3_impl<<<frame.packet_num, frame.block_num * frame.laser_num>>>(
   //           << "time taken to copy data from gpu is " << std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count() << "\n"
   //           << "time taken to copy cpu to cpu is " << std::chrono::duration_cast<std::chrono::microseconds>(t5 - t4).count() << "\n";
 
-  float alpha = 0.1f;
-  int num_bins = 5;
+  float alpha = 1.5f;
+  int num_bins = 10;
   int* num_filtered = (int*)malloc(sizeof(int));
   auto filtered_points = GraceAndConrad(frame.points, frame.block_num * frame.laser_num * frame.packet_num, alpha, num_bins, num_filtered);
   frame.filtered_points_num = static_cast<uint32_t>(*num_filtered);
@@ -1068,8 +1068,8 @@ compute_xyzs_v4_3_impl<<<frame.packet_num, frame.block_num * frame.laser_num>>>(
   free(num_filtered);
   cudaDeviceSynchronize();
   std::cout << "Number of clusters: " << cone_clusters.size() << std::endl;
-  frame.cone_centroids_num = cone_clusters.size();
-  std::memcpy(frame.cone_centroids, cone_clusters.data(), cone_clusters.size() * sizeof(T_Point));
+  frame.cones_num = cone_clusters.size();
+  std::memcpy(frame.cones, cone_clusters.data(), cone_clusters.size() * sizeof(T_Point));
 
 
   free(filtered_points);
