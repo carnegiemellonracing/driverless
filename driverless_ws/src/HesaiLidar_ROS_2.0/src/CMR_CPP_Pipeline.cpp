@@ -68,7 +68,7 @@ inline radial_t min_height(vector<radial_t> bin) {
   }
 
   radial_t mini = bin[0];
-  for (int i = 0; i < size; i++) {
+  for (int i = 0; i < size; ++i) {
     radial_t rd = bin[i];
     if (rd.z < mini.z) {
       mini = rd;
@@ -85,7 +85,8 @@ inline radial_t min_height(vector<radial_t> bin) {
  * @param height_threshold: Keep all points this distance above the best fit line
  * @return A point cloud of ground-filtered points
  */
-inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double alpha, 
+inline PointCloud<PointXYZ> GraceAndConrad(const LidarDecodedFrame<LidarPointXYZIRT>& frame, 
+                                    double alpha, 
                                     int num_bins, double height_threshold) {
 
   double upper_height_threshold = 0.2;
@@ -97,11 +98,18 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
   //&& rd.angle > -4 * (M_PI/9) && rd.angle < 4 * (M_PI/9)
   PointCloud<PointXYZ> output;
-
+  
   // Parse all points from XYZ to radial,Z and separate into bins
-  int csize = cloud.points.size();git 
-  for (int i = 0; i < csize; i++) {
-    PointXYZ pt = cloud.points[i];
+  for (size_t i = 0; i < frame.points_num; ++i) {
+    // Filtering code (from source_driver_ros2.hpp)
+    float epsilon = 0.1;
+    LidarPointXYZIRT point = frame.points[i];
+    if (std::abs(point.x) < epsilon && std::abs(point.y) < epsilon && std::abs(point.z) < epsilon) {
+      continue;
+    }
+
+    // Post-filter output
+    PointXYZ pt = PointXYZ(point.x, point.y, point.z);
     radial_t rd = point2radial(pt);
 
     if (rd.radius < radius_max && (pt.y) < 0.5 && pt.y > -1.5) {
@@ -135,7 +143,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
     double sum_z = 0;
     double sum_radz = 0;
     int n = minis_rad.size();
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; ++i) {
       double rad = minis_rad[i];
       double z = minis_z[i];
       sum_rad += rad;
@@ -307,7 +315,8 @@ inline PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon,
   return cloud;
 }
 
-inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alpha, 
+inline PointCloud<PointXYZ> run_pipeline(const LidarDecodedFrame<LidarPointXYZIRT>& frame, 
+                                         double alpha, 
                                          int num_bins, double height_threshold, 
                                          double epsilon, int min_points, 
                                          double epsilon2, int min_points2) {
@@ -317,7 +326,7 @@ inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alp
 
   // Time GraceAndConrad step
   auto start_GNC = std::chrono::high_resolution_clock::now();
-  PointCloud<PointXYZ> GNC_cloud = GraceAndConrad(cloud, alpha, num_bins, height_threshold);
+  PointCloud<PointXYZ> GNC_cloud = GraceAndConrad(frame, alpha, num_bins, height_threshold);
   auto end_GNC = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> duration_GNC = end_GNC - start_GNC;
   std::cout << "GraceAndConrad time: " << duration_GNC.count() << " ms" << std::endl;

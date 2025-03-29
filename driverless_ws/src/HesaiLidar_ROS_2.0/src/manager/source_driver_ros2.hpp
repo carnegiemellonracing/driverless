@@ -332,19 +332,8 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
   sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_vis_msg, "z");
 
   float epsilon = 0.1;
-
-  PointCloud<PointXYZ> filtered_points;
-
-  for (size_t i = 0; i < frame.points_num; i++) {
-    LidarPointXYZIRT point = frame.points[i];
-    if (std::abs(point.x) < epsilon && std::abs(point.y) < epsilon && std::abs(point.z) < epsilon) {
-      continue;
-    }
-
-    filtered_points.push_back(PointXYZ(point.x, point.y, point.z));
-  }
   
-  PointCloud<PointXYZ> filtered_cloud = run_pipeline(filtered_points, CPP_ALPHA, CPP_NUM_BINS, CPP_HEIGHT_THRESHOLD, CPP_EPSILON, CPP_MIN_POINTS, CPP_EPSILON2, CPP_MIN_POINTS2);
+  PointCloud<PointXYZ> filtered_cloud = run_pipeline(frame, CPP_ALPHA, CPP_NUM_BINS, CPP_HEIGHT_THRESHOLD, CPP_EPSILON, CPP_MIN_POINTS, CPP_EPSILON2, CPP_MIN_POINTS2);
 
   for (size_t i = 0; i < filtered_cloud.size(); i++) {
     *iter_x_ = -filtered_cloud.points[i].y;
