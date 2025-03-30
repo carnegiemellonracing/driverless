@@ -39,14 +39,14 @@ using std::placeholders::_1;
 // ---------------------------------------------------------------------------
 //    FLAGS
 // ---------------------------------------------------------------------------
-#define VIZ 1 // Prints color detection outputs of every point
+#define VIZ 0 // Prints color detection outputs of every point
 #define VERBOSE 0 // Prints transform matrix and transformed pixel of every point
 #define YOLO 0 // 0: HSV Coloring | 1: YOLO Coloring
-#define TIMING 1 // Prints timing suite at end of every callback
+#define TIMING 0 // Prints timing suite at end of every callback
 #define INNER 1 // Uses inner lens of ZEDS (if 0 uses the outer lens)
 
-static constexpr int yolo_h 640;
-static constexpr int yolo_w 640;
+static constexpr int yolo_h = 640;
+static constexpr int yolo_w = 640;
 static constexpr int max_deque_size = 10;
 
 class Point_To_Pixel_Node : public rclcpp::Node
@@ -122,7 +122,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
                                               cap_1(sl_oc::video::VideoCapture(params))
 {
   // Camera 0
-  if(!(this->cap_0).initializeVideo())
+  if(!(this->cap_0).initializeVideo(0))
   {
     RCLCPP_ERROR(this->get_logger(), "Cannot open camera 0 video capture");
     rclcpp::shutdown(); // Shutdown node
@@ -130,7 +130,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
   RCLCPP_INFO(this->get_logger(), "Connected to ZED camera 0. %s", (this->cap_0).getDeviceName().c_str());
 
   // Camera 1
-  if(!(this->cap_1).initializeVideo())
+  if(!(this->cap_1).initializeVideo(2))
   {
     RCLCPP_ERROR(this->get_logger(), "Cannot open camera 1 video capture");
     rclcpp::shutdown(); // Shutdown node
@@ -178,7 +178,9 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
   // Set auto exposure and brightness
   this->cap_0.setAECAGC(true);
+  // this->cap_0.setAutoWhiteBalance(true);
   this->cap_1.setAECAGC(true);
+  // this->cap_1.setAutoWhiteBalance(true);
 
   RCLCPP_INFO(this->get_logger(), "ZED Camera 0 Ready. %s", (this->cap_0).getDeviceName().c_str());
   RCLCPP_INFO(this->get_logger(), "ZED Camera 1 Ready. %s", (this->cap_1).getDeviceName().c_str());
@@ -750,7 +752,7 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
 void Point_To_Pixel_Node::camera_callback()
 {
   // Capture Frame and Time
-  this->frame_0 = this->cap_1.getLastFrame();
+  this->frame_0 = this->cap_0.getLastFrame();
   rclcpp::Time time0 = this->get_clock()->now();
 
   this->frame_1 = this->cap_1.getLastFrame();
