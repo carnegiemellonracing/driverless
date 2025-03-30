@@ -43,7 +43,7 @@ using std::placeholders::_1;
 // ---------------------------------------------------------------------------
 //    FLAGS
 // ---------------------------------------------------------------------------
-#define VIZ 0 // Prints color detection outputs of every point
+#define VIZ 1 // Prints color detection outputs of every point
 #define VERBOSE 0 // Prints transform matrix and transformed pixel of every point
 #define YOLO 0 // 0: HSV Coloring | 1: YOLO Coloring
 #define TIMING 1 // Prints timing suite at end of every callback
@@ -727,17 +727,6 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
     auto transform_coloring_time = high_resolution_clock::now();
   #endif
 
-  int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
-  int yellow_cones = message.yellow_cones.size();
-  int blue_cones = message.blue_cones.size();
-  int orange_cones = message.orange_cones.size();
-  int unknown_color_cones = message.unknown_color_cones.size();
-  
-  RCLCPP_INFO(
-    this->get_logger(), 
-    "Transform callback triggered. Published %d cones. %d yellow, %d blue, %d orange, and %d unknown.", 
-    cones_published, yellow_cones, blue_cones, orange_cones, unknown_color_cones
-  );
 
   if (!unordered_yellow_cones.empty()) {
     std::vector<Cone> ordered_yellow = orderConesByPathDirection(unordered_yellow_cones);
@@ -752,6 +741,19 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
       message.blue_cones.push_back(cone.point);
     }
   }
+
+  int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
+  int yellow_cones = message.yellow_cones.size();
+  int blue_cones = message.blue_cones.size();
+  int orange_cones = message.orange_cones.size();
+  int unknown_color_cones = message.unknown_color_cones.size();
+  
+  RCLCPP_INFO(
+    this->get_logger(), 
+    "Transform callback triggered. Published %d cones. %d yellow, %d blue, %d orange, and %d unknown.", 
+    cones_published, yellow_cones, blue_cones, orange_cones, unknown_color_cones
+  );
+
 
   #if TIMING
     auto end_time = high_resolution_clock::now();

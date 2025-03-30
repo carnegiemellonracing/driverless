@@ -1,5 +1,21 @@
 /point_to_pixel:
   ros__parameters:
+    blue_filter_high:
+    - 126
+    - 255
+    - 255
+    blue_filter_low:
+    - 72
+    - 150
+    - 0
+    orange_filter_high:
+    - 25
+    - 255
+    - 255
+    orange_filter_low:
+    - 7
+    - 255
+    - 20
     projection_matrix:
     - 0.5840560136943477
     - 0.12579521749360642
@@ -14,26 +30,10 @@
     - 0.00037003207314329433
     - 0.0007350456138419462
     yellow_filter_high:
-    - 30
+    - 144
     - 255
     - 255
     yellow_filter_low:
-    - 20
-    - 100
-    - 100
-    blue_filter_high:
-    - 140
-    - 255
-    - 255
-    blue_filter_low:
-    - 89
-    - 76
     - 0
-    orange_filter_high:
-    - 0
-    - 0
-    - 0
-    orange_filter_low:
-    - 0
-    - 0
-    - 0
+    - 78
+    - 154

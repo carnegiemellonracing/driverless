@@ -166,7 +166,7 @@ class HSVCalibrationUI:
         os.makedirs(os.path.dirname(config_path), exist_ok=True)
         
         try:
-            with open(filename, 'r') as file:
+            with open(config_path, 'r') as file:
                 data = yaml.safe_load(file)
 
                 curr = data['/point_to_pixel']['ros__parameters']
@@ -176,9 +176,9 @@ class HSVCalibrationUI:
                     curr[f"{color}_filter_low"] = [vars["lh"].get(), vars["ls"].get(), vars["lv"].get()]
                     curr[f"{color}_filter_high"] = [vars["uh"].get(), vars["us"].get(), vars["uv"].get()]
 
-            with open(filename, "w") as f:
+            with open(config_path, "w") as f:
                 yaml.dump(data, f)
-            messagebox.showinfo("Calibration Saved", f"Calibration data saved to {filename}")
+            messagebox.showinfo("Calibration Saved", f"Calibration data saved to {config_path}")
         except Exception as e:
 
             messagebox.showerror("Error", f"Failed to save calibration: {str(e)}")
