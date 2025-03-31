@@ -22,9 +22,19 @@ set(LIBRARY_PATH ~/Documents/driverless-packages/zed-open-capture/build)
 
 include_directories(~/Documents/driverless-packages/zed-open-capture/include)
 include_directories(~/Documents/driverless-packages/zed-open-capture/examples/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+set(POINT_TO_PIXEL_SRC
+  src/ros_node/point_to_pixel_node.cpp
+  src/transform/transform.cpp
+  src/camera/camera.cpp
+  src/coloring/coloring.cpp
+  src/coloring/hsv.cpp
+  src/coloring/yolo.cpp
+)
 
 # Point to Pixel Executable
-add_executable(point_to_pixel src/point_to_pixel.cpp)
+add_executable(point_to_pixel ${POINT_TO_PIXEL_SRC})
 ament_target_dependencies(point_to_pixel rclcpp interfaces geometry_msgs Eigen3 OpenCV)
 
 target_include_directories(point_to_pixel PUBLIC
@@ -33,7 +43,7 @@ target_include_directories(point_to_pixel PUBLIC
 target_compile_features(point_to_pixel PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
 # Point to Pixel Debug Executable
-add_executable(point_to_pixel_debug src/point_to_pixel_debug.cpp)
+add_executable(point_to_pixel_debug ${POINT_TO_PIXEL_SRC})
 ament_target_dependencies(point_to_pixel_debug rclcpp interfaces geometry_msgs Eigen3 OpenCV)
 
 target_include_directories(point_to_pixel_debug PUBLIC
