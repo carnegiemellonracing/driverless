@@ -1,14 +1,14 @@
 #include "hsv.hpp"
 
 // Flag for debug visualization
-#ifndef VIZ
-#define VIZ 0   // Prints color detection outputs of every point
+#ifndef viz
+#define viz 0   // Prints color detection outputs of every point
 #endif
 
 namespace coloring {
     namespace hsv {
         std::pair<int, double> get_color(
-            Eigen::Vector2d& pixel,
+            Eigen::Vector3d& pixel,
             cv::Mat img,
             const cv::Scalar& yellow_filter_low,
             const cv::Scalar& yellow_filter_high,
@@ -73,7 +73,7 @@ namespace coloring {
             double orange_percentage = orange_pixels / total_pixels;
             
             // Print out the color percentages
-            #if VIZ
+            #if viz
                 std::cout << "Yellow Percentage: " << yellow_percentage * 100 << "%" << std::endl;
                 std::cout << "Blue Percentage: " << blue_percentage * 100 << "%" << std::endl;
                 std::cout << "Orange Percentage: " << orange_percentage * 100 << "%" << std::endl;

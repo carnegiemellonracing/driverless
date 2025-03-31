@@ -4,7 +4,7 @@
 
 namespace coloring {
     int get_cone_class(
-        std::pair<Eigen::Vector2d, Eigen::Vector2d> pixel_pair,
+        std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
         std::pair<cv::Mat, cv::Mat> frame_pair,
         std::pair<cv::Mat, cv::Mat> detection_pair,
         const cv::Scalar& yellow_filter_low,

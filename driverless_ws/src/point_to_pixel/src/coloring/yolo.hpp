@@ -17,7 +17,7 @@ namespace coloring {
          * @return std::pair<int, double> Color ID and confidence
          */
         std::pair<int, double> get_color(
-            Eigen::Vector2d& pixel,
+            Eigen::Vector3d& pixel,
             cv::Mat detection,
             int cols,
             int rows,

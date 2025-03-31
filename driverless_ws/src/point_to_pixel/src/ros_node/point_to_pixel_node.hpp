@@ -7,27 +7,10 @@
 #include "interfaces/msg/cone_list.hpp"
 #include "interfaces/msg/cone_array.hpp"
 
-// zed-open-capture library header
-#include <videocapture.hpp>
-#include <ocv_display.hpp>
-#include <calibration.hpp>
-
-// Standard Imports
-#include <deque>
-#include <memory>
-#include <chrono>
-
 // Project Headers
 #include "../transform/transform.hpp"
 #include "../camera/camera.hpp"
 #include "../coloring/coloring.hpp"
-
-// Flags
-#define VIZ 0      // Prints color detection outputs of every point
-#define VERBOSE 0  // Prints transform matrix and transformed pixel of every point
-#define USE_YOLO 0 // 0: HSV Coloring | 1: YOLO Coloring
-#define TIMING 0   // Prints timing suite at end of every callback
-#define INNER 1    // Uses inner lens of ZEDS (if 0 uses the outer lens)
 
 using std::chrono::duration;
 using std::chrono::duration_cast;
@@ -35,13 +18,21 @@ using std::chrono::high_resolution_clock;
 using std::chrono::milliseconds;
 using std::placeholders::_1;
 
-static constexpr int max_deque_size = 10;
+// BUILD FLAGS
+static constexpr bool viz = 0;      // Prints color detection outputs of every point
+static constexpr bool verbose = 0;  // Prints transform matrix and transformed pixel of every point
+static constexpr bool use_yolo = 0; // 0: HSV Coloring | 1: YOLO Coloring
+static constexpr bool timing = 0;   // Prints timing suite at end of every callback
+static constexpr bool inner = 0;    // Uses inner lens of ZEDS (if 0 uses the outer lens)
 
 class PointToPixelNode : public rclcpp::Node
 {
 public:
     // Constructor declaration
     PointToPixelNode();
+    static constexpr int max_deque_size = 10;
+    // static constexpr int zed_one_sn; // Left side zed
+    // static constexpr int zed_two_sn; // Right side zed
 
 private:
     // Image Deque
@@ -49,6 +40,8 @@ private:
     std::deque<std::pair<rclcpp::Time, cv::Mat>> img_deque_r;
 
     // ROS2 Parameters
+    bool inner;
+
     Eigen::Matrix<double, 3, 4> projection_matrix_l;
     Eigen::Matrix<double, 3, 4> projection_matrix_r;
 
@@ -89,11 +82,11 @@ private:
 
     // Helper functions with implementations in separate files
     std::pair<cv::Mat, cv::Mat> get_camera_frame(rclcpp::Time callbackTime);
-    int get_cone_class(std::pair<Eigen::Vector2d, Eigen::Vector2d> pixel_pair,
+    int get_cone_class(std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
                       std::pair<cv::Mat, cv::Mat> frame_pair,
                       std::pair<cv::Mat, cv::Mat> detection_pair);
 
-#if USE_YOLO
+#if use_yolo
     cv::dnn::Net net; // YOLO Model
 #endif
 };

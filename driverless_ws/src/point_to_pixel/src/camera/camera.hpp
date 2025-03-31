@@ -1,12 +1,14 @@
-#ifndef CAMERA_HPP
-#define CAMERA_HPP
+#pragma once
 
-#include <opencv2/opencv.hpp>
 #include <videocapture.hpp>
 #include <ocv_display.hpp>
 #include <calibration.hpp>
 #include "rclcpp/rclcpp.hpp"
+
+#include <opencv2/opencv.hpp>
+// Standard Imports
 #include <deque>
+#include <cmath>
 
 /**
  * @brief Finds the closest frame to a callback time from the image deque
@@ -23,7 +25,7 @@ cv::Mat find_closest_frame(
 );
 
 /**
- * @brief Initialize ZED camera with calibration
+ * @brief Initialize ZED camera with rectification matrices and calibration
  * 
  * @param cap The video capture object
  * @param device_id Device ID for the camera
@@ -35,14 +37,13 @@ cv::Mat find_closest_frame(
  * @return bool Success status
  */
 bool initialize_camera(
-    sl_oc::video::VideoCapture& cap,
+    sl_oc::video::VideoCapture &cap,
     int device_id,
-    cv::Mat& map_left_x,
-    cv::Mat& map_left_y,
-    cv::Mat& map_right_x,
-    cv::Mat& map_right_y,
-    const rclcpp::Logger& logger
-);
+    cv::Mat &map_left_x,
+    cv::Mat &map_left_y,
+    cv::Mat &map_right_x,
+    cv::Mat &map_right_y,
+    const rclcpp::Logger &logger);
 
 /**
  * @brief Captures and rectifies a frame from a ZED camera
@@ -52,8 +53,8 @@ bool initialize_camera(
  * @param map_left_y Left y rectification map
  * @param map_right_x Right x rectification map
  * @param map_right_y Right y rectification map
- * @param use_inner_lens Whether to use inner or outer lens
- * @param logger ROS logger for error reporting
+ * @param left_camera If using left sided zed set to true
+ * @param use_inner_lens If using inner lenses set to true
  * @return cv::Mat The rectified frame
  */
 cv::Mat capture_and_rectify_frame(
@@ -62,8 +63,6 @@ cv::Mat capture_and_rectify_frame(
     const cv::Mat& map_left_y,
     const cv::Mat& map_right_x,
     const cv::Mat& map_right_y,
-    bool use_inner_lens,
-    const rclcpp::Logger& logger
+    bool left_camera,
+    bool use_inner_lens
 );
-
-#endif

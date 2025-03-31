@@ -20,7 +20,7 @@ namespace coloring {
          * @return std::pair<int, double> Color ID (-1, 0=orange, 1=yellow, 2=blue) and confidence
          */
         std::pair<int, double> get_color(
-            Eigen::Vector2d& pixel,
+            Eigen::Vector3d& pixel,
             cv::Mat image,
             const cv::Scalar& yellow_filter_low,
             const cv::Scalar& yellow_filter_high,

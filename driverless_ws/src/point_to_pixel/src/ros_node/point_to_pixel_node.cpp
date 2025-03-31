@@ -1,5 +1,10 @@
 #include "point_to_pixel_node.hpp"
 
+// Standard Imports
+#include <deque>
+#include <memory>
+#include <chrono>
+
 // Constructor definition
 PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     params([]() {sl_oc::video::VideoParams p; p.res = sl_oc::video::RESOLUTION::HD1080; p.fps = sl_oc::video::FPS::FPS_30; return p;}()),
@@ -29,6 +34,9 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     img_deque_l = {};
     img_deque_r = {};
 
+    // Boolean parameter that determines whether we use the inner two zed cameras or the outer two zed cameras
+    declare_parameter("inner", false);
+
     // Projection matrix that takes LiDAR points to pixels
     std::vector<double> param_default(12, 1.0f); 
 
@@ -38,7 +46,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     // Threshold that determines whether it reports the color on a cone or not
     declare_parameter("confidence_threshold", 0.05);
 
-    #if USE_YOLO
+    #if use_yolo
         // Load YOLO Model
         net = coloring::yolo::init_model("src/point_to_pixel/config/best164.onnx");
         if (net.empty()) {
@@ -63,29 +71,40 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     declare_parameter("orange_filter_high", lo_filter_default);
     declare_parameter("orange_filter_low", uo_filter_default);
 
-    // Load Projection Matrix
-    std::vector<double> param_l = get_parameter("projection_matrix_l").as_double_array();
-    std::vector<double> param_r = get_parameter("projection_matrix_r").as_double_array();
+    // Load inner boolean parameter
+    bool inner = get_parameter("camera_inner").as_bool();
+
+    // Load Projection Matrix if inner is set to true, then load lr and rl, else load ll and rr
+    std::vector<double> param_l, param_r;
+    
+    if (inner) {
+        param_l = get_parameter("projection_matrix_lr").as_double_array();
+        param_r = get_parameter("projection_matrix_rl").as_double_array();
+    } else {
+        param_l = get_parameter("projection_matrix_ll").as_double_array();
+        param_r = get_parameter("projection_matrix_rr").as_double_array();
+    }
+    
     projection_matrix_l = Eigen::Map<Eigen::Matrix<double, 3, 4, Eigen::RowMajor>>(param_l.data());
     projection_matrix_r = Eigen::Map<Eigen::Matrix<double, 3, 4, Eigen::RowMajor>>(param_r.data());
 
-    #if VERBOSE
-        // Create a stringstream to log the matrix
-        std::stringstream ss_l;
-        std::stringstream ss_r;
+    #if verbose
+    // Create a stringstream to log the matrix
+    std::stringstream ss_l;
+    std::stringstream ss_r;
 
-        // Iterate over the rows and columns of the matrix and format the output
-        for (int i = 0; i < projection_matrix_l.rows(); ++i){
-            for (int j = 0; j < projection_matrix_l.cols(); ++j){
-                ss_l << projection_matrix_l(i, j) << " ";
-                ss_r << projection_matrix_r(i, j) << " ";
-            }
-            ss_l << "\n";
-            ss_r << "\n";
+    // Iterate over the rows and columns of the matrix and format the output
+    for (int i = 0; i < projection_matrix_l.rows(); ++i){
+        for (int j = 0; j < projection_matrix_l.cols(); ++j){
+            ss_l << projection_matrix_l(i, j) << " ";
+            ss_r << projection_matrix_r(i, j) << " ";
         }
-        // Log the projection_matrix using ROS 2 logger
-        RCLCPP_INFO(get_logger(), "Projection Matrix Left:\n%s", ss_l.str().c_str());
-        RCLCPP_INFO(get_logger(), "Projection Matrix Right:\n%s", ss_r.str().c_str());
+        ss_l << "\n";
+        ss_r << "\n";
+    }
+    // Log the projection_matrix using ROS 2 logger
+    RCLCPP_INFO(get_logger(), "Projection Matrix Left:\n%s", ss_l.str().c_str());
+    RCLCPP_INFO(get_logger(), "Projection Matrix Right:\n%s", ss_r.str().c_str());
     #endif
 
     // Load Confidence Threshold
@@ -110,7 +129,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     //                              ROS2 OBJECTS
     // ---------------------------------------------------------------------------
 
-    // Publisher that returns colored cones
+    // Publisher that returns colored cones 
     publisher_ = create_publisher<interfaces::msg::ConeArray>("/perc_cones", 10);
     
     // Subscriber that reads the input topic that contains an array of cone_point arrays from LiDAR stack
@@ -137,9 +156,13 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
         map_left_y_ll,
         map_right_x_lr,
         map_right_y_lr,
-        INNER == 1,
-        get_logger()
+        true, // left_camera==true;
+        inner
     );
+
+    if (frame_l.empty()) {
+        RCLCPP_ERROR(get_logger(), "Failed to capture frame from left camera.");
+    };
 
     cv::Mat frame_r = capture_and_rectify_frame(
         cap_r,
@@ -147,9 +170,13 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
         map_left_y_rl,
         map_right_x_rr,
         map_right_y_rr,
-        INNER == 1,
-        get_logger()
+        false, // left_camera==false;
+        inner
     );
+
+    if (frame_r.empty()) {
+        RCLCPP_ERROR(get_logger(), "Failed to capture frame from right camera.");
+    };
 
     // Save freeze images
     cv::imwrite("src/point_to_pixel/config/freeze_l.png", frame_l);
@@ -157,20 +184,20 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
 
     // Initialization Complete Message Suite
     RCLCPP_INFO(get_logger(), "Point to Pixel Node INITIALIZED");
-    #if VERBOSE
+    #if verbose
         RCLCPP_INFO(get_logger(), "Verbose Logging On");
     #endif
-    #if USE_YOLO
+    #if use_yolo
         RCLCPP_INFO(get_logger(), "Using YOLO Color Detection");
     #else
         RCLCPP_INFO(get_logger(), "Using HSV Color Detection");
     #endif
-    #if INNER
+    #if inner
         RCLCPP_INFO(get_logger(), "Using Inner Cameras on ZEDs");
     #else
         RCLCPP_INFO(get_logger(), "Using Outer Cameras on ZEDs");
     #endif
-};
+}
 
 // Returns closest frame to callback time from both cameras
 std::pair<cv::Mat, cv::Mat> PointToPixelNode::get_camera_frame(rclcpp::Time callbackTime)
@@ -184,7 +211,7 @@ std::pair<cv::Mat, cv::Mat> PointToPixelNode::get_camera_frame(rclcpp::Time call
 
 // Get color of cone by combining output from both cameras
 int PointToPixelNode::get_cone_class(
-    std::pair<Eigen::Vector2d, Eigen::Vector2d> pixel_pair,
+    std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
     std::pair<cv::Mat, cv::Mat> frame_pair,
     std::pair<cv::Mat, cv::Mat> detection_pair
 ) {
@@ -199,7 +226,7 @@ int PointToPixelNode::get_cone_class(
         orange_filter_low,
         orange_filter_high,
         confidence_threshold,
-        USE_YOLO == 1
+        use_yolo == 1
     );
 }
 
@@ -207,7 +234,7 @@ int PointToPixelNode::get_cone_class(
 void PointToPixelNode::topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
 {
     // Logging Actions
-    #if TIMING
+    #if timing
         auto start_time = high_resolution_clock::now();
         int64_t ms_time_since_lidar_2 = (get_clock()->now().nanoseconds() - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1000;
     #endif
@@ -227,11 +254,11 @@ void PointToPixelNode::topic_callback(const interfaces::msg::PPMConeArray::Share
     // Retrieve Camera Frame
     std::pair<cv::Mat, cv::Mat> frame_pair = get_camera_frame(msg->header.stamp);
 
-    #if TIMING
+    #if timing
         auto camera_time = high_resolution_clock::now();
     #endif
 
-    #if USE_YOLO
+    #if use_yolo
         // Process frames with YOLO
         cv::Mat detection_l = coloring::yolo::process_frame(frame_pair.first, net);
         cv::Mat detection_r = coloring::yolo::process_frame(frame_pair.second, net);
@@ -242,25 +269,25 @@ void PointToPixelNode::topic_callback(const interfaces::msg::PPMConeArray::Share
     #endif
 
     // Timing Variables
-    #if TIMING
+    #if timing
         int transform_time = 0;
         int coloring_time = 0;
     #endif
 
     // Iterate through all points in /cpp_cones message
     for (int i = 0; i < msg->cone_array.size(); i++) {
-        #if TIMING
+        #if timing
             auto loop_start = high_resolution_clock::now();
         #endif
           
         // Transform Point
-        std::pair<Eigen::Vector2d, Eigen::Vector2d> pixel_pair = transform_point(
+        std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair = transform_point(
             msg->cone_array[i].cone_points[0],
             projection_matrix_l,
             projection_matrix_r
         );
 
-        #if TIMING
+        #if timing
             // Time for transform
             auto loop_transform = high_resolution_clock::now();
             transform_time = transform_time + std::chrono::duration_cast<std::chrono::microseconds>(loop_transform - loop_start).count();
@@ -268,7 +295,7 @@ void PointToPixelNode::topic_callback(const interfaces::msg::PPMConeArray::Share
 
         int cone_class = get_cone_class(pixel_pair, frame_pair, detection_pair);
 
-        #if TIMING
+        #if timing
             // Time for coloring
             auto loop_coloring = high_resolution_clock::now();
             coloring_time = coloring_time + std::chrono::duration_cast<std::chrono::microseconds>(loop_coloring - loop_transform).count();
@@ -278,7 +305,7 @@ void PointToPixelNode::topic_callback(const interfaces::msg::PPMConeArray::Share
         point_msg.y = msg->cone_array[i].cone_points[0].y;
         point_msg.z = 0.0;
       
-        #if VIZ
+        #if viz
             RCLCPP_INFO(get_logger(), "Cone: Color %d, 2D[ l: (%lf, %lf) | r: (%lf, %lf) ] from 3D[ (%lf, %lfl, %lf)",
                     cone_class, pixel_pair.first[0], pixel_pair.first[1], pixel_pair.second[0], pixel_pair.second[1],
                     msg->cone_array[i].cone_points[0].x, msg->cone_array[i].cone_points[0].y, msg->cone_array[i].cone_points[0].z);
@@ -300,7 +327,7 @@ void PointToPixelNode::topic_callback(const interfaces::msg::PPMConeArray::Share
         }
     }
 
-    #if TIMING
+    #if timing
         auto transform_coloring_time = high_resolution_clock::now();
     #endif
 
@@ -316,7 +343,7 @@ void PointToPixelNode::topic_callback(const interfaces::msg::PPMConeArray::Share
         cones_published, yellow_cones, blue_cones, orange_cones, unknown_color_cones
     );
 
-    #if TIMING
+    #if timing
         auto end_time = high_resolution_clock::now();
         auto stamp_time = msg->header.stamp;
         auto ms_time_since_lidar = get_clock()->now() - stamp_time;
@@ -344,9 +371,10 @@ void PointToPixelNode::camera_callback()
         map_left_y_ll,
         map_right_x_lr,
         map_right_y_lr,
-        INNER == 1,
-        get_logger()
+        true, // left_camera==true
+        inner
     );
+
     rclcpp::Time time_l = get_clock()->now();
 
     // Capture and rectify frame from camera r
@@ -356,8 +384,8 @@ void PointToPixelNode::camera_callback()
         map_left_y_rl,
         map_right_x_rr,
         map_right_y_rr,
-        INNER == 1,
-        get_logger()
+        false, // left_camera==false
+        inner
     );
     rclcpp::Time time_r = get_clock()->now();
 

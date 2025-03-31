@@ -1,5 +1,4 @@
 #include "camera.hpp"
-#include <cmath>
 
 cv::Mat find_closest_frame(
     const std::deque<std::pair<rclcpp::Time, cv::Mat>>& img_deque,
@@ -73,7 +72,7 @@ bool initialize_camera(
 
     // Set auto exposure and brightness
     cap.setAECAGC(true);
-    // cap.setAutoWhiteBalance(true);
+    cap.setAutoWhiteBalance(true);
 
     RCLCPP_INFO(logger, "ZED Camera %d Ready. %s", device_id, cap.getDeviceName().c_str());
     
@@ -86,26 +85,51 @@ cv::Mat capture_and_rectify_frame(
     const cv::Mat& map_left_y,
     const cv::Mat& map_right_x,
     const cv::Mat& map_right_y,
-    bool use_inner_lens,
-    const rclcpp::Logger& logger
+    bool left_camera,
+    bool use_inner_lens
 ) {
     // Capture the frame
     const sl_oc::video::Frame frame = cap.getLastFrame();
-    cv::Mat frameBGR, left_raw, left_rect;
+    cv::Mat frameBGR, raw, rect;
+    cv::Rect index; 
+    cv::Mat map_x;
+    cv::Mat map_y;
+
+    // Set the side of the frame to capture
+    if (left_camera) {
+        if (use_inner_lens) {
+            index = cv::Rect(frameBGR.cols / 2, frameBGR.rows, frameBGR.cols, frameBGR.rows); // Right side of the frame
+            map_x = map_right_x;
+            map_y = map_right_y;
+        } else {
+            index = cv::Rect(0, 0, frameBGR.cols / 2, frameBGR.rows); // Left side of the frame
+            map_x = map_left_x;
+            map_y = map_left_y;
+        }
+    } else {
+        if (use_inner_lens) {
+            index = cv::Rect(0, 0, frameBGR.cols / 2, frameBGR.rows); // Left side of the frame
+            map_x = map_left_x;
+            map_y = map_left_y;
+        } else {
+            index = cv::Rect(frameBGR.cols / 2, frameBGR.rows, frameBGR.cols, frameBGR.rows); // Right side of the frame
+            map_x = map_right_x;
+            map_y = map_right_y;
+        }
+    }
     
     if (frame.data != nullptr) {
         cv::Mat frameYUV = cv::Mat(frame.height, frame.width, CV_8UC2, frame.data);
         cv::cvtColor(frameYUV, frameBGR, cv::COLOR_YUV2BGR_YUYV);
         
-        // Extract left image from side-by-side
-        left_raw = frameBGR(cv::Rect(0, 0, frameBGR.cols / 2, frameBGR.rows));
+        // Extract relevant part of the image from side-by-side
+        raw = frameBGR(cv::Rect(index));
         
         // Apply rectification
-        cv::remap(left_raw, left_rect, map_left_x, map_left_y, cv::INTER_LINEAR);
+        cv::remap(raw, rect, map_x, map_y, cv::INTER_LINEAR);
         
-        return left_rect;
+        return rect;
     } else {
-        RCLCPP_ERROR(logger, "Failed to capture frame from camera.");
         return cv::Mat();
     }
 }
