@@ -204,7 +204,7 @@ class LidarInputDialog:
         self.top.destroy()
 
 class CalibrationUI:
-    def __init__(self, min_points: int = 10, width=800, height=450, frame_path: str = ""):
+    def __init__(self, min_points: int = 10, width=800, height=450, frame_path: str = "", cam: str = ""):
         self.min_points = min_points
         self.calibration_data = CalibrationData()
         self.current_frame = None
@@ -213,6 +213,7 @@ class CalibrationUI:
         self.height = height
         self.frame_path = frame_path  # Path to the image you want to use as the frame
         self.scaling_factor = 1280 /1920
+        self.cam = cam
         self.setup_ui()
 
     def setup_ui(self):
@@ -397,7 +398,7 @@ class CalibrationUI:
         calibration_data = {
             "/point_to_pixel": {
                 "ros__parameters": {
-                    "projection_matrix": proj_matrix.flatten().tolist(),
+                    f"projection_matrix{self.cam}": proj_matrix.flatten().tolist(),
                 }
             }
         }
@@ -416,14 +417,20 @@ class CalibrationUI:
 
 def main():
     # # Set up argument parser
-    parser = argparse.ArgumentParser(description="Specify which camera you're calibrating for (0->left or 1->right).")
-    parser.add_argument("-c", "--camera", required=True, help="camera (either 0 or 1)", type=int)
+    parser = argparse.ArgumentParser(description="Specify which camera you're calibrating for (specify ll, lr, rr, or rl).")
+    parser.add_argument("-c", "--camera", required=True, help="camera (specify ll, lr, rr, or rl)", type=str)
     args = parser.parse_args()
 
-    ext = 1 if args.camera else 0
+    print()
+
+    if args.camera not in {"ll", "lr", "rr", "rl"}:
+        print(f"Invalid args, specify ll, lr, rr, or rl")
+        sys.exit(1)
+
+    cam = args.camera
 
     # Read the image from the provided file path
-    path = f"/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/freeze{ext}.png"
+    path = f"/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/freeze_{cam}.png"
     im = cv2.imread(path)
 
     if im is None:
@@ -433,7 +440,7 @@ def main():
     try:
         # Initialize CalibrationUI with the image size and file path
         print(im.shape)
-        ui = CalibrationUI(width=1280, height=720, frame_path=path)
+        ui = CalibrationUI(width=1280, height=720, frame_path=path, cam=cam)
         ui.run()
     except Exception as e:
         print(f"Calibration failed: {e}", file=sys.stderr)

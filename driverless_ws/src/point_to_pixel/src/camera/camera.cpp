@@ -1,12 +1,13 @@
 #include "camera.hpp"
+#include <iostream>
 
 cv::Mat find_closest_frame(
-    const std::deque<std::pair<rclcpp::Time, cv::Mat>>& img_deque,
+    const std::deque<std::pair<uint64_t, cv::Mat>>& img_deque,
     const rclcpp::Time& callbackTime,
     const rclcpp::Logger& logger
 ) {
     // Initialize variables
-    int64_t bestDiff = INT64_MAX;
+    uint64_t bestDiff = INT64_MAX;
     cv::Mat closestFrame;
 
     // Check if deque empty
@@ -17,13 +18,15 @@ cv::Mat find_closest_frame(
 
     // Iterate through deque to find the closest frame by timestamp
     for (const auto &frame : img_deque) {
-        int64_t timeDiff = std::abs(frame.first.nanoseconds() - callbackTime.nanoseconds());
+        uint64_t timeDiff = frame.first - callbackTime.nanoseconds();
 
         if (timeDiff < bestDiff) {
             closestFrame = frame.second;
             bestDiff = timeDiff;
         }
     }
+
+    std::cout << "time difference between camera and lidar:" << bestDiff << std::endl;
 
     return closestFrame;
 }
@@ -79,7 +82,7 @@ bool initialize_camera(
     return true;
 }
 
-cv::Mat capture_and_rectify_frame(
+std::pair<uint64_t, cv::Mat> capture_and_rectify_frame(
     sl_oc::video::VideoCapture& cap,
     const cv::Mat& map_left_x,
     const cv::Mat& map_left_y,
@@ -89,7 +92,9 @@ cv::Mat capture_and_rectify_frame(
     bool use_inner_lens
 ) {
     // Capture the frame
+    // uint64_t systime = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
     const sl_oc::video::Frame frame = cap.getLastFrame();
+
     cv::Mat frameBGR, raw, rect;
     cv::Rect index; 
     cv::Mat map_x;
@@ -98,26 +103,26 @@ cv::Mat capture_and_rectify_frame(
     // Set the side of the frame to capture
     if (left_camera) {
         if (use_inner_lens) {
-            index = cv::Rect(frameBGR.cols / 2, frameBGR.rows, frameBGR.cols, frameBGR.rows); // Right side of the frame
+            index = cv::Rect(frame.width / 2, 0, frame.width / 2, frame.height); // Right side of the frame
             map_x = map_right_x;
             map_y = map_right_y;
         } else {
-            index = cv::Rect(0, 0, frameBGR.cols / 2, frameBGR.rows); // Left side of the frame
+            index = cv::Rect(0, 0, frame.width / 2, frame.height); // Left side of the frame
             map_x = map_left_x;
             map_y = map_left_y;
         }
     } else {
         if (use_inner_lens) {
-            index = cv::Rect(0, 0, frameBGR.cols / 2, frameBGR.rows); // Left side of the frame
+            index = cv::Rect(0, 0, frame.width / 2, frame.height); // Left side of the frame
             map_x = map_left_x;
             map_y = map_left_y;
         } else {
-            index = cv::Rect(frameBGR.cols / 2, frameBGR.rows, frameBGR.cols, frameBGR.rows); // Right side of the frame
+            index = cv::Rect(frame.width / 2, 0, frame.width / 2, frame.height); // Right side of the frame
             map_x = map_right_x;
             map_y = map_right_y;
         }
     }
-    
+
     if (frame.data != nullptr) {
         cv::Mat frameYUV = cv::Mat(frame.height, frame.width, CV_8UC2, frame.data);
         cv::cvtColor(frameYUV, frameBGR, cv::COLOR_YUV2BGR_YUYV);
@@ -128,8 +133,8 @@ cv::Mat capture_and_rectify_frame(
         // Apply rectification
         cv::remap(raw, rect, map_x, map_y, cv::INTER_LINEAR);
         
-        return rect;
+        return std::make_pair(frame.timestamp, rect);
     } else {
-        return cv::Mat();
+        return std::make_pair(frame.timestamp, cv::Mat());
     }
 }

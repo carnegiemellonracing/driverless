@@ -36,8 +36,8 @@ public:
 
 private:
     // Image Deque
-    std::deque<std::pair<rclcpp::Time, cv::Mat>> img_deque_l;
-    std::deque<std::pair<rclcpp::Time, cv::Mat>> img_deque_r;
+    std::deque<std::pair<uint64_t, cv::Mat>> img_deque_l;
+    std::deque<std::pair<uint64_t, cv::Mat>> img_deque_r;
 
     // ROS2 Parameters
     bool inner;

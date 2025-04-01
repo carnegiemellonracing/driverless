@@ -14,18 +14,17 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     // ---------------------------------------------------------------------------
     //                              CAMERA INITIALIZATION
     // ---------------------------------------------------------------------------
-    
-    // Initialize cameras
-    if (!initialize_camera(cap_l, 0, map_left_x_ll, map_left_y_ll, map_right_x_lr, map_right_y_lr, get_logger())) {
-        rclcpp::shutdown(); // Shutdown node if camera initialization fails
-        return;
-    }
-    
-    if (!initialize_camera(cap_r, 2, map_left_x_rl, map_left_y_rl, map_right_x_rr, map_right_y_rr, get_logger())) {
-        rclcpp::shutdown(); // Shutdown node if camera initialization fails
-        return;
-    }
 
+    // Initialize cameras
+    if (!initialize_camera(cap_l, 2, map_left_x_ll, map_left_y_ll, map_right_x_lr, map_right_y_lr, get_logger())) {
+        rclcpp::shutdown(); // Shutdown node if camera initialization fails
+        return;
+    }
+    
+    if (!initialize_camera(cap_r, 0, map_left_x_rl, map_left_y_rl, map_right_x_rr, map_right_y_rr, get_logger())) {
+        rclcpp::shutdown(); // Shutdown node if camera initialization fails
+        return;
+    }
     // ---------------------------------------------------------------------------
     //                               PARAMETERS
     // ---------------------------------------------------------------------------
@@ -35,13 +34,16 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     img_deque_r = {};
 
     // Boolean parameter that determines whether we use the inner two zed cameras or the outer two zed cameras
-    declare_parameter("inner", false);
+    declare_parameter("camera_inner", false);
 
     // Projection matrix that takes LiDAR points to pixels
     std::vector<double> param_default(12, 1.0f); 
 
-    declare_parameter("projection_matrix_l", param_default);
-    declare_parameter("projection_matrix_r", param_default);
+    declare_parameter("projection_matrix_ll", param_default);
+    declare_parameter("projection_matrix_rl", param_default);
+    declare_parameter("projection_matrix_lr", param_default);
+    declare_parameter("projection_matrix_rr", param_default);
+
 
     // Threshold that determines whether it reports the color on a cone or not
     declare_parameter("confidence_threshold", 0.05);
@@ -70,7 +72,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     declare_parameter("blue_filter_low", ub_filter_default);
     declare_parameter("orange_filter_high", lo_filter_default);
     declare_parameter("orange_filter_low", uo_filter_default);
-
+        
     // Load inner boolean parameter
     bool inner = get_parameter("camera_inner").as_bool();
 
@@ -141,46 +143,77 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
 
     // Camera Callback (25 fps)
     camera_timer_ = create_wall_timer(
-        std::chrono::milliseconds(40),
+        std::chrono::milliseconds(30),
         [this](){camera_callback();}
     );
 
     // ---------------------------------------------------------------------------
     //                       INITIALIZATION COMPLETE SEQUENCE
     // ---------------------------------------------------------------------------
-    
+
     // Capture and rectify frames for calibration
-    cv::Mat frame_l = capture_and_rectify_frame(
+    std::pair<uint64_t, cv::Mat> frame_ll = capture_and_rectify_frame(
         cap_l,
         map_left_x_ll,
         map_left_y_ll,
         map_right_x_lr,
         map_right_y_lr,
-        true, // left_camera==true;
-        inner
+        true, // left_camera==true
+        false // outer == false
     );
 
-    if (frame_l.empty()) {
-        RCLCPP_ERROR(get_logger(), "Failed to capture frame from left camera.");
+    if (frame_ll.second.empty()) {
+        RCLCPP_ERROR(get_logger(), "Failed to capture frame from left camera left frame.");
     };
 
-    cv::Mat frame_r = capture_and_rectify_frame(
+    std::pair<uint64_t, cv::Mat> frame_lr = capture_and_rectify_frame(
+        cap_l,
+        map_left_x_ll,
+        map_left_y_ll,
+        map_right_x_lr,
+        map_right_y_lr,
+        true, // left_camera==true
+        true // inner == true
+    );
+
+    if (frame_lr.second.empty()) {
+        RCLCPP_ERROR(get_logger(), "Failed to capture frame from left camera right frame.");
+    };
+
+        // Capture and rectify frames for calibration
+    std::pair<uint64_t, cv::Mat> frame_rr = capture_and_rectify_frame(
         cap_r,
         map_left_x_rl,
         map_left_y_rl,
         map_right_x_rr,
         map_right_y_rr,
-        false, // left_camera==false;
-        inner
+        false, // right_camera==false
+        false // outer == false
     );
 
-    if (frame_r.empty()) {
-        RCLCPP_ERROR(get_logger(), "Failed to capture frame from right camera.");
+    if (frame_rr.second.empty()) {
+        RCLCPP_ERROR(get_logger(), "Failed to capture frame from right camera right frame.");
+    };
+
+    std::pair<uint64_t, cv::Mat> frame_rl = capture_and_rectify_frame(
+        cap_r,
+        map_left_x_rl,
+        map_left_y_rl,
+        map_right_x_rr,
+        map_right_y_rr,
+        false, // right_camera==false
+        true // inner == true
+    );
+
+    if (frame_rl.second.empty()) {
+        RCLCPP_ERROR(get_logger(), "Failed to capture frame from right camera left frame.");
     };
 
     // Save freeze images
-    cv::imwrite("src/point_to_pixel/config/freeze_l.png", frame_l);
-    cv::imwrite("src/point_to_pixel/config/freeze_r.png", frame_r);
+    cv::imwrite("src/point_to_pixel/config/freeze_ll.png", frame_ll.second);
+    cv::imwrite("src/point_to_pixel/config/freeze_lr.png", frame_lr.second);
+    cv::imwrite("src/point_to_pixel/config/freeze_rr.png", frame_rr.second);
+    cv::imwrite("src/point_to_pixel/config/freeze_rl.png", frame_rl.second);
 
     // Initialization Complete Message Suite
     RCLCPP_INFO(get_logger(), "Point to Pixel Node INITIALIZED");
@@ -275,7 +308,7 @@ void PointToPixelNode::topic_callback(const interfaces::msg::PPMConeArray::Share
     #endif
 
     // Iterate through all points in /cpp_cones message
-    for (int i = 0; i < msg->cone_array.size(); i++) {
+    for (size_t i = 0; i < msg->cone_array.size(); i++) {
         #if timing
             auto loop_start = high_resolution_clock::now();
         #endif
@@ -365,7 +398,7 @@ void PointToPixelNode::topic_callback(const interfaces::msg::PPMConeArray::Share
 void PointToPixelNode::camera_callback()
 {
     // Capture and rectify frame from camera l
-    cv::Mat frameBGR_l = capture_and_rectify_frame(
+    std::pair<uint64_t, cv::Mat> frame_l = capture_and_rectify_frame(
         cap_l,
         map_left_x_ll,
         map_left_y_ll,
@@ -375,10 +408,8 @@ void PointToPixelNode::camera_callback()
         inner
     );
 
-    rclcpp::Time time_l = get_clock()->now();
-
     // Capture and rectify frame from camera r
-    cv::Mat frameBGR_r = capture_and_rectify_frame(
+    std::pair<uint64_t, cv::Mat> frame_r = capture_and_rectify_frame(
         cap_r,
         map_left_x_rl,
         map_left_y_rl,
@@ -387,7 +418,6 @@ void PointToPixelNode::camera_callback()
         false, // left_camera==false
         inner
     );
-    rclcpp::Time time_r = get_clock()->now();
 
     // Deque Management and Updating
     while (img_deque_l.size() >= max_deque_size) {
@@ -398,8 +428,8 @@ void PointToPixelNode::camera_callback()
         img_deque_r.pop_front();
     }
 
-    img_deque_l.push_back(std::make_pair(time_l, frameBGR_l));
-    img_deque_r.push_back(std::make_pair(time_r, frameBGR_r));
+    img_deque_l.push_back(frame_l);
+    img_deque_r.push_back(frame_r);
 }
 
 int main(int argc, char** argv)

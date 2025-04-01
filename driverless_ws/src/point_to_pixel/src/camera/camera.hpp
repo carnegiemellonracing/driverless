@@ -19,7 +19,7 @@
  * @return cv::Mat The closest frame
  */
 cv::Mat find_closest_frame(
-    const std::deque<std::pair<rclcpp::Time, cv::Mat>>& img_deque,
+    const std::deque<std::pair<uint64_t, cv::Mat>>& img_deque,
     const rclcpp::Time& callbackTime,
     const rclcpp::Logger& logger
 );
@@ -57,7 +57,7 @@ bool initialize_camera(
  * @param use_inner_lens If using inner lenses set to true
  * @return cv::Mat The rectified frame
  */
-cv::Mat capture_and_rectify_frame(
+std::pair<uint64_t, cv::Mat> capture_and_rectify_frame(
     sl_oc::video::VideoCapture& cap,
     const cv::Mat& map_left_x,
     const cv::Mat& map_left_y,
