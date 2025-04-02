@@ -16,12 +16,12 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     // ---------------------------------------------------------------------------
 
     // Initialize cameras
-    if (!initialize_camera(cap_l, 2, map_left_x_ll, map_left_y_ll, map_right_x_lr, map_right_y_lr, get_logger())) {
+    if (!initialize_camera(cap_l, 0, map_left_x_ll, map_left_y_ll, map_right_x_lr, map_right_y_lr, get_logger())) {
         rclcpp::shutdown(); // Shutdown node if camera initialization fails
         return;
     }
     
-    if (!initialize_camera(cap_r, 0, map_left_x_rl, map_left_y_rl, map_right_x_rr, map_right_y_rr, get_logger())) {
+    if (!initialize_camera(cap_r, 2, map_left_x_rl, map_left_y_rl, map_right_x_rr, map_right_y_rr, get_logger())) {
         rclcpp::shutdown(); // Shutdown node if camera initialization fails
         return;
     }
@@ -32,9 +32,6 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     // Initialize Empty IMG Deque
     img_deque_l = {};
     img_deque_r = {};
-
-    // Boolean parameter that determines whether we use the inner two zed cameras or the outer two zed cameras
-    declare_parameter("camera_inner", false);
 
     // Projection matrix that takes LiDAR points to pixels
     std::vector<double> param_default(12, 1.0f); 
@@ -72,20 +69,17 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     declare_parameter("blue_filter_low", ub_filter_default);
     declare_parameter("orange_filter_high", lo_filter_default);
     declare_parameter("orange_filter_low", uo_filter_default);
-        
-    // Load inner boolean parameter
-    bool inner = get_parameter("camera_inner").as_bool();
 
     // Load Projection Matrix if inner is set to true, then load lr and rl, else load ll and rr
     std::vector<double> param_l, param_r;
     
-    if (inner) {
+    #if inner
         param_l = get_parameter("projection_matrix_lr").as_double_array();
         param_r = get_parameter("projection_matrix_rl").as_double_array();
-    } else {
+    #else
         param_l = get_parameter("projection_matrix_ll").as_double_array();
         param_r = get_parameter("projection_matrix_rr").as_double_array();
-    }
+    #endif
     
     projection_matrix_l = Eigen::Map<Eigen::Matrix<double, 3, 4, Eigen::RowMajor>>(param_l.data());
     projection_matrix_r = Eigen::Map<Eigen::Matrix<double, 3, 4, Eigen::RowMajor>>(param_r.data());
@@ -143,7 +137,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
 
     // Camera Callback (25 fps)
     camera_timer_ = create_wall_timer(
-        std::chrono::milliseconds(30),
+        std::chrono::milliseconds(40),
         [this](){camera_callback();}
     );
 
@@ -405,7 +399,7 @@ void PointToPixelNode::camera_callback()
         map_right_x_lr,
         map_right_y_lr,
         true, // left_camera==true
-        inner
+        inner == 1
     );
 
     // Capture and rectify frame from camera r
@@ -416,7 +410,7 @@ void PointToPixelNode::camera_callback()
         map_right_x_rr,
         map_right_y_rr,
         false, // left_camera==false
-        inner
+        inner == 1
     );
 
     // Deque Management and Updating

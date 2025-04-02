@@ -25,8 +25,7 @@ cv::Mat find_closest_frame(
             bestDiff = timeDiff;
         }
     }
-
-    std::cout << "time difference between camera and lidar:" << bestDiff << std::endl;
+    // std::cout << "time difference between camera and lidar:" << bestDiff << std::endl;
 
     return closestFrame;
 }

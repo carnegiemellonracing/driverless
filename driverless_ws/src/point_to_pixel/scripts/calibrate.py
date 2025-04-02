@@ -394,20 +394,24 @@ class CalibrationUI:
         except Exception as e:
             tk.messagebox.showerror("Error", f"Calibration failed: {str(e)}")
 
-    def save_calibration(self, proj_matrix):
-        calibration_data = {
-            "/point_to_pixel": {
-                "ros__parameters": {
-                    f"projection_matrix{self.cam}": proj_matrix.flatten().tolist(),
-                }
-            }
-        }
+    def save_calibration(self, proj_matrix): 
         config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
                                  "config/params.yaml")
         os.makedirs(os.path.dirname(config_path), exist_ok=True)
-        with open(config_path, "w") as f:
-            yaml.dump(calibration_data, f)
-            print(f"Calibration saved to: {config_path}")
+        
+        try:
+            with open(config_path, 'r') as file:
+                data = yaml.safe_load(file)
+
+                curr = data['/point_to_pixel']['ros__parameters']
+
+                curr[f"projection_matrix_{self.cam}"] = [proj_matrix.flatten().tolist()]
+
+            with open(config_path, "w") as f:
+                yaml.dump(data, f)
+                print("Calibration Saved", f"Calibration data saved to {config_path}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to save calibration: {str(e)}")
 
     def run(self):
         self.update_camera_view()

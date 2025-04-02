@@ -19,11 +19,11 @@ using std::chrono::milliseconds;
 using std::placeholders::_1;
 
 // BUILD FLAGS
-static constexpr bool viz = 0;      // Prints color detection outputs of every point
-static constexpr bool verbose = 0;  // Prints transform matrix and transformed pixel of every point
-static constexpr bool use_yolo = 0; // 0: HSV Coloring | 1: YOLO Coloring
-static constexpr bool timing = 0;   // Prints timing suite at end of every callback
-static constexpr bool inner = 0;    // Uses inner lens of ZEDS (if 0 uses the outer lens)
+#define viz 1      // Prints color detection outputs of every point
+#define verbose 1  // Prints transform matrix and transformed pixel of every point
+#define use_yolo 0 // 0: HSV Coloring | 1: YOLO Coloring
+#define timing 0   // Prints timing suite at end of every callback
+#define inner 1    // Uses inner lens of ZEDS (if 0 uses the outer lens)
 
 class PointToPixelNode : public rclcpp::Node
 {
@@ -38,9 +38,6 @@ private:
     // Image Deque
     std::deque<std::pair<uint64_t, cv::Mat>> img_deque_l;
     std::deque<std::pair<uint64_t, cv::Mat>> img_deque_r;
-
-    // ROS2 Parameters
-    bool inner;
 
     Eigen::Matrix<double, 3, 4> projection_matrix_l;
     Eigen::Matrix<double, 3, 4> projection_matrix_r;
