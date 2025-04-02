@@ -23,6 +23,9 @@ include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
+find_package(yaml-cpp REQUIRED)
+target_link_libraries(hesai_ros_driver_node yaml-cpp)
+
 #=======================================
 # Compile setup (ORIGINAL, CATKIN, COLCON)
 #=======================================

@@ -8,6 +8,7 @@
 #include <bits/stdc++.h>
 #include <thread>
 #include <atomic>
+#include <yaml-cpp/yaml.h>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -15,6 +16,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <unordered_map>
+
 
 using namespace std;
 using std::chrono::high_resolution_clock;
@@ -29,6 +31,17 @@ typedef struct radial {
   double radius;
   double z;
 } radial_t;
+
+// Add these global variables after the other using statements
+double LEFT_BOUNDARY_THRESHOLD;
+double RIGHT_BOUNDARY_THRESHOLD;
+
+// Add this function before the pipeline functions
+void loadConfig() {
+    YAML::Node config = YAML::LoadFile("src/HesaiLidar_ROS_2.0/src/Breezeway.yaml");
+    LEFT_BOUNDARY_THRESHOLD = config["LEFT_BOUNDARY_THRESHOLD"].as<double>();
+    RIGHT_BOUNDARY_THRESHOLD = config["RIGHT_BOUNDARY_THRESHOLD"].as<double>();
+}
 
 /**
  * Converts (x,y,z) to (radius,ang,z), where ang is in radians
@@ -104,7 +117,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
     PointXYZ pt = cloud.points[i];
     radial_t rd = point2radial(pt);
 
-    if (rd.radius < radius_max && (pt.y) < 5.0 && pt.y > -5.0) {
+    if (rd.radius < radius_max && (pt.y) < RIGHT_BOUNDARY_THRESHOLD && pt.y > LEFT_BOUNDARY_THRESHOLD) {
       int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
       int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
       if (seg_index < 0)
@@ -311,55 +324,55 @@ inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alp
                                          int num_bins, double height_threshold, 
                                          double epsilon, int min_points, 
                                          double epsilon2, int min_points2) {
+    loadConfig(); // Add this line
+    // Start overall timer
+    auto start_pipeline = std::chrono::high_resolution_clock::now();
+    
+    // Print the entry sizetime: 36.776 of the cloud
+    printf("Entry Size: %zu\n", cloud.size());                               
 
-  // Start overall timer
-  auto start_pipeline = std::chrono::high_resolution_clock::now();
-  
-  // Print the entry sizetime: 36.776 of the cloud
-  printf("Entry Size: %zu\n", cloud.size());                               
+    // Time GraceAndConrad step
+    auto start_GNC = std::chrono::high_resolution_clock::now();
+    PointCloud<PointXYZ> GNC_cloud = GraceAndConrad(cloud, alpha, num_bins, height_threshold);
+    auto end_GNC = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration_GNC = end_GNC - start_GNC;
+    std::cout << "GraceAndConrad time: " << duration_GNC.count() << " ms" << std::endl;
 
-  // Time GraceAndConrad step
-  auto start_GNC = std::chrono::high_resolution_clock::now();
-  PointCloud<PointXYZ> GNC_cloud = GraceAndConrad(cloud, alpha, num_bins, height_threshold);
-  auto end_GNC = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> duration_GNC = end_GNC - start_GNC;
-  std::cout << "GraceAndConrad time: " << duration_GNC.count() << " ms" << std::endl;
+    // Time DBSCAN step
+    auto start_DBSCAN = std::chrono::high_resolution_clock::now();
+    PointCloud<PointXYZ> clustered_cloud = DBSCAN(GNC_cloud, epsilon, min_points);
+    auto end_DBSCAN = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration_DBSCAN = end_DBSCAN - start_DBSCAN;
+    std::cout << "DBSCAN time: " << duration_DBSCAN.count() << " ms" << std::endl;
 
-  // Time DBSCAN step
-  auto start_DBSCAN = std::chrono::high_resolution_clock::now();
-  PointCloud<PointXYZ> clustered_cloud = DBSCAN(GNC_cloud, epsilon, min_points);
-  auto end_DBSCAN = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> duration_DBSCAN = end_DBSCAN - start_DBSCAN;
-  std::cout << "DBSCAN time: " << duration_DBSCAN.count() << " ms" << std::endl;
+    // Time DBSCAN2 step
+    auto start_DBSCAN2 = std::chrono::high_resolution_clock::now();
+    PointCloud<PointXYZ> filtered_cloud = DBSCAN2(clustered_cloud, epsilon2, min_points2);
+    auto end_DBSCAN2 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration_DBSCAN2 = end_DBSCAN2 - start_DBSCAN2;
+    std::cout << "DBSCAN2 time: " << duration_DBSCAN2.count() << " ms" << std::endl;
 
-  // Time DBSCAN2 step
-  auto start_DBSCAN2 = std::chrono::high_resolution_clock::now();
-  PointCloud<PointXYZ> filtered_cloud = DBSCAN2(clustered_cloud, epsilon2, min_points2);
-  auto end_DBSCAN2 = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> duration_DBSCAN2 = end_DBSCAN2 - start_DBSCAN2;
-  std::cout << "DBSCAN2 time: " << duration_DBSCAN2.count() << " ms" << std::endl;
+    // Time the overall pipeline
+    auto end_pipeline = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration_pipeline = end_pipeline - start_pipeline;
+    std::cout << "Total pipeline time: " << duration_pipeline.count() << " ms" << std::endl;
 
-  // Time the overall pipeline
-  auto end_pipeline = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> duration_pipeline = end_pipeline - start_pipeline;
-  std::cout << "Total pipeline time: " << duration_pipeline.count() << " ms" << std::endl;
+    std::string out_file = "gnc_output_points.csv";
+    std::string out_file2 = "pipe_output_points.csv";
+    ofstream write_to(out_file);
+    ofstream write_to2(out_file2);
 
-  std::string out_file = "gnc_output_points.csv";
-  std::string out_file2 = "pipe_output_points.csv";
-  ofstream write_to(out_file);
-  ofstream write_to2(out_file2);
+    write_to << "x,y,z\n";
+    write_to2 << "x,y,z\n";
 
-  write_to << "x,y,z\n";
-  write_to2 << "x,y,z\n";
+    for (int i = 0; i < GNC_cloud.size(); i++) {
+      write_to << to_string(GNC_cloud.points[i].z) + "," + to_string(GNC_cloud.points[i].x) + "," + to_string(GNC_cloud.points[i].y) + "\n";
+    }
+    for (int i = 0; i < filtered_cloud.size(); i++) {
+      write_to2 << to_string(filtered_cloud.points[i].z) + "," + to_string(filtered_cloud.points[i].x) + "," + to_string(filtered_cloud.points[i].y) + "\n";
+    }
+    write_to.close();
+    write_to2.close();
 
-  for (int i = 0; i < GNC_cloud.size(); i++) {
-    write_to << to_string(GNC_cloud.points[i].z) + "," + to_string(GNC_cloud.points[i].x) + "," + to_string(GNC_cloud.points[i].y) + "\n";
-  }
-  for (int i = 0; i < filtered_cloud.size(); i++) {
-    write_to2 << to_string(filtered_cloud.points[i].z) + "," + to_string(filtered_cloud.points[i].x) + "," + to_string(filtered_cloud.points[i].y) + "\n";
-  }
-  write_to.close();
-  write_to2.close();
-
-  return filtered_cloud;
+    return filtered_cloud;
 }

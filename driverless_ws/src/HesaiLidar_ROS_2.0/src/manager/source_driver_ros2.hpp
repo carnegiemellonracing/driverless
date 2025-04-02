@@ -212,6 +212,8 @@ if (driver_param.input_param.ros_send_correction_topic != NULL_TOPIC) {
     std::cout << "Driver Initialize Error...." << std::endl;
     exit(-1);
   }
+
+  loadConfig();
 }
 
 inline void SourceDriver::Start()
@@ -236,12 +238,22 @@ inline void SourceDriver::SendPacket(const UdpFrame_t& msg, double timestamp)
 
 inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIRT>& msg)
 {
+  
+  
   pub_->publish(ToRosMsg(msg, frame_id_));
   #ifdef __CUDACC__
     filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));
     cones_pub_->publish(ToRosMsgCones(msg, frame_id_));
   #else
-    cone_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
+    auto filtered_msg = msg;
+    filtered_msg.points.erase(
+        std::remove_if(filtered_msg.points.begin(), filtered_msg.points.end(),
+            [this](const auto& point) {
+                return point.y >= RIGHT_BOUNDARY_THRESHOLD || point.y <= LEFT_BOUNDARY_THRESHOLD;
+            }),
+        filtered_msg.points.end()
+    );
+    cone_pub_->publish(ToRosMsgConesCPP(filtered_msg, frame_id_));
   #endif
 }
 
