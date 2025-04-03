@@ -3,55 +3,11 @@
 #pragma once
 
 #include <rclcpp/rclcpp.hpp>
+#include "ros_types_and_constants.hpp"
 
 //TODO: these should all be inline constexpr (not currently broken because not ODR-used)
 
 namespace controls { 
-    /* ROS moments */
-
-    constexpr const char *controller_node_name = "controller";
-    constexpr const char *control_action_topic_name = "control_action";
-    constexpr const char *spline_topic_name = "spline";
-    constexpr const char *state_topic_name = "state";
-    constexpr const char *cone_topic_name = "perc_cones"; //Is this right? didn't exist before
-    constexpr const char *world_twist_topic_name = "filter/twist";
-    constexpr const char *world_quat_topic_name = "filter/quaternion";
-    constexpr const char *world_pose_topic_name = "filter/pose";
-    constexpr const char *controller_info_topic_name = "controller_info";
-    constexpr const char *pid_topic_name = "pid_values";
-    constexpr const char *world_positionlla_topic_name = "filter/positionlla";
-
-    // TODO: Ask Ankit what is this, why did we choose it
-    /// Profile for best effort communication
-    static const rmw_qos_profile_t best_effort_profile = {
-        RMW_QOS_POLICY_HISTORY_KEEP_LAST,
-        1,
-        RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,
-        RMW_QOS_POLICY_DURABILITY_VOLATILE,
-        RMW_QOS_DEADLINE_DEFAULT,
-        RMW_QOS_LIFESPAN_DEFAULT,
-        RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT,
-        RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,
-        false
-    };
-    const rclcpp::QoS best_effort_qos = rclcpp::QoS(
-        rclcpp::QoSInitialization(
-          best_effort_profile.history,
-          best_effort_profile.depth
-        ),
-        best_effort_profile);
-
-    const rclcpp::QoS control_action_qos = best_effort_qos;
-    const rclcpp::QoS spline_qos = best_effort_qos;
-    const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
-    const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
-    const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1)); 
-    const rclcpp::QoS world_pose_qos (rclcpp::KeepLast(1));
-    const rclcpp::QoS controller_info_qos = best_effort_qos;
-    const rclcpp::QoS pid_qos (rclcpp::KeepLast(1));
-
-    constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
-
     // Testing stuff
 
     constexpr bool send_to_can = false;
@@ -67,8 +23,8 @@ namespace controls {
     constexpr bool log_render_and_sync_timing = false;
 
     constexpr StateProjectionMode projection_mode = StateProjectionMode::MODEL_MULTISET;
-    constexpr float maximum_speed_ms = 10.0;
-    constexpr float whl_radius = 0.2286;
+    constexpr float maximum_speed_ms = 5.0f;
+    constexpr float whl_radius = 0.2286f;
     // This is for reference only
     constexpr uint16_t can_max_velocity_rpm = static_cast<uint16_t>((maximum_speed_ms * 60.0f) / (2 * M_PI * whl_radius));
     

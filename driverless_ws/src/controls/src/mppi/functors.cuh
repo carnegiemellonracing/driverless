@@ -92,6 +92,7 @@ namespace controls {
             const float progress = cent_curv_pose[0];
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
+            // ^ This is gotten from the state projection strategy
             const float actual_speed_along = world_state[3];
             const float speed_above_threshold_cost = (actual_speed_along > maximum_speed_ms) ? above_speed_threshold_cost : 0.0f;
 
