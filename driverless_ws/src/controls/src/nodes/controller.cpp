@@ -153,9 +153,6 @@ namespace controls {
                 ss << "Length of big orange cones: " << cone_msg.big_orange_cones.size() << std::endl;
                 RCLCPP_DEBUG(get_logger(), ss.str().c_str());
 
-                // * We want to manually lock the state mutex here, so use a unique_lock
-                std::unique_lock<std::mutex> state_lock {m_state_mut};
-
 
                 // save for info publishing later, since might be changed during iteration
                 rclcpp::Time cone_arrival_time = cone_msg.header.stamp;
@@ -168,25 +165,27 @@ namespace controls {
                 State proj_curr_state {};
                 std::chrono::_V2::system_clock::time_point cone_process_start, cone_process_end, project_start, project_end, sync_start, sync_end, gen_action_start, gen_action_end;
 
-                // try {
-                    cone_process_start = std::chrono::high_resolution_clock::now();
-                    float svm_time = m_state_estimator->on_cone(cone_msg);
-                    cone_process_end = std::chrono::high_resolution_clock::now();
-                    m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
-                    m_last_svm_time = svm_time;
+                try {
+                    {
+                        std::lock_guard<std::mutex> guard {m_state_mut};
+                        cone_process_start = std::chrono::high_resolution_clock::now();
+                        float svm_time = m_state_estimator->on_cone(cone_msg);
+                        cone_process_end = std::chrono::high_resolution_clock::now();
+                        m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
+                        m_last_svm_time = svm_time;
 
-                    RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
+                        RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
 
 
-                    // send state to device (i.e. cuda globals)
-                    // (also serves to lock state since nothing else updates gpu state)
-                    RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                    project_start = std::chrono::high_resolution_clock::now();
-                    proj_curr_state = get_state_under_strategy();
-                    project_end = std::chrono::high_resolution_clock::now();
+                        // send state to device (i.e. cuda globals)
+                        // (also serves to lock state since nothing else updates gpu state)
+                        RCLCPP_DEBUG(get_logger(), "syncing state to device");
+                        project_start = std::chrono::high_resolution_clock::now();
+                        proj_curr_state = get_state_under_strategy();
+                        project_end = std::chrono::high_resolution_clock::now();
 
-                    // * Let state callbacks proceed, so unlock the state mutex
-                    state_lock.unlock();
+                        // * Let state callbacks proceed, so unlock the state mutex
+                    }
 
                     // send state to device
                     sync_start = std::chrono::high_resolution_clock::now();
@@ -199,13 +198,13 @@ namespace controls {
                     gen_action_start = std::chrono::high_resolution_clock::now();
                     action = m_mppi_controller->generate_action();
                     gen_action_end = std::chrono::high_resolution_clock::now();
-                // } catch (const ControllerError& e) {
-                //     // state_lock.unlock();
-                //     RCLCPP_ERROR(get_logger(), "Error generating action: %s, taking next averaged action instead", e.what());
-                //     gen_action_start = std::chrono::high_resolution_clock::now();
-                //     action = m_mppi_controller->get_next_averaged_action();
-                //     gen_action_end = std::chrono::high_resolution_clock::now();
-                // }
+
+                } catch (const ControllerError& e) {
+                    RCLCPP_ERROR(get_logger(), "Error generating action: %s, taking next averaged action instead", e.what());
+                    gen_action_start = std::chrono::high_resolution_clock::now();
+                    action = m_mppi_controller->get_next_averaged_action();
+                    gen_action_end = std::chrono::high_resolution_clock::now();
+                }
 
                 publish_action(action);
                 m_last_action_signal = action_to_signal(action);
