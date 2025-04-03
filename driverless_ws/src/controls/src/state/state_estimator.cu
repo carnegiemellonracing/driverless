@@ -33,10 +33,11 @@
 #include <SDL2/SDL_video.h>
 
 #include <midline/svm_conv.hpp>
-
+#include <utils/general_utils.hpp>
 
 namespace controls {
     namespace state {
+        StateProjector::StateProjector() : m_logger_obj {rclcpp::get_logger("")} {}
 
         void StateProjector::print_history() const {
             std::cout << "---- BEGIN HISTORY ---\n";
@@ -137,7 +138,7 @@ namespace controls {
             // print_history();
         }
 
-        State StateProjector::project(const rclcpp::Time& time, LoggerFunc logger) const {
+        std::optional<State> StateProjector::project(const rclcpp::Time& time, LoggerFunc logger_func) const {
             assert(m_pose_record.has_value() && "State projector has not recieved first pose");
             // std::cout << "Projecting to " << time.nanoseconds() << std::endl;
 
@@ -150,7 +151,10 @@ namespace controls {
             const auto first_time = m_history_since_pose.empty() ? time : m_history_since_pose.begin()->time;
             const float delta_time = (first_time.nanoseconds() - m_pose_record.value().time.nanoseconds()) / 1e9f;
             // std::cout << "delta time: " << delta_time << std::endl;
-            assert(delta_time > 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
+            if (delta_time <= 0) {
+                RCLCPP_WARN(m_logger_obj, "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
+                return std::nullopt;
+            }
             // simulates up to first_time
             ONLINE_DYNAMICS_FUNC(state.data(), m_init_action.action.data(), state.data(), delta_time);
 
@@ -161,7 +165,10 @@ namespace controls {
                 const auto next_time = std::next(record_iter) == m_history_since_pose.end() ? time : std::next(record_iter)->time;
 
                 const float delta_time = (next_time - sim_time).nanoseconds() / 1e9f;
-                assert(delta_time >= 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
+                if (delta_time < 0) {
+                    RCLCPP_WARN(m_logger_obj, "RUH ROH. Delta time for propogation delay simulation within the while loop  was negative.   : (");
+                    return std::nullopt;
+                }
 
                 switch (record_iter->type) {
                     case Record::Type::Action:
@@ -184,7 +191,7 @@ namespace controls {
                 sim_time = next_time;
             }
 
-            return state;
+            return std::optional<State> {state};
         }
 
         bool StateProjector::is_ready() const {
@@ -963,8 +970,7 @@ namespace controls {
             const size_t n = m_spline_frames.size();
 
             if (n < 2) {
-                // throw std::runtime_error("less than 2 spline frames! (bruh andrew and/or deep)");
-                return;
+                throw ControllerError("less than 2 spline frames! (bruh andrew and/or deep)");
             }
 
             std::vector<Vertex> vertices;

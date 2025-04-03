@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <glm/glm.hpp>
+#include <stdexcept>
 
 namespace controls {
     /// Asserts whether x is true if the PARANOID compiler flag is set (-P)
@@ -45,5 +46,10 @@ namespace controls {
     inline bool isnan_vec(glm::fvec2 vec) {
         return std::isnan(vec.x) || std::isnan(vec.y);
     }
+
+    class ControllerError : public std::runtime_error {
+        public:
+            using std::runtime_error::runtime_error;
+    };
 }
 

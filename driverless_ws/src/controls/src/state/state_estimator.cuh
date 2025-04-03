@@ -12,6 +12,7 @@ namespace controls {
 
         class StateProjector {
         public:
+            StateProjector();
             /**
              * @brief Record an action into the history
              * @param[in] action The action to be recorded
@@ -44,7 +45,7 @@ namespace controls {
              * @param logger The logger function to be used
              * @return The projected state of the car at the given time
              */
-            State project(const rclcpp::Time& time, LoggerFunc logger) const;
+            std::optional<State> project(const rclcpp::Time& time, LoggerFunc logger) const;
             /**
              * @brief Whether the StateProjector is ready to project a state. This is true if there is a pose record,
              * which is every time since the first spline is received.
@@ -105,6 +106,7 @@ namespace controls {
              * time stamps of each record should be strictly after m_pose_record
              */
             std::multiset<Record, CompareRecordTimes> m_history_since_pose {};
+            rclcpp::Logger m_logger_obj;
         };
 
         class StateEstimator_Impl : public StateEstimator {

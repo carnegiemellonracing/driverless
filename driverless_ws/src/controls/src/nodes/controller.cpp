@@ -125,38 +125,52 @@ namespace controls {
                 auto start_time = std::chrono::high_resolution_clock::now();
 
                 // Process cones and report timing
-                auto cone_process_start = std::chrono::high_resolution_clock::now();
-                float svm_time = m_state_estimator->on_cone(cone_msg);
-                auto cone_process_end = std::chrono::high_resolution_clock::now();
-                m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
-                m_last_svm_time = svm_time;
+                Action action;
+                try {
+                    auto cone_process_start = std::chrono::high_resolution_clock::now();
+                    float svm_time = m_state_estimator->on_cone(cone_msg);
+                    auto cone_process_end = std::chrono::high_resolution_clock::now();
+                    m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
+                    m_last_svm_time = svm_time;
 
-                RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
+                    RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
 
-                // save for info publishing later, since might be changed during iteration
-                rclcpp::Time cone_arrival_time = cone_msg.header.stamp;
+                    // save for info publishing later, since might be changed during iteration
+                    rclcpp::Time cone_arrival_time = cone_msg.header.stamp;
 
-                // send state to device (i.e. cuda globals)
-                // (also serves to lock state since nothing else updates gpu state)
-                RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                auto project_start = std::chrono::high_resolution_clock::now();
-                State proj_curr_state = m_state_estimator->project_state(get_clock()->now());
-                auto project_end = std::chrono::high_resolution_clock::now();
+                    // send state to device (i.e. cuda globals)
+                    // (also serves to lock state since nothing else updates gpu state)
+                    RCLCPP_DEBUG(get_logger(), "syncing state to device");
+                    auto project_start = std::chrono::high_resolution_clock::now();
+                    std::optional<State> proj_curr_state_opt = m_state_estimator->project_state(get_clock()->now());
+                    State proj_curr_state;
+                    if (proj_curr_state_opt.has_value()) {
+                        proj_curr_state = proj_curr_state_opt.value();
+                    } else {
+                        RCLCPP_WARN(get_logger(), "Failed to project state");
+                        proj_curr_state = {0,0,0,0};
+                    }
+                    auto project_end = std::chrono::high_resolution_clock::now();
 
-                // * Let state callbacks proceed, so unlock the state mutex
-                state_lock.unlock();
+                    // * Let state callbacks proceed, so unlock the state mutex
+                    state_lock.unlock();
 
-                // send state to device
-                auto sync_start = std::chrono::high_resolution_clock::now();
-                m_state_estimator->render_and_sync(proj_curr_state);
-                // auto duration_vec = m_state_estimator->sync_to_device(get_clock()->now());
-                auto sync_end = std::chrono::high_resolution_clock::now();
+                    // send state to device
+                    auto sync_start = std::chrono::high_resolution_clock::now();
+                    m_state_estimator->render_and_sync(proj_curr_state);
+                    // auto duration_vec = m_state_estimator->sync_to_device(get_clock()->now());
+                    auto sync_end = std::chrono::high_resolution_clock::now();
 
-                // we don't need the host state anymore, so release the lock and let state callbacks proceed
+                    // we don't need the host state anymore, so release the lock and let state callbacks proceed
 
-                // run mppi, and write action to the write buffer
-                auto gen_action_start = std::chrono::high_resolution_clock::now();
-                Action action = m_mppi_controller->generate_action();
+                    // run mppi, and write action to the write buffer
+                    auto gen_action_start = std::chrono::high_resolution_clock::now();
+                    action = m_mppi_controller->generate_action();
+                } catch (const ControllerError& e) {
+                    RCLCPP_ERROR(get_logger(), "Error generating action: %s, taking next averaged action instead", e.what());
+                    action = m_mppi_controller->get_next_averaged_action();
+                }
+
                 auto gen_action_end = std::chrono::high_resolution_clock::now();
                 publish_action(action);
                 m_last_action_signal = action_to_signal(action);
