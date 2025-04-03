@@ -468,6 +468,8 @@ inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZ> &cloud,
 
     return message;
 
+  }
+
   inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alpha, 
                                          int num_bins, double height_threshold, 
                                          double epsilon, int min_points, 
@@ -504,4 +506,3 @@ inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZ> &cloud,
       
       return filtered_cloud;
     }
-  }
