@@ -93,6 +93,8 @@ namespace controls {
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
             const float actual_speed_along = world_state[3];
+            const float speed_above_threshold_cost = (actual_speed_along > maximum_speed_ms) ? above_speed_threshold_cost : 0.0f;
+
             (void)actual_speed_along;
             // if (fabsf(approx_speed_along - actual_speed_along) > 1.0f) {
             //     printf("Approx speed along: %f, actual speed along: %f\n", approx_speed_along, actual_speed_along);
@@ -107,11 +109,11 @@ namespace controls {
 
             float total_cost;
             if (follow_midline_only) {
-                total_cost = progress_cost + distance_cost;
+                total_cost = progress_cost + distance_cost + speed_above_threshold_cost;
             } else {
-                total_cost = progress_cost;
+                total_cost = progress_cost + speed_above_threshold_cost;
             }
-
+ 
             //TODO: delete?
             // const float deriv_cost = first ?
             //     fabsf(action[action_torque_idx] - last_taken_action[action_torque_idx]) / controller_period / 10 * torque_10Nps_cost
