@@ -121,12 +121,12 @@ namespace controls {
                             return proj_curr_state_opt.value();
                         } else {
                             RCLCPP_WARN(get_logger(), "Failed to project state, using naive speed only");
-                            return {0.0f, 0.0f, 0.0f, m_last_speed};
+                            return {0.0f, 0.0f, M_PI_2, m_last_speed};
                         }
                         break;
                     }
                     case StateProjectionMode::NAIVE_SPEED_ONLY:
-                        return {0.0f, 0.0f, 0.0f, m_last_speed};
+                        return {0.0f, 0.0f, M_PI_2, m_last_speed};
                         break;
                     case StateProjectionMode::POSITIONLLA_YAW_SPEED:
                         return {}; //TODO: implement the binary set lol
