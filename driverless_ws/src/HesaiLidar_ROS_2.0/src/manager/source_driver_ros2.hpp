@@ -271,7 +271,7 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
 #else
   if (dark_mode)
   {
-    cone_pub_->publish(ToRosMsgConesCPP_dark(msg, frame_id_));
+    cone_pub_dark->publish(ToRosMsgConesCPP_dark(msg, frame_id_));
   }
   else
   {
