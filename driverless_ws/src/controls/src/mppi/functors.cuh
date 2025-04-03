@@ -296,7 +296,7 @@ namespace controls {
                         u_ij[k] = deadzoned;
                     }
 
-                    assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
+                    paranoid_assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
                     model(x_curr, u_ij, x_curr, controller_period);
                     // printf("j: %i, x: %f, y: %f, yaw: %f, speed: %f\n", j, x_curr[state_x_idx], x_curr[state_yaw_idx], x_curr[state_yaw_idx], x_curr[state_speed_idx]);
                     paranoid_assert(!any_nan(x_curr, state_dims) && "State was nan after model step");

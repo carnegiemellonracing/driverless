@@ -2,7 +2,7 @@
  * @file cmr_tx.c
  * @brief cmr_can_wrapper
  * 
- * @author Ayush Garg and Vikram Mani
+ * @author Ayush Garg, Vikram Mani, Anthony Yip
  */
 
 
@@ -18,6 +18,7 @@
 #include "cmr_can.h"
 #include <math.h>
 #include <assert.h>
+#include <utils/paranoid_assert.h>
 
 
 #define READ_WAIT_INFINITE (unsigned long)(-1)
@@ -121,7 +122,7 @@ uint16_t swangle_to_adc(float swangle)
     float max_deg = 23.6;
     float adc_deg_ratio = ((float)(max_adc - min_adc)) / ((max_deg - min_deg));
     int desired_adc = (int)(swangle_in_degrees * adc_deg_ratio) + zero_adc;
-    assert(min_adc < desired_adc && desired_adc < max_adc);
+    paranoid_assert(min_adc < desired_adc && desired_adc < max_adc);
     uint16_t desired_adc_modded = (uint16_t)(desired_adc % modulus);
     return desired_adc_modded;
 }
@@ -232,7 +233,7 @@ int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t 
     msg[7] = (unsigned char) (rackDisplacement_adc >> 8);
     msg[6] = (unsigned char) rackDisplacement_adc;
 
-    assert(current_can_handle >= 0 && "can was not initialized when trying to send control action");
+    paranoid_assert(current_can_handle >= 0 && "can was not initialized when trying to send control action");
 
     return cmr_can_tx(0, controlActionID, &msg, 8, false);
 }

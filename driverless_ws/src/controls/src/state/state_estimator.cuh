@@ -125,8 +125,7 @@ namespace controls {
             void on_pose(const PoseMsg& pose_msg) override;
 
             void render_and_sync(State state) override;
-            State project_state(const rclcpp::Time &time) override;
-            std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) override;
+            std::optional<State> project_state(const rclcpp::Time &time) override;
             bool is_ready() override;
             void set_logger(LoggerFunc logger) override;
             void set_logger_obj(rclcpp::Logger logger) override;
@@ -141,7 +140,6 @@ namespace controls {
             std::vector<glm::fvec2> get_left_cone_points() override;
             std::vector<glm::fvec2> get_right_cone_points() override;
             std::vector<glm::fvec2> get_raceline_points();
-            std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> get_all_cone_points() override;
             std::vector<float> get_vertices() override;
             // std::vector<glm::fvec2> get_normals() override;
             void get_offset_pixels(OffsetImage& offset_image) override;

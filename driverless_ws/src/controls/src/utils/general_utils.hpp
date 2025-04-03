@@ -5,14 +5,10 @@
 #include <sstream>
 #include <glm/glm.hpp>
 #include <stdexcept>
+#include "paranoid_assert.h"
 
 namespace controls {
     /// Asserts whether x is true if the PARANOID compiler flag is set (-P)
-    #ifdef PARANOID
-    #define paranoid_assert(x) (assert(x))
-    #else
-    #define paranoid_assert(x) ((void)0)
-    #endif
 
     struct SplineAndCones
     {

@@ -31,7 +31,7 @@ namespace controls {
                 m_follow_midline_only = follow_midline_only;
             }
             
-            virtual State project_state(const rclcpp::Time &time) =0;
+            virtual std::optional<State> project_state(const rclcpp::Time &time) =0;
 
             /**
              * @brief "main" function of the state estimator. Calculates current inertial state and the
@@ -39,8 +39,6 @@ namespace controls {
              * (into @ref cuda_globals::curv_frame_lookup_tex and @ref cuda_globals::curr_state respectively)
              * @param time The current time
              */
-            virtual std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) =0;
-
             virtual void render_and_sync(State state) =0;
 
             /**
@@ -108,7 +106,6 @@ namespace controls {
             virtual std::vector<glm::fvec2> get_right_cone_points() = 0;
             virtual std::vector<glm::fvec2> get_raceline_points() =0;
 
-            virtual std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> get_all_cone_points() =0;
             virtual std::vector<float> get_vertices() =0;
             // virtual std::vector<GLuint> get_indices()=0;
             virtual void get_offset_pixels(OffsetImage& offset_image) =0;

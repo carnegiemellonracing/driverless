@@ -2,9 +2,10 @@
 
 #include <curand.h>
 #include <iostream>
-
+#include <sstream>
 #include "general_utils.hpp"
 #include "constants.hpp"
+
 
 /** @brief indexes into a 3-dimensional tensor that is represented in memory as a single nested array.
  * Note: 0 <= idx.x < dim.x
@@ -87,8 +88,11 @@ namespace controls {
     {
         if (code != cudaSuccess)
         {
-            fprintf(stderr,"cuda assert: %s (%i). Location: %s:%d\n", cudaGetErrorString(code), code, file, line);
-            if (abort) exit(code);
+            std::stringstream error_stream;
+            error_stream << "cuda assert: " << cudaGetErrorString(code) << " (" << code << "). Location: " << file << ":" << line << "\n" << std::endl;
+            if (abort) {
+                throw ControllerError(error_stream.str());
+            }
         }
     }
 
@@ -97,8 +101,11 @@ namespace controls {
     {
         if (code != CURAND_STATUS_SUCCESS)
         {
-            fprintf(stderr,"curand assert: %s (%i). Location: %s:%d\n", curandGetErrorString(code), code, file, line);
-            if (abort) exit(code);
+            std::stringstream error_stream;
+            error_stream << "curand assert: " << curandGetErrorString(code) << " (" << code << "). Location: " << file << ":" << line << "\n" << std::endl;
+            if (abort) {
+                throw ControllerError(error_stream.str());
+            }
         }
     }
 

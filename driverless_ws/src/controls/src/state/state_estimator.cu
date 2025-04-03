@@ -65,19 +65,21 @@ namespace controls {
         }
 
         void StateProjector::record_action(Action action, rclcpp::Time time) {
-            // std::cout << "Recording action " << action[0] << ", " << action[1] << " at time " << time.nanoseconds() << std::endl;
+            RCLCPP_DEBUG_STREAM(m_logger_obj, "Recording action " << action[0] << ", " << action[1] << " at time " << time.nanoseconds());
 
-            // change to assert(!m_pose_record.has_value() || time >= m_pose_record.value().time)
-            assert(m_pose_record.has_value() && time >= m_pose_record.value().time
-                && "call me marty mcfly the way im time traveling");
-
-            m_history_since_pose.insert(Record {
-                .action = action,
-                .time = time,
-                .type = Record::Type::Action
-            });
-
-            // print_history();
+            if (m_pose_record.has_value()) {
+                if (time >= m_pose_record.value().time) {
+                m_history_since_pose.insert(Record {
+                    .action = action,
+                    .time = time,
+                    .type = Record::Type::Action
+                });
+            } else {
+                    RCLCPP_WARN(m_logger_obj, "Attempted to record an action before the latest pose's time. Ignoring.");
+                }
+            } else {
+                RCLCPP_WARN(m_logger_obj, "Attempted to record an action before the first pose. Ignoring.");
+            }
         }
 
         void StateProjector::record_speed(float speed, rclcpp::Time time) {
@@ -141,7 +143,7 @@ namespace controls {
         }
 
         std::optional<State> StateProjector::project(const rclcpp::Time& time, LoggerFunc logger_func) const {
-            assert(m_pose_record.has_value() && "State projector has not recieved first pose");
+            paranoid_assert(m_pose_record.has_value() && "State projector has not recieved first pose");
             // std::cout << "Projecting to " << time.nanoseconds() << std::endl;
 
             State state;
@@ -416,7 +418,7 @@ namespace controls {
                 processed_points.push_back(
                     glm::fvec2(cone_x, cone_y));
             }
-            assert(processed_points.size() == points.size());
+            paranoid_assert(processed_points.size() == points.size());
             return processed_points;
         }
 
@@ -562,9 +564,9 @@ namespace controls {
             utils::sync_gl_and_unbind_context(m_gl_window);
         }
 
-        State StateEstimator_Impl::project_state(const rclcpp::Time& time) {
+        std::optional<State> StateEstimator_Impl::project_state(const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
-            State state = m_state_projector.project(
+            auto state = m_state_projector.project(
                 rclcpp::Time{
                     time.nanoseconds() + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
                     default_clock_type},
@@ -573,28 +575,6 @@ namespace controls {
             return state;
         }
 
-        std::vector<std::chrono::milliseconds> StateEstimator_Impl::sync_to_device(const rclcpp::Time& time) {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            m_logger("beginning state estimator device sync");
-
-            m_logger("projecting current state");
-            auto t1 = std::chrono::high_resolution_clock::now();
-            const State state = m_state_projector.project(
-                rclcpp::Time {
-                    time.nanoseconds()
-                    + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
-                    default_clock_type
-                }, m_logger
-            );
-            auto t2 = std::chrono::high_resolution_clock::now();
-            render_and_sync(state);
-            auto t3 = std::chrono::high_resolution_clock::now();
-
-            m_logger("finished state estimator device sync");
-            return std::vector {std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1), 
-            std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2)};
-        }
 
         bool StateEstimator_Impl::is_ready() {
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -663,14 +643,6 @@ namespace controls {
             return m_raceline_points;
         }
 
-
-        std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> StateEstimator_Impl::get_all_cone_points() {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            assert(m_all_left_cone_points.size() > 0);
-
-            return std::make_pair(m_all_left_cone_points, m_all_right_cone_points);
-        }
 
         std::vector<float> StateEstimator_Impl::get_vertices() {
             std::lock_guard<std::mutex> guard {m_mutex};

@@ -110,7 +110,7 @@ namespace controls {
 #endif
             State ControllerNode::get_state_under_strategy() {
                 switch (projection_mode) {
-                    case StateProjectionMode::MODEL_MULTISET:
+                    case StateProjectionMode::MODEL_MULTISET: {
                         std::optional<State> proj_curr_state_opt = m_state_estimator->project_state(get_clock()->now());
                         if (proj_curr_state_opt.has_value()) {
                             return proj_curr_state_opt.value();
@@ -119,6 +119,7 @@ namespace controls {
                             return {0.0f, 0.0f, 0.0f, m_last_speed};
                         }
                         break;
+                    }
                     case StateProjectionMode::NAIVE_SPEED_ONLY:
                         return {0.0f, 0.0f, 0.0f, m_last_speed};
                         break;
@@ -150,50 +151,56 @@ namespace controls {
                 // * We want to manually lock the state mutex here, so use a unique_lock
                 std::unique_lock<std::mutex> state_lock {m_state_mut};
 
+
+                // save for info publishing later, since might be changed during iteration
+                rclcpp::Time cone_arrival_time = cone_msg.header.stamp;
+
                 // record time to estimate speed of the entire pipeline
                 auto start_time = std::chrono::high_resolution_clock::now();
 
                 // Process cones and report timing
-                Action action;
+                Action action {};
+                State proj_curr_state {};
+                std::chrono::_V2::system_clock::time_point cone_process_start, cone_process_end, project_start, project_end, sync_start, sync_end, gen_action_start, gen_action_end;
+
                 try {
-                    auto cone_process_start = std::chrono::high_resolution_clock::now();
+                    cone_process_start = std::chrono::high_resolution_clock::now();
                     float svm_time = m_state_estimator->on_cone(cone_msg);
-                    auto cone_process_end = std::chrono::high_resolution_clock::now();
+                    cone_process_end = std::chrono::high_resolution_clock::now();
                     m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
                     m_last_svm_time = svm_time;
 
                     RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
 
-                    // save for info publishing later, since might be changed during iteration
-                    rclcpp::Time cone_arrival_time = cone_msg.header.stamp;
 
-                // send state to device (i.e. cuda globals)
-                // (also serves to lock state since nothing else updates gpu state)
-                RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                auto project_start = std::chrono::high_resolution_clock::now();
-                State proj_curr_state = get_state_under_strategy();
-                auto project_end = std::chrono::high_resolution_clock::now();
+                    // send state to device (i.e. cuda globals)
+                    // (also serves to lock state since nothing else updates gpu state)
+                    RCLCPP_DEBUG(get_logger(), "syncing state to device");
+                    project_start = std::chrono::high_resolution_clock::now();
+                    proj_curr_state = get_state_under_strategy();
+                    project_end = std::chrono::high_resolution_clock::now();
 
                     // * Let state callbacks proceed, so unlock the state mutex
                     state_lock.unlock();
 
                     // send state to device
-                    auto sync_start = std::chrono::high_resolution_clock::now();
+                    sync_start = std::chrono::high_resolution_clock::now();
                     m_state_estimator->render_and_sync(proj_curr_state);
-                    // auto duration_vec = m_state_estimator->sync_to_device(get_clock()->now());
-                    auto sync_end = std::chrono::high_resolution_clock::now();
+                    sync_end = std::chrono::high_resolution_clock::now();
 
                     // we don't need the host state anymore, so release the lock and let state callbacks proceed
 
                     // run mppi, and write action to the write buffer
-                    auto gen_action_start = std::chrono::high_resolution_clock::now();
+                    gen_action_start = std::chrono::high_resolution_clock::now();
                     action = m_mppi_controller->generate_action();
+                    gen_action_end = std::chrono::high_resolution_clock::now();
                 } catch (const ControllerError& e) {
                     RCLCPP_ERROR(get_logger(), "Error generating action: %s, taking next averaged action instead", e.what());
+                    gen_action_start = std::chrono::high_resolution_clock::now();
                     action = m_mppi_controller->get_next_averaged_action();
+                    gen_action_end = std::chrono::high_resolution_clock::now();
                 }
 
-                auto gen_action_end = std::chrono::high_resolution_clock::now();
                 publish_action(action);
                 m_last_action_signal = action_to_signal(action);
                 std::string error_str;
@@ -436,7 +443,7 @@ namespace controls {
                                 sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                 auto end = std::chrono::steady_clock::now();
                                 RCLCPP_DEBUG(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
-                            }
+                            // }
                             // }
                         }
                         std::cout << "I just got terminated in another way lol\n";
