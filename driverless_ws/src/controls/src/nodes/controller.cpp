@@ -392,6 +392,7 @@ namespace controls {
                             if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
                                 auto start = std::chrono::steady_clock::now();
                                 ActionSignal last_action_signal = m_last_action_signal;
+                                // FYI, velocity_rpm is determined from the speed threshold
                                 sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                 auto end = std::chrono::steady_clock::now();
                                 RCLCPP_WARN(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());

@@ -55,7 +55,11 @@ namespace controls {
 
     constexpr bool ingest_midline = false;
     constexpr bool follow_midline_only = false;
-    constexpr uint16_t can_max_velocity_rpm = 3000;
+    constexpr float maximum_speed_ms = 10.0;
+    constexpr float whl_radius = 0.2286;
+    // This is for reference only
+    constexpr uint16_t can_max_velocity_rpm = static_cast<uint16_t>((maximum_speed_ms * 60.0f) / (2 * M_PI * whl_radius));
+    
 
     // MPPI stuff
 
@@ -73,6 +77,8 @@ namespace controls {
     /// Best guess of action trajectory when controller first starts.
     constexpr float init_action_trajectory[num_timesteps * action_dims] = {};
     constexpr float action_momentum = 0.0f; ///< How much of last action taken to retain in calculation of next action.
+    constexpr float above_speed_threshold_cost = 1000.0f;
+
 
     // DEPRECATED
     constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
@@ -120,7 +126,6 @@ namespace controls {
     constexpr float cg_to_nose = 2.025f;
     constexpr float cg_to_side = 0.75f; //ACTUAL .75
     //constexpr float whl_base = 2.0f;
-    constexpr float whl_radius = 0.2286;
     /// gear ratio = motor speed / wheel speed = wheel torque / motor torque
     constexpr float gear_ratio = 15.0f;
     constexpr float car_mass = 210.0f;
