@@ -57,7 +57,7 @@
 #include <pcl/point_types.h>
 #include <../CMR_CPP_Pipeline.cpp>
 
-#define dark_mode false
+#define dark_mode 1
 #define CPP_ALPHA 0.1
 #define CPP_NUM_BINS 10
 #define CPP_HEIGHT_THRESHOLD 0.12
@@ -269,14 +269,11 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
   filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));
   cones_pub_->publish(ToRosMsgCones(msg, frame_id_));
 #else
-  if (dark_mode)
-  {
-    cone_pub_dark->publish(ToRosMsgConesCPP_dark(msg, frame_id_));
-  }
-  else
-  {
-    cone_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
-  }
+#if dark_mode
+  cone_pub_dark->publish(ToRosMsgConesCPP_dark(msg, frame_id_));
+#else
+  cone_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
+#endif
 #endif
 }
 
@@ -303,7 +300,7 @@ inline void SourceDriver::SendFiretime(const double *firetime_correction_)
 // CPP Driver Call
   inline interfaces::msg::ConeArray SourceDriver::ToRosMsgConesCPP_dark(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id)
   {
-
+    std::cout << "Dark Version" << endl;
     sensor_msgs::msg::PointCloud2 ros_vis_msg;
 
     int fields = 3;
@@ -385,6 +382,7 @@ inline void SourceDriver::SendFiretime(const double *firetime_correction_)
 
   inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id)
   {
+    std::cout << "Light Version" << endl;
 
     // Start the timer
     auto start = std::chrono::high_resolution_clock::now();
