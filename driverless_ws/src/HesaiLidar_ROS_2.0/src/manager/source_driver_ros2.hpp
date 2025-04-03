@@ -57,7 +57,7 @@
 #include <pcl/point_types.h>
 #include <../CMR_CPP_Pipeline.cpp>
 
-#define dark_mode = false;
+#define bool dark_mode = false;
 
 class SourceDriver
 {
