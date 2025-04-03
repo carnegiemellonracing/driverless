@@ -307,7 +307,7 @@ inline PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon,
   return cloud;
 }
 
-interfaces::msg::ConeArray color_cones_without_camera(const PointCloud<PointXYZ>& cloud) {
+inline interfaces::msg::ConeArray color_cones_without_camera(const PointCloud<PointXYZ>& cloud) {
     interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
     message.blue_cones = std::vector<geometry_msgs::msg::Point> {};
     message.yellow_cones = std::vector<geometry_msgs::msg::Point> {};
