@@ -19,7 +19,7 @@ namespace controls {
     constexpr const char *world_pose_topic_name = "filter/pose";
     constexpr const char *controller_info_topic_name = "controller_info";
     constexpr const char *pid_topic_name = "pid_values";
-    constexpr const char *rtk_pose_topic_name = "idk man";
+    constexpr const char *world_positionlla_topic_name = "filter/positionlla";
 
     // TODO: Ask Ankit what is this, why did we choose it
     /// Profile for best effort communication
@@ -56,7 +56,13 @@ namespace controls {
 
     constexpr bool ingest_midline = false;
     constexpr bool follow_midline_only = false;
-    constexpr bool rtk_instead_of_projection = true;
+    enum class StateProjectionMode {
+        MODEL_MULTISET,
+        NAIVE_SPEED_ONLY,
+        POSITIONLLA_YAW_SPEED
+    };
+
+    constexpr StateProjectionMode projection_mode = StateProjectionMode::NAIVE_SPEED_ONLY;
     constexpr uint16_t can_max_velocity_rpm = 3000;
 
     // MPPI stuff

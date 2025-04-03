@@ -18,6 +18,7 @@
 #include "controller.hpp"
 #include <sstream>
 #include <utils/general_utils.hpp>
+#include <utils/ros_utils.hpp>
 
 
 // This is to fit into the ROS API
@@ -107,6 +108,23 @@ namespace controls {
                 return ss.str();
             }
 #endif
+            State ControllerNode::get_state_under_strategy() {
+                switch (projection_mode) {
+                    case StateProjectionMode::MODEL_MULTISET:
+                        return m_state_estimator->project_state(get_clock()->now());
+                        break;
+                    case StateProjectionMode::NAIVE_SPEED_ONLY:
+                        return {0.0f, 0.0f, 0.0f, m_last_speed};
+                        break;
+                    case StateProjectionMode::POSITIONLLA_YAW_SPEED:
+                        return {}; //TODO: implement the binary set lol
+                        break;
+                    default:
+                        RCLCPP_WARN(get_logger(), "unknown state projection mode");
+                        return {};
+                }
+            }
+
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
 
@@ -145,12 +163,7 @@ namespace controls {
                 // (also serves to lock state since nothing else updates gpu state)
                 RCLCPP_DEBUG(get_logger(), "syncing state to device");
                 auto project_start = std::chrono::high_resolution_clock::now();
-                State proj_curr_state;
-                if constexpr (rtk_instead_of_projection) {
-                    proj_curr_state = m_last_rtk_state;
-                } else {
-                    proj_curr_state = m_state_estimator->project_state(get_clock()->now());
-                }
+                State proj_curr_state = get_state_under_strategy();
                 auto project_end = std::chrono::high_resolution_clock::now();
 
                 // * Let state callbacks proceed, so unlock the state mutex
@@ -266,6 +279,7 @@ namespace controls {
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
                     m_state_estimator->on_twist(twist_msg, twist_msg.header.stamp);
+                    m_last_speed = twist_msg_to_speed(twist_msg);
                 }
 
             }
@@ -287,10 +301,6 @@ namespace controls {
                 RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
             }
 
-
-            void rtk_callback(const RTKPoseMsg& rtk_pose_msg) {
-                throw std::runtime_error("Unimplemented");
-            }
 
             void ControllerNode::publish_action(const Action& action) {
                 const auto msg = action_to_msg(action);

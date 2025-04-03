@@ -10,6 +10,7 @@
 #include <interfaces/msg/control_action.hpp>
 #include <interfaces/msg/controls_state.hpp>
 #include <interfaces/msg/controller_info.hpp>
+#include <geometry_msgs/msg/vector3_stamped.hpp>
 #include <interfaces/msg/cone_array.hpp>
 
 #include "constants.hpp"
@@ -32,7 +33,7 @@ namespace controls {
     using InfoMsg = interfaces::msg::ControllerInfo; ///< State, control action, latency info
     using ConeMsg = interfaces::msg::ConeArray; /// Array of coloured cone positions
     using PIDMsg = geometry_msgs::msg::Point;
-    using RTKPoseMsg = int; // get the correct thing later
+    using PositionLLAMsg = geometry_msgs::msg::Vector3Stamped;
 
     /// Logging function type.
     using LoggerFunc = std::function<void(const char*)>;

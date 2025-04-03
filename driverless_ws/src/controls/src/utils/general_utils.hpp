@@ -45,5 +45,6 @@ namespace controls {
     inline bool isnan_vec(glm::fvec2 vec) {
         return std::isnan(vec.x) || std::isnan(vec.y);
     }
+
 }
 
