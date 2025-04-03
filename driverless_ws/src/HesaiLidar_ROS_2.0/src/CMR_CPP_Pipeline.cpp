@@ -104,7 +104,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
     PointXYZ pt = cloud.points[i];
     radial_t rd = point2radial(pt);
 
-    if (rd.radius < radius_max && (pt.y) < 1.5 && pt.y > -1.5) {
+    if (rd.radius < radius_max && (pt.y) < 1.4 && pt.y > -1.4) {
       int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
       int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
       if (seg_index < 0)
@@ -396,7 +396,7 @@ inline interfaces::msg::ConeArray color_cones_without_camera(const PointCloud<Po
             p.x = current_left_cone.x;
             p.y = current_left_cone.y;
             p.z = current_left_cone.z;
-            message.yellow_cones.push_back(p);
+            message.blue_cones.push_back(p);
             processed_cones[next_left_idx] = true;
             processed_count++;
         }
@@ -407,7 +407,7 @@ inline interfaces::msg::ConeArray color_cones_without_camera(const PointCloud<Po
             p.x = current_right_cone.x;
             p.y = current_right_cone.y;
             p.z = current_right_cone.z;
-            message.blue_cones.push_back(p);
+            message.yellow_cones.push_back(p);
             processed_cones[next_right_idx] = true;
             processed_count++;
         }
