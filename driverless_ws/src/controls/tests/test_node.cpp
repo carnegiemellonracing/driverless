@@ -564,9 +564,10 @@ namespace controls {
 
 
         void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
-            std::cout << "\nSwangle: " << msg.swangle * (180 / M_PI) << "deg Torque f: " <<
-                msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl;
-            
+            RCLCPP_INFO(get_logger(), "-----------Action Received-----------");
+            RCLCPP_INFO_STREAM(get_logger(), "X: " << m_world_state[0] << " Y: " << m_world_state[1] << " Yaw: " << m_world_state[2] << " Speed: " << m_world_state[3]);
+            RCLCPP_INFO_STREAM(get_logger(), "Swangle: " << msg.swangle * (180 / M_PI) << "deg Torque f: " << msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr);
+
             m_last_action_msg = msg;
         }
         /**
