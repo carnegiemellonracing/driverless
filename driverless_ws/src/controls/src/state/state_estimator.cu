@@ -488,7 +488,14 @@ namespace controls {
 #endif
 
             if constexpr (reset_pose_on_cone) {
-                m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
+                switch (projection_mode) {
+                    case StateProjectionMode::MODEL_MULTISET: {
+                        m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
+                    }
+                    break;
+                    default:
+                    break;
+                }
             }
             
             m_logger("finished state estimator cone processing");
@@ -501,15 +508,30 @@ namespace controls {
 
             const float speed = twist_msg_to_speed(twist_msg);
 
-            m_state_projector.record_speed(speed, time);
+            switch (projection_mode) {
+                case StateProjectionMode::MODEL_MULTISET: {
+                    m_state_projector.record_speed(speed, time);
+                }
+                break;
+                default:
+                break;
+            }
+
         }
 
         void StateEstimator_Impl::on_pose(const PoseMsg &pose_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            m_state_projector.record_pose(
-                pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.orientation.z,
-                pose_msg.header.stamp);
+            switch (projection_mode) {
+                case StateProjectionMode::MODEL_MULTISET: {
+                    m_state_projector.record_pose(
+                        pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.orientation.z,
+                        pose_msg.header.stamp);
+                }
+                break;
+                default:
+                break;
+            }
         }
 
 
@@ -517,12 +539,16 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             // record actions in the future (when they are actually requested by the actuator)
-            m_state_projector.record_action(action, rclcpp::Time {
-                    time.nanoseconds()
-                    + static_cast<int64_t>(approx_propogation_delay * 1e9f),
-                    default_clock_type
+            switch (projection_mode) {
+                case StateProjectionMode::MODEL_MULTISET: {
+                    m_state_projector.record_action(action, rclcpp::Time{
+                                                                time.nanoseconds() + static_cast<int64_t>(approx_propogation_delay * 1e9f),
+                                                                default_clock_type});
                 }
-            );
+                break;
+                default:
+                break;
+            }
         }
 
         // Used only for the offline controller
