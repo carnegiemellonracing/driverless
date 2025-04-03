@@ -63,7 +63,10 @@ namespace controls {
         POSITIONLLA_YAW_SPEED
     };
 
-    constexpr StateProjectionMode projection_mode = StateProjectionMode::NAIVE_SPEED_ONLY;
+    // Timing flags
+    constexpr bool log_render_and_sync_timing = false;
+
+    constexpr StateProjectionMode projection_mode = StateProjectionMode::MODEL_MULTISET;
     constexpr uint16_t can_max_velocity_rpm = 3000;
     
     // Printing flags
@@ -96,7 +99,6 @@ namespace controls {
     /// Reason for not using infinity: reduction uses log of the cost (trading precision for representable range).
     /// This covers the edge case where every trajectory goes out of bounds, allowing us to still extract useful information.
     constexpr float out_of_bounds_cost = 100.0f; ///< Cost for being out of (fake) track bound as defined by @ref track_width.
-    // TODO: use real bounds
 
     // Midline/SVM
     constexpr float mesh_grid_spacing = 0.2f; //m

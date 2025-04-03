@@ -36,6 +36,54 @@
 
 #include <utils/ros_utils.hpp>
 
+namespace {
+    // Helper function for timing with optional GPU synchronization
+    template<bool EnableSync>
+    std::chrono::time_point<std::chrono::high_resolution_clock> sync_now() {
+        // if constexpr (EnableSync) {
+        //     glFinish(); // Ensure GPU has completed all work
+        // }
+        return std::chrono::high_resolution_clock::now();
+    }
+    
+    // Helper function to log timings if enabled
+    template<bool EnableLog>
+    void log_timings(
+        rclcpp::Logger& logger,
+        float total_ms,
+        float gl_context_ms,
+        float tex_info_ms,
+        float buffer_cones_ms,
+        float buffer_spline_ms,
+        float unmap_ms,
+        float fake_track_ms,
+        float curv_frame_ms,
+        float map_ms,
+        float sync_state_ms,
+        float sync_tex_ms,
+        float unbind_ms) {
+        
+        if constexpr (EnableLog) {
+            // Note: When EnableLog==true with glFinish calls, these timings include GPU execution time
+            RCLCPP_INFO(logger, 
+                "render_and_sync timing (ms): Total=%.2f, GL context=%.2f, Tex info=%.2f, "
+                "Buffer cones=%.2f, Buffer spline=%.2f, Unmap=%.2f, Fake track=%.2f, "
+                "Curv frame=%.2f, Map=%.2f, Sync state=%.2f, Sync tex=%.2f, Unbind=%.2f",
+                total_ms, gl_context_ms, tex_info_ms,
+                buffer_cones_ms, buffer_spline_ms, unmap_ms,
+                fake_track_ms, curv_frame_ms, map_ms,
+                sync_state_ms, sync_tex_ms, unbind_ms);
+            
+            // Log sum of component times to verify accounting
+            float sum = gl_context_ms + tex_info_ms + buffer_cones_ms + buffer_spline_ms + 
+                      unmap_ms + fake_track_ms + curv_frame_ms + map_ms + 
+                      sync_state_ms + sync_tex_ms + unbind_ms;
+            
+            RCLCPP_INFO(logger, "Sum of component times: %.2f ms (%.2f%% of total)",
+                       sum, (sum / total_ms) * 100.0f);
+        }
+    }
+}
 
 namespace controls {
     namespace state {
@@ -551,43 +599,102 @@ namespace controls {
             }
         }
 
-        // Used only for the offline controller
         void StateEstimator_Impl::render_and_sync(State state) {
             std::lock_guard<std::mutex> guard {m_mutex};
             
+            // Timing variables
+            auto start_time = sync_now<log_render_and_sync_timing>();
+            auto last_time = start_time;
+            std::chrono::duration<float, std::milli> gl_context_time, tex_info_time, 
+                buffer_cones_time, buffer_spline_time, unmap_time, 
+                fake_track_time, curv_frame_time, map_time, 
+                sync_state_time, sync_tex_time, unbind_time, total_time;
+            
             // enable openGL
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
+            auto current_time = sync_now<log_render_and_sync_timing>();
+            gl_context_time = current_time - last_time;
+            last_time = current_time;
 
             m_logger("generating spline frame lookup texture info...");
-
             gen_tex_info({state[state_x_idx], state[state_y_idx]});
+            current_time = sync_now<log_render_and_sync_timing>();
+            tex_info_time = current_time - last_time;
+            last_time = current_time;
 
             m_logger("filling OpenGL buffers...");
             // takes car position, places them in the vertices
             fill_path_buffers_cones();
+            current_time = sync_now<log_render_and_sync_timing>();
+            buffer_cones_time = current_time - last_time;
+            last_time = current_time;
+            
             fill_path_buffers_spline();
+            current_time = sync_now<log_render_and_sync_timing>();
+            buffer_spline_time = current_time - last_time;
+            last_time = current_time;
 
             m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
             unmap_curv_frame_lookup();
+            current_time = sync_now<log_render_and_sync_timing>();
+            unmap_time = current_time - last_time;
+            last_time = current_time;
 
             // render the lookup table
             m_logger("rendering curv frame lookup table...");
             render_fake_track();
+            current_time = sync_now<log_render_and_sync_timing>();
+            fake_track_time = current_time - last_time;
+            last_time = current_time;
+            
             if (!m_follow_midline_only) {
                 render_curv_frame_lookup();
+                current_time = sync_now<log_render_and_sync_timing>();
+                curv_frame_time = current_time - last_time;
+                last_time = current_time;
             }
 
             m_logger("mapping OpenGL curv frame texture back to CUDA");
             map_curv_frame_lookup();
+            current_time = sync_now<log_render_and_sync_timing>();
+            map_time = current_time - last_time;
+            last_time = current_time;
 
             m_logger("syncing world state to device");
-
             CUDA_CALL(cudaMemcpyToSymbol(cuda_globals::curr_state, state.data(), state_dims * sizeof(float)));
+            current_time = sync_now<log_render_and_sync_timing>();
+            sync_state_time = current_time - last_time;
+            last_time = current_time;
 
             m_logger("syncing spline frame lookup texture info to device");
             sync_tex_info();
+            current_time = sync_now<log_render_and_sync_timing>();
+            sync_tex_time = current_time - last_time;
+            last_time = current_time;
 
             utils::sync_gl_and_unbind_context(m_gl_window);
+            current_time = sync_now<log_render_and_sync_timing>();
+            unbind_time = current_time - last_time;
+            
+            // Total time
+            total_time = current_time - start_time;
+            
+            // Log timing information using our helper function
+            log_timings<log_render_and_sync_timing>(
+                m_logger_obj,
+                total_time.count(),
+                gl_context_time.count(),
+                tex_info_time.count(),
+                buffer_cones_time.count(),
+                buffer_spline_time.count(),
+                unmap_time.count(),
+                fake_track_time.count(),
+                curv_frame_time.count(),
+                map_time.count(),
+                sync_state_time.count(),
+                sync_tex_time.count(),
+                unbind_time.count()
+            );
         }
 
         std::optional<State> StateEstimator_Impl::project_state(const rclcpp::Time& time) {
