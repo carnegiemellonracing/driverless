@@ -70,6 +70,8 @@ namespace controls {
 
             void pid_callback(const PIDMsg& pid_msg);
 
+            void rtk_callback(const RTKPoseMsg& rtk_pose_msg);
+
             /**
              * Publishes a control action to the `control_action` topic.
              *
@@ -140,6 +142,7 @@ namespace controls {
             std::atomic<bool> m_keep_sending_aim_signal = true;
             std::thread launch_aim_communication();
             float m_p_value;
+            State m_last_rtk_state;
         };
     }
 }

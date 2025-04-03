@@ -32,6 +32,7 @@ namespace controls {
     using InfoMsg = interfaces::msg::ControllerInfo; ///< State, control action, latency info
     using ConeMsg = interfaces::msg::ConeArray; /// Array of coloured cone positions
     using PIDMsg = geometry_msgs::msg::Point;
+    using RTKPoseMsg = int; // get the correct thing later
 
     /// Logging function type.
     using LoggerFunc = std::function<void(const char*)>;

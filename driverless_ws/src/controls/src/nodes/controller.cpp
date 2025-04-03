@@ -145,7 +145,12 @@ namespace controls {
                 // (also serves to lock state since nothing else updates gpu state)
                 RCLCPP_DEBUG(get_logger(), "syncing state to device");
                 auto project_start = std::chrono::high_resolution_clock::now();
-                State proj_curr_state = m_state_estimator->project_state(get_clock()->now());
+                State proj_curr_state;
+                if constexpr (rtk_instead_of_projection) {
+                    proj_curr_state = m_last_rtk_state;
+                } else {
+                    proj_curr_state = m_state_estimator->project_state(get_clock()->now());
+                }
                 auto project_end = std::chrono::high_resolution_clock::now();
 
                 // * Let state callbacks proceed, so unlock the state mutex
@@ -280,6 +285,11 @@ namespace controls {
                 m_p_value = pid_msg.x;
                 sendPIDConstants(m_p_value, 0);
                 RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
+            }
+
+
+            void rtk_callback(const RTKPoseMsg& rtk_pose_msg) {
+                throw std::runtime_error("Unimplemented");
             }
 
             void ControllerNode::publish_action(const Action& action) {
