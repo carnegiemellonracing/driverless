@@ -70,6 +70,8 @@ namespace controls {
 
             void pid_callback(const PIDMsg& pid_msg);
 
+            void position_lla_callback(const PositionLLAMsg& position_lla_msg);
+
             /**
              * Publishes a control action to the `control_action` topic.
              *
@@ -140,6 +142,11 @@ namespace controls {
             std::atomic<bool> m_keep_sending_aim_signal = true;
             std::thread launch_aim_communication();
             float m_p_value;
+            float m_last_speed;
+            State get_state_under_strategy();
+
+            // Stuff for the naive state estimator
+            
         };
     }
 }

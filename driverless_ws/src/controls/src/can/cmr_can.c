@@ -35,7 +35,7 @@ static void debug_printf(const char *format, ...) {
 }
 static unsigned int can_tx_timeout = 30;
 
-
+canHandle current_can_handle = -1;
 
 
 static void check(char *id, canStatus stat)
@@ -126,22 +126,24 @@ uint16_t swangle_to_adc(float swangle)
     return desired_adc_modded;
 }
 
-//CMR TX
-//Channel should default to 0
-static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool verbose){
+static void cmr_can_error_exit(int signal) {
+    canHandle hnd = current_can_handle; 
+    canStatus stat;
+    if (hnd >= 0) {
+        stat = canBusOff(hnd);
+        check("canBusOff", stat);
+        usleep(50 * 1000); // Sleep just to get the last notification.
+        stat = canClose(hnd);
+        check("canClose", stat);
+        stat = canUnloadLibrary();
+        check("canUnloadLibrary", stat);
+        return;
+    }
+}
+
+static int cmr_can_init(int channel, bool verbose) {
     canHandle hnd;
     canStatus stat;
-    struct sigaction sigact;
-    
-    /* Use sighand and allow SIGINT to interrupt syscalls */
-    sigact.sa_flags = SA_SIGINFO;
-    sigemptyset(&sigact.sa_mask);
-    sigact.sa_sigaction = sighand;
-    if (sigaction(SIGINT, &sigact, NULL) != 0) {
-        perror("sigaction SIGINT failed");
-        return -1;
-    }
-    debug_printf("Blocking sigint\n");
 
     if(verbose){
         debug_printf("Sending a CAN message on channel %d\n", channel);
@@ -155,26 +157,13 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
     if (hnd < 0) {
         debug_printf("canOpenChannel %d", channel);
         check("", hnd);
-        sigact.sa_sigaction = exitOnSignal;
-        if (sigaction(SIGINT, &sigact, NULL) != 0)
-        {
-            perror("sigaction SIGINT failed");
-            return -1;
-        }
-        debug_printf("Unblocked sigint\n");
-        sigset_t pending_set;
-        sigpending(&pending_set);
-        if (sigismember(&pending_set, SIGINT))
-        {
-            exitOnSignal(SIGINT, NULL, NULL);
-        }
         return -1;
     }
 
     stat = canSetBusParams(hnd, canBITRATE_500K, 0, 0, 0, 0, 0);
     check("canSetBusParams", stat);
     if (stat != canOK) {
-        goto ErrorExit;
+        return -2;
     }
 
     if(verbose){
@@ -188,46 +177,36 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
     stat = canBusOn(hnd);
     check("canBusOn", stat);
     if (stat != canOK) {
-        goto ErrorExit;
+        return -3;
     }
+    current_can_handle = hnd;
+    signal(SIGINT, cmr_can_error_exit);
+    return 0;
+ }
 
+//CMR TX
+//Channel should default to 0
+static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool verbose){
+    canHandle hnd = current_can_handle;
+    canStatus stat;
     stat = canWrite(hnd, id, msg, msgLen, 0);
     check("canWrite", stat);
     if (stat != canOK) {
-        goto ErrorExit;
+        return -1;
     }
     stat = canWriteSync(hnd, can_tx_timeout);
     check("canWriteSync", stat);
     if (stat != canOK) {
-        goto ErrorExit;
-    }
-
-ErrorExit:
-    stat = canBusOff(hnd);
-    check("canBusOff", stat);
-    usleep(50 * 1000); // Sleep just to get the last notification.
-    stat = canClose(hnd);
-    check("canClose", stat);
-    stat = canUnloadLibrary();
-    check("canUnloadLibrary", stat);
-
-    sigact.sa_sigaction = exitOnSignal;
-    if (sigaction(SIGINT, &sigact, NULL) != 0)
-    {
-        perror("sigaction SIGINT failed");
         return -1;
     }
-    debug_printf("Unblocked sigint\n");
-    sigset_t pending_set;
-    sigpending(&pending_set);
-    if (sigismember(&pending_set, SIGINT))
-    {
-        exitOnSignal(SIGINT, NULL, NULL);
-    }
-
     return 0;
 }
 
+
+
+int initializeCan(void) {
+    return cmr_can_init(0, false);
+}
 
 
 /*
@@ -240,7 +219,7 @@ ErrorExit:
 @returns 0 on success else error occured
 */
 int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t velocity_rpm /*divide by ~13 for wheelspeed*/, uint16_t rackDisplacement_adc /*2450 -> 4050*/){
-    long controlActionID = 0x190;
+    const long controlActionID = 0x190;
 
     //defines our message
     unsigned char msg[8];
@@ -252,6 +231,8 @@ int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t 
     msg[4] = (unsigned char) velocity_rpm;
     msg[7] = (unsigned char) (rackDisplacement_adc >> 8);
     msg[6] = (unsigned char) rackDisplacement_adc;
+
+    assert(current_can_handle >= 0 && "can was not initialized when trying to send control action");
 
     return cmr_can_tx(0, controlActionID, &msg, 8, false);
 }

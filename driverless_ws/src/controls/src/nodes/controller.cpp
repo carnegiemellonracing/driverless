@@ -18,6 +18,7 @@
 #include "controller.hpp"
 #include <sstream>
 #include <utils/general_utils.hpp>
+#include <utils/ros_utils.hpp>
 
 
 // This is to fit into the ROS API
@@ -85,6 +86,11 @@ namespace controls {
                 
             
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
+            int can_init_result = initializeCan();
+            if (can_init_result < 0) {
+                std::cout << "Can failed to initialize with error " << can_init_result << std::endl;
+                throw std::runtime_error("Failed to initialize can");
+            }
 
             launch_aim_communication().detach();
         }
@@ -102,6 +108,29 @@ namespace controls {
                 return ss.str();
             }
 #endif
+            State ControllerNode::get_state_under_strategy() {
+                switch (projection_mode) {
+                    case StateProjectionMode::MODEL_MULTISET:
+                        std::optional<State> proj_curr_state_opt = m_state_estimator->project_state(get_clock()->now());
+                        if (proj_curr_state_opt.has_value()) {
+                            return proj_curr_state_opt.value();
+                        } else {
+                            RCLCPP_WARN(get_logger(), "Failed to project state, using naive speed only");
+                            return {0.0f, 0.0f, 0.0f, m_last_speed};
+                        }
+                        break;
+                    case StateProjectionMode::NAIVE_SPEED_ONLY:
+                        return {0.0f, 0.0f, 0.0f, m_last_speed};
+                        break;
+                    case StateProjectionMode::POSITIONLLA_YAW_SPEED:
+                        return {}; //TODO: implement the binary set lol
+                        break;
+                    default:
+                        RCLCPP_WARN(get_logger(), "unknown state projection mode");
+                        return {};
+                }
+            }
+
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
 
@@ -138,19 +167,12 @@ namespace controls {
                     // save for info publishing later, since might be changed during iteration
                     rclcpp::Time cone_arrival_time = cone_msg.header.stamp;
 
-                    // send state to device (i.e. cuda globals)
-                    // (also serves to lock state since nothing else updates gpu state)
-                    RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                    auto project_start = std::chrono::high_resolution_clock::now();
-                    std::optional<State> proj_curr_state_opt = m_state_estimator->project_state(get_clock()->now());
-                    State proj_curr_state;
-                    if (proj_curr_state_opt.has_value()) {
-                        proj_curr_state = proj_curr_state_opt.value();
-                    } else {
-                        RCLCPP_WARN(get_logger(), "Failed to project state");
-                        proj_curr_state = {0,0,0,0};
-                    }
-                    auto project_end = std::chrono::high_resolution_clock::now();
+                // send state to device (i.e. cuda globals)
+                // (also serves to lock state since nothing else updates gpu state)
+                RCLCPP_DEBUG(get_logger(), "syncing state to device");
+                auto project_start = std::chrono::high_resolution_clock::now();
+                State proj_curr_state = get_state_under_strategy();
+                auto project_end = std::chrono::high_resolution_clock::now();
 
                     // * Let state callbacks proceed, so unlock the state mutex
                     state_lock.unlock();
@@ -270,6 +292,7 @@ namespace controls {
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
                     m_state_estimator->on_twist(twist_msg, twist_msg.header.stamp);
+                    m_last_speed = twist_msg_to_speed(twist_msg);
                 }
 
             }
@@ -287,7 +310,10 @@ namespace controls {
 
             void ControllerNode::pid_callback(const PIDMsg& pid_msg) {
                 m_p_value = pid_msg.x;
+                sendPIDConstants(m_p_value, 0);
+                RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
             }
+
 
             void ControllerNode::publish_action(const Action& action) {
                 const auto msg = action_to_msg(action);
@@ -400,19 +426,18 @@ namespace controls {
                     {
                         while (rclcpp::ok)
                         {
-                            // std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
+                            std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
                             auto current_time = std::chrono::high_resolution_clock::now();
                             // std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 << std::endl;
-                            if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
+
+                            // if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
                                 auto start = std::chrono::steady_clock::now();
                                 ActionSignal last_action_signal = m_last_action_signal;
                                 sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                 auto end = std::chrono::steady_clock::now();
                                 RCLCPP_DEBUG(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
-
-                                sendPIDConstants(m_p_value, 0);
-                                RCLCPP_DEBUG(get_logger(), "send Kp %f", m_p_value);
                             }
+                            // }
                         }
                         std::cout << "I just got terminated in another way lol\n";
                         send_finished_ignore_error();

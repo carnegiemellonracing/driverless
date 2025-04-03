@@ -19,6 +19,7 @@ namespace controls {
     constexpr const char *world_pose_topic_name = "filter/pose";
     constexpr const char *controller_info_topic_name = "controller_info";
     constexpr const char *pid_topic_name = "pid_values";
+    constexpr const char *world_positionlla_topic_name = "filter/positionlla";
 
     // TODO: Ask Ankit what is this, why did we choose it
     /// Profile for best effort communication
@@ -55,6 +56,13 @@ namespace controls {
 
     constexpr bool ingest_midline = false;
     constexpr bool follow_midline_only = false;
+    enum class StateProjectionMode {
+        MODEL_MULTISET,
+        NAIVE_SPEED_ONLY,
+        POSITIONLLA_YAW_SPEED
+    };
+
+    constexpr StateProjectionMode projection_mode = StateProjectionMode::NAIVE_SPEED_ONLY;
     constexpr uint16_t can_max_velocity_rpm = 3000;
     
     // Printing flags
@@ -97,7 +105,7 @@ namespace controls {
     constexpr float lookahead_behind_squared = 25.0f;
 
     // AIM communication stuff
-    constexpr int aim_signal_period_ms = 1000;
+    constexpr int aim_signal_period_ms = 98;
 
 
     // State Estimation
@@ -140,7 +148,7 @@ namespace controls {
     /// Time from MPPI control action request to physical change, in sec
     // TODO: Re-estimate since Falcon (steering motor) replacement
     constexpr float approx_propogation_delay = 0.02f;
-    constexpr float approx_mppi_time = 0.02f; ///< Time from MPPI launch to control action calculation, in sec
+    constexpr float approx_mppi_time = 0.040f; ///< Time from MPPI launch to control action calculation, in sec
 
     enum class TorqueMode
     {

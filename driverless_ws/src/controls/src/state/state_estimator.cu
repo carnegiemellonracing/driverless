@@ -33,7 +33,9 @@
 #include <SDL2/SDL_video.h>
 
 #include <midline/svm_conv.hpp>
-#include <utils/general_utils.hpp>
+
+#include <utils/ros_utils.hpp>
+
 
 namespace controls {
     namespace state {
@@ -495,9 +497,7 @@ namespace controls {
             // TODO: whats up with all these mutexes
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            const float speed = std::sqrt(
-                twist_msg.twist.linear.x * twist_msg.twist.linear.x
-                + twist_msg.twist.linear.y * twist_msg.twist.linear.y);
+            const float speed = twist_msg_to_speed(twist_msg);
 
             m_state_projector.record_speed(speed, time);
         }
