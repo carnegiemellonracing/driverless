@@ -168,7 +168,7 @@ namespace controls {
                 State proj_curr_state {};
                 std::chrono::_V2::system_clock::time_point cone_process_start, cone_process_end, project_start, project_end, sync_start, sync_end, gen_action_start, gen_action_end;
 
-                try {
+                // try {
                     cone_process_start = std::chrono::high_resolution_clock::now();
                     float svm_time = m_state_estimator->on_cone(cone_msg);
                     cone_process_end = std::chrono::high_resolution_clock::now();
@@ -199,12 +199,13 @@ namespace controls {
                     gen_action_start = std::chrono::high_resolution_clock::now();
                     action = m_mppi_controller->generate_action();
                     gen_action_end = std::chrono::high_resolution_clock::now();
-                } catch (const ControllerError& e) {
-                    RCLCPP_ERROR(get_logger(), "Error generating action: %s, taking next averaged action instead", e.what());
-                    gen_action_start = std::chrono::high_resolution_clock::now();
-                    action = m_mppi_controller->get_next_averaged_action();
-                    gen_action_end = std::chrono::high_resolution_clock::now();
-                }
+                // } catch (const ControllerError& e) {
+                //     // state_lock.unlock();
+                //     RCLCPP_ERROR(get_logger(), "Error generating action: %s, taking next averaged action instead", e.what());
+                //     gen_action_start = std::chrono::high_resolution_clock::now();
+                //     action = m_mppi_controller->get_next_averaged_action();
+                //     gen_action_end = std::chrono::high_resolution_clock::now();
+                // }
 
                 publish_action(action);
                 m_last_action_signal = action_to_signal(action);
@@ -288,8 +289,8 @@ namespace controls {
                 interfaces::msg::ControllerInfo info{};
                 info.action = action_to_msg(action);
                 info.proj_state = state_to_msg(proj_curr_state);
-                info.projection_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(sync_end - sync_start)).count(); // duration_vec[0].count();
-                info.render_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(project_end - project_start)).count();
+                info.projection_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(project_end - project_start)).count(); // duration_vec[0].count();
+                info.render_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(sync_end - sync_start)).count();
                 info.mppi_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(gen_action_end - gen_action_start)).count();
                 info.latency_ms = time_elapsed.count();
                 info.total_latency_ms = total_time_elapsed;

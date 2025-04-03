@@ -968,7 +968,7 @@ namespace controls {
             const size_t n = m_spline_frames.size();
 
             if (n < 2) {
-                throw ControllerError("less than 2 spline frames! (bruh andrew and/or deep)");
+                throw ControllerError("less than 2 spline frames! (bruh saket and/or saket)");
             }
 
             std::vector<Vertex> vertices;
