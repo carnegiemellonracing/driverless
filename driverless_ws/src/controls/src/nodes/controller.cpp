@@ -85,6 +85,11 @@ namespace controls {
                 
             
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
+            int can_init_result = initializeCan();
+            if (can_init_result < 0) {
+                std::cout << "Can failed to initialize with error " << can_init_result << std::endl;
+                throw std::runtime_error("Failed to initialize can");
+            }
 
             launch_aim_communication().detach();
         }
@@ -273,6 +278,8 @@ namespace controls {
 
             void ControllerNode::pid_callback(const PIDMsg& pid_msg) {
                 m_p_value = pid_msg.x;
+                sendPIDConstants(m_p_value, 0);
+                RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
             }
 
             void ControllerNode::publish_action(const Action& action) {
@@ -386,19 +393,18 @@ namespace controls {
                     {
                         while (rclcpp::ok)
                         {
-                            // std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
+                            std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
                             auto current_time = std::chrono::high_resolution_clock::now();
                             // std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 << std::endl;
-                            if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
+
+                            // if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
                                 auto start = std::chrono::steady_clock::now();
                                 ActionSignal last_action_signal = m_last_action_signal;
                                 sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                 auto end = std::chrono::steady_clock::now();
                                 RCLCPP_WARN(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
 
-                                sendPIDConstants(m_p_value, 0);
-                                RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
-                            }
+                            // }
                         }
                         std::cout << "I just got terminated in another way lol\n";
                         send_finished_ignore_error();

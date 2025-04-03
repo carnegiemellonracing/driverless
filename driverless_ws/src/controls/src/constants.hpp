@@ -94,7 +94,7 @@ namespace controls {
     constexpr float lookahead_behind_squared = 25.0f;
 
     // AIM communication stuff
-    constexpr int aim_signal_period_ms = 1000;
+    constexpr int aim_signal_period_ms = 98;
 
 
     // State Estimation
