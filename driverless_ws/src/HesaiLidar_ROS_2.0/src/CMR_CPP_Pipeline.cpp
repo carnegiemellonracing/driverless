@@ -23,8 +23,6 @@ using std::chrono::duration;
 using std::chrono::milliseconds;
 using namespace pcl;
 
-#define dark_mode = false;
-
 typedef struct radial {
   double angle;
   double radius;
@@ -418,12 +416,10 @@ inline interfaces::msg::ConeArray color_cones_without_camera(const PointCloud<Po
 }
 
 
-if (dark_mode) {
-  inline interfaces::msg::ConeArray run_pipeline(PointCloud<PointXYZ> &cloud, double alpha, 
+inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZ> &cloud, double alpha, 
                                           int num_bins, double height_threshold, 
                                           double epsilon, int min_points, 
-                                          double epsilon2, int min_points2,
-                                          bool dark_mode) {
+                                          double epsilon2, int min_points2) {
 
     // Start overall timer
     auto start_pipeline = std::chrono::high_resolution_clock::now();
@@ -471,8 +467,8 @@ if (dark_mode) {
     interfaces::msg::ConeArray message = color_cones_without_camera(filtered_cloud);
 
     return message;
-  } else {
-    inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alpha, 
+
+  inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alpha, 
                                          int num_bins, double height_threshold, 
                                          double epsilon, int min_points, 
                                          double epsilon2, int min_points2) {
@@ -509,4 +505,3 @@ if (dark_mode) {
       return filtered_cloud;
     }
   }
-}

@@ -112,7 +112,7 @@ protected:
 
   if (dark_mode)
   {
-    interfaces::msg::ConeArray ToRosMsgConesCPP(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id);
+    interfaces::msg::ConeArray ToRosMsgConesCPP_dark(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id);
   }
   else
   {
@@ -276,7 +276,13 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
   filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));
   cones_pub_->publish(ToRosMsgCones(msg, frame_id_));
 #else
-  cone_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
+  if (dark_mode)
+  {
+    cone_pub_->publish(ToRosMsgConesCPP_dark(msg, frame_id_));
+  }
+  else
+  {
+    cone_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
 #endif
 }
 
@@ -301,9 +307,7 @@ inline void SourceDriver::SendFiretime(const double *firetime_correction_)
 }
 
 // CPP Driver Call
-if (dark_mode)
-{
-  inline interfaces::msg::ConeArray SourceDriver::ToRosMsgConesCPP(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id)
+  inline interfaces::msg::ConeArray SourceDriver::ToRosMsgConesCPP_dark(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id)
   {
 
     sensor_msgs::msg::PointCloud2 ros_vis_msg;
@@ -354,7 +358,7 @@ if (dark_mode)
       filtered_points.push_back(PointXYZ(point.x, point.y, point.z));
     }
 
-    interfaces::msg::ConeArray message = run_pipeline(filtered_points, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
+    interfaces::msg::ConeArray message = run_pipeline_dark(filtered_points, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
 
     for (size_t i = 0; i < message.blue_cones.size(); i++)
     {
@@ -393,7 +397,7 @@ if (dark_mode)
 
     return message;
   }
-} else {
+
   inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id)
   {
 
@@ -501,7 +505,6 @@ if (dark_mode)
 
     return ros_msg;
   }
-}
 
 inline sensor_msgs::msg::PointCloud2 SourceDriver::ToRosMsg(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id)
 {
