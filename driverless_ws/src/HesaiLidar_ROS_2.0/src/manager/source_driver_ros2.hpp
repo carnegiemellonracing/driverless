@@ -146,7 +146,7 @@ inline void SourceDriver::Init(const YAML::Node& config)
     filtered_pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>("/filtered_points", 100);
     cones_pub_ = node_ptr_->create_publisher<interfaces::msg::ConeArray>("/cones", 100);
 
-    cone_pub_ = node_ptr_->create_publisher<interfaces::msg::ConeArray>("/cpp_cones", 100);
+    cone_pub_ = node_ptr_->create_publisher<interfaces::msg::ConeArray>("/perc_cones", 100);
     cone_vis_pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>("/cpp_vis_cones", 100);
 
   }

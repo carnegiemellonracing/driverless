@@ -104,7 +104,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
     PointXYZ pt = cloud.points[i];
     radial_t rd = point2radial(pt);
 
-    if (rd.radius < radius_max && (pt.y) < 5.0 && pt.y > -5.0) {
+    if (rd.radius < radius_max && (pt.y) < 1.5 && pt.y > -1.5) {
       int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
       int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
       if (seg_index < 0)
@@ -341,7 +341,7 @@ inline interfaces::msg::ConeArray color_cones_without_camera(const PointCloud<Po
         p.x = cloud.points[initial_left_idx].x;
         p.y = cloud.points[initial_left_idx].y;
         p.z = cloud.points[initial_left_idx].z;
-        message.yellow_cones.push_back(p);
+        message.blue_cones.push_back(p);
         processed_cones[initial_left_idx] = true;
         processed_count++;
     }
@@ -350,7 +350,7 @@ inline interfaces::msg::ConeArray color_cones_without_camera(const PointCloud<Po
         p.x = cloud.points[initial_right_idx].x;
         p.y = cloud.points[initial_right_idx].y;
         p.z = cloud.points[initial_right_idx].z;
-        message.blue_cones.push_back(p);
+        message.yellow_cones.push_back(p);
         processed_cones[initial_right_idx] = true;
         processed_count++;
     }
@@ -359,8 +359,8 @@ inline interfaces::msg::ConeArray color_cones_without_camera(const PointCloud<Po
     PointXYZ current_right_cone = cloud.points[initial_right_idx];
 
     while (processed_count < total_cones) {
-        double min_distance_left = std::numeric_limits<double>::max();
-        double min_distance_right = std::numeric_limits<double>::max();
+        min_distance_left = std::numeric_limits<double>::max();
+        min_distance_right = std::numeric_limits<double>::max();
         int next_left_idx = -1;
         int next_right_idx = -1;
 
@@ -454,9 +454,13 @@ inline interfaces::msg::ConeArray run_pipeline(PointCloud<PointXYZ> &cloud, doub
   std::cout << "Total pipeline time: " << duration_pipeline.count() << " ms" << std::endl;
 
   for (int i = 0; i < filtered_cloud.size(); i++) {
-    filtered_cloud.points[i].x = -filtered_cloud.points[i].y;
-    filtered_cloud.points[i].y = filtered_cloud.points[i].x;
-    filtered_cloud.points[i].z = filtered_cloud.points[i].z;
+    double original_x = filtered_cloud.points[i].x;
+    double original_y = filtered_cloud.points[i].y;
+    double original_z = filtered_cloud.points[i].z;
+    
+    filtered_cloud.points[i].x = -original_y;
+    filtered_cloud.points[i].y = original_x;
+    filtered_cloud.points[i].z = original_z;
   }
 
   interfaces::msg::ConeArray message = color_cones_without_camera(filtered_cloud);
