@@ -54,6 +54,7 @@ namespace controls {
 
     // Testing stuff
 
+    constexpr bool send_to_can = false;
     constexpr bool ingest_midline = false;
     constexpr bool follow_midline_only = false;
     enum class StateProjectionMode {
@@ -106,6 +107,8 @@ namespace controls {
 
     // AIM communication stuff
     constexpr int aim_signal_period_ms = 98;
+    constexpr float default_p = 1.5f;
+    constexpr float default_feedforward = 30.0f;
 
 
     // State Estimation
