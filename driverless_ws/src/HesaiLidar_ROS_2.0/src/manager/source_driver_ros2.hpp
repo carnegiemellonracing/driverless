@@ -57,7 +57,14 @@
 #include <pcl/point_types.h>
 #include <../CMR_CPP_Pipeline.cpp>
 
-#define bool dark_mode = false;
+#define dark_mode false
+#define CPP_ALPHA 0.1
+#define CPP_NUM_BINS 10
+#define CPP_HEIGHT_THRESHOLD 0.12
+#define CPP_EPSILON 0.2
+#define CPP_MIN_POINTS 3
+#define CPP_EPSILON2 3
+#define CPP_MIN_POINTS2 3
 
 class SourceDriver
 {
@@ -78,6 +85,8 @@ public:
 #else
   std::shared_ptr<HesaiLidarSdk<LidarPointXYZIRT>> driver_ptr_;
 #endif
+
+
 protected:
   // Save Correction file subscribed by "ros_recv_correction_topic"
   void RecieveCorrection(const std_msgs::msg::UInt8MultiArray::SharedPtr msg);
@@ -321,15 +330,6 @@ inline void SourceDriver::SendFiretime(const double *firetime_correction_)
     auto start = std::chrono::high_resolution_clock::now();
     float epsilon = 0.1;
 
-    // Define Constants
-    double cpp_alpha = 0.1;
-    int cpp_num_bins = 10;
-    double cpp_height_threshold = 0.12;
-    double cpp_epsilon = 0.2;
-    int cpp_min_points = 3;
-    double cpp_epsilon2 = 3;
-    int cpp_min_points2 = 3;
-
     PointCloud<PointXYZ> filtered_points;
 
     for (size_t i = 0; i < frame.points_num; i++)
@@ -343,7 +343,7 @@ inline void SourceDriver::SendFiretime(const double *firetime_correction_)
       filtered_points.push_back(PointXYZ(point.x, point.y, point.z));
     }
 
-    interfaces::msg::ConeArray message = run_pipeline_dark(filtered_points, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
+    interfaces::msg::ConeArray message = run_pipeline_dark(filtered_points, CPP_ALPHA, CPP_NUM_BINS, CPP_HEIGHT_THRESHOLD, CPP_EPSILON, CPP_MIN_POINTS, CPP_EPSILON2, CPP_MIN_POINTS2);
 
     for (size_t i = 0; i < message.blue_cones.size(); i++)
     {
