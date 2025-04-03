@@ -110,14 +110,8 @@ protected:
   sensor_msgs::msg::PointCloud2 ToRosMsgFiltered(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id);
   interfaces::msg::ConeArray ToRosMsgCones(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id);
 
-  if (dark_mode)
-  {
-    interfaces::msg::ConeArray ToRosMsgConesCPP_dark(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id);
-  }
-  else
-  {
-    interfaces::msg::PPMConeArray ToRosMsgConesCPP(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id);
-  }
+  interfaces::msg::ConeArray ToRosMsgConesCPP_dark(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id);
+  interfaces::msg::PPMConeArray ToRosMsgConesCPP(const LidarDecodedFrame<LidarPointXYZIRT> &frame, const std::string &frame_id);
 
   // Convert packets into ROS messages
   hesai_ros_driver::msg::UdpFrame ToRosMsg(const UdpFrame_t &ros_msg, double timestamp);
@@ -131,14 +125,10 @@ protected:
   rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cones_pub_;
 
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr cone_vis_pub_;
-  if (dark_mode)
-  {
-    rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cone_pub_;
-  }
-  else
-  {
-    rclcpp::Publisher<interfaces::msg::PPMConeArray>::SharedPtr cone_pub_;
-  }
+
+  rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cone_pub_dark;
+
+  rclcpp::Publisher<interfaces::msg::PPMConeArray>::SharedPtr cone_pub_;
 
   rclcpp::Publisher<hesai_ros_driver::msg::Firetime>::SharedPtr firetime_pub_;
   rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr crt_pub_;
@@ -162,14 +152,8 @@ inline void SourceDriver::Init(const YAML::Node &config)
     filtered_pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>("/filtered_points", 100);
     cones_pub_ = node_ptr_->create_publisher<interfaces::msg::ConeArray>("/cones", 100);
 
-    if (dark_mode)
-    {
-      cone_pub_ = node_ptr_->create_publisher<interfaces::msg::ConeArray>("/perc_cones", 100);
-    }
-    else
-    {
-      cone_pub_ = node_ptr_->create_publisher<interfaces::msg::PPMConeArray>("/cpp_cones", 100);
-    }
+    cone_pub_dark = node_ptr_->create_publisher<interfaces::msg::ConeArray>("/perc_cones", 100);
+    cone_pub_ = node_ptr_->create_publisher<interfaces::msg::PPMConeArray>("/cpp_cones", 100);
     cone_vis_pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>("/cpp_vis_cones", 100);
   }
 
@@ -283,6 +267,7 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
   else
   {
     cone_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
+  }
 #endif
 }
 
