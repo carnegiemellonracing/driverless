@@ -268,6 +268,29 @@ inline void SourceDriver::SendFiretime(const double *firetime_correction_)
 //CPP Driver Call
 
 inline interfaces::msg::ConeArray SourceDriver::ToRosMsgConesCPP(const LidarDecodedFrame<LidarPointXYZIRT>& frame, const std::string& frame_id) {
+
+  sensor_msgs::msg::PointCloud2 ros_vis_msg;
+
+  int fields = 3;
+  ros_vis_msg.fields.clear();
+  ros_vis_msg.fields.reserve(fields);
+  ros_vis_msg.width = frame.points_num; 
+  ros_vis_msg.height = 1; 
+
+  int offset = 0;
+  offset = addPointField(ros_vis_msg, "x", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
+  offset = addPointField(ros_vis_msg, "y", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
+  offset = addPointField(ros_vis_msg, "z", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
+
+  ros_vis_msg.point_step = offset;
+  ros_vis_msg.row_step = ros_vis_msg.width * ros_vis_msg.point_step;
+  ros_vis_msg.is_dense = false;
+  ros_vis_msg.data.resize(frame.points_num * ros_vis_msg.point_step);
+
+  sensor_msgs::PointCloud2Iterator<float> iter_x_(ros_vis_msg, "x");
+  sensor_msgs::PointCloud2Iterator<float> iter_y_(ros_vis_msg, "y");
+  sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_vis_msg, "z");
+
   // Start the timer
   auto start = std::chrono::high_resolution_clock::now();
   float epsilon = 0.1;
@@ -293,6 +316,30 @@ inline interfaces::msg::ConeArray SourceDriver::ToRosMsgConesCPP(const LidarDeco
   }
   
   interfaces::msg::ConeArray message = run_pipeline(filtered_points, cpp_alpha, cpp_num_bins, cpp_height_threshold, cpp_epsilon, cpp_min_points, cpp_epsilon2, cpp_min_points2);
+
+  for (size_t i = 0; i < message.blue_cones.size(); i++) {
+    *iter_x_ = message.blue_cones[i].x;
+    *iter_y_ = message.blue_cones[i].y;
+    *iter_z_ = message.blue_cones[i].z;
+    ++iter_x_;
+    ++iter_y_;
+    ++iter_z_;
+  }
+
+  for (size_t i = 0; i < message.yellow_cones.size(); i++) {
+    *iter_x_ = message.yellow_cones[i].x;
+    *iter_y_ = message.yellow_cones[i].y;
+    *iter_z_ = message.yellow_cones[i].z;
+    ++iter_x_;
+    ++iter_y_;
+    ++iter_z_;
+  }
+
+  ros_vis_msg.header.stamp.sec = (uint32_t)floor(frame.points[0].timestamp);
+  ros_vis_msg.header.stamp.nanosec = (uint32_t)round((frame.points[0].timestamp - ros_vis_msg.header.stamp.sec) * 1e9);
+  ros_vis_msg.header.frame_id = frame_id_;
+
+  cone_vis_pub_->publish(ros_vis_msg);
 
   message.header.stamp.sec = (uint32_t)floor(frame.points[0].timestamp);
   message.header.stamp.nanosec = (uint32_t)round((frame.points[0].timestamp - message.header.stamp.sec) * 1e9);
