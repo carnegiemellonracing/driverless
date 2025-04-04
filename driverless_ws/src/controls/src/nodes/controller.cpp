@@ -345,8 +345,9 @@ namespace controls {
             void ControllerNode::imu_accel_callback(const IMUAccelerationMsg& imu_accel_msg) {
                 if constexpr (testing_on_breezway) {
                     float time_since_last_imu_acceleration_s = get_clock()->now().seconds() - m_last_imu_acceleration_time.seconds();
-                    m_last_x_velocity = m_last_x_velocity + imu_accel_msg.vector.x * time_since_last_imu_acceleration_s;
-                    m_last_y_velocity = m_last_y_velocity + imu_accel_msg.vector.y * time_since_last_imu_acceleration_s;
+                    // GPS and controller/dv frame are different
+                    m_last_x_velocity = m_last_x_velocity - imu_accel_msg.vector.y * time_since_last_imu_acceleration_s;
+                    m_last_y_velocity = m_last_y_velocity + imu_accel_msg.vector.x * time_since_last_imu_acceleration_s;
                     m_last_imu_acceleration_time = get_clock()->now();
                     m_last_speed = std::sqrt(m_last_x_velocity * m_last_x_velocity + m_last_y_velocity * m_last_y_velocity);
                 }
