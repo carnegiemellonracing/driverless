@@ -83,7 +83,12 @@ namespace controls {
                 [this](const PIDMsg::SharedPtr msg)
                 { pid_callback(*msg); },
                 options);  
-                
+
+            m_imu_accel_subscription = create_subscription<IMUAccelerationMsg>(
+                imu_accel_topic_name, imu_accel_qos,
+                [this](const IMUAccelerationMsg::SharedPtr msg)
+                { imu_accel_callback(*msg); },
+                options);
             
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
             if constexpr (send_to_can) {
@@ -94,6 +99,12 @@ namespace controls {
                     throw std::runtime_error("Failed to initialize can");
                 }
                 sendPIDConstants(default_p, default_feedforward);
+            }
+
+            if constexpr (testing_on_breezway) {
+                m_last_imu_acceleration_time = get_clock()->now();
+                m_last_x_velocity = 0.0f;
+                m_last_y_velocity = 0.0f;
             }
 
 
@@ -300,11 +311,14 @@ namespace controls {
             void ControllerNode::world_twist_callback(const TwistMsg &twist_msg) {
                 RCLCPP_DEBUG(get_logger(), "Received twist");
 
+                if constexpr (!testing_on_breezway) {
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
                     m_state_estimator->on_twist(twist_msg, twist_msg.header.stamp);
                     m_last_speed = twist_msg_to_speed(twist_msg);
+                }
+
                 }
 
             }
@@ -326,6 +340,16 @@ namespace controls {
                     sendPIDConstants(m_p_value, 0);
                 }
                 RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
+            }
+
+            void ControllerNode::imu_accel_callback(const IMUAccelerationMsg& imu_accel_msg) {
+                if constexpr (testing_on_breezway) {
+                    float time_since_last_imu_acceleration_s = get_clock()->now().seconds() - m_last_imu_acceleration_time.seconds();
+                    m_last_x_velocity = m_last_x_velocity + imu_accel_msg.vector.x * time_since_last_imu_acceleration_s;
+                    m_last_y_velocity = m_last_y_velocity + imu_accel_msg.vector.y * time_since_last_imu_acceleration_s;
+                    m_last_imu_acceleration_time = get_clock()->now();
+                    m_last_speed = std::sqrt(m_last_x_velocity * m_last_x_velocity + m_last_y_velocity * m_last_y_velocity);
+                }
             }
 
 

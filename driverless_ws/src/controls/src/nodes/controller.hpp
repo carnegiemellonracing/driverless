@@ -72,6 +72,8 @@ namespace controls {
 
             void position_lla_callback(const PositionLLAMsg& position_lla_msg);
 
+            void imu_accel_callback(const IMUAccelerationMsg& imu_accel_msg);
+
             /**
              * Publishes a control action to the `control_action` topic.
              *
@@ -109,7 +111,7 @@ namespace controls {
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
             rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;
             rclcpp::Subscription<PIDMsg>::SharedPtr m_pid_subscription;
-            // ConeArray = /lidar_node_cones
+            rclcpp::Subscription<IMUAccelerationMsg>::SharedPtr m_imu_accel_subscription;
 
             /**
              * Mutex protecting `m_state_estimator`. This needs to be acquired when forwarding callbacks to the
@@ -143,6 +145,9 @@ namespace controls {
             std::thread launch_aim_communication();
             float m_p_value;
             float m_last_speed;
+            float m_last_x_velocity;
+            float m_last_y_velocity;
+            rclcpp::Time m_last_imu_acceleration_time;
             State get_state_under_strategy();
 
             // Stuff for the naive state estimator
