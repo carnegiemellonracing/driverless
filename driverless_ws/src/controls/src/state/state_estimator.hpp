@@ -9,6 +9,15 @@
 
 namespace controls {
     namespace state {
+            struct OffsetImage {
+                std::vector<float> pixels;
+                uint pix_width;
+                uint pix_height;
+                glm::fvec2 center;
+                float world_width;
+            };
+        
+        
         /**
          * @brief State Estimator! Provides functions for controller node to use to prepare state information for mppi.
          * Implemnentation is in @ref StateEstimator_Impl.
@@ -91,15 +100,9 @@ namespace controls {
 
             virtual std::vector<glm::fvec2> get_spline_frames() = 0;
 
-#ifdef DISPLAY
-            struct OffsetImage {
-                std::vector<float> pixels;
-                uint pix_width;
-                uint pix_height;
-                glm::fvec2 center;
-                float world_width;
-            };
 
+
+#ifdef DISPLAY
             virtual std::vector<glm::fvec2> get_all_left_cone_points() =0;
             virtual std::vector<glm::fvec2> get_all_right_cone_points() =0;
             virtual std::vector<glm::fvec2> get_left_cone_points() = 0;

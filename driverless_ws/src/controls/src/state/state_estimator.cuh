@@ -134,6 +134,7 @@ namespace controls {
 
             std::vector<glm::fvec2> get_spline_frames() override;
 
+
 #ifdef DISPLAY
             std::vector<glm::fvec2> get_all_left_cone_points() override;
             std::vector<glm::fvec2> get_all_right_cone_points() override;
@@ -143,7 +144,8 @@ namespace controls {
             std::vector<float> get_vertices() override;
             // std::vector<glm::fvec2> get_normals() override;
             OffsetImage get_offset_pixels() override;
-            OffsetImage m_last_offset_pixels;
+            OffsetImage m_last_offset_image;
+
 #endif
 
             /**

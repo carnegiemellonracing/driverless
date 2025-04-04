@@ -840,7 +840,7 @@ namespace controls {
 
         OffsetImage StateEstimator_Impl::get_offset_pixels() {
             std::lock_guard<std::mutex> guard {m_mutex};
-            return m_last_offset_pixels;
+            return m_last_offset_image;
         }
 #endif
 
