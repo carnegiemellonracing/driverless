@@ -398,7 +398,7 @@ namespace controls {
             gen_fake_track();
 
             glFinish();
-            // utils::make_gl_current_or_except(m_gl_window, nullptr);
+            utils::make_gl_current_or_except(m_gl_window, nullptr);
             m_logger("finished state estimator initialization");
             SDL_GLContext curr_context = SDL_GL_GetCurrentContext();
             SDL_Window* curr_window = SDL_GL_GetCurrentWindow();
@@ -607,18 +607,6 @@ namespace controls {
             }
         }
 
-        void StateEstimator_Impl::initialize_gl() {
-            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
-            glFinish();
-            SDL_GLContext log_context;
-            SDL_Window* log_window;
-            log_context = SDL_GL_GetCurrentContext();
-            log_window = SDL_GL_GetCurrentWindow();
-            RCLCPP_INFO(m_logger_obj, "After initializing gl: window: %p, context %p", log_window, log_context);
-
-        }
-
-
         void StateEstimator_Impl::render_and_sync(State state) {
             std::lock_guard<std::mutex> guard {m_mutex};
             
@@ -638,7 +626,7 @@ namespace controls {
 
 
             // enable openGL
-            // utils::make_gl_current_or_except(m_gl_window, m_gl_context);
+            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
             RCLCPP_INFO(m_logger_obj, "Call to make gl current or except: window: %p, context %p", m_gl_window, m_gl_context);
 
             // // exclusively for logging
@@ -727,7 +715,7 @@ namespace controls {
             display_time = current_time - last_time;
             last_time = current_time;
 
-            // utils::sync_gl_and_unbind_context(m_gl_window);
+            utils::sync_gl_and_unbind_context(m_gl_window);
             log_context = SDL_GL_GetCurrentContext();
             log_window = SDL_GL_GetCurrentWindow();
             RCLCPP_INFO(m_logger_obj, "What happens after unbinding?: window: %p, context %p", log_window, log_context);

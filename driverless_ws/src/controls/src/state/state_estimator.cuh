@@ -148,8 +148,6 @@ namespace controls {
 
 #endif
 
-            virtual void initialize_gl() override;
-
             /**
              * @brief Destructor, cleans up OpenGL resources
              */
