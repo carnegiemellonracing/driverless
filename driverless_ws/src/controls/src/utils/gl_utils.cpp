@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <glad/glad.h>
+#include <utils/general_utils.hpp>
 
 
 namespace controls {
@@ -156,7 +157,7 @@ namespace controls {
             glGetProgramiv(program_id, GL_LINK_STATUS, &vProgramLinked);
             if(!vProgramLinked) {
                 print_program_log(program_id);
-                throw std::runtime_error("Failed to link program");
+                throw ControllerError("Failed to link program");
             }
 
             return program_id;
@@ -164,7 +165,7 @@ namespace controls {
 
         void make_gl_current_or_except(SDL_Window* window, SDL_GLContext gl_context) {
             if (SDL_GL_MakeCurrent(window, gl_context) < 0) {
-                throw std::runtime_error(SDL_GetError());
+                throw ControllerError(SDL_GetError());
             }
         }
 
