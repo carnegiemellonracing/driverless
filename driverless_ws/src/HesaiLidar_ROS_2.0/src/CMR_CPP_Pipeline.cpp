@@ -23,7 +23,6 @@ using std::chrono::duration;
 using std::chrono::milliseconds;
 using namespace pcl;
 
-
 typedef struct radial {
   double angle;
   double radius;
@@ -92,7 +91,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
 
   const double angle_min = -0.5 * M_PI;
   const double angle_max = 0.5 * M_PI;
-  const double radius_max = 25;
+  const double radius_max = 15;
   int num_segs = static_cast<int>((angle_max - angle_min) / alpha);
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
   //&& rd.angle > -4 * (M_PI/9) && rd.angle < 4 * (M_PI/9)
@@ -104,7 +103,7 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
     PointXYZ pt = cloud.points[i];
     radial_t rd = point2radial(pt);
 
-    if (rd.radius < radius_max && (pt.y) < 0.5 && pt.y > -1.5) {
+    if (rd.radius < radius_max && (pt.y) < 1.7 && pt.y > -1.7) {
       int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
       int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
       if (seg_index < 0)
@@ -307,39 +306,203 @@ inline PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon,
   return cloud;
 }
 
-inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alpha, 
+inline interfaces::msg::ConeArray color_cones_without_camera(const PointCloud<PointXYZ>& cloud) {
+    interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
+    message.blue_cones = std::vector<geometry_msgs::msg::Point> {};
+    message.yellow_cones = std::vector<geometry_msgs::msg::Point> {};
+    message.orange_cones = std::vector<geometry_msgs::msg::Point> {};
+
+    std::vector<bool> processed_cones(cloud.points.size(), false);
+    size_t processed_count = 0;
+    const size_t total_cones = cloud.points.size();
+
+    double min_distance_left = std::numeric_limits<double>::max();
+    double min_distance_right = std::numeric_limits<double>::max();
+    int initial_left_idx = -1;
+    int initial_right_idx = -1;
+
+    for (size_t i = 0; i < cloud.points.size(); i++) {
+        const auto& point = cloud.points[i];
+        double distance = std::sqrt(std::pow(point.x, 2) + std::pow(point.y, 2));
+
+        if (point.x < 0 && distance < min_distance_left) {
+            min_distance_left = distance;
+            initial_left_idx = i;
+        }
+        else if (point.x > 0 && distance < min_distance_right) {
+            min_distance_right = distance;
+            initial_right_idx = i;
+        }
+    }
+
+    if (initial_left_idx != -1) {
+        geometry_msgs::msg::Point p;
+        p.x = cloud.points[initial_left_idx].x;
+        p.y = cloud.points[initial_left_idx].y;
+        p.z = cloud.points[initial_left_idx].z;
+        message.blue_cones.push_back(p);
+        processed_cones[initial_left_idx] = true;
+        processed_count++;
+    }
+    if (initial_right_idx != -1) {
+        geometry_msgs::msg::Point p;
+        p.x = cloud.points[initial_right_idx].x;
+        p.y = cloud.points[initial_right_idx].y;
+        p.z = cloud.points[initial_right_idx].z;
+        message.yellow_cones.push_back(p);
+        processed_cones[initial_right_idx] = true;
+        processed_count++;
+    }
+
+    PointXYZ current_left_cone = cloud.points[initial_left_idx];
+    PointXYZ current_right_cone = cloud.points[initial_right_idx];
+
+    while (processed_count < total_cones) {
+        min_distance_left = std::numeric_limits<double>::max();
+        min_distance_right = std::numeric_limits<double>::max();
+        int next_left_idx = -1;
+        int next_right_idx = -1;
+
+        for (size_t i = 0; i < cloud.points.size(); i++) {
+            if (!processed_cones[i]) {
+                const auto& point = cloud.points[i];
+                
+                double distance_to_left = std::sqrt(
+                    pow(point.x - current_left_cone.x, 2) + 
+                    pow(point.y - current_left_cone.y, 2)
+                );
+                if (distance_to_left < min_distance_left) {
+                    min_distance_left = distance_to_left;
+                    next_left_idx = i;
+                }
+
+                double distance_to_right = std::sqrt(
+                    pow(point.x - current_right_cone.x, 2) + 
+                    pow(point.y - current_right_cone.y, 2)
+                );
+                if (distance_to_right < min_distance_right) {
+                    min_distance_right = distance_to_right;
+                    next_right_idx = i;
+                }
+            }
+        }
+
+        if (next_left_idx == -1 && next_right_idx == -1) break;
+
+        if (next_left_idx != -1) {
+            current_left_cone = cloud.points[next_left_idx];
+            geometry_msgs::msg::Point p;
+            p.x = current_left_cone.x;
+            p.y = current_left_cone.y;
+            p.z = current_left_cone.z;
+            message.blue_cones.push_back(p);
+            processed_cones[next_left_idx] = true;
+            processed_count++;
+        }
+
+        if (next_right_idx != -1) {
+            current_right_cone = cloud.points[next_right_idx];
+            geometry_msgs::msg::Point p;
+            p.x = current_right_cone.x;
+            p.y = current_right_cone.y;
+            p.z = current_right_cone.z;
+            message.yellow_cones.push_back(p);
+            processed_cones[next_right_idx] = true;
+            processed_count++;
+        }
+    }
+
+    return message;
+}
+
+
+inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZ> &cloud, double alpha, 
+                                          int num_bins, double height_threshold, 
+                                          double epsilon, int min_points, 
+                                          double epsilon2, int min_points2) {
+
+    // Start overall timer
+    auto start_pipeline = std::chrono::high_resolution_clock::now();
+    
+    // Print the entry sizetime: 36.776 of the cloud
+    printf("Entry Size: %zu\n", cloud.size());                               
+
+    // Time GraceAndConrad step
+    auto start_GNC = std::chrono::high_resolution_clock::now();
+    PointCloud<PointXYZ> GNC_cloud = GraceAndConrad(cloud, alpha, num_bins, height_threshold);
+    auto end_GNC = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration_GNC = end_GNC - start_GNC;
+    std::cout << "GraceAndConrad time: " << duration_GNC.count() << " ms" << std::endl;
+
+    // Time DBSCAN step
+    auto start_DBSCAN = std::chrono::high_resolution_clock::now();
+    PointCloud<PointXYZ> clustered_cloud = DBSCAN(GNC_cloud, epsilon, min_points);
+    auto end_DBSCAN = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration_DBSCAN = end_DBSCAN - start_DBSCAN;
+    std::cout << "DBSCAN time: " << duration_DBSCAN.count() << " ms" << std::endl;
+
+    // Time DBSCAN2 step
+    auto start_DBSCAN2 = std::chrono::high_resolution_clock::now();
+    PointCloud<PointXYZ> filtered_cloud = DBSCAN2(clustered_cloud, epsilon2, min_points2);
+    auto end_DBSCAN2 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration_DBSCAN2 = end_DBSCAN2 - start_DBSCAN2;
+    std::cout << "DBSCAN2 time: " << duration_DBSCAN2.count() << " ms" << std::endl;
+
+    // Time the overall pipeline
+    auto end_pipeline = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration_pipeline = end_pipeline - start_pipeline;
+    std::cout << "Total pipeline time: " << duration_pipeline.count() << " ms" << std::endl;
+
+
+    for (int i = 0; i < filtered_cloud.size(); i++) {
+      double original_x = filtered_cloud.points[i].x;
+      double original_y = filtered_cloud.points[i].y;
+      double original_z = filtered_cloud.points[i].z;
+      
+      filtered_cloud.points[i].x = -original_y;
+      filtered_cloud.points[i].y = original_x;
+      filtered_cloud.points[i].z = original_z;
+    }
+
+    interfaces::msg::ConeArray message = color_cones_without_camera(filtered_cloud);
+
+    return message;
+
+  }
+
+  inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alpha, 
                                          int num_bins, double height_threshold, 
                                          double epsilon, int min_points, 
                                          double epsilon2, int min_points2) {
 
-  // Start overall timer
-  auto start_pipeline = std::chrono::high_resolution_clock::now();
+      // Start overall timer
+      auto start_pipeline = std::chrono::high_resolution_clock::now();
 
-  // Time GraceAndConrad step
-  auto start_GNC = std::chrono::high_resolution_clock::now();
-  PointCloud<PointXYZ> GNC_cloud = GraceAndConrad(cloud, alpha, num_bins, height_threshold);
-  auto end_GNC = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> duration_GNC = end_GNC - start_GNC;
-  std::cout << "GraceAndConrad time: " << duration_GNC.count() << " ms" << std::endl;
+      // Time GraceAndConrad step
+      auto start_GNC = std::chrono::high_resolution_clock::now();
+      PointCloud<PointXYZ> GNC_cloud = GraceAndConrad(cloud, alpha, num_bins, height_threshold);
+      auto end_GNC = std::chrono::high_resolution_clock::now();
+      std::chrono::duration<double, std::milli> duration_GNC = end_GNC - start_GNC;
+      std::cout << "GraceAndConrad time: " << duration_GNC.count() << " ms" << std::endl;
 
-  // Time DBSCAN step
-  auto start_DBSCAN = std::chrono::high_resolution_clock::now();
-  PointCloud<PointXYZ> clustered_cloud = DBSCAN(GNC_cloud, epsilon, min_points);
-  auto end_DBSCAN = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> duration_DBSCAN = end_DBSCAN - start_DBSCAN;
-  std::cout << "DBSCAN time: " << duration_DBSCAN.count() << " ms" << std::endl;
+      // Time DBSCAN step
+      auto start_DBSCAN = std::chrono::high_resolution_clock::now();
+      PointCloud<PointXYZ> clustered_cloud = DBSCAN(GNC_cloud, epsilon, min_points);
+      auto end_DBSCAN = std::chrono::high_resolution_clock::now();
+      std::chrono::duration<double, std::milli> duration_DBSCAN = end_DBSCAN - start_DBSCAN;
+      std::cout << "DBSCAN time: " << duration_DBSCAN.count() << " ms" << std::endl;
 
-  // Time DBSCAN2 step
-  auto start_DBSCAN2 = std::chrono::high_resolution_clock::now();
-  PointCloud<PointXYZ> filtered_cloud = DBSCAN2(clustered_cloud, epsilon2, min_points2);
-  auto end_DBSCAN2 = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> duration_DBSCAN2 = end_DBSCAN2 - start_DBSCAN2;
-  std::cout << "DBSCAN2 time: " << duration_DBSCAN2.count() << " ms" << std::endl;
+      // Time DBSCAN2 step
+      auto start_DBSCAN2 = std::chrono::high_resolution_clock::now();
+      PointCloud<PointXYZ> filtered_cloud = DBSCAN2(clustered_cloud, epsilon2, min_points2);
+      auto end_DBSCAN2 = std::chrono::high_resolution_clock::now();
+      std::chrono::duration<double, std::milli> duration_DBSCAN2 = end_DBSCAN2 - start_DBSCAN2;
+      std::cout << "DBSCAN2 time: " << duration_DBSCAN2.count() << " ms" << std::endl;
 
-  // Time the overall pipeline
-  auto end_pipeline = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> duration_pipeline = end_pipeline - start_pipeline;
-  std::cout << "Total pipeline time: " << duration_pipeline.count() << " ms" << std::endl;
-  
-  return filtered_cloud;
-}
+      // Time the overall pipeline
+      auto end_pipeline = std::chrono::high_resolution_clock::now();
+      std::chrono::duration<double, std::milli> duration_pipeline = end_pipeline - start_pipeline;
+      std::cout << "Total pipeline time: " << duration_pipeline.count() << " ms" << std::endl;
+      
+      return filtered_cloud;
+    }
