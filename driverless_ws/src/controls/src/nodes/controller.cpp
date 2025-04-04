@@ -52,6 +52,7 @@ namespace controls {
               m_data_trajectory_log {"mppi_inputs.txt", std::ios::out},
               m_p_value {0.1}
         {
+            m_state_estimator->initialize_gl();
             // create a callback group that prevents state and spline callbacks from being executed concurrently
             rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group{
                 create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};

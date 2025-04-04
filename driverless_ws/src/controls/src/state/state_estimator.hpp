@@ -42,6 +42,8 @@ namespace controls {
             
             virtual std::optional<State> project_state(const rclcpp::Time &time) =0;
 
+            virtual void initialize_gl() =0;
+
             /**
              * @brief "main" function of the state estimator. Calculates current inertial state and the
              * inertial-to-curvilinear lookup table, then syncs them to the GPU for MPPI use.
