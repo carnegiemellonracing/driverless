@@ -61,6 +61,7 @@ namespace {
         float map_ms,
         float sync_state_ms,
         float sync_tex_ms,
+        float display_ms,
         float unbind_ms) {
         
         if constexpr (EnableLog) {
@@ -68,11 +69,11 @@ namespace {
             RCLCPP_INFO(logger, 
                 "render_and_sync timing (ms): Total=%.2f, GL context=%.2f, Tex info=%.2f, "
                 "Buffer cones=%.2f, Buffer spline=%.2f, Unmap=%.2f, Fake track=%.2f, "
-                "Curv frame=%.2f, Map=%.2f, Sync state=%.2f, Sync tex=%.2f, Unbind=%.2f",
+                "Curv frame=%.2f, Map=%.2f, Sync state=%.2f, Sync tex=%.2f, Display=%.2f, Unbind=%.2f",
                 total_ms, gl_context_ms, tex_info_ms,
                 buffer_cones_ms, buffer_spline_ms, unmap_ms,
                 fake_track_ms, curv_frame_ms, map_ms,
-                sync_state_ms, sync_tex_ms, unbind_ms);
+                sync_state_ms, sync_tex_ms, display_ms, unbind_ms);
             
             // Log sum of component times to verify accounting
             float sum = gl_context_ms + tex_info_ms + buffer_cones_ms + buffer_spline_ms + 
@@ -360,6 +361,7 @@ namespace controls {
 
         // methods
 
+        // Constructor
         StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger)
             : m_mutex {mutex}, m_logger {logger}, m_logger_obj {rclcpp::get_logger("")} {
             std::lock_guard<std::mutex> guard {mutex};
@@ -398,6 +400,11 @@ namespace controls {
             glFinish();
             utils::make_gl_current_or_except(m_gl_window, nullptr);
             m_logger("finished state estimator initialization");
+            SDL_GLContext curr_context = SDL_GL_GetCurrentContext();
+            SDL_Window* curr_window = SDL_GL_GetCurrentWindow();
+            RCLCPP_INFO(m_logger_obj, "After constructor: window: %p, context %p", curr_window, curr_context);
+
+
         }
 
         void StateEstimator_Impl::gen_curv_frame_lookup_framebuffer() {
@@ -450,6 +457,7 @@ namespace controls {
         }
 
         StateEstimator_Impl::~StateEstimator_Impl() {
+            // utils::sync_gl_and_unbind_context(m_gl_window);
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
 
@@ -608,10 +616,26 @@ namespace controls {
             std::chrono::duration<float, std::milli> gl_context_time, tex_info_time, 
                 buffer_cones_time, buffer_spline_time, unmap_time, 
                 fake_track_time, curv_frame_time, map_time, 
-                sync_state_time, sync_tex_time, unbind_time, total_time;
+                sync_state_time, sync_tex_time, display_time, unbind_time, total_time;
             
+            SDL_GLContext log_context;
+            SDL_Window* log_window;
+            log_context = SDL_GL_GetCurrentContext();
+            log_window = SDL_GL_GetCurrentWindow();
+            RCLCPP_INFO(m_logger_obj, "Before start of render and sync: window: %p, context %p", log_window, log_context);
+
+
             // enable openGL
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
+            RCLCPP_INFO(m_logger_obj, "Call to make gl current or except: window: %p, context %p", m_gl_window, m_gl_context);
+
+            // // exclusively for logging
+            log_context = SDL_GL_GetCurrentContext();
+            log_window = SDL_GL_GetCurrentWindow();
+            RCLCPP_INFO(m_logger_obj, "After make gl current in render and sync - window: %p, context %p", log_window, log_context);
+
+
+
             auto current_time = sync_now<log_render_and_sync_timing>();
             gl_context_time = current_time - last_time;
             last_time = current_time;
@@ -672,7 +696,31 @@ namespace controls {
             sync_tex_time = current_time - last_time;
             last_time = current_time;
 
+
+#ifdef DISPLAY
+            m_last_offset_image.pixels = std::vector<float>(4 * curv_frame_lookup_tex_width * curv_frame_lookup_tex_width);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
+            glReadPixels(
+                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                GL_RGBA, GL_FLOAT,
+                m_last_offset_image.pixels.data()
+            );
+
+            m_last_offset_image.pix_width = curv_frame_lookup_tex_width;
+            m_last_offset_image.pix_height = curv_frame_lookup_tex_width;
+            m_last_offset_image.center = {m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter};
+            m_last_offset_image.world_width = m_curv_frame_lookup_tex_info.width;
+#endif
+            current_time = sync_now<log_render_and_sync_timing>();
+            display_time = current_time - last_time;
+            last_time = current_time;
+
             utils::sync_gl_and_unbind_context(m_gl_window);
+            log_context = SDL_GL_GetCurrentContext();
+            log_window = SDL_GL_GetCurrentWindow();
+            RCLCPP_INFO(m_logger_obj, "What happens after unbinding?: window: %p, context %p", log_window, log_context);
+
+
             current_time = sync_now<log_render_and_sync_timing>();
             unbind_time = current_time - last_time;
             
@@ -693,6 +741,7 @@ namespace controls {
                 map_time.count(),
                 sync_state_time.count(),
                 sync_tex_time.count(),
+                display_time.count(),
                 unbind_time.count()
             );
         }
@@ -787,34 +836,11 @@ namespace controls {
         //     std::lock_guard<std::mutex> guard {m_mutex};
 
         //     return m_indices;
-        // }
 
 
-
-
-        void StateEstimator_Impl::get_offset_pixels(OffsetImage &offset_image) {
+        OffsetImage StateEstimator_Impl::get_offset_pixels() {
             std::lock_guard<std::mutex> guard {m_mutex};
-
-            SDL_GLContext prev_context = SDL_GL_GetCurrentContext();
-            SDL_Window* prev_window = SDL_GL_GetCurrentWindow();
-
-            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
-
-            offset_image.pixels = std::vector<float>(4 * curv_frame_lookup_tex_width * curv_frame_lookup_tex_width);
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
-            glReadPixels(
-                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                GL_RGBA, GL_FLOAT,
-                offset_image.pixels.data()
-            );
-
-            offset_image.pix_width = curv_frame_lookup_tex_width;
-            offset_image.pix_height = curv_frame_lookup_tex_width;
-            offset_image.center = {m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter};
-            offset_image.world_width = m_curv_frame_lookup_tex_info.width;
-
-            utils::sync_gl_and_unbind_context(m_gl_window);
-            utils::make_gl_current_or_except(prev_window, prev_context);
+            return m_last_offset_pixels;
         }
 #endif
 

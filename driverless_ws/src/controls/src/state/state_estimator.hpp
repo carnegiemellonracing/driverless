@@ -108,7 +108,8 @@ namespace controls {
 
             virtual std::vector<float> get_vertices() =0;
             // virtual std::vector<GLuint> get_indices()=0;
-            virtual void get_offset_pixels(OffsetImage& offset_image) =0;
+            virtual OffsetImage get_offset_pixels() =0;
+
 #endif
 
             /**

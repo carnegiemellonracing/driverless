@@ -142,7 +142,8 @@ namespace controls {
             std::vector<glm::fvec2> get_raceline_points();
             std::vector<float> get_vertices() override;
             // std::vector<glm::fvec2> get_normals() override;
-            void get_offset_pixels(OffsetImage& offset_image) override;
+            OffsetImage get_offset_pixels() override;
+            OffsetImage m_last_offset_pixels;
 #endif
 
             /**
