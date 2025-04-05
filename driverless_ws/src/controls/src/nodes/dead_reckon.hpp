@@ -63,7 +63,8 @@ private:
   float angle_degrees_ = 0.0f;
   float period_seconds_ = 1.0f;
   rclcpp::Time start_time_;
-  
+  std::chrono::high_resolution_clock::time_point m_start_time;
   // Timer for periodic execution
   rclcpp::TimerBase::SharedPtr timer_;
+  
 }; 

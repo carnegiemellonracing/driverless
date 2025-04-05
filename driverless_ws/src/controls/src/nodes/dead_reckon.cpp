@@ -2,7 +2,7 @@
 #include <can/cmr_can.h> // For sendControlAction
 #include <string>
 #include <cmath>
-
+#include <chrono>
 // External declaration for the swangle_to_adc function
 extern "C" uint16_t swangle_to_adc(float swangle);
 
@@ -22,8 +22,11 @@ ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torq
   angle_degrees_(angle_degrees),
   sinusoid_mode_(false),
   pvalue_(pvalue),
-  feedforward_(feedforward)
+  feedforward_(feedforward),
+  m_start_time(std::chrono::high_resolution_clock::now())
 {
+
+  auto start_time = std::chrono::high_resolution_clock::now();
   // Convert angle from degrees to radians, then to ADC value
   float angle_rad = angle_degrees * M_PI / 180.0f;
   rack_displacement_adc_ = swangle_to_adc(angle_rad);
@@ -60,7 +63,8 @@ ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torq
   period_seconds_(period_seconds),
   pvalue_(pvalue),
   feedforward_(feedforward),
-  start_time_(this->now())
+  start_time_(std::chrono::high_resolution_clock::now()),
+  m_start_time(std::chrono::high_resolution_clock::now())
 {
   // Create a timer that triggers every 100ms (10Hz)
   timer_ = this->create_wall_timer(
@@ -112,6 +116,7 @@ void ControlSenderNode::timer_callback()
     rack_displacement_adc_ = swangle_to_adc(current_angle);
   }
   
+  auto time_just_before_send = std::chrono::high_resolution_clock::now();
   // Call sendControlAction with the provided arguments
   int result = sendControlAction(
     front_torque_mNm_,
@@ -119,7 +124,8 @@ void ControlSenderNode::timer_callback()
     velocity_rpm_,
     rack_displacement_adc_
   );
-  
+  int time_difference = std::chrono::duration_cast<std::chrono::nanoseconds>(time_just_before_send - m_start_time).count();
+  RCLCPP_WARN_ONCE(this->get_logger(), "Time just before send: %d nanoseconds", time_difference);
 
   RCLCPP_INFO(this->get_logger(), "Sending control action with parameters: front_torque_mNm: %d, back_torque_mNm: %d, velocity_rpm: %u, rack_displacement_adc: %u", 
               front_torque_mNm_, back_torque_mNm_, velocity_rpm_, rack_displacement_adc_);
