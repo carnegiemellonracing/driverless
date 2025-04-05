@@ -53,42 +53,49 @@ namespace controls {
               m_p_value {0.1}
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
-            rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group{
+            rclcpp::CallbackGroup::SharedPtr main_control_loop_callback_group{
+                create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};
+            
+            rclcpp::CallbackGroup::SharedPtr auxiliary_state_callback_group{
                 create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};
 
-            rclcpp::SubscriptionOptions options{};
-            options.callback_group = state_estimation_callback_group;
+            rclcpp::SubscriptionOptions main_control_loop_options{};
+            main_control_loop_options.callback_group = main_control_loop_callback_group;
+
+
+            rclcpp::SubscriptionOptions auxiliary_state_options{};
+            auxiliary_state_options.callback_group = auxiliary_state_callback_group;
 
 
                 m_cone_subscription = create_subscription<ConeMsg>(
                     cone_topic_name, spline_qos, //was cone_qos but that didn't exist, publisher uses spline_qos
                     [this] (const ConeMsg::SharedPtr msg) { cone_callback(*msg); },
-                    options
+                    main_control_loop_options
                 );
 
                 m_world_twist_subscription = create_subscription<TwistMsg>(
                     world_twist_topic_name, world_twist_qos,
                     [this] (const TwistMsg::SharedPtr msg) { world_twist_callback(*msg); },
-                    options
+                    auxiliary_state_options
                 );
 
             m_world_pose_subscription = create_subscription<PoseMsg>(
                 world_pose_topic_name, world_pose_qos,
                 [this](const PoseMsg::SharedPtr msg)
                 { world_pose_callback(*msg); },
-                options);
+                auxiliary_state_options);
 
             m_pid_subscription = create_subscription<PIDMsg>(
                 pid_topic_name, pid_qos,
                 [this](const PIDMsg::SharedPtr msg)
                 { pid_callback(*msg); },
-                options);  
+                auxiliary_state_options);  
 
             m_imu_accel_subscription = create_subscription<IMUAccelerationMsg>(
                 imu_accel_topic_name, imu_accel_qos,
                 [this](const IMUAccelerationMsg::SharedPtr msg)
                 { imu_accel_callback(*msg); },
-                options);
+                auxiliary_state_options);
             
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
             if constexpr (send_to_can) {
