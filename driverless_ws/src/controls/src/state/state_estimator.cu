@@ -402,7 +402,7 @@ namespace controls {
             m_logger("finished state estimator initialization");
             SDL_GLContext curr_context = SDL_GL_GetCurrentContext();
             SDL_Window* curr_window = SDL_GL_GetCurrentWindow();
-            RCLCPP_INFO(m_logger_obj, "After constructor: window: %p, context %p", curr_window, curr_context);
+            // RCLCPP_INFO(m_logger_obj, "After constructor: window: %p, context %p", curr_window, curr_context);
 
 
         }
@@ -622,17 +622,17 @@ namespace controls {
             SDL_Window* log_window;
             log_context = SDL_GL_GetCurrentContext();
             log_window = SDL_GL_GetCurrentWindow();
-            RCLCPP_INFO(m_logger_obj, "Before start of render and sync: window: %p, context %p", log_window, log_context);
+            // RCLCPP_INFO(m_logger_obj, "Before start of render and sync: window: %p, context %p", log_window, log_context);
 
 
             // enable openGL
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
-            RCLCPP_INFO(m_logger_obj, "Call to make gl current or except: window: %p, context %p", m_gl_window, m_gl_context);
+            // RCLCPP_INFO(m_logger_obj, "Call to make gl current or except: window: %p, context %p", m_gl_window, m_gl_context);
 
             // // exclusively for logging
             log_context = SDL_GL_GetCurrentContext();
             log_window = SDL_GL_GetCurrentWindow();
-            RCLCPP_INFO(m_logger_obj, "After make gl current in render and sync - window: %p, context %p", log_window, log_context);
+            // RCLCPP_INFO(m_logger_obj, "After make gl current in render and sync - window: %p, context %p", log_window, log_context);
 
 
 
@@ -718,7 +718,7 @@ namespace controls {
             utils::sync_gl_and_unbind_context(m_gl_window);
             log_context = SDL_GL_GetCurrentContext();
             log_window = SDL_GL_GetCurrentWindow();
-            RCLCPP_INFO(m_logger_obj, "What happens after unbinding?: window: %p, context %p", log_window, log_context);
+            // RCLCPP_INFO(m_logger_obj, "What happens after unbinding?: window: %p, context %p", log_window, log_context);
 
 
             current_time = sync_now<log_render_and_sync_timing>();
