@@ -26,8 +26,10 @@ namespace controls {
     constexpr StateProjectionMode projection_mode = StateProjectionMode::MODEL_MULTISET;
     constexpr float maximum_speed_ms = 5.0f;
     constexpr float whl_radius = 0.2286f;
+    constexpr float gear_ratio = 14.0f;
+
     // This is for reference only
-    constexpr uint16_t can_max_velocity_rpm = static_cast<uint16_t>((maximum_speed_ms * 60.0f) / (2 * M_PI * whl_radius));
+    constexpr uint16_t can_max_velocity_rpm = static_cast<uint16_t>((maximum_speed_ms * 60.0f * gear_ratio) / (2 * M_PI * whl_radius));
     
     
     // Printing flags
@@ -100,7 +102,6 @@ namespace controls {
     constexpr float cg_to_side = 0.75f; //ACTUAL .75
     //constexpr float whl_base = 2.0f;
     /// gear ratio = motor speed / wheel speed = wheel torque / motor torque
-    constexpr float gear_ratio = 15.0f;
     constexpr float car_mass = 210.0f;
     constexpr float rolling_drag = 100.0f; /// Total drag forces on the car (rolling friction + air drag) in N
     /// Maximum forward acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
