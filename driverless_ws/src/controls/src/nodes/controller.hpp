@@ -70,7 +70,9 @@ namespace controls {
 
             void pid_callback(const PIDMsg& pid_msg);
 
-            void position_lla_callback(const PositionLLAMsg& position_lla_msg);
+            void world_position_lla_callback(const PositionLLAMsg& position_lla_msg);
+
+            void world_quat_callback(const QuatMsg& quat_ms);
 
             void imu_accel_callback(const IMUAccelerationMsg& imu_accel_msg);
 
@@ -107,11 +109,13 @@ namespace controls {
             rclcpp::Publisher<InfoMsg>::SharedPtr m_info_publisher; ///< Publishes controller info for debugging
             rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription; ///< Subscribes to path planning spline
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription; ///< Subscribes to intertial twist
-            rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription; ///< Subscribes to intertial quaternion
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
             rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;
             rclcpp::Subscription<PIDMsg>::SharedPtr m_pid_subscription;
             rclcpp::Subscription<IMUAccelerationMsg>::SharedPtr m_imu_accel_subscription;
+            rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription; ///< Subscribes to intertial quaternion
+            rclcpp::Subscription<PositionLLAMsg>::SharedPtr m_position_lla_subscription;
+
 
             /**
              * Mutex protecting `m_state_estimator`. This needs to be acquired when forwarding callbacks to the
@@ -149,6 +153,7 @@ namespace controls {
             float m_last_y_velocity;
             rclcpp::Time m_last_imu_acceleration_time;
             State get_state_under_strategy();
+            NaiveStateTracker m_naive_state_tracker;
 
             // Stuff for the naive state estimator
             

@@ -96,6 +96,19 @@ namespace controls {
                 [this](const IMUAccelerationMsg::SharedPtr msg)
                 { imu_accel_callback(*msg); },
                 auxiliary_state_options);
+
+            m_world_quat_subscription = create_subscription<QuatMsg>(
+                world_quat_topic_name, world_quat_qos,
+                [this](const QuatMsg::SharedPtr msg)
+                { world_quat_callback(*msg); },
+                auxiliary_state_options);
+
+            m_position_lla_subscription = create_subscription<PositionLLAMsg>(
+                world_position_lla_topic_name, world_pose_qos,
+                [this](const PositionLLAMsg::SharedPtr msg)
+                { world_position_lla_callback(*msg); },
+                auxiliary_state_options);
+
             
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
             if constexpr (send_to_can) {

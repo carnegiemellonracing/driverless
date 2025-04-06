@@ -39,7 +39,7 @@ namespace controls {
     constexpr const char *world_pose_topic_name = "filter/pose";
     constexpr const char *controller_info_topic_name = "controller_info";
     constexpr const char *pid_topic_name = "pid_values";
-    constexpr const char *world_positionlla_topic_name = "filter/positionlla";
+    constexpr const char *world_position_lla_topic_name = "filter/positionlla";
     // for breezeway testing
     constexpr const char *imu_accel_topic_name = "imu/acceleration";
 
@@ -71,6 +71,7 @@ namespace controls {
     const rclcpp::QoS controller_info_qos = best_effort_qos;
     const rclcpp::QoS pid_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS imu_accel_qos (rclcpp::KeepLast(1));
+    const rclcpp::QoS world_position_lla_qos (rclcpp::KeepLast(1));
     
     constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
 
