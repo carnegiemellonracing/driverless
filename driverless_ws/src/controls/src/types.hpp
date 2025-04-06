@@ -18,4 +18,5 @@ namespace controls {
     /// Instance of LoggerFunc that doesn't log anything.
     constexpr void no_log(const char*) {};
 
+    using XYPosition = std::pair<float, float>;
 }

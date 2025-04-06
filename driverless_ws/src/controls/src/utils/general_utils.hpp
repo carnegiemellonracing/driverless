@@ -47,5 +47,10 @@ namespace controls {
         public:
             using std::runtime_error::runtime_error;
     };
+    inline constexpr float degrees_to_radians(const float degrees) {
+        return degrees * M_PI / 180.0f;
+    }
+
+
 }
 
