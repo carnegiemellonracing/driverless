@@ -82,6 +82,7 @@ set(LIB_SOURCES
         src/midline/svm_conv.cpp
         src/midline/svm_conv_fast.cpp
         src/midline/cones.cpp
+        src/state/naive_state_tracker.cpp
 )
 
 if (DISPLAY)

@@ -19,4 +19,5 @@ namespace controls {
     constexpr void no_log(const char*) {};
 
     using XYPosition = std::pair<float, float>;
+    using PositionAndYaw = std::pair<XYPosition, float>;
 }

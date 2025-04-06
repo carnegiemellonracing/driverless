@@ -544,7 +544,7 @@ namespace controls {
 #endif
 
             if constexpr (reset_pose_on_cone) {
-                switch (projection_mode) {
+                switch (state_projection_mode) {
                     case StateProjectionMode::MODEL_MULTISET: {
                         m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
                     }
@@ -564,7 +564,7 @@ namespace controls {
 
             const float speed = twist_msg_to_speed(twist_msg);
 
-            switch (projection_mode) {
+            switch (state_projection_mode) {
                 case StateProjectionMode::MODEL_MULTISET: {
                     m_state_projector.record_speed(speed, time);
                 }
@@ -578,7 +578,7 @@ namespace controls {
         void StateEstimator_Impl::on_pose(const PoseMsg &pose_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            switch (projection_mode) {
+            switch (state_projection_mode) {
                 case StateProjectionMode::MODEL_MULTISET: {
                     m_state_projector.record_pose(
                         pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.orientation.z,
@@ -595,7 +595,7 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             // record actions in the future (when they are actually requested by the actuator)
-            switch (projection_mode) {
+            switch (state_projection_mode) {
                 case StateProjectionMode::MODEL_MULTISET: {
                     m_state_projector.record_action(action, rclcpp::Time{
                                                                 time.nanoseconds() + static_cast<int64_t>(approx_propogation_delay * 1e9f),

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <types.hpp>
 #include <optional>
 
@@ -7,11 +9,11 @@ namespace controls {
 
         class NaiveStateTracker {
             public:
-                using PositionAndYaw = std::pair<XYPosition, float>;
                 void record_positionlla(const PositionLLAMsg& position_lla_msg);
                 void record_quaternion(const QuatMsg& quat_msg);
+                void record_cone_seen_time(const rclcpp::Time& cone_timestamp);
                 // void clear_data_on_cone(const rclcpp::Time& cone_timestamp);
-                std::optional<PositionAndYaw> get_relative_position_and_yaw(rclcpp::Time cone_seen_time);
+                std::optional<PositionAndYaw> get_relative_position_and_yaw();
 
             private:
                 using EpochSeconds = double;
@@ -19,6 +21,7 @@ namespace controls {
                 std::mutex m_xy_positions_mutex;
                 std::multimap<EpochSeconds, float> m_yaws;
                 std::mutex m_yaws_mutex;
+                rclcpp::Time m_last_cone_seen_time;
         };
     }
 }

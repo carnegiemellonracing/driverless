@@ -14,6 +14,7 @@
 //TODO: MPPI is supposedly included by state_estimator but I can't find it. Weird
 #include <state/state_estimator.hpp>
 #include <condition_variable>
+#include <state/naive_state_tracker.hpp>
 
 
 namespace controls {
@@ -153,7 +154,7 @@ namespace controls {
             float m_last_y_velocity;
             rclcpp::Time m_last_imu_acceleration_time;
             State get_state_under_strategy();
-            NaiveStateTracker m_naive_state_tracker;
+            state::NaiveStateTracker m_naive_state_tracker;
 
             // Stuff for the naive state estimator
             

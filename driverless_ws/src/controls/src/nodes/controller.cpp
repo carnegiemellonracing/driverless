@@ -19,6 +19,7 @@
 #include <sstream>
 #include <utils/general_utils.hpp>
 #include <utils/ros_utils.hpp>
+#include <state/naive_state_tracker.hpp>
 
 
 // This is to fit into the ROS API
@@ -145,7 +146,7 @@ namespace controls {
             }
 #endif
             State ControllerNode::get_state_under_strategy() {
-                switch (projection_mode) {
+                switch (state_projection_mode) {
                     case StateProjectionMode::MODEL_MULTISET: {
                         std::optional<State> proj_curr_state_opt = m_state_estimator->project_state(get_clock()->now());
                         if (proj_curr_state_opt.has_value()) {
@@ -159,9 +160,16 @@ namespace controls {
                     case StateProjectionMode::NAIVE_SPEED_ONLY:
                         return {0.0f, 0.0f, M_PI_2, m_last_speed};
                         break;
-                    case StateProjectionMode::POSITIONLLA_YAW_SPEED:
-                        return {}; //TODO: implement the binary set lol
+                    case StateProjectionMode::POSITIONLLA_YAW_SPEED: {
+                        std::optional<PositionAndYaw> position_and_yaw_opt = m_naive_state_tracker.get_relative_position_and_yaw();
+                        if (position_and_yaw_opt.has_value()) {
+                            return {position_and_yaw_opt.value().first.first, position_and_yaw_opt.value().first.second, position_and_yaw_opt.value().second, m_last_speed};
+                        } else {
+                            RCLCPP_WARN(get_logger(), "Failed to get position and yaw, using naive speed only");
+                            return {0.0f, 0.0f, M_PI_2, m_last_speed};
+                        }
                         break;
+                    }
                     default:
                         RCLCPP_WARN(get_logger(), "unknown state projection mode");
                         return {};
@@ -201,6 +209,7 @@ namespace controls {
                         std::lock_guard<std::mutex> guard {m_state_mut};
                         cone_process_start = std::chrono::high_resolution_clock::now();
                         float svm_time = m_state_estimator->on_cone(cone_msg);
+                        m_naive_state_tracker.record_cone_seen_time(cone_msg.header.stamp);
                         cone_process_end = std::chrono::high_resolution_clock::now();
                         m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
                         m_last_svm_time = svm_time;
@@ -372,7 +381,18 @@ namespace controls {
                     m_last_speed = std::sqrt(m_last_x_velocity * m_last_x_velocity + m_last_y_velocity * m_last_y_velocity);
                 }
             }
+            
+            void ControllerNode::world_quat_callback(const QuatMsg& quat_msg) {
+                if constexpr (state_projection_mode == StateProjectionMode::POSITIONLLA_YAW_SPEED) {
+                    m_naive_state_tracker.record_quaternion(quat_msg);
+                }
+            }
 
+            void ControllerNode::world_position_lla_callback(const PositionLLAMsg& position_lla_msg) {
+                if constexpr (state_projection_mode == StateProjectionMode::POSITIONLLA_YAW_SPEED) {
+                    m_naive_state_tracker.record_positionlla(position_lla_msg);
+                }
+            }
 
             void ControllerNode::publish_action(const Action& action) {
                 const auto msg = action_to_msg(action);
