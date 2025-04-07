@@ -1,34 +1,46 @@
 #include <state/state_projector.cuh>
 #include <utils/general_utils.hpp>
 #include <model/slipless/model.cuh>
-
+#include <sstream>
+#include <fstream>
 
 namespace controls {
     namespace state {
 
         StateProjector::StateProjector() : m_logger_obj {rclcpp::get_logger("")} {}
             
-        void StateProjector::print_history() const {
-            std::cout << "---- BEGIN HISTORY ---\n";
+        std::string StateProjector::history_to_string() const {
+            std::stringstream ss;
+            ss << "---- BEGIN HISTORY ---\n";
             for (const Record& record : m_history_since_pose) {
+                ss << "Time: " << record.time.nanoseconds() << "ns|||";
                 switch (record.type) {
                     case Record::Type::Action:
-                        std::cout << "Action: " << record.action[0] << ", " << record.action[1] << std::endl;
+                        ss << "Action: " << record.action[0] << ", " << record.action[1] << std::endl;
                         break;
 
                     case Record::Type::Speed:
-                        std::cout << "Speed: " << record.speed << std::endl;
+                        ss << "Speed: " << record.speed << std::endl;
                         break;
 
                     case Record::Type::Pose:
-                        std::cout << "Pose: " << record.pose.x << ", " << record.pose.y << ", " << record.pose.yaw << std::endl;
+                        ss << "Pose: " << record.pose.x << ", " << record.pose.y << ", " << record.pose.yaw << std::endl;
+                        break;
+
+                    case Record::Type::PositionLLA:
+                        ss << "PositionLLA: " << record.position_lla.x << ", " << record.position_lla.y << std::endl;
+                        break;
+
+                    case Record::Type::Yaw:
+                        ss << "Yaw: " << record.yaw << std::endl;
                         break;
 
                     default:
                         throw new std::runtime_error("bruh. invalid record type bruh. (in print history)");
                 }
             }
-            std::cout << "---END HISTORY---" << std::endl;
+            ss << "---END HISTORY---" << std::endl;
+            return ss.str();
         }
 
         void StateProjector::record_action(Action action, rclcpp::Time time) {
@@ -68,7 +80,6 @@ namespace controls {
                 });
             }
 
-            // print_history();
         }
 
         void StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time) {
@@ -106,7 +117,6 @@ namespace controls {
 
             m_history_since_pose.erase(m_history_since_pose.begin(), record_iter);
 
-            // print_history();
         }
 
         void StateProjector::record_position_lla(float x, float y, rclcpp::Time time) {
@@ -128,16 +138,30 @@ namespace controls {
             });
         }
 
+        static void record_state(int time_ns, const State& state, std::stringstream& output_stream) {
+            if constexpr (log_state_projection_history) {
+                output_stream << "Time: " << time_ns << "ns|||";
+                output_stream << "Predicted X: " << state[state_x_idx] << "|||";
+                output_stream << "Predicted Y: " << state[state_y_idx] << "|||";
+                output_stream << "Predicted Yaw: " << state[state_yaw_idx] << "|||";
+                output_stream << "Predicted Speed: " << state[state_speed_idx] << "|||";
+                output_stream << std::endl;
+            }
+        }
 
         std::optional<State> StateProjector::project(const rclcpp::Time& time, LoggerFunc logger_func) const {
             paranoid_assert(m_pose_record.has_value() && "State projector has not recieved first pose");
-            // std::cout << "Projecting to " << time.nanoseconds() << std::endl;
+            if (controls::log_state_projection_history) {
+                std::cout << "Projecting to " << time.nanoseconds() << std::endl;
+            }
 
+            std::stringstream predicted_ss;
             State state;
             state[state_x_idx] = m_pose_record.value().pose.x;
             state[state_y_idx] = m_pose_record.value().pose.y;
             state[state_yaw_idx] = m_pose_record.value().pose.yaw;
             state[state_speed_idx] = m_init_speed.speed;
+            record_state(m_pose_record.value().time.nanoseconds(), state, predicted_ss);
 
             const auto first_time = m_history_since_pose.empty() ? time : m_history_since_pose.begin()->time;
             const float delta_time = (first_time.nanoseconds() - m_pose_record.value().time.nanoseconds()) / 1e9f;
@@ -148,6 +172,7 @@ namespace controls {
             }
             // simulates up to first_time
             model::slipless::dynamics(state.data(), m_init_action.action.data(), state.data(), delta_time);
+            record_state(first_time.nanoseconds(), state, predicted_ss);
 
             rclcpp::Time sim_time = first_time;
             Action last_action = m_init_action.action;
@@ -179,7 +204,17 @@ namespace controls {
                         throw new std::runtime_error("bruh. invalid record type bruh. (in simulation)");
                 }
 
+                record_state(next_time.nanoseconds(), state, predicted_ss);
+
                 sim_time = next_time;
+            }
+            if constexpr (log_state_projection_history) {
+                std::string log_location = getenv("ROS_LOG_DIR") + std::string{"state_projection_history.txt"};
+                std::fstream fs {log_location, std::ios::out | std::ios::app};
+                fs << history_to_string();
+                fs << "---- BEGIN PREDICTION ----" << std::endl;
+                fs << predicted_ss.str();
+                fs << "---- END PREDICTION ----" << std::endl;
             }
 
             return std::optional<State> {state};

@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <types.hpp>
+#include <constants.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <utils/general_utils.hpp>
 
@@ -90,7 +91,7 @@ namespace controls {
             };
 
             /// Prints the elements of m_history_since_pose, for debugging purposes.
-            void print_history() const;
+            std::string history_to_string() const;
 
             /// @note m_init_action and m_init_speed should occur <= m_pose_record, if m_pose_record exists
 
