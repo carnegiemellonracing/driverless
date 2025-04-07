@@ -7,7 +7,11 @@
 namespace controls {
     namespace state {
 
-        StateProjector::StateProjector() : m_logger_obj {rclcpp::get_logger("")} {}
+        StateProjector::StateProjector() : m_logger_obj {rclcpp::get_logger("")} {
+            std::string log_location = getenv("ROS_LOG_DIR") + std::string{"/state_projection_history.txt"};
+            std::fstream overwrite_fs{log_location};
+            overwrite_fs << "\n";
+        }
             
         std::string StateProjector::history_to_string() const {
             std::stringstream ss;
@@ -151,9 +155,6 @@ namespace controls {
 
         std::optional<State> StateProjector::project(const rclcpp::Time& time, LoggerFunc logger_func) const {
             paranoid_assert(m_pose_record.has_value() && "State projector has not recieved first pose");
-            if (controls::log_state_projection_history) {
-                std::cout << "Projecting to " << time.nanoseconds() << std::endl;
-            }
 
             std::stringstream predicted_ss;
             State state;
@@ -209,7 +210,8 @@ namespace controls {
                 sim_time = next_time;
             }
             if constexpr (log_state_projection_history) {
-                std::string log_location = getenv("ROS_LOG_DIR") + std::string{"state_projection_history.txt"};
+                std::string log_location = getenv("ROS_LOG_DIR") + std::string{"/state_projection_history.txt"};
+                std::cout << "Logging to: " << log_location << std::endl;
                 std::fstream fs {log_location, std::ios::out | std::ios::app};
                 fs << history_to_string();
                 fs << "---- BEGIN PREDICTION ----" << std::endl;

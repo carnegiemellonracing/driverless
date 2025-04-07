@@ -158,9 +158,11 @@ namespace controls {
                         break;
                     }
                     case StateProjectionMode::NAIVE_SPEED_ONLY:
+                        m_state_estimator->project_state(get_clock()->now());
                         return {0.0f, 0.0f, M_PI_2, m_last_speed};
                         break;
                     case StateProjectionMode::POSITIONLLA_YAW_SPEED: {
+                        m_state_estimator->project_state(get_clock()->now());
                         std::optional<PositionAndYaw> position_and_yaw_opt = m_naive_state_tracker.get_relative_position_and_yaw();
                         if (position_and_yaw_opt.has_value()) {
                             return {position_and_yaw_opt.value().first.first, position_and_yaw_opt.value().first.second, position_and_yaw_opt.value().second, m_last_speed};
