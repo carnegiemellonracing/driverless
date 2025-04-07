@@ -33,7 +33,6 @@
 #include <SDL2/SDL_video.h>
 
 #include <midline/svm_conv.hpp>
-
 #include <utils/ros_utils.hpp>
 
 namespace {
@@ -88,169 +87,7 @@ namespace {
 
 namespace controls {
     namespace state {
-        StateProjector::StateProjector() : m_logger_obj {rclcpp::get_logger("")} {}
-
-        void StateProjector::print_history() const {
-            std::cout << "---- BEGIN HISTORY ---\n";
-            for (const Record& record : m_history_since_pose) {
-                switch (record.type) {
-                    case Record::Type::Action:
-                        std::cout << "Action: " << record.action[0] << ", " << record.action[1] << std::endl;
-                        break;
-
-                    case Record::Type::Speed:
-                        std::cout << "Speed: " << record.speed << std::endl;
-                        break;
-
-                    case Record::Type::Pose:
-                        std::cout << "Pose: " << record.pose.x << ", " << record.pose.y << ", " << record.pose.yaw << std::endl;
-                        break;
-
-                    default:
-                        throw new std::runtime_error("bruh. invalid record type bruh. (in print history)");
-                }
-            }
-            std::cout << "---END HISTORY---" << std::endl;
-        }
-
-        void StateProjector::record_action(Action action, rclcpp::Time time) {
-            RCLCPP_DEBUG_STREAM(m_logger_obj, "Recording action " << action[0] << ", " << action[1] << " at time " << time.nanoseconds());
-
-            if (m_pose_record.has_value()) {
-                if (time >= m_pose_record.value().time) {
-                m_history_since_pose.insert(Record {
-                    .action = action,
-                    .time = time,
-                    .type = Record::Type::Action
-                });
-            } else {
-                    RCLCPP_WARN(m_logger_obj, "Attempted to record an action before the latest pose's time. Ignoring.");
-                }
-            } else {
-                RCLCPP_WARN(m_logger_obj, "Attempted to record an action before the first pose. Ignoring.");
-            }
-        }
-
-        void StateProjector::record_speed(float speed, rclcpp::Time time) {
-            // std::cout << "Recording speed " << speed << " at time " << time.nanoseconds() << std::endl;
-
-            if (m_pose_record.has_value() && time < m_pose_record.value().time) {
-                if (time > m_init_speed.time) {
-                    m_init_speed = Record {
-                        .speed = speed,
-                        .time = time,
-                        .type = Record::Type::Speed
-                    };
-                }
-            } else {
-                m_history_since_pose.insert(Record {
-                    .speed = speed,
-                    .time = time,
-                    .type = Record::Type::Speed
-                });
-            }
-
-            // print_history();
-        }
-
-        void StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time) {
-            // std::cout << "Recording pose " << x << ", " << y << ", " << yaw << " at time " << time.nanoseconds() << std::endl;
-
-            m_pose_record = Record {
-                .pose = {
-                    .x = x,
-                    .y = y,
-                    .yaw = yaw
-                },
-                .time = time,
-                .type = Record::Type::Pose
-            };
-
-            auto record_iter = m_history_since_pose.begin();
-            for (; record_iter != m_history_since_pose.end(); ++record_iter) {
-                if (record_iter->time > time) {
-                    break;
-                }
-
-                switch (record_iter->type) {
-                    case Record::Type::Action:
-                        m_init_action = *record_iter;
-                        break;
-
-                    case Record::Type::Speed:
-                        m_init_speed = *record_iter;
-                        break;
-
-                    default:
-                        throw new std::runtime_error("bruh. invalid record type bruh. (in record pose)");
-                }
-            }
-
-            m_history_since_pose.erase(m_history_since_pose.begin(), record_iter);
-
-            // print_history();
-        }
-
-        std::optional<State> StateProjector::project(const rclcpp::Time& time, LoggerFunc logger_func) const {
-            paranoid_assert(m_pose_record.has_value() && "State projector has not recieved first pose");
-            // std::cout << "Projecting to " << time.nanoseconds() << std::endl;
-
-            State state;
-            state[state_x_idx] = m_pose_record.value().pose.x;
-            state[state_y_idx] = m_pose_record.value().pose.y;
-            state[state_yaw_idx] = m_pose_record.value().pose.yaw;
-            state[state_speed_idx] = m_init_speed.speed;
-
-            const auto first_time = m_history_since_pose.empty() ? time : m_history_since_pose.begin()->time;
-            const float delta_time = (first_time.nanoseconds() - m_pose_record.value().time.nanoseconds()) / 1e9f;
-            // std::cout << "delta time: " << delta_time << std::endl;
-            if (delta_time <= 0) {
-                RCLCPP_WARN(m_logger_obj, "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
-                return std::nullopt;
-            }
-            // simulates up to first_time
-            ONLINE_DYNAMICS_FUNC(state.data(), m_init_action.action.data(), state.data(), delta_time);
-
-            rclcpp::Time sim_time = first_time;
-            Action last_action = m_init_action.action;
-            for (auto record_iter = m_history_since_pose.begin(); record_iter != m_history_since_pose.end(); ++record_iter) {
-                // checks if we're on last record
-                const auto next_time = std::next(record_iter) == m_history_since_pose.end() ? time : std::next(record_iter)->time;
-
-                const float delta_time = (next_time - sim_time).nanoseconds() / 1e9f;
-                if (delta_time < 0) {
-                    RCLCPP_WARN(m_logger_obj, "RUH ROH. Delta time for propogation delay simulation within the while loop  was negative.   : (");
-                    return std::nullopt;
-                }
-
-                switch (record_iter->type) {
-                    case Record::Type::Action:
-                        ONLINE_DYNAMICS_FUNC(state.data(), record_iter->action.data(), state.data(), delta_time);
-                        last_action = record_iter->action;
-                        break;
-
-                    case Record::Type::Speed:
-                        char logger_buf[70];
-                        snprintf(logger_buf, 70, "Predicted speed: %f\nActual speed: %f", state[state_speed_idx], record_iter->speed);
-                        //std::cout << logger_buf << std::endl;
-                        state[state_speed_idx] = record_iter->speed;
-                        ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
-                        break;
-
-                    default:
-                        throw new std::runtime_error("bruh. invalid record type bruh. (in simulation)");
-                }
-
-                sim_time = next_time;
-            }
-
-            return std::optional<State> {state};
-        }
-
-        bool StateProjector::is_ready() const {
-            return m_pose_record.has_value();
-        }
-
+ 
 
         // State Estimator
 
@@ -491,7 +328,12 @@ namespace controls {
 
             m_logger("finished state estimator spline processing");
         }
-        
+
+        void StateEstimator_Impl::on_quat(const QuatMsg& quat_msg) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            const float yaw = quat_msg_to_yaw(quat_msg);
+            m_state_projector.record_yaw(yaw, quat_msg.header.stamp);
+        }
 
         float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -564,47 +406,25 @@ namespace controls {
 
             const float speed = twist_msg_to_speed(twist_msg);
 
-            switch (state_projection_mode) {
-                case StateProjectionMode::MODEL_MULTISET: {
-                    m_state_projector.record_speed(speed, time);
-                }
-                break;
-                default:
-                break;
-            }
+            m_state_projector.record_speed(speed, time);
 
         }
 
         void StateEstimator_Impl::on_pose(const PoseMsg &pose_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
-
-            switch (state_projection_mode) {
-                case StateProjectionMode::MODEL_MULTISET: {
-                    m_state_projector.record_pose(
-                        pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.orientation.z,
-                        pose_msg.header.stamp);
-                }
-                break;
-                default:
-                break;
-            }
+            m_state_projector.record_pose(
+                pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.orientation.z,
+                pose_msg.header.stamp);
         }
 
 
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
+            // TODO: put this under a constexpr switch flag, now we always record for debugging purposes
+            m_state_projector.record_action(action, rclcpp::Time{
+                                                        time.nanoseconds() + static_cast<int64_t>(approx_propogation_delay * 1e9f),
+                                                        default_clock_type});
 
-            // record actions in the future (when they are actually requested by the actuator)
-            switch (state_projection_mode) {
-                case StateProjectionMode::MODEL_MULTISET: {
-                    m_state_projector.record_action(action, rclcpp::Time{
-                                                                time.nanoseconds() + static_cast<int64_t>(approx_propogation_delay * 1e9f),
-                                                                default_clock_type});
-                }
-                break;
-                default:
-                break;
-            }
         }
 
         void StateEstimator_Impl::render_and_sync(State state) {

@@ -23,7 +23,7 @@ namespace controls {
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
 
-    constexpr StateProjectionMode state_projection_mode = StateProjectionMode::MODEL_MULTISET;
+    constexpr StateProjectionMode state_projection_mode = StateProjectionMode::POSITIONLLA_YAW_SPEED;
     constexpr float maximum_speed_ms = 5.0f;
     constexpr float whl_radius = 0.2286f;
     constexpr float gear_ratio = 14.0f;

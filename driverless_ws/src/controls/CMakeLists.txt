@@ -74,6 +74,7 @@ file(GLOB TWO_TRACK_SRCS src/model/two_track/codegen/*.cpp)
 set(LIB_SOURCES
         src/mppi/mppi.cu
         src/state/state_estimator.cu
+        src/state/state_projector.cu
         src/cuda_globals/cuda_globals.cu
         extern/src/glad.c
         src/utils/gl_utils.cpp
