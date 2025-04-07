@@ -20,6 +20,8 @@
 #include <utils/general_utils.hpp>
 #include <utils/ros_utils.hpp>
 #include <state/naive_state_tracker.hpp>
+#include <filesystem>
+#include <map>
 
 
 // This is to fit into the ROS API
@@ -29,6 +31,8 @@ void send_finished_ignore_error() {
 }
 
 namespace controls {
+    float approx_propogation_delay;
+    bool follow_midline_only;
     namespace nodes {
         ControllerNode::ControllerNode(
             std::shared_ptr<state::StateEstimator> state_estimator,
@@ -527,9 +531,62 @@ namespace controls {
             }
     }
 }
+std::string trim(const std::string &str) {
+    const size_t first = str.find_first_not_of(" \t");
+
+    if (first == std::string::npos) return "";
+
+    const size_t last = str.find_last_not_of(" \t");
+    const size_t length = last - first + 1;
+
+    return str.substr(first, length);
+}
 
 int main(int argc, char *argv[]) {
     using namespace controls;
+    std::string default_config_path = "conf1";
+    std::string config_file_path;
+    if (argc < 2) {
+        std::cout << "Perhaps you didn't pass in the config file name, using default" << std::endl;
+        config_file_path = default_config_path;
+    } else {
+        std::cout << "Config file passed." << std::endl;
+        config_file_path = argv[1];
+    }
+    std::string config_file_base_path = std::string {getenv("DRIVERLESS")} + "/driverless_ws/src/controls/src/nodes/configs/";
+    std::string config_file_full_path = config_file_base_path + config_file_path;
+    
+    std::map<std::string, std::string> config_dict;
+
+    std::cout << "Looking for " << config_file_full_path << std::endl;
+    if (std::filesystem::exists(config_file_full_path)) {
+        std::cout << "Config file found.\n";
+    } else {
+        std::cout << "Config file not found.\n";
+        return 1;
+    }
+    
+    std::ifstream conf_file(config_file_full_path);  
+    
+    if (conf_file.is_open()) {
+        std::string line;
+        while (std::getline(conf_file, line, '\n'))
+        {
+            std::cout << line << std::endl;
+            if (line.empty() || line[0] == '#') {
+                continue;
+            } else {
+                int delim_position = line.find(':');
+                std::string key = trim(line.substr(0, delim_position));
+                std::string val = trim(line.substr(delim_position + 1));
+                // std::cout << line << " " << key << " " << val <<std::endl;
+                config_dict[key] = val;
+            }
+        }
+    }
+
+    approx_propogation_delay = std::stof(config_dict["approx_propogation_delay"]);
+    follow_midline_only = config_dict["follow_midline_only"] == "true" ? true : false;
     
     std::mutex mppi_mutex;
     std::mutex state_mutex;
