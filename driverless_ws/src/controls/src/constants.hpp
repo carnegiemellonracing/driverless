@@ -22,6 +22,7 @@ namespace controls {
 
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
+    constexpr bool log_state_projection_history = true;
 
     constexpr StateProjectionMode state_projection_mode = StateProjectionMode::MODEL_MULTISET;
     constexpr float maximum_speed_ms = 5.0f;
