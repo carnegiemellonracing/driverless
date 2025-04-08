@@ -369,7 +369,10 @@ namespace controls {
                     finish_time - start_time);
 
                 // can't use high res clock since need to be aligned with other nodes
-                auto total_time_elapsed = (get_clock()->now().nanoseconds() - cone_arrival_time.nanoseconds()) / 1000000;
+                RCLCPP_WARN(get_logger(), "Current time %ld", get_clock()->now().nanoseconds());
+                RCLCPP_WARN(get_logger(), "Cone arrival time %ld", cone_arrival_time.nanoseconds());
+
+                auto total_time_elapsed = get_clock()->now() - cone_arrival_time;    
 
                 interfaces::msg::ControllerInfo info{};
                 info.action = action_to_msg(action);
@@ -378,7 +381,7 @@ namespace controls {
                 info.render_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(sync_end - sync_start)).count();
                 info.mppi_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(gen_action_end - gen_action_start)).count();
                 info.latency_ms = time_elapsed.count();
-                info.total_latency_ms = total_time_elapsed;
+                info.total_latency_ms = total_time_elapsed.seconds() * 1000 + total_time_elapsed.nanoseconds() / 1000000;
 
                 publish_and_print_info(info, error_str);
             }
@@ -515,17 +518,17 @@ namespace controls {
             }
 
             void ControllerNode::publish_and_print_info(interfaces::msg::ControllerInfo info, const std::string& additional_info) {
-                m_info_publisher->publish(info);
+                // m_info_publisher->publish(info);
                 std::stringstream ss;
 
                 ss
                     << "Action:\n"
                     << "  swangle (rad): " << info.action.swangle << "\n"
-                    // << swangle_bar(info.action.swangle,min_swangle, max_swangle,40) << "\n"
-                    // << progress_bar(info.action.torque_fl, min_torque, max_torque, 40) << "\n"
-                    // << progress_bar(info.action.torque_fr, min_torque, max_torque, 40) << "\n"
-                    // << progress_bar(info.action.torque_rl, min_torque, max_torque, 40) << "\n"
-                    // << progress_bar(info.action.torque_rr, min_torque, max_torque, 40) << "\n"
+                    << swangle_bar(info.action.swangle,min_swangle, max_swangle,40) << "\n"
+                    << progress_bar(info.action.torque_fl, min_torque, max_torque, 40) << "\n"
+                    << progress_bar(info.action.torque_fr, min_torque, max_torque, 40) << "\n"
+                    << progress_bar(info.action.torque_rl, min_torque, max_torque, 40) << "\n"
+                    << progress_bar(info.action.torque_rr, min_torque, max_torque, 40) << "\n"
                     << "  torque_fl (Nm): " << info.action.torque_fl << "\n"
                     << "  torque_fr (Nm): " << info.action.torque_fr << "\n"
                     << "  torque_rl (Nm): " << info.action.torque_rl << "\n"
@@ -542,8 +545,9 @@ namespace controls {
                     << "MPPI Step Latency (ms): " << info.mppi_latency_ms << "\n"
                     << "Controls Latency (ms): " << info.latency_ms << "\n"
                     << "Total Latency (ms): " << info.total_latency_ms << "\n"
-                    << additional_info
-                    << std::endl;
+                    << get_clock()->get_clock_type()
+                << additional_info
+                << std::endl;
 
                 std::string info_str = ss.str();
 
