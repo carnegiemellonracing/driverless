@@ -4,4 +4,4 @@ get_last_log() {
 }
 alias dv_src="source $DRIVERLESS/driverless_ws/install/setup.bash"
 alias k9="kill -9 %"
-alias sros="source install/setup.bash"alias dv_src="source /home/chip/Documents/driverless/driverless_ws/install/setup.bash"
+alias sros="source install/setup.bash"
