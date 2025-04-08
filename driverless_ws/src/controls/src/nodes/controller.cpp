@@ -145,6 +145,48 @@ namespace controls {
                 return ss.str();
             }
 #endif
+            std::string progress_bar(float current, float min, float max, int width) {
+                if (current < min || current > max) {
+                    return "OUT OF BOUNDS";
+                }
+                float progress = (current - min)/(max - min);
+                int pos = static_cast<int>(progress * width);
+                std::string bar;
+                if (pos < width / 2)
+                {
+                    bar = "[" + std::string(std::max(0, pos), ' ') + "\033[31m" + std::string(width / 2 - pos, '|') + "\033[0m" + "|" + std::string(width / 2, ' ') + "]";
+                }
+                else if (pos > width / 2)
+                {
+                    bar = "[" + std::string(width / 2, ' ') + "|" + "\033[32m" + std::string(std::max(0, pos - width / 2), '|') + "\033[0m" + std::string(width - pos, ' ') + "]";
+                }
+                else
+                {
+                    bar = "[" + std::string(width / 2, ' ') + "|" + std::string(width / 2, ' ') + "]";
+                }
+                return bar;
+            }
+            std::string swangle_bar(float current, float min, float max, int width) {
+                if (current < min || current > max)
+                {
+                    return "OUT OF BOUNDS";
+                }
+                float progress = (current - min)/(max - min);
+                int pos = static_cast<int>(progress * width);
+                std::string bar;
+                if (pos < width / 2)
+                {
+                    bar = "[" + std::string(std::max(0, pos), ' ') + "\033[31m+\033[0m" + std::string(width / 2 - pos-1, ' ') + "|" + std::string(width / 2, ' ') + "]";
+                }
+                else if (pos > width / 2){
+                    bar = "[" + std::string(width / 2, ' ') + "|" + std::string(std::max(0, pos - width / 2), ' ') + "\033[32m+\033[0m" + std::string(width - pos-1, ' ') + "]";
+                }
+                else{
+                    bar = "[" + std::string(width / 2, ' ') + "\033[33m+\033[0m" + std::string(width / 2, ' ') + "]";
+                }
+
+                return bar;
+            }
             State ControllerNode::get_state_under_strategy() {
                 switch (state_projection_mode) {
                     case StateProjectionMode::MODEL_MULTISET: {
@@ -158,7 +200,7 @@ namespace controls {
                         break;
                     }
                     case StateProjectionMode::NAIVE_SPEED_ONLY:
-                        return {0.0f, 0.0f, M_PI_2, m_last_speed};
+                        // return {0.0f, 0.0f, M_PI_2, m_last_speed};
                         break;
                     case StateProjectionMode::POSITIONLLA_YAW_SPEED: {
                         std::optional<PositionAndYaw> position_and_yaw_opt = m_naive_state_tracker.get_relative_position_and_yaw();
@@ -405,6 +447,7 @@ namespace controls {
 
 
 
+
             ControllerNode::ActionSignal ControllerNode::action_to_signal(Action action) {
                 ActionSignal action_signal;
 
@@ -472,6 +515,11 @@ namespace controls {
                 ss
                     << "Action:\n"
                     << "  swangle (rad): " << info.action.swangle << "\n"
+                    << swangle_bar(info.action.swangle,min_swangle, max_swangle,40) << "\n"
+                    << progress_bar(info.action.torque_fl, min_torque, max_torque, 40) << "\n"
+                    << progress_bar(info.action.torque_fr, min_torque, max_torque, 40) << "\n"
+                    << progress_bar(info.action.torque_rl, min_torque, max_torque, 40) << "\n"
+                    << progress_bar(info.action.torque_rr, min_torque, max_torque, 40) << "\n"
                     << "  torque_fl (Nm): " << info.action.torque_fl << "\n"
                     << "  torque_fr (Nm): " << info.action.torque_fr << "\n"
                     << "  torque_rl (Nm): " << info.action.torque_rl << "\n"

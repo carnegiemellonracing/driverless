@@ -113,6 +113,10 @@ namespace controls {
     constexpr float brake_enable_speed = 1.0f;
     /// Maximum torque request (N m)
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
+    constexpr float min_torque = -saturating_motor_torque;
+    constexpr float max_torque = saturating_motor_torque;
+    constexpr float min_swangle = -19 * M_PI / 180.0f; //19 radians
+    constexpr float max_swangle = 19 * M_PI / 180.0f;
     /// Time from MPPI control action request to physical change, in sec
     // TODO: Re-estimate since Falcon (steering motor) replacement
     constexpr float approx_propogation_delay = 0.02f;
