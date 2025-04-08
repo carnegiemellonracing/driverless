@@ -200,9 +200,11 @@ namespace controls {
                         break;
                     }
                     case StateProjectionMode::NAIVE_SPEED_ONLY:
-                        // return {0.0f, 0.0f, M_PI_2, m_last_speed};
+                        m_state_estimator->project_state(get_clock()->now());
+                        return {0.0f, 0.0f, M_PI_2, m_last_speed};
                         break;
                     case StateProjectionMode::POSITIONLLA_YAW_SPEED: {
+                        m_state_estimator->project_state(get_clock()->now());
                         std::optional<PositionAndYaw> position_and_yaw_opt = m_naive_state_tracker.get_relative_position_and_yaw();
                         if (position_and_yaw_opt.has_value()) {
                             return {position_and_yaw_opt.value().first.first, position_and_yaw_opt.value().first.second, position_and_yaw_opt.value().second, m_last_speed};
@@ -428,12 +430,14 @@ namespace controls {
                 if constexpr (state_projection_mode == StateProjectionMode::POSITIONLLA_YAW_SPEED) {
                     m_naive_state_tracker.record_quaternion(quat_msg);
                 }
+                m_state_estimator->on_quat(quat_msg);
             }
 
             void ControllerNode::world_position_lla_callback(const PositionLLAMsg& position_lla_msg) {
                 if constexpr (state_projection_mode == StateProjectionMode::POSITIONLLA_YAW_SPEED) {
                     m_naive_state_tracker.record_positionlla(position_lla_msg);
                 }
+                m_state_estimator->on_position_lla(position_lla_msg);
             }
 
             void ControllerNode::publish_action(const Action& action) {
@@ -563,6 +567,7 @@ namespace controls {
                                 if constexpr (send_to_can) {
                                     // FYI, velocity_rpm is determined from the speed threshold
                                     sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
+                                    RCLCPP_DEBUG(get_logger(), "Sending action signal %d, %d, %u, %u\n", last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                 }
                                 auto end = std::chrono::steady_clock::now();
                                 RCLCPP_DEBUG(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());

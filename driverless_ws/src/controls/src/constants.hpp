@@ -10,9 +10,9 @@
 namespace controls { 
     // Testing stuff
 
-    constexpr bool send_to_can = false;
+    constexpr bool send_to_can = true;
     constexpr bool ingest_midline = false;
-    constexpr bool follow_midline_only = false;
+    constexpr bool follow_midline_only = true;
     enum class StateProjectionMode {
         MODEL_MULTISET,
         NAIVE_SPEED_ONLY,
@@ -22,9 +22,10 @@ namespace controls {
 
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
+    constexpr bool log_state_projection_history = true;
 
     constexpr StateProjectionMode state_projection_mode = StateProjectionMode::MODEL_MULTISET;
-    constexpr float maximum_speed_ms = 5.0f;
+    constexpr float maximum_speed_ms = 2.0f;
     constexpr float whl_radius = 0.2286f;
     constexpr float gear_ratio = 14.0f;
 
@@ -41,7 +42,7 @@ namespace controls {
     constexpr float controller_period = 1. / controller_freq; ///< Target duration between control actions, in sec
 
     constexpr uint32_t num_samples = 64 * 1024; ///< Number of trajectories sampled each controller step
-    constexpr uint32_t num_timesteps = 16; ///< Number of controller steps simulated into the future
+    constexpr uint32_t num_timesteps = 32; ///< Number of controller steps simulated into the future
     constexpr uint8_t action_dims = 2; ///< \f$q\f$, dimensions of @ref Action
     constexpr uint8_t state_dims = 4; ///< \f$p\f$, dimensions of @ref State
     constexpr float temperature = 1.0f; ///< Convergence speed/stability tradeoff, see LaTeX for more details
@@ -119,8 +120,8 @@ namespace controls {
     constexpr float max_swangle = 19 * M_PI / 180.0f;
     /// Time from MPPI control action request to physical change, in sec
     // TODO: Re-estimate since Falcon (steering motor) replacement
-    constexpr float approx_propogation_delay = 0.02f;
-    constexpr float approx_mppi_time = 0.040f; ///< Time from MPPI launch to control action calculation, in sec
+    constexpr float approx_propogation_delay = 0.6f;
+    constexpr float approx_mppi_time = 0.020f; ///< Time from MPPI launch to control action calculation, in sec
 
     enum class TorqueMode
     {

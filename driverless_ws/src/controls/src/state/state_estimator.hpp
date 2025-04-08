@@ -59,6 +59,10 @@ namespace controls {
 
             virtual float on_cone(const ConeMsg& cone_msg) =0;
 
+            virtual void on_quat(const QuatMsg& quat_msg) =0;
+
+            virtual void on_position_lla(const PositionLLAMsg& position_lla_msg) =0;
+
          /**
           * @brief Callback for twist messages. Updates the state estimator with the new twist. Used for state projection.
           * @param twist_msg The spline message
