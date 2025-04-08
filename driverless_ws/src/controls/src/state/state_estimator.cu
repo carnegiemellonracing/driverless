@@ -618,22 +618,30 @@ namespace controls {
                 fake_track_time, curv_frame_time, map_time, 
                 sync_state_time, sync_tex_time, display_time, unbind_time, total_time;
             
+
             SDL_GLContext log_context;
             SDL_Window* log_window;
-            log_context = SDL_GL_GetCurrentContext();
-            log_window = SDL_GL_GetCurrentWindow();
-            // RCLCPP_INFO(m_logger_obj, "Before start of render and sync: window: %p, context %p", log_window, log_context);
+            if constexpr (log_render_and_sync_timing) {
+                log_context = SDL_GL_GetCurrentContext();
+                log_window = SDL_GL_GetCurrentWindow();
+                RCLCPP_INFO(m_logger_obj, "Before start of render and sync: window: %p, context %p", log_window, log_context);
+            }
+
 
 
             // enable openGL
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
-            // RCLCPP_INFO(m_logger_obj, "Call to make gl current or except: window: %p, context %p", m_gl_window, m_gl_context);
+            if constexpr (log_render_and_sync_timing) {
+                RCLCPP_INFO(m_logger_obj, "Call to make gl current or except: window: %p, context %p", m_gl_window, m_gl_context);
+            }
+            
 
             // // exclusively for logging
-            log_context = SDL_GL_GetCurrentContext();
-            log_window = SDL_GL_GetCurrentWindow();
-            // RCLCPP_INFO(m_logger_obj, "After make gl current in render and sync - window: %p, context %p", log_window, log_context);
-
+            if constexpr (log_render_and_sync_timing) {
+                log_context = SDL_GL_GetCurrentContext();
+                log_window = SDL_GL_GetCurrentWindow();
+                RCLCPP_INFO(m_logger_obj, "After make gl current in render and sync - window: %p, context %p", log_window, log_context);
+            }
 
 
             auto current_time = sync_now<log_render_and_sync_timing>();
@@ -716,10 +724,11 @@ namespace controls {
             last_time = current_time;
 
             utils::sync_gl_and_unbind_context(m_gl_window);
-            log_context = SDL_GL_GetCurrentContext();
-            log_window = SDL_GL_GetCurrentWindow();
-            // RCLCPP_INFO(m_logger_obj, "What happens after unbinding?: window: %p, context %p", log_window, log_context);
-
+            if constexpr (log_render_and_sync_timing) {
+                log_context = SDL_GL_GetCurrentContext();
+                log_window = SDL_GL_GetCurrentWindow();
+                RCLCPP_INFO(m_logger_obj, "What happens after unbinding?: window: %p, context %p", log_window, log_context);
+            }
 
             current_time = sync_now<log_render_and_sync_timing>();
             unbind_time = current_time - last_time;
