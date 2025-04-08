@@ -200,7 +200,9 @@ namespace controls {
                         break;
                     }
                     case StateProjectionMode::NAIVE_SPEED_ONLY:
-                        m_state_estimator->project_state(get_clock()->now());
+                        if constexpr (!testing_on_rosbag) {
+                            m_state_estimator->project_state(get_clock()->now());
+                        }
                         return {0.0f, 0.0f, M_PI_2, m_last_speed};
                         break;
                     case StateProjectionMode::POSITIONLLA_YAW_SPEED: {
@@ -519,11 +521,11 @@ namespace controls {
                 ss
                     << "Action:\n"
                     << "  swangle (rad): " << info.action.swangle << "\n"
-                    << swangle_bar(info.action.swangle,min_swangle, max_swangle,40) << "\n"
-                    << progress_bar(info.action.torque_fl, min_torque, max_torque, 40) << "\n"
-                    << progress_bar(info.action.torque_fr, min_torque, max_torque, 40) << "\n"
-                    << progress_bar(info.action.torque_rl, min_torque, max_torque, 40) << "\n"
-                    << progress_bar(info.action.torque_rr, min_torque, max_torque, 40) << "\n"
+                    // << swangle_bar(info.action.swangle,min_swangle, max_swangle,40) << "\n"
+                    // << progress_bar(info.action.torque_fl, min_torque, max_torque, 40) << "\n"
+                    // << progress_bar(info.action.torque_fr, min_torque, max_torque, 40) << "\n"
+                    // << progress_bar(info.action.torque_rl, min_torque, max_torque, 40) << "\n"
+                    // << progress_bar(info.action.torque_rr, min_torque, max_torque, 40) << "\n"
                     << "  torque_fl (Nm): " << info.action.torque_fl << "\n"
                     << "  torque_fr (Nm): " << info.action.torque_fr << "\n"
                     << "  torque_rl (Nm): " << info.action.torque_rl << "\n"

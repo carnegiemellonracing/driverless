@@ -10,7 +10,7 @@
 namespace controls { 
     // Testing stuff
 
-    constexpr bool send_to_can = true;
+    constexpr bool send_to_can = false;
     constexpr bool ingest_midline = false;
     constexpr bool follow_midline_only = true;
     enum class StateProjectionMode {
@@ -19,12 +19,13 @@ namespace controls {
         POSITIONLLA_YAW_SPEED
     };
     constexpr bool testing_on_breezway = false;
+    constexpr bool testing_on_rosbag = true;
 
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
     constexpr bool log_state_projection_history = true;
 
-    constexpr StateProjectionMode state_projection_mode = StateProjectionMode::MODEL_MULTISET;
+    constexpr StateProjectionMode state_projection_mode = StateProjectionMode::NAIVE_SPEED_ONLY;
     constexpr float maximum_speed_ms = 2.0f;
     constexpr float whl_radius = 0.2286f;
     constexpr float gear_ratio = 14.0f;

@@ -115,7 +115,6 @@ namespace controls {
                         break;
 
                     default:
-                        std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAa" << std::endl;
                         break;
                 }
             }

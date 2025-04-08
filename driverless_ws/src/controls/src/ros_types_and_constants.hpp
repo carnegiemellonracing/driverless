@@ -1,4 +1,5 @@
 #pragma once
+#include <rclcpp/rclcpp.hpp>
 // Note: these header files are part of the ROS2 standard libraries
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <geometry_msgs/msg/quaternion_stamped.hpp>

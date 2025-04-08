@@ -153,6 +153,8 @@ add_executable(dead_reckon
         src/nodes/dead_reckon.cpp 
         src/can/cmr_can.c)
 
+
+
 target_link_libraries(dead_reckon Threads::Threads m can_lib)
 ament_target_dependencies(dead_reckon rclcpp interfaces builtin_interfaces)
 
@@ -160,6 +162,18 @@ install(
         TARGETS dead_reckon
         DESTINATION lib/${PROJECT_NAME}
 )
+
+# ***** Info Visualizer Node *****
+add_executable(info_visualizer src/nodes/info_visualizer.cpp)
+
+target_link_libraries(info_visualizer controls_lib)
+ament_target_dependencies(info_visualizer rclcpp interfaces builtin_interfaces)
+
+install(
+        TARGETS info_visualizer
+        DESTINATION lib/${PROJECT_NAME}
+)
+
 
 # ***** Shared options *****
 
