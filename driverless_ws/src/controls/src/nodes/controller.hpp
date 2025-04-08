@@ -50,6 +50,13 @@ namespace controls {
                 std::shared_ptr<mppi::MppiController> mppi_controller
             );
 
+            struct ActionSignal
+            {
+                int16_t front_torque_mNm = 0;
+                int16_t back_torque_mNm = 0;
+                uint16_t velocity_rpm = 0;
+                uint16_t rack_displacement_adc = 0;
+            };
 
         private:
 
@@ -93,6 +100,9 @@ namespace controls {
              * @return the launched thread
              */
             std::thread launch_mppi();
+            ActionSignal action_to_signal(Action action);
+            ActionSignal m_last_action_signal;
+            std::thread launch_can();
 
             /** Notify MPPI thread that the state is dirty, and to refire if idle */
             void notify_state_dirty();

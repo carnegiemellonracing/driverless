@@ -5,6 +5,23 @@
 #include <constants.hpp>
 #include <interfaces/msg/control_action.hpp>
 #include <state/state_estimator.hpp>
+#include <can/cmr_can.h>
+
+static uint16_t swangle_to_adc(float swangle)
+{
+
+    int modulus = 4096;
+    float swangle_in_degrees = swangle * 180 / (float)M_PI;
+    int zero_adc = 3159;
+    int min_adc = 2010;
+    int max_adc = modulus + 212;
+    float min_deg = -21.04;
+    float max_deg = 23.6;
+    float adc_deg_ratio = ((float)(max_adc - min_adc)) / ((max_deg - min_deg));
+    int desired_adc = (int)(swangle_in_degrees * adc_deg_ratio) + zero_adc;
+    uint16_t desired_adc_modded = (uint16_t)(desired_adc % modulus);
+    return desired_adc_modded;
+}
 
 #ifdef DISPLAY
 #include <display/display.hpp>
@@ -61,6 +78,7 @@ namespace controls {
                     options
                 );
 
+                launch_can().detach();
                 // start mppi :D
                 // this won't immediately begin publishing, since it waits for the first dirty state
                 launch_mppi().detach();
@@ -106,6 +124,50 @@ namespace controls {
                 m_action_publisher->publish(msg);
             }
 
+            static void send_finished_ignore_error()
+            {
+                std::cout << "I just got terminated lol\n";
+                sendFinishedCommand();
+            }
+
+            ControllerNode::ActionSignal ControllerNode::action_to_signal(Action action)
+            {
+                ActionSignal action_signal;
+
+                action_signal.front_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
+                action_signal.back_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
+                action_signal.velocity_rpm = can_max_velocity_rpm;
+                action_signal.rack_displacement_adc = swangle_to_adc(action[action_swangle_idx]);
+                return action_signal;
+            }
+
+            std::thread ControllerNode::launch_can() {
+                return std::thread {
+                [this]
+                {
+                    while (rclcpp::ok)
+                    {
+                        std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
+                        auto current_time = std::chrono::high_resolution_clock::now();
+                        // std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 << std::endl;
+
+                        // if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
+                        auto start = std::chrono::steady_clock::now();
+                        ActionSignal last_action_signal = m_last_action_signal;
+                        if constexpr (send_to_can)
+                        {
+                            // FYI, velocity_rpm is determined from the speed threshold
+                            sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
+                            RCLCPP_DEBUG(get_logger(), "Sending action signal %d, %d, %u, %u\n", last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
+                        }
+                        auto end = std::chrono::steady_clock::now();
+                        RCLCPP_DEBUG(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+                    }
+                    std::cout << "I just got terminated in another way lol\n";
+                    send_finished_ignore_error();
+                }};
+            }
+
             std::thread ControllerNode::launch_mppi() {
                 return std::thread {[this] {
                     while (true) {
@@ -136,6 +198,7 @@ namespace controls {
                         // run mppi, and write action to the write buffer
                         Action action = m_mppi_controller->generate_action();
                         publish_action(action);
+                        m_last_action_signal = action_to_signal(action);
 
                         m_state_estimator->record_control_action(action, get_clock()->now());
 
