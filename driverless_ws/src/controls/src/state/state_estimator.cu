@@ -302,13 +302,13 @@ namespace controls {
 
             for (const auto& frame : spline_msg.frames) {
                 m_spline_frames.push_back({
-                    static_cast<float>(frame.y),
-                    static_cast<float>(frame.x)
+                    static_cast<float>(frame.x),
+                    static_cast<float>(frame.y)
                 });
             }
 
             if constexpr (reset_pose_on_spline) {
-                m_state_projector.record_pose(0, 0, 0, spline_msg.orig_data_stamp);
+                m_state_projector.record_pose(0, 0, M_PI_2, spline_msg.orig_data_stamp);
             }
 
             m_orig_spline_data_stamp = spline_msg.orig_data_stamp;
