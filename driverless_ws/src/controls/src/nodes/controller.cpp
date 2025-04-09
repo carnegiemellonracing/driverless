@@ -78,9 +78,16 @@ namespace controls {
             rclcpp::SubscriptionOptions auxiliary_state_options{};
             auxiliary_state_options.callback_group = auxiliary_state_callback_group;
 
+            const char* desired_cone_topic_name;
+            if constexpr (testing_on_rosbag) {
+                desired_cone_topic_name = republished_perc_cones_topic_name;
+            } else {
+                desired_cone_topic_name = cone_topic_name;
+            }
+
 
                 m_cone_subscription = create_subscription<ConeMsg>(
-                    cone_topic_name, spline_qos, //was cone_qos but that didn't exist, publisher uses spline_qos
+                    desired_cone_topic_name, spline_qos, //was cone_qos but that didn't exist, publisher uses spline_qos
                     [this] (const ConeMsg::SharedPtr msg) { cone_callback(*msg); },
                     main_control_loop_options
                 );
@@ -259,7 +266,18 @@ namespace controls {
 
 
                 // save for info publishing later, since might be changed during iteration
-                rclcpp::Time cone_arrival_time = cone_msg.header.stamp;
+                rclcpp::Time lidar_points_seen_time = cone_msg.header.stamp;
+
+                rclcpp::Time cone_callback_time = get_clock()->now();
+                rclcpp::Time time_to_project_till;
+                if constexpr (testing_on_rosbag)
+                {
+                    time_to_project_till = cone_msg.controller_receive_time;
+                }
+                else
+                {
+                    time_to_project_till = cone_callback_time;
+                }
 
                 // record time to estimate speed of the entire pipeline
                 auto start_time = std::chrono::high_resolution_clock::now();
@@ -286,12 +304,13 @@ namespace controls {
                         // (also serves to lock state since nothing else updates gpu state)
                         RCLCPP_DEBUG(get_logger(), "syncing state to device");
                         project_start = std::chrono::high_resolution_clock::now();
-                        auto current_time = get_clock()->now();
-                        proj_curr_state = get_state_under_strategy(current_time);
+
+
+                        proj_curr_state = get_state_under_strategy(time_to_project_till);
                         project_end = std::chrono::high_resolution_clock::now();
-                        if constexpr (republish_perc_cones) {
+                        if constexpr (!testing_on_rosbag && republish_perc_cones) {
                             ConeMsg new_perc_cone_msg = cone_msg;
-                            new_perc_cone_msg.controller_receive_time = current_time;
+                            new_perc_cone_msg.controller_receive_time = time_to_project_till;
                             m_perc_cones_republisher->publish(new_perc_cone_msg);
                         }
 
@@ -400,9 +419,15 @@ namespace controls {
 
                 // can't use high res clock since need to be aligned with other nodes
                 RCLCPP_WARN(get_logger(), "Current time %ld", get_clock()->now().nanoseconds());
-                RCLCPP_WARN(get_logger(), "Cone arrival time %ld", cone_arrival_time.nanoseconds());
+                RCLCPP_WARN(get_logger(), "Cone arrival time %ld", lidar_points_seen_time.nanoseconds());
 
-                auto total_time_elapsed = get_clock()->now() - cone_arrival_time;    
+                rclcpp::Duration total_time_elapsed (0, 0);
+                if constexpr (testing_on_rosbag) {
+                    // The first measures how long this function took, the second measures how long it took from lidar receiving points to this function getting called.
+                    total_time_elapsed = (get_clock()->now() - cone_callback_time) - (rclcpp::Time(cone_msg.controller_receive_time) - lidar_points_seen_time);
+                } else {
+                    total_time_elapsed = get_clock()->now() - lidar_points_seen_time;
+                }
 
                 interfaces::msg::ControllerInfo info{};
                 info.header.stamp = action_time;
