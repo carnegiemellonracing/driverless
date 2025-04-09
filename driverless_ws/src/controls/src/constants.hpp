@@ -21,6 +21,7 @@ namespace controls {
     };
     constexpr bool testing_on_breezway = false;
     constexpr bool testing_on_rosbag = true;
+    constexpr bool republish_perc_cones = true;
 
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;

@@ -38,6 +38,11 @@ namespace controls {
               m_state_estimator{std::move(state_estimator)},
               m_mppi_controller{std::move(mppi_controller)},
 
+              m_perc_cones_republisher{
+                  create_publisher<ConeMsg>(
+                      republished_perc_cones_topic_name,
+                      republished_perc_cones_qos)},
+
               m_action_publisher{
                   // TODO: <ActionMsg>
                   create_publisher<interfaces::msg::ControlAction>(
@@ -47,11 +52,10 @@ namespace controls {
               m_info_publisher{
                   create_publisher<InfoMsg>(
                       controller_info_topic_name,
-                      controller_info_qos)
-              },
+                      controller_info_qos)},
 
-              m_data_trajectory_log {"mppi_inputs.txt", std::ios::out},
-              m_p_value {0.1}
+              m_data_trajectory_log{"mppi_inputs.txt", std::ios::out},
+              m_p_value{0.1}
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
             rclcpp::CallbackGroup::SharedPtr main_control_loop_callback_group{
@@ -187,10 +191,10 @@ namespace controls {
 
                 return bar;
             }
-            State ControllerNode::get_state_under_strategy() {
+            State ControllerNode::get_state_under_strategy(rclcpp::Time current_time) {
                 switch (state_projection_mode) {
                     case StateProjectionMode::MODEL_MULTISET: {
-                        std::optional<State> proj_curr_state_opt = m_state_estimator->project_state(get_clock()->now());
+                        std::optional<State> proj_curr_state_opt = m_state_estimator->project_state(current_time);
                         if (proj_curr_state_opt.has_value()) {
                             return proj_curr_state_opt.value();
                         } else {
@@ -201,12 +205,12 @@ namespace controls {
                     }
                     case StateProjectionMode::NAIVE_SPEED_ONLY:
                         if constexpr (!testing_on_rosbag) {
-                            m_state_estimator->project_state(get_clock()->now());
+                            m_state_estimator->project_state(current_time);
                         }
                         return {0.0f, 0.0f, M_PI_2, m_last_speed};
                         break;
                     case StateProjectionMode::POSITIONLLA_YAW_SPEED: {
-                        m_state_estimator->project_state(get_clock()->now());
+                        m_state_estimator->project_state(current_time);
                         std::optional<PositionAndYaw> position_and_yaw_opt = m_naive_state_tracker.get_relative_position_and_yaw();
                         if (position_and_yaw_opt.has_value()) {
                             return {position_and_yaw_opt.value().first.first, position_and_yaw_opt.value().first.second, position_and_yaw_opt.value().second, m_last_speed};
@@ -267,8 +271,14 @@ namespace controls {
                         // (also serves to lock state since nothing else updates gpu state)
                         RCLCPP_DEBUG(get_logger(), "syncing state to device");
                         project_start = std::chrono::high_resolution_clock::now();
-                        proj_curr_state = get_state_under_strategy();
+                        auto current_time = get_clock()->now();
+                        proj_curr_state = get_state_under_strategy(current_time);
                         project_end = std::chrono::high_resolution_clock::now();
+                        if constexpr (republish_perc_cones) {
+                            ConeMsg new_perc_cone_msg = cone_msg;
+                            new_perc_cone_msg.controller_receive_time = current_time;
+                            m_perc_cones_republisher->publish(new_perc_cone_msg);
+                        }
 
                         // * Let state callbacks proceed, so unlock the state mutex
                     }
@@ -292,9 +302,11 @@ namespace controls {
                     gen_action_end = std::chrono::high_resolution_clock::now();
                 }
 
-                publish_action(action);
+                auto action_time = get_clock()->now(); 
+                publish_action(action, action_time);
                 m_last_action_signal = action_to_signal(action);
                 std::string error_str;
+                m_state_estimator->record_control_action(action, action_time);
 
 #ifdef DATA
                 std::stringstream parameters_ss;
@@ -361,7 +373,6 @@ namespace controls {
 
                 // this can happen concurrently with another state estimator callback, but the internal lock
                 // protects it.
-                m_state_estimator->record_control_action(action, get_clock()->now());
 
                 // calculate and print time elapsed
                 auto finish_time = std::chrono::high_resolution_clock::now();
@@ -445,8 +456,9 @@ namespace controls {
                 m_state_estimator->on_position_lla(position_lla_msg);
             }
 
-            void ControllerNode::publish_action(const Action& action) {
-                const auto msg = action_to_msg(action);
+            void ControllerNode::publish_action(const Action& action, rclcpp::Time current_time) {
+                auto msg = action_to_msg(action);
+                msg.header.stamp = current_time;
                 m_action_publisher->publish(msg);
             }
 

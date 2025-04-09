@@ -43,6 +43,7 @@ namespace controls {
     constexpr const char *world_position_lla_topic_name = "filter/positionlla";
     // for breezeway testing
     constexpr const char *imu_accel_topic_name = "imu/acceleration";
+    constexpr const char *republished_perc_cones_topic_name = "perc_cones_republished";
 
     /// Profile for best effort communication
     static const rmw_qos_profile_t best_effort_profile = {
@@ -64,7 +65,7 @@ namespace controls {
         best_effort_profile);
 
     const rclcpp::QoS control_action_qos = best_effort_qos;
-    const rclcpp::QoS spline_qos = best_effort_qos;
+    const rclcpp::QoS spline_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1)); 
@@ -73,6 +74,7 @@ namespace controls {
     const rclcpp::QoS pid_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS imu_accel_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_position_lla_qos (rclcpp::KeepLast(1));
+    const rclcpp::QoS republished_perc_cones_qos (rclcpp::KeepLast(1));
     
     constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
 

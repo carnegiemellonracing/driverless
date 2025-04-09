@@ -82,7 +82,7 @@ namespace controls {
              *
              * @param action Action to publish
              */
-            void publish_action(const Action& action);
+            void publish_action(const Action& action, rclcpp::Time current_time);
 
             /// Converts MPPI control action output to a ROS2 message. Affected by drive mode (FWD, RWD, AWD).
             /// @param[in] action Control action - output of MPPI.
@@ -108,6 +108,7 @@ namespace controls {
 
             rclcpp::Publisher<ActionMsg>::SharedPtr m_action_publisher; ///< Publishes control action for actuators
             rclcpp::Publisher<InfoMsg>::SharedPtr m_info_publisher; ///< Publishes controller info for debugging
+            rclcpp::Publisher<ConeMsg>::SharedPtr m_perc_cones_republisher;
             rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription; ///< Subscribes to path planning spline
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription; ///< Subscribes to intertial twist
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
@@ -153,7 +154,7 @@ namespace controls {
             float m_last_x_velocity;
             float m_last_y_velocity;
             rclcpp::Time m_last_imu_acceleration_time;
-            State get_state_under_strategy();
+            State get_state_under_strategy(rclcpp::Time current_time);
             state::NaiveStateTracker m_naive_state_tracker;
 
             // Stuff for the naive state estimator
