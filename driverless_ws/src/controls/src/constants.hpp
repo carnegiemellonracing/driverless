@@ -54,7 +54,7 @@ namespace controls {
     // Testing stuff
 
     constexpr bool ingest_midline = false;
-    constexpr bool follow_midline_only = false;
+    constexpr bool follow_midline_only = true;
     constexpr uint16_t can_max_velocity_rpm = 3000;
 
     // MPPI stuff
@@ -76,7 +76,7 @@ namespace controls {
 
     // DEPRECATED
     constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
-    constexpr float target_speed = 10.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
+    constexpr float target_speed = 4.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 
     // Cost params

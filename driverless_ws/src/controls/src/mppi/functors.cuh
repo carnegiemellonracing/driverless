@@ -107,7 +107,7 @@ namespace controls {
 
             float total_cost;
             if (follow_midline_only) {
-                total_cost = progress_cost + distance_cost;
+                total_cost = speed_cost + distance_cost;
             } else {
                 total_cost = progress_cost;
             }
