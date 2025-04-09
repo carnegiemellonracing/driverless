@@ -30,7 +30,7 @@ namespace controls {
 
     constexpr StateProjectionMode state_projection_mode = StateProjectionMode::MODEL_MULTISET;
     constexpr float maximum_speed_ms = 15.0f;
-    constexpr float whl_radius = 0.2286f;
+    constexpr float whl_radius = 0.215f;
     constexpr float gear_ratio = 14.0f;
 
     // This is for reference only
@@ -98,31 +98,46 @@ namespace controls {
      // triangle threshold is the max distance between cones on opposing sides that we will use for triangle drawing
     constexpr float triangle_threshold_squared = 64.0f;
 
-    // NEW MODEL STUFF
-    constexpr float rolling_drag_constant_kN = 0.147287f;
-    constexpr float rolling_drag_linear = 12.604f;
-    constexpr float rolling_drag_squared = 0.0f;
-    constexpr float understeer_slope_squared = 0.28980572;
-    constexpr float torque_efficiency = 0.75152479f;
+    constexpr float cg_to_side = 0.75f; // ACTUAL .75
+    constexpr float cg_to_nose = 2.025f;
 
+#ifdef USESYSID
+    constexpr float cg_to_front = 0.83855;
+    constexpr float cg_to_rear = 0.71145; // Also rear of car
+    constexpr float car_mass = 245.0f;
+
+
+#else
+    
     // Car params
     //cg_to_front and cg_to_rear are from center of gravity to wheel base
     //cg_to_nose is actual front of car
     //Wheel base = 1.55, car length = 2.80
     constexpr float cg_to_front = 0.775; 
     constexpr float cg_to_rear = 0.775; //Also rear of car
-    constexpr float cg_to_nose = 2.025f;
-    constexpr float cg_to_side = 0.75f; //ACTUAL .75
     //constexpr float whl_base = 2.0f;
     /// gear ratio = motor speed / wheel speed = wheel torque / motor torque
     constexpr float car_mass = 210.0f;
-    constexpr float rolling_drag = 100.0f; /// Total drag forces on the car (rolling friction + air drag) in N
+
+#endif
+
+    // NEW MODEL STUFF (the 5 tuned parameters)
+
+    constexpr float rolling_drag_constant_kN = 0.147287f;
+    constexpr float rolling_drag_linear = 12.604f;
+    constexpr float rolling_drag_squared = 0.0f;
+    constexpr float understeer_slope_squared = 0.28980572;
+    constexpr float torque_efficiency = 0.75152479f;
+
+    // OLD MODEL STUFF 
+    constexpr float rolling_drag = 100.0f;   /// Total drag forces on the car (rolling friction + air drag) in N
+    constexpr float understeer_slope = 0.0f; ///< How much car understeers as speed increases. See @rst :doc:`/source/explainers/slipless_model` @endrst.
+
     /// Maximum forward acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
     constexpr float long_tractive_capability = 2.0f;
     /// Maximum centripetal acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
     /// Usually slightly more than @c long_tractive_capability
     constexpr float lat_tractive_capability = 3.0f;
-    constexpr float understeer_slope = 0.0f; ///< How much car understeers as speed increases. See @rst :doc:`/source/explainers/slipless_model` @endrst.
     constexpr float brake_enable_speed = 1.0f;
     /// Maximum torque request (N m)
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
