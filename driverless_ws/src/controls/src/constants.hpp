@@ -21,6 +21,7 @@ namespace controls {
     };
     constexpr bool testing_on_breezway = false;
     constexpr bool testing_on_rosbag = false; // so that even if we are not using model multiset, we can record the IRL data for posterity
+    // also note that testing_on_rosbag true means we don't publish control actions anymore, is that alright?
     constexpr bool republish_perc_cones = true; // no harm in doing this besides latency
     constexpr bool publish_spline = true;
 

@@ -121,6 +121,14 @@ namespace controls {
                 { world_position_lla_callback(*msg); },
                 auxiliary_state_options);
 
+            if constexpr (testing_on_rosbag) {
+                m_action_subscription = create_subscription<ActionMsg>(
+                control_action_topic_name, control_action_qos,
+                [this](const ActionMsg::SharedPtr msg)
+                { rosbag_action_callback(*msg); },
+                auxiliary_state_options);
+            }
+
             
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
             if constexpr (send_to_can) {
@@ -310,10 +318,14 @@ namespace controls {
                 }
 
                 auto action_time = get_clock()->now(); 
-                publish_action(action, action_time);
+                if constexpr (!testing_on_rosbag) {
+                    publish_action(action, action_time);
+                    m_state_estimator->record_control_action(action, action_time);
+                }
+
+
                 m_last_action_signal = action_to_signal(action);
                 std::string error_str;
-                m_state_estimator->record_control_action(action, action_time);
 
 #ifdef DATA
                 std::stringstream parameters_ss;
@@ -470,6 +482,19 @@ namespace controls {
                 m_action_publisher->publish(msg);
             }
 
+
+            static Action msg_to_action(const ActionMsg& msg) {
+                Action action;
+                action[action_swangle_idx] = msg.swangle;
+                action[action_torque_idx] = msg.torque_fl + msg.torque_fr + msg.torque_rl + msg.torque_rr;
+                return action;
+            }
+
+            void ControllerNode::rosbag_action_callback(const ActionMsg& rosbag_action_msg) {
+                std::lock_guard<std::mutex> guard {m_state_mut};
+                m_state_estimator->record_control_action(msg_to_action(rosbag_action_msg), rosbag_action_msg.header.stamp);
+            }
+
             static uint8_t swangle_to_rackdisplacement(float swangle) {
                 return 0;
             }
@@ -526,6 +551,7 @@ namespace controls {
 
                 return msg;
             }
+
 
             StateMsg ControllerNode::state_to_msg(const State &state) {
                 StateMsg msg;

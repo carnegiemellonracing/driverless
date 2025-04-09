@@ -77,6 +77,8 @@ namespace controls {
 
             void imu_accel_callback(const IMUAccelerationMsg& imu_accel_msg);
 
+            void rosbag_action_callback(const ActionMsg& rosbag_action_msg);
+
             /**
              * Publishes a control action to the `control_action` topic.
              *
@@ -110,7 +112,8 @@ namespace controls {
             rclcpp::Publisher<InfoMsg>::SharedPtr m_info_publisher; ///< Publishes controller info for debugging
             rclcpp::Publisher<ConeMsg>::SharedPtr m_perc_cones_republisher;
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
-
+            rclcpp::Subscription<ActionMsg>::SharedPtr m_action_subscription; ///< Exclusively for when replaying rosbags, and using it for state projection
+            rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription; ///< Subscribes to path planning spline
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription; ///< Subscribes to intertial twist
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
             rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;
