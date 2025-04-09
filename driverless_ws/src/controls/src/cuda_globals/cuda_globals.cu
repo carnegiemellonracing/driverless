@@ -10,7 +10,7 @@ namespace controls {
         __constant__ float curr_state[state_dims] = {0, 0, 0, 0};
 
         //TODO: throttle vs torque (write down units, maybe also add in mapping to IRL)
-        constexpr float swangle_swangle_std = 0.1; ///< Standard deviation for swangle distribution
+        constexpr float swangle_swangle_std = 0.4; ///< Standard deviation for swangle distribution
         constexpr float torque_torque_std = 10; ///< Standard deviation for throttle distribution
 
         __constant__ const float perturbs_incr_std[action_dims * action_dims] = {
