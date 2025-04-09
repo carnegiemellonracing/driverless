@@ -3,11 +3,12 @@
 #pragma once
 
 #include <rclcpp/rclcpp.hpp>
-#include "ros_types_and_constants.hpp"
-
+// Note: these header files are part of the ROS2 standard libraries
+#include <ros_types_and_constants.hpp>
 //TODO: these should all be inline constexpr (not currently broken because not ODR-used)
 
-namespace controls { 
+namespace controls {
+
     // Testing stuff
 
     constexpr bool send_to_can = false;
