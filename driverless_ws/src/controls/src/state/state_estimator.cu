@@ -409,14 +409,7 @@ namespace controls {
 #endif
 
             if constexpr (reset_pose_on_cone) {
-                switch (state_projection_mode) {
-                    case StateProjectionMode::MODEL_MULTISET: {
-                        m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
-                    }
-                    break;
-                    default:
-                    break;
-                }
+                m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
             }
             
             m_logger("finished state estimator cone processing");
