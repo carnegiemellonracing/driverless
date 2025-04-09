@@ -101,25 +101,28 @@ namespace controls {
             //     printf("Approx speed along: %f, actual speed along: %f\n", approx_speed_along, actual_speed_along);
             // }
             const float speed_deviation = approx_speed_along - target_speed;
-            // const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
-            const float speed_cost = speed_off_1mps_cost * (-speed_deviation);
+            const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
+            // const float speed_cost = speed_off_1mps_cost * (-speed_deviation);
             (void)speed_cost;
 
             const float distance_cost = offset_1m_cost * cent_curv_pose[state_y_idx];
             const float progress_cost = progress_cost_multiplier * (-progress);
 
+            const float deriv_cost = first ?
+                0 :
+                fabsf(action[action_torque_idx] - last_taken_action[action_torque_idx]) / controller_period * torque_1Nps_cost
+              + fabsf(action[action_swangle_idx] - last_taken_action[action_swangle_idx]) / controller_period * swangle_1radps_cost
+              ;
+
             float total_cost;
             if (follow_midline_only) {
-                total_cost = progress_cost + distance_cost + speed_above_threshold_cost;
+                total_cost = progress_cost + distance_cost + speed_above_threshold_cost + deriv_cost;
             } else {
                 total_cost = progress_cost + speed_above_threshold_cost;
             }
  
             //TODO: delete?
-            // const float deriv_cost = first ?
-            //     fabsf(action[action_torque_idx] - last_taken_action[action_torque_idx]) / controller_period / 10 * torque_10Nps_cost
-            //   + fabsf(action[action_swangle_idx] - last_taken_action[action_swangle_idx]) / controller_period * swangle_1radps_cost
-            //   : 0;
+
             // return speed_cost;
             return total_cost;
             // + fabsf(action[action_torque_idx]) * 0.05f;// + deriv_cost;

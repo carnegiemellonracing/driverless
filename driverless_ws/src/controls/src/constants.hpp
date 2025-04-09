@@ -3,11 +3,12 @@
 #pragma once
 
 #include <rclcpp/rclcpp.hpp>
-#include "ros_types_and_constants.hpp"
-
+// Note: these header files are part of the ROS2 standard libraries
+#include <ros_types_and_constants.hpp>
 //TODO: these should all be inline constexpr (not currently broken because not ODR-used)
 
-namespace controls { 
+namespace controls {
+
     // Testing stuff
 
     constexpr bool send_to_can = false;
@@ -26,7 +27,7 @@ namespace controls {
     constexpr bool log_state_projection_history = true;
 
     constexpr StateProjectionMode state_projection_mode = StateProjectionMode::NAIVE_SPEED_ONLY;
-    constexpr float maximum_speed_ms = 2.0f;
+    constexpr float maximum_speed_ms = 15.0f;
     constexpr float whl_radius = 0.2286f;
     constexpr float gear_ratio = 14.0f;
 
@@ -43,7 +44,7 @@ namespace controls {
     constexpr float controller_period = 1. / controller_freq; ///< Target duration between control actions, in sec
 
     constexpr uint32_t num_samples = 64 * 1024; ///< Number of trajectories sampled each controller step
-    constexpr uint32_t num_timesteps = 32; ///< Number of controller steps simulated into the future
+    constexpr uint32_t num_timesteps = 16; ///< Number of controller steps simulated into the future
     constexpr uint8_t action_dims = 2; ///< \f$q\f$, dimensions of @ref Action
     constexpr uint8_t state_dims = 4; ///< \f$p\f$, dimensions of @ref State
     constexpr float temperature = 1.0f; ///< Convergence speed/stability tradeoff, see LaTeX for more details
@@ -55,9 +56,10 @@ namespace controls {
     constexpr float action_momentum = 0.0f; ///< How much of last action taken to retain in calculation of next action.
     constexpr float above_speed_threshold_cost = 1000.0f;
 
-
-    // DEPRECATED
-    constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
+    constexpr float torque_1Nps_cost = 0.0f;
+    constexpr float swangle_1radps_cost = 0.0f;
+        // DEPRECATED
+        constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
     constexpr float target_speed = 10.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 
@@ -68,9 +70,9 @@ namespace controls {
     constexpr float out_of_bounds_cost = 100.0f; ///< Cost for being out of (fake) track bound as defined by @ref track_width.
 
     // Midline/SVM
-    constexpr float mesh_grid_spacing = 0.2f; //m
+    constexpr float mesh_grid_spacing = 0.1f; //m
     constexpr float max_spline_length = 200.0f;
-    constexpr int cone_augmentation_angle = 180;
+    constexpr int cone_augmentation_angle = 60;
 
     constexpr float lookahead_behind_squared = 25.0f;
 
@@ -128,7 +130,7 @@ namespace controls {
     constexpr float max_swangle = 19 * M_PI / 180.0f;
     /// Time from MPPI control action request to physical change, in sec
     // TODO: Re-estimate since Falcon (steering motor) replacement
-    constexpr float approx_propogation_delay = 0.6f;
+    constexpr float approx_propogation_delay = 0.0f;
     constexpr float approx_mppi_time = 0.020f; ///< Time from MPPI launch to control action calculation, in sec
 
     enum class TorqueMode
