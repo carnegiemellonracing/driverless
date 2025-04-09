@@ -85,11 +85,11 @@ namespace controls {
                 
             
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
-            int can_init_result = initializeCan();
-            if (can_init_result < 0) {
-                std::cout << "Can failed to initialize with error " << can_init_result << std::endl;
-                throw std::runtime_error("Failed to initialize can");
-            }
+            // int can_init_result = initializeCan();
+            // if (can_init_result < 0) {
+            //     std::cout << "Can failed to initialize with error " << can_init_result << std::endl;
+            //     throw std::runtime_error("Failed to initialize can");
+            // }
 
             launch_aim_communication().detach();
         }
@@ -400,7 +400,7 @@ namespace controls {
                             // if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
                                 auto start = std::chrono::steady_clock::now();
                                 ActionSignal last_action_signal = m_last_action_signal;
-                                sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
+                                // sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                 auto end = std::chrono::steady_clock::now();
                                 RCLCPP_WARN(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
 
