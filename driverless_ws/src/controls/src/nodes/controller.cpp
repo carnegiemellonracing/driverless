@@ -529,9 +529,24 @@ namespace controls {
 
             ControllerNode::ActionSignal ControllerNode::action_to_signal(Action action) {
                 ActionSignal action_signal;
+                switch (torque_mode) {
+                    case TorqueMode::AWD: {
+                        action_signal.front_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
+                        action_signal.back_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
+                        break;
+                    }
+                    case TorqueMode::FWD: {
+                        action_signal.front_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 1000.0f);
+                        action_signal.back_torque_mNm = 0;
+                        break;
+                    }
+                    case TorqueMode::RWD: {
+                        action_signal.front_torque_mNm = 0;
+                        action_signal.back_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 1000.0f);
+                        break;
+                    }
+                }
 
-                action_signal.front_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
-                action_signal.back_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
                 action_signal.velocity_rpm = can_max_velocity_rpm;
                 action_signal.rack_displacement_adc = swangle_to_adc(action[action_swangle_idx]);
                 return action_signal;   
