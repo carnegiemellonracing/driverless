@@ -11,7 +11,7 @@ namespace controls {
 
     // Testing stuff
 
-    constexpr bool send_to_can = false;
+    constexpr bool send_to_can = true;
     constexpr bool ingest_midline = false;
     constexpr bool follow_midline_only = true;
     enum class StateProjectionMode {
@@ -20,7 +20,7 @@ namespace controls {
         POSITIONLLA_YAW_SPEED
     };
     constexpr bool testing_on_breezway = false;
-    constexpr bool testing_on_rosbag = true; // so that even if we are not using model multiset, we can record the IRL data for posterity
+    constexpr bool testing_on_rosbag = false; // so that even if we are not using model multiset, we can record the IRL data for posterity
     // also note that testing_on_rosbag true means we don't publish control actions anymore, is that alright?
     constexpr bool republish_perc_cones = true; // no harm in doing this besides latency
     constexpr bool publish_spline = true;
@@ -63,7 +63,7 @@ namespace controls {
     constexpr float swangle_1radps_cost = 0.0f;
         // DEPRECATED
         constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
-    constexpr float target_speed = 10.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
+    constexpr float target_speed = 3.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 
     // Cost params
@@ -157,7 +157,7 @@ namespace controls {
         FWD,
         RWD
     };
-    constexpr TorqueMode torque_mode = TorqueMode::FWD; ///< Because back two wheels don't currently work
+    constexpr TorqueMode torque_mode = TorqueMode::AWD; ///< Because back two wheels don't currently work
 
 
     // Indices

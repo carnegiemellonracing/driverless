@@ -663,6 +663,8 @@ namespace controls {
                                 auto start = std::chrono::steady_clock::now();
                                 ActionSignal last_action_signal = m_last_action_signal;
                                 if constexpr (send_to_can) {
+                                      sendPIDConstants(default_p, default_feedforward);
+
                                     // FYI, velocity_rpm is determined from the speed threshold
                                     sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                     RCLCPP_DEBUG(get_logger(), "Sending action signal %d, %d, %u, %u\n", last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
