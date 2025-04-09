@@ -32,7 +32,7 @@
 #include <tuple>
 #include <vector>
 
-#include <utils/macros.h>
+#include <utils/macros.hpp>
 #include <utils/general_utils.hpp>
 
 namespace controls {

@@ -10,6 +10,7 @@ if __name__ == "__main__":
     parser.add_argument("-D", "--display", action="store_true")
     parser.add_argument("-c", "--data_collection", action="store_true")
     parser.add_argument("-e", "--export", action="store_true", help="export compile commands")
+    parser.add_argument("-s", "--use_sysid", action="store_true")
 
     args = parser.parse_args()
     command = "colcon build --packages-up-to controls --cmake-args"
@@ -23,6 +24,8 @@ if __name__ == "__main__":
         command += " -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
     if args.data_collection:
         command += " -DDATA=ON"
+    if args.use_sysid:
+        command += " -DUSESYSID=ON"
 
     os.system(command)
 

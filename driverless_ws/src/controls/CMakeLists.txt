@@ -66,6 +66,10 @@ if (DATA)
   )
 endif()
 
+if (USESYSID)
+  add_compile_options(-DUSESYSID)
+endif()
+
 
 # **** Controls Lib *****
 

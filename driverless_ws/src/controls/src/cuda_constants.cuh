@@ -1,7 +1,7 @@
 #pragma once
 
 #include <curand.h>
-#include <utils/macros.h>
+#include <utils/macros.hpp>
 
 #include "constants.hpp"
 

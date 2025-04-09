@@ -17,7 +17,7 @@
 #include <cuda_constants.cuh>
 #include <cuda_globals/helpers.cuh>
 #include <math_constants.h>
-#include <utils/macros.h>
+#include <utils/macros.hpp>
 
 #include "types.cuh"
 
