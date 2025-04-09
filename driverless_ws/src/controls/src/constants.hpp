@@ -4,7 +4,7 @@
 
 namespace controls {
     /* ROS moments */
-    constexpr bool send_to_can = false;
+    constexpr bool send_to_can = true;
     constexpr int aim_signal_period_ms = 98;
 
     constexpr const char *controller_node_name = "controller";
@@ -67,8 +67,8 @@ namespace controls {
 
     // Cost params
 
-    constexpr float offset_1m_cost = 5.0f;
-    constexpr float target_speed = 10.0f;
+    constexpr float offset_1m_cost = 10.0f;
+    constexpr float target_speed = 2.0f;
     constexpr float whl_radius = 0.2286;
     constexpr float gear_ratio = 15.0f;
     constexpr uint16_t can_max_velocity_rpm = static_cast<uint16_t>((target_speed * 1.5f * 60.0f * gear_ratio) / (2 * M_PI * whl_radius));
@@ -94,14 +94,14 @@ namespace controls {
     constexpr float cg_to_nose = 1.5f;
     constexpr float whl_base = 2.0f;
 
-    constexpr float car_mass = 210.0f;
+    constexpr float car_mass = 250.0f;
     constexpr float rolling_drag = 100.0f; // N
-    constexpr float long_tractive_capability = 2.0f; // m/s^2
-    constexpr float lat_tractive_capability = 3.0f; // m/s^2
+    constexpr float long_tractive_capability = 1.0f; // m/s^2
+    constexpr float lat_tractive_capability = 2.0f; // m/s^2
     constexpr float understeer_slope = 0.0f;
     constexpr float brake_enable_speed = 1.0f;
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
-    constexpr float approx_propogation_delay = 0.02f;  // sec
+    constexpr float approx_propogation_delay = 0.56f;  // sec
     constexpr float approx_mppi_time = 0.02f; // sec
 
     enum class TorqueMode

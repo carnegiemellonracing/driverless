@@ -18,7 +18,6 @@
 #include "cmr_can.h"
 #include <math.h>
 #include <assert.h>
-#include <utils/paranoid_assert.h>
 
 
 #define READ_WAIT_INFINITE (unsigned long)(-1)
@@ -217,7 +216,7 @@ int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t 
     msg[7] = (unsigned char) (rackDisplacement_adc >> 8);
     msg[6] = (unsigned char) rackDisplacement_adc;
 
-    paranoid_assert(current_can_handle >= 0 && "can was not initialized when trying to send control action");
+    assert(current_can_handle >= 0 && "can was not initialized when trying to send control action");
 
     return cmr_can_tx(0, controlActionID, &msg, 8, false);
 }

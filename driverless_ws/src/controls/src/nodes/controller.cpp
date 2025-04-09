@@ -52,6 +52,14 @@ namespace controls {
                             controller_info_qos
                         )
                   } {
+                if constexpr (send_to_can) {
+                    int can_init_result = initializeCan();
+                    if (can_init_result < 0)
+                    {
+                        std::cout << "Can failed to initialize with error " << can_init_result << std::endl;
+                        throw std::runtime_error("Failed to initialize can");
+                    }
+                }
 
                 // create a callback group that prevents state and spline callbacks from being executed concurrently
                 rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group {
@@ -133,12 +141,33 @@ namespace controls {
             ControllerNode::ActionSignal ControllerNode::action_to_signal(Action action)
             {
                 ActionSignal action_signal;
+                switch (torque_mode) {
+                    case TorqueMode::AWD: {
+                        action_signal.front_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
+                        action_signal.back_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
+                        break;
+                    }
+                    case TorqueMode::FWD: {
+                        action_signal.front_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 1000.0f);
+                        action_signal.back_torque_mNm = 0;
+                        break;
+                    }
+                    case TorqueMode::RWD: {
+                        action_signal.front_torque_mNm = 0;
+                        action_signal.back_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 1000.0f);
+                        break;
+                    }
+                }
+                action_signal.front_torque_mNm = abs(action_signal.front_torque_mNm);
+                action_signal.back_torque_mNm = abs(action_signal.back_torque_mNm);
+                if (action[action_torque_idx] < 0) {
+                    action_signal.velocity_rpm = 0;
+                } else {
+                    action_signal.velocity_rpm = can_max_velocity_rpm;
+                }
 
-                action_signal.front_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
-                action_signal.back_torque_mNm = static_cast<int16_t>(action[action_torque_idx] * 500.0f);
-                action_signal.velocity_rpm = can_max_velocity_rpm;
                 action_signal.rack_displacement_adc = swangle_to_adc(action[action_swangle_idx]);
-                return action_signal;
+                return action_signal; 
             }
 
             std::thread ControllerNode::launch_can() {
@@ -156,6 +185,7 @@ namespace controls {
                         ActionSignal last_action_signal = m_last_action_signal;
                         if constexpr (send_to_can)
                         {
+                            sendPIDConstants(2.5, 0.0);
                             // FYI, velocity_rpm is determined from the speed threshold
                             sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                             RCLCPP_DEBUG(get_logger(), "Sending action signal %d, %d, %u, %u\n", last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
