@@ -518,7 +518,7 @@ namespace controls {
             }
 
             void ControllerNode::publish_and_print_info(interfaces::msg::ControllerInfo info, const std::string& additional_info) {
-                // m_info_publisher->publish(info);
+                m_info_publisher->publish(info);
                 std::stringstream ss;
 
                 ss
