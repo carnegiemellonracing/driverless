@@ -179,7 +179,7 @@ namespace controls {
                     bar = "[" + std::string(std::max(0, pos), ' ') + "\033[31m+\033[0m" + std::string(width / 2 - pos-1, ' ') + "|" + std::string(width / 2, ' ') + "]";
                 }
                 else if (pos > width / 2){
-                    bar = "[" + std::string(width / 2, ' ') + "|" + std::string(std::max(0, pos - width / 2), ' ') + "\033[32m+\033[0m" + std::string(width - pos-1, ' ') + "]";
+                    bar = "[" + std::string(width / 2, ' ') + "|" + std::string(std::max(0, pos - width / 2), ' ') + "\033[32m+\033[0m" + std::string(std::max(0, width - pos - 1), ' ') + "]";
                 }
                 else{
                     bar = "[" + std::string(width / 2, ' ') + "\033[33m+\033[0m" + std::string(width / 2, ' ') + "]";
