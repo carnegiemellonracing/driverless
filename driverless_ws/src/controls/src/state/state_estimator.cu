@@ -342,7 +342,20 @@ namespace controls {
             m_state_projector.record_position_lla(pair.first, pair.second, position_lla_msg.header.stamp);
         }
 
-        float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
+        static SplineMsg spline_frames_to_msg(std::vector<glm::fvec2> frames_vec) {
+            SplineMsg frames_msg;
+            frames_msg.frames.reserve(frames_vec.size());
+            for (auto& frame : frames_vec) {
+                geometry_msgs::msg::Point point;
+                point.x = frame.x;
+                point.y = frame.y;
+                frames_msg.frames.push_back(point);
+            }
+            return frames_msg;
+        }
+
+
+        float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg, rclcpp::Publisher<SplineMsg>::SharedPtr cone_publisher) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             paranoid_assert(cone_msg.blue_cones.size() > 0);
@@ -378,7 +391,10 @@ namespace controls {
                 for (const auto& frame : spline_frames) {
                     paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
                     m_spline_frames.emplace_back(frame.first, frame.second);
-                }   
+                }
+                if constexpr (publish_spline) {
+                    cone_publisher->publish(spline_frames_to_msg(m_spline_frames));
+                }
 
             }
 

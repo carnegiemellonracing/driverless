@@ -57,7 +57,7 @@ namespace controls {
              */
             virtual void on_spline(const SplineMsg& spline_msg) =0;
 
-            virtual float on_cone(const ConeMsg& cone_msg) =0;
+            virtual float on_cone(const ConeMsg& cone_msg, rclcpp::Publisher<SplineMsg>::SharedPtr spline_publisher) =0;
 
             virtual void on_quat(const QuatMsg& quat_msg) =0;
 

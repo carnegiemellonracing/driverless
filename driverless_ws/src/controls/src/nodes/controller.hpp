@@ -109,7 +109,8 @@ namespace controls {
             rclcpp::Publisher<ActionMsg>::SharedPtr m_action_publisher; ///< Publishes control action for actuators
             rclcpp::Publisher<InfoMsg>::SharedPtr m_info_publisher; ///< Publishes controller info for debugging
             rclcpp::Publisher<ConeMsg>::SharedPtr m_perc_cones_republisher;
-            rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription; ///< Subscribes to path planning spline
+            rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
+
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription; ///< Subscribes to intertial twist
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
             rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;

@@ -20,8 +20,9 @@ namespace controls {
         POSITIONLLA_YAW_SPEED
     };
     constexpr bool testing_on_breezway = false;
-    constexpr bool testing_on_rosbag = true;
-    constexpr bool republish_perc_cones = true;
+    constexpr bool testing_on_rosbag = false; // so that even if we are not using model multiset, we can record the IRL data for posterity
+    constexpr bool republish_perc_cones = true; // no harm in doing this besides latency
+    constexpr bool publish_spline = true;
 
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;

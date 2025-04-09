@@ -21,7 +21,7 @@ namespace controls {
 
             void on_spline(const SplineMsg& spline_msg) override;
             void on_quat(const QuatMsg& quat_msg) override;
-            float on_cone(const ConeMsg& cone_msg) override;
+            float on_cone(const ConeMsg& cone_msg, rclcpp::Publisher<SplineMsg>::SharedPtr spline_publisher) override;
             void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) override;
             // on_pose is not used, for future proofing
             void on_pose(const PoseMsg& pose_msg) override;

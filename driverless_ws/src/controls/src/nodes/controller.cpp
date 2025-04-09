@@ -54,6 +54,13 @@ namespace controls {
                       controller_info_topic_name,
                       controller_info_qos)},
 
+              m_spline_publisher{
+                create_publisher<SplineMsg>(
+                    spline_topic_name,
+                    spline_qos
+                )
+              },
+
               m_data_trajectory_log{"mppi_inputs.txt", std::ios::out},
               m_p_value{0.1}
         {
@@ -204,7 +211,7 @@ namespace controls {
                         break;
                     }
                     case StateProjectionMode::NAIVE_SPEED_ONLY:
-                        if constexpr (!testing_on_rosbag) {
+                        if constexpr (!testing_on_rosbag) { // TODO: Move this if statement to before get_state_under_strategy is called, allowing current_time to be siphoned off the republished perc cone message instead of the normal one
                             m_state_estimator->project_state(current_time);
                         }
                         return {0.0f, 0.0f, M_PI_2, m_last_speed};
@@ -258,7 +265,7 @@ namespace controls {
                     {
                         std::lock_guard<std::mutex> guard {m_state_mut};
                         cone_process_start = std::chrono::high_resolution_clock::now();
-                        float svm_time = m_state_estimator->on_cone(cone_msg);
+                        float svm_time = m_state_estimator->on_cone(cone_msg, m_spline_publisher);
                         m_naive_state_tracker.record_cone_seen_time(cone_msg.header.stamp);
                         cone_process_end = std::chrono::high_resolution_clock::now();
                         m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
@@ -386,6 +393,7 @@ namespace controls {
                 auto total_time_elapsed = get_clock()->now() - cone_arrival_time;    
 
                 interfaces::msg::ControllerInfo info{};
+                info.header.stamp = action_time;
                 info.action = action_to_msg(action);
                 info.proj_state = state_to_msg(proj_curr_state);
                 info.projection_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(project_end - project_start)).count(); // duration_vec[0].count();
