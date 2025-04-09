@@ -1,6 +1,6 @@
 #include <state/state_projector.cuh>
 #include <utils/general_utils.hpp>
-#include <model/slipless/model.cuh>
+#include <utils/macros.h>
 #include <sstream>
 #include <fstream>
 
@@ -172,7 +172,7 @@ namespace controls {
                 return std::nullopt;
             }
             // simulates up to first_time
-            model::slipless::dynamics(state.data(), m_init_action.action.data(), state.data(), delta_time);
+            ONLINE_DYNAMICS_FUNC(state.data(), m_init_action.action.data(), state.data(), delta_time);
             record_state(first_time.nanoseconds(), state, predicted_ss);
 
             rclcpp::Time sim_time = first_time;
@@ -189,7 +189,7 @@ namespace controls {
 
                 switch (record_iter->type) {
                     case Record::Type::Action:
-                        model::slipless::dynamics(state.data(), record_iter->action.data(), state.data(), delta_time);
+                        ONLINE_DYNAMICS_FUNC(state.data(), record_iter->action.data(), state.data(), delta_time);
                         last_action = record_iter->action;
                         break;
 
@@ -198,7 +198,7 @@ namespace controls {
                         snprintf(logger_buf, 70, "Predicted speed: %f\nActual speed: %f", state[state_speed_idx], record_iter->speed);
                         //std::cout << logger_buf << std::endl;
                         state[state_speed_idx] = record_iter->speed;
-                        model::slipless::dynamics(state.data(), last_action.data(), state.data(), delta_time);
+                        ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
                         break;
 
                     default:

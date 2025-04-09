@@ -34,6 +34,7 @@
 
 #include <midline/svm_conv.hpp>
 #include <utils/ros_utils.hpp>
+#include <utils/macros.h>
 
 namespace {
     // Helper function for timing with optional GPU synchronization

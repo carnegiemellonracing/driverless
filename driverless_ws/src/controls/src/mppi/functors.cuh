@@ -18,6 +18,7 @@
 #include <cuda_globals/helpers.cuh>
 #include <math_constants.h>
 #include <model/slipless/model.cuh>
+#include <model/sysid/model.cuh>
 
 #include "types.cuh"
 
