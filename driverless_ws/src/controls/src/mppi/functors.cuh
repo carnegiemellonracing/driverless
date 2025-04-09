@@ -17,8 +17,7 @@
 #include <cuda_constants.cuh>
 #include <cuda_globals/helpers.cuh>
 #include <math_constants.h>
-#include <model/slipless/model.cuh>
-#include <model/sysid/model.cuh>
+#include <utils/macros.h>
 
 #include "types.cuh"
 
@@ -70,7 +69,7 @@ namespace controls {
 
             cuda_globals::sample_curv_state(world_state, cent_curv_pose, cent_out_of_bounds);
 
-            const float centripedal_accel = model::slipless::centripedal_accel(world_state[state_speed_idx], action[action_swangle_idx]);
+            const float centripedal_accel = CENTRIPEDAL_ACCEL_FUNC(world_state[state_speed_idx], action[action_swangle_idx]);
             const float abs_centripedal_accel = fabsf(centripedal_accel);
 
             if (abs_centripedal_accel > lat_tractive_capability) {

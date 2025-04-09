@@ -94,6 +94,13 @@ namespace controls {
      // triangle threshold is the max distance between cones on opposing sides that we will use for triangle drawing
     constexpr float triangle_threshold_squared = 64.0f;
 
+    // NEW MODEL STUFF
+    constexpr float rolling_drag_constant_kN = 0.147287f;
+    constexpr float rolling_drag_linear = 12.604f;
+    constexpr float rolling_drag_squared = 0.0f;
+    constexpr float understeer_slope_squared = 0.28980572;
+    constexpr float torque_efficiency = 0.75152479f;
+
     // Car params
     //cg_to_front and cg_to_rear are from center of gravity to wheel base
     //cg_to_nose is actual front of car

@@ -32,8 +32,7 @@
 #include <tuple>
 #include <vector>
 
-#include <model/slipless/model_host.h>
-
+#include <utils/macros.h>
 #include <utils/general_utils.hpp>
 
 namespace controls {
@@ -553,7 +552,7 @@ namespace controls {
 
             double sim_time = m_time.nanoseconds() / 1.0e9;
             m_time = get_clock()->now();
-            controls::model::slipless::dynamics(orig_world_state.data(), action, m_world_state.data(), m_time.nanoseconds() / 1.0e9 - sim_time);
+            HOST_DYNAMICS_FUNC(orig_world_state.data(), action, m_world_state.data(), m_time.nanoseconds() / 1.0e9 - sim_time);
 
             update_visible_indices();
             update_track_time();

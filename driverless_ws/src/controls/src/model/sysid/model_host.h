@@ -7,13 +7,17 @@
 
 #pragma once
 #include <constants.hpp>
-#include <utils/cuda_utils.cuh>
 
 
 namespace controls {
-    namespace model {
+    namespace model_host {
         namespace sysid {
-
+            template <typename T>
+            static T clamp(T n, T low, T high)
+            {
+                return n > high ? high : n < low ? low
+                                                 : n;
+            }
 
             /*
              * Action : R^2 [swangle (rad), torque (N x m)]
@@ -26,11 +30,11 @@ namespace controls {
              * @param[in] swangle Steering angle in radians.
              * @return Kinematic steering angle in radians.
              */
-            __host__ __device__ static float kinematic_swangle(const float speed, const float swangle, const float radius) {
+            static float kinematic_swangle(const float speed, const float swangle, const float radius) {
                 return swangle / (1 + ((speed * speed) / radius) * (understeer_slope_squared / 10));
             }
 
-            __host__ __device__ static float turning_radius(const float swangle_) {
+            static float turning_radius(const float swangle_) {
               float ratio = (cg_to_front + cg_to_rear) / tanf(swangle_);
               return sqrtf(cg_to_rear * cg_to_rear + ratio * ratio);
              }
@@ -41,7 +45,7 @@ namespace controls {
              * @param[in] kinematic_swangle_ Kinematic steering angle in radians.
              * @return Angular speed in rad/s.
              */
-            __host__ __device__ static float angular_speed(const float speed, const float kinematic_swangle_) {
+            static float angular_speed(const float speed, const float kinematic_swangle_) {
                 if (kinematic_swangle_ == 0) {
                     return 0;
                 }
@@ -60,7 +64,7 @@ namespace controls {
              * @param[in] swangle Steering angle in radians.
              * @return Centripedal acceleration in m/s^2.
              */
-            __host__ __device__ static float centripedal_accel(const float speed, const float swangle) {
+            static float centripedal_accel(const float speed, const float swangle) {
                 if (swangle == 0) {
                     return 0;
                 }
@@ -79,7 +83,7 @@ namespace controls {
              * @param[in] kinematic_swangle Kinematic steering angle in radians.
              * @return Slip angle in radians.
              */
-            __host__ __device__ static float slip_angle(const float kinematic_swangle) {
+            static float slip_angle(const float kinematic_swangle) {
                 return atanf(cg_to_rear / (cg_to_front + cg_to_rear) * tanf(kinematic_swangle));
             }
 
@@ -90,7 +94,7 @@ namespace controls {
              * @param[out] next_state Next state of the car.
              * @param[in] timestep Model time step in seconds.
              */
-            __host__ __device__ static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
+            static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
                 const float x = state[state_x_idx];
                 const float y = state[state_y_idx];
                 const float yaw = state[state_yaw_idx];

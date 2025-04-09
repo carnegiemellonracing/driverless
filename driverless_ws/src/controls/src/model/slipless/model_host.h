@@ -9,7 +9,7 @@
 #include <constants.hpp>
 
 namespace controls {
-    namespace model {
+    namespace model_host {
         namespace slipless {
 
             template <typename T>

@@ -130,7 +130,7 @@ namespace controls {
                     ((torque_front * cosf(swangle - slip_angle_) + torque_rear * cosf(slip_angle_)) / (whl_radius * car_mass)
                     - rolling_drag / car_mass) * timestep;
                 // car can't go backwards, negative torque is regenerative braking
-                const float next_speed = max(0.0f, next_speed_raw);
+                const float next_speed = std::max(0.0f, next_speed_raw);
 
                 const float speed2 = speed * speed;
                 const float next_speed2 = next_speed * next_speed;
