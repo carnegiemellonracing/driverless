@@ -147,6 +147,29 @@ for key in super_data.keys():
 
     f.close()
 
+def calc_statistics(L):
+    length = len(L)
+    mean_difference = 0
+    mean_square_error = 0
+
+    for point in L:
+        (x, y) = point
+        (x, y) = (float(x), float(y))
+        mean_difference += (x - y)
+        mean_square_error += (x-y) ** 2
+
+    mean_difference /= length
+    mean_square_error /= length
+
+    return mean_difference, mean_square_error
+
+        
+for key in super_data.keys():
+    mean_diff, mse = calc_statistics(super_data[key])
+    print(f"KEY: {key}")
+    print(f"Mean Difference: {mean_diff}")
+    print(f"MSE: {mse}")
+
 def plot_endpoints(directory="endpoints"):
     """
     Reads all .txt files in the specified directory, parses tuples of the form (x1, x2),
@@ -210,7 +233,6 @@ def plot_endpoints(directory="endpoints"):
     plt.tight_layout()
     plt.show()
 
-print(super_data)
 # To run the function, simply call:
 plot_endpoints()
 
