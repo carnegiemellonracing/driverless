@@ -142,7 +142,7 @@ namespace controls {
             });
         }
 
-        static void record_state(int time_ns, const State& state, std::stringstream& output_stream) {
+        static void record_state(size_t time_ns, const State& state, std::stringstream& output_stream) {
             if constexpr (log_state_projection_history) {
                 output_stream << "Time: " << time_ns << "ns|||";
                 output_stream << "Predicted X: " << state[state_x_idx] << "|||";
