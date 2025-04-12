@@ -11,7 +11,7 @@
 #include <interfaces/msg/controller_info.hpp>
 #include <geometry_msgs/msg/vector3_stamped.hpp>
 #include <interfaces/msg/cone_array.hpp>
-
+#include <std_msgs/msg/float32.hpp>
 
 namespace controls {
     /// ROS Message Types
@@ -46,7 +46,7 @@ namespace controls {
     // for breezeway testing
     constexpr const char *imu_accel_topic_name = "imu/acceleration";
     constexpr const char *republished_perc_cones_topic_name = "perc_cones_republished";
-    constexpr const char *can_swangle_topic_name = "can_swangle"
+    constexpr const char *can_swangle_topic_name = "can_swangle";
 
     /// Profile for best effort communication
     static const rmw_qos_profile_t best_effort_profile = {
@@ -78,7 +78,7 @@ namespace controls {
     const rclcpp::QoS imu_accel_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_position_lla_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS republished_perc_cones_qos (rclcpp::KeepLast(1));
-    const rclcppp::QoS can_swangle_qos = best_effort_qos;
+    const rclcpp::QoS can_swangle_qos = best_effort_qos;
     
     constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
 

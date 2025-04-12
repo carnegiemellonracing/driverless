@@ -65,7 +65,7 @@ namespace controls {
                     can_swangle_topic_name,
                     can_swangle_qos
                 )
-              }
+              },
 
               m_data_trajectory_log{"mppi_inputs.txt", std::ios::out},
               m_p_value{0.1}
@@ -661,8 +661,7 @@ namespace controls {
                             msg.data = swangle_reading;
                             m_can_swangle_publisher->publish(msg);
                             
-                            
-
+                    
                         }
                     }};      
             }

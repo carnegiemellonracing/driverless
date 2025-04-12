@@ -129,9 +129,11 @@ uint16_t swangle_to_adc(float swangle)
 }
 
 float adc_to_swangle(uint16_t adc) {
+    int modulus = 4096;
     if (adc < 1500) {
-        adc +=  4096;
+        adc +=  modulus;
     }
+
     int zero_adc = 3159;
     int min_adc = 2010;
     int max_adc = modulus + 212;
@@ -139,7 +141,7 @@ float adc_to_swangle(uint16_t adc) {
     float max_deg = 23.6;
     float deg_adc_ratio = ((float)(max_deg - min_deg) / (max_adc - min_adc));
     float swangle_degrees = ((float)(adc - zero_adc)) * deg_adc_ratio;
-    float swangle_radians = swange_degrees * M_PI / 180;
+    float swangle_radians = swangle_degrees * M_PI / 180;
     return swangle_radians;
 }
 
@@ -162,12 +164,13 @@ static void cmr_can_error_exit(int signal) {
     cleanup_handle(receive_can_handle);
 }
 
-static void set_global_can_handle(canHandle *global_handle) {
+static int set_global_can_handle(canHandle *global_handle) {
     /* Open channel, set parameters and go on bus */
-    hnd = canOpenChannel(channel,
+    canStatus stat;
+    canHandle hnd = canOpenChannel(0,
                          canOPEN_EXCLUSIVE /*| canOPEN_REQUIRE_EXTENDED*/ | canOPEN_ACCEPT_VIRTUAL);
     if (hnd < 0) {
-        debug_printf("canOpenChannel %d", channel);
+        debug_printf("canOpenChannel %d", 0);
         check("", hnd);
         return -1;
     }
@@ -176,14 +179,6 @@ static void set_global_can_handle(canHandle *global_handle) {
     check("canSetBusParams", stat);
     if (stat != canOK) {
         return -2;
-    }
-
-    if(verbose){
-        stat = canSetNotify(hnd, notifyCallback,
-            canNOTIFY_RX | canNOTIFY_TX | canNOTIFY_ERROR | canNOTIFY_STATUS |
-            canNOTIFY_ENVVAR,
-            (char *)0);
-        check("canSetNotify", stat);
     }
 
     stat = canBusOn(hnd);
@@ -289,6 +284,7 @@ int sendFinishedCommand(){
 uint16_t cmr_can_rx(int channel, long id) {
     canHandle hnd = receive_can_handle;
     canStatus stat;
+    bool seen;
     do {
         long curId;
         unsigned char msg[8];
