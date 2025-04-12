@@ -224,10 +224,10 @@ int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t 
 
     //defines our message
     unsigned char msg[8];
-    msg[1] = (unsigned char) (rearTorque_mNm >> 8); //8 MSB of frontTorque
-    msg[0] = (unsigned char) rearTorque_mNm; // 8 LSB of frontTorque
-    msg[3] = (unsigned char) (frontTorque_mNm >> 8); // 8 MSB of rearTorque
-    msg[2] = (unsigned char) frontTorque_mNm; // 8 LSB of rearTorque
+    msg[1] = (unsigned char) (frontTorque_mNm >> 8); //8 MSB of frontTorque
+    msg[0] = (unsigned char) frontTorque_mNm; // 8 LSB of frontTorque
+    msg[3] = (unsigned char) (rearTorque_mNm >> 8); // 8 MSB of rearTorque
+    msg[2] = (unsigned char) rearTorque_mNm; // 8 LSB of rearTorque
     msg[5] = (unsigned char) (velocity_rpm >> 8);
     msg[4] = (unsigned char) velocity_rpm;
     msg[7] = (unsigned char) (rackDisplacement_adc >> 8);
@@ -260,68 +260,12 @@ int sendFinishedCommand(){
     return cmr_can_tx(0, 0x777, &msg,1, false);
 }
 
-
-//CMR RX
-//Channel should default to 0
-//UNTESTED
-int cmr_can_rx(int channel, long id, bool verbose)
-{
-    canHandle hnd;
+int cmr_can_rx(int channel, long id) {
+    canHandle hnd = current_can_handle;
     canStatus stat;
-    stat == canOK;
-    struct sigaction sigact;
-
-
-    /* Use sighand and allow SIGINT to interrupt syscalls */
-    sigact.sa_flags = SA_SIGINFO;
-    sigemptyset(&sigact.sa_mask);
-    sigact.sa_sigaction = sighand;
-    if (sigaction(SIGINT, &sigact, NULL) != 0) {
-        perror("sigaction SIGINT failed");
-        return -1;
-    }
-
-    if(verbose){
-        debug_printf("Reading CAN messages on channel %d\n", channel);
-    }
-
-    canInitializeLibrary();
-
-    /* Open channel, set parameters and go on bus */
-    hnd = canOpenChannel(channel,
-                         canOPEN_EXCLUSIVE | canOPEN_REQUIRE_EXTENDED | canOPEN_ACCEPT_VIRTUAL);
-   
-    if(verbose) {
-        if (hnd < 0) {
-        debug_printf("canOpenChannel %d", channel);
-        check("", hnd);
-        return -1;
-    }
-    }
-
-
-    stat = canSetNotify(hnd, notifyCallback,
-                        canNOTIFY_RX | canNOTIFY_TX | canNOTIFY_ERROR | canNOTIFY_STATUS |
-                            canNOTIFY_ENVVAR,
-                        (char *)0);
-    check("canSetNotify", stat);
-
-    stat = canSetBusParams(hnd, canBITRATE_500K, 0, 0, 0, 0, 0);
-    check("canSetBusParams", stat);
-    if (stat != canOK) {
-        goto ErrorExit;
-    }
-
-    stat = canBusOn(hnd);
-    check("canBusOn", stat);
-    if (stat != canOK) {
-        goto ErrorExit;
-    }
-    
-    bool seen = false;
     do {
         long curId;
-        unsigned char msg[8];
+        unsigned char msg[32];
         unsigned int dlc;
         unsigned int flag;
         unsigned long time;
@@ -339,6 +283,7 @@ int cmr_can_rx(int channel, long id, bool verbose)
                 if(curId == id) {
                     seen = true;
                     debug_printf("(%u) id:%ld dlc:%u data: ", msgCounter, id, dlc);
+                    return (uint32_t)msg;
                     if (dlc > 8) {
                         dlc = 8;
                     }
@@ -358,16 +303,7 @@ int cmr_can_rx(int channel, long id, bool verbose)
         }
 
     } while ((stat == canOK) & seen!=true);
-
-ErrorExit:
-
-    stat = canBusOff(hnd);
-    check("canBusOff", stat);
-    usleep(50 * 1000); // Sleep just to get the last notification.
-    stat = canClose(hnd);
-    check("canClose", stat);
-    stat = canUnloadLibrary();
-    check("canUnloadLibrary", stat);
+    cmr_can_error_exit(0);
 
     return 0;
 }

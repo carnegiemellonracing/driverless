@@ -14,7 +14,7 @@ int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t 
 int sendPIDConstants(float p, float feedforward);
 int sendFinishedCommand();
 
-int cmr_can_rx(int channel, long id, bool verbose);
+int cmr_can_rx(int channel, long id);
 
 
 
