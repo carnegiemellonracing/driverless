@@ -11,8 +11,8 @@ namespace controls {
 
     // Testing stuff
 
-    constexpr bool send_to_can = true;
-    constexpr bool ingest_midline = true;
+    constexpr bool send_to_can = false;
+    constexpr bool ingest_midline = false;
     constexpr bool follow_midline_only = true;
     enum class StateProjectionMode {
         MODEL_MULTISET,
