@@ -15,9 +15,9 @@ namespace controls {
             
         std::string StateProjector::history_to_string() const {
             std::stringstream ss;
-            ss << "---- BEGIN HISTORY ---\n";
+            ss << "---BEGIN HISTORY---" << std::endl;
             for (const Record& record : m_history_since_pose) {
-                ss << "Time: " << record.time.nanoseconds() << "ns|||";
+                ss << "[1]Time: " << record.time.nanoseconds();
                 switch (record.type) {
                     case Record::Type::Action:
                         ss << "Action: " << record.action[0] << ", " << record.action[1] << std::endl;
@@ -33,7 +33,7 @@ namespace controls {
 
                     case Record::Type::PositionLLA:
                         ss << "PositionLLAX: " << record.position_lla.x << std::endl;
-                        ss << "Time: " << record.time.nanoseconds() << "ns|||";
+                        ss << "[1]Time: " << record.time.nanoseconds();
                         ss << "PositionLLAY: " << record.position_lla.y << std::endl;
                         break;
 
@@ -146,10 +146,19 @@ namespace controls {
 
         static void record_state(size_t time_ns, const State& state, std::stringstream& output_stream) {
             if constexpr (log_state_projection_history) {
-                output_stream << "Time: " << time_ns << "ns|||";
+                output_stream << "[0]Time: " << time_ns << "ns|||";
                 output_stream << "Predicted X: " << state[state_x_idx] << "|||";
+                output_stream << std::endl;
+
+                output_stream << "[0]Time: " << time_ns << "ns|||";
                 output_stream << "Predicted Y: " << state[state_y_idx] << "|||";
+                output_stream << std::endl;
+
+                output_stream << "[0]Time: " << time_ns << "ns|||";
                 output_stream << "Predicted Yaw: " << state[state_yaw_idx] << "|||";
+                output_stream << std::endl;
+
+                output_stream << "[0]Time: " << time_ns << "ns|||";
                 output_stream << "Predicted Speed: " << state[state_speed_idx] << "|||";
                 output_stream << std::endl;
             }
