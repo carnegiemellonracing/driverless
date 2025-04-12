@@ -28,7 +28,7 @@ namespace controls {
 #endif
     // also note that testing_on_rosbag true means we don't publish control actions anymore, is that alright?
     constexpr bool republish_perc_cones = true; // no harm in doing this besides latency
-    constexpr bool publish_spline = true;
+    constexpr bool publish_spline = false;
 
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
