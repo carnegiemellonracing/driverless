@@ -4,7 +4,6 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDur
 from tf2_ros import TransformBroadcaster
 from geometry_msgs.msg import TransformStamped, Point
 from sensor_msgs.msg import PointCloud2
-from sensor_msgs_py import point_cloud2 as pc2
 from visualization_msgs.msg import Marker, MarkerArray
 from interfaces.msg import ConeArray, SplineFrames
 from perceptions.topics import POINT_TOPIC, POINT_2_TOPIC
@@ -159,9 +158,9 @@ class FoxgloveNode(Node):
                 marker.id = marker_id
                 marker.type = Marker.CUBE
                 marker.action = Marker.ADD
-                marker.pose.position.x = cone.y
-                marker.pose.position.y = -cone.x
-                marker.pose.position.z = -0.7
+                marker.pose.position.x = cone.x
+                marker.pose.position.y = cone.y
+                marker.pose.position.z = 0.0
                 marker.pose.orientation.w = 1.0
                 marker.scale.x = 0.2
                 marker.scale.y = 0.2
@@ -210,11 +209,11 @@ class FoxgloveNode(Node):
         transformed_points = []
         for frame in msg.frames:
             point = Point()
-            point.x = frame.y
+            point.x = frame.x
             if point.x < 1:
                 continue
-            point.y = -frame.x
-            point.z = -0.7
+            point.y = frame.y
+            point.z = 0.0
             transformed_points.append(point)
 
         spline_marker.points = transformed_points
