@@ -36,7 +36,8 @@ static void debug_printf(const char *format, ...) {
 }
 static unsigned int can_tx_timeout = 30;
 
-canHandle current_can_handle = -1;
+canHandle transmission_can_handle = -1;
+canHandle receive_can_handle = -1;
 
 
 static void check(char *id, canStatus stat)
@@ -127,8 +128,22 @@ uint16_t swangle_to_adc(float swangle)
     return desired_adc_modded;
 }
 
-static void cmr_can_error_exit(int signal) {
-    canHandle hnd = current_can_handle; 
+float adc_to_swangle(uint16_t adc) {
+    if (adc < 1500) {
+        adc +=  4096;
+    }
+    int zero_adc = 3159;
+    int min_adc = 2010;
+    int max_adc = modulus + 212;
+    float min_deg = -21.04;
+    float max_deg = 23.6;
+    float deg_adc_ratio = ((float)(max_deg - min_deg) / (max_adc - min_adc));
+    float swangle_degrees = ((float)(adc - zero_adc)) * deg_adc_ratio;
+    float swangle_radians = swange_degrees * M_PI / 180;
+    return swangle_radians;
+}
+
+static void cleanup_handle(canHandle hnd) {
     canStatus stat;
     if (hnd >= 0) {
         stat = canBusOff(hnd);
@@ -142,16 +157,12 @@ static void cmr_can_error_exit(int signal) {
     }
 }
 
-static int cmr_can_init(int channel, bool verbose) {
-    canHandle hnd;
-    canStatus stat;
+static void cmr_can_error_exit(int signal) {
+    cleanup_handle(transmission_can_handle);
+    cleanup_handle(receive_can_handle);
+}
 
-    if(verbose){
-        debug_printf("Sending a CAN message on channel %d\n", channel);
-    }
-
-    canInitializeLibrary();
-
+static void set_global_can_handle(canHandle *global_handle) {
     /* Open channel, set parameters and go on bus */
     hnd = canOpenChannel(channel,
                          canOPEN_EXCLUSIVE /*| canOPEN_REQUIRE_EXTENDED*/ | canOPEN_ACCEPT_VIRTUAL);
@@ -180,7 +191,22 @@ static int cmr_can_init(int channel, bool verbose) {
     if (stat != canOK) {
         return -3;
     }
-    current_can_handle = hnd;
+    *global_handle = hnd;
+}
+
+static int cmr_can_init(int channel, bool verbose) {
+    canHandle hnd;
+    canStatus stat;
+
+    if(verbose){
+        debug_printf("Sending a CAN message on channel %d\n", channel);
+    }
+
+    canInitializeLibrary();
+
+    set_global_can_handle(&transmission_can_handle);
+    set_global_can_handle(&receive_can_handle);
+
     signal(SIGINT, cmr_can_error_exit);
     return 0;
  }
@@ -188,7 +214,7 @@ static int cmr_can_init(int channel, bool verbose) {
 //CMR TX
 //Channel should default to 0
 static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool verbose){
-    canHandle hnd = current_can_handle;
+    canHandle hnd = transmission_can_handle;
     canStatus stat;
     stat = canWrite(hnd, id, msg, msgLen, 0);
     check("canWrite", stat);
@@ -233,7 +259,7 @@ int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t 
     msg[7] = (unsigned char) (rackDisplacement_adc >> 8);
     msg[6] = (unsigned char) rackDisplacement_adc;
 
-    paranoid_assert(current_can_handle >= 0 && "can was not initialized when trying to send control action");
+    paranoid_assert(transmission_can_handle >= 0 && "can was not initialized when trying to send control action");
 
     return cmr_can_tx(0, controlActionID, &msg, 8, false);
 }
@@ -260,12 +286,12 @@ int sendFinishedCommand(){
     return cmr_can_tx(0, 0x777, &msg,1, false);
 }
 
-int cmr_can_rx(int channel, long id) {
-    canHandle hnd = current_can_handle;
+uint16_t cmr_can_rx(int channel, long id) {
+    canHandle hnd = receive_can_handle;
     canStatus stat;
     do {
         long curId;
-        unsigned char msg[32];
+        unsigned char msg[8];
         unsigned int dlc;
         unsigned int flag;
         unsigned long time;
@@ -283,7 +309,7 @@ int cmr_can_rx(int channel, long id) {
                 if(curId == id) {
                     seen = true;
                     debug_printf("(%u) id:%ld dlc:%u data: ", msgCounter, id, dlc);
-                    return (uint32_t)msg;
+                    return ((((uint16_t) msg[2]) << 8) | msg[3]);
                     if (dlc > 8) {
                         dlc = 8;
                     }
@@ -303,7 +329,12 @@ int cmr_can_rx(int channel, long id) {
         }
 
     } while ((stat == canOK) & seen!=true);
-    cmr_can_error_exit(0);
+    cmr_can_error_exit(0); //TODO: should probably remove this
 
     return 0;
+}
+
+float receiveSwangle() {
+    uint16_t can_result = cmr_can_rx(0, 0x543);
+    return adc_to_swangle(can_result);
 }
