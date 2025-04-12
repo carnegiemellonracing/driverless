@@ -32,7 +32,9 @@ namespace controls {
                         break;
 
                     case Record::Type::PositionLLA:
-                        ss << "PositionLLA: " << record.position_lla.x << ", " << record.position_lla.y << std::endl;
+                        ss << "PositionLLAX: " << record.position_lla.x << std::endl;
+                        ss << "Time: " << record.time.nanoseconds() << "ns|||";
+                        ss << "PositionLLAY: " << record.position_lla.y << std::endl;
                         break;
 
                     case Record::Type::Yaw:
