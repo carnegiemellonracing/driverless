@@ -1,0 +1,19 @@
+#==================================
+#Simulation Config File Description
+#==================================
+name: Simulation Config File <Main>
+date: April 7, 2024
+by: Controls Sim Team
+ 
+#==========
+#File Paths
+#==========
+root_dir: /driverless_ws/src/controls/
+ 
+#=====================
+#Miscellaneous Configs
+#=====================
+ 
+follow_midline_only: false
+approx_propogation_delay: 0.02f
+offset_1m_cost: 10.0f

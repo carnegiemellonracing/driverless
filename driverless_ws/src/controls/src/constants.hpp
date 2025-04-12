@@ -9,11 +9,13 @@
 
 namespace controls {
 
+    extern float approx_propogation_delay;
+    extern bool follow_midline_only;
     // Testing stuff
 
-    constexpr bool send_to_can = true;
+    constexpr bool send_to_can = false;
     constexpr bool ingest_midline = false;
-    constexpr bool follow_midline_only = true;
+    // constexpr bool follow_midline_only = true;
     enum class StateProjectionMode {
         MODEL_MULTISET,
         NAIVE_SPEED_ONLY,
@@ -148,7 +150,7 @@ namespace controls {
     constexpr float max_swangle = 19 * M_PI / 180.0f;
     /// Time from MPPI control action request to physical change, in sec
     // TODO: Re-estimate since Falcon (steering motor) replacement
-    constexpr float approx_propogation_delay = 0.56f;
+    // constexpr float approx_propogation_delay = 0.56f;
     constexpr float approx_mppi_time = 0.020f; ///< Time from MPPI launch to control action calculation, in sec
 
     enum class TorqueMode
