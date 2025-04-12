@@ -82,8 +82,9 @@ set(LIB_SOURCES
         src/midline/svm_conv.cpp
         src/midline/svm_conv_fast.cpp
         src/midline/svm_conv_strat3.cpp
-        src/midline/svm_conv_strat4.cpp
+        #src/midline/svm_conv_strat4.cpp
         src/midline/svm_conv_stratnaive.cpp
+        src/midline/svm_conv_test.cpp
         src/midline/cones.cpp
 )
 
@@ -100,7 +101,7 @@ target_link_libraries(controls_lib CUDA::curand OpenGL::GL OpenGL::GLU ${SDL2_LI
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
-          -g -G
+          -g -G -ggdb
           >)
 else ()
   add_compile_options(-O3)

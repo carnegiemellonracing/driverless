@@ -242,7 +242,11 @@ double abs(double x) {
     return x;
 }
 
-std::vector<std::pair<size_t, size_t>> getValidChildren(std::pair<size_t, size_t> pt, size_t rows, size_t cols) {
+bool label_eq(double l1, double l2, double epsilon) {
+    return abs(l1 - l2) < epsilon;
+}
+
+std::vector<std::optional<std::pair<size_t, size_t>>> getValidChildren(std::pair<size_t, size_t> pt, size_t rows, size_t cols) {
     //
     // 1 2 3
     // 8   4
@@ -252,73 +256,206 @@ std::vector<std::pair<size_t, size_t>> getValidChildren(std::pair<size_t, size_t
     size_t i = pt.first;
     size_t j = pt.second;
 
-    std::vector<std::pair<size_t, size_t>> validChildren;
-
-    if (i - 1 >= 0 && j - 1 >= 0) {
-        validChildren.push_back({i - 1, j - 1});
-    } 
-
-    if (i - 1 >= 0) {
-        validChildren.push_back({i - 1, j});
+    std::vector<std::optional<std::pair<size_t, size_t>>> validChildren;
+    for (int p = -1; p < 2; p++) {
+        for (int q = -1; q < 2; q++) {
+            if (p == 0 && q == 0) {
+                continue;
+            }
+            if (i + p >= 0 && i + p < rows && j + q >= 0 && j + q < cols) {
+                validChildren.push_back({i + p, j + q});
+            }
+            else {
+                validChildren.push_back(std::nullopt);
+            }
+        }
     }
+    // if (i - 1 >= 0 && j - 1 >= 0) {
+    //     validChildren.push_back({i - 1, j - 1});
+    // } else {
+    //     validChildren.push_back(std::nullopt);
+    // }
 
-    if (i - 1 >= 0 && j + 1 < cols) {
-        validChildren.push_back({i - 1, j + 1});
-    }
+    // if (i - 1 >= 0) {
+    //     validChildren.push_back({i - 1, j});
+    // } else {
+    //     validChildren.push_back(std::nullopt);
+    // }
 
-    if (j + 1 < cols) {
-        validChildren.push_back({i, j + 1});
-    }
+    // if (i - 1 >= 0 && j + 1 < cols) {
+    //     validChildren.push_back({i - 1, j + 1});
+    // } else {
+    //     validChildren.push_back(std::nullopt);
+    // }
 
-    if (i + 1 < rows && j + 1 < cols) {
-        validChildren.push_back({i + 1, j + 1});
-    }
+    // if (j + 1 < cols) {
+    //     validChildren.push_back({i, j + 1});
+    // } else {
+    //     validChildren.push_back(std::nullopt);
+    // }
 
-    if (i + 1 < rows) {
-        validChildren.push_back({i + 1, j});
-    }
+    // if (i + 1 < rows && j + 1 < cols) {
+    //     validChildren.push_back({i + 1, j + 1});
+    // } else {
+    //     validChildren.push_back(std::nullopt);
+    // }
 
-    if (i + 1 < rows && j - 1 >= 0) {
-        validChildren.push_back({i + 1, j - 1});
-    }
+    // if (i + 1 < rows) {
+    //     validChildren.push_back({i + 1, j});
+    // } else {
+    //     validChildren.push_back()
+    // }
 
-    if (j - 1 >= 0) {
-        validChildren.push_back({i, j - 1});
-    }
+    // if (i + 1 < rows && j - 1 >= 0) {
+    //     validChildren.push_back({i + 1, j - 1});
+    // } else {
+    //     validChildren.push_back()
+    // }
+
+    // if (j - 1 >= 0) {
+    //     validChildren.push_back({i, j - 1});
+    // } else {
+    //     validChildren.push_back()
+    // }
 
     return validChildren;
 }
 
-conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const std::vector<std::vector<double>> &yy,
-    const svm_model *model) {
+bool getValidChild(double label_curr, std::vector<std::pair<std::optional<std::pair<size_t, size_t>>, double>> childrenLabelPairs, int index) {
+    // 1 2 3
+    // 4   5
+    // 6 7 8
+
+    double epsilon = 0.0001;
+
+    std::optional<std::pair<size_t, size_t>> child1 = childrenLabelPairs[0].first;
+    double label1 = childrenLabelPairs[0].second;
+
+    std::optional<std::pair<size_t, size_t>> child2 = childrenLabelPairs[1].first;
+    double label2 = childrenLabelPairs[1].second;
+    
+    std::optional<std::pair<size_t, size_t>> child3 = childrenLabelPairs[2].first;
+    double label3 = childrenLabelPairs[2].second;
+
+    std::optional<std::pair<size_t, size_t>> child4 = childrenLabelPairs[3].first;
+    double label4 = childrenLabelPairs[3].second;
+
+    std::optional<std::pair<size_t, size_t>> child5 = childrenLabelPairs[4].first;
+    double label5 = childrenLabelPairs[4].second;
+
+    std::optional<std::pair<size_t, size_t>> child6 = childrenLabelPairs[5].first;
+    double label6 = childrenLabelPairs[5].second;
+
+    std::optional<std::pair<size_t, size_t>> child7 = childrenLabelPairs[6].first;
+    double label7 = childrenLabelPairs[6].second;
+
+    std::optional<std::pair<size_t, size_t>> child8 = childrenLabelPairs[7].first;
+    double label8 = childrenLabelPairs[7].second;
+
+    if (index == 1) {
+        if (!child1.has_value()) return false;
+
+        bool differentLabelFlag = false;
+        if (child2.has_value()) {
+            differentLabelFlag |= !label_eq(label_curr, label2, epsilon);
+        }
+
+        if (child4.has_value()) {
+            differentLabelFlag |= !label_eq(label_curr, label4, epsilon);
+        }
+
+        if (differentLabelFlag && (!label_eq(label_curr, label1))) return true;
+    }
+    // 1 2 3
+    // 4   5
+    // 6 7 8
+    if (index == 2) {
+        if (!child2.has_value()) return false;
+
+        bool differentLabelFlag = false;
+        if (child1.has_value()) {
+            differentLabelFlag |= !label_eq(label_curr, label1, epsilon);
+        }
+
+        if (child3.has_value()) {
+            differentLabelFlag |= !label_eq(label_curr, label3, epsilon);
+        }
+
+        if (child4.has_value()) {
+            
+        }
+    }
+
+    return true;
+}
+
+std::vector<std::pair<double, double>> boundaryDetection(const std::vector<std::vector<double>> &xx,
+    const std::vector<std::vector<double>> &yy, const svm_model *model) {
+
     size_t rows = xx.size();
     size_t cols = xx[0].size();
     std::vector<std::pair<double, double>> boundary_points;
-    std::pair<size_t, size_t> starter_point;
-    std::pair<size_t, size_t> curr_point = {0.0, 0.0};
+    std::pair<size_t, size_t> starter_point = {0, 0}; // initialize starter
     double label = 0.0;
     double epsilon = 0.0001;
 
-    for (size_t i = 0; i < rows; i++) {
+    bool foundStarter = false;
+    for (size_t i = 0; i < rows && !foundStarter; i++) {
         for (size_t j = 0; j < cols; j++) {
             double curr_label = nodePredictor({xx[i][j], yy[i][j]}, model);
-
-            if (abs(curr_label - label) <= epsilon) {
+            if (std::abs(curr_label - label) <= epsilon) {
                 starter_point = {i, j};
+                foundStarter = true;
                 break;
             }
         }
     }
-    std::map<std::pair<size_t, size_t>, double> memo;
 
+    if (!foundStarter) {
+        return boundary_points;
+    }
+
+    std::map<std::pair<size_t, size_t>, bool> visited;
     std::queue<std::pair<size_t, size_t>> Q;
+    Q.push(starter_point);
 
-    std::vector<std::pair<size_t, size_t>> starter_children = getValidChildren(starter_point, rows, cols);
+    while (!Q.empty()) {
+        std::pair<size_t, size_t> curr_point = Q.front();
+        Q.pop();
 
-    
+        if (visited[curr_point])
+            continue;
+        visited[curr_point] = true;
+
+        bool isBoundary = false;
+        auto children = getValidChildren(curr_point, rows, cols);
+        std::vector<std::pair<std::optional<std::pair<size_t, size_t>>, double>> childrenLabelPairs;
+
+        // create list of <child, child label>
+        for (auto child : children) {
+            double child_label = 0.0;
+            if (child.has_value()) {
+                auto [row, col] = child.value();
+                child_label = nodePredictor({xx[row][col], yy[row][col]}, model);
+            }
+            childrenLabelPairs.push_back({child, child_label});
+            // if (std::abs(child_label - label) > epsilon) {
+            //     isBoundary = true;
+            // }
+            // else if (!visited[child]) {
+            //     Q.push(child);
+            // }
+        }
+
+
+        if (isBoundary) {
+            boundary_points.push_back({xx[curr_point.first][curr_point.second], yy[curr_point.first][curr_point.second]});
+        }
+    }
 
     return boundary_points;
 }
+
 
 // downsample the boundary points
 conesList downsamplePoints(const conesList &boundary_points)
