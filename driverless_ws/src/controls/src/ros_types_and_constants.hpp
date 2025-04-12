@@ -65,7 +65,7 @@ namespace controls {
         best_effort_profile);
 
     const rclcpp::QoS control_action_qos = best_effort_qos;
-    const rclcpp::QoS spline_qos = best_effort_qos;
+    const rclcpp::QoS spline_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_twist_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_quat_qos (rclcpp::KeepLast(1)); 
