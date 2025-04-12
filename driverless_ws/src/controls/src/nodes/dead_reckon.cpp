@@ -2,6 +2,7 @@
 #include <can/cmr_can.h> // For sendControlAction
 #include <string>
 #include <cmath>
+#include <std_msgs/msg/float32.h>
 
 // External declaration for the swangle_to_adc function
 extern "C" uint16_t swangle_to_adc(float swangle);
@@ -23,6 +24,12 @@ ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torq
   sinusoid_mode_(false),
   pvalue_(pvalue),
   feedforward_(feedforward)
+  m_can_swangle_publisher{
+    create_publisher<CANSwangleMsg>(
+        "/can_swangle",
+        can_swangle_qos
+    )
+  },
 {
   // Convert angle from degrees to radians, then to ADC value
   float angle_rad = angle_degrees * M_PI / 180.0f;
@@ -47,6 +54,7 @@ ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torq
   if (initializeCan() < 0) {
 	  throw std::runtime_error("Initialize Can raised an error");
   }
+  launch_can_swangle_listener().detach();
 }
 
 ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torque_mNm, uint16_t velocity_rpm, float angle_degrees, float period_seconds, float pvalue, float feedforward)
@@ -142,6 +150,23 @@ void ControlSenderNode::timer_callback()
   } else {
     RCLCPP_INFO(this->get_logger(), "PID constants sent successfully");
   }
+}
+
+std::thread ControllerNode::launch_can_swangle_listener() {
+    return std::thread{
+        [this]
+        {
+            while (rclcpp::ok)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(can_swangle_listener_period_ms));
+                float swangle_reading = receiveSwangle();
+                CANSwangleMsg msg;
+                msg.data = swangle_reading;
+                m_can_swangle_publisher->publish(msg);
+                
+        
+            }
+        }};      
 }
 
 void print_usage(const char* prog_name) {
