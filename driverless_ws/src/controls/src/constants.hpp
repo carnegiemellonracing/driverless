@@ -12,7 +12,7 @@ namespace controls {
     // Testing stuff
 
     constexpr bool send_to_can = true;
-    constexpr bool ingest_midline = false;
+    constexpr bool ingest_midline = true;
     constexpr bool follow_midline_only = true;
     enum class StateProjectionMode {
         MODEL_MULTISET,
@@ -20,7 +20,12 @@ namespace controls {
         POSITIONLLA_YAW_SPEED
     };
     constexpr bool testing_on_breezway = false;
+
+#ifdef ROSBAG
+    constexpr bool testing_on_rosbag = true;
+#else
     constexpr bool testing_on_rosbag = false; // so that even if we are not using model multiset, we can record the IRL data for posterity
+#endif
     // also note that testing_on_rosbag true means we don't publish control actions anymore, is that alright?
     constexpr bool republish_perc_cones = true; // no harm in doing this besides latency
     constexpr bool publish_spline = true;
@@ -148,7 +153,7 @@ namespace controls {
     constexpr float max_swangle = 19 * M_PI / 180.0f;
     /// Time from MPPI control action request to physical change, in sec
     // TODO: Re-estimate since Falcon (steering motor) replacement
-    constexpr float approx_propogation_delay = 0.56f;
+    constexpr float approx_propogation_delay = 0.50f;
     constexpr float approx_mppi_time = 0.020f; ///< Time from MPPI launch to control action calculation, in sec
 
     enum class TorqueMode

@@ -70,6 +70,10 @@ if (USESYSID)
   add_compile_options(-DUSESYSID)
 endif()
 
+if (ROSBAG)
+  add_compile_options(-DROSBAG)
+endif()
+
 
 # **** Controls Lib *****
 
