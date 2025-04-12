@@ -30,7 +30,7 @@ namespace controls {
     constexpr bool log_state_projection_history = true;
 
     constexpr StateProjectionMode state_projection_mode = StateProjectionMode::MODEL_MULTISET;
-    constexpr float maximum_speed_ms = 15.0f;
+    constexpr float maximum_speed_ms = 2.0f;
     constexpr float whl_radius = 0.215f;
     constexpr float gear_ratio = 14.0f;
 
@@ -63,7 +63,7 @@ namespace controls {
     constexpr float swangle_1radps_cost = 0.0f;
         // DEPRECATED
         constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
-    constexpr float target_speed = 3.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
+    constexpr float target_speed = 2.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 
     // Cost params

@@ -24,7 +24,7 @@
 #define READ_WAIT_INFINITE (unsigned long)(-1)
 static unsigned int msgCounter = 0;
 
-static bool debug = false;
+static bool debug = true;
 
 static void debug_printf(const char *format, ...) {
     if (debug) {

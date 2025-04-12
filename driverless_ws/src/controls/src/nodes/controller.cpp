@@ -162,7 +162,7 @@ namespace controls {
 
 
             launch_aim_communication().detach();
-            launch_can_swangle_listener().detach();
+            // launch_can_swangle_listener().detach();
         }   
 
 
@@ -686,7 +686,7 @@ namespace controls {
 
                                     // FYI, velocity_rpm is determined from the speed threshold
                                     sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
-                                    RCLCPP_DEBUG(get_logger(), "Sending action signal %d, %d, %u, %u\n", last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
+                                    RCLCPP_INFO(get_logger(), "Sending action signal %d, %d, %u, %u\n", last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
                                 }
                                 auto end = std::chrono::steady_clock::now();
                                 RCLCPP_DEBUG(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
