@@ -58,8 +58,14 @@ namespace controls {
                 create_publisher<SplineMsg>(
                     spline_topic_name,
                     spline_qos
+                )},
+
+              m_can_swangle_publisher{
+                create_publisher<CANSwangleMsg>(
+                    can_swangle_topic_name,
+                    can_swangle_qos
                 )
-              },
+              }
 
               m_data_trajectory_log{"mppi_inputs.txt", std::ios::out},
               m_p_value{0.1}
@@ -641,6 +647,24 @@ namespace controls {
                 std::cout << clear_term_sequence << info_str << std::flush;
                 RCLCPP_INFO_STREAM(get_logger(), "mppi step complete. info:\n"
                                                      << info_str);
+            }
+
+            std::thread ControllerNode::launch_can_swangle_listener() {
+                return std::thread{
+                    [this]
+                    {
+                        while (rclcpp::ok)
+                        {
+                            std::this_thread::sleep_for(std::chrono::milliseconds(can_swangle_listener_period_ms));
+                            float swangle_reading = receiveSwangle();
+                            CANSwangleMsg msg;
+                            msg.data = swangle_reading;
+                            m_can_swangle_publisher->publish(msg);
+                            
+                            
+
+                        }
+                    }};      
             }
 
             std::thread ControllerNode::launch_aim_communication()

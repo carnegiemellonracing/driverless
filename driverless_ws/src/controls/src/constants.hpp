@@ -81,6 +81,7 @@ namespace controls {
 
     // AIM communication stuff
     constexpr int aim_signal_period_ms = 98;
+    constexpr int can_swangle_listener_period_ms = 10;
     constexpr float default_p = 1.5f;
     constexpr float default_feedforward = 30.0f;
 

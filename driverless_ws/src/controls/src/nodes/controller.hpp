@@ -121,7 +121,7 @@ namespace controls {
             rclcpp::Subscription<IMUAccelerationMsg>::SharedPtr m_imu_accel_subscription;
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription; ///< Subscribes to intertial quaternion
             rclcpp::Subscription<PositionLLAMsg>::SharedPtr m_position_lla_subscription;
-
+            rclcpp::Publisher<CANSwangleMsg>::SharedPtr m_can_swangle_publisher;
 
             /**
              * Mutex protecting `m_state_estimator`. This needs to be acquired when forwarding callbacks to the
@@ -153,6 +153,7 @@ namespace controls {
             std::thread m_aim_communication_thread;
             std::atomic<bool> m_keep_sending_aim_signal = true;
             std::thread launch_aim_communication();
+            std::thread launch_can_swangle_listener();
             float m_p_value;
             float m_last_speed;
             float m_last_x_velocity;
