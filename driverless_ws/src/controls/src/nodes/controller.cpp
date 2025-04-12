@@ -162,7 +162,8 @@ namespace controls {
 
 
             launch_aim_communication().detach();
-        }
+            launch_can_swangle_listener().detach();
+        }   
 
 
 #ifdef DATA
