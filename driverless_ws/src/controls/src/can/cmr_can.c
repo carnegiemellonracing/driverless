@@ -224,10 +224,10 @@ int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t 
 
     //defines our message
     unsigned char msg[8];
-    msg[1] = (unsigned char) (rearTorque_mNm >> 8); //8 MSB of frontTorque
-    msg[0] = (unsigned char) rearTorque_mNm; // 8 LSB of frontTorque
-    msg[3] = (unsigned char) (frontTorque_mNm >> 8); // 8 MSB of rearTorque
-    msg[2] = (unsigned char) frontTorque_mNm; // 8 LSB of rearTorque
+    msg[1] = (unsigned char) (frontTorque_mNm >> 8); //8 MSB of frontTorque
+    msg[0] = (unsigned char) frontTorque_mNm; // 8 LSB of frontTorque
+    msg[3] = (unsigned char) (rearTorque_mNm >> 8); // 8 MSB of rearTorque
+    msg[2] = (unsigned char) rearTorque_mNm; // 8 LSB of rearTorque
     msg[5] = (unsigned char) (velocity_rpm >> 8);
     msg[4] = (unsigned char) velocity_rpm;
     msg[7] = (unsigned char) (rackDisplacement_adc >> 8);
