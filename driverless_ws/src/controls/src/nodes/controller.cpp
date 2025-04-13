@@ -306,6 +306,9 @@ namespace controls {
                 try {
                     {
                         std::lock_guard<std::mutex> guard {m_state_mut};
+                        if (cone_msg.blue_cones.size() == 0 && cone_msg.yellow_cones.size() == 0) {
+                            throw ControllerError("No blue or yellow cones to process");
+                        }
                         cone_process_start = std::chrono::high_resolution_clock::now();
                         float svm_time = m_state_estimator->on_cone(cone_msg, m_spline_publisher);
                         m_naive_state_tracker.record_cone_seen_time(cone_msg.header.stamp);
