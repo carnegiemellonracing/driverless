@@ -15,6 +15,6 @@
  */
 std::pair<Eigen::Vector3d, Eigen::Vector3d> transform_point(
     geometry_msgs::msg::Vector3& point,
-    const Eigen::Matrix<double, 3, 4>& projection_matrix_l,
-    const Eigen::Matrix<double, 3, 4>& projection_matrix_r
+    std::pair<std::pair<double, double>, std::pair<double, double>> ds_pair,
+    const std::pair<Eigen::Matrix<double, 3, 4>, Eigen::Matrix<double, 3, 4>> &projection_matrix_pair
 );

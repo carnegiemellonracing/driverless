@@ -20,17 +20,20 @@ namespace coloring {
         ) {
             // Ratio of color in relation to all other colors
             const double RATIO_THRESHOLD = 1.5;
+            const double NOMINAL_SIDE_LENGTH = 25;
+            const double SCALING_FACTOR = 1.0;
 
-            // Setup region of interest
-            int side_length = 25;
+            // Find real side length (MATTS AN ECON MAJOR) by dividing by scaling factor (distance)
+            int real_side_length = NOMINAL_SIDE_LENGTH; // / (SCALING_FACTOR * pixel(2));
+
             int x = static_cast<int>(pixel(0));
             int y = static_cast<int>(pixel(1));
             int height = img.rows;
             int width = img.cols;
-            int x_min = std::max(0, x - side_length);
-            int x_max = std::min(width, x + side_length);
-            int y_min = std::max(0, y - side_length);
-            int y_max = std::min(height, y + side_length);
+            int x_min = std::max(0, x - real_side_length);
+            int x_max = std::min(width, x + real_side_length);
+            int y_min = std::max(0, y - real_side_length);
+            int y_max = std::min(height, y + real_side_length);
 
             // Transformed point out of frame
             if (x_min >= x_max || y_min >= y_max) {
