@@ -10,6 +10,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 import pyperclip
+import argparse
 
 @dataclass
 class CalibrationPoint:
@@ -203,7 +204,7 @@ class LidarInputDialog:
         self.top.destroy()
 
 class CalibrationUI:
-    def __init__(self, min_points: int = 10, width=800, height=450, frame_path: str = ""):
+    def __init__(self, min_points: int = 10, width=800, height=450, frame_path: str = "", cam: str = ""):
         self.min_points = min_points
         self.calibration_data = CalibrationData()
         self.current_frame = None
@@ -212,6 +213,7 @@ class CalibrationUI:
         self.height = height
         self.frame_path = frame_path  # Path to the image you want to use as the frame
         self.scaling_factor = 1280 /1920
+        self.cam = cam
         self.setup_ui()
 
     def setup_ui(self):
@@ -392,20 +394,24 @@ class CalibrationUI:
         except Exception as e:
             tk.messagebox.showerror("Error", f"Calibration failed: {str(e)}")
 
-    def save_calibration(self, proj_matrix):
-        calibration_data = {
-            "/point_to_pixel": {
-                "ros__parameters": {
-                    "projection_matrix": proj_matrix.flatten().tolist(),
-                }
-            }
-        }
+    def save_calibration(self, proj_matrix): 
         config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
                                  "config/params.yaml")
         os.makedirs(os.path.dirname(config_path), exist_ok=True)
-        with open(config_path, "w") as f:
-            yaml.dump(calibration_data, f)
-            print(f"Calibration saved to: {config_path}")
+        
+        try:
+            with open(config_path, 'r') as file:
+                data = yaml.safe_load(file)
+
+                curr = data['/point_to_pixel']['ros__parameters']
+
+                curr[f"projection_matrix_{self.cam}"] = [proj_matrix.flatten().tolist()]
+
+            with open(config_path, "w") as f:
+                yaml.dump(data, f)
+                print("Calibration Saved", f"Calibration data saved to {config_path}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to save calibration: {str(e)}")
 
     def run(self):
         self.update_camera_view()
@@ -415,12 +421,20 @@ class CalibrationUI:
 
 def main():
     # # Set up argument parser
-    # parser = argparse.ArgumentParser(description="Run calibration UI with a given image file.")
-    # parser.add_argument("-i", "--input", required=True, help="Path to the input image file")
-    # args = parser.parse_args()
+    parser = argparse.ArgumentParser(description="Specify which camera you're calibrating for (specify ll, lr, rr, or rl).")
+    parser.add_argument("-c", "--camera", required=True, help="camera (specify ll, lr, rr, or rl)", type=str)
+    args = parser.parse_args()
+
+    print()
+
+    if args.camera not in {"ll", "lr", "rr", "rl"}:
+        print(f"Invalid args, specify ll, lr, rr, or rl")
+        sys.exit(1)
+
+    cam = args.camera
 
     # Read the image from the provided file path
-    path = "/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/freeze.png"
+    path = f"/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/freeze_{cam}.png"
     im = cv2.imread(path)
 
     if im is None:
@@ -430,7 +444,7 @@ def main():
     try:
         # Initialize CalibrationUI with the image size and file path
         print(im.shape)
-        ui = CalibrationUI(width=1280, height=720, frame_path=path)
+        ui = CalibrationUI(width=1280, height=720, frame_path=path, cam=cam)
         ui.run()
     except Exception as e:
         print(f"Calibration failed: {e}", file=sys.stderr)

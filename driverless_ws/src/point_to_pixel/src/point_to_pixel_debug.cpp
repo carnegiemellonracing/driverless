@@ -32,10 +32,10 @@ using std::placeholders::_1;
 #define DEBUG 1 // should output transformed points using opencv
 #define VERBOSE 1 // Prints outputs and transform matrix
 
-class Point_To_Pixel_Node : public rclcpp::Node
+class PointToPixelNode : public rclcpp::Node
 {
   public:
-    Point_To_Pixel_Node(); // Constructor declaration
+    PointToPixelNode(); // Constructor declaration
 
     static std::tuple<int, double> identify_color(Eigen::Vector2d& pixel, cv::Mat image);
     static void mouse_callback(int event, int x, int y, int flags, void* param);
@@ -84,7 +84,7 @@ class Point_To_Pixel_Node : public rclcpp::Node
 // TODO: FIX ZED static ID per this forum https://github.com/stereolabs/zed-ros-wrapper/issues/94
 
 // Constructor definition
-Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
+PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
                                               params([]() {sl_oc::video::VideoParams p; p.res = sl_oc::video::RESOLUTION::HD1080; p.fps = sl_oc::video::FPS::FPS_30; return p;}()),
                                               cap_0(sl_oc::video::VideoCapture(params)),
                                               cap_1(sl_oc::video::VideoCapture(params))
@@ -232,7 +232,7 @@ Point_To_Pixel_Node::Point_To_Pixel_Node() : Node("point_to_pixel"),
 
 // Point to Pixel coordinate transform
 // returns 0 for blue cone, 1 for yellow cone, and 2 for orange cone
-int Point_To_Pixel_Node::transform(
+int PointToPixelNode::transform(
   geometry_msgs::msg::Vector3& point, 
   rclcpp::Time callbackTime
 )
@@ -288,7 +288,7 @@ int Point_To_Pixel_Node::transform(
 
 
 // Returns closest frame to callback time
-cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
+cv::Mat PointToPixelNode::getCameraFrame(rclcpp::Time callbackTime)
 {
   // Set as int max
   int64 bestDiff = INT64_MAX;
@@ -338,7 +338,7 @@ cv::Mat Point_To_Pixel_Node::getCameraFrame(rclcpp::Time callbackTime)
 
 
 // Identifies Color from a camera pixel
-std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pixel, cv::Mat img)
+std::tuple<int, double> PointToPixelNode::identify_color(Eigen::Vector2d& pixel, cv::Mat img)
 {
 
     // Setup region of interest
@@ -430,7 +430,7 @@ std::tuple<int, double> Point_To_Pixel_Node::identify_color(Eigen::Vector2d& pix
 
 
 // Topic callback definition
-void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
+void PointToPixelNode::topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
 {
   RCLCPP_INFO(this->get_logger(), "Received message with %zu cones", msg->cone_array.size());
 
@@ -494,7 +494,7 @@ void Point_To_Pixel_Node::topic_callback(const interfaces::msg::PPMConeArray::Sh
 
 
 // Camera Callback (Populates and maintain deque)
-void Point_To_Pixel_Node::camera_callback()
+void PointToPixelNode::camera_callback()
 {
   this->frame_1 = this->cap_1.getLastFrame();
 
@@ -528,7 +528,7 @@ void Point_To_Pixel_Node::camera_callback()
 
 
 // OpenCV Callback (for debugging)
-void Point_To_Pixel_Node::opencv_callback() 
+void PointToPixelNode::opencv_callback() 
 {
   this->frame_0 = this->cap_1.getLastFrame();
   cv::Mat frameBGR;
@@ -580,7 +580,7 @@ void drawTransparentRectangle(cv::Mat& image, int x_min, int x_max, int y_min, i
 
 
 // OpenCV Callback Helper
-void Point_To_Pixel_Node::mouse_callback(int event, int x, int y, int flags, void* param)
+void PointToPixelNode::mouse_callback(int event, int x, int y, int flags, void* param)
 {
     if (event == cv::EVENT_LBUTTONDOWN){
         // Unpack parameters: first is the original image, second is the canvas
@@ -589,7 +589,7 @@ void Point_To_Pixel_Node::mouse_callback(int event, int x, int y, int flags, voi
         cv::Mat* canvas = params->second;
 
         Eigen::Vector2d pix(x, y);
-        std::tuple<int, double> out = Point_To_Pixel_Node::identify_color(pix, *image);  // Pass the original image to identify_color
+        std::tuple<int, double> out = PointToPixelNode::identify_color(pix, *image);  // Pass the original image to identify_color
         std::cout << std::get<0>(out) << std::endl << std::get<1>(out) << std::endl;
         std::cout << x << std::endl << y << std::endl;
 
@@ -630,7 +630,7 @@ void Point_To_Pixel_Node::mouse_callback(int event, int x, int y, int flags, voi
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<Point_To_Pixel_Node>());
+  rclcpp::spin(std::make_shared<PointToPixelNode>());
   rclcpp::shutdown();
   return 0;
 }

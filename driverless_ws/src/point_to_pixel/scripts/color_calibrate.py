@@ -1,8 +1,8 @@
 import os
 import sys
+import numpy as np
 import cv2
 import yaml
-import numpy as np
 import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter.ttk import Notebook
@@ -185,7 +185,7 @@ class HSVCalibrationUI:
     def run(self):
         self.root.mainloop()
 def main():
-    path = "/home/chip/Documents/driverless/driverless_ws/src/point_to_pixel/config/freeze.png"  # Update this path as needed.
+    path = os.path.join(os.path.dirname(os.getcwd()), "driverless_ws/src/point_to_pixel/config/freeze_lr.png")  # Update this path as needed.
     if not os.path.exists(path):
         print(f"Error: Image not found: {path}", file=sys.stderr)
         sys.exit(1)

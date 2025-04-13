@@ -1,3 +1,7 @@
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
+
 cmake_minimum_required(VERSION 3.8)
 project(point_to_pixel)
 
@@ -22,9 +26,19 @@ set(LIBRARY_PATH ~/Documents/driverless-packages/zed-open-capture/build)
 
 include_directories(~/Documents/driverless-packages/zed-open-capture/include)
 include_directories(~/Documents/driverless-packages/zed-open-capture/examples/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+set(POINT_TO_PIXEL_SRC  
+  src/transform/transform.cpp
+  src/camera/camera.cpp
+  src/coloring/coloring.cpp
+  src/coloring/hsv.cpp
+  src/coloring/yolo.cpp
+  src/ros_node/point_to_pixel_node.cpp
+)
 
 # Point to Pixel Executable
-add_executable(point_to_pixel src/point_to_pixel.cpp)
+add_executable(point_to_pixel ${POINT_TO_PIXEL_SRC})
 ament_target_dependencies(point_to_pixel rclcpp interfaces geometry_msgs Eigen3 OpenCV)
 
 target_include_directories(point_to_pixel PUBLIC
@@ -33,37 +47,23 @@ target_include_directories(point_to_pixel PUBLIC
 target_compile_features(point_to_pixel PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
 # Point to Pixel Debug Executable
-add_executable(point_to_pixel_debug src/point_to_pixel_debug.cpp)
-ament_target_dependencies(point_to_pixel_debug rclcpp interfaces geometry_msgs Eigen3 OpenCV)
+# add_executable(point_to_pixel_debug ${POINT_TO_PIXEL_SRC})
+# ament_target_dependencies(point_to_pixel_debug rclcpp interfaces geometry_msgs Eigen3 OpenCV)
 
-target_include_directories(point_to_pixel_debug PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_compile_features(point_to_pixel_debug PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-
-# Zed Node Executable
-add_executable(zed_node src/zed.cpp)
-ament_target_dependencies(zed_node rclcpp sensor_msgs Eigen3 OpenCV)
-
-target_include_directories(zed_node PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_compile_features(zed_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-
-target_link_libraries(zed_node
-  ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so)  # Link ZED SDK library
+# target_include_directories(point_to_pixel_debug PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>)
+# target_compile_features(point_to_pixel_debug PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
 target_link_libraries(point_to_pixel
   ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so)  # Link ZED SDK library
 target_compile_definitions(point_to_pixel PUBLIC VIDEO_MOD_AVAILABLE)
 
-target_link_libraries(point_to_pixel_debug
-  ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so)  # Link ZED SDK library
-target_compile_definitions(point_to_pixel_debug PUBLIC VIDEO_MOD_AVAILABLE)
+# target_link_libraries(point_to_pixel_debug
+#   ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so)  # Link ZED SDK library
+# target_compile_definitions(point_to_pixel_debug PUBLIC VIDEO_MOD_AVAILABLE)
 
-target_compile_definitions(zed_node PUBLIC VIDEO_MOD_AVAILABLE)
-
-install(TARGETS point_to_pixel zed_node
+install(TARGETS point_to_pixel
   DESTINATION lib/${PROJECT_NAME})
 
 # Install wrapper script
@@ -79,7 +79,6 @@ install(
   config/
   DESTINATION share/${PROJECT_NAME}/config
 )
-
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
