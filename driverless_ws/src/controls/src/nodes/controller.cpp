@@ -840,7 +840,7 @@ int main(int argc, char *argv[]) {
 
     std::cout << "controller node thread launched" << std::endl;
 
-    if (display_on) {
+    if (true || display_on) {
         display::Display display {controller, state_estimator};
         std::cout << "display created" << std::endl;
 

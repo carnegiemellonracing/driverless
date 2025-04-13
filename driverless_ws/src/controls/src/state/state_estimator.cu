@@ -205,7 +205,7 @@ namespace controls {
             std::lock_guard<std::mutex> guard {mutex};
 
             m_logger("initializing state estimator");
-            if (display_on) {
+            if (true || display_on) {
                 m_gl_window = utils::create_sdl2_gl_window(
                     "Spline Frame Lookup", curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
                     0, &m_gl_context
@@ -400,7 +400,7 @@ namespace controls {
 
 
 #ifdef DISPLAY
-            if (display_on) {
+            if (true || display_on) {
                 m_all_left_cone_points.clear();
                 m_all_right_cone_points.clear();
 
@@ -545,7 +545,7 @@ namespace controls {
 
 
 #ifdef DISPLAY
-            if (display_on) {
+            if (true || display_on) {
                 m_last_offset_image.pixels = std::vector<float>(4 * curv_frame_lookup_tex_width * curv_frame_lookup_tex_width);
                 glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
                 glReadPixels(
@@ -743,7 +743,7 @@ namespace controls {
             glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
 
 #ifdef DISPLAY
-            if (display_on) {
+            if (true || display_on) {
                 glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fake_track_fbo);
                 glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
                 glBlitFramebuffer(
