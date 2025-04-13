@@ -108,7 +108,7 @@ namespace controls {
              * and the triples of vertex indices that represent triangles respectively.
              */
             void fill_path_buffers_cones();
-            void fill_path_buffers_spline();
+            void fill_path_buffers_for_fake_track(FakeTrackInfo &fake_track_info, const std::vector<glm::fvec2>& base_points);
 
             struct Vertex {
                 struct {
@@ -181,9 +181,9 @@ namespace controls {
              */
             utils::GLObj m_gl_path;
 
-            GLuint m_gl_path_shader; ///< Shader program to be used. Composed of vertex and fragment shaders.
+            GLuint m_curv_frame_lookup_shader_program; ///< Shader program to be used. Composed of vertex and fragment shaders.
 
-            GLuint m_double_cone_shader;
+            GLuint m_double_cone_shader_program;
 
             /// OpenGL context, stores all the information associated with this instance.
             SDL_GLContext m_gl_context;
