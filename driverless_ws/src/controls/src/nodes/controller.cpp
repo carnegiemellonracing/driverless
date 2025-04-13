@@ -41,6 +41,7 @@ namespace controls {
     StateProjectionMode state_projection_mode;
     bool publish_spline;
     bool log_state_projection_history;
+    bool no_midline_controller;
 
 
 
@@ -761,6 +762,7 @@ static int process_config_file(std::string config_file_path) {
     ingest_midline = config_dict["ingest_midline"] == "true" ? true : false;
     send_to_can = config_dict["send_to_can"] == "true" ? true : false;
     display_on = config_dict["display_on"] == "true" ? true : false;
+    no_midline_controller = config_dict["no_midline_controller"] == "true" ? true : false;
     if (config_dict["state_projection_mode"] == "model_multiset") {
         state_projection_mode = StateProjectionMode::MODEL_MULTISET;
     } else if (config_dict["state_projection_mode"] == "naive_speed_only") {

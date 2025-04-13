@@ -58,6 +58,13 @@ namespace controls {
             ~StateEstimator_Impl() override;
 
         private:
+            struct FakeTrackInfo
+            {
+                GLuint fbo;
+                GLuint texture_color;
+                utils::GLObj path;
+            };
+            
             /// Index into where the uniform scale is stored for vertex shader to reference.
             constexpr static GLint shader_scale_loc = 0;
             /// Index into where the uniform center is stored for vertex shader to reference.
@@ -161,11 +168,7 @@ namespace controls {
             /// Render buffer object. Render target for the fbo, used to map to CUDA memory
             GLuint m_curv_frame_lookup_rbo;
 
-            struct FakeTrackInfo {
-                GLuint fbo;
-                GLuint texture_color;
-                utils::GLObj path;
-            };
+
 
             FakeTrackInfo m_midline_fake_track;
             FakeTrackInfo m_left_fake_track;

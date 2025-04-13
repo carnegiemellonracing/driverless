@@ -25,3 +25,4 @@ display_on: true
 state_projection_mode: model_multiset
 publish_spline: true
 log_state_projection_history: false
+no_midline_controller: true
