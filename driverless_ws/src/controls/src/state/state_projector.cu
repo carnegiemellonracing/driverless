@@ -145,7 +145,7 @@ namespace controls {
         }
 
         static void record_state(size_t time_ns, const State& state, std::stringstream& output_stream) {
-            if constexpr (log_state_projection_history) {
+            if (log_state_projection_history) {
                 output_stream << "[0]Time: " << time_ns << "ns|||";
                 output_stream << "Predicted X: " << state[state_x_idx] << "|||";
                 output_stream << std::endl;
@@ -220,7 +220,7 @@ namespace controls {
 
                 sim_time = next_time;
             }
-            if constexpr (log_state_projection_history) {
+            if (log_state_projection_history) {
                 std::string log_location = getenv("ROS_LOG_DIR") + std::string{"/state_projection_history.txt"};
                 std::cout << "Logging to: " << log_location << std::endl;
                 std::fstream fs {log_location, std::ios::out | std::ios::app};

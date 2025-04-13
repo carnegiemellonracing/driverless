@@ -8,35 +8,34 @@
 //TODO: these should all be inline constexpr (not currently broken because not ODR-used)
 
 namespace controls {
-
-    extern float approx_propogation_delay;
-    extern bool follow_midline_only;
-    // Testing stuff
-
-    constexpr bool send_to_can = false;
-    constexpr bool ingest_midline = false;
-    // constexpr bool follow_midline_only = true;
     enum class StateProjectionMode {
         MODEL_MULTISET,
         NAIVE_SPEED_ONLY,
         POSITIONLLA_YAW_SPEED
     };
+    extern float approx_propogation_delay;
+    extern bool follow_midline_only;
+    extern bool testing_on_rosbag;
+    extern bool ingest_midline;
+    extern bool send_to_can;
+    extern bool display_on;
+    extern StateProjectionMode state_projection_mode;
+    extern bool publish_spline;
+    extern bool log_state_projection_history;
+
+
+    // Testing stuff
+
+
+
     constexpr bool testing_on_breezway = false;
 
-#ifdef ROSBAG
-    constexpr bool testing_on_rosbag = true;
-#else
-    constexpr bool testing_on_rosbag = false; // so that even if we are not using model multiset, we can record the IRL data for posterity
-#endif
     // also note that testing_on_rosbag true means we don't publish control actions anymore, is that alright?
     constexpr bool republish_perc_cones = true; // no harm in doing this besides latency
-    constexpr bool publish_spline = true;
 
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
-    constexpr bool log_state_projection_history = false;
 
-    constexpr StateProjectionMode state_projection_mode = StateProjectionMode::MODEL_MULTISET;
     constexpr float maximum_speed_ms = 7.0f;
     constexpr float whl_radius = 0.215f;
     constexpr float gear_ratio = 14.0f;

@@ -31,8 +31,20 @@ void send_finished_ignore_error() {
 }
 
 namespace controls {
+    // global runtime variables
     float approx_propogation_delay;
     bool follow_midline_only;
+    bool testing_on_rosbag;
+    bool ingest_midline;
+    bool send_to_can;
+    bool display_on;
+    StateProjectionMode state_projection_mode;
+    bool publish_spline;
+    bool log_state_projection_history;
+
+
+
+
     namespace nodes {
         ControllerNode::ControllerNode(
             std::shared_ptr<state::StateEstimator> state_estimator,
@@ -83,7 +95,7 @@ namespace controls {
             auxiliary_state_options.callback_group = auxiliary_state_callback_group;
 
             const char* desired_cone_topic_name;
-            if constexpr (testing_on_rosbag) {
+            if (testing_on_rosbag) {
                 desired_cone_topic_name = republished_perc_cones_topic_name;
             } else {
                 desired_cone_topic_name = cone_topic_name;
@@ -132,7 +144,7 @@ namespace controls {
                 { world_position_lla_callback(*msg); },
                 auxiliary_state_options);
 
-            if constexpr (testing_on_rosbag) {
+            if (testing_on_rosbag) {
                 m_action_subscription = create_subscription<ActionMsg>(
                 control_action_topic_name, control_action_qos,
                 [this](const ActionMsg::SharedPtr msg)
@@ -142,7 +154,7 @@ namespace controls {
 
             
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
-            if constexpr (send_to_can) {
+            if (send_to_can) {
                 int can_init_result = initializeCan();
                 if (can_init_result < 0)
                 {
@@ -230,7 +242,7 @@ namespace controls {
                         break;
                     }
                     case StateProjectionMode::NAIVE_SPEED_ONLY:
-                        if constexpr (!testing_on_rosbag) { // TODO: Move this if statement to before get_state_under_strategy is called, allowing current_time to be siphoned off the republished perc cone message instead of the normal one
+                        if (!testing_on_rosbag) { // TODO: Move this if statement to before get_state_under_strategy is called, allowing current_time to be siphoned off the republished perc cone message instead of the normal one
                             m_state_estimator->project_state(current_time);
                         }
                         return {0.0f, 0.0f, M_PI_2, m_last_speed};
@@ -274,7 +286,7 @@ namespace controls {
 
                 rclcpp::Time cone_callback_time = get_clock()->now();
                 rclcpp::Time time_to_project_till;
-                if constexpr (testing_on_rosbag)
+                if (testing_on_rosbag)
                 {
                     time_to_project_till = cone_msg.controller_receive_time;
                 }
@@ -312,7 +324,7 @@ namespace controls {
 
                         proj_curr_state = get_state_under_strategy(time_to_project_till);
                         project_end = std::chrono::high_resolution_clock::now();
-                        if constexpr (!testing_on_rosbag && republish_perc_cones) {
+                        if (!testing_on_rosbag && republish_perc_cones) {
                             ConeMsg new_perc_cone_msg = cone_msg;
                             new_perc_cone_msg.controller_receive_time = time_to_project_till;
                             m_perc_cones_republisher->publish(new_perc_cone_msg);
@@ -341,7 +353,7 @@ namespace controls {
                 }
 
                 auto action_time = get_clock()->now(); 
-                if constexpr (!testing_on_rosbag) {
+                if (!testing_on_rosbag) {
                     publish_action(action, action_time);
                     m_state_estimator->record_control_action(action, action_time);
                 }
@@ -426,7 +438,7 @@ namespace controls {
                 RCLCPP_WARN(get_logger(), "Cone arrival time %ld", lidar_points_seen_time.nanoseconds());
 
                 rclcpp::Duration total_time_elapsed (0, 0);
-                if constexpr (testing_on_rosbag) {
+                if (testing_on_rosbag) {
                     // The first measures how long this function took, the second measures how long it took from lidar receiving points to this function getting called.
                     total_time_elapsed = (get_clock()->now() - cone_callback_time) - (rclcpp::Time(cone_msg.controller_receive_time) - lidar_points_seen_time);
                 } else {
@@ -476,7 +488,7 @@ namespace controls {
 
             void ControllerNode::pid_callback(const PIDMsg& pid_msg) {
                 m_p_value = pid_msg.x;
-                if constexpr (send_to_can) {
+                if (send_to_can) {
                     sendPIDConstants(m_p_value, 0);
                 }
                 RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
@@ -494,14 +506,14 @@ namespace controls {
             }
             
             void ControllerNode::world_quat_callback(const QuatMsg& quat_msg) {
-                if constexpr (state_projection_mode == StateProjectionMode::POSITIONLLA_YAW_SPEED) {
+                if (state_projection_mode == StateProjectionMode::POSITIONLLA_YAW_SPEED) {
                     m_naive_state_tracker.record_quaternion(quat_msg);
                 }
                 m_state_estimator->on_quat(quat_msg);
             }
 
             void ControllerNode::world_position_lla_callback(const PositionLLAMsg& position_lla_msg) {
-                if constexpr (state_projection_mode == StateProjectionMode::POSITIONLLA_YAW_SPEED) {
+                if (state_projection_mode == StateProjectionMode::POSITIONLLA_YAW_SPEED) {
                     m_naive_state_tracker.record_positionlla(position_lla_msg);
                 }
                 m_state_estimator->on_position_lla(position_lla_msg);
@@ -611,7 +623,7 @@ namespace controls {
             }
 
             void ControllerNode::publish_and_print_info(interfaces::msg::ControllerInfo info, const std::string& additional_info) {
-                if constexpr (!testing_on_rosbag) {
+                if (!testing_on_rosbag) {
                     m_info_publisher->publish(info);
 
                 }
@@ -667,7 +679,7 @@ namespace controls {
                             // if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
                                 auto start = std::chrono::steady_clock::now();
                                 ActionSignal last_action_signal = m_last_action_signal;
-                                if constexpr (send_to_can) {
+                                if (send_to_can) {
                                       sendPIDConstants(default_p, default_feedforward);
 
                                     // FYI, velocity_rpm is determined from the speed threshold
@@ -684,7 +696,7 @@ namespace controls {
                     }};
             }
     }
-}
+
 std::string trim(const std::string &str)
 {
     const size_t first = str.find_first_not_of(" \t");
@@ -698,20 +710,8 @@ std::string trim(const std::string &str)
     return str.substr(first, length);
 }
 
-int main(int argc, char *argv[]) {
-    using namespace controls;
-    std::string default_config_path = "conf1";
-    std::string config_file_path;
-    if (argc < 2)
-    {
-        std::cout << "Perhaps you didn't pass in the config file name, using default" << std::endl;
-        config_file_path = default_config_path;
-    }
-    else
-    {
-        std::cout << "Config file passed." << std::endl;
-        config_file_path = argv[1];
-    }
+
+static int process_config_file(std::string config_file_path) {
     std::string config_file_base_path = std::string{getenv("DRIVERLESS")} + "/driverless_ws/src/controls/src/nodes/configs/";
     std::string config_file_full_path = config_file_base_path + config_file_path;
 
@@ -753,6 +753,45 @@ int main(int argc, char *argv[]) {
 
     approx_propogation_delay = std::stof(config_dict["approx_propogation_delay"]);
     follow_midline_only = config_dict["follow_midline_only"] == "true" ? true : false;
+
+    testing_on_rosbag = config_dict["testing_on_rosbag"] == "true" ? true : false;
+    ingest_midline = config_dict["ingest_midline"] == "true" ? true : false;
+    send_to_can = config_dict["send_to_can"] == "true" ? true : false;
+    display_on = config_dict["display_on"] == "true" ? true : false;
+    if (config_dict["state_projection_mode"] == "model_multiset") {
+        state_projection_mode = StateProjectionMode::MODEL_MULTISET;
+    } else if (config_dict["state_projection_mode"] == "naive_speed_only") {
+        state_projection_mode = StateProjectionMode::NAIVE_SPEED_ONLY;
+    } else if (config_dict["state_projection_mode"] == "positionlla_yaw_speed") {
+    }
+    
+    publish_spline = config_dict["publish_spline"] == "true" ? true : false;
+    log_state_projection_history = config_dict["log_state_projection_history"] == "true" ? true : false;
+    return 0;
+}
+
+}
+
+
+
+int main(int argc, char *argv[]) {
+    using namespace controls;
+    std::string default_config_path = "conf1";
+    std::string config_file_path;
+    if (argc < 2)
+    {
+        std::cout << "Perhaps you didn't pass in the config file name, using default" << std::endl;
+        config_file_path = default_config_path;
+    }
+    else
+    {
+        std::cout << "Config file passed." << std::endl;
+        config_file_path = argv[1];
+    }
+    if (process_config_file(config_file_path) != 0) {
+        return 1;
+    }
+
     std::mutex mppi_mutex;
     std::mutex state_mutex;
 
@@ -801,23 +840,23 @@ int main(int argc, char *argv[]) {
 
     std::cout << "controller node thread launched" << std::endl;
 
-#ifdef DISPLAY
-    display::Display display {controller, state_estimator};
-    std::cout << "display created" << std::endl;
+    if (display_on) {
+        display::Display display {controller, state_estimator};
+        std::cout << "display created" << std::endl;
 
-    std::thread display_thread {[&] {
-        display.run();
+        std::thread display_thread {[&] {
+            display.run();
 
-        {
-            std::lock_guard<std::mutex> guard {thread_died_mut};
+            {
+                std::lock_guard<std::mutex> guard {thread_died_mut};
 
-            std::cout << "Display thread closed. Exiting.." << std::endl;
-            thread_died = true;
-            thread_died_cond.notify_all();
-        }
-    }};
-    std::cout << "display thread launched" << std::endl;
-#endif
+                std::cout << "Display thread closed. Exiting.." << std::endl;
+                thread_died = true;
+                thread_died_cond.notify_all();
+            }
+        }};
+        std::cout << "display thread launched" << std::endl;
+    }
 
     // wait for a thread to die
     {

@@ -40,10 +40,10 @@ include_directories(${PROJECT_SOURCE_DIR}/../)
 include_directories(${PROJECT_SOURCE_DIR}/extern/include)
 include_directories($<INSTALL_INTERFACE:include>)
 
-if (DISPLAY)
+
   # set to copy the states to host
-  add_compile_options(-DDISPLAY)
-endif()
+add_compile_options(-DDISPLAY)
+
 
 if (PARANOID)
   add_compile_options(-DPARANOID)
@@ -94,11 +94,9 @@ set(LIB_SOURCES
         src/state/naive_state_tracker.cpp
 )
 
-if (DISPLAY)
-  set(LIB_SOURCES
-          ${LIB_SOURCES}
-          src/display/display.cpp)
-endif()
+set(LIB_SOURCES
+        ${LIB_SOURCES}
+        src/display/display.cpp)
 
 add_library(controls_lib SHARED ${LIB_SOURCES})
 

@@ -17,3 +17,11 @@ root_dir: /driverless_ws/src/controls/
 follow_midline_only: false
 approx_propogation_delay: 0.02f
 offset_1m_cost: 10.0f
+
+testing_on_rosbag: false
+ingest_midline: false
+send_to_can: false
+display_on: true
+state_projection_mode: model_multiset
+publish_spline: true
+log_state_projection_history: true

@@ -205,18 +205,18 @@ namespace controls {
             std::lock_guard<std::mutex> guard {mutex};
 
             m_logger("initializing state estimator");
-#ifdef DISPLAY
-            m_gl_window = utils::create_sdl2_gl_window(
-                "Spline Frame Lookup", curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                0, &m_gl_context
-            );
-#else
-            // dummy window to create opengl context for curv frame buffer
-            m_gl_window = utils::create_sdl2_gl_window(
-                "Spline Frame Lookup Dummy", 1, 1,
-                SDL_WINDOW_HIDDEN, &m_gl_context
-            );
-#endif
+            if (display_on) {
+                m_gl_window = utils::create_sdl2_gl_window(
+                    "Spline Frame Lookup", curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    0, &m_gl_context
+                );
+            } else {
+                // dummy window to create opengl context for curv frame buffer
+                m_gl_window = utils::create_sdl2_gl_window(
+                    "Spline Frame Lookup Dummy", 1, 1,
+                    SDL_WINDOW_HIDDEN, &m_gl_context
+                );
+            }
 
             m_logger("making state estimator gl context current");
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
@@ -323,7 +323,7 @@ namespace controls {
 
             paranoid_assert(spline_msg.frames.size() > 0);
 
-            if constexpr (ingest_midline) {
+            if (ingest_midline) {
                 m_spline_frames = process_ros_points(spline_msg.frames);
             }
 
@@ -371,7 +371,7 @@ namespace controls {
 
             float svm_time = 0.0f;
 
-            if constexpr (!ingest_midline) {
+            if (!ingest_midline) {
 
                 midline::Cones cones;
                 for (const auto& cone : m_left_cone_points) {
@@ -392,7 +392,7 @@ namespace controls {
                     paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
                     m_spline_frames.emplace_back(frame.first, frame.second);
                 }
-                if constexpr (publish_spline) {
+                if (publish_spline) {
                     cone_publisher->publish(spline_frames_to_msg(m_spline_frames));
                 }
 
@@ -400,12 +400,15 @@ namespace controls {
 
 
 #ifdef DISPLAY
-            m_all_left_cone_points.clear();
-            m_all_right_cone_points.clear();
+            if (display_on) {
+                m_all_left_cone_points.clear();
+                m_all_right_cone_points.clear();
 
-            m_all_left_cone_points = process_ros_points(cone_msg.orange_cones);
-            m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
-            m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
+                m_all_left_cone_points = process_ros_points(cone_msg.orange_cones);
+                m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
+                m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
+
+            }
 #endif
 
             if constexpr (reset_pose_on_cone) {
@@ -542,18 +545,21 @@ namespace controls {
 
 
 #ifdef DISPLAY
-            m_last_offset_image.pixels = std::vector<float>(4 * curv_frame_lookup_tex_width * curv_frame_lookup_tex_width);
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
-            glReadPixels(
-                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                GL_RGBA, GL_FLOAT,
-                m_last_offset_image.pixels.data()
-            );
+            if (display_on) {
+                m_last_offset_image.pixels = std::vector<float>(4 * curv_frame_lookup_tex_width * curv_frame_lookup_tex_width);
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
+                glReadPixels(
+                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    GL_RGBA, GL_FLOAT,
+                    m_last_offset_image.pixels.data()
+                );
 
-            m_last_offset_image.pix_width = curv_frame_lookup_tex_width;
-            m_last_offset_image.pix_height = curv_frame_lookup_tex_width;
-            m_last_offset_image.center = {m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter};
-            m_last_offset_image.world_width = m_curv_frame_lookup_tex_info.width;
+                m_last_offset_image.pix_width = curv_frame_lookup_tex_width;
+                m_last_offset_image.pix_height = curv_frame_lookup_tex_width;
+                m_last_offset_image.center = {m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter};
+                m_last_offset_image.world_width = m_curv_frame_lookup_tex_info.width;
+
+            }
 #endif
             current_time = sync_now<log_render_and_sync_timing>();
             display_time = current_time - last_time;
@@ -737,14 +743,17 @@ namespace controls {
             glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
 
 #ifdef DISPLAY
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fake_track_fbo);
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-            glBlitFramebuffer(
-                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                GL_COLOR_BUFFER_BIT, GL_NEAREST);
+            if (display_on) {
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fake_track_fbo);
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+                glBlitFramebuffer(
+                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-            SDL_GL_SwapWindow(m_gl_window);
+                SDL_GL_SwapWindow(m_gl_window);
+            }
+
 #endif
         }
 
