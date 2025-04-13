@@ -134,39 +134,43 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     
     // Subscriber that reads the input topic that contains an array of cone_point arrays from LiDAR stack
     auto cone_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    rclcpp::SubscriptionOptions options;
+    rclcpp::SubscriptionOptions cone_options;
     options.callback_group = cone_callback_group_;
     cone_sub_ = create_subscription<interfaces::msg::PPMConeArray>(
         "/cpp_cones", 
         10, 
-        [this](const interfaces::msg::PPMConeArray::SharedPtr msg) {cone_callback(msg);}
+        [this](const interfaces::msg::PPMConeArray::SharedPtr msg) {cone_callback(msg);},
+        cone_options
     );
 
     auto velocity_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    rclcpp::SubscriptionOptions options;
+    rclcpp::SubscriptionOptions velocity_options;
     options.callback_group = velocity_callback_group_;
     velocity_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>(
         "/velocity", 
         10, 
-        [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg) {velocity_callback(msg);}
+        [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg) {velocity_callback(msg);},
+        velocity_options
     );
 
     auto yaw_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    rclcpp::SubscriptionOptions options;
+    rclcpp::SubscriptionOptions yaw_options;
     options.callback_group = yaw_callback_group_;
     yaw_sub_ = create_subscription<geometry_msgs::msg::Vector3Stamped>(
         "/yaw", 
         10, 
-        [this](const geometry_msgs::msg::Vector3Stamped::SharedPtr msg) {yaw_callback(msg);}
+        [this](const geometry_msgs::msg::Vector3Stamped::SharedPtr msg) {yaw_callback(msg);},
+        yaw_options
     );
 
     // Camera Callback (25 fps)
     auto camera_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    rclcpp::SubscriptionOptions options;
+    rclcpp::SubscriptionOptions camera_options;
     options.callback_group = camera_callback_group_;
     camera_timer_ = create_wall_timer(
         std::chrono::milliseconds(40),
-        [this](){camera_callback();}
+        [this](){camera_callback();},
+        camera_options
     );
 
     // ---------------------------------------------------------------------------
