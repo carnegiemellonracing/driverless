@@ -402,7 +402,7 @@ namespace controls {
                     m_spline_frames.emplace_back(frame.first, frame.second);
                 }
                 if (m_spline_frames.size() < 2) {
-                    assert(cone_msg.blue_cones.size() == 0 && cone_msg.yellow_cones.size() == 0);
+                    paranoid_assert(cone_msg.blue_cones.size() == 0 && cone_msg.yellow_cones.size() == 0);
                 }
                 if (publish_spline) {
                     cone_publisher->publish(spline_frames_to_msg(m_spline_frames));
