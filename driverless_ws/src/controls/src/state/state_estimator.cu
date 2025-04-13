@@ -403,7 +403,7 @@ namespace controls {
 
             float svm_time = 0.0f;
 
-            if (!ingest_midline) {
+            if (!ingest_midline && !no_midline_controller) {
 
                 midline::Cones cones;
                 for (const auto& cone : m_left_cone_points) {
@@ -750,6 +750,8 @@ namespace controls {
             ));
         }
 
+        
+
         void StateEstimator_Impl::gen_tex_info(glm::fvec2 car_pos) {
             float xmin = car_pos.x;
             float ymin = car_pos.y;
@@ -757,6 +759,22 @@ namespace controls {
             float ymax = car_pos.y;
 
             for (const glm::fvec2 frame : m_spline_frames) {
+                xmin = std::min(xmin, frame.x);
+                xmax = std::max(xmax, frame.x);
+                ymin = std::min(ymin, frame.y);
+                ymax = std::max(ymax, frame.y);
+            }
+
+            for (const glm::fvec2 frame : m_left_cone_points)
+            {
+                xmin = std::min(xmin, frame.x);
+                xmax = std::max(xmax, frame.x);
+                ymin = std::min(ymin, frame.y);
+                ymax = std::max(ymax, frame.y);
+            }
+
+            for (const glm::fvec2 frame : m_right_cone_points)
+            {
                 xmin = std::min(xmin, frame.x);
                 xmax = std::max(xmax, frame.x);
                 ymin = std::min(ymin, frame.y);
@@ -789,7 +807,7 @@ namespace controls {
             glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
             glBindVertexArray(fake_track_info.path.vao);
-            glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
+            glDrawElements(GL_TRIANGLES, (fake_track_info.num_elements * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
         }
 
         void StateEstimator_Impl::render_curv_frame_lookup() {
@@ -1112,6 +1130,8 @@ namespace controls {
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fake_track_info.path.ebo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
+
+            fake_track_info.num_elements = base_points.size();
         }
     }
 }

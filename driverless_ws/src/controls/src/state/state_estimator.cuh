@@ -63,8 +63,9 @@ namespace controls {
                 GLuint fbo;
                 GLuint texture_color;
                 utils::GLObj path;
+                size_t num_elements;
             };
-            
+
             /// Index into where the uniform scale is stored for vertex shader to reference.
             constexpr static GLint shader_scale_loc = 0;
             /// Index into where the uniform center is stored for vertex shader to reference.
