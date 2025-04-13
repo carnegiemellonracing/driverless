@@ -14,6 +14,7 @@
 //TODO: MPPI is supposedly included by state_estimator but I can't find it. Weird
 #include <state/state_estimator.hpp>
 #include <condition_variable>
+#include <state/naive_state_tracker.hpp>
 
 
 namespace controls {
@@ -70,12 +71,20 @@ namespace controls {
 
             void pid_callback(const PIDMsg& pid_msg);
 
+            void world_position_lla_callback(const PositionLLAMsg& position_lla_msg);
+
+            void world_quat_callback(const QuatMsg& quat_ms);
+
+            void imu_accel_callback(const IMUAccelerationMsg& imu_accel_msg);
+
+            void rosbag_action_callback(const ActionMsg& rosbag_action_msg);
+
             /**
              * Publishes a control action to the `control_action` topic.
              *
              * @param action Action to publish
              */
-            void publish_action(const Action& action);
+            void publish_action(const Action& action, rclcpp::Time current_time);
 
             /// Converts MPPI control action output to a ROS2 message. Affected by drive mode (FWD, RWD, AWD).
             /// @param[in] action Control action - output of MPPI.
@@ -101,13 +110,18 @@ namespace controls {
 
             rclcpp::Publisher<ActionMsg>::SharedPtr m_action_publisher; ///< Publishes control action for actuators
             rclcpp::Publisher<InfoMsg>::SharedPtr m_info_publisher; ///< Publishes controller info for debugging
+            rclcpp::Publisher<ConeMsg>::SharedPtr m_perc_cones_republisher;
+            rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
+            rclcpp::Subscription<ActionMsg>::SharedPtr m_action_subscription; ///< Exclusively for when replaying rosbags, and using it for state projection
             rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription; ///< Subscribes to path planning spline
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription; ///< Subscribes to intertial twist
-            rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription; ///< Subscribes to intertial quaternion
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
             rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;
             rclcpp::Subscription<PIDMsg>::SharedPtr m_pid_subscription;
-            // ConeArray = /lidar_node_cones
+            rclcpp::Subscription<IMUAccelerationMsg>::SharedPtr m_imu_accel_subscription;
+            rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription; ///< Subscribes to intertial quaternion
+            rclcpp::Subscription<PositionLLAMsg>::SharedPtr m_position_lla_subscription;
+
 
             /**
              * Mutex protecting `m_state_estimator`. This needs to be acquired when forwarding callbacks to the
@@ -140,6 +154,15 @@ namespace controls {
             std::atomic<bool> m_keep_sending_aim_signal = true;
             std::thread launch_aim_communication();
             float m_p_value;
+            float m_last_speed;
+            float m_last_x_velocity;
+            float m_last_y_velocity;
+            rclcpp::Time m_last_imu_acceleration_time;
+            State get_state_under_strategy(rclcpp::Time current_time);
+            state::NaiveStateTracker m_naive_state_tracker;
+
+            // Stuff for the naive state estimator
+            
         };
     }
 }

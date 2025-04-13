@@ -9,6 +9,7 @@ extern "C" { // Ensures compatibility with C++ compilers
 #include <stdint.h>
 
 uint16_t swangle_to_adc(float swangle);
+int initializeCan();
 int sendControlAction(int16_t frontTorque_mNm, int16_t rearTorque_mNm, uint16_t velocity_rpm, uint16_t rackDisplacement_adc);
 int sendPIDConstants(float p, float feedforward);
 int sendFinishedCommand();

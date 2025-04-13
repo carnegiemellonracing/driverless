@@ -1,4 +1,3 @@
-#include <model/slipless/model.cuh>
 #include <types.hpp>
 #include <iostream>
 
@@ -21,7 +20,6 @@ int main(int argc, char* argv[]) {
     }
 
     State statedot;
-    model::slipless::dynamics(state.data(), action.data(), statedot.data(), controller_period);
 
     for (uint8_t i = 0; i < state_dims; i++) {
         std::cout << statedot[i] << " ";

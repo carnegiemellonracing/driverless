@@ -4,14 +4,11 @@
 #include <string>
 #include <sstream>
 #include <glm/glm.hpp>
+#include <stdexcept>
+#include "paranoid_assert.h"
 
 namespace controls {
     /// Asserts whether x is true if the PARANOID compiler flag is set (-P)
-    #ifdef PARANOID
-    #define paranoid_assert(x) (assert(x))
-    #else
-    #define paranoid_assert(x) ((void)0)
-    #endif
 
     struct SplineAndCones
     {
@@ -45,5 +42,15 @@ namespace controls {
     inline bool isnan_vec(glm::fvec2 vec) {
         return std::isnan(vec.x) || std::isnan(vec.y);
     }
+
+    class ControllerError : public std::runtime_error {
+        public:
+            using std::runtime_error::runtime_error;
+    };
+    inline constexpr float degrees_to_radians(const float degrees) {
+        return degrees * M_PI / 180.0f;
+    }
+
+
 }
 

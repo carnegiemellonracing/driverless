@@ -115,7 +115,7 @@ namespace controls {
             
             std::vector<glm::fvec2> m_last_reduced_state_trajectory;
             std::vector<float> m_last_state_trajectories;
-            state::StateEstimator::OffsetImage m_offset_image;
+            state::OffsetImage m_offset_image;
         };
     }
 }

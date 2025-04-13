@@ -33,164 +33,62 @@
 #include <SDL2/SDL_video.h>
 
 #include <midline/svm_conv.hpp>
+#include <utils/ros_utils.hpp>
+#include <utils/cuda_macros.cuh>
 
+namespace {
+    // Helper function for timing with optional GPU synchronization
+    template<bool EnableSync>
+    std::chrono::time_point<std::chrono::high_resolution_clock> sync_now() {
+        // if constexpr (EnableSync) {
+        //     glFinish(); // Ensure GPU has completed all work
+        // }
+        return std::chrono::high_resolution_clock::now();
+    }
+    
+    // Helper function to log timings if enabled
+    template<bool EnableLog>
+    void log_timings(
+        rclcpp::Logger& logger,
+        float total_ms,
+        float gl_context_ms,
+        float tex_info_ms,
+        float buffer_cones_ms,
+        float buffer_spline_ms,
+        float unmap_ms,
+        float fake_track_ms,
+        float curv_frame_ms,
+        float map_ms,
+        float sync_state_ms,
+        float sync_tex_ms,
+        float display_ms,
+        float unbind_ms) {
+        
+        if constexpr (EnableLog) {
+            // Note: When EnableLog==true with glFinish calls, these timings include GPU execution time
+            RCLCPP_INFO(logger, 
+                "render_and_sync timing (ms): Total=%.2f, GL context=%.2f, Tex info=%.2f, "
+                "Buffer cones=%.2f, Buffer spline=%.2f, Unmap=%.2f, Fake track=%.2f, "
+                "Curv frame=%.2f, Map=%.2f, Sync state=%.2f, Sync tex=%.2f, Display=%.2f, Unbind=%.2f",
+                total_ms, gl_context_ms, tex_info_ms,
+                buffer_cones_ms, buffer_spline_ms, unmap_ms,
+                fake_track_ms, curv_frame_ms, map_ms,
+                sync_state_ms, sync_tex_ms, display_ms, unbind_ms);
+            
+            // Log sum of component times to verify accounting
+            float sum = gl_context_ms + tex_info_ms + buffer_cones_ms + buffer_spline_ms + 
+                      unmap_ms + fake_track_ms + curv_frame_ms + map_ms + 
+                      sync_state_ms + sync_tex_ms + unbind_ms;
+            
+            RCLCPP_INFO(logger, "Sum of component times: %.2f ms (%.2f%% of total)",
+                       sum, (sum / total_ms) * 100.0f);
+        }
+    }
+}
 
 namespace controls {
     namespace state {
-
-        void StateProjector::print_history() const {
-            std::cout << "---- BEGIN HISTORY ---\n";
-            for (const Record& record : m_history_since_pose) {
-                switch (record.type) {
-                    case Record::Type::Action:
-                        std::cout << "Action: " << record.action[0] << ", " << record.action[1] << std::endl;
-                        break;
-
-                    case Record::Type::Speed:
-                        std::cout << "Speed: " << record.speed << std::endl;
-                        break;
-
-                    case Record::Type::Pose:
-                        std::cout << "Pose: " << record.pose.x << ", " << record.pose.y << ", " << record.pose.yaw << std::endl;
-                        break;
-
-                    default:
-                        throw new std::runtime_error("bruh. invalid record type bruh. (in print history)");
-                }
-            }
-            std::cout << "---END HISTORY---" << std::endl;
-        }
-
-        void StateProjector::record_action(Action action, rclcpp::Time time) {
-            // std::cout << "Recording action " << action[0] << ", " << action[1] << " at time " << time.nanoseconds() << std::endl;
-
-            // change to assert(!m_pose_record.has_value() || time >= m_pose_record.value().time)
-            assert(m_pose_record.has_value() && time >= m_pose_record.value().time
-                && "call me marty mcfly the way im time traveling");
-
-            m_history_since_pose.insert(Record {
-                .action = action,
-                .time = time,
-                .type = Record::Type::Action
-            });
-
-            // print_history();
-        }
-
-        void StateProjector::record_speed(float speed, rclcpp::Time time) {
-            // std::cout << "Recording speed " << speed << " at time " << time.nanoseconds() << std::endl;
-
-            if (m_pose_record.has_value() && time < m_pose_record.value().time) {
-                if (time > m_init_speed.time) {
-                    m_init_speed = Record {
-                        .speed = speed,
-                        .time = time,
-                        .type = Record::Type::Speed
-                    };
-                }
-            } else {
-                m_history_since_pose.insert(Record {
-                    .speed = speed,
-                    .time = time,
-                    .type = Record::Type::Speed
-                });
-            }
-
-            // print_history();
-        }
-
-        void StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time) {
-            // std::cout << "Recording pose " << x << ", " << y << ", " << yaw << " at time " << time.nanoseconds() << std::endl;
-
-            m_pose_record = Record {
-                .pose = {
-                    .x = x,
-                    .y = y,
-                    .yaw = yaw
-                },
-                .time = time,
-                .type = Record::Type::Pose
-            };
-
-            auto record_iter = m_history_since_pose.begin();
-            for (; record_iter != m_history_since_pose.end(); ++record_iter) {
-                if (record_iter->time > time) {
-                    break;
-                }
-
-                switch (record_iter->type) {
-                    case Record::Type::Action:
-                        m_init_action = *record_iter;
-                        break;
-
-                    case Record::Type::Speed:
-                        m_init_speed = *record_iter;
-                        break;
-
-                    default:
-                        throw new std::runtime_error("bruh. invalid record type bruh. (in record pose)");
-                }
-            }
-
-            m_history_since_pose.erase(m_history_since_pose.begin(), record_iter);
-
-            // print_history();
-        }
-
-        State StateProjector::project(const rclcpp::Time& time, LoggerFunc logger) const {
-            assert(m_pose_record.has_value() && "State projector has not recieved first pose");
-            // std::cout << "Projecting to " << time.nanoseconds() << std::endl;
-
-            State state;
-            state[state_x_idx] = m_pose_record.value().pose.x;
-            state[state_y_idx] = m_pose_record.value().pose.y;
-            state[state_yaw_idx] = m_pose_record.value().pose.yaw;
-            state[state_speed_idx] = m_init_speed.speed;
-
-            const auto first_time = m_history_since_pose.empty() ? time : m_history_since_pose.begin()->time;
-            const float delta_time = (first_time.nanoseconds() - m_pose_record.value().time.nanoseconds()) / 1e9f;
-            // std::cout << "delta time: " << delta_time << std::endl;
-            assert(delta_time > 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
-            // simulates up to first_time
-            ONLINE_DYNAMICS_FUNC(state.data(), m_init_action.action.data(), state.data(), delta_time);
-
-            rclcpp::Time sim_time = first_time;
-            Action last_action = m_init_action.action;
-            for (auto record_iter = m_history_since_pose.begin(); record_iter != m_history_since_pose.end(); ++record_iter) {
-                // checks if we're on last record
-                const auto next_time = std::next(record_iter) == m_history_since_pose.end() ? time : std::next(record_iter)->time;
-
-                const float delta_time = (next_time - sim_time).nanoseconds() / 1e9f;
-                assert(delta_time >= 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
-
-                switch (record_iter->type) {
-                    case Record::Type::Action:
-                        ONLINE_DYNAMICS_FUNC(state.data(), record_iter->action.data(), state.data(), delta_time);
-                        last_action = record_iter->action;
-                        break;
-
-                    case Record::Type::Speed:
-                        char logger_buf[70];
-                        snprintf(logger_buf, 70, "Predicted speed: %f\nActual speed: %f", state[state_speed_idx], record_iter->speed);
-                        //std::cout << logger_buf << std::endl;
-                        state[state_speed_idx] = record_iter->speed;
-                        ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
-                        break;
-
-                    default:
-                        throw new std::runtime_error("bruh. invalid record type bruh. (in simulation)");
-                }
-
-                sim_time = next_time;
-            }
-
-            return state;
-        }
-
-        bool StateProjector::is_ready() const {
-            return m_pose_record.has_value();
-        }
-
+ 
 
         // State Estimator
 
@@ -301,23 +199,27 @@ namespace controls {
 
         // methods
 
+        // Constructor
         StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger)
             : m_mutex {mutex}, m_logger {logger}, m_logger_obj {rclcpp::get_logger("")} {
             std::lock_guard<std::mutex> guard {mutex};
 
             m_logger("initializing state estimator");
 #ifdef DISPLAY
-            m_gl_window = utils::create_sdl2_gl_window(
-                "Spline Frame Lookup", curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                0, &m_gl_context
-            );
+            // if (true || display_on) {
+                m_gl_window = utils::create_sdl2_gl_window(
+                    "Spline Frame Lookup", curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    0, &m_gl_context
+                );
+            // } else {
 #else
-            // dummy window to create opengl context for curv frame buffer
-            m_gl_window = utils::create_sdl2_gl_window(
-                "Spline Frame Lookup Dummy", 1, 1,
-                SDL_WINDOW_HIDDEN, &m_gl_context
-            );
+                // dummy window to create opengl context for curv frame buffer
+                m_gl_window = utils::create_sdl2_gl_window(
+                    "Spline Frame Lookup Dummy", 1, 1,
+                    SDL_WINDOW_HIDDEN, &m_gl_context
+                );
 #endif
+            // }
 
             m_logger("making state estimator gl context current");
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
@@ -339,6 +241,11 @@ namespace controls {
             glFinish();
             utils::make_gl_current_or_except(m_gl_window, nullptr);
             m_logger("finished state estimator initialization");
+            SDL_GLContext curr_context = SDL_GL_GetCurrentContext();
+            SDL_Window* curr_window = SDL_GL_GetCurrentWindow();
+            // RCLCPP_INFO(m_logger_obj, "After constructor: window: %p, context %p", curr_window, curr_context);
+
+
         }
 
         void StateEstimator_Impl::gen_curv_frame_lookup_framebuffer() {
@@ -391,6 +298,7 @@ namespace controls {
         }
 
         StateEstimator_Impl::~StateEstimator_Impl() {
+            // utils::sync_gl_and_unbind_context(m_gl_window);
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
 
@@ -407,7 +315,7 @@ namespace controls {
                 processed_points.push_back(
                     glm::fvec2(cone_x, cone_y));
             }
-            assert(processed_points.size() == points.size());
+            paranoid_assert(processed_points.size() == points.size());
             return processed_points;
         }
 
@@ -418,15 +326,39 @@ namespace controls {
 
             paranoid_assert(spline_msg.frames.size() > 0);
 
-            if constexpr (ingest_midline) {
+            if (ingest_midline) {
                 m_spline_frames = process_ros_points(spline_msg.frames);
             }
 
             m_logger("finished state estimator spline processing");
         }
-        
-        
-        float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
+
+        void StateEstimator_Impl::on_quat(const QuatMsg& quat_msg) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            const float yaw = quat_msg_to_yaw(quat_msg);
+            m_state_projector.record_yaw(yaw, quat_msg.header.stamp);
+        }
+
+        void StateEstimator_Impl::on_position_lla(const PositionLLAMsg& position_lla_msg) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            const auto pair = position_lla_msg_to_xy(position_lla_msg);
+            m_state_projector.record_position_lla(pair.first, pair.second, position_lla_msg.header.stamp);
+        }
+
+        static SplineMsg spline_frames_to_msg(std::vector<glm::fvec2> frames_vec) {
+            SplineMsg frames_msg;
+            frames_msg.frames.reserve(frames_vec.size());
+            for (auto& frame : frames_vec) {
+                geometry_msgs::msg::Point point;
+                point.x = frame.x;
+                point.y = frame.y;
+                frames_msg.frames.push_back(point);
+            }
+            return frames_msg;
+        }
+
+
+        float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg, rclcpp::Publisher<SplineMsg>::SharedPtr cone_publisher) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             paranoid_assert(cone_msg.blue_cones.size() > 0);
@@ -442,7 +374,7 @@ namespace controls {
 
             float svm_time = 0.0f;
 
-            if constexpr (!ingest_midline) {
+            if (!ingest_midline) {
 
                 midline::Cones cones;
                 for (const auto& cone : m_left_cone_points) {
@@ -464,17 +396,23 @@ namespace controls {
                     paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
                     m_spline_frames.emplace_back(frame.first, frame.second);
                 }
+                if (publish_spline) {
+                    cone_publisher->publish(spline_frames_to_msg(m_spline_frames));
+                }
 
             }
 
 
 #ifdef DISPLAY
-            m_all_left_cone_points.clear();
-            m_all_right_cone_points.clear();
+            if (true || display_on) {
+                m_all_left_cone_points.clear();
+                m_all_right_cone_points.clear();
 
-            m_all_left_cone_points = process_ros_points(cone_msg.orange_cones);
-            m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
-            m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
+                m_all_left_cone_points = process_ros_points(cone_msg.orange_cones);
+                m_all_right_cone_points = process_ros_points(cone_msg.unknown_color_cones);
+                m_raceline_points = process_ros_points(cone_msg.big_orange_cones);
+
+            }
 #endif
 
             if constexpr (reset_pose_on_cone) {
@@ -489,16 +427,14 @@ namespace controls {
             // TODO: whats up with all these mutexes
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            const float speed = std::sqrt(
-                twist_msg.twist.linear.x * twist_msg.twist.linear.x
-                + twist_msg.twist.linear.y * twist_msg.twist.linear.y);
+            const float speed = twist_msg_to_speed(twist_msg);
 
             m_state_projector.record_speed(speed, time);
+
         }
 
         void StateEstimator_Impl::on_pose(const PoseMsg &pose_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
-
             m_state_projector.record_pose(
                 pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.orientation.z,
                 pose_msg.header.stamp);
@@ -507,58 +443,167 @@ namespace controls {
 
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
+            // TODO: put this under a constexpr switch flag, now we always record for debugging purposes
+            m_state_projector.record_action(action, rclcpp::Time{
+                                                        time.nanoseconds() + static_cast<int64_t>(approx_propogation_delay * 1e9f),
+                                                        default_clock_type});
 
-            // record actions in the future (when they are actually requested by the actuator)
-            m_state_projector.record_action(action, rclcpp::Time {
-                    time.nanoseconds()
-                    + static_cast<int64_t>(approx_propogation_delay * 1e9f),
-                    default_clock_type
-                }
-            );
         }
 
-        // Used only for the offline controller
         void StateEstimator_Impl::render_and_sync(State state) {
             std::lock_guard<std::mutex> guard {m_mutex};
             
+            // Timing variables
+            auto start_time = sync_now<log_render_and_sync_timing>();
+            auto last_time = start_time;
+            std::chrono::duration<float, std::milli> gl_context_time, tex_info_time, 
+                buffer_cones_time, buffer_spline_time, unmap_time, 
+                fake_track_time, curv_frame_time, map_time, 
+                sync_state_time, sync_tex_time, display_time, unbind_time, total_time;
+            
+
+            SDL_GLContext log_context;
+            SDL_Window* log_window;
+            if constexpr (log_render_and_sync_timing) {
+                log_context = SDL_GL_GetCurrentContext();
+                log_window = SDL_GL_GetCurrentWindow();
+                RCLCPP_INFO(m_logger_obj, "Before start of render and sync: window: %p, context %p", log_window, log_context);
+            }
+
+
+
             // enable openGL
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);
+            if constexpr (log_render_and_sync_timing) {
+                RCLCPP_INFO(m_logger_obj, "Call to make gl current or except: window: %p, context %p", m_gl_window, m_gl_context);
+            }
+            
+
+            // // exclusively for logging
+            if constexpr (log_render_and_sync_timing) {
+                log_context = SDL_GL_GetCurrentContext();
+                log_window = SDL_GL_GetCurrentWindow();
+                RCLCPP_INFO(m_logger_obj, "After make gl current in render and sync - window: %p, context %p", log_window, log_context);
+            }
+
+
+            auto current_time = sync_now<log_render_and_sync_timing>();
+            gl_context_time = current_time - last_time;
+            last_time = current_time;
 
             m_logger("generating spline frame lookup texture info...");
-
             gen_tex_info({state[state_x_idx], state[state_y_idx]});
+            current_time = sync_now<log_render_and_sync_timing>();
+            tex_info_time = current_time - last_time;
+            last_time = current_time;
 
             m_logger("filling OpenGL buffers...");
             // takes car position, places them in the vertices
             fill_path_buffers_cones();
+            current_time = sync_now<log_render_and_sync_timing>();
+            buffer_cones_time = current_time - last_time;
+            last_time = current_time;
+            
             fill_path_buffers_spline();
+            current_time = sync_now<log_render_and_sync_timing>();
+            buffer_spline_time = current_time - last_time;
+            last_time = current_time;
 
             m_logger("unmapping CUDA curv frame lookup texture for OpenGL rendering");
             unmap_curv_frame_lookup();
+            current_time = sync_now<log_render_and_sync_timing>();
+            unmap_time = current_time - last_time;
+            last_time = current_time;
 
             // render the lookup table
             m_logger("rendering curv frame lookup table...");
             render_fake_track();
+            current_time = sync_now<log_render_and_sync_timing>();
+            fake_track_time = current_time - last_time;
+            last_time = current_time;
+            
             if (!m_follow_midline_only) {
                 render_curv_frame_lookup();
+                current_time = sync_now<log_render_and_sync_timing>();
+                curv_frame_time = current_time - last_time;
+                last_time = current_time;
             }
 
             m_logger("mapping OpenGL curv frame texture back to CUDA");
             map_curv_frame_lookup();
+            current_time = sync_now<log_render_and_sync_timing>();
+            map_time = current_time - last_time;
+            last_time = current_time;
 
             m_logger("syncing world state to device");
-
             CUDA_CALL(cudaMemcpyToSymbol(cuda_globals::curr_state, state.data(), state_dims * sizeof(float)));
+            current_time = sync_now<log_render_and_sync_timing>();
+            sync_state_time = current_time - last_time;
+            last_time = current_time;
 
             m_logger("syncing spline frame lookup texture info to device");
             sync_tex_info();
+            current_time = sync_now<log_render_and_sync_timing>();
+            sync_tex_time = current_time - last_time;
+            last_time = current_time;
+
+
+#ifdef DISPLAY
+            if (true || display_on) {
+                m_last_offset_image.pixels = std::vector<float>(4 * curv_frame_lookup_tex_width * curv_frame_lookup_tex_width);
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
+                glReadPixels(
+                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    GL_RGBA, GL_FLOAT,
+                    m_last_offset_image.pixels.data()
+                );
+
+                m_last_offset_image.pix_width = curv_frame_lookup_tex_width;
+                m_last_offset_image.pix_height = curv_frame_lookup_tex_width;
+                m_last_offset_image.center = {m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter};
+                m_last_offset_image.world_width = m_curv_frame_lookup_tex_info.width;
+
+            }
+#endif
+            current_time = sync_now<log_render_and_sync_timing>();
+            display_time = current_time - last_time;
+            last_time = current_time;
 
             utils::sync_gl_and_unbind_context(m_gl_window);
+            if constexpr (log_render_and_sync_timing) {
+                log_context = SDL_GL_GetCurrentContext();
+                log_window = SDL_GL_GetCurrentWindow();
+                RCLCPP_INFO(m_logger_obj, "What happens after unbinding?: window: %p, context %p", log_window, log_context);
+            }
+
+            current_time = sync_now<log_render_and_sync_timing>();
+            unbind_time = current_time - last_time;
+            
+            // Total time
+            total_time = current_time - start_time;
+            
+            // Log timing information using our helper function
+            log_timings<log_render_and_sync_timing>(
+                m_logger_obj,
+                total_time.count(),
+                gl_context_time.count(),
+                tex_info_time.count(),
+                buffer_cones_time.count(),
+                buffer_spline_time.count(),
+                unmap_time.count(),
+                fake_track_time.count(),
+                curv_frame_time.count(),
+                map_time.count(),
+                sync_state_time.count(),
+                sync_tex_time.count(),
+                display_time.count(),
+                unbind_time.count()
+            );
         }
 
-        State StateEstimator_Impl::project_state(const rclcpp::Time& time) {
+        std::optional<State> StateEstimator_Impl::project_state(const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
-            State state = m_state_projector.project(
+            auto state = m_state_projector.project(
                 rclcpp::Time{
                     time.nanoseconds() + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
                     default_clock_type},
@@ -567,28 +612,6 @@ namespace controls {
             return state;
         }
 
-        std::vector<std::chrono::milliseconds> StateEstimator_Impl::sync_to_device(const rclcpp::Time& time) {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            m_logger("beginning state estimator device sync");
-
-            m_logger("projecting current state");
-            auto t1 = std::chrono::high_resolution_clock::now();
-            const State state = m_state_projector.project(
-                rclcpp::Time {
-                    time.nanoseconds()
-                    + static_cast<int64_t>((approx_propogation_delay + approx_mppi_time) * 1e9f),
-                    default_clock_type
-                }, m_logger
-            );
-            auto t2 = std::chrono::high_resolution_clock::now();
-            render_and_sync(state);
-            auto t3 = std::chrono::high_resolution_clock::now();
-
-            m_logger("finished state estimator device sync");
-            return std::vector {std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1), 
-            std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2)};
-        }
 
         bool StateEstimator_Impl::is_ready() {
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -658,14 +681,6 @@ namespace controls {
         }
 
 
-        std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> StateEstimator_Impl::get_all_cone_points() {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            assert(m_all_left_cone_points.size() > 0);
-
-            return std::make_pair(m_all_left_cone_points, m_all_right_cone_points);
-        }
-
         std::vector<float> StateEstimator_Impl::get_vertices() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
@@ -676,34 +691,11 @@ namespace controls {
         //     std::lock_guard<std::mutex> guard {m_mutex};
 
         //     return m_indices;
-        // }
 
 
-
-
-        void StateEstimator_Impl::get_offset_pixels(OffsetImage &offset_image) {
+        OffsetImage StateEstimator_Impl::get_offset_pixels() {
             std::lock_guard<std::mutex> guard {m_mutex};
-
-            SDL_GLContext prev_context = SDL_GL_GetCurrentContext();
-            SDL_Window* prev_window = SDL_GL_GetCurrentWindow();
-
-            utils::make_gl_current_or_except(m_gl_window, m_gl_context);
-
-            offset_image.pixels = std::vector<float>(4 * curv_frame_lookup_tex_width * curv_frame_lookup_tex_width);
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
-            glReadPixels(
-                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                GL_RGBA, GL_FLOAT,
-                offset_image.pixels.data()
-            );
-
-            offset_image.pix_width = curv_frame_lookup_tex_width;
-            offset_image.pix_height = curv_frame_lookup_tex_width;
-            offset_image.center = {m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter};
-            offset_image.world_width = m_curv_frame_lookup_tex_info.width;
-
-            utils::sync_gl_and_unbind_context(m_gl_window);
-            utils::make_gl_current_or_except(prev_window, prev_context);
+            return m_last_offset_image;
         }
 #endif
 
@@ -755,14 +747,17 @@ namespace controls {
             glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
 
 #ifdef DISPLAY
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fake_track_fbo);
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-            glBlitFramebuffer(
-                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                GL_COLOR_BUFFER_BIT, GL_NEAREST);
+            if (true || display_on) {
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fake_track_fbo);
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+                glBlitFramebuffer(
+                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-            SDL_GL_SwapWindow(m_gl_window);
+                SDL_GL_SwapWindow(m_gl_window);
+            }
+
 #endif
         }
 
@@ -964,8 +959,7 @@ namespace controls {
             const size_t n = m_spline_frames.size();
 
             if (n < 2) {
-                // throw std::runtime_error("less than 2 spline frames! (bruh andrew and/or deep)");
-                return;
+                throw ControllerError("less than 2 spline frames! (bruh saket and/or saket)");
             }
 
             std::vector<Vertex> vertices;

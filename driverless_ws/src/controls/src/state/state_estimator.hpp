@@ -9,6 +9,15 @@
 
 namespace controls {
     namespace state {
+            struct OffsetImage {
+                std::vector<float> pixels;
+                uint pix_width;
+                uint pix_height;
+                glm::fvec2 center;
+                float world_width;
+            };
+        
+        
         /**
          * @brief State Estimator! Provides functions for controller node to use to prepare state information for mppi.
          * Implemnentation is in @ref StateEstimator_Impl.
@@ -31,7 +40,7 @@ namespace controls {
                 m_follow_midline_only = follow_midline_only;
             }
             
-            virtual State project_state(const rclcpp::Time &time) =0;
+            virtual std::optional<State> project_state(const rclcpp::Time &time) =0;
 
             /**
              * @brief "main" function of the state estimator. Calculates current inertial state and the
@@ -39,8 +48,6 @@ namespace controls {
              * (into @ref cuda_globals::curv_frame_lookup_tex and @ref cuda_globals::curr_state respectively)
              * @param time The current time
              */
-            virtual std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) =0;
-
             virtual void render_and_sync(State state) =0;
 
             /**
@@ -50,7 +57,11 @@ namespace controls {
              */
             virtual void on_spline(const SplineMsg& spline_msg) =0;
 
-            virtual float on_cone(const ConeMsg& cone_msg) =0;
+            virtual float on_cone(const ConeMsg& cone_msg, rclcpp::Publisher<SplineMsg>::SharedPtr spline_publisher) =0;
+
+            virtual void on_quat(const QuatMsg& quat_msg) =0;
+
+            virtual void on_position_lla(const PositionLLAMsg& position_lla_msg) =0;
 
          /**
           * @brief Callback for twist messages. Updates the state estimator with the new twist. Used for state projection.
@@ -93,25 +104,19 @@ namespace controls {
 
             virtual std::vector<glm::fvec2> get_spline_frames() = 0;
 
-#ifdef DISPLAY
-            struct OffsetImage {
-                std::vector<float> pixels;
-                uint pix_width;
-                uint pix_height;
-                glm::fvec2 center;
-                float world_width;
-            };
 
+
+#ifdef DISPLAY
             virtual std::vector<glm::fvec2> get_all_left_cone_points() =0;
             virtual std::vector<glm::fvec2> get_all_right_cone_points() =0;
             virtual std::vector<glm::fvec2> get_left_cone_points() = 0;
             virtual std::vector<glm::fvec2> get_right_cone_points() = 0;
             virtual std::vector<glm::fvec2> get_raceline_points() =0;
 
-            virtual std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> get_all_cone_points() =0;
             virtual std::vector<float> get_vertices() =0;
             // virtual std::vector<GLuint> get_indices()=0;
-            virtual void get_offset_pixels(OffsetImage& offset_image) =0;
+            virtual OffsetImage get_offset_pixels() =0;
+
 #endif
 
             /**
