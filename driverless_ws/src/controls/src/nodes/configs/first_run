@@ -18,10 +18,10 @@ follow_midline_only: true
 approx_propogation_delay: 0.5f
 offset_1m_cost: 10.0f
 
-testing_on_rosbag: false
+testing_on_rosbag: true
 ingest_midline: false
 send_to_can: true
-display_on: false
+display_on: true
 state_projection_mode: model_multiset
 publish_spline: true
 log_state_projection_history: false

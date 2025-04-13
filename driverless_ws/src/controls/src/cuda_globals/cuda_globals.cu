@@ -26,10 +26,10 @@ namespace controls {
         };
 
         __constant__ const float action_min[action_dims] = {
-            -radians(19), -max_torque
+            -radians(20), -max_torque
         };
         __constant__ const float action_max[action_dims] = {
-            radians(19), max_torque
+            radians(20), max_torque
         };
 
         __constant__ const float action_deriv_min[action_dims] = {
