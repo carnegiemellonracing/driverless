@@ -21,7 +21,7 @@ using std::chrono::milliseconds;
 using std::placeholders::_1;
 
 // BUILD FLAGS
-#define viz 1      // Prints color detection outputs of every point
+#define viz 0      // Prints color detection outputs of every point
 #define verbose 1  // Prints transform matrix and transformed pixel of every point
 #define use_yolo 0 // 0: HSV Coloring | 1: YOLO Coloring
 #define timing 1   // Prints timing suite at end of every callback
@@ -40,7 +40,7 @@ class PointToPixelNode : public rclcpp::Node
 public:
     // Constructor declaration
     PointToPixelNode();
-    static constexpr int max_deque_size = 10;
+    static constexpr int max_deque_size = 100;
     // static constexpr int zed_one_sn; // Left side zed
     // static constexpr int zed_two_sn; // Right side zed
 
@@ -113,6 +113,8 @@ private:
     // Cone state propogation
     std::pair<double, double> getMotionEstimate(double velocity, double angle, double dt);
     std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_velocity_yaw(uint64_t callbackTime);
+
+    std::thread launch_camera_communication();
 
 #if use_yolo
     cv::dnn::Net net; // YOLO Model

@@ -20,6 +20,8 @@ std::pair<uint64_t, cv::Mat> find_closest_frame(
         }
     }
 
+    return img_deque.back();
+
     RCLCPP_ERROR(logger, "Callback time out of range! Cannot find matching frame.");
     return std::make_pair(uint64_t(0), cv::Mat());
 }
@@ -76,6 +78,7 @@ bool initialize_camera(
 }
 
 std::pair<uint64_t, cv::Mat> capture_and_rectify_frame(
+    const rclcpp::Logger &logger,
     sl_oc::video::VideoCapture& cap,
     const cv::Mat& map_left_x,
     const cv::Mat& map_left_y,

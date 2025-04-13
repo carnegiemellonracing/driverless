@@ -143,9 +143,9 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
         cone_options
     );
 
-    auto velocity_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    // auto velocity_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions velocity_options;
-    velocity_options.callback_group = velocity_callback_group_;
+    velocity_options.callback_group = cone_callback_group_;
     velocity_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>(
         "/filter/twist", 
         10, 
@@ -153,9 +153,9 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
         velocity_options
     );
 
-    auto yaw_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    // auto yaw_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions yaw_options;
-    yaw_options.callback_group = yaw_callback_group_;
+    yaw_options.callback_group = cone_callback_group_;
     yaw_sub_ = create_subscription<geometry_msgs::msg::Vector3Stamped>(
         "/filter/euler", 
         10, 
@@ -164,12 +164,12 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     );
 
     // Camera Callback (25 fps)
-    auto camera_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    camera_timer_ = create_wall_timer(
-        std::chrono::milliseconds(40),
-        [this](){camera_callback();},
-        camera_callback_group_
-    );
+    // auto camera_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    // camera_timer_ = create_wall_timer(
+    //     std::chrono::milliseconds(40),
+    //     [this](){camera_callback();},
+    //     camera_callback_group_
+    // );
 
     // ---------------------------------------------------------------------------
     //                       INITIALIZATION COMPLETE SEQUENCE
@@ -179,6 +179,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
 
     // Capture and rectify frames for calibration
     std::pair<uint64_t, cv::Mat> frame_ll = capture_and_rectify_frame(
+        get_logger(),
         cap_l,
         map_left_x_ll,
         map_left_y_ll,
@@ -193,6 +194,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     };
 
     std::pair<uint64_t, cv::Mat> frame_lr = capture_and_rectify_frame(
+        get_logger(),
         cap_l,
         map_left_x_ll,
         map_left_y_ll,
@@ -211,6 +213,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
 
         // Capture and rectify frames for calibration
     std::pair<uint64_t, cv::Mat> frame_rr = capture_and_rectify_frame(
+        get_logger(),
         cap_r,
         map_left_x_rl,
         map_left_y_rl,
@@ -225,6 +228,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     };
 
     std::pair<uint64_t, cv::Mat> frame_rl = capture_and_rectify_frame(
+        get_logger(),
         cap_r,
         map_left_x_rl,
         map_left_y_rl,
@@ -246,6 +250,8 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     cv::imwrite("src/point_to_pixel/config/freeze_lr.png", frame_lr.second);
     cv::imwrite("src/point_to_pixel/config/freeze_rr.png", frame_rr.second);
     cv::imwrite("src/point_to_pixel/config/freeze_rl.png", frame_rl.second);
+
+    launch_camera_communication().detach();
 
     // Initialization Complete Message Suite
     RCLCPP_INFO(get_logger(), "Point to Pixel Node INITIALIZED");
@@ -287,13 +293,14 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
     geometry_msgs::msg::TwistStamped::SharedPtr velocity_msg;
 
     // Check if deque empty
-    yaw_mutex.lock();
+    // yaw_mutex.lock();
     if (yaw_deque.empty())
     {
-        RCLCPP_ERROR(get_logger(), "Yaw deque is empty! Cannot find matching yaw.");
+        RCLCPP_INFO(get_logger(), "Yaw deque is empty! Cannot find matching yaw.");
         return std::make_pair(nullptr, nullptr);
     }
 
+    yaw_msg = yaw_deque.back();
     // Iterate through deque to find the closest frame by timestamp
     for (const auto &yaw : yaw_deque)
     {   
@@ -304,16 +311,17 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
             yaw_msg = yaw;
         }
     }
-    yaw_mutex.unlock();
+    // yaw_mutex.unlock();
 
     // Check if deque empty
-    velocity_mutex.lock();
+    // velocity_mutex.lock();
     if (velocity_deque.empty())
     {
-        RCLCPP_ERROR(get_logger(), "Velocity deque is empty! Cannot find matching velocity.");
+        RCLCPP_INFO(get_logger(), "Velocity deque is empty! Cannot find matching velocity.");
         return std::make_pair(nullptr, nullptr);
     }
 
+    velocity_msg = velocity_deque.back();
     // Iterate through deque to find the closest frame by timestamp
     for (const auto &velocity : velocity_deque)
     {
@@ -323,7 +331,7 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
             velocity_msg = velocity;
         }
     }
-    velocity_mutex.unlock();
+    // velocity_mutex.unlock();
 
     // Return closest velocity, yaw pair if found
     if (yaw_msg != NULL && velocity_msg != NULL)
@@ -331,7 +339,7 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
         return std::make_pair(velocity_msg, yaw_msg);
     }
 
-    RCLCPP_ERROR(get_logger(), "Callback time out of range! Cannot find matching velocity or yaw.");
+    RCLCPP_INFO(get_logger(), "Callback time out of range! Cannot find matching velocity or yaw.");
     return std::make_pair(nullptr, nullptr);
 }
 
@@ -462,32 +470,60 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> vel_yaw_l = get_velocity_yaw(std::get<0>(frame_tuple));
     std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> vel_yaw_r = get_velocity_yaw(std::get<2>(frame_tuple));
 
+    if (vel_yaw_l.first == nullptr || vel_yaw_l.second == nullptr || vel_yaw_r.first == nullptr || vel_yaw_r.second == nullptr)
+    {
+        return;
+    }
+
     geometry_msgs::msg::TwistStamped::SharedPtr velocity_l = vel_yaw_l.first;
     geometry_msgs::msg::Vector3Stamped::SharedPtr yaw_l = vel_yaw_l.second;
 
     geometry_msgs::msg::TwistStamped::SharedPtr velocity_r = vel_yaw_r.first;
     geometry_msgs::msg::Vector3Stamped::SharedPtr yaw_r = vel_yaw_r.second;
 
-    if (velocity_l == nullptr || yaw_l == nullptr || velocity_r == nullptr || yaw_r == nullptr)
-    {
-        return;
-    }
 
     // In case of negative time diff (should never happen)
-    double time_diff_l = (((double)yaw_l->header.stamp.sec + (double)(yaw_l->header.stamp.nanosec) / 1e9) - 
-                          ((double)msg->header.stamp.sec + (double)(msg->header.stamp.nanosec) / 1e9));
-    double time_diff_r = (((double)yaw_r->header.stamp.sec + (double)(yaw_r->header.stamp.nanosec) / 1e9) - 
-                          ((double)msg->header.stamp.sec + (double)(msg->header.stamp.nanosec) / 1e9));
+    // double time_diff_l = (((double)yaw_l->header.stamp.sec + (double)(yaw_l->header.stamp.nanosec) / 1e9) - 
+    //                       ((double)msg->header.stamp.sec + (double)(msg->header.stamp.nanosec) / 1e9));
+    // double time_diff_r = (((double)yaw_r->header.stamp.sec + (double)(yaw_r->header.stamp.nanosec) / 1e9) - 
+    //                       ((double)msg->header.stamp.sec + (double)(msg->header.stamp.nanosec) / 1e9));
 
-    double dt_l = std::max( 0.0, time_diff_l );
-    double dt_r = std::max( 0.0, time_diff_r );
+    double dt_l = (std::get<0>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9; //::max( 0.0, time_diff_l );
+    double dt_r = (std::get<2>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9; // time_diffstd::max( 0.0, time_diff_r );
+
+    // dt_l = 0.0;
+    // dt_r = 0.0;
+    RCLCPP_INFO(get_logger(), "left_camera_timestamp: %llu, right_camera_timestamp: %llu", std::get<0>(frame_tuple), std::get<2>(frame_tuple));
+    RCLCPP_INFO(get_logger(), "lidar_timestamp: %f", msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec);
+
+    auto global_dx_l = velocity_l->twist.linear.x * dt_l;
+    auto global_dy_l = velocity_l->twist.linear.y * dt_l;
+    auto global_dx_r = velocity_r->twist.linear.x * dt_r;
+    auto global_dy_r = velocity_r->twist.linear.y * dt_r;
+
+    auto long_l = global_dx_l * std::cos(yaw_l->vector.z * M_PI / 180) + global_dy_l * std::sin(yaw_l->vector.z * M_PI / 180);
+    auto lat_l = -global_dx_l * std::sin(yaw_l->vector.z * M_PI / 180) + global_dy_l * std::cos(yaw_l->vector.z * M_PI / 180);
+    auto long_r = global_dx_r * std::cos(yaw_r->vector.z * M_PI / 180) + global_dy_r * std::sin(yaw_r->vector.z * M_PI / 180);
+    auto lat_r = -global_dx_r * std::sin(yaw_r->vector.z * M_PI / 180) + global_dy_r * std::cos(yaw_r->vector.z * M_PI / 180);
+
+    std::pair<double, double> ds_l = std::make_pair(-lat_l, long_l);
+    std::pair<double, double> ds_r = std::make_pair(-lat_r, long_r);
+
+
+
+
+    // longitudinal = xworld * np.cos(yaw) + yworld * np.sin(yaw)
+    // lateral = -xworld * np.sin(yaw) + yworld * np.cos(yaw)
+    // return longitudinal, lateral
+
+    RCLCPP_INFO(get_logger(), "Time diff L: %f, Time diff R: %f", dt_l, dt_r);
 
     // Calculate velocity 
-    double v_l = std::sqrt(velocity_l->twist.linear.x * velocity_l->twist.linear.x + velocity_l->twist.linear.y * velocity_l->twist.linear.y);
-    double v_r = std::sqrt(velocity_r->twist.linear.x * velocity_r->twist.linear.x + velocity_r->twist.linear.y * velocity_r->twist.linear.y);
+    // double v_l = std::sqrt(velocity_l->twist.linear.x * velocity_l->twist.linear.x + velocity_l->twist.linear.y * velocity_l->twist.linear.y);
+    // double v_r = std::sqrt(velocity_r->twist.linear.x * velocity_r->twist.linear.x + velocity_r->twist.linear.y * velocity_r->twist.linear.y);
 
-    std::pair<double, double> ds_l = PointToPixelNode::getMotionEstimate(v_l, yaw_l->vector.z, dt_l);
-    std::pair<double, double> ds_r = PointToPixelNode::getMotionEstimate(v_r, yaw_r->vector.z, dt_r);
+    // std::pair<double, double> ds_l = PointToPixelNode::getMotionEstimate(v_l, yaw_l->vector.z, dt_l);
+    // std::pair<double, double> ds_r = PointToPixelNode::getMotionEstimate(v_r, yaw_r->vector.z, dt_r);
 
     #if timing
         auto camera_time = high_resolution_clock::now();
@@ -553,7 +589,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
 
         switch (cone_class) {
             case 0:
-                message.orange_cones.push_back(point_msg);
+                message.yellow_cones.push_back(point_msg);
                 break;
             case 1:
                 // message.yellow_cones.push_back(point_msg);
@@ -628,6 +664,7 @@ void PointToPixelNode::camera_callback()
 {
     // Capture and rectify frame from camera l
     std::pair<uint64_t, cv::Mat> frame_l = capture_and_rectify_frame(
+        get_logger(),
         cap_l,
         map_left_x_ll,
         map_left_y_ll,
@@ -639,6 +676,7 @@ void PointToPixelNode::camera_callback()
 
     // Capture and rectify frame from camera r
     std::pair<uint64_t, cv::Mat> frame_r = capture_and_rectify_frame(
+        get_logger(),
         cap_r,
         map_left_x_rl,
         map_left_y_rl,
@@ -665,28 +703,40 @@ void PointToPixelNode::camera_callback()
     r_img_mutex.unlock();
 }
 
+std::thread PointToPixelNode::launch_camera_communication() {
+    return std::thread{
+        [this]
+        {
+            while (rclcpp::ok)
+            {
+                camera_callback();
+                rclcpp::sleep_for(std::chrono::milliseconds(30));
+            }
+        }};
+}
+
 void PointToPixelNode::velocity_callback(geometry_msgs::msg::TwistStamped::SharedPtr msg)
 {
     // Deque Management and Updating
-    velocity_mutex.lock();
+    // velocity_mutex.lock();
     while (velocity_deque.size() >= max_deque_size)
     {
         velocity_deque.pop_front();
     }
     velocity_deque.push_back(msg);
-    velocity_mutex.unlock();
+    // velocity_mutex.unlock();
 }
 
 void PointToPixelNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::SharedPtr msg)
 {
     // Deque Management and Updating
-    yaw_mutex.lock();
+    // yaw_mutex.lock();
     while (yaw_deque.size() >= max_deque_size)
     {
         yaw_deque.pop_front();
     }
     yaw_deque.push_back(msg);
-    yaw_mutex.unlock();
+    // yaw_mutex.unlock();
 }
 
 int main(int argc, char **argv)
