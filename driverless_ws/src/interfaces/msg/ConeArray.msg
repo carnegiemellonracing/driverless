@@ -2,7 +2,7 @@
 
 std_msgs/Header header
 
-builtin_interfaces/Time orig_data_stamp
+builtin_interfaces/Time controller_receive_time
 
 geometry_msgs/Point[] blue_cones
 std_msgs/Int32 number

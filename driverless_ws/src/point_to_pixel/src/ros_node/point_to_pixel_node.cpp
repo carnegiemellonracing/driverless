@@ -135,7 +135,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     // Subscriber that reads the input topic that contains an array of cone_point arrays from LiDAR stack
     auto cone_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions cone_options;
-    options.callback_group = cone_callback_group_;
+    cone_options.callback_group = cone_callback_group_;
     cone_sub_ = create_subscription<interfaces::msg::PPMConeArray>(
         "/cpp_cones", 
         10, 
@@ -145,7 +145,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
 
     auto velocity_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions velocity_options;
-    options.callback_group = velocity_callback_group_;
+    velocity_options.callback_group = velocity_callback_group_;
     velocity_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>(
         "/velocity", 
         10, 
@@ -155,7 +155,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
 
     auto yaw_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions yaw_options;
-    options.callback_group = yaw_callback_group_;
+    yaw_options.callback_group = yaw_callback_group_;
     yaw_sub_ = create_subscription<geometry_msgs::msg::Vector3Stamped>(
         "/yaw", 
         10, 
@@ -165,12 +165,10 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
 
     // Camera Callback (25 fps)
     auto camera_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    rclcpp::SubscriptionOptions camera_options;
-    options.callback_group = camera_callback_group_;
     camera_timer_ = create_wall_timer(
         std::chrono::milliseconds(40),
         [this](){camera_callback();},
-        camera_options
+        camera_callback_group_
     );
 
     // ---------------------------------------------------------------------------
