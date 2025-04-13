@@ -258,7 +258,14 @@ namespace controls {
             m_logger("generating state estimator gl buffers");
             gen_curv_frame_lookup_framebuffer();
             gen_gl_path(m_gl_path);
-            gen_fake_track();
+            gen_fake_track(m_midline_fake_track);
+            if (no_midline_controller) {
+                gen_fake_track(m_left_fake_track);
+                gen_fake_track(m_right_fake_track);
+            }
+
+
+
 
             glFinish();
             utils::make_gl_current_or_except(m_gl_window, nullptr);
@@ -301,7 +308,7 @@ namespace controls {
             glBindTexture(GL_TEXTURE_2D, 0);
 
             // attach it to currently bound framebuffer object
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_fake_track_texture_color, 0); 
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fake_track_info.texture_color, 0); 
             
             GLuint depth_rbo;
 
@@ -316,7 +323,7 @@ namespace controls {
             // reset framebuffer to default
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-            gen_gl_path(m_fake_track_path);
+            gen_gl_path(fake_track_info.path);
         }
 
         StateEstimator_Impl::~StateEstimator_Impl() {
@@ -475,6 +482,9 @@ namespace controls {
         }
 
         void StateEstimator_Impl::render_and_sync(State state) {
+            if (no_midline_controller && m_follow_midline_only) {
+                throw std::runtime_error("No mildine controller + follow midline only doesn't make any sense");
+            }
             std::lock_guard<std::mutex> guard {m_mutex};
             
             // Timing variables
@@ -541,7 +551,13 @@ namespace controls {
 
             // render the lookup table
             m_logger("rendering curv frame lookup table...");
-            render_fake_track();
+            if (!no_midline_controller) {
+                render_fake_track(m_midline_fake_track);
+            } else {
+                render_fake_track(m_left_fake_track);
+                render_fake_track(m_right_fake_track);
+            }
+
             current_time = sync_now<log_render_and_sync_timing>();
             fake_track_time = current_time - last_time;
             last_time = current_time;
@@ -747,8 +763,8 @@ namespace controls {
             m_curv_frame_lookup_tex_info.width = std::max(xmax - xmin, ymax - ymin) + car_padding * 2;
         }
 
-        void StateEstimator_Impl::render_fake_track() {
-            glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
+        void StateEstimator_Impl::render_fake_track(FakeTrackInfo &fake_track_info) {
+            glBindFramebuffer(GL_FRAMEBUFFER, fake_track_info.fbo);
 
             if (m_follow_midline_only) {
                 // ^ Replaces the texture with the render buffer (the final target)
@@ -767,22 +783,8 @@ namespace controls {
             glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
             glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
-            glBindVertexArray(m_fake_track_path.vao);
+            glBindVertexArray(fake_track_info.path.vao);
             glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
-
-#ifdef DISPLAY
-            if (display_on) {
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fake_track_fbo);
-                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-                glBlitFramebuffer(
-                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                    GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-                SDL_GL_SwapWindow(m_gl_window);
-            }
-
-#endif
         }
 
         void StateEstimator_Impl::render_curv_frame_lookup() {
@@ -793,16 +795,34 @@ namespace controls {
             // (technically 2 rendering passes are done - color and depth)
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT); // TODO: remove depth buffer
-            // use a shader program
-            glUseProgram(m_gl_path_shader);
-            // set the relevant scale and center uniforms (constants) in the shader program
-            glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
-            glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
-            glBindVertexArray(m_gl_path.vao);
-            glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
-            glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
+            if (!no_midline_controller) {
+                // use a shader program
+                glUseProgram(m_gl_path_shader);
+                // set the relevant scale and center uniforms (constants) in the shader program
+                glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
+                glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
+                glBindVertexArray(m_gl_path.vao);
+                glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
+                glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
+            } else {
+                glUseProgram()
+            }
+
+
+#ifdef DISPLAY
+            if (display_on) {
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+                glBlitFramebuffer(
+                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+                SDL_GL_SwapWindow(m_gl_window);
+            }
+#endif
 
         }
 

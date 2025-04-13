@@ -67,7 +67,7 @@ namespace controls {
             /// in m_curv_frame_lookup_tex_info.
             void gen_tex_info(glm::fvec2 car_pos);
 
-            void render_fake_track();
+            void render_fake_track(FakeTrackInfo &fake_track_info);
             /**
              * Render the lookup table into m_curv_frame_lookup_fbo
              */
@@ -93,7 +93,7 @@ namespace controls {
              */
             void gen_curv_frame_lookup_framebuffer();
 
-            void gen_fake_track();
+            void gen_fake_track(FakeTrackInfo &fake_track_info);
 
             /**
              * Creates the buffers to be used, as well as the descriptions of how the buffers are laid out.

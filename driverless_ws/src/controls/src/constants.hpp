@@ -22,6 +22,7 @@ namespace controls {
     extern StateProjectionMode state_projection_mode;
     extern bool publish_spline;
     extern bool log_state_projection_history;
+    extern bool no_midline_controller;
 
 
     // Testing stuff
