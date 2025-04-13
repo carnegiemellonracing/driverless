@@ -129,22 +129,31 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     //                              ROS2 OBJECTS
     // ---------------------------------------------------------------------------
 
-    // Publisher that returns colored cones 
+    // Publisher that returns colored cones
     cone_pub_ = create_publisher<interfaces::msg::ConeArray>("/perc_cones", 10);
     
     // Subscriber that reads the input topic that contains an array of cone_point arrays from LiDAR stack
+    auto cone_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    rclcpp::SubscriptionOptions options;
+    options.callback_group = cone_callback_group_;
     cone_sub_ = create_subscription<interfaces::msg::PPMConeArray>(
         "/cpp_cones", 
         10, 
         [this](const interfaces::msg::PPMConeArray::SharedPtr msg) {cone_callback(msg);}
     );
 
+    auto velocity_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    rclcpp::SubscriptionOptions options;
+    options.callback_group = velocity_callback_group_;
     velocity_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>(
         "/velocity", 
         10, 
         [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg) {velocity_callback(msg);}
     );
 
+    auto yaw_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    rclcpp::SubscriptionOptions options;
+    options.callback_group = yaw_callback_group_;
     yaw_sub_ = create_subscription<geometry_msgs::msg::Vector3Stamped>(
         "/yaw", 
         10, 
@@ -152,6 +161,9 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     );
 
     // Camera Callback (25 fps)
+    auto camera_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    rclcpp::SubscriptionOptions options;
+    options.callback_group = camera_callback_group_;
     camera_timer_ = create_wall_timer(
         std::chrono::milliseconds(40),
         [this](){camera_callback();}
@@ -248,8 +260,12 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
 std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> PointToPixelNode::get_camera_frame(rclcpp::Time callbackTime)
 {
     // Get closest frame from each camera
+    l_img_mutex.lock();
     std::pair<uint64_t, cv::Mat> closestFrame_l = find_closest_frame(img_deque_l, callbackTime, get_logger());
+    l_img_mutex.unlock();
+    r_img_mutex.lock();
     std::pair<uint64_t, cv::Mat> closestFrame_r = find_closest_frame(img_deque_r, callbackTime, get_logger());
+    r_img_mutex.unlock();
 
     return std::make_tuple(closestFrame_l.first, closestFrame_l.second, closestFrame_r.first, closestFrame_r.second);
 }
@@ -263,6 +279,7 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
     geometry_msgs::msg::TwistStamped::SharedPtr velocity_msg;
 
     // Check if deque empty
+    yaw_mutex.lock();
     if (yaw_deque.empty())
     {
         RCLCPP_ERROR(get_logger(), "Yaw deque is empty! Cannot find matching yaw.");
@@ -279,8 +296,10 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
             yaw_msg = yaw;
         }
     }
+    yaw_mutex.unlock();
 
     // Check if deque empty
+    velocity_mutex.lock();
     if (velocity_deque.empty())
     {
         RCLCPP_ERROR(get_logger(), "Velocity deque is empty! Cannot find matching velocity.");
@@ -296,6 +315,7 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
             velocity_msg = velocity;
         }
     }
+    velocity_mutex.unlock();
 
     // Return closest velocity, yaw pair if found
     if (yaw_msg != NULL && velocity_msg != NULL)
@@ -610,36 +630,42 @@ void PointToPixelNode::camera_callback()
     );
 
     // Deque Management and Updating
+    l_img_mutex.lock();
     while (img_deque_l.size() >= max_deque_size) {
         img_deque_l.pop_front();
     }
+    img_deque_l.push_back(frame_l);
+    l_img_mutex.unlock();
 
     while (img_deque_r.size() >= max_deque_size) {
         img_deque_r.pop_front();
     }
 
-    img_deque_l.push_back(frame_l);
     img_deque_r.push_back(frame_r);
 }
 
 void PointToPixelNode::velocity_callback(geometry_msgs::msg::TwistStamped::SharedPtr msg)
 {
     // Deque Management and Updating
+    velocity_mutex.lock();
     while (velocity_deque.size() >= max_deque_size)
     {
         velocity_deque.pop_front();
     }
     velocity_deque.push_back(msg);
+    velocity_mutex.unlock();
 }
 
 void PointToPixelNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::SharedPtr msg)
 {
     // Deque Management and Updating
+    yaw_mutex.lock();
     while (yaw_deque.size() >= max_deque_size)
     {
         yaw_deque.pop_front();
     }
     yaw_deque.push_back(msg);
+    yaw_mutex.unlock();
 }
 
 int main(int argc, char **argv)

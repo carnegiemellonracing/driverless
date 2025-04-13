@@ -88,6 +88,11 @@ private:
     cv::Mat map_left_x_rl, map_left_y_rl;
     cv::Mat map_right_x_rr, map_right_y_rr;
 
+    std::mutex l_img_mutex;
+    std::mutex r_img_mutex;
+    std::mutex velocity_mutex;
+    std::mutex yaw_mutex;
+
     // ROS2 Publisher and Subscribers
     rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cone_pub_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr cone_sub_;
