@@ -844,11 +844,13 @@ int main(int argc, char *argv[]) {
     std::cout << "controller node thread launched" << std::endl;
 
 #ifdef DISPLAY
-    
         display::Display display {controller, state_estimator};
         std::cout << "display created" << std::endl;
 
         std::thread display_thread {[&] {
+            if (!display_on) {
+                return;
+            }
             display.run();
 
             {
@@ -860,6 +862,7 @@ int main(int argc, char *argv[]) {
             }
         }};
         std::cout << "display thread launched" << std::endl;
+    
     
 #endif
 
