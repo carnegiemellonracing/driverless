@@ -14,7 +14,7 @@ import perceptions.ros.utils.conversions as conv
 from perceptions.topics import LEFT_IMAGE_TOPIC, RIGHT_IMAGE_TOPIC, XYZ_IMAGE_TOPIC, DEPTH_IMAGE_TOPIC, POINT_TOPIC #, DATAFRAME_TOPIC
 from perceptions.topics import LEFT2_IMAGE_TOPIC, RIGHT2_IMAGE_TOPIC, XYZ2_IMAGE_TOPIC, DEPTH2_IMAGE_TOPIC
 from perceptions.topics import CAMERA_INFO, CAMERA_PARAM
-from perceptions.zed import ZEDSDK
+# from perceptions.zed import ZEDSDK
 
 # perceptions Library visualization functions (for 3D data)
 import perc22a.predictors.utils.lidar.visualization as vis
@@ -70,23 +70,23 @@ class DataNode(Node):
                                                         qos_profile=RELIABLE_QOS_PROFILE)
                 self.frame_id = 0
 
-        if own_zed == "zed2" or own_zed == "both":
-            self.serial_num2, left_topic, xyz_topic = CAMERA_INFO["zed2"]
-            print("Starting ZED")
-            self.zed2 = ZEDSDK(serial_num=self.serial_num2)
-            print("Opening ZED")
-            self.zed2.open()
-            print("ZED Opened")
+        # if own_zed == "zed2" or own_zed == "both":
+        #     self.serial_num2, left_topic, xyz_topic = CAMERA_INFO["zed2"]
+        #     print("Starting ZED")
+        #     self.zed2 = ZEDSDK(serial_num=self.serial_num2)
+        #     print("Opening ZED")
+        #     self.zed2.open()
+        #     print("ZED Opened")
 
-            self.data_syncer2 = self.create_timer(1/PUBLISH_FPS, self.update_zed2_data)
-            if publish_images:
-                self.left2_publisher = self.create_publisher(msg_type=Image,
-                                                            topic=left_topic,
-                                                            qos_profile=RELIABLE_QOS_PROFILE)
-                self.xyz2_publisher = self.create_publisher(msg_type=Image,
-                                                        topic=xyz_topic,
-                                                        qos_profile=RELIABLE_QOS_PROFILE)
-                self.frame2_id = 0
+        #     self.data_syncer2 = self.create_timer(1/PUBLISH_FPS, self.update_zed2_data)
+        #     if publish_images:
+        #         self.left2_publisher = self.create_publisher(msg_type=Image,
+        #                                                     topic=left_topic,
+        #                                                     qos_profile=RELIABLE_QOS_PROFILE)
+        #         self.xyz2_publisher = self.create_publisher(msg_type=Image,
+        #                                                 topic=xyz_topic,
+        #                                                 qos_profile=RELIABLE_QOS_PROFILE)
+        #         self.frame2_id = 0
 
         # define variables for timing code
         self.data_times = {}
@@ -100,24 +100,24 @@ class DataNode(Node):
         self.data = DataInstance(required_data)
 
 
-        if DataType.ZED_LEFT_COLOR in self.required_data and (own_zed == "zed2" or own_zed == None):
-            self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # if DataType.ZED_LEFT_COLOR in self.required_data and (own_zed == "zed2" or own_zed == None):
+        #     self.left_color_subscriber = self.create_subscription(Image, LEFT_IMAGE_TOPIC, self.left_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         
-        if DataType.ZED2_LEFT_COLOR in self.required_data and (own_zed == "zed" or own_zed == None):
-            self.left2_color_subscriber = self.create_subscription(Image, LEFT2_IMAGE_TOPIC, self.left2_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        # if DataType.ZED2_LEFT_COLOR in self.required_data and (own_zed == "zed" or own_zed == None):
+        #     self.left2_color_subscriber = self.create_subscription(Image, LEFT2_IMAGE_TOPIC, self.left2_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
         
         # if DataType.ZED_RIGHT_COLOR in self.required_data:
         #     self.right_color_subscriber = self.create_subscription(Image, RIGHT_IMAGE_TOPIC, self.right_color_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
-        if DataType.ZED_XYZ_IMG in self.required_data and (own_zed == "zed2" or own_zed == None):
-            self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-            if self.visualize:
-                self.xyz_image_window = vis.init_visualizer_window()
+        # if DataType.ZED_XYZ_IMG in self.required_data and (own_zed == "zed2" or own_zed == None):
+        #     self.xyz_image_subscriber = self.create_subscription(Image, XYZ_IMAGE_TOPIC, self.xyz_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        #     if self.visualize:
+        #         self.xyz_image_window = vis.init_visualizer_window()
                 
-        if DataType.ZED2_XYZ_IMG in self.required_data and (own_zed == "zed" or own_zed == None):
-            self.xyz2_image_subscriber = self.create_subscription(Image, XYZ2_IMAGE_TOPIC, self.xyz2_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-            if self.visualize:
-                self.xyz2_image_window = vis.init_visualizer_window()
+        # if DataType.ZED2_XYZ_IMG in self.required_data and (own_zed == "zed" or own_zed == None):
+        #     self.xyz2_image_subscriber = self.create_subscription(Image, XYZ2_IMAGE_TOPIC, self.xyz2_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        #     if self.visualize:
+        #         self.xyz2_image_window = vis.init_visualizer_window()
 
         # if DataType.ZED_DEPTH_IMG in self.required_data:
         #     self.depth_subscriber = self.create_subscription(Image, DEPTH_IMAGE_TOPIC, self.depth_image_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)

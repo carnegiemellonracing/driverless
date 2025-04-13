@@ -34,7 +34,7 @@ from perc22a.mergers.merger_factory import \
     create_all_merger, \
     create_any_merger
 
-from interfaces.msg import SplineFrames
+from interfaces.msg import SplineFrames, ConeArray
 from geometry_msgs.msg import Point
 
 import perceptions.ros.utils.conversions as conv
@@ -71,6 +71,9 @@ class EndToEndNode(Node):
         # publishers
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
                                                  topic="/spline",
+                                                 qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.cone_pub = self.create_publisher(msg_type=ConeArray,
+                                                 topic="/perc_cones",
                                                  qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         # parts of the pipeline 
@@ -130,6 +133,8 @@ class EndToEndNode(Node):
         # TODO: should separately update cones and then return cones relevant for svm
         cones = self.cone_state.update(cones, mi)
         time_state = self.timer.end("merge+color+state", ret=True)
+
+        self.cone_pub.publish(conv.cones_to_msg(cones))
 
         # spline
         self.timer.start("spline")
