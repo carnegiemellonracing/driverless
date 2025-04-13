@@ -18,10 +18,10 @@
  * @param logger ROS logger for error reporting
  * @return cv::Mat The closest frame
  */
-cv::Mat find_closest_frame(
-    const std::deque<std::pair<uint64_t, cv::Mat>>& img_deque,
-    const rclcpp::Time& callbackTime,
-    const rclcpp::Logger& logger
+std::pair<uint64_t, cv::Mat> find_closest_frame(
+    const std::deque<std::pair<uint64_t, cv::Mat>> &img_deque,
+    const rclcpp::Time &callbackTime,
+    const rclcpp::Logger &logger
 );
 
 /**

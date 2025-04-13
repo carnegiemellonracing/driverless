@@ -1,33 +1,27 @@
 #include "camera.hpp"
 #include <iostream>
 
-cv::Mat find_closest_frame(
-    const std::deque<std::pair<uint64_t, cv::Mat>>& img_deque,
-    const rclcpp::Time& callbackTime,
-    const rclcpp::Logger& logger
+std::pair<uint64_t, cv::Mat> find_closest_frame(
+    const std::deque<std::pair<uint64_t, cv::Mat>> &img_deque,
+    const rclcpp::Time &callbackTime,
+    const rclcpp::Logger &logger
 ) {
-    // Initialize variables
-    uint64_t bestDiff = INT64_MAX;
-    cv::Mat closestFrame;
 
     // Check if deque empty
     if (img_deque.empty()) {
         RCLCPP_ERROR(logger, "Image deque is empty! Cannot find matching frame.");
-        return cv::Mat();
+        return std::make_pair(uint64_t(0), cv::Mat());
     }
 
     // Iterate through deque to find the closest frame by timestamp
     for (const auto &frame : img_deque) {
-        uint64_t timeDiff = frame.first - callbackTime.nanoseconds();
-
-        if (timeDiff < bestDiff) {
-            closestFrame = frame.second;
-            bestDiff = timeDiff;
+        if (frame.first >= callbackTime.nanoseconds()) {
+            return frame;
         }
     }
-    // std::cout << "time difference between camera and lidar:" << bestDiff << std::endl;
 
-    return closestFrame;
+    RCLCPP_ERROR(logger, "Callback time out of range! Cannot find matching frame.");
+    return std::make_pair(uint64_t(0), cv::Mat());
 }
 
 bool initialize_camera(

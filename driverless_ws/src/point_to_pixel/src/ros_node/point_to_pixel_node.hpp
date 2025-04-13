@@ -3,6 +3,8 @@
 // ROS2 imports
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/point.hpp"
+#include "geometry_msgs/msg/vector3_stamped.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
 #include "interfaces/msg/ppm_cone_array.hpp"
 #include "interfaces/msg/cone_list.hpp"
 #include "interfaces/msg/cone_array.hpp"
@@ -22,7 +24,7 @@ using std::placeholders::_1;
 #define viz 1      // Prints color detection outputs of every point
 #define verbose 1  // Prints transform matrix and transformed pixel of every point
 #define use_yolo 0 // 0: HSV Coloring | 1: YOLO Coloring
-#define timing 0   // Prints timing suite at end of every callback
+#define timing 1   // Prints timing suite at end of every callback
 #define inner 1    // Uses inner lens of ZEDS (if 0 uses the outer lens)
 
 struct Cone {
@@ -46,6 +48,9 @@ private:
     // Image Deque
     std::deque<std::pair<uint64_t, cv::Mat>> img_deque_l;
     std::deque<std::pair<uint64_t, cv::Mat>> img_deque_r;
+    std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> velocity_deque;
+    std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> yaw_deque;
+
 
     Eigen::Matrix<double, 3, 4> projection_matrix_l;
     Eigen::Matrix<double, 3, 4> projection_matrix_r;
@@ -59,7 +64,9 @@ private:
     cv::Scalar orange_filter_low;
 
     // Topic Callback Functions
-    void topic_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
+    void cone_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
+    void velocity_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg);
+    void yaw_callback(const geometry_msgs::msg::Vector3Stamped::SharedPtr msg);
 
     // Camera Callback Functions
     void camera_callback();
@@ -81,18 +88,31 @@ private:
     cv::Mat map_left_x_rl, map_left_y_rl;
     cv::Mat map_right_x_rr, map_right_y_rr;
 
+    std::mutex l_img_mutex;
+    std::mutex r_img_mutex;
+    std::mutex velocity_mutex;
+    std::mutex yaw_mutex;
+
     // ROS2 Publisher and Subscribers
-    rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr publisher_;
-    rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr subscriber_;
+    rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cone_pub_;
+    rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr cone_sub_;
+    rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr velocity_sub_;
+    rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr yaw_sub_;
 
     // Helper functions with implementations in separate files
-    std::pair<cv::Mat, cv::Mat> get_camera_frame(rclcpp::Time callbackTime);
+    std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> get_camera_frame(rclcpp::Time callbackTime);
     int get_cone_class(std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
                       std::pair<cv::Mat, cv::Mat> frame_pair,
                       std::pair<cv::Mat, cv::Mat> detection_pair);
+
+    // Ordering function and helpers
     Cone findClosestCone(const std::vector<Cone>& cones);
     double calculateAngle(const Cone& from, const Cone& to);
     std::vector<Cone> orderConesByPathDirection(const std::vector<Cone>& unordered_cones);
+
+    // Cone state propogation
+    std::pair<double, double> getMotionEstimate(double velocity, double angle, double dt);
+    std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_velocity_yaw(uint64_t callbackTime);
 
 #if use_yolo
     cv::dnn::Net net; // YOLO Model
