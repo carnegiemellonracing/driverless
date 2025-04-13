@@ -260,8 +260,8 @@ namespace controls {
                 ss << "Length of blue cones: " << cone_msg.blue_cones.size() << std::endl;
                 ss << "Length of yellow cones: " << cone_msg.yellow_cones.size() << std::endl;
                 ss << "Length of orange cones: " << cone_msg.orange_cones.size() << std::endl;
-                ss << "Length of unknown color cones: " << cone_msg.unknown_color_cones.size() << std::endl;
-                ss << "Length of big orange cones: " << cone_msg.big_orange_cones.size() << std::endl;
+                // ss << "Length of unknown color cones: " << cone_msg.unknown_color_cones.size() << std::endl;
+                // ss << "Length of big orange cones: " << cone_msg.big_orange_cones.size() << std::endl;
                 RCLCPP_DEBUG(get_logger(), ss.str().c_str());
 
 
@@ -439,7 +439,9 @@ namespace controls {
                 info.latency_ms = time_elapsed.count();
                 info.total_latency_ms = total_time_elapsed.seconds() * 1000 + total_time_elapsed.nanoseconds() / 1000000;
 
+
                 publish_and_print_info(info, error_str);
+
             }
 
             void ControllerNode::world_twist_callback(const TwistMsg &twist_msg) {
@@ -605,7 +607,11 @@ namespace controls {
             }
 
             void ControllerNode::publish_and_print_info(interfaces::msg::ControllerInfo info, const std::string& additional_info) {
-                m_info_publisher->publish(info);
+                if constexpr (!testing_on_rosbag) {
+                    m_info_publisher->publish(info);
+
+                }
+                
                 std::stringstream ss;
 
                 ss

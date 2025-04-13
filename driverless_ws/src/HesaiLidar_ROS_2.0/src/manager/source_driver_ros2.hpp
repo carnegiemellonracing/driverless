@@ -57,7 +57,7 @@
 #include <pcl/point_types.h>
 #include <../CMR_CPP_Pipeline.cpp>
 
-#define dark_mode 1
+#define dark_mode 0
 #define CPP_ALPHA 0.1
 #define CPP_NUM_BINS 10
 #define CPP_HEIGHT_THRESHOLD 0.10
