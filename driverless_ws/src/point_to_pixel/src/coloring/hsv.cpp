@@ -24,7 +24,7 @@ namespace coloring {
             const double SCALING_FACTOR = 1.0;
 
             // Find real side length (MATTS AN ECON MAJOR) by dividing by scaling factor (distance)
-            int real_side_length = NOMINAL_SIDE_LENGTH / (SCALING_FACTOR * pixel(2));
+            int real_side_length = NOMINAL_SIDE_LENGTH; // / (SCALING_FACTOR * pixel(2));
 
             int x = static_cast<int>(pixel(0));
             int y = static_cast<int>(pixel(1));

@@ -24,7 +24,7 @@ using std::placeholders::_1;
 #define viz 1      // Prints color detection outputs of every point
 #define verbose 1  // Prints transform matrix and transformed pixel of every point
 #define use_yolo 0 // 0: HSV Coloring | 1: YOLO Coloring
-#define timing 0   // Prints timing suite at end of every callback
+#define timing 1   // Prints timing suite at end of every callback
 #define inner 1    // Uses inner lens of ZEDS (if 0 uses the outer lens)
 
 struct Cone {

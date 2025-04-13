@@ -147,7 +147,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     rclcpp::SubscriptionOptions velocity_options;
     velocity_options.callback_group = velocity_callback_group_;
     velocity_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>(
-        "/velocity", 
+        "/filter/twist", 
         10, 
         [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg) {velocity_callback(msg);},
         velocity_options
@@ -157,7 +157,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     rclcpp::SubscriptionOptions yaw_options;
     yaw_options.callback_group = yaw_callback_group_;
     yaw_sub_ = create_subscription<geometry_msgs::msg::Vector3Stamped>(
-        "/yaw", 
+        "/filter/euler", 
         10, 
         [this](const geometry_msgs::msg::Vector3Stamped::SharedPtr msg) {yaw_callback(msg);},
         yaw_options
@@ -205,6 +205,9 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     if (frame_lr.second.empty()) {
         RCLCPP_ERROR(get_logger(), "Failed to capture frame from left camera right frame.");
     };
+    l_img_mutex.lock();
+    img_deque_l.push_back(frame_lr);
+    l_img_mutex.unlock();
 
         // Capture and rectify frames for calibration
     std::pair<uint64_t, cv::Mat> frame_rr = capture_and_rectify_frame(
@@ -234,6 +237,9 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     if (frame_rl.second.empty()) {
         RCLCPP_ERROR(get_logger(), "Failed to capture frame from right camera left frame.");
     };
+    r_img_mutex.lock();
+    img_deque_r.push_back(frame_rl);
+    r_img_mutex.unlock();
 
     // Save freeze images
     cv::imwrite("src/point_to_pixel/config/freeze_ll.png", frame_ll.second);
@@ -462,6 +468,11 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     geometry_msgs::msg::TwistStamped::SharedPtr velocity_r = vel_yaw_r.first;
     geometry_msgs::msg::Vector3Stamped::SharedPtr yaw_r = vel_yaw_r.second;
 
+    if (velocity_l == nullptr || yaw_l == nullptr || velocity_r == nullptr || yaw_r == nullptr)
+    {
+        return;
+    }
+
     // In case of negative time diff (should never happen)
     double time_diff_l = (((double)yaw_l->header.stamp.sec + (double)(yaw_l->header.stamp.nanosec) / 1e9) - 
                           ((double)msg->header.stamp.sec + (double)(msg->header.stamp.nanosec) / 1e9));
@@ -563,18 +574,23 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     #endif
 
     if (!unordered_yellow_cones.empty()) {
-    std::vector<Cone> ordered_yellow = orderConesByPathDirection(unordered_yellow_cones);
-    for (const auto& cone : ordered_yellow) {
-      message.yellow_cones.push_back(cone.point);
+        std::vector<Cone> ordered_yellow = orderConesByPathDirection(unordered_yellow_cones);
+        for (const auto& cone : ordered_yellow) {
+        message.yellow_cones.push_back(cone.point);
+        }
     }
-  }
 
-  if (!unordered_blue_cones.empty()) {
-    std::vector<Cone> ordered_blue = orderConesByPathDirection(unordered_blue_cones);
-    for (const auto& cone : ordered_blue) {
-      message.blue_cones.push_back(cone.point);
+    if (!unordered_blue_cones.empty()) {
+        std::vector<Cone> ordered_blue = orderConesByPathDirection(unordered_blue_cones);
+        for (const auto& cone : ordered_blue) {
+            message.blue_cones.push_back(cone.point);
+        }
     }
-  }
+
+    #if timing
+        auto end_ordering_time = high_resolution_clock::now();
+        auto ordering_time = std::chrono::duration_cast<std::chrono::microseconds>(end_ordering_time - transform_coloring_time).count();
+    #endif
 
     int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
     int yellow_cones = message.yellow_cones.size();
@@ -597,6 +613,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
         RCLCPP_INFO(get_logger(), "Total Transform and Coloring Time  %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(transform_coloring_time - camera_time).count());
         RCLCPP_INFO(get_logger(), "--Total Transform Time  %ld microseconds.", transform_time);
         RCLCPP_INFO(get_logger(), "--Total Coloring Time  %ld microseconds.", coloring_time);
+        RCLCPP_INFO(get_logger(), "--Total Ordering Time  %ld microseconds.", ordering_time);
         auto time_diff = end_time - start_time;
         RCLCPP_INFO(get_logger(), "Total PPM Time %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(time_diff).count());
         RCLCPP_INFO(get_logger(), "Total Time from Lidar  %ld microseconds.", ms_time_since_lidar.nanoseconds() / 1000);
@@ -639,11 +656,13 @@ void PointToPixelNode::camera_callback()
     img_deque_l.push_back(frame_l);
     l_img_mutex.unlock();
 
+    r_img_mutex.lock();
     while (img_deque_r.size() >= max_deque_size) {
         img_deque_r.pop_front();
     }
 
     img_deque_r.push_back(frame_r);
+    r_img_mutex.unlock();
 }
 
 void PointToPixelNode::velocity_callback(geometry_msgs::msg::TwistStamped::SharedPtr msg)
