@@ -25,6 +25,8 @@ import perc22a.predictors.utils.lidar.visualization as vis
 from perc22a.data.utils.DataType import DataType
 from perc22a.data.utils.DataInstance import DataInstance
 
+from perc22a.predictors.utils.cones import Cones
+
 # Cone Merger and pipeline enum type
 from perc22a.mergers.MergerInterface import Merger
 from perc22a.mergers.PipelineType import PipelineType
@@ -34,7 +36,7 @@ from perc22a.mergers.merger_factory import \
     create_all_merger, \
     create_any_merger
 
-from interfaces.msg import SplineFrames, EndToEndDebug, ConeArray
+from interfaces.msg import SplineFrames, ConeArray, EndToEndDebug
 from geometry_msgs.msg import Point
 
 import perceptions.ros.utils.conversions as conv
@@ -99,6 +101,20 @@ class EndToEndNode(Node):
     def init_predictor(self):
         return LidarPredictor()
     
+
+    
+    
+    # def sort_cone_array(self, cone_array):
+    #     rem_cones = set(cone_array)
+    #     while re
+    
+    def sort_cones(self, cones):
+        sorted_cones = Cones()
+        sorted_cones.blue_cones = self.sort_cone_array(cones.blue_cones)
+        sorted_cones.yellow_cones = self.sort_cone_array(cones.yellow_cones)
+        sorted_cones.orange_cones = self.sort_cone_array(cones.orange_cones)
+        return sorted_cones
+    
     def twist_callback(self, curr_twist):
         self.curr_twist = curr_twist
 
@@ -142,6 +158,8 @@ class EndToEndNode(Node):
         time_state = self.timer.end("merge+color+state", ret=True)
         cone_msg = conv.cones_to_msg(cones)
         cone_msg.header.stamp = msg.header.stamp
+        self.cones_pub.publish(conv.cones_to_msg(cones))
+
         self.cones_pub.publish(conv.cones_to_msg(cones))
 
         # spline

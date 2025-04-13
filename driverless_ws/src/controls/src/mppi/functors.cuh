@@ -20,6 +20,7 @@
 #include <utils/macros.hpp>
 
 #include "types.cuh"
+#include <utils/general_utils.hpp>
 
 
 namespace controls {

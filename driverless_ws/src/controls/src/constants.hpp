@@ -22,17 +22,22 @@ namespace controls {
         POSITIONLLA_YAW_SPEED
     };
     constexpr bool testing_on_breezway = false;
+
+#ifdef ROSBAG
+    constexpr bool testing_on_rosbag = true;
+#else
     constexpr bool testing_on_rosbag = false; // so that even if we are not using model multiset, we can record the IRL data for posterity
+#endif
     // also note that testing_on_rosbag true means we don't publish control actions anymore, is that alright?
     constexpr bool republish_perc_cones = true; // no harm in doing this besides latency
     constexpr bool publish_spline = true;
 
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
-    constexpr bool log_state_projection_history = true;
+    constexpr bool log_state_projection_history = false;
 
     constexpr StateProjectionMode state_projection_mode = StateProjectionMode::MODEL_MULTISET;
-    constexpr float maximum_speed_ms = 3.0f;
+    constexpr float maximum_speed_ms = 7.0f;
     constexpr float whl_radius = 0.215f;
     constexpr float gear_ratio = 14.0f;
 
@@ -65,7 +70,7 @@ namespace controls {
     constexpr float swangle_1radps_cost = 0.0f;
         // DEPRECATED
         constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
-    constexpr float target_speed = 2.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
+    constexpr float target_speed = 6.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 
     // Cost params
@@ -101,7 +106,7 @@ namespace controls {
      // triangle threshold is the max distance between cones on opposing sides that we will use for triangle drawing
     constexpr float triangle_threshold_squared = 64.0f;
 
-    constexpr float cg_to_side = 0.75f; // ACTUAL .75
+    constexpr float cg_to_side = 1.0f; // ACTUAL .75
     constexpr float cg_to_nose = 2.025f;
 
 #ifdef USESYSID
@@ -137,10 +142,10 @@ namespace controls {
     constexpr float understeer_slope = 0.0f; ///< How much car understeers as speed increases. See @rst :doc:`/source/explainers/slipless_model` @endrst.
 
     /// Maximum forward acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
-    constexpr float long_tractive_capability = 2.0f;
+    constexpr float long_tractive_capability = 4.0f;
     /// Maximum centripetal acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
     /// Usually slightly more than @c long_tractive_capability
-    constexpr float lat_tractive_capability = 3.0f;
+    constexpr float lat_tractive_capability = 6.0f;
     constexpr float brake_enable_speed = 1.0f;
     /// Maximum torque request (N m)
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
@@ -150,7 +155,6 @@ namespace controls {
     constexpr float max_swangle = 19 * M_PI / 180.0f;
     /// Time from MPPI control action request to physical change, in sec
     // TODO: Re-estimate since Falcon (steering motor) replacement
-    // constexpr float approx_propogation_delay = 0.56f;
     constexpr float approx_mppi_time = 0.020f; ///< Time from MPPI launch to control action calculation, in sec
 
     enum class TorqueMode
