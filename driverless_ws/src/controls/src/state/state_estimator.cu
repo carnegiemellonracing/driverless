@@ -205,18 +205,21 @@ namespace controls {
             std::lock_guard<std::mutex> guard {mutex};
 
             m_logger("initializing state estimator");
-            if (true || display_on) {
+#ifdef DISPLAY
+            // if (true || display_on) {
                 m_gl_window = utils::create_sdl2_gl_window(
                     "Spline Frame Lookup", curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
                     0, &m_gl_context
                 );
-            } else {
+            // } else {
+#else
                 // dummy window to create opengl context for curv frame buffer
                 m_gl_window = utils::create_sdl2_gl_window(
                     "Spline Frame Lookup Dummy", 1, 1,
                     SDL_WINDOW_HIDDEN, &m_gl_context
                 );
-            }
+#endif
+            // }
 
             m_logger("making state estimator gl context current");
             utils::make_gl_current_or_except(m_gl_window, m_gl_context);

@@ -840,6 +840,7 @@ int main(int argc, char *argv[]) {
 
     std::cout << "controller node thread launched" << std::endl;
 
+#ifdef DISPLAY
     if (true || display_on) {
         display::Display display {controller, state_estimator};
         std::cout << "display created" << std::endl;
@@ -857,6 +858,7 @@ int main(int argc, char *argv[]) {
         }};
         std::cout << "display thread launched" << std::endl;
     }
+#endif
 
     // wait for a thread to die
     {

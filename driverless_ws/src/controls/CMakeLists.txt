@@ -42,8 +42,9 @@ include_directories($<INSTALL_INTERFACE:include>)
 
 
   # set to copy the states to host
+if (DISPLAY)
 add_compile_options(-DDISPLAY)
-
+endif()
 
 if (PARANOID)
   add_compile_options(-DPARANOID)
@@ -94,9 +95,11 @@ set(LIB_SOURCES
         src/state/naive_state_tracker.cpp
 )
 
+if (DISPLAY)
 set(LIB_SOURCES
         ${LIB_SOURCES}
         src/display/display.cpp)
+endif()
 
 add_library(controls_lib SHARED ${LIB_SOURCES})
 
