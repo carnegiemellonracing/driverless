@@ -34,7 +34,7 @@
 
 #include <midline/svm_conv.hpp>
 #include <utils/ros_utils.hpp>
-#include <utils/macros.hpp>
+#include <utils/cuda_macros.cuh>
 
 namespace {
     // Helper function for timing with optional GPU synchronization

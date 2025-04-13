@@ -1,6 +1,6 @@
 #include <state/state_projector.cuh>
 #include <utils/general_utils.hpp>
-#include <utils/macros.hpp>
+#include <utils/cuda_macros.cuh>
 #include <sstream>
 #include <fstream>
 
