@@ -781,7 +781,7 @@ static int process_config_file(std::string config_file_path) {
 
 int main(int argc, char *argv[]) {
     using namespace controls;
-    std::string default_config_path = "conf1";
+    std::string default_config_path = "controls_default_config";
     std::string config_file_path;
     if (argc < 2)
     {
