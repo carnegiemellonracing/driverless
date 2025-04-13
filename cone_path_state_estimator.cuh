@@ -5,10 +5,107 @@
 #include <utils/gl_utils.hpp>
 
 #include "state_estimator.hpp"
-#include "state_projector.cuh"
+
 
 namespace controls {
     namespace state {
+
+        class StateProjector {
+        public:
+            /**
+             * @brief Record an action into the history
+             * @param[in] action The action to be recorded
+             * @param[in] time The time at which the action was taken by the actuators.
+             */
+            void record_action(Action action, rclcpp::Time time);
+
+            /**
+             * @brief Record a speed into the history
+             * @param[in] speed The speed to be recorded
+             * @param[in] time The time at which the speed was measured. Should have no latency.
+             */
+            void record_speed(float speed, rclcpp::Time time);
+
+            /**
+             * @brief Record a pose into the history. Although pose data itself is not measured, this is called when
+             * the spline is updated, and a pose of (0,0,0) is inferred from the spline.
+             * @param x The x coordinate of the pose
+             * @param y The y coordinate of the pose
+             * @param yaw The yaw of the vehicle w.r.t. the inertial coordinate frame
+             * @param time The time at which the vehicle had the pose. Since the pose is inferred from the spline, this
+             * should be when the LIDAR points first came in.
+             */
+            void record_pose(float x, float y, float yaw, rclcpp::Time time);
+
+            /**
+             * @brief "main" projection function. Projects the state of the car at a given time, from the most
+             * recent pose record and the history of actions and speeds since that pose record.
+             * @param time The time at which the state is to be projected
+             * @param logger The logger function to be used
+             * @return The projected state of the car at the given time
+             */
+            State project(const rclcpp::Time& time, LoggerFunc logger) const;
+            /**
+             * @brief Whether the StateProjector is ready to project a state. This is true if there is a pose record,
+             * which is every time since the first spline is received.
+             * @return True if the StateProjector is ready to project a state, false otherwise.
+             */
+            bool is_ready() const;
+
+        private:
+            /// Historical record type
+            struct Record {
+                enum class Type {
+                    Action,
+                    Speed,
+                    Pose
+                };
+
+                union {
+                    Action action;
+                    float speed;
+
+                    struct {
+                        float x;
+                        float y;
+                        float yaw;
+                    } pose;
+                };
+
+                rclcpp::Time time;
+                Type type;
+            };
+
+            /// Prints the elements of m_history_since_pose, for debugging purposes.
+            void print_history() const;
+
+            /// @note m_init_action and m_init_speed should occur <= m_pose_record, if m_pose_record exists
+
+            /// "Default" action to be used until a recorded action is available
+            Record m_init_action { .action {}, .time = rclcpp::Time(0UL, default_clock_type), .type = Record::Type::Action};
+            /// "Default" speed to be used until a recorded speed is available
+            /// @note direction of velocity is inferred from swangle
+            Record m_init_speed { .speed = 0, .time = rclcpp::Time(0UL, default_clock_type), .type = Record::Type::Speed};
+            /// most recent and only pose (new pose implies a new coord. frame, throw away data in old coord. frame)
+            /// only nullopt before first pose received
+            std::optional<Record> m_pose_record = std::nullopt;
+
+            /// Helper binary operator for sorting records by time, needed for the multiset.
+            struct CompareRecordTimes {
+                bool operator() (const Record& a, const Record& b) const {
+                    return a.time < b.time;
+                }
+            };
+            /**
+             * Contains all action and speed records since the last pose record.
+             * Multiset is used like a self-sorting array.
+             *
+             * Invariants of m_history_since_pose:
+             * should only contain Action and Speed records
+             * time stamps of each record should be strictly after m_pose_record
+             */
+            std::multiset<Record, CompareRecordTimes> m_history_since_pose {};
+        };
 
         class StateEstimator_Impl : public StateEstimator {
         public:
@@ -20,24 +117,22 @@ namespace controls {
             StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger);
 
             void on_spline(const SplineMsg& spline_msg) override;
-            void on_quat(const QuatMsg& quat_msg) override;
-            float on_cone(const ConeMsg& cone_msg, rclcpp::Publisher<SplineMsg>::SharedPtr spline_publisher) override;
+            float on_cone(const ConeMsg& cone_msg) override;
             void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) override;
             // on_pose is not used, for future proofing
             void on_pose(const PoseMsg& pose_msg) override;
-            void on_position_lla(const PositionLLAMsg& position_lla_msg) override;
-
 
             void render_and_sync(State state) override;
-            std::optional<State> project_state(const rclcpp::Time &time) override;
+            State project_state(const rclcpp::Time &time) override;
+            std::vector<std::chrono::milliseconds> sync_to_device(const rclcpp::Time &time) override;
             bool is_ready() override;
             void set_logger(LoggerFunc logger) override;
             void set_logger_obj(rclcpp::Logger logger) override;
 
+            rclcpp::Time get_orig_spline_data_stamp() override;
             void record_control_action(const Action &action, const rclcpp::Time &time) override;
 
             std::vector<glm::fvec2> get_spline_frames() override;
-
 
 #ifdef DISPLAY
             std::vector<glm::fvec2> get_all_left_cone_points() override;
@@ -45,11 +140,10 @@ namespace controls {
             std::vector<glm::fvec2> get_left_cone_points() override;
             std::vector<glm::fvec2> get_right_cone_points() override;
             std::vector<glm::fvec2> get_raceline_points();
+            std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> get_all_cone_points() override;
             std::vector<float> get_vertices() override;
             // std::vector<glm::fvec2> get_normals() override;
-            OffsetImage get_offset_pixels() override;
-            OffsetImage m_last_offset_image;
-
+            void get_offset_pixels(OffsetImage& offset_image) override;
 #endif
 
             /**
@@ -67,7 +161,9 @@ namespace controls {
             /// in m_curv_frame_lookup_tex_info.
             void gen_tex_info(glm::fvec2 car_pos);
 
-            void render_fake_track();
+            // void render_fake_track();
+            void render_left_fake_track();
+            void render_right_fake_track();
             /**
              * Render the lookup table into m_curv_frame_lookup_fbo
              */
@@ -94,6 +190,8 @@ namespace controls {
             void gen_curv_frame_lookup_framebuffer();
 
             void gen_fake_track();
+            void gen_left_fake_track();
+            void gen_right_fake_track();
 
             /**
              * Creates the buffers to be used, as well as the descriptions of how the buffers are laid out.
@@ -108,6 +206,9 @@ namespace controls {
              * and the triples of vertex indices that represent triangles respectively.
              */
             void fill_path_buffers_cones();
+            
+            void fill_left_path_buffers_spline();
+            void fill_right_path_buffers_spline();
             void fill_path_buffers_spline();
 
             struct Vertex {
@@ -140,9 +241,11 @@ namespace controls {
             std::vector<GLuint> m_triangles;
 
             int m_num_triangles;
+            /// Stores the exact time the spline should be accurate from (i.e. when cones were identified by LIDAR)
+            rclcpp::Time m_orig_spline_data_stamp;
 
             /// The owned StateProjector to estimate the current state.
-            state::StateProjector m_state_projector;
+            StateProjector m_state_projector;
 
             ///// -----OPENGL OBJECTS----- /////
 
@@ -161,16 +264,15 @@ namespace controls {
             /// Render buffer object. Render target for the fbo, used to map to CUDA memory
             GLuint m_curv_frame_lookup_rbo;
 
-            struct FakeTrackInfo {
-                GLuint fbo;
-                GLuint texture_color;
-                utils::GLObj path;
-            };
-
-            FakeTrackInfo m_midline_fake_track;
-            FakeTrackInfo m_left_fake_track;
-            FakeTrackInfo m_right_fake_track;
-
+            GLuint m_fake_track_fbo;
+            GLuint m_left_fake_track_fbo;
+            GLuint m_right_fake_track_fbo;
+            GLuint m_fake_track_texture_color;
+            GLuint m_left_fake_track_texture_color;
+            GLuint m_right_fake_track_texture_color;
+            //utils::GLObj m_fake_track_path;
+            utils::GLObj m_left_fake_track_path;
+            utils::GLObj m_right_fake_track_path;
             GLuint m_fake_track_shader_program; 
 
             /**
@@ -182,8 +284,6 @@ namespace controls {
             utils::GLObj m_gl_path;
 
             GLuint m_gl_path_shader; ///< Shader program to be used. Composed of vertex and fragment shaders.
-
-            GLuint m_double_cone_shader;
 
             /// OpenGL context, stores all the information associated with this instance.
             SDL_GLContext m_gl_context;
