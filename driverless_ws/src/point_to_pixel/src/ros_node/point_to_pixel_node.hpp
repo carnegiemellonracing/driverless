@@ -13,6 +13,7 @@
 #include "../transform/transform.hpp"
 #include "../camera/camera.hpp"
 #include "../coloring/coloring.hpp"
+#include "../coloring/yolo.hpp"
 
 using std::chrono::duration;
 using std::chrono::duration_cast;
