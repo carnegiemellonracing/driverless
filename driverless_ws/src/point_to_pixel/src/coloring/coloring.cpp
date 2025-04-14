@@ -1,6 +1,4 @@
 #include "coloring.hpp"
-#include "hsv.hpp"
-#include "yolo.hpp"
 
 namespace coloring {
     int get_cone_class(

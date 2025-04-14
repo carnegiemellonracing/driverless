@@ -21,11 +21,11 @@ using std::chrono::milliseconds;
 using std::placeholders::_1;
 
 // BUILD FLAGS
-#define viz 0      // Prints color detection outputs of every point
 #define verbose 1  // Prints transform matrix and transformed pixel of every point
-#define use_yolo 0 // 0: HSV Coloring | 1: YOLO Coloring
+#define use_yolo 1 // 0: HSV Coloring | 1: YOLO Coloring
 #define timing 1   // Prints timing suite at end of every callback
 #define inner 1    // Uses inner lens of ZEDS (if 0 uses the outer lens)
+#define save_frames 1 // Writes every 5th frame to img_log folder
 
 struct Cone {
     geometry_msgs::msg::Point point;
@@ -41,6 +41,11 @@ public:
     // Constructor declaration
     PointToPixelNode();
     static constexpr int max_deque_size = 100;
+
+    #if save_frames
+    static constexpr int frame_interval = 5;
+    #endif
+
     // static constexpr int zed_one_sn; // Left side zed
     // static constexpr int zed_two_sn; // Right side zed
 
@@ -116,7 +121,13 @@ private:
 
     std::thread launch_camera_communication();
 
-#if use_yolo
+    #if use_yolo
     cv::dnn::Net net; // YOLO Model
-#endif
+    #endif
+
+    #if save_frames
+    std::string save_path;
+    uint64_t camera_callback_count;
+    void save_frame(std::pair<uint64_t, cv::Mat> frame_l, std::pair<uint64_t, cv::Mat> frame_r);
+    #endif
 };

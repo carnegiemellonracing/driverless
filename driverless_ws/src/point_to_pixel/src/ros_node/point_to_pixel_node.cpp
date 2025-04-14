@@ -4,6 +4,7 @@
 #include <deque>
 #include <memory>
 #include <chrono>
+#include <filesystem>
 
 // Constructor definition
 PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
@@ -44,7 +45,6 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     declare_parameter("projection_matrix_rl", param_default);
     declare_parameter("projection_matrix_lr", param_default);
     declare_parameter("projection_matrix_rr", param_default);
-
 
     // Threshold that determines whether it reports the color on a cone or not
     declare_parameter("confidence_threshold", 0.01);
@@ -207,9 +207,6 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     if (frame_lr.second.empty()) {
         RCLCPP_ERROR(get_logger(), "Failed to capture frame from left camera right frame.");
     };
-    l_img_mutex.lock();
-    img_deque_l.push_back(frame_lr);
-    l_img_mutex.unlock();
 
         // Capture and rectify frames for calibration
     std::pair<uint64_t, cv::Mat> frame_rr = capture_and_rectify_frame(
@@ -241,9 +238,6 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     if (frame_rl.second.empty()) {
         RCLCPP_ERROR(get_logger(), "Failed to capture frame from right camera left frame.");
     };
-    r_img_mutex.lock();
-    img_deque_r.push_back(frame_rl);
-    r_img_mutex.unlock();
 
     // Save freeze images
     cv::imwrite("src/point_to_pixel/config/freeze_ll.png", frame_ll.second);
@@ -251,6 +245,30 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     cv::imwrite("src/point_to_pixel/config/freeze_rr.png", frame_rr.second);
     cv::imwrite("src/point_to_pixel/config/freeze_rl.png", frame_rl.second);
 
+    // Clear directory
+    #if save_frames
+    save_path = "src/point_to_pixel/img_log/";
+    camera_callback_count = 0;
+
+    try
+    {
+        if (std::filesystem::remove_all(save_path))
+        {
+            RCLCPP_INFO(get_logger(), "Cleared previous image log.");
+        }
+        else
+        {
+            RCLCPP_ERROR(get_logger(), "Failed to delete directory.");
+        }
+    }
+    catch (const std::exception &e)
+    {
+        RCLCPP_ERROR(get_logger(), "Failed to delete directory: %s", e.what());
+    }
+    #endif
+
+
+    // Launch camera thread
     launch_camera_communication().detach();
 
     // Initialization Complete Message Suite
@@ -277,6 +295,7 @@ std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> PointToPixelNode::get_camera_fr
     l_img_mutex.lock();
     std::pair<uint64_t, cv::Mat> closestFrame_l = find_closest_frame(img_deque_l, callbackTime, get_logger());
     l_img_mutex.unlock();
+
     r_img_mutex.lock();
     std::pair<uint64_t, cv::Mat> closestFrame_r = find_closest_frame(img_deque_r, callbackTime, get_logger());
     r_img_mutex.unlock();
@@ -470,8 +489,10 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> vel_yaw_l = get_velocity_yaw(std::get<0>(frame_tuple));
     std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> vel_yaw_r = get_velocity_yaw(std::get<2>(frame_tuple));
 
+    // Null Check
     if (vel_yaw_l.first == nullptr || vel_yaw_l.second == nullptr || vel_yaw_r.first == nullptr || vel_yaw_r.second == nullptr)
     {
+        RCLCPP_INFO(get_logger(), "Velocity or Yaw is null");
         return;
     }
 
@@ -482,17 +503,9 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     geometry_msgs::msg::Vector3Stamped::SharedPtr yaw_r = vel_yaw_r.second;
 
 
-    // In case of negative time diff (should never happen)
-    // double time_diff_l = (((double)yaw_l->header.stamp.sec + (double)(yaw_l->header.stamp.nanosec) / 1e9) - 
-    //                       ((double)msg->header.stamp.sec + (double)(msg->header.stamp.nanosec) / 1e9));
-    // double time_diff_r = (((double)yaw_r->header.stamp.sec + (double)(yaw_r->header.stamp.nanosec) / 1e9) - 
-    //                       ((double)msg->header.stamp.sec + (double)(msg->header.stamp.nanosec) / 1e9));
+    double dt_l = (std::get<0>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9;
+    double dt_r = (std::get<2>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9;
 
-    double dt_l = (std::get<0>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9; //::max( 0.0, time_diff_l );
-    double dt_r = (std::get<2>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9; // time_diffstd::max( 0.0, time_diff_r );
-
-    // dt_l = 0.0;
-    // dt_r = 0.0;
     RCLCPP_INFO(get_logger(), "left_camera_timestamp: %llu, right_camera_timestamp: %llu", std::get<0>(frame_tuple), std::get<2>(frame_tuple));
     RCLCPP_INFO(get_logger(), "lidar_timestamp: %f", msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec);
 
@@ -509,14 +522,9 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     std::pair<double, double> ds_l = std::make_pair(-lat_l, long_l);
     std::pair<double, double> ds_r = std::make_pair(-lat_r, long_r);
 
-
-
-
-    // longitudinal = xworld * np.cos(yaw) + yworld * np.sin(yaw)
-    // lateral = -xworld * np.sin(yaw) + yworld * np.cos(yaw)
-    // return longitudinal, lateral
-
-    RCLCPP_INFO(get_logger(), "Time diff L: %f, Time diff R: %f", dt_l, dt_r);
+    #if timing
+        RCLCPP_INFO(get_logger(), "Time diff L: %f, Time diff R: %f", dt_l, dt_r);
+    #endif
 
     // Calculate velocity 
     // double v_l = std::sqrt(velocity_l->twist.linear.x * velocity_l->twist.linear.x + velocity_l->twist.linear.y * velocity_l->twist.linear.y);
@@ -580,12 +588,6 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
         point_msg.x = msg->cone_array[i].cone_points[0].x;
         point_msg.y = msg->cone_array[i].cone_points[0].y;
         point_msg.z = 0.0;
-      
-        #if viz
-            RCLCPP_INFO(get_logger(), "Cone: Color %d, 2D[ l: (%lf, %lf) | r: (%lf, %lf) ] from 3D[ (%lf, %lfl, %lf)",
-                    cone_class, pixel_pair.first[0], pixel_pair.first[1], pixel_pair.second[0], pixel_pair.second[1],
-                    msg->cone_array[i].cone_points[0].x, msg->cone_array[i].cone_points[0].y, msg->cone_array[i].cone_points[0].z);
-        #endif
 
         switch (cone_class) {
             case 0:
@@ -659,6 +661,16 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     cone_pub_->publish(message);
 }
 
+#if save_frames
+void PointToPixelNode::save_frame(std::pair<uint64_t, cv::Mat> frame_l, std::pair<uint64_t, cv::Mat> frame_r)
+{
+    std::string l_filename = save_path + std::to_string(frame_l.first) + ".png";
+    std::string r_filename = save_path + std::to_string(frame_r.first) + ".png";
+    cv::imwrite(l_filename, frame_l.second);
+    cv::imwrite(r_filename, frame_r.second);
+}
+#endif
+
 // Camera Callback (Populates and maintain deque)
 void PointToPixelNode::camera_callback()
 {
@@ -686,6 +698,17 @@ void PointToPixelNode::camera_callback()
         inner == 1
     );
 
+    #if save_frames
+    if(camera_callback_count % frame_interval == 0)
+    {
+        save_frame(frame_l, frame_r);
+    }    
+
+    camera_callback_count++;
+    #endif
+
+
+
     // Deque Management and Updating
     l_img_mutex.lock();
     while (img_deque_l.size() >= max_deque_size) {
@@ -703,6 +726,7 @@ void PointToPixelNode::camera_callback()
     r_img_mutex.unlock();
 }
 
+// Launches camera thread
 std::thread PointToPixelNode::launch_camera_communication() {
     return std::thread{
         [this]
@@ -710,6 +734,7 @@ std::thread PointToPixelNode::launch_camera_communication() {
             while (rclcpp::ok)
             {
                 camera_callback();
+                // 33 FPS
                 rclcpp::sleep_for(std::chrono::milliseconds(30));
             }
         }};
@@ -736,7 +761,6 @@ void PointToPixelNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::SharedPt
         yaw_deque.pop_front();
     }
     yaw_deque.push_back(msg);
-    // yaw_mutex.unlock();
 }
 
 int main(int argc, char **argv)
