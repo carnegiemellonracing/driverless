@@ -434,28 +434,26 @@ inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZ> &cloud,
     PointCloud<PointXYZ> GNC_cloud = GraceAndConrad(cloud, alpha, num_bins, height_threshold);
     auto end_GNC = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> duration_GNC = end_GNC - start_GNC;
-    RCLCPP_INFO(logger, "GraceAndConrad time: %dms", duration_GNC.count());
+    RCLCPP_INFO(logger, "GraceAndConrad time: %fms", duration_GNC.count());
 
     // Time DBSCAN step
     auto start_DBSCAN = std::chrono::high_resolution_clock::now();
     PointCloud<PointXYZ> clustered_cloud = DBSCAN(GNC_cloud, epsilon, min_points);
     auto end_DBSCAN = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> duration_DBSCAN = end_DBSCAN - start_DBSCAN;
-    RCLCPP_INFO(logger, "DBSCAN time: %dms", duration_DBSCAN.count());
+    RCLCPP_INFO(logger, "DBSCAN time: %fms", duration_DBSCAN.count());
 
     // Time DBSCAN2 step
     auto start_DBSCAN2 = std::chrono::high_resolution_clock::now();
     PointCloud<PointXYZ> filtered_cloud = DBSCAN2(clustered_cloud, epsilon2, min_points2);
     auto end_DBSCAN2 = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> duration_DBSCAN2 = end_DBSCAN2 - start_DBSCAN2;
-    // std::cout << "DBSCAN2 time: " << duration_DBSCAN2.count() << " ms" << std::endl;
-    RCLCPP_INFO(logger, "DBSCAN2 time: %dms", duration_DBSCAN2.count());
+    RCLCPP_INFO(logger, "DBSCAN2 time: %fms", duration_DBSCAN2.count());
 
     // Time the overall pipeline
     auto end_pipeline = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> duration_pipeline = end_pipeline - start_pipeline;
-    // std::cout << "Total pipeline time: " << duration_pipeline.count() << " ms" << std::endl;
-    RCLCPP_INFO(logger, "Total pipeline time: %dms", duration_pipeline.count());
+    RCLCPP_INFO(logger, "Total pipeline time: %fms", duration_pipeline.count());
 
     for (int i = 0; i < filtered_cloud.size(); i++) {
       double original_x = filtered_cloud.points[i].x;
@@ -488,26 +486,26 @@ inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZ> &cloud,
     PointCloud<PointXYZ> GNC_cloud = GraceAndConrad(cloud, alpha, num_bins, height_threshold);
     auto end_GNC = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> duration_GNC = end_GNC - start_GNC;
-    RCLCPP_INFO(logger, "GraceAndConrad time: %dms", duration_GNC.count());
+    RCLCPP_INFO(logger, "GraceAndConrad time: %fms", duration_GNC.count());
 
     // Time DBSCAN step
     auto start_DBSCAN = std::chrono::high_resolution_clock::now();
     PointCloud<PointXYZ> clustered_cloud = DBSCAN(GNC_cloud, epsilon, min_points);
     auto end_DBSCAN = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> duration_DBSCAN = end_DBSCAN - start_DBSCAN;
-    RCLCPP_INFO(logger, "DBSCAN time: %dms", duration_DBSCAN.count());
+    RCLCPP_INFO(logger, "DBSCAN time: %fms", duration_DBSCAN.count());
 
     // Time DBSCAN2 step
     auto start_DBSCAN2 = std::chrono::high_resolution_clock::now();
     PointCloud<PointXYZ> filtered_cloud = DBSCAN2(clustered_cloud, epsilon2, min_points2);
     auto end_DBSCAN2 = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> duration_DBSCAN2 = end_DBSCAN2 - start_DBSCAN2;
-    RCLCPP_INFO(logger, "DBSCAN2 time: %dms", duration_DBSCAN2.count());
+    RCLCPP_INFO(logger, "DBSCAN2 time: %fms", duration_DBSCAN2.count());
 
     // Time the overall pipeline
     auto end_pipeline = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> duration_pipeline = end_pipeline - start_pipeline;
-    RCLCPP_INFO(logger, "Total pipeline time: %dms", duration_pipeline.count());
+    RCLCPP_INFO(logger, "Total pipeline time: %fms", duration_pipeline.count());
 
     return filtered_cloud;
   }

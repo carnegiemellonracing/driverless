@@ -269,7 +269,7 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
   pub_->publish(ToRosMsg(msg, frame_id_));
   auto end_lidar_pub = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> duration_pub = end_lidar_pub - start_lidar_pub;
-  RCLCPP_INFO(node_ptr_->get_logger(), "Lidar Point Publishing time: %dms", duration_pub.count());
+  RCLCPP_INFO(node_ptr_->get_logger(), "/lidar_points Publishing time: %fms", duration_pub.count());
 
 #ifdef __CUDACC__
   filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));
@@ -282,7 +282,7 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
   cone_pub_->publish(ToRosMsgConesCPP(msg, frame_id_));
   auto end_cone_pub = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> duration_cone_pub = end_cone_pub - start_cone_pub;
-  RCLCPP_INFO(node_ptr_->get_logger(), "Cone Point Publishing time: %dms", duration_cone_pub.count());
+  RCLCPP_INFO(node_ptr_->get_logger(), "/cpp_cones Publishing time: %fms", duration_cone_pub.count());
 #endif
 #endif
 }
@@ -494,7 +494,7 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> duration = end - start;
 
-  std::cout << "Time taken: " << duration.count() << " ms" << std::endl;
+  RCLCPP_INFO(node_ptr_->get_logger(), "Time taken: %fms", duration.count());
 
   return ros_msg;
 }
