@@ -46,6 +46,7 @@ namespace controls {
              */
             virtual Action generate_action() =0;
             virtual void hardcode_last_action_trajectory(std::vector<Action> actions) =0;
+            virtual Action get_next_averaged_action() =0;
             virtual void set_logger(LoggerFunc logger) =0;
 
 #ifdef DISPLAY

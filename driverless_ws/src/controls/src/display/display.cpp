@@ -200,7 +200,7 @@ namespace controls {
         void Display::init_spline() {
             m_spline = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_trajectory_shader_program);
             m_left_cone_trajectory = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 0.0f, 1.0f, 1.0f}, 3, m_trajectory_shader_program);
-            m_right_cone_trajectory = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 1.0f, 0.0f, 1.0f}, 3, m_trajectory_shader_program);
+            m_right_cone_trajectory = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 1.0f, 0.0f, 1.0f}, 3, m_trajectory_shader_program);
         }
 
         void Display::init_best_guess() {
@@ -491,7 +491,7 @@ namespace controls {
                 m_right_cone_points = m_state_estimator->get_right_cone_points();
                 m_raceline_points = m_state_estimator->get_raceline_points();
 
-                m_state_estimator->get_offset_pixels(m_offset_image);
+                m_offset_image = m_state_estimator->get_offset_pixels();
                 m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();
                 m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);
                 

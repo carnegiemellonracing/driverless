@@ -24,8 +24,8 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> transform_point(
     // std::cout << "Projection Matrix Right:\n" << ss_r.str().c_str() << std::endl;
 
     // Convert point to Eigen Vector4d (homogeneous coordinates)
-    Eigen::Vector4d lidar_pt_l(point.x, point.y, point.z, 1.0);
-    Eigen::Vector4d lidar_pt_r(point.x, point.y, point.z, 1.0);    
+    Eigen::Vector4d lidar_pt_l(point.x - ds_pair.first.first, point.y - ds_pair.first.second, point.z, 1.0);
+    Eigen::Vector4d lidar_pt_r(point.x - ds_pair.second.first, point.y - ds_pair.second.second, point.z, 1.0);    
 
     double distance_l = std::sqrt(lidar_pt_l(0) * lidar_pt_l(0) + lidar_pt_l(1) * lidar_pt_l(1));
     double distance_r = std::sqrt(lidar_pt_r(0) * lidar_pt_r(0) + lidar_pt_r(1) * lidar_pt_r(1));

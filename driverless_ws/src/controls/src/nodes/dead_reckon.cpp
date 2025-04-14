@@ -43,6 +43,10 @@ ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torq
   RCLCPP_INFO(this->get_logger(), "  angle_degrees: %.2f (ADC: %u)", angle_degrees_, rack_displacement_adc_);
   RCLCPP_INFO(this->get_logger(), "  pvalue: %.2f", pvalue_);
   RCLCPP_INFO(this->get_logger(), "  feedforward: %.2f", feedforward_);
+
+  if (initializeCan() < 0) {
+	  throw std::runtime_error("Initialize Can raised an error");
+  }
 }
 
 ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torque_mNm, uint16_t velocity_rpm, float angle_degrees, float period_seconds, float pvalue, float feedforward)
@@ -74,6 +78,10 @@ ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torq
   RCLCPP_INFO(this->get_logger(), "  period_seconds: %.2f", period_seconds_);
   RCLCPP_INFO(this->get_logger(), "  pvalue: %.2f", pvalue_);
   RCLCPP_INFO(this->get_logger(), "  feedforward: %.2f", feedforward_);
+  
+  if (initializeCan() < 0) {
+	  throw std::runtime_error("Initialize Can raised an error");
+  }
 }
 
 float ControlSenderNode::calculate_steering_angle() {

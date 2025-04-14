@@ -15,6 +15,15 @@
 namespace controls {
     namespace mppi {
 
+        static Action device_action_to_action (const DeviceAction& device_action) {
+            Action returned_action;
+            std::copy(
+                std::begin(device_action.data), std::end(device_action.data),
+                returned_action.begin()
+            );
+            return returned_action;
+        }
+
         std::shared_ptr<MppiController> MppiController::create(std::mutex& mutex, LoggerFunc logger) {
             return std::make_shared<MppiController_Impl>(mutex, logger);
         }
@@ -82,12 +91,8 @@ namespace controls {
 
             // not actually on device, just still in a device action struct
             DeviceAction host_action = m_last_action * action_momentum + (1 - action_momentum) * averaged_trajectory[0];
-
-            Action result_action;
-            std::copy(
-                std::begin(host_action.data), std::end(host_action.data),
-                result_action.begin()
-            );
+            m_last_action = host_action;
+            Action result_action = device_action_to_action(host_action);
 
 #ifdef DATA
             // we want to compare the first num_timesteps - 1 elements of averaged_trajectory and m_last_action_trajectory
@@ -130,12 +135,12 @@ namespace controls {
 
 #endif
 
-                thrust::copy(
-                    averaged_trajectory.begin() + 1,
-                    averaged_trajectory.end(),
-                    m_last_action_trajectory.begin());
+            // Save the averaged trajectory into a member variable for use by the next iteration of MPPI
+            thrust::copy(
+                averaged_trajectory.begin() + 1,
+                averaged_trajectory.end(),
+                m_last_action_trajectory.begin());
 
-            m_last_action = host_action;
 
 #ifdef DISPLAY
             CUDA_CALL(cudaMemcpyFromSymbol(
@@ -146,6 +151,22 @@ namespace controls {
 #endif
 
             return result_action;
+        }
+
+        Action MppiController_Impl::get_next_averaged_action() {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            DeviceAction action_to_take = m_last_action * action_momentum + (1 - action_momentum) * m_last_action_trajectory[0];
+            m_last_action = action_to_take;
+            /**
+             * From the CPP reference:
+             * If arg3 is in [arg1, arg2), then the behavior is undefined. Thankfully this is not the case for us.
+             */
+            thrust::copy(
+                m_last_action_trajectory.begin() + 1,
+                m_last_action_trajectory.end(),
+                m_last_action_trajectory.begin());
+
+            return device_action_to_action(action_to_take);
         }
 
         void MppiController_Impl::set_logger(LoggerFunc logger) {

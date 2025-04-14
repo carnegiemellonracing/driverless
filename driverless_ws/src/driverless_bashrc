@@ -1,0 +1,8 @@
+export ROS_LOG_DIR="$DRIVERLESS/logs"
+get_last_log() {
+	find $ROS_LOG_DIR -type f -regex ".*/$1.*" -print0 | xargs -0 ls -lt 2>/dev/null | head -1 | awk '{print $9}'
+}
+alias dv_src="source $DRIVERLESS/driverless_ws/install/setup.bash"
+alias k9="kill -9 %"
+alias sros="source install/setup.bash"
+alias ccontrols="rm -r install/controls build/controls"

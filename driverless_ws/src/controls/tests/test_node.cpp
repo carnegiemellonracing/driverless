@@ -32,8 +32,7 @@
 #include <tuple>
 #include <vector>
 
-#include <model/slipless/model_host.h>
-
+#include <utils/macros.hpp>
 #include <utils/general_utils.hpp>
 
 namespace controls {
@@ -553,7 +552,7 @@ namespace controls {
 
             double sim_time = m_time.nanoseconds() / 1.0e9;
             m_time = get_clock()->now();
-            controls::model::slipless::dynamics(orig_world_state.data(), action, m_world_state.data(), m_time.nanoseconds() / 1.0e9 - sim_time);
+            HOST_DYNAMICS_FUNC(orig_world_state.data(), action, m_world_state.data(), m_time.nanoseconds() / 1.0e9 - sim_time);
 
             update_visible_indices();
             update_track_time();
@@ -564,9 +563,10 @@ namespace controls {
 
 
         void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
-            std::cout << "\nSwangle: " << msg.swangle * (180 / M_PI) << "deg Torque f: " <<
-                msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr << std::endl;
-            
+            RCLCPP_INFO(get_logger(), "-----------Action Received-----------");
+            RCLCPP_INFO_STREAM(get_logger(), "X: " << m_world_state[0] << " Y: " << m_world_state[1] << " Yaw: " << m_world_state[2] << " Speed: " << m_world_state[3]);
+            RCLCPP_INFO_STREAM(get_logger(), "Swangle: " << msg.swangle * (180 / M_PI) << "deg Torque f: " << msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr);
+
             m_last_action_msg = msg;
         }
         /**

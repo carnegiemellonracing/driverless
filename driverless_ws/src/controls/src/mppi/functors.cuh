@@ -17,9 +17,10 @@
 #include <cuda_constants.cuh>
 #include <cuda_globals/helpers.cuh>
 #include <math_constants.h>
-#include <model/slipless/model.cuh>
+#include <utils/cuda_macros.cuh>
 
 #include "types.cuh"
+#include <utils/general_utils.hpp>
 
 
 namespace controls {
@@ -69,7 +70,7 @@ namespace controls {
 
             cuda_globals::sample_curv_state(world_state, cent_curv_pose, cent_out_of_bounds);
 
-            const float centripedal_accel = model::slipless::centripedal_accel(world_state[state_speed_idx], action[action_swangle_idx]);
+            const float centripedal_accel = CENTRIPEDAL_ACCEL_FUNC(world_state[state_speed_idx], action[action_swangle_idx]);
             const float abs_centripedal_accel = fabsf(centripedal_accel);
 
             if (abs_centripedal_accel > lat_tractive_capability) {
@@ -92,31 +93,37 @@ namespace controls {
             const float progress = cent_curv_pose[0];
 
             const float approx_speed_along = (progress - start_progress) / time_since_traj_start;
+            // ^ This is gotten from the state projection strategy
             const float actual_speed_along = world_state[3];
+            const float speed_above_threshold_cost = (actual_speed_along > maximum_speed_ms) ? above_speed_threshold_cost : 0.0f;
+
             (void)actual_speed_along;
             // if (fabsf(approx_speed_along - actual_speed_along) > 1.0f) {
             //     printf("Approx speed along: %f, actual speed along: %f\n", approx_speed_along, actual_speed_along);
             // }
             const float speed_deviation = approx_speed_along - target_speed;
-            // const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
-            const float speed_cost = speed_off_1mps_cost * (-speed_deviation);
+            const float speed_cost = speed_off_1mps_cost * fmaxf(-speed_deviation, 0.0f);
+            // const float speed_cost = speed_off_1mps_cost * (-speed_deviation);
             (void)speed_cost;
 
             const float distance_cost = offset_1m_cost * cent_curv_pose[state_y_idx];
             const float progress_cost = progress_cost_multiplier * (-progress);
 
+            const float deriv_cost = first ?
+                0 :
+                fabsf(action[action_torque_idx] - last_taken_action[action_torque_idx]) / controller_period * torque_1Nps_cost
+              + fabsf(action[action_swangle_idx] - last_taken_action[action_swangle_idx]) / controller_period * swangle_1radps_cost
+              ;
+
             float total_cost;
             if (follow_midline_only) {
-                total_cost = progress_cost + distance_cost;
+                total_cost = progress_cost + distance_cost + speed_above_threshold_cost + deriv_cost;
             } else {
-                total_cost = progress_cost;
+                total_cost = progress_cost + speed_above_threshold_cost;
             }
-
+ 
             //TODO: delete?
-            // const float deriv_cost = first ?
-            //     fabsf(action[action_torque_idx] - last_taken_action[action_torque_idx]) / controller_period / 10 * torque_10Nps_cost
-            //   + fabsf(action[action_swangle_idx] - last_taken_action[action_swangle_idx]) / controller_period * swangle_1radps_cost
-            //   : 0;
+
             // return speed_cost;
             return total_cost;
             // + fabsf(action[action_torque_idx]) * 0.05f;// + deriv_cost;
@@ -296,7 +303,7 @@ namespace controls {
                         u_ij[k] = deadzoned;
                     }
 
-                    assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
+                    paranoid_assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
                     model(x_curr, u_ij, x_curr, controller_period);
                     // printf("j: %i, x: %f, y: %f, yaw: %f, speed: %f\n", j, x_curr[state_x_idx], x_curr[state_yaw_idx], x_curr[state_yaw_idx], x_curr[state_speed_idx]);
                     paranoid_assert(!any_nan(x_curr, state_dims) && "State was nan after model step");

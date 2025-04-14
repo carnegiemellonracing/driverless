@@ -1,20 +1,20 @@
 /point_to_pixel:
   ros__parameters:
     blue_filter_high:
-    - 119
+    - 140
     - 255
     - 255
     blue_filter_low:
-    - 87
-    - 60
-    - 52
+    - 74
+    - 70
+    - 0
     orange_filter_high:
-    - 19
+    - 25
     - 255
     - 255
     orange_filter_low:
-    - 0
-    - 166
+    - 10
+    - 100
     - 20
     projection_matrix_lr:
     - - -0.19189343871459694

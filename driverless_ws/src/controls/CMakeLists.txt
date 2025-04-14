@@ -40,9 +40,10 @@ include_directories(${PROJECT_SOURCE_DIR}/../)
 include_directories(${PROJECT_SOURCE_DIR}/extern/include)
 include_directories($<INSTALL_INTERFACE:include>)
 
-if (DISPLAY)
+
   # set to copy the states to host
-  add_compile_options(-DDISPLAY)
+if (DISPLAY)
+add_compile_options(-DDISPLAY)
 endif()
 
 if (PARANOID)
@@ -66,6 +67,14 @@ if (DATA)
   )
 endif()
 
+if (USESYSID)
+  add_compile_options(-DUSESYSID)
+endif()
+
+if (ROSBAG)
+  add_compile_options(-DROSBAG)
+endif()
+
 
 # **** Controls Lib *****
 
@@ -74,6 +83,7 @@ file(GLOB TWO_TRACK_SRCS src/model/two_track/codegen/*.cpp)
 set(LIB_SOURCES
         src/mppi/mppi.cu
         src/state/state_estimator.cu
+        src/state/state_projector.cu
         src/cuda_globals/cuda_globals.cu
         extern/src/glad.c
         src/utils/gl_utils.cpp
@@ -81,13 +91,18 @@ set(LIB_SOURCES
         src/midline/svm.cpp
         src/midline/svm_conv.cpp
         src/midline/svm_conv_fast.cpp
+        src/midline/svm_conv_strat3.cpp
+        #src/midline/svm_conv_strat4.cpp
+        src/midline/svm_conv_stratnaive.cpp
+        src/midline/svm_conv_test.cpp
         src/midline/cones.cpp
+        src/state/naive_state_tracker.cpp
 )
 
 if (DISPLAY)
-  set(LIB_SOURCES
-          ${LIB_SOURCES}
-          src/display/display.cpp)
+set(LIB_SOURCES
+        ${LIB_SOURCES}
+        src/display/display.cpp)
 endif()
 
 add_library(controls_lib SHARED ${LIB_SOURCES})
@@ -97,7 +112,7 @@ target_link_libraries(controls_lib CUDA::curand OpenGL::GL OpenGL::GLU ${SDL2_LI
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   target_compile_options(controls_lib PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:
-          -g -G
+          -g -G -ggdb
           >)
 else ()
   add_compile_options(-O3)
@@ -151,6 +166,8 @@ add_executable(dead_reckon
         src/nodes/dead_reckon.cpp 
         src/can/cmr_can.c)
 
+
+
 target_link_libraries(dead_reckon Threads::Threads m can_lib)
 ament_target_dependencies(dead_reckon rclcpp interfaces builtin_interfaces)
 
@@ -158,6 +175,18 @@ install(
         TARGETS dead_reckon
         DESTINATION lib/${PROJECT_NAME}
 )
+
+# ***** Info Visualizer Node *****
+add_executable(info_visualizer src/nodes/info_visualizer.cpp)
+
+target_link_libraries(info_visualizer controls_lib)
+ament_target_dependencies(info_visualizer rclcpp interfaces builtin_interfaces)
+
+install(
+        TARGETS info_visualizer
+        DESTINATION lib/${PROJECT_NAME}
+)
+
 
 # ***** Shared options *****
 

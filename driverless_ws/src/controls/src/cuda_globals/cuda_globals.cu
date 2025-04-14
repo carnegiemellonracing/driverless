@@ -1,6 +1,6 @@
 #include "cuda_globals.cuh"
 #include "utils/cuda_utils.cuh"
-
+#include "constants.hpp"
 
 namespace controls {
     namespace cuda_globals {
@@ -26,10 +26,10 @@ namespace controls {
         };
 
         __constant__ const float action_min[action_dims] = {
-            -radians(19), -saturating_motor_torque
+            -radians(20), -max_torque
         };
         __constant__ const float action_max[action_dims] = {
-            radians(19), saturating_motor_torque
+            radians(20), max_torque
         };
 
         __constant__ const float action_deriv_min[action_dims] = {
