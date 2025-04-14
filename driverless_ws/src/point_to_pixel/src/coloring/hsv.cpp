@@ -1,10 +1,5 @@
 #include "hsv.hpp"
 
-// Flag for debug visualization
-#ifndef viz
-#define viz 0   // Prints color detection outputs of every point
-#endif
-
 namespace coloring {
     namespace hsv {
         std::pair<int, double> get_color(
@@ -74,14 +69,7 @@ namespace coloring {
             double yellow_percentage = yellow_pixels / total_pixels;
             double blue_percentage = blue_pixels / total_pixels;
             double orange_percentage = orange_pixels / total_pixels;
-            
-            // Print out the color percentages
-            #if viz
-                std::cout << "Yellow Percentage: " << yellow_percentage * 100 << "%" << std::endl;
-                std::cout << "Blue Percentage: " << blue_percentage * 100 << "%" << std::endl;
-                std::cout << "Orange Percentage: " << orange_percentage * 100 << "%" << std::endl;
-            #endif
-            
+
             // Determine cone color
             if (orange_percentage > confidence_threshold && 
                 orange_percentage > std::max(yellow_percentage, blue_percentage) * RATIO_THRESHOLD) {

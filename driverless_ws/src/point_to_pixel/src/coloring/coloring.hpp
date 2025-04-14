@@ -2,9 +2,12 @@
 
 #include <opencv2/opencv.hpp>
 #include <Eigen/Dense>
+#include "hsv.hpp"
+#include "yolo.hpp"
 
-// Forward declarations
-namespace coloring {
+    // Forward declarations
+    namespace coloring
+{
     namespace hsv {
         std::pair<int, double> get_color(
             Eigen::Vector3d& pixel,
