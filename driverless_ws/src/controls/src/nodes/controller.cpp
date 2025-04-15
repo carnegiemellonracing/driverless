@@ -637,7 +637,7 @@ namespace controls {
                 ss
                     << "Action:\n"
                     << "  swangle (rad): " << info.action.swangle << "\n"
-                    << swangle_bar(info.action.swangle,min_swangle, max_swangle,40) << "\n"
+                    << swangle_bar(info.action.swangle,min_swangle_rad, max_swangle_rad,40) << "\n"
                     << progress_bar(info.action.torque_fl, min_torque, max_torque, 40) << "\n"
                     << progress_bar(info.action.torque_fr, min_torque, max_torque, 40) << "\n"
                     << progress_bar(info.action.torque_rl, min_torque, max_torque, 40) << "\n"

@@ -51,6 +51,10 @@ namespace controls {
         return degrees * M_PI / 180.0f;
     }
 
+    inline constexpr float radians_to_degrees(const float radians) {
+        return radians * 180.0f / M_PI;
+    }
+
 
 }
 

@@ -5,6 +5,7 @@
 #include <rclcpp/rclcpp.hpp>
 // Note: these header files are part of the ROS2 standard libraries
 #include <ros_types_and_constants.hpp>
+#include <utils/general_utils.hpp>
 //TODO: these should all be inline constexpr (not currently broken because not ODR-used)
 
 namespace controls {
@@ -151,8 +152,8 @@ namespace controls {
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
     constexpr float min_torque = -saturating_motor_torque;
     constexpr float max_torque = saturating_motor_torque;
-    constexpr float min_swangle = -19 * M_PI / 180.0f; //19 radians
-    constexpr float max_swangle = 19 * M_PI / 180.0f;
+    constexpr float min_swangle_rad = degrees_to_radians(-19.0f); 
+    constexpr float max_swangle_rad = degrees_to_radians(19.0f);
     /// Time from MPPI control action request to physical change, in sec
     // TODO: Re-estimate since Falcon (steering motor) replacement
     constexpr float approx_mppi_time = 0.020f; ///< Time from MPPI launch to control action calculation, in sec
