@@ -161,7 +161,7 @@ inline PointCloud<PointXYZI> GraceAndConrad(PointCloud<PointXYZI> cloud, double 
         radial_t pt = segments[seg][bin][j];
         double low_cutoff = slope * pt.radius + intercept + height_threshold;
         double high_cutoff = slope * pt.radius + intercept + upper_height_threshold;
-        if (pt.z > low_cutoff & pt.z < high_cutoff) {
+        if (pt.z > low_cutoff && pt.z < high_cutoff) {
           output.points.push_back(radial2point(pt));
         }
       }
@@ -518,22 +518,23 @@ inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZI> &cloud
     message.yellow_cones = std::vector<geometry_msgs::msg::Point> {};
     message.orange_cones = std::vector<geometry_msgs::msg::Point> {};
 
-    for (int i = 0; i < filtered_cloud.size(); i++) {
-      geometry_msgs::msg::Point p;
-      p.x = filtered_cloud.points[i].x;
-      p.y = filtered_cloud.points[i].y;
-      p.z = filtered_cloud.points[i].z;
-      p.intensity = filtered_cloud.points[i].intensity;
+    for (size_t i = 0; i < filtered_cloud.size(); i++) {
+        geometry_msgs::msg::Point p;
+        p.x = filtered_cloud.points[i].x;
+        p.y = filtered_cloud.points[i].y;
+        p.z = filtered_cloud.points[i].z;
+        
+        float intensity = filtered_cloud.points[i].intensity;
 
-      if (p.intensity == 0.0) {
-        message.blue_cones.push_back(p);
-      }
-      else if (p.intensity == 1.0) {
-        message.yellow_cones.push_back(p);
-      }
-      else {
-        message.orange_cones.push_back(p);
-      }
+        if (intensity == 0.0) {
+            message.blue_cones.push_back(p);
+        }
+        else if (intensity == 1.0) {
+            message.yellow_cones.push_back(p);
+        }
+        else {
+            message.orange_cones.push_back(p);
+        }
     }
 
     return message;
