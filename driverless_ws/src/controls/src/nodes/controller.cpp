@@ -457,7 +457,7 @@ namespace controls {
                 info.render_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(sync_end - sync_start)).count();
                 info.mppi_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(gen_action_end - gen_action_start)).count();
                 info.latency_ms = time_elapsed.count();
-                info.total_latency_ms = total_time_elapsed.seconds() * 1000 + total_time_elapsed.nanoseconds() / 1000000;
+                info.total_latency_ms = total_time_elapsed.nanoseconds() / 1000000;
 
 
                 publish_and_print_info(info, error_str);
