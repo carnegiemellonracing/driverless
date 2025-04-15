@@ -398,27 +398,7 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
   auto start = std::chrono::high_resolution_clock::now();
 
   interfaces::msg::PPMConeArray ros_msg;
-
-  // int fields = 3;
-  // ros_msg.fields.clear();
-  // ros_msg.fields.reserve(fields);
-  // ros_msg.width = frame.points_num;
-  // ros_msg.height = 1;
-
-  // int offset = 0;
-  // offset = addPointField(ros_msg, "x", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
-  // offset = addPointField(ros_msg, "y", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
-  // offset = addPointField(ros_msg, "z", 1, sensor_msgs::msg::PointField::FLOAT32, offset);
-
-  // ros_msg.point_step = offset;
-  // ros_msg.row_step = ros_msg.width * ros_msg.point_step;
-  // ros_msg.is_dense = false;
-  // ros_msg.data.resize(frame.points_num * ros_msg.point_step);
-
-  // sensor_msgs::PointCloud2Iterator<float> iter_x_(ros_msg, "x");
-  // sensor_msgs::PointCloud2Iterator<float> iter_y_(ros_msg, "y");
-  // sensor_msgs::PointCloud2Iterator<float> iter_z_(ros_msg, "z");
-
+  
   sensor_msgs::msg::PointCloud2 ros_vis_msg;
 
   int fields = 3;
@@ -443,7 +423,7 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
 
   float epsilon = 0.1;
 
-  PointCloud<PointXYZ> filtered_points;
+  PointCloud<PointXYZI> filtered_points;
 
   for (size_t i = 0; i < frame.points_num; i++)
   {
@@ -453,10 +433,10 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
       continue;
     }
 
-    filtered_points.push_back(PointXYZ(point.x, point.y, point.z));
+    filtered_points.push_back(PointXYZI(point.x, point.y, point.z, point.intensity));
   }
 
-  PointCloud<PointXYZ> filtered_cloud = run_pipeline(filtered_points, CPP_ALPHA, CPP_NUM_BINS, CPP_HEIGHT_THRESHOLD, CPP_EPSILON, CPP_MIN_POINTS, CPP_EPSILON2, CPP_MIN_POINTS2, node_ptr_->get_logger());
+  PointCloud<PointXYZI> filtered_cloud = run_pipeline(filtered_points, CPP_ALPHA, CPP_NUM_BINS, CPP_HEIGHT_THRESHOLD, CPP_EPSILON, CPP_MIN_POINTS, CPP_EPSILON2, CPP_MIN_POINTS2, node_ptr_->get_logger());
 
   for (size_t i = 0; i < filtered_cloud.size(); i++)
   {
@@ -469,7 +449,7 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
 
     interfaces::msg::PPMConePoints conePoints;
 
-    geometry_msgs::msg::Vector3 centroid;
+    geometry_msgs::msg::Vector centroid;
 
     centroid.x = -filtered_cloud.points[i].y;
     centroid.y = filtered_cloud.points[i].x;
