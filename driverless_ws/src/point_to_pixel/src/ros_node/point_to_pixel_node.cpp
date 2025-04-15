@@ -484,6 +484,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
 
     // Returns first frame captured after lidar timestamp in the form: (timestamp_l, frame_l, timestamp_r, frame_r)
     std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple = get_camera_frame(msg->header.stamp);
+    std::pair<cv::Mat, cv::Mat> frame_pair = std::make_pair(std::get<1>(frame_tuple), std::get<3>(frame_tuple));
 
     // Motion modeling for both frames
     std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> vel_yaw_l = get_velocity_yaw(std::get<0>(frame_tuple));
@@ -506,8 +507,10 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     double dt_l = (std::get<0>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9;
     double dt_r = (std::get<2>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9;
 
-    RCLCPP_INFO(get_logger(), "left_camera_timestamp: %llu, right_camera_timestamp: %llu", std::get<0>(frame_tuple), std::get<2>(frame_tuple));
-    RCLCPP_INFO(get_logger(), "lidar_timestamp: %f", msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec);
+    #if timing
+        RCLCPP_INFO(get_logger(), "left_camera_timestamp: %llu, right_camera_timestamp: %llu", std::get<0>(frame_tuple), std::get<2>(frame_tuple));
+        RCLCPP_INFO(get_logger(), "lidar_timestamp: %f", msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec);
+    #endif
 
     auto global_dx_l = velocity_l->twist.linear.x * dt_l;
     auto global_dy_l = velocity_l->twist.linear.y * dt_l;
@@ -549,14 +552,20 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
 
     // Timing Variables
     #if timing
-        int transform_time = 0;
+            int transform_time = 0;
         int coloring_time = 0;
+    #endif
+
+    #if save_frames
+    std::vector<std::pair<cv::Point, cv::Point>> unknown_transformed_pixels, yellow_transformed_pixels, blue_transformed_pixels, orange_transformed_pixels;
     #endif
 
     std::vector<Cone> unordered_yellow_cones;
     std::vector<Cone> unordered_blue_cones;
 
     // Iterate through all points in /cpp_cones message
+
+    // TODO: In loop, draw pixels
     for (size_t i = 0; i < msg->cone_array.size(); i++) {
         #if timing
             auto loop_start = high_resolution_clock::now();
@@ -577,7 +586,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
 
         // CALCULATE CONE DISTANCE TO CAR (PYTHAG)
         // TODO: This cannot be the best way to do this...
-        int cone_class = get_cone_class(pixel_pair, std::make_pair(std::get<1>(frame_tuple), std::get<3>(frame_tuple)), detection_pair);
+        int cone_class = get_cone_class(pixel_pair, frame_pair, detection_pair);
 
         #if timing
             // Time for coloring
@@ -592,20 +601,149 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
         switch (cone_class) {
             case 0:
                 message.yellow_cones.push_back(point_msg);
+                #if save_frames
+                    orange_transformed_pixels.push_back(
+                        std::make_pair(
+                            cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))), 
+                            cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))
+                        )
+                    );
+                #endif
                 break;
             case 1:
                 // message.yellow_cones.push_back(point_msg);
                 unordered_yellow_cones.push_back(Cone(point_msg));
+                #if save_frames
+                yellow_transformed_pixels.push_back(
+                    std::make_pair(
+                        cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
+                        cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))));
+#endif
                 break;
             case 2:
                 // message.blue_cones.push_back(point_msg);
                 unordered_blue_cones.push_back(Cone(point_msg));
+                #if save_frames
+                blue_transformed_pixels.push_back(
+                    std::make_pair(
+                        cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
+                        cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))));
+#endif
                 break;
             default:
                 message.unknown_color_cones.push_back(point_msg);
+                #if save_frames
+                unknown_transformed_pixels.push_back(
+                    std::make_pair(
+                        cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
+                        cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))));
+#endif
                 break;
         }
     }
+
+    #if save_frames 
+        // cv::Mat frame_l = frame_pair.first;
+        // cv::Mat frame_r = frame_pair.second;
+        // TODO: desature if needed by converting to hsv and lowering saturation
+
+    #if use_yolo
+    // Add Yolo Bounding Boxes to frame
+
+    cv::Mat frame_l_canvas = frame_pair.first.clone();
+    cv::Mat frame_r_canvas = frame_pair.second.clone();
+    float alpha = .3;
+
+    for (int i = 0; i < detection_l.rows; i++) {
+        cv::Rect rect(detection_l.at<float>(i, 0), detection_l.at<float>(i, 1), detection_l.at<float>(i, 2), detection_l.at<float>(i, 3));
+        int confidence = 0;
+        int cone_class = 0;
+
+        // Find best confidence and class
+        for (int j = 0; j < detection_l.cols - 4; j++) {
+            if (detection_l.at<float>(i, j+4) > confidence)
+                cone_class = j;
+        }
+
+        cv::Scalar color;
+        switch (cone_class) {
+            case 0:
+                color = cv::Scalar(255, 69, 0);  // Orange
+                break;
+            case 1:
+                color = cv::Scalar(255, 255, 0);  // Yellow
+                break;
+            case 2:
+                color = cv::Scalar(0, 0, 255);  // Blue
+                break;
+            default:
+                color = cv::Scalar(0, 0, 0);  // Black (Unidentified)
+                break;
+        }
+        cv::rectangle(frame_l_canvas, rect, color, cv::FILLED);
+    }
+
+    for (int i = 0; i < detection_r.rows; i++) {
+        cv::Rect rect(detection_r.at<float>(i, 0), detection_r.at<float>(i, 1), detection_r.at<float>(i, 2), detection_r.at<float>(i, 3));
+        int confidence = 0;
+        int cone_class = 0;
+
+        // Find best confidence and class
+        for (int j = 0; j < detection_r.cols - 4; j++) {
+            if (detection_r.at<float>(i, j+4) > confidence)
+                cone_class = j;
+        }
+
+        cv::Scalar color;
+        switch (cone_class) {
+            case 0:
+                color = cv::Scalar(255, 69, 0);  // Orange
+                break;
+            case 1:
+                color = cv::Scalar(255, 255, 0);  // Yellow
+                break;
+            case 2:
+                color = cv::Scalar(0, 0, 255);  // Blue
+                break;
+            default:
+                color = cv::Scalar(0, 0, 0);  // Black (Unidentified)
+                break;
+        }
+        cv::rectangle(frame_r_canvas, rect, color, cv::FILLED);
+    }
+
+    cv::addWeighted(frame_l_canvas, alpha, frame_l_canvas, 1-alpha, 0, std::get<1>(frame_tuple));
+    cv::addWeighted(frame_r_canvas, alpha, frame_r_canvas, 1-alpha, 0, std::get<3>(frame_tuple));
+
+    #endif
+
+    // add transformed points to frame
+    for (int i = 0; i < yellow_transformed_pixels.size(); i++) {
+        cv::circle(std::get<1>(frame_tuple), yellow_transformed_pixels[i].first, 5, cv::Scalar(255, 255, 0), 2);
+        cv::circle(std::get<3>(frame_tuple), yellow_transformed_pixels[i].second, 5, cv::Scalar(255, 255, 0), 2);
+    }
+
+    for (int i = 0; i < blue_transformed_pixels.size(); i++) {
+        cv::circle(std::get<1>(frame_tuple), blue_transformed_pixels[i].first, 5, cv::Scalar(0, 0, 255), 2);
+        cv::circle(std::get<3>(frame_tuple), blue_transformed_pixels[i].second, 5, cv::Scalar(0, 0, 255), 2);
+    }
+
+    for (int i = 0; i < orange_transformed_pixels.size(); i++) {
+        cv::circle(std::get<1>(frame_tuple), orange_transformed_pixels[i].first, 5, cv::Scalar(255, 69, 0), 2);
+        cv::circle(std::get<3>(frame_tuple), orange_transformed_pixels[i].second, 5, cv::Scalar(255, 69, 0), 2);
+    }
+    
+    for (int i = 0; i < unknown_transformed_pixels.size(); i++) {
+        cv::circle(std::get<1>(frame_tuple), unknown_transformed_pixels[i].first, 5, cv::Scalar(0, 0, 0), 2);
+        cv::circle(std::get<3>(frame_tuple), unknown_transformed_pixels[i].second, 5, cv::Scalar(0, 0, 0), 2);
+    }
+
+    // Save frame
+    save_frame(
+        std::make_pair(std::get<0>(frame_tuple), std::get<1>(frame_tuple)),
+        std::make_pair(std::get<2>(frame_tuple), std::get<3>(frame_tuple))
+    );
+    #endif
 
     #if timing
         auto transform_coloring_time = high_resolution_clock::now();
@@ -697,16 +835,6 @@ void PointToPixelNode::camera_callback()
         false, // left_camera==false
         inner == 1
     );
-
-    #if save_frames
-    if(camera_callback_count % frame_interval == 0)
-    {
-        save_frame(frame_l, frame_r);
-    }    
-
-    camera_callback_count++;
-    #endif
-
 
 
     // Deque Management and Updating
