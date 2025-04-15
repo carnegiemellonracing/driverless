@@ -337,7 +337,7 @@ inline interfaces::msg::ConeArray SourceDriver::ToRosMsgConesCPP_dark(const Lida
   auto start = std::chrono::high_resolution_clock::now();
   float epsilon = 0.1;
 
-  PointCloud<PointXYZ> filtered_points;
+  PointCloud<PointXYZI> filtered_points;
 
   for (size_t i = 0; i < frame.points_num; i++)
   {
@@ -347,7 +347,7 @@ inline interfaces::msg::ConeArray SourceDriver::ToRosMsgConesCPP_dark(const Lida
       continue;
     }
 
-    filtered_points.push_back(PointXYZ(point.x, point.y, point.z));
+    filtered_points.push_back(PointXYZI(point.x, point.y, point.z, point.intensity));
   }
 
   interfaces::msg::ConeArray message = run_pipeline_dark(filtered_points, CPP_ALPHA, CPP_NUM_BINS, CPP_HEIGHT_THRESHOLD, CPP_EPSILON, CPP_MIN_POINTS, CPP_EPSILON2, CPP_MIN_POINTS2, node_ptr_->get_logger());
@@ -449,7 +449,7 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
 
     interfaces::msg::PPMConePoints conePoints;
 
-    geometry_msgs::msg::Vector centroid;
+    geometry_msgs::msg::Vector3 centroid;
 
     centroid.x = -filtered_cloud.points[i].y;
     centroid.y = filtered_cloud.points[i].x;

@@ -237,31 +237,25 @@ inline PointCloud<PointXYZI> computeCentroids(
     double min_x = std::numeric_limits<double>::max();
     double max_x = std::numeric_limits<double>::min();
     for (int idx : indices) {
+      if (cloud.points[idx].x < min_x) min_x = cloud.points[idx].x;
+      if (cloud.points[idx].x > max_x) max_x = cloud.points[idx].x;
       sum_x += cloud.points[idx].x;
       sum_y += cloud.points[idx].y;
       sum_z += cloud.points[idx].z;
-      if (cloud.points[idx].x < min_x) {
-        min_x = cloud.points[idx].x;
-      }
-      if (cloud.points[idx].x > max_x) {
-        max_x = cloud.points[idx].x;
-      }
     }
 
+    const int num_levels = 5;
+    std::vector<std::tuple<double, double, int>> levels(num_levels);
     double height = max_x - min_x;
-    double levels = 5;
-    double level_height = height / levels;
+    double level_height = height / num_levels;
 
-    std::array<std::tuple<double, double, double>, 5> levels;
-    for(int i = 0; i < 5; i++) {
-      std::get<0>(levels[i]) = min_x + (i+1) * level_height;
-      std::get<1>(levels[i]) = 0;
-      std::get<2>(levels[i]) = 0;
+    for (int i = 0; i < num_levels; i++) {
+      levels[i] = std::make_tuple(min_x + (i+1) * level_height, 0.0, 0);
     }
 
-    for (int idx: indices) {
-      for(int i = 0; i < 5; i++) {
-        if(i == 4 || cloud.points[idx].x < std::get<0>(levels[i])) {
+    for (int idx : indices) {
+      for (int i = 0; i < num_levels; i++) {
+        if (i == num_levels-1 || cloud.points[idx].x < std::get<0>(levels[i])) {
           std::get<1>(levels[i]) += cloud.points[idx].intensity;
           std::get<2>(levels[i])++;
           break;
@@ -269,46 +263,30 @@ inline PointCloud<PointXYZI> computeCentroids(
       }
     }
 
-    for(int i = 0; i < 5; i++) {
-      std::get<1>(levels[i]) /= std::get<2>(levels[i]);
-    }
-
-    bool increasing = false;
-    bool decreasing = false;
-    double prev_intensity = std::get<1>(levels[0]);
-    
-    for(int i = 1; i < 5; i++) {
-      double curr_intensity = std::get<1>(levels[i]);
-      if(curr_intensity > prev_intensity) {
-        increasing = true;
-        decreasing = false;
+    // Calculate average intensities
+    for (int i = 0; i < num_levels; i++) {
+      if (std::get<2>(levels[i]) > 0) {
+        std::get<1>(levels[i]) /= std::get<2>(levels[i]);
       }
-      else if(curr_intensity < prev_intensity) {
-        increasing = false;
-        decreasing = true;
-      }
-      prev_intensity = curr_intensity;
     }
 
     double intensity = 0.0;
-    if(std::abs(std::get<1>(levels[4]) - std::get<1>(levels[0])) < 0.1) {
-      if(increasing) {
-        intensity = 0.0;
+    if (std::abs(std::get<1>(levels[num_levels-1]) - std::get<1>(levels[0])) < 0.1) {
+      bool increasing = true;
+      bool decreasing = true;
+      for (int i = 1; i < num_levels; i++) {
+        if (std::get<1>(levels[i]) <= std::get<1>(levels[i-1])) increasing = false;
+        if (std::get<1>(levels[i]) >= std::get<1>(levels[i-1])) decreasing = false;
       }
-      else if(decreasing) {
-        intensity = 1.0;
-      }
+      intensity = increasing ? 0.0 : (decreasing ? 1.0 : 0.5);
     }
 
-    for (int idx : indices) {
-      double size = static_cast<double>(indices.size());
-      PointXYZI centroid;
-      centroid.x = sum_x / size;
-      centroid.y = sum_y / size;
-      centroid.z = sum_z / size;
-      centroid.intensity = intensity;
-    }
-
+    double size = static_cast<double>(indices.size());
+    PointXYZI centroid;
+    centroid.x = sum_x / size;
+    centroid.y = sum_y / size;
+    centroid.z = sum_z / size;
+    centroid.intensity = intensity;
     centroids.points.push_back(centroid);
   }
   return centroids;
@@ -562,12 +540,11 @@ inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZI> &cloud
 
   }
 
-  inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZI> &cloud, double alpha,
+  inline PointCloud<PointXYZI> run_pipeline(PointCloud<PointXYZI> &cloud, double alpha,
                                            int num_bins, double height_threshold,
                                            double epsilon, int min_points,
                                            double epsilon2, int min_points2,
-                                           const rclcpp::Logger &logger)
-  {
+                                           const rclcpp::Logger &logger) {
 
     // Start overall timer
     auto start_pipeline = std::chrono::high_resolution_clock::now();
@@ -598,5 +575,5 @@ inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZI> &cloud
     std::chrono::duration<double, std::milli> duration_pipeline = end_pipeline - start_pipeline;
     RCLCPP_INFO(logger, "Total pipeline time: %fms", duration_pipeline.count());
 
-    return filtered_cloud;
+    return filtered_cloud; 
   }
