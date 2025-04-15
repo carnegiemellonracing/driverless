@@ -6,7 +6,6 @@ std::pair<uint64_t, cv::Mat> find_closest_frame(
     const rclcpp::Time &callbackTime,
     const rclcpp::Logger &logger
 ) {
-
     // Check if deque empty
     if (img_deque.empty()) {
         RCLCPP_ERROR(logger, "Image deque is empty! Cannot find matching frame.");

@@ -18,15 +18,16 @@ namespace coloring {
          */
         std::pair<int, double> get_color(
             Eigen::Vector3d& pixel,
-            float *detection,
+            std::vector<cv::Mat> detection,
             int cols,
             int rows,
             double confidence_threshold
         );
         
-        std::pair<int, double> draw_bounding_boxes(
+        void draw_bounding_boxes(
             cv::Mat& frame,
-            float *detection,
+            cv::Mat& canvas,
+            std::vector<cv::Mat> detections,
             int cols,
             int rows,
             double confidence_threshold
@@ -49,7 +50,7 @@ namespace coloring {
          * @param yolo_height Height for YOLO input
          * @return float *detection results
          */
-        float *process_frame(
+        std::vector<cv::Mat> process_frame(
             const cv::Mat& frame,
             cv::dnn::Net& net,
             int yolo_width = 640,
