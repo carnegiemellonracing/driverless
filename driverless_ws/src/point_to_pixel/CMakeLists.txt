@@ -17,7 +17,16 @@ find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED) 
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
+
+set(OpenCV_DIR /home/chip/Downloads/opencv/build/)
 find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+link_directories(/home/chip/Downloads/opencv/lib)
+
+# DEBUG OpenCV Version
+# message(WARNING "OpenCV version: ${OpenCV_VERSION}")
+# message(WARNING  "OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
+# message(WARNING "OpenCV libs: ${OpenCV_LIBS}")
 
 # Add zed-open-capture cpp library path/to/zed_open_capture
 # link_directories(~/CMR/zed-open-capture/build/zed_open_capture)
@@ -56,7 +65,8 @@ target_compile_features(point_to_pixel PUBLIC c_std_99 cxx_std_17)  # Require C9
 # target_compile_features(point_to_pixel_debug PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
 target_link_libraries(point_to_pixel
-  ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so)  # Link ZED SDK library
+  ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so  # Link ZED SDK library
+  ${OpenCV_LIBS})  # Link OpenCV
 target_compile_definitions(point_to_pixel PUBLIC VIDEO_MOD_AVAILABLE)
 
 # target_link_libraries(point_to_pixel_debug

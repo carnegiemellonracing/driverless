@@ -40,7 +40,5 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> transform_point(
     Eigen::Vector3d pixel_l(transformed_l(0)/transformed_l(2), transformed_l(1)/transformed_l(2), distance_l);
     Eigen::Vector3d pixel_r(transformed_r(0)/transformed_r(2), transformed_r(1)/transformed_r(2), distance_r);
 
-    std::cout << pixel_l(0) << " " << pixel_l(1) << std::endl;
-
     return std::make_pair(pixel_l, pixel_r);
 }

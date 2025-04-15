@@ -47,11 +47,11 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     declare_parameter("projection_matrix_rr", param_default);
 
     // Threshold that determines whether it reports the color on a cone or not
-    declare_parameter("confidence_threshold", 0.01);
+    declare_parameter("confidence_threshold", 0.5);
 
     #if use_yolo
         // Load YOLO Model
-        net = coloring::yolo::init_model("src/point_to_pixel/config/best164.onnx");
+        net = coloring::yolo::init_model(yolo_model_path);
         if (net.empty()) {
             RCLCPP_ERROR(get_logger(), "Error Loading YOLO Model");
             rclcpp::shutdown();
@@ -247,7 +247,6 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
 
     // Clear directory
     #if save_frames
-    save_path = "src/point_to_pixel/img_log/";
     camera_callback_count = 0;
 
     try
@@ -260,6 +259,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
         {
             RCLCPP_ERROR(get_logger(), "Failed to delete directory.");
         }
+        std::filesystem::create_directory(save_path);
     }
     catch (const std::exception &e)
     {
@@ -366,7 +366,7 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
 int PointToPixelNode::get_cone_class(
     std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
     std::pair<cv::Mat, cv::Mat> frame_tuple,
-    std::pair<cv::Mat, cv::Mat> detection_pair
+    std::pair<float*, float*> detection_pair
 ) {
     return coloring::get_cone_class(
         pixel_pair,
@@ -484,50 +484,55 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
 
     // Returns first frame captured after lidar timestamp in the form: (timestamp_l, frame_l, timestamp_r, frame_r)
     std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple = get_camera_frame(msg->header.stamp);
-    std::pair<cv::Mat, cv::Mat> frame_pair = std::make_pair(std::get<1>(frame_tuple), std::get<3>(frame_tuple));
-
-    // Motion modeling for both frames
-    std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> vel_yaw_l = get_velocity_yaw(std::get<0>(frame_tuple));
-    std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> vel_yaw_r = get_velocity_yaw(std::get<2>(frame_tuple));
-
-    // Null Check
-    if (vel_yaw_l.first == nullptr || vel_yaw_l.second == nullptr || vel_yaw_r.first == nullptr || vel_yaw_r.second == nullptr)
+    if (std::get<1>(frame_tuple).empty() || std::get<3>(frame_tuple).empty())
     {
-        RCLCPP_INFO(get_logger(), "Velocity or Yaw is null");
+        RCLCPP_WARN(get_logger(), "No frame, likely an empty frame queue");
         return;
     }
+    std::pair<cv::Mat, cv::Mat> frame_pair = std::make_pair(std::get<1>(frame_tuple), std::get<3>(frame_tuple));
 
-    geometry_msgs::msg::TwistStamped::SharedPtr velocity_l = vel_yaw_l.first;
-    geometry_msgs::msg::Vector3Stamped::SharedPtr yaw_l = vel_yaw_l.second;
+    // // Motion modeling for both frames
+    // std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> vel_yaw_l = get_velocity_yaw(std::get<0>(frame_tuple));
+    // std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> vel_yaw_r = get_velocity_yaw(std::get<2>(frame_tuple));
 
-    geometry_msgs::msg::TwistStamped::SharedPtr velocity_r = vel_yaw_r.first;
-    geometry_msgs::msg::Vector3Stamped::SharedPtr yaw_r = vel_yaw_r.second;
+    // // Null Check
+    // if (vel_yaw_l.first == nullptr || vel_yaw_l.second == nullptr || vel_yaw_r.first == nullptr || vel_yaw_r.second == nullptr)
+    // {
+    //     RCLCPP_INFO(get_logger(), "Velocity or Yaw is null");
+    //     return;
+    // }
+
+    // geometry_msgs::msg::TwistStamped::SharedPtr velocity_l = vel_yaw_l.first;
+    // geometry_msgs::msg::Vector3Stamped::SharedPtr yaw_l = vel_yaw_l.second;
+
+    // geometry_msgs::msg::TwistStamped::SharedPtr velocity_r = vel_yaw_r.first;
+    // geometry_msgs::msg::Vector3Stamped::SharedPtr yaw_r = vel_yaw_r.second;
 
 
-    double dt_l = (std::get<0>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9;
-    double dt_r = (std::get<2>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9;
+    // double dt_l = (std::get<0>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9;
+    // double dt_r = (std::get<2>(frame_tuple) - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e9;
 
-    #if timing
-        RCLCPP_INFO(get_logger(), "left_camera_timestamp: %llu, right_camera_timestamp: %llu", std::get<0>(frame_tuple), std::get<2>(frame_tuple));
-        RCLCPP_INFO(get_logger(), "lidar_timestamp: %f", msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec);
-    #endif
+    // #if timing
+    //     RCLCPP_INFO(get_logger(), "left_camera_timestamp: %llu, right_camera_timestamp: %llu", std::get<0>(frame_tuple), std::get<2>(frame_tuple));
+    //     RCLCPP_INFO(get_logger(), "lidar_timestamp: %f", msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec);
+    // #endif
 
-    auto global_dx_l = velocity_l->twist.linear.x * dt_l;
-    auto global_dy_l = velocity_l->twist.linear.y * dt_l;
-    auto global_dx_r = velocity_r->twist.linear.x * dt_r;
-    auto global_dy_r = velocity_r->twist.linear.y * dt_r;
+    // auto global_dx_l = velocity_l->twist.linear.x * dt_l;
+    // auto global_dy_l = velocity_l->twist.linear.y * dt_l;
+    // auto global_dx_r = velocity_r->twist.linear.x * dt_r;
+    // auto global_dy_r = velocity_r->twist.linear.y * dt_r;
 
-    auto long_l = global_dx_l * std::cos(yaw_l->vector.z * M_PI / 180) + global_dy_l * std::sin(yaw_l->vector.z * M_PI / 180);
-    auto lat_l = -global_dx_l * std::sin(yaw_l->vector.z * M_PI / 180) + global_dy_l * std::cos(yaw_l->vector.z * M_PI / 180);
-    auto long_r = global_dx_r * std::cos(yaw_r->vector.z * M_PI / 180) + global_dy_r * std::sin(yaw_r->vector.z * M_PI / 180);
-    auto lat_r = -global_dx_r * std::sin(yaw_r->vector.z * M_PI / 180) + global_dy_r * std::cos(yaw_r->vector.z * M_PI / 180);
+    // auto long_l = global_dx_l * std::cos(yaw_l->vector.z * M_PI / 180) + global_dy_l * std::sin(yaw_l->vector.z * M_PI / 180);
+    // auto lat_l = -global_dx_l * std::sin(yaw_l->vector.z * M_PI / 180) + global_dy_l * std::cos(yaw_l->vector.z * M_PI / 180);
+    // auto long_r = global_dx_r * std::cos(yaw_r->vector.z * M_PI / 180) + global_dy_r * std::sin(yaw_r->vector.z * M_PI / 180);
+    // auto lat_r = -global_dx_r * std::sin(yaw_r->vector.z * M_PI / 180) + global_dy_r * std::cos(yaw_r->vector.z * M_PI / 180);
 
-    std::pair<double, double> ds_l = std::make_pair(-lat_l, long_l);
-    std::pair<double, double> ds_r = std::make_pair(-lat_r, long_r);
+    // std::pair<double, double> ds_l = std::make_pair(-lat_l, long_l);
+    // std::pair<double, double> ds_r = std::make_pair(-lat_r, long_r);
 
-    #if timing
-        RCLCPP_INFO(get_logger(), "Time diff L: %f, Time diff R: %f", dt_l, dt_r);
-    #endif
+    // #if timing
+    //     RCLCPP_INFO(get_logger(), "Time diff L: %f, Time diff R: %f", dt_l, dt_r);
+    // #endif
 
     // Calculate velocity 
     // double v_l = std::sqrt(velocity_l->twist.linear.x * velocity_l->twist.linear.x + velocity_l->twist.linear.y * velocity_l->twist.linear.y);
@@ -542,12 +547,12 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
 
     #if use_yolo
         // Process frames with YOLO
-        cv::Mat detection_l = coloring::yolo::process_frame(std::get<1>(frame_tuple), net);
-        cv::Mat detection_r = coloring::yolo::process_frame(std::get<3>(frame_tuple), net);
-        std::pair<cv::Mat, cv::Mat> detection_pair = std::make_pair(detection_l, detection_r);
+        float *detection_l = coloring::yolo::process_frame(std::get<1>(frame_tuple), net);
+        float *detection_r = coloring::yolo::process_frame(std::get<3>(frame_tuple), net);
+        std::pair<float*, float*> detection_pair = std::make_pair(detection_l, detection_r);
     #else
         // Initialize empty matrix if not YOLO
-        std::pair<cv::Mat, cv::Mat> detection_pair = std::make_pair(cv::Mat(), cv::Mat());
+        std::pair<float*, float*> detection_pair = std::make_pair(nullptr, nullptr);
     #endif
 
     // Timing Variables
@@ -574,7 +579,8 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
         // Transform Point
         std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair = transform_point(
             msg->cone_array[i].cone_points[0],
-            std::make_pair(ds_l, ds_r),
+            // std::make_pair(ds_l, ds_r),
+            std::make_pair(std::make_pair(0.0, 0.0), std::make_pair(0.0, 0.0)),
             std::make_pair(projection_matrix_l, projection_matrix_r)
         );
 
@@ -596,7 +602,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
 
         point_msg.x = msg->cone_array[i].cone_points[0].x;
         point_msg.y = msg->cone_array[i].cone_points[0].y;
-        point_msg.z = 0.0;
+        point_msg.z = 0.0; 
 
         switch (cone_class) {
             case 0:
@@ -642,7 +648,10 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
         }
     }
 
-    #if save_frames 
+
+    #if save_frames && camera_callback_count == 0
+        camera_callback_count += 1;
+        camera_callback_count %= frame_interval;
         // cv::Mat frame_l = frame_pair.first;
         // cv::Mat frame_r = frame_pair.second;
         // TODO: desature if needed by converting to hsv and lowering saturation
@@ -650,87 +659,34 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     #if use_yolo
     // Add Yolo Bounding Boxes to frame
 
+    std::cout << "Adding bounding boxes to image" << std::endl;
+
     cv::Mat frame_l_canvas = frame_pair.first.clone();
     cv::Mat frame_r_canvas = frame_pair.second.clone();
-    float alpha = .3;
+    float alpha = .75;
 
-    for (int i = 0; i < detection_l.rows; i++) {
-        cv::Rect rect(detection_l.at<float>(i, 0), detection_l.at<float>(i, 1), detection_l.at<float>(i, 2), detection_l.at<float>(i, 3));
-        int confidence = 0;
-        int cone_class = 0;
+    coloring::yolo::draw_bounding_boxes(frame_l_canvas, detection_pair.first, frame_pair.first.cols, frame_pair.first.rows, confidence_threshold);
+    coloring::yolo::draw_bounding_boxes(frame_r_canvas, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows, confidence_threshold);
 
-        // Find best confidence and class
-        for (int j = 0; j < detection_l.cols - 4; j++) {
-            if (detection_l.at<float>(i, j+4) > confidence)
-                cone_class = j;
-        }
-
-        cv::Scalar color;
-        switch (cone_class) {
-            case 0:
-                color = cv::Scalar(255, 69, 0);  // Orange
-                break;
-            case 1:
-                color = cv::Scalar(255, 255, 0);  // Yellow
-                break;
-            case 2:
-                color = cv::Scalar(0, 0, 255);  // Blue
-                break;
-            default:
-                color = cv::Scalar(0, 0, 0);  // Black (Unidentified)
-                break;
-        }
-        cv::rectangle(frame_l_canvas, rect, color, cv::FILLED);
-    }
-
-    for (int i = 0; i < detection_r.rows; i++) {
-        cv::Rect rect(detection_r.at<float>(i, 0), detection_r.at<float>(i, 1), detection_r.at<float>(i, 2), detection_r.at<float>(i, 3));
-        int confidence = 0;
-        int cone_class = 0;
-
-        // Find best confidence and class
-        for (int j = 0; j < detection_r.cols - 4; j++) {
-            if (detection_r.at<float>(i, j+4) > confidence)
-                cone_class = j;
-        }
-
-        cv::Scalar color;
-        switch (cone_class) {
-            case 0:
-                color = cv::Scalar(255, 69, 0);  // Orange
-                break;
-            case 1:
-                color = cv::Scalar(255, 255, 0);  // Yellow
-                break;
-            case 2:
-                color = cv::Scalar(0, 0, 255);  // Blue
-                break;
-            default:
-                color = cv::Scalar(0, 0, 0);  // Black (Unidentified)
-                break;
-        }
-        cv::rectangle(frame_r_canvas, rect, color, cv::FILLED);
-    }
-
-    cv::addWeighted(frame_l_canvas, alpha, frame_l_canvas, 1-alpha, 0, std::get<1>(frame_tuple));
-    cv::addWeighted(frame_r_canvas, alpha, frame_r_canvas, 1-alpha, 0, std::get<3>(frame_tuple));
+    cv::addWeighted(frame_l_canvas, alpha, std::get<1>(frame_tuple), 1-alpha, 0, std::get<1>(frame_tuple));
+    cv::addWeighted(frame_r_canvas, alpha, std::get<3>(frame_tuple), 1-alpha, 0, std::get<3>(frame_tuple));
 
     #endif
 
     // add transformed points to frame
     for (int i = 0; i < yellow_transformed_pixels.size(); i++) {
-        cv::circle(std::get<1>(frame_tuple), yellow_transformed_pixels[i].first, 5, cv::Scalar(255, 255, 0), 2);
-        cv::circle(std::get<3>(frame_tuple), yellow_transformed_pixels[i].second, 5, cv::Scalar(255, 255, 0), 2);
+        cv::circle(std::get<1>(frame_tuple), yellow_transformed_pixels[i].first, 5, cv::Scalar(0, 255, 255), 2);
+        cv::circle(std::get<3>(frame_tuple), yellow_transformed_pixels[i].second, 5, cv::Scalar(0, 255, 255), 2);
     }
 
     for (int i = 0; i < blue_transformed_pixels.size(); i++) {
-        cv::circle(std::get<1>(frame_tuple), blue_transformed_pixels[i].first, 5, cv::Scalar(0, 0, 255), 2);
-        cv::circle(std::get<3>(frame_tuple), blue_transformed_pixels[i].second, 5, cv::Scalar(0, 0, 255), 2);
+        cv::circle(std::get<1>(frame_tuple), blue_transformed_pixels[i].first, 5, cv::Scalar(255, 0, 0), 2);
+        cv::circle(std::get<3>(frame_tuple), blue_transformed_pixels[i].second, 5, cv::Scalar(255, 0, 0), 2);
     }
 
     for (int i = 0; i < orange_transformed_pixels.size(); i++) {
-        cv::circle(std::get<1>(frame_tuple), orange_transformed_pixels[i].first, 5, cv::Scalar(255, 69, 0), 2);
-        cv::circle(std::get<3>(frame_tuple), orange_transformed_pixels[i].second, 5, cv::Scalar(255, 69, 0), 2);
+        cv::circle(std::get<1>(frame_tuple), orange_transformed_pixels[i].first, 5, cv::Scalar(0, 69, 255), 2);
+        cv::circle(std::get<3>(frame_tuple), orange_transformed_pixels[i].second, 5, cv::Scalar(0, 69, 255), 2);
     }
     
     for (int i = 0; i < unknown_transformed_pixels.size(); i++) {
@@ -836,6 +792,7 @@ void PointToPixelNode::camera_callback()
         inner == 1
     );
 
+    // std::cout << "Pushing frame_l to deque" << std::endl;
 
     // Deque Management and Updating
     l_img_mutex.lock();

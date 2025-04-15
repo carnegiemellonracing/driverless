@@ -23,7 +23,7 @@ using std::placeholders::_1;
 // BUILD FLAGS
 #define verbose 1  // Prints transform matrix and transformed pixel of every point
 #define use_yolo 1 // 0: HSV Coloring | 1: YOLO Coloring
-#define timing 1   // Prints timing suite at end of every callback
+#define timing 0  // Prints timing suite at end of every callback
 #define inner 1    // Uses inner lens of ZEDS (if 0 uses the outer lens)
 #define save_frames 1 // Writes every 5th frame to img_log folder
 
@@ -42,8 +42,13 @@ public:
     PointToPixelNode();
     static constexpr int max_deque_size = 100;
 
+    #if use_yolo
+    static constexpr char yolo_model_path[] = "src/point_to_pixel/config/yolov5_model_params.onnx";
+    #endif
+
     #if save_frames
     static constexpr int frame_interval = 5;
+    static constexpr char save_path[] = "src/point_to_pixel/img_log/";
     #endif
 
     // static constexpr int zed_one_sn; // Left side zed
@@ -108,7 +113,7 @@ private:
     std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> get_camera_frame(rclcpp::Time callbackTime);
     int get_cone_class(std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
                       std::pair<cv::Mat, cv::Mat> frame_pair,
-                      std::pair<cv::Mat, cv::Mat> detection_pair);
+                      std::pair<float*, float*> detection_pair);
 
     // Ordering function and helpers
     Cone findClosestCone(const std::vector<Cone>& cones);
@@ -126,7 +131,6 @@ private:
     #endif
 
     #if save_frames
-    std::string save_path;
     uint64_t camera_callback_count;
     void save_frame(std::pair<uint64_t, cv::Mat> frame_l, std::pair<uint64_t, cv::Mat> frame_r);
     #endif
