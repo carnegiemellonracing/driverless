@@ -18,11 +18,20 @@ namespace coloring {
          */
         std::pair<int, double> get_color(
             Eigen::Vector3d& pixel,
-            cv::Mat detection,
+            std::vector<cv::Mat> detection,
             int cols,
             int rows,
             double confidence_threshold
         );
+        
+        void draw_bounding_boxes(
+            cv::Mat& frame,
+            cv::Mat& canvas,
+            std::vector<cv::Mat> detections,
+            int cols,
+            int rows,
+            double confidence_threshold
+        ); 
 
         /**
          * @brief Initialize the YOLO model
@@ -39,9 +48,9 @@ namespace coloring {
          * @param net Neural network
          * @param yolo_width Width for YOLO input
          * @param yolo_height Height for YOLO input
-         * @return cv::Mat Detection results
+         * @return float *detection results
          */
-        cv::Mat process_frame(
+        std::vector<cv::Mat> process_frame(
             const cv::Mat& frame,
             cv::dnn::Net& net,
             int yolo_width = 640,

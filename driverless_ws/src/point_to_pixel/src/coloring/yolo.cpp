@@ -5,70 +5,128 @@ namespace coloring {
     namespace yolo {
         std::pair<int, double> get_color(
             Eigen::Vector3d& pixel,
-            cv::Mat detection,
+            std::vector<cv::Mat> detections,
             int cols,
             int rows,
             double confidence_threshold
         ) {
-            static constexpr int yolo_h = 640;
-            static constexpr int yolo_w = 640;
+            float* data = (float*)detections[0].data;
+            int num_detections = detections[0].size[1];  // 25200
+            int attributes = detections[0].size[2];      // 10
+
+            float x_scale = static_cast<float>(cols) / 640.0f;
+            float y_scale = static_cast<float>(rows) / 640.0f;
             
-            int x = static_cast<int>(pixel(0));
-            int y = static_cast<int>(pixel(1));
+            for (int i = 0; i < num_detections; i++) {
+                float confidence = data[i * attributes + 4];
+                if (confidence > confidence_threshold) {
+                    float cx = data[i * attributes];
+                    float cy = data[i * attributes + 1];
+                    float w = data[i * attributes + 2];
+                    float h = data[i * attributes + 3];
 
-            // Post Processing
-            const float x_factor = cols / static_cast<float>(yolo_w);
-            const float y_factor = rows / static_cast<float>(yolo_h);
+                    // Convert center coordinates to top-left corner (x, y)
+                    int x = static_cast<int>((cx - w / 2) * x_scale);
+                    int y = static_cast<int>((cy - h / 2) * y_scale);
+                    int width = static_cast<int>(w * x_scale);
+                    int height = static_cast<int>(h * y_scale);
 
-            // Loop through all detection
-            for (int i = 0; i < detection.rows; ++i) {
-                double confidence = detection.at<double>(i, 4);
-
-                if (confidence >= confidence_threshold) {
-                    // Get bounding box coordinates
-                    float cx = detection.at<float>(i, 0) * x_factor;
-                    float cy = detection.at<float>(i, 1) * y_factor;
-                    float width = detection.at<float>(i, 2) * x_factor;
-                    float height = detection.at<float>(i, 3) * y_factor;
-                    
-                    // Calculate the bounding box corners
-                    float left = cx - width/2;
-                    float top = cy - height/2;
-                    float right = cx + width/2;
-                    float bottom = cy + height/2;
-                    
-                    // If pixel is inside the bounding box
-                    if (left <= x && x <= right && top <= y && y <= bottom) {
-                        // Find the highest class score
-                        double max_class_score = 0;
-                        int class_id = -1;
+                    // If pixel is inside the bounding box color it
+                    if (pixel(0) > x && pixel(0) < x + width && pixel(1) > y && pixel(1) < y + height) {
                         
-                        // Assuming class scores start after index 5
-                        for (int j = 5; j < detection.cols; ++j) {
-                            double class_score = detection.at<float>(i, j);
-                            if (class_score > max_class_score) {
-                                max_class_score = class_score;
-                                class_id = j - 5;  // Adjust index to get the actual class ID
-                            }
+                        int cone_class;
+                        float conf = 0.0f;
+
+                        for (int j = 0; j < 5; j++) {
+                            if (data[i * attributes + j + 5] > conf) {
+                                cone_class = j;
+                                conf = data[i * attributes + j + 5];
+                            };
                         }
-                        
-                        // Map class_id to cone color
-                        int cone_color = -1;
-                        if (class_id >= 0) {
-                            switch(class_id) {
-                                case 0: cone_color = 0; break;  // Orange cone
-                                case 1: cone_color = 1; break;  // Yellow cone
-                                case 2: cone_color = 2; break;  // Blue cone
-                                default: cone_color = -1; break; // Unknown
-                            }
-                            return std::make_pair(cone_color, confidence);
+
+                        cv::Scalar color;
+
+                        switch (cone_class) {
+                            case 0:
+                                return std::make_pair(2, conf);  // Blue
+                            case 4:
+                                return std::make_pair(1, conf);  // Yellow
+                            case 2:
+                                return std::make_pair(0, conf);  // Orange
+                            case 3:
+                                return std::make_pair(0, conf);  // Big Orange
+                            default:
+                                return std::make_pair(-1, 0.0);  // Unknown
                         }
                     }
                 }
             }
-            
-            // No detection 
+
+            // No detection
             return std::make_pair(-1, 0.0);
+        }
+
+        
+
+        void draw_bounding_boxes(cv::Mat& frame, cv::Mat& canvas, std::vector<cv::Mat> detections, int rows, int cols, double confidence_threshold) {
+            float alpha = .3f;
+            float* data = (float*)detections[0].data;
+            int num_detections = detections[0].size[1];  // 25200
+            int attributes = detections[0].size[2];      // 10
+
+            float x_scale = static_cast<float>(rows) / 640.0f;
+            float y_scale = static_cast<float>(cols) / 640.0f;
+
+            for (int i = 0; i < num_detections; i++) {
+                float confidence = data[i * attributes + 4];
+                if (confidence > confidence_threshold) {
+                    float cx = data[i * attributes];
+                    float cy = data[i * attributes + 1];
+                    float w = data[i * attributes + 2];
+                    float h = data[i * attributes + 3];
+
+                    // Convert center coordinates to top-left corner (x, y)
+                    int x = static_cast<int>((cx - w / 2) * x_scale);
+                    int y = static_cast<int>((cy - h / 2) * y_scale);
+                    int width = static_cast<int>(w * x_scale);
+                    int height = static_cast<int>(h * y_scale);
+                    
+                    int cone_class;
+                    float conf = 0.0f;
+
+                    for (int j = 0; j < 5; j++) {
+                        if (data[i * attributes + j + 5] > conf) {
+                            cone_class = j;
+                            conf = data[i * attributes + j + 5];
+                        };
+                    }
+
+                    cv::Scalar color;
+                    switch (cone_class) {
+                        case 0:
+                            color = cv::Scalar(255, 0, 0);  // Blue
+                            break;
+                        case 4:
+                            color = cv::Scalar(0, 255, 255);  // Yellow
+                            break;
+                        case 2:
+                            color = cv::Scalar(0, 69, 255);  // Orange
+                            break;
+                        case 3:
+                            color = cv::Scalar(0, 69, 255);  // Green
+                            break;
+                        default:
+                            color = cv::Scalar(0, 255, 255);  // Unknown
+                            break;
+                    }
+
+                    // Draw bounding box (assuming class color is handled elsewhere)
+                    cv::rectangle(canvas, cv::Rect(x, y, width, height), color, cv::FILLED);
+                    cv::rectangle(frame, cv::Rect(x, y, width, height), color, 2);
+                }
+            }
+
+            cv::addWeighted(canvas, alpha, frame, 1-alpha, 0, frame);
         }
 
         cv::dnn::Net init_model(const std::string& model_path) {
@@ -78,18 +136,20 @@ namespace coloring {
             if (!net.empty()) {
                 net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
                 net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+            } else {
+                std::cerr << "Failed to load YOLO model" << std::endl;
             }
             
             return net;
         }
 
-        cv::Mat process_frame(
+        std::vector<cv::Mat> process_frame(
             const cv::Mat& frame,
             cv::dnn::Net& net,
             int yolo_width,
             int yolo_height
         ) {
-            // Create a blob from the image
+            // Prepare input
             cv::Mat blob;
             cv::dnn::blobFromImage(
                 frame, 
@@ -101,13 +161,17 @@ namespace coloring {
                 false
             );
             
-            // Forward pass through the network
+            // Run inference
             net.setInput(blob);
             std::vector<cv::Mat> outputs;
             net.forward(outputs, net.getUnconnectedOutLayersNames());
-            
+
+            float* data = (float*)outputs[0].data;
+            int num_detections = outputs[0].size[1];  // 25200
+            int attributes = outputs[0].size[2];      // 10
+
             // Return the detection results
-            return outputs[0];
+            return outputs;
         }
     }
 }
