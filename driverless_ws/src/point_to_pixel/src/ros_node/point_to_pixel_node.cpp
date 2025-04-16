@@ -453,14 +453,6 @@
         return ordered_cones;
     }
 
-    // Calculate motion estimate
-    std::pair<double, double> PointToPixelNode::getMotionEstimate(double velocity, double angle, double dt)
-    {
-        double v_x = velocity * std::cos(angle);
-        double v_y = velocity * std::sin(angle);
-        return std::make_pair(v_x * dt, v_y * dt);
-    }
-
     // Topic callback definition
     void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
     {
@@ -524,13 +516,49 @@
 
         // Timing Variables
         #if timing
-                int transform_time = 0;
+            int transform_time = 0;
             int coloring_time = 0;
         #endif
 
         #if save_frames
         std::vector<std::pair<cv::Point, cv::Point>> unknown_transformed_pixels, yellow_transformed_pixels, blue_transformed_pixels, orange_transformed_pixels;
         #endif
+
+        // Motion modeling for both frames
+        auto [velocity_l_camera_frame, yaw_l_camera_frame] = get_velocity_yaw(std::get<0>(frame_tuple));
+        auto [velocity_r_camera_frame, yaw_r_camera_frame] = get_velocity_yaw(std::get<2>(frame_tuple));
+
+        auto current_lidar_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
+        auto [velocity_lidar_frame, yaw_lidar_frame] = get_velocity_yaw(current_lidar_time);
+
+        if (velocity_lidar_frame == nullptr || yaw_lidar_frame == nullptr)
+        {
+            return;
+        }
+
+        double dt_l = (std::get<0>(frame_tuple) - current_lidar_time) / 1e9; //::max( 0.0, time_diff_l );
+        double dt_r = (std::get<2>(frame_tuple) - current_lidar_time) / 1e9; // time_diffstd::max( 0.0, time_diff_r );
+
+        double average_velocity_l_x = (velocity_l_camera_frame->twist.linear.x + velocity_lidar_frame->twist.linear.x) / 2;
+        double average_velocity_l_y = (velocity_l_camera_frame->twist.linear.y + velocity_lidar_frame->twist.linear.y) / 2;
+        double average_velocity_r_x = (velocity_r_camera_frame->twist.linear.x + velocity_lidar_frame->twist.linear.x) / 2;
+        double average_velocity_r_y = (velocity_r_camera_frame->twist.linear.y + velocity_lidar_frame->twist.linear.y) / 2;
+
+        auto global_dx_l = average_velocity_l_x * dt_l;
+        auto global_dy_l = average_velocity_l_y * dt_l;
+        auto global_dyaw_l = yaw_l_camera_frame->vector.z - yaw_lidar_frame->vector.z;
+
+        auto global_dx_r = average_velocity_r_x * dt_r;
+        auto global_dy_r = average_velocity_r_y * dt_r;
+        auto global_dyaw_r = yaw_r_camera_frame->vector.z - yaw_lidar_frame->vector.z;
+
+        double yaw_l_rad = yaw_lidar_frame->vector.z * M_PI / 180;
+        std::pair<double, double> global_frame_change_l = std::make_pair(global_dx_l, global_dy_l);
+        std::pair<double, double> long_lat_l = global_frame_to_local_frame(global_frame_change_l, yaw_l_rad);
+
+        double yaw_r_rad = yaw_lidar_frame->vector.z * M_PI / 180;
+        std::pair<double, double> global_frame_change_r = std::make_pair(global_dx_r, global_dy_r);
+        std::pair<double, double> long_lat_r = global_frame_to_local_frame(global_frame_change_r, yaw_r_rad);
 
         std::vector<Cone> unordered_yellow_cones;
         std::vector<Cone> unordered_blue_cones;
@@ -546,9 +574,9 @@
             // Transform Point
             std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair = transform_point(
                 msg->cone_array[i].cone_points[0],
-                // std::make_pair(ds_l, ds_r),
-                std::make_pair(std::make_pair(0.0, 0.0), std::make_pair(0.0, 0.0)),
-                std::make_pair(projection_matrix_l, projection_matrix_r)
+                {long_lat_l, long_lat_r},
+                {global_dyaw_l, global_dyaw_r},
+                {projection_matrix_l, projection_matrix_r}
             );
 
             #if timing
@@ -808,6 +836,7 @@
             yaw_deque.pop_front();
         }
         yaw_deque.push_back(msg);
+        // yaw_mutex.unlock();
     }
 
     int main(int argc, char **argv)
