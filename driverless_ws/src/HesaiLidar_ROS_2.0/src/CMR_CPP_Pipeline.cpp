@@ -95,7 +95,7 @@ inline PointCloud<PointXYZI> GraceAndConrad(PointCloud<PointXYZI> cloud, double 
 
   const double angle_min = -0.5 * M_PI;
   const double angle_max = 0.5 * M_PI;
-  const double radius_max = 15;
+  const double radius_max = 5;
   int num_segs = static_cast<int>((angle_max - angle_min) / alpha);
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
   //&& rd.angle > -4 * (M_PI/9) && rd.angle < 4 * (M_PI/9)
@@ -107,7 +107,7 @@ inline PointCloud<PointXYZI> GraceAndConrad(PointCloud<PointXYZI> cloud, double 
     PointXYZI pt = cloud.points[i];
     radial_t rd = point2radial(pt);
 
-    if (rd.radius < radius_max) {
+    if (rd.radius < radius_max && pt.y < 1.0 && pt.y > -1.0) {
       int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
       int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
       if (seg_index < 0)
@@ -234,51 +234,115 @@ inline PointCloud<PointXYZI> computeCentroids(
   for (const auto &kv : clusters) {
     const auto &indices = kv.second;
     double sum_x = 0.0, sum_y = 0.0, sum_z = 0.0;
-    double min_x = std::numeric_limits<double>::max();
-    double max_x = std::numeric_limits<double>::min();
+
+    // Find min max of point cluster
+    double min_z = 9999999.0;
+    double max_z = -9999999.0;
     for (int idx : indices) {
-      if (cloud.points[idx].x < min_x) min_x = cloud.points[idx].x;
-      if (cloud.points[idx].x > max_x) max_x = cloud.points[idx].x;
+      if (cloud.points[idx].z < min_z) min_z = cloud.points[idx].z;
+      if (cloud.points[idx].z > max_z) max_z = cloud.points[idx].z;
       sum_x += cloud.points[idx].x;
       sum_y += cloud.points[idx].y;
       sum_z += cloud.points[idx].z;
     }
 
-    const int num_levels = 5;
-    std::vector<std::tuple<double, double, int>> levels(num_levels);
-    double height = max_x - min_x;
+    std::cout << "min_z: " << min_z << ", max_z: " << max_z << std::endl;
+
+    const int num_levels = 3;
+    std::vector<std::pair<double, int>> levels(num_levels);
+    double height = max_z - min_z;
     double level_height = height / num_levels;
 
     for (int i = 0; i < num_levels; i++) {
-      levels[i] = std::make_tuple(min_x + (i+1) * level_height, 0.0, 0);
+      levels[i] = {0.0, 0};
     }
 
-    for (int idx : indices) {
-      for (int i = 0; i < num_levels; i++) {
-        if (i == num_levels-1 || cloud.points[idx].x < std::get<0>(levels[i])) {
-          std::get<1>(levels[i]) += cloud.points[idx].intensity;
-          std::get<2>(levels[i])++;
+    // Assign points to levels
+    for (const auto &idx : indices) {
+      bool assigned = false;
+      for (int i = 1; i < num_levels; i++) {
+        if (cloud.points[idx].z < min_z + level_height * i) {
+          levels[i-1].first += cloud.points[idx].intensity;
+          levels[i-1].second++;
+          assigned = true;
           break;
         }
+      }
+      if (!assigned) {
+        levels[num_levels-1].first += cloud.points[idx].intensity;
+        levels[num_levels-1].second++;
       }
     }
 
     // Calculate average intensities
     for (int i = 0; i < num_levels; i++) {
-      if (std::get<2>(levels[i]) > 0) {
-        std::get<1>(levels[i]) /= std::get<2>(levels[i]);
+      if (levels[i].second > 0) {
+        levels[i].first /= levels[i].second;
+      } else {
+        levels[i].first = 0.0;
       }
+      std::cout << "Level " << i << ": " << levels[i].first << std::endl;
     }
 
-    double intensity = 0.0;
-    if (std::abs(std::get<1>(levels[num_levels-1]) - std::get<1>(levels[0])) < 0.1) {
-      bool increasing = true;
-      bool decreasing = true;
-      for (int i = 1; i < num_levels; i++) {
-        if (std::get<1>(levels[i]) <= std::get<1>(levels[i-1])) increasing = false;
-        if (std::get<1>(levels[i]) >= std::get<1>(levels[i-1])) decreasing = false;
+    int state = 0;
+    //              0
+    //             / \
+    //            /   \
+    //           /     \
+    //          /       \
+    //         /         \
+    //        /           \
+    //        1(incr)     2(decr)
+    //       / \         / \
+    //      /   \       /   \
+    //     /     \     /     \
+    //    /       \   /       \
+    //   3(decr)  -1  4(incr)  -1
+
+    
+    double running_intensity = levels[0].first;
+    for (int i = 1; i < num_levels; i++) {
+      switch (state) {
+        case -1:
+          state = -1;
+        case 0:
+          if (levels[i].first > running_intensity) {
+            state = 1;
+          } else {
+            state = 2;
+          }
+          break;
+        case 1:
+          if (levels[i].first > running_intensity) {
+            state = 1;
+          } else {
+            state = 3;
+          }
+          break;
+        case 2:
+          if (levels[i].first > running_intensity) {
+            state = 4;
+          } else {
+            state = 2;
+          }
+          break;
+        case 3:
+          if (levels[i].first > running_intensity) {
+            state = -1;
+          } else {
+            state = 3;
+          }
+          break;
+        case 4:
+          if (levels[i].first > running_intensity) {
+            state = 4;
+          } else {
+            state = -1;
+          }
+          break;
+        default:
+          break;
       }
-      intensity = increasing ? 0.0 : (decreasing ? 1.0 : 0.5);
     }
 
     double size = static_cast<double>(indices.size());
@@ -286,8 +350,20 @@ inline PointCloud<PointXYZI> computeCentroids(
     centroid.x = sum_x / size;
     centroid.y = sum_y / size;
     centroid.z = sum_z / size;
-    centroid.intensity = intensity;
+    switch (state) {
+      case 3:
+        centroid.intensity = 1.0; // yellow cone
+        break;
+      case 4:
+        centroid.intensity = 0.0; // blue cone
+        break;
+      default:
+        centroid.intensity = -1.0; // green cone
+        break;
+    }
     centroids.points.push_back(centroid);
+
+    std::cout << "Centroid: " << centroid.x << ", " << centroid.y << ", " << centroid.z << ", " << centroid.intensity << std::endl;
   }
   return centroids;
 }
@@ -520,8 +596,8 @@ inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZI> &cloud
 
     for (size_t i = 0; i < filtered_cloud.size(); i++) {
         geometry_msgs::msg::Point p;
-        p.x = filtered_cloud.points[i].x;
-        p.y = filtered_cloud.points[i].y;
+        p.x = -filtered_cloud.points[i].y;
+        p.y = filtered_cloud.points[i].x;
         p.z = filtered_cloud.points[i].z;
         
         float intensity = filtered_cloud.points[i].intensity;

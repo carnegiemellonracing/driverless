@@ -59,8 +59,8 @@
 
 #define dark_mode 0
 #define CPP_ALPHA 0.1
-#define CPP_NUM_BINS 10
-#define CPP_HEIGHT_THRESHOLD 0.10
+#define CPP_NUM_BINS 5
+#define CPP_HEIGHT_THRESHOLD 0.08
 #define CPP_EPSILON 0.2
 #define CPP_MIN_POINTS 3
 #define CPP_EPSILON2 3
@@ -276,6 +276,7 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
   cones_pub_->publish(ToRosMsgCones(msg, frame_id_));
 #else
 #if dark_mode
+  RCLCPP_INFO(node_ptr_->get_logger(), "dark mode printing\n");
   cone_pub_dark->publish(ToRosMsgConesCPP_dark(msg, frame_id_));
 #else
   auto start_cone_pub = std::chrono::high_resolution_clock::now();
@@ -347,7 +348,13 @@ inline interfaces::msg::ConeArray SourceDriver::ToRosMsgConesCPP_dark(const Lida
       continue;
     }
 
-    filtered_points.push_back(PointXYZI(point.x, point.y, point.z, point.intensity));
+    PointXYZI pt;
+    pt.x = point.x;
+    pt.y = point.y;
+    pt.z = point.z;
+    pt.intensity = point.intensity;
+
+    filtered_points.push_back(pt);
   }
 
   interfaces::msg::ConeArray message = run_pipeline_dark(filtered_points, CPP_ALPHA, CPP_NUM_BINS, CPP_HEIGHT_THRESHOLD, CPP_EPSILON, CPP_MIN_POINTS, CPP_EPSILON2, CPP_MIN_POINTS2, node_ptr_->get_logger());
@@ -433,7 +440,14 @@ inline interfaces::msg::PPMConeArray SourceDriver::ToRosMsgConesCPP(const LidarD
       continue;
     }
 
-    filtered_points.push_back(PointXYZI(point.x, point.y, point.z, point.intensity));
+    
+    PointXYZI pt;
+    pt.x = point.x;
+    pt.y = point.y;
+    pt.z = point.z;
+    pt.intensity = point.intensity;
+
+    filtered_points.push_back(pt);
   }
 
   PointCloud<PointXYZI> filtered_cloud = run_pipeline(filtered_points, CPP_ALPHA, CPP_NUM_BINS, CPP_HEIGHT_THRESHOLD, CPP_EPSILON, CPP_MIN_POINTS, CPP_EPSILON2, CPP_MIN_POINTS2, node_ptr_->get_logger());
