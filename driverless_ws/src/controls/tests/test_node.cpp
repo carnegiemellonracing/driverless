@@ -350,7 +350,7 @@ namespace controls {
             }
             return prev_closest;
         }
-
+        
         static size_t find_furthest_point(const std::vector<glm::fvec2>& points, glm::fvec2 position, float lookahead_squared, size_t prev_furthest, size_t prev_closest) {
             // this will eventually terminate if prev_closest is sane
             while (get_squared_distance(points.at(prev_furthest), position) < lookahead_squared) {
