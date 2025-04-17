@@ -240,8 +240,8 @@ namespace controls {
 
               m_log_file{getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_logs"], std::ios_base::trunc},
 
-              m_is_loop{m_config_dict["is_loop"] == "true"}
-              m_slam_chunks{0},
+              m_is_loop{m_config_dict["is_loop"] == "true"},
+              m_slam_chunks{0}
         {   
             std::cout << m_lookahead << std::endl;
             std::cout << m_all_segments.size() << std::endl;
@@ -249,8 +249,8 @@ namespace controls {
             // m_lookahead = std::stof(m_config_dict["look_ahead"]);
             // m_lookahead_squared = m_lookahead * m_lookahead;
             
-            glm::fvec2 curr_pos {0, 0}; // TODO: this is just to test what happens if the car starts OOB
-            // glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
+            // glm::fvec2 curr_pos {0, 0}; // TODO: this is just to test what happens if the car starts OOB
+            glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
             float curr_heading = m_world_state[2];
             int chunk_id = 0;
             for (const auto& seg : m_all_segments) {
