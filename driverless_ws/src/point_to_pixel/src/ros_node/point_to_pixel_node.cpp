@@ -453,6 +453,63 @@
         return ordered_cones;
     }
 
+    void PointToPixelNode::classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point) {
+        // Find the closest point wrt yellow points
+        float min_dist_from_yellow = find_closest_point_in_cone_history(yellow_cone_history, lidar_point);
+
+        // Find the closest point wrt blue points
+        float min_dist_from_blue = find_closest_point_in_cone_history(blue_cone_history, lidar_point);
+
+        // Between the 2 colors, determine which is closer
+        if (min_dist_from_blue <= min_dist_from_yellow) { // most like a blue cone 
+            return 2;
+        } else if (min_dist_from_yellow <= min_dist_from_blue) {
+            return 1;
+        }   
+    }
+
+    void PointToPixelNode::motion_model_on_cone_history(std::queue<ObsConeInfo>& cone_history, std::pair<double, double> long_lat_change) {
+        /**
+         * Note: In the case that you plan to multithread the code in the future, 
+         * this expression is moved out because cone_history's size changes 
+         * during each iteration.
+         */
+        int cone_history_size = cone_history.size();
+
+        for (int i = 0; i < cone_history_size; i++) {
+            ObsConeInfo cone_info = cone_history.pop();
+            cone_info.cur_car_to_observer_position_y -= long_lat_change.first;
+            cone_info.cur_car_to_observer_position_x -= long_lat_change.second;
+            cone_history.push(cone_info);
+        }
+    }
+
+    void PointToPixelNode::add_lidar_point_to_cone_history(std::queue<ObsConeInfo>& cone_history, geometry_msgs::msg::Vector3 lidar_point) {
+        ObsConeInfo cone_info = {
+            .cur_car_to_observer_position_x = lidar_point.x,
+            .cur_car_to_observer_position_y = lidar_point.y,
+            .observer_position_to_cone_x = 0.0f,
+            .observer_position_to_cone_y = 0.0f,
+            .lifespan = 0
+        };
+        cone_history.push(cone_info);
+    }
+
+    void PointToPixelNode::maintain_cone_history_lifespans(std::queue<ObsConeInfo>& cone_history) {
+        int cone_history_size = cone_history.size();
+
+        for (int i = 0; i < cone_history_size; i++) {
+            ObsConeInfo cone_info = cone_history.pop();
+            assert(cone_info.lifespan <= max_timesteps_in_cone_history);
+            if (cone_info.lifespan == max_timesteps_in_cone_history) {
+                continue;
+            } else {
+                cone_info.lifespan++;
+                cone_history.push(cone_info);
+            }
+        }
+    }
+
     // Topic callback definition
     void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
     {
@@ -576,6 +633,10 @@
 
         // Iterate through all points in /cpp_cones message
         // TODO: In loop, draw pixels
+        // TODO: take the average long and lat and pass it in to the motion model 
+        motion_model_on_cone_history(blue_cone_history, long_lat_l);
+        motion_model_on_cone_history(yellow_cone_history, long_lat_l);
+
         for (size_t i = 0; i < msg->cone_array.size(); i++) {
             #if timing
                 auto loop_start = high_resolution_clock::now();
@@ -620,7 +681,9 @@
 
             switch (cone_class) {
                 case 0:
+                    // TODO: I think this is meant to be orange
                     message.yellow_cones.push_back(point_msg);
+                    add_lidar_point_to_cone_history(yellow_cone_history, msg->cone_array[i].cone_points[0]);
                     #if save_frames
                         orange_transformed_pixels.push_back(
                             std::make_pair(
@@ -633,6 +696,7 @@
                 case 1:
                     // message.yellow_cones.push_back(point_msg);
                     unordered_yellow_cones.push_back(Cone(point_msg));
+                    add_lidar_point_to_cone_history(yellow_cone_history, msg->cone_array[i].cone_points[0]);
                     #if save_frames
                     yellow_transformed_pixels.push_back(
                         std::make_pair(
@@ -643,6 +707,7 @@
                 case 2:
                     // message.blue_cones.push_back(point_msg);
                     unordered_blue_cones.push_back(Cone(point_msg));
+                    add_lidar_point_to_cone_history(blue_cone_history, msg->cone_array[i].cone_points[0]);
                     #if save_frames
                     blue_transformed_pixels.push_back(
                         std::make_pair(
@@ -651,7 +716,18 @@
                     #endif
                     break;
                 default:
-                    message.unknown_color_cones.push_back(point_msg);
+                    //message.unknown_color_cones.push_back(point_msg);
+
+                    // Use data association on the cone_history to determine the color
+                    classify_through_data_association(msg->cone_array[i].cone_points[0]);
+
+                    if (cone_class == 1) {
+                        add_lidar_point_to_cone_history(yellow_cone_history, msg->cone_array[i].cone_points[0]);
+                    } else if (cone_class == 2) {
+                        add_lidar_point_to_cone_history(blue_cone_history, msg->cone_array[i].cone_points[0]);
+                    }
+
+
                     #if save_frames
                     unknown_transformed_pixels.push_back(
                         std::make_pair(
@@ -660,7 +736,13 @@
                     #endif
                     break;
             }
+
+            
+
         }
+
+        maintain_lifespans_in_cone_history(yellow_cone_history);
+        maintain_lifespans_in_cone_history(blue_cone_history);
 
         RCLCPP_INFO(get_logger(), "Left out of frame count: %d", left_out_of_frame_count);
         RCLCPP_INFO(get_logger(), "Right out of frame count: %d", right_out_of_frame_count);

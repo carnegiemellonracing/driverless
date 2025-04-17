@@ -36,12 +36,36 @@ struct Cone {
     }
 };
 
+/**
+ * @brief Observer position represents where the car was when the one was observed.
+ * Cur car position is where the car currently is. When the car moves, we calculate 
+ * the change in x and y and add the changes to the observer position.
+ * 
+ * When a cone is observed, this information will be added to a queue.with which
+ * we can perform data association on. As we do this, we should incremet the 
+ * lifespan of the car.  
+ */
+struct ObsConeInfo {
+   // Motion model changes are applied to these values
+   float cur_car_to_observer_position_x;
+   float cur_car_to_observer_position_y;
+
+   // The observed positions of the cones in CMR frame 
+   float observer_position_to_cone_x;
+   float observer_position_to_cone_y;
+
+   int lifespan;
+};
+
+
+
 class PointToPixelNode : public rclcpp::Node
 {
 public:
     // Constructor declaration
     PointToPixelNode();
     static constexpr int max_deque_size = 100;
+    static constexpr int max_timesteps_in_cone_history = 10;
 
     #if use_yolo
     static constexpr char yolo_model_path[] = "src/point_to_pixel/config/yolov5_model_params.onnx";
@@ -62,6 +86,9 @@ private:
     std::deque<std::pair<uint64_t, cv::Mat>> img_deque_r;
     std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> velocity_deque;
     std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> yaw_deque;
+
+    std::queue<ObsConeInfo> yellow_cone_history;
+    std::queue<ObsConeInfo> blue_cone_history;
 
 
     Eigen::Matrix<double, 3, 4> projection_matrix_l;
@@ -128,6 +155,12 @@ private:
     std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_velocity_yaw(uint64_t callbackTime);
 
     std::thread launch_camera_communication();
+
+    // Cone history and data association
+    void classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point);
+    void motion_model_on_cone_history(std::queue<ObsConeInfo>& cone_history, std::pair<double, double> long_lat_change);
+    void add_lidar_point_to_cone_history(std::queue<ObsConeInfo>& cone_history, geometry_msgs::msg::Vector3 lidar_point);
+    void maintain_cone_history_lifespans(std::queue<ObsConeInfo>& cone_history);
 
     #if use_yolo
     cv::dnn::Net net; // YOLO Model
