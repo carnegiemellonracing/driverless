@@ -13,6 +13,7 @@
 #include "../transform/transform.hpp"
 #include "../camera/camera.hpp"
 #include "../coloring/coloring.hpp"
+#include <queue>
 
 using std::chrono::duration;
 using std::chrono::duration_cast;
@@ -157,12 +158,13 @@ private:
     std::thread launch_camera_communication();
 
     // Cone history and data association
-    void classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point);
+    int classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point);
     void motion_model_on_cone_history(std::queue<ObsConeInfo>& cone_history, std::pair<double, double> long_lat_change);
     void add_lidar_point_to_cone_history(std::queue<ObsConeInfo>& cone_history, geometry_msgs::msg::Vector3 lidar_point);
-    void maintain_cone_history_lifespans(std::queue<ObsConeInfo>& cone_history);
-
-    #if use_yolo
+    void maintain_lifespans_in_cone_history(std::queue<ObsConeInfo>& cone_history);
+    float find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point);
+    
+#if use_yolo
     cv::dnn::Net net; // YOLO Model
     #endif
 
@@ -170,4 +172,4 @@ private:
     uint64_t camera_callback_count;
     void save_frame(std::pair<uint64_t, cv::Mat> frame_l, std::pair<uint64_t, cv::Mat> frame_r);
     #endif
-};
+    };
