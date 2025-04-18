@@ -453,12 +453,26 @@
         return ordered_cones;
     }
 
-    void PointToPixelNode::classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point) {
+    float PointToPixelNode::find_closest_distance_in_cone_history(std::queue<ObsConeInfo>& cone_history, geometry_msgs::msg::Vector3 lidar_point) {
+        float min_dist = std::numeric_limits<float>::max();
+        for (int i =0; i < cone_history.size(); i++) {
+            ObsConeInfo cone_info = cone_history.front();
+            cone_history.pop();
+            float dist = sqrt(pow(cone_info.cur_car_to_observer_position_x + lidar_point.x, 2) + pow(cone_info.cur_car_to_observer_position_y + lidar_point.y, 2));
+            if (dist < min_dist) {
+                min_dist = dist;
+            }
+            cone_history.push(cone_info);
+        }
+        return min_dist;
+    }
+
+    int PointToPixelNode::classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point) {
         // Find the closest point wrt yellow points
-        float min_dist_from_yellow = find_closest_point_in_cone_history(yellow_cone_history, lidar_point);
+        float min_dist_from_yellow = find_closest_distance_in_cone_history(yellow_cone_history, lidar_point);
 
         // Find the closest point wrt blue points
-        float min_dist_from_blue = find_closest_point_in_cone_history(blue_cone_history, lidar_point);
+        float min_dist_from_blue = find_closest_distance_in_cone_history(blue_cone_history, lidar_point);
 
         // Between the 2 colors, determine which is closer
         if (min_dist_from_blue <= min_dist_from_yellow) { // most like a blue cone 
@@ -477,9 +491,12 @@
         int cone_history_size = cone_history.size();
 
         for (int i = 0; i < cone_history_size; i++) {
-            ObsConeInfo cone_info = cone_history.pop();
+            ObsConeInfo cone_info = cone_history.front();
+            cone_history.pop();
+            
             cone_info.cur_car_to_observer_position_y -= long_lat_change.first;
             cone_info.cur_car_to_observer_position_x -= long_lat_change.second;
+            
             cone_history.push(cone_info);
         }
     }
@@ -495,20 +512,22 @@
         cone_history.push(cone_info);
     }
 
-    void PointToPixelNode::maintain_cone_history_lifespans(std::queue<ObsConeInfo>& cone_history) {
+    void PointToPixelNode::maintain_lifespans_in_cone_history(std::queue<ObsConeInfo>& cone_history) {
         int cone_history_size = cone_history.size();
 
         for (int i = 0; i < cone_history_size; i++) {
-            ObsConeInfo cone_info = cone_history.pop();
+            ObsConeInfo cone_info = cone_history.front();
             assert(cone_info.lifespan <= max_timesteps_in_cone_history);
             if (cone_info.lifespan == max_timesteps_in_cone_history) {
-                continue;
+                cone_history.pop();
             } else {
                 cone_info.lifespan++;
                 cone_history.push(cone_info);
             }
         }
     }
+
+    
 
     // Topic callback definition
     void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
