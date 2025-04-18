@@ -173,7 +173,7 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
                     }
                 }
             }
-            boundary_points.emplace(xx[row][chosen_column], yy[row][chosen_column]);
+            boundary_points.emplace(xx[row][chosen_column.value()], yy[row][chosen_column.value()]);
 
         } else {
             // Reset chosen_column so we don't propagate error
