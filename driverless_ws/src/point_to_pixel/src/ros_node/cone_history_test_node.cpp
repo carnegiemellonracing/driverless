@@ -1,6 +1,20 @@
 #include "cone_history_test_node.hpp"
 
-ConeHistoryTestNode::ConeHistoryTestNode() 
+
+std::pair<double, double> global_frame_to_local_frame(
+    std::pair<double, double> global_frame_change,
+    double yaw)
+{
+    double global_frame_dx = global_frame_change.first;
+    double global_frame_dy = global_frame_change.second;
+
+    double cmr_y = global_frame_dx * std::cos(yaw * M_PI / 180.0) + global_frame_dy * std::sin(yaw * M_PI / 180.0);
+    double cmr_x = global_frame_dx * std::sin(yaw * M_PI / 180.0) - global_frame_dy * std::cos(yaw * M_PI / 180.0);
+
+    return std::make_pair(cmr_x, cmr_y);
+}
+
+ConeHistoryTestNode::ConeHistoryTestNode() : Node("cone_history_test_node") 
 {
     // Initialize the velocity and yaw deques
     velocity_deque = {};
@@ -10,27 +24,37 @@ ConeHistoryTestNode::ConeHistoryTestNode()
     prev_time_stamp = -1;
 
     // Initialize subscribers
-    velocity_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>(
-        "/filter/twist", 
-        10, 
-        [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg) {velocity_callback(msg);},
-        velocity_options
-    );
 
-    yaw_sub_ = create_subscription<geometry_msgs::msg::Vector3Stamped>(
-        "/filter/euler", 
-        10, 
-        [this](const geometry_msgs::msg::Vector3Stamped::SharedPtr msg) {yaw_callback(msg);},
-        yaw_options
-    );
-
+    // Subscriber that reads the input topic that contains an array of cone_point arrays from LiDAR stack
+    auto cone_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    rclcpp::SubscriptionOptions cone_options;
+    cone_options.callback_group = cone_callback_group_;
     perc_cones_sub_ = create_subscription<interfaces::msg::ConeArray>(
-        "/perc_cones", 
-        10, 
-        [this](const interfaces::msg::ConeArray::SharedPtr msg) {cone_callback(msg);},
-        cone_options
-    );
+        "/perc_cones",
+        10,
+        [this](const interfaces::msg::ConeArray::SharedPtr msg)
+        { cone_callback(msg); },
+        cone_options);
 
+    // auto velocity_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    rclcpp::SubscriptionOptions velocity_options;
+    velocity_options.callback_group = cone_callback_group_;
+    velocity_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>(
+        "/filter/twist",
+        10,
+        [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg)
+        { velocity_callback(msg); },
+        velocity_options);
+
+    // auto yaw_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    rclcpp::SubscriptionOptions yaw_options;
+    yaw_options.callback_group = cone_callback_group_;
+    yaw_sub_ = create_subscription<geometry_msgs::msg::Vector3Stamped>(
+        "/filter/euler",
+        10,
+        [this](const geometry_msgs::msg::Vector3Stamped::SharedPtr msg)
+        { yaw_callback(msg); },
+        yaw_options);
 
     // Initialize publishers
     associated_cones_pub_ = create_publisher<interfaces::msg::ConeArray>(
@@ -136,12 +160,29 @@ void ConeHistoryTestNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::Share
     // yaw_mutex.unlock();
 }
 
-void ConeHistoryTestNode::classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point) {
+float ConeHistoryTestNode::find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point)
+{
+    float min_dist = std::numeric_limits<float>::max();
+    for (int i = 0; i < cone_history.size(); i++)
+    {
+        ObsConeInfo cone_info = cone_history.front();
+        cone_history.pop();
+        float dist = sqrt(pow(cone_info.cur_car_to_observer_position_x + lidar_point.x, 2) + pow(cone_info.cur_car_to_observer_position_y + lidar_point.y, 2));
+        if (dist < min_dist)
+        {
+            min_dist = dist;
+        }
+        cone_history.push(cone_info);
+    }
+    return min_dist;
+}
+
+int ConeHistoryTestNode::classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point) {
     // Find the closest point wrt yellow points
-    float min_dist_from_yellow = find_closest_point_in_cone_history(yellow_cone_history, lidar_point);
+    float min_dist_from_yellow = find_closest_distance_in_cone_history(yellow_cone_history, lidar_point);
 
     // Find the closest point wrt blue points
-    float min_dist_from_blue = find_closest_point_in_cone_history(blue_cone_history, lidar_point);
+    float min_dist_from_blue = find_closest_distance_in_cone_history(blue_cone_history, lidar_point);
 
     // Between the 2 colors, determine which is closer
     if (min_dist_from_blue <= min_dist_from_yellow) { // most like a blue cone 
@@ -160,9 +201,10 @@ void ConeHistoryTestNode::motion_model_on_cone_history(std::queue<ObsConeInfo>& 
     int cone_history_size = cone_history.size();
 
     for (int i = 0; i < cone_history_size; i++) {
-        ObsConeInfo cone_info = cone_history.pop();
+        ObsConeInfo cone_info = cone_history.front();
         cone_info.cur_car_to_observer_position_y -= long_lat_change.first;
         cone_info.cur_car_to_observer_position_x -= long_lat_change.second;
+        cone_history.pop();
         cone_history.push(cone_info);
     }
 }
@@ -182,7 +224,8 @@ void ConeHistoryTestNode::maintain_cone_history_lifespans(std::queue<ObsConeInfo
     int cone_history_size = cone_history.size();
 
     for (int i = 0; i < cone_history_size; i++) {
-        ObsConeInfo cone_info = cone_history.pop();
+        ObsConeInfo cone_info = cone_history.front();
+        cone_history.pop();
         assert(cone_info.lifespan <= max_timesteps_in_cone_history);
         if (cone_info.lifespan == max_timesteps_in_cone_history) {
             continue;
@@ -206,28 +249,29 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
         prev_time_stamp = cur_time_stamp;
     }
 
-    uint64_t time_diff = cur_time_stamp - prev_time_stamp;
+    double time_diff_seconds = (cur_time_stamp - prev_time_stamp) / 1e9;
 
-    std::pair<double, double> cur_velocity_yaw = get_velocity_yaw(msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec);
-    double cur_velocity_x = cur_velocity_yaw.first.twist.linear.x;
-    double cur_velocity_y = cur_velocity_yaw.first.twist.linear.y;
-    double cur_yaw = cur_velocity_yaw.second.vector.z;
+    std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> cur_velocity_yaw = get_velocity_yaw(msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec);
+    double cur_velocity_x = cur_velocity_yaw.first->twist.linear.x;
+    double cur_velocity_y = cur_velocity_yaw.first->twist.linear.y;
+    double cur_yaw = cur_velocity_yaw.second->vector.z;
     
-    std::pair <double, double> prev_velocity_yaw = get_velocity_yaw(prev_time_stamp);
-    double prev_velocity_x = prev_velocity_yaw.first.twist.linear.x;
-    double prev_velocity_y = prev_velocity_yaw.first.twist.linear.y;
-    double prev_yaw = prev_velocity_yaw.second.vector.z;
+    double global_change_dx = cur_velocity_x * time_diff_seconds;
+    double global_change_dy = cur_velocity_y * time_diff_seconds;
+
 
     std::vector<geometry_msgs::msg::Point> blue_cones_to_publish = msg->blue_cones;
     std::vector<geometry_msgs::msg::Point> yellow_cones_to_publish = msg->yellow_cones;
 
+    std::pair<double, double> long_lat_l = global_frame_to_local_frame(std::make_pair(global_change_dx, global_change_dy), cur_yaw);
+
 
     for (int i= 0; i < msg->blue_cones.size(); i++) {
-        blue_cone_history.emplace(0.0f, 0.0f, msg->blue_cones[i].x, msg->blue_cones[i].y);
+        blue_cone_history.emplace(0.0f, 0.0f, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
     }
     
     for (int i= 0; i < msg->yellow_cones.size(); i++) {
-        yellow_cone_history.emplace(0.0f, 0.0f, msg->yellow_cones[i].x, msg->yellow_cones[i].y);
+        yellow_cone_history.emplace(0.0f, 0.0f, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
     }
 
     // Classify each unknown cone.
@@ -235,27 +279,31 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     motion_model_on_cone_history(yellow_cone_history, long_lat_l);
 
     int num_unable_to_classify_cones = 0;
-    for (int i = 0; i < msg->unknown_cones.size(); i++) {
-        int cone_class = classify_through_data_association(msg->unknown_cones[i]);
+    for (int i = 0; i < msg->unknown_color_cones.size(); i++) {
+        geometry_msgs::msg::Vector3 lidar_point;
+        lidar_point.x = msg->unknown_color_cones[i].x;
+        lidar_point.y = msg->unknown_color_cones[i].y;
+        lidar_point.z = msg->unknown_color_cones[i].z;
+        int cone_class = classify_through_data_association(lidar_point);
 
         // Classify and add the newly classified cone to the cone history
-        switch cone_class {
+        switch (cone_class) {
             //yellow
             case 1:
-                yellow_cones_to_publish.push_back(msg->unknown_cones[i]);
-                yellow_cone_history.emplace(0.0f, 0.0f, msg->yellow_cones[i].x, msg->yellow_cones[i].y);
+                yellow_cones_to_publish.push_back(msg->unknown_color_cones[i]);
+                yellow_cone_history.emplace(0.0f, 0.0f, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
                 break;
             //blue 
             case 2:
-                blue_cones_to_publish.push_back(msg->unknown_cones[i]);
-                blue_cone_history.emplace(0.0f, 0.0f, msg->blue_cones[i].x, msg->blue_cones[i].y);
+                blue_cones_to_publish.push_back(msg->unknown_color_cones[i]);
+                blue_cone_history.emplace(0.0f, 0.0f, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
                 break;
 
             default: 
                 num_unable_to_classify_cones++;
-                RCLPCP_INFO(this->get_logger(), "\tUnable to classify cone @ (%f, %f)", 
-                                                msg->unknown_cones[i].x, 
-                                                msg->unknown_cones[i].y);
+                RCLCPP_INFO(this->get_logger(), "\tUnable to classify cone @ (%f, %f)", 
+                                                msg->unknown_color_cones[i].x, 
+                                                msg->unknown_color_cones[i].y);
                 break;    
         }
     }
@@ -263,7 +311,7 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     
 
     // Create the associated cones message
-    Interfaces::msg::ConeArray associated_cones_msg_;
+    interfaces::msg::ConeArray associated_cones_msg_;
     associated_cones_msg_.header.stamp = msg->header.stamp;
     associated_cones_msg_.header.frame_id = msg->header.frame_id;
     associated_cones_msg_.blue_cones = blue_cones_to_publish;
