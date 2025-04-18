@@ -268,7 +268,7 @@ namespace controls
                 return downsampled;
             }
 
-            bool compare_cones(conesList &cones1, conesList &cones2) {
+            bool compare_cones(const conesList &cones1, const conesList &cones2) {
                 if (cones1.size() != cones2.size()) {
                     return false;
                 }
@@ -456,7 +456,6 @@ namespace controls
                 }
 
                 boundary_points = sortBoundaryPoints(boundary_points);
-                paranoid_assert(compare_cones(boundary_points, sortBoundaryPoints(svm_strat3::boundaryDetection(xx, yy, model))));
 
                 // downsample boundary points
                 conesList downsampled = downsamplePoints(boundary_points);

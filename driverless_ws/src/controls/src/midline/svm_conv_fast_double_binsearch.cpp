@@ -17,6 +17,7 @@
 #include "cones.hpp"
 #include "svm_conv.hpp"
 #include <constants.hpp>
+#include <rclcpp/rclcpp.hpp>
 #define NUM_THREADS 4
 
 
@@ -52,6 +53,10 @@ double nodePredictor(const std::vector<double> &cone, const svm_model *model)
 //     return;
 // }
 
+static constexpr bool is_colored_one(double label) {
+    return abs(label - 1) <= 0.1;
+}
+
 /* take the flatten mesh and generate a vector of boundary points,
    using lazy evaluation
 */
@@ -62,10 +67,70 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
     size_t rows = xx.size();
     size_t cols = xx[0].size();
     std::set<std::pair<double, double>> boundary_points;
-
+    std::optional<size_t> chosen_column = std::nullopt;
+    bool zero_to_right = true;
+    size_t number_of_rows_not_skipped = 0;
     for (size_t row = 0; row < rows; ++row)
     {
+        // We check up to -2 and +2
+        // also holy garbage code right here
+        if (chosen_column.has_value()) { // TODO: add additional bounds checking
+            size_t chosen_column_value = chosen_column.value();
+            if (chosen_column_value < cols - 2 && chosen_column_value >= 2) {
+                if (zero_to_right) {
+                    /*
+                    1 1 0 0
+                    1 1 0 0
+
+                    1 1 0 0 
+                    1 1 1 0
+
+                    1 1 0 0
+                    1 0 0 0
+                    */
+                    double center_label = nodePredictor({xx[row][chosen_column_value], yy[row][chosen_column_value]}, model);
+                    if (is_colored_one(center_label)) {
+                        if (!is_colored_one(nodePredictor({xx[row][chosen_column_value + 1], yy[row][chosen_column_value + 1]}, model))) {
+                            chosen_column = chosen_column_value;
+                            continue;
+                        } else if (!is_colored_one(nodePredictor({xx[row][chosen_column_value + 2], yy[row][chosen_column_value + 2]}, model))) {
+                            chosen_column = chosen_column_value + 1;
+                            continue;
+                        }
+                    } else {
+                        if (is_colored_one(nodePredictor({xx[row][chosen_column_value - 1], yy[row][chosen_column_value - 1]}, model))) {
+                            chosen_column = chosen_column_value - 1;
+                            continue;
+                        }
+                    }
+                } else {
+                    /*
+                    0 0 1 1
+                    0 0 1 1
+
+                    0 0 1 1
+                    0 1 1 1
+                    */
+                // ^ Notice how the +'s and -'s are all swapped from the previous one, we can refactor this later
+                    if (is_colored_one(nodePredictor({xx[row][chosen_column_value], yy[row][chosen_column_value]}, model))) {
+                        if (!is_colored_one(nodePredictor({xx[row][chosen_column_value - 1], yy[row][chosen_column_value - 1]}, model))) {
+                            chosen_column = chosen_column_value;
+                            continue;
+                        } else if (!is_colored_one(nodePredictor({xx[row][chosen_column_value - 2], yy[row][chosen_column_value - 2]}, model))) {
+                            chosen_column = chosen_column_value - 1;
+                            continue;
+                        }
+                    } else {
+                        if (is_colored_one(nodePredictor({xx[row][chosen_column_value + 1], yy[row][chosen_column_value + 1]}, model))) {
+                            chosen_column = chosen_column_value + 1;
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
         // predict left and right labels
+        number_of_rows_not_skipped++;
         std::vector<double> left_node = {xx[row][0], yy[row][0]};
         std::vector<double> right_node = {xx[row][cols - 1], yy[row][cols - 1]};
         double left_label = nodePredictor(left_node, model);
@@ -83,16 +148,19 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
                 double left_point = nodePredictor({xx[row][mid], yy[row][mid]}, model);
                 double right_point = nodePredictor({xx[row][mid + 1], yy[row][mid + 1]}, model);
 
-                // std::cout << left_point << " " << right_point << std::endl;
                 if (left_point != right_point)
                 {
-                    if(abs(left_point - 1) > 0.1)
-                        boundary_points.emplace(xx[row][mid + 1], yy[row][mid + 1]);
-                    else
-                        boundary_points.emplace(xx[row][mid], yy[row][mid]);
+                    if (is_colored_one(left_point)) {
+                        chosen_column = mid;
+                        zero_to_right = true;
+                    } else {
+                        chosen_column = mid + 1;
+                        zero_to_right = false;
+                    }
+                    break;
+
                     right = left;
                 }
-
                 else
                 {
                     if (left_point == left_label)
@@ -105,9 +173,20 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
                     }
                 }
             }
+            boundary_points.emplace(xx[row][chosen_column], yy[row][chosen_column]);
 
+        } else {
+            // Reset chosen_column so we don't propagate error
+            chosen_column = std::nullopt;
         }
     }
+
+    std::cout << "Skipped: " << rows - number_of_rows_not_skipped << "/" << rows << std::endl;
+
+    std::optional<size_t> chosen_row = std::nullopt;
+    bool zero_below = true;
+    size_t number_of_cols_not_skipped = 0;
+
     for (size_t col = 0; col < cols; ++col)
     {
         // predict left and right labels
