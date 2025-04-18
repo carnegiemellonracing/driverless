@@ -254,9 +254,15 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> cur_velocity_yaw = get_velocity_yaw(msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec);
 
     if (cur_velocity_yaw.first == nullptr || cur_velocity_yaw.second == nullptr) {
+        RCLCPP_INFO(get_logger(), "Velocity or Yaw deque is empty! Cannot find matching velocity.");
         return;
     }
 
+    RCLCPP_INFO(get_logger(), "-------------Motion Modeling--------------");
+    RCLCPP_INFO(get_logger(), "\tTime diff: %f", time_diff_seconds);
+    RCLCPP_INFO(get_logger(), "\tVelocity: %f, %f", cur_velocity_yaw.first->twist.linear.x, cur_velocity_yaw.first->twist.linear.y);
+    RCLCPP_INFO(get_logger(), "\tYaw: %f", cur_velocity_yaw.second->vector.z);
+    RCLCPP_INFO(get_logger(), "-------------End Motion Modeling--------------\n");
 
     double cur_velocity_x = cur_velocity_yaw.first->twist.linear.x;
     double cur_velocity_y = cur_velocity_yaw.first->twist.linear.y;
@@ -266,8 +272,12 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     double global_change_dy = cur_velocity_y * time_diff_seconds;
 
 
+    RCLCPP_INFO(get_logger(), "-------------Processing Cones--------------"); 
+    RCLCPP_INFO(get_logger(), "\tNumber of blue cones: %zu", msg->blue_cones.size());
+    RCLCPP_INFO(get_logger(), "\tNumber of yellow cones: %zu", msg->yellow_cones.size());
     std::vector<geometry_msgs::msg::Point> blue_cones_to_publish = msg->blue_cones;
     std::vector<geometry_msgs::msg::Point> yellow_cones_to_publish = msg->yellow_cones;
+    
 
     std::pair<double, double> long_lat_l = global_frame_to_local_frame(std::make_pair(global_change_dx, global_change_dy), cur_yaw);
 
@@ -279,30 +289,37 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     for (int i= 0; i < msg->yellow_cones.size(); i++) {
         yellow_cone_history.emplace(0.0f, 0.0f, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
     }
+    RCLCPP_INFO(get_logger(), "-------------End Processing Cones--------------\n");
 
     // Classify each unknown cone.
+    RCLCPP_INFO(get_logger(), "-------------Start Motion Modeling On Cones--------------\n");
     motion_model_on_cone_history(blue_cone_history, long_lat_l);
     motion_model_on_cone_history(yellow_cone_history, long_lat_l);
+    RCLCPP_INFO(get_logger(), "-------------End Motion Modeling On Cones--------------\n");
 
     int num_unable_to_classify_cones = 0;
     for (int i = 0; i < msg->unknown_color_cones.size(); i++) {
+        RCLCPP_INFO(get_logger(), "-------------Classifying Cone--------------\n");
         geometry_msgs::msg::Vector3 lidar_point;
         lidar_point.x = msg->unknown_color_cones[i].x;
         lidar_point.y = msg->unknown_color_cones[i].y;
         lidar_point.z = msg->unknown_color_cones[i].z;
+        RCLCPP_INFO(get_logger(), "\t Point: (%f, %f, %f)", lidar_point.x, lidar_point.y, lidar_point.z);
         int cone_class = classify_through_data_association(lidar_point);
 
         // Classify and add the newly classified cone to the cone history
         switch (cone_class) {
             //yellow
             case 1:
+                RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as yellow", msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
                 yellow_cones_to_publish.push_back(msg->unknown_color_cones[i]);
-                yellow_cone_history.emplace(0.0f, 0.0f, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
+                yellow_cone_history.emplace(0.0f, 0.0f, msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y, 0);
                 break;
             //blue 
             case 2:
+                RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as blue", msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
                 blue_cones_to_publish.push_back(msg->unknown_color_cones[i]);
-                blue_cone_history.emplace(0.0f, 0.0f, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
+                blue_cone_history.emplace(0.0f, 0.0f, msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y, 0);
                 break;
 
             default: 
