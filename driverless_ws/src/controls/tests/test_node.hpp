@@ -119,8 +119,7 @@ namespace controls {
             float m_lookahead;
             float m_lookahead_squared;
 
-            /// Stores the current state of the car (in Thomas model coordinates)
-            // std::array<double, 13> m_world_state {0, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
+            std::array<float, 4> m_world_state{0.0f, 0.0f, 0.0f, 0.0f};
 
             rclcpp::Time m_time;
             std::mt19937 m_rng;
@@ -132,7 +131,7 @@ namespace controls {
             Visibility m_initial_visible_indices;
             float m_spline_end_heading = 0;
             ActionMsg m_last_action_msg;
-            std::unordered_map<size_t,  std::pair<glm::fvec2, glm::fvec2>> m_slam_chunks;
+            std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
 
             /// For lap tracking
             std::vector<glm::fvec2> m_start_line;

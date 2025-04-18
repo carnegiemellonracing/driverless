@@ -255,7 +255,7 @@ namespace controls {
             int chunk_id = 0;
             for (const auto& seg : m_all_segments) {
                 SlamMsg chunk_info;
-                chunk_id = chunk++;
+                chunk_id = chunk_id++;
                 if (seg.type == SegmentType::ARC) {
                     
                     float next_heading = arc_rad_adjusted(curr_heading + seg.heading_change);
@@ -270,9 +270,24 @@ namespace controls {
                     curr_pos = spline.back();
                     curr_heading = next_heading;
 
-                    chunk_info.chunk_id = chunk_id;
-                    chunk_info.blue_cones = left;
-                    chunk_info.yellow_cones = right;
+                    chunk_info.chunk_id.data = chunk_id;
+                    for (const auto &point : left)
+                    {
+                        geometry_msgs::msg::Point p;
+                        p.x = point.x;
+                        p.y = point.y;
+                        p.z = 0.0; // Assuming 2D points
+                        chunk_info.blue_cones.push_back(p);
+                    }
+
+                    for (const auto &point : right)
+                    {
+                        geometry_msgs::msg::Point p;
+                        p.x = point.x;
+                        p.y = point.y;
+                        p.z = 0.0; // Assuming 2D points
+                        chunk_info.yellow_cones.push_back(p);
+                    }
                     m_slam_publisher->publish(chunk_info);
 
                     m_slam_chunks[chunk_id] = std::make_pair(left, right);
@@ -286,9 +301,24 @@ namespace controls {
 
                     curr_pos = spline.back();
 
-                    chunk_info.chunk_id = chunk_id;
-                    chunk_info.blue_cones = left;
-                    chunk_info.yellow_cones = right;
+                    chunk_info.chunk_id.data = chunk_id;
+                    for (const auto &point : left)
+                    {
+                        geometry_msgs::msg::Point p;
+                        p.x = point.x;
+                        p.y = point.y;
+                        p.z = 0.0; 
+                        chunk_info.blue_cones.push_back(p);
+                    }
+
+                    for (const auto &point : right)
+                    {
+                        geometry_msgs::msg::Point p;
+                        p.x = point.x;
+                        p.y = point.y;
+                        p.z = 0.0; 
+                        chunk_info.yellow_cones.push_back(p);
+                    }
                     m_slam_publisher->publish(chunk_info);
 
                     m_slam_chunks[chunk_id] = std::make_pair(left, right);
