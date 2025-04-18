@@ -52,6 +52,8 @@ namespace controls {
 
             void cone_callback(const ConeMsg& cone_msg);
 
+            void slam_callback(const SlamMsg& slam_msg);
+
             /**
              * Callback for world twist subscription. Forwards message to `StateEstimator::on_world_twist`, and notifies MPPI
              * thread of the dirty state. Likely from GPS.
