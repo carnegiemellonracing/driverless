@@ -564,8 +564,8 @@ namespace controls {
             g_car_poses.push_back(std::make_tuple(world_state_vec, m_world_state[2], m_time.seconds() - m_start_time.seconds()));
             if (g_config_dict["log_on_sim"] == "true") {
                 auto time = get_clock()->now();
-                RCLCPP_WARN(get_logger(), "Time:%d", time.nanoseconds());
-                RCLCPP_WARN(get_logger(), "State:%s", state_to_string(m_world_state));
+                RCLCPP_WARN(get_logger(), "Time:%ld", time.nanoseconds());
+                RCLCPP_WARN(get_logger(), "State:%s", state_to_string(m_world_state).c_str());
                 const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
                 const float car_heading = m_world_state[2];
 
@@ -579,10 +579,11 @@ namespace controls {
                     glm::fvec2 rotated_point = rotate_point(rel_point, M_PI_2 - car_heading);
                     return rotated_point;
                 };
-                std::transform(m_all_left_cones.begin(), m_all_left_cones.end(), left_cones_transformed.begin(), gen_point);
-                std::transform(m_all_right_cones.begin(), m_all_right_cones.end(), right_cones_transformed.begin(), gen_point);
-                RCLCPP_WARN(get_logger(), "LeftCones:%s", points_to_parseable_string(left_cones_transformed));
-                RCLCPP_WARN(get_logger(), "RightCones:%s", points_to_parseable_string(right_cones_transformed));
+                std::transform(m_all_left_cones.begin(), m_all_left_cones.end(), std::back_inserter(left_cones_transformed), gen_point);
+                std::transform(m_all_right_cones.begin(), m_all_right_cones.end(), std::back_inserter(right_cones_transformed), gen_point);
+                std::cout << "sizes: " <<  m_all_left_cones.size() << " " << m_all_right_cones.size() << " " << left_cones_transformed.size() << " " << right_cones_transformed.size() << std::endl;
+                RCLCPP_WARN(get_logger(), "LeftCones:%s", vector_to_parseable_string(left_cones_transformed).c_str());
+                RCLCPP_WARN(get_logger(), "RightCones:%s", vector_to_parseable_string(right_cones_transformed).c_str());
             }
         }
 

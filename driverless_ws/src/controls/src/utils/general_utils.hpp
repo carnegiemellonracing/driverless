@@ -56,6 +56,9 @@ namespace controls {
     }
 
     inline std::string vector_to_parseable_string(const std::vector<glm::fvec2>& vec) {
+            if (vec.size() == 0) {
+                return "EmptyVector";
+            }
             std::stringstream ss;
             for (int i = 0; i < vec.size() - 1; i++)
             {
