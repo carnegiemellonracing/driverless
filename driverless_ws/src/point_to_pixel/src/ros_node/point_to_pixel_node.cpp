@@ -313,7 +313,7 @@
         // yaw_mutex.lock();
         if (yaw_deque.empty())
         {
-            RCLCPP_INFO(get_logger(), "Yaw deque is empty! Cannot find matching yaw.");
+            RCLCPP_WARN(get_logger(), "Yaw deque is empty! Cannot find matching yaw.");
             return std::make_pair(nullptr, nullptr);
         }
 
@@ -334,7 +334,7 @@
         // velocity_mutex.lock();
         if (velocity_deque.empty())
         {
-            RCLCPP_INFO(get_logger(), "Velocity deque is empty! Cannot find matching velocity.");
+            RCLCPP_WARN(get_logger(), "Velocity deque is empty! Cannot find matching velocity.");
             return std::make_pair(nullptr, nullptr);
         }
 
@@ -457,7 +457,7 @@
         // Logging Actions
         #if timing
             auto start_time = high_resolution_clock::now();
-            int64_t ms_time_since_lidar_2 = (get_clock()->now().nanoseconds() - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1000;
+            int64_t ms_time_since_lidar_2 = (get_clock()->now().nanoseconds() - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e6;
         #endif
 
         RCLCPP_INFO(get_logger(), "Received message with %zu cones", msg->cone_array.size());
@@ -562,8 +562,6 @@
         std::vector<Cone> unordered_blue_cones;
 
         // Iterate through all points in /cpp_cones message
-
-        // TODO: In loop, draw pixels
         for (size_t i = 0; i < msg->cone_array.size(); i++) {
             #if timing
                 auto loop_start = high_resolution_clock::now();
@@ -639,57 +637,10 @@
             }
         }
 
-
-        #if save_frames && camera_callback_count == 0
-            camera_callback_count += 1;
-            camera_callback_count %= frame_interval;
-            // cv::Mat frame_l = frame_pair.first;
-            // cv::Mat frame_r = frame_pair.second;
-            // TODO: desature if needed by converting to hsv and lowering saturation
-
-            #if use_yolo
-            // Add Yolo Bounding Boxes to frame
-
-            std::cout << "Adding bounding boxes to image" << std::endl;
-
-            cv::Mat frame_l_canvas = frame_pair.first.clone();
-            cv::Mat frame_r_canvas = frame_pair.second.clone();
-            float alpha = .3;
-
-            coloring::yolo::draw_bounding_boxes(frame_pair.first, frame_l_canvas, detection_l, frame_pair.first.cols, frame_pair.first.rows, confidence_threshold);
-            coloring::yolo::draw_bounding_boxes(frame_pair.second, frame_r_canvas, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows, confidence_threshold);
-
-            #endif
-
-            // add transformed points to frame
-            for (int i = 0; i < yellow_transformed_pixels.size(); i++) {
-                cv::circle(frame_pair.first, yellow_transformed_pixels[i].first, 5, cv::Scalar(0, 255, 255), 2);
-                cv::circle(frame_pair.second, yellow_transformed_pixels[i].second, 5, cv::Scalar(0, 255, 255), 2);
-            }
-
-            for (int i = 0; i < blue_transformed_pixels.size(); i++) {
-                cv::circle(frame_pair.first, blue_transformed_pixels[i].first, 5, cv::Scalar(255, 0, 0), 2);
-                cv::circle(frame_pair.second, blue_transformed_pixels[i].second, 5, cv::Scalar(255, 0, 0), 2);
-            }
-
-            for (int i = 0; i < orange_transformed_pixels.size(); i++) {
-                cv::circle(frame_pair.first, orange_transformed_pixels[i].first, 5, cv::Scalar(0, 69, 255), 2);
-                cv::circle(frame_pair.second, orange_transformed_pixels[i].second, 5, cv::Scalar(0, 69, 255), 2);
-            }
-            
-            for (int i = 0; i < unknown_transformed_pixels.size(); i++) {
-                cv::circle(frame_pair.first, unknown_transformed_pixels[i].first, 5, cv::Scalar(0, 0, 0), 2);
-                cv::circle(frame_pair.second, unknown_transformed_pixels[i].second, 5, cv::Scalar(0, 0, 0), 2);
-            }
-
-            save_mutex.lock();
-            save_queue.push(frame_tuple);
-            save_mutex.unlock();
-        #endif
-
         #if timing
             auto transform_coloring_time = high_resolution_clock::now();
         #endif
+
 
         if (!unordered_yellow_cones.empty()) {
             std::vector<Cone> ordered_yellow = orderConesByPathDirection(unordered_yellow_cones);
@@ -710,6 +661,51 @@
             auto ordering_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_ordering_time - transform_coloring_time).count();
         #endif
 
+        #if save_frames
+        if (camera_callback_count == 10) {
+            camera_callback_count = 0;
+            #if use_yolo
+            // Add Yolo Bounding Boxes to frame
+
+            std::cout << "Adding bounding boxes to image" << std::endl;
+
+            cv::Mat frame_l_canvas = frame_pair.first.clone();
+            cv::Mat frame_r_canvas = frame_pair.second.clone();
+            float alpha = .3;
+
+            coloring::yolo::draw_bounding_boxes(frame_pair.first, frame_l_canvas, detection_l, frame_pair.first.cols, frame_pair.first.rows, confidence_threshold);
+            coloring::yolo::draw_bounding_boxes(frame_pair.second, frame_r_canvas, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows, confidence_threshold);
+
+            #endif
+
+            // add transformed points to frame
+            for (int i = 0; i < yellow_transformed_pixels.size(); i++) {
+                cv::circle(frame_pair.first, yellow_transformed_pixels[i].first, 2, cv::Scalar(0, 255, 255), 2);
+                cv::circle(frame_pair.second, yellow_transformed_pixels[i].second, 2, cv::Scalar(0, 255, 255), 2);
+            }
+
+            for (int i = 0; i < blue_transformed_pixels.size(); i++) {
+                cv::circle(frame_pair.first, blue_transformed_pixels[i].first, 2, cv::Scalar(255, 0, 0), 2);
+                cv::circle(frame_pair.second, blue_transformed_pixels[i].second, 2, cv::Scalar(255, 0, 0), 2);
+            }
+
+            for (int i = 0; i < orange_transformed_pixels.size(); i++) {
+                cv::circle(frame_pair.first, orange_transformed_pixels[i].first, 2, cv::Scalar(0, 69, 255), 2);
+                cv::circle(frame_pair.second, orange_transformed_pixels[i].second, 2, cv::Scalar(0, 69, 255), 2);
+            }
+            
+            for (int i = 0; i < unknown_transformed_pixels.size(); i++) {
+                cv::circle(frame_pair.first, unknown_transformed_pixels[i].first, 2, cv::Scalar(0, 0, 0), 2);
+                cv::circle(frame_pair.second, unknown_transformed_pixels[i].second, 2, cv::Scalar(0, 0, 0), 2);
+            }
+            
+            save_mutex.lock();
+            save_queue.push(frame_tuple);
+            save_mutex.unlock();
+        }
+        camera_callback_count += 1;
+        #endif
+
         int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
         int yellow_cones = message.yellow_cones.size();
         int blue_cones = message.blue_cones.size();
@@ -724,8 +720,8 @@
 
         #if timing
             auto end_time = high_resolution_clock::now();
-            auto stamp_time = msg->header.stamp;
-            auto ms_time_since_lidar = get_clock()->now() - stamp_time;
+            auto stamp_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
+            auto ms_time_since_lidar = (get_clock()->now().nanoseconds() - stamp_time) / 1e6;
 
             RCLCPP_INFO(get_logger(), "Get Camera Frame  %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(camera_time - start_time).count());
             RCLCPP_INFO(get_logger(), "Total Transform and Coloring Time  %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(transform_coloring_time - camera_time).count());
@@ -734,7 +730,7 @@
             RCLCPP_INFO(get_logger(), "--Total Ordering Time  %ld ms.", ordering_time);
             auto time_diff = end_time - start_time;
             RCLCPP_INFO(get_logger(), "Total PPM Time %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(time_diff).count());
-            RCLCPP_INFO(get_logger(), "Total Time from Lidar  %ld ms.", ms_time_since_lidar.nanoseconds() / 1000);
+            RCLCPP_INFO(get_logger(), "Total Time from Lidar:  %ld ms.", (uint64_t) ms_time_since_lidar);
             RCLCPP_INFO(get_logger(), "Total Time from Lidar to start  %ld ms.", ms_time_since_lidar_2);
         #endif
         
@@ -777,8 +773,6 @@
             false, // left_camera==false
             inner == 1
         );
-
-        // std::cout << "Pushing frame_l to deque" << std::endl;
 
         // Deque Management and Updating
         l_img_mutex.lock();
@@ -826,7 +820,7 @@
                     }
                     save_mutex.unlock();
                     // Save a frame every half second
-                    rclcpp::sleep_for(std::chrono::milliseconds(500));
+                    rclcpp::sleep_for(std::chrono::milliseconds(1));
                 }
             }};
     }

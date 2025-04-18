@@ -16,7 +16,7 @@ namespace coloring {
             // Ratio of color in relation to all other colors
             const double RATIO_THRESHOLD = 1.5;
             const double NOMINAL_SIDE_LENGTH = 25;
-            const double SCALING_FACTOR = 1.0;
+            // const double SCALING_FACTOR = 1.0;
 
             // Find real side length (MATTS AN ECON MAJOR) by dividing by scaling factor (distance)
             int real_side_length = NOMINAL_SIDE_LENGTH; // / (SCALING_FACTOR * pixel(2));
