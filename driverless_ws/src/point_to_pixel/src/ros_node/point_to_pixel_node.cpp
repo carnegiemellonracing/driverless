@@ -318,15 +318,20 @@
             return std::make_pair(nullptr, nullptr);
         }
 
-        yaw_msg = yaw_deque.back();
-        // Iterate through deque to find the closest frame by timestamp
-        for (const auto &yaw : yaw_deque)
-        {   
-            uint64_t yaw_time_ns = yaw->header.stamp.sec * 1e9 + yaw->header.stamp.nanosec;
-
+        yaw_msg = yaw_deque.back(); // in case all messages are before camera
+        for (size_t i = 0; i < yaw_deque.size(); i++) {
+            uint64_t yaw_time_ns = yaw_deque[i]->header.stamp.sec * 1e9 + yaw_deque[i]->header.stamp.nanosec;
             if (yaw_time_ns >= frameTime)
             {
-                yaw_msg = yaw;
+                yaw_msg = yaw_deque[i];
+                if (i > 0) { // interpolate with the previous
+                    auto prev_yaw_msg = yaw_deque[i - 1];
+                    auto prev_yaw_ts = prev_yaw_msg->header.stamp.sec * 1e9 + prev_yaw_msg->header.stamp.nanosec;
+                    auto yaw = prev_yaw_msg->vector.z + (yaw_msg->vector.z - prev_yaw_msg->vector.z) * (frameTime - prev_yaw_ts) / (yaw_time_ns - prev_yaw_ts);
+                    yaw_msg = std::make_shared<geometry_msgs::msg::Vector3Stamped>();
+                    yaw_msg->vector.z = yaw;
+                }
+                break;
             }
         }
         yaw_mutex.unlock();
@@ -348,6 +353,7 @@
             if (velocity_time_ns >= frameTime)
             {
                 velocity_msg = velocity;
+                break;
             }
         }
         velocity_mutex.unlock();
@@ -552,13 +558,13 @@
         auto global_dy_r = average_velocity_r_y * dt_r;
         auto global_dyaw_r = yaw_r_camera_frame->vector.z - yaw_lidar_frame->vector.z;
 
-        double yaw_l_rad = yaw_lidar_frame->vector.z * M_PI / 180;
-        std::pair<double, double> global_frame_change_l = std::make_pair(global_dx_l, global_dy_l);
-        std::pair<double, double> long_lat_l = global_frame_to_local_frame(global_frame_change_l, yaw_l_rad);
+        double yaw_lidar_rad = yaw_lidar_frame->vector.z * M_PI / 180;
 
-        double yaw_r_rad = yaw_lidar_frame->vector.z * M_PI / 180;
+        std::pair<double, double> global_frame_change_l = std::make_pair(global_dx_l, global_dy_l);
+        std::pair<double, double> long_lat_l = global_frame_to_local_frame(global_frame_change_l, yaw_lidar_rad);
+
         std::pair<double, double> global_frame_change_r = std::make_pair(global_dx_r, global_dy_r);
-        std::pair<double, double> long_lat_r = global_frame_to_local_frame(global_frame_change_r, yaw_r_rad);
+        std::pair<double, double> long_lat_r = global_frame_to_local_frame(global_frame_change_r, yaw_lidar_rad);
 
         std::vector<Cone> unordered_yellow_cones;
         std::vector<Cone> unordered_blue_cones;
