@@ -357,7 +357,6 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
         point.z = 0;
         // Check if you have an old or new cone
         double min_dist = find_closest_distance_in_cone_history(long_term_blue_cone_history, point, cur_yaw);
-        RCLCPP_INFO(get_logger(), "Min dist blue old history: %f", min_dist);
         if (min_dist > min_dist_th) { // Greater than the threshold means that its far away from everything enough, we believe it's new
             long_term_blue_cone_history.emplace(0.0, 0.0, cur_yaw, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
         }
@@ -379,7 +378,6 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
         point.z = 0;
         // Check if you have an old or new cone
         double min_dist = find_closest_distance_in_cone_history(long_term_yellow_cone_history, point, cur_yaw);
-        RCLCPP_INFO(get_logger(), "Min dist yellow old history: %f", min_dist);
         if (min_dist > min_dist_th) { // Greater than the threshold means that its far away from everything enough, we believe it's new
             long_term_yellow_cone_history.emplace(0.0, 0.0, cur_yaw, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
         }
