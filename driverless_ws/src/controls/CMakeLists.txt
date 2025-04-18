@@ -92,6 +92,7 @@ set(LIB_SOURCES
         src/midline/svm_conv.cpp
         src/midline/svm_conv_fast.cpp
         src/midline/svm_conv_strat3.cpp
+        src/midline/svm_conv_fast_double_binsearch.cpp
         #src/midline/svm_conv_strat4.cpp
         src/midline/svm_conv_stratnaive.cpp
         src/midline/svm_conv_test.cpp

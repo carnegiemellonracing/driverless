@@ -237,7 +237,7 @@ namespace controls
             conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const std::vector<std::vector<double>> &yy,
                                         const svm_model *model)
             {
-                return svm_strat3::boundaryDetection(xx, yy, model);
+                return svm_fast_double_binsearch::boundaryDetection(xx, yy, model);
             }
 
             // downsample the boundary points
@@ -266,6 +266,18 @@ namespace controls
                 }
 
                 return downsampled;
+            }
+
+            bool compare_cones(conesList &cones1, conesList &cones2) {
+                if (cones1.size() != cones2.size()) {
+                    return false;
+                }
+                for (size_t i = 0; i < cones1.size(); ++i) {
+                    if (cones1[i].first != cones2[i].first || cones1[i].second != cones2[i].second) {
+                        return false;
+                    }
+                }
+                return true;
             }
 
             conesList cones_to_midline(Cones cones)
@@ -444,6 +456,7 @@ namespace controls
                 }
 
                 boundary_points = sortBoundaryPoints(boundary_points);
+                paranoid_assert(compare_cones(boundary_points, sortBoundaryPoints(svm_strat3::boundaryDetection(xx, yy, model))));
 
                 // downsample boundary points
                 conesList downsampled = downsamplePoints(boundary_points);
