@@ -538,7 +538,11 @@ namespace controls {
             return std::make_tuple(spline, left, right);
         }
 
-
+        static std::string state_to_string(std::array<float, 4> state) {
+            std::stringstream ss;
+            ss << state[0] << "," << state[1] << "," << state[2] << "," << state[3];
+            return ss.str();
+        }
 
         void TestNode::on_sim() {
             ActionMsg adj_msg = m_last_action_msg;
@@ -557,8 +561,29 @@ namespace controls {
             update_visible_indices();
             update_track_time();
             glm::fvec2 world_state_vec {m_world_state[0], m_world_state[1]};
-            
             g_car_poses.push_back(std::make_tuple(world_state_vec, m_world_state[2], m_time.seconds() - m_start_time.seconds()));
+            if (g_config_dict["log_on_sim"] == "true") {
+                auto time = get_clock()->now();
+                RCLCPP_WARN(get_logger(), "Time:%d", time.nanoseconds());
+                RCLCPP_WARN(get_logger(), "State:%s", state_to_string(m_world_state));
+                const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
+                const float car_heading = m_world_state[2];
+
+                // transformation from world to car frame
+                std::vector<glm::fvec2> left_cones_transformed;
+                std::vector<glm::fvec2> right_cones_transformed;
+                left_cones_transformed.reserve(m_all_left_cones.size());
+                right_cones_transformed.reserve(m_all_right_cones.size());
+                auto gen_point = [&car_pos, car_heading](const glm::fvec2& point) {
+                    glm::fvec2 rel_point = point - car_pos;
+                    glm::fvec2 rotated_point = rotate_point(rel_point, M_PI_2 - car_heading);
+                    return rotated_point;
+                };
+                std::transform(m_all_left_cones.begin(), m_all_left_cones.end(), left_cones_transformed.begin(), gen_point);
+                std::transform(m_all_right_cones.begin(), m_all_right_cones.end(), right_cones_transformed.begin(), gen_point);
+                RCLCPP_WARN(get_logger(), "LeftCones:%s", points_to_parseable_string(left_cones_transformed));
+                RCLCPP_WARN(get_logger(), "RightCones:%s", points_to_parseable_string(right_cones_transformed));
+            }
         }
 
 

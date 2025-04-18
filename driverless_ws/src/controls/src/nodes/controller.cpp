@@ -176,18 +176,6 @@ namespace controls {
         }
 
 
-#ifdef DATA
-            std::string vector_to_parseable_string(const std::vector<glm::fvec2> &vec) {
-                std::stringstream ss;
-                for (int i = 0; i < vec.size() - 1; i++)
-                {
-                    ss << vec[i].x << " " << vec[i].y << ",";
-                }
-                ss << vec[vec.size() - 1].x << " " << vec[vec.size() - 1].y;
-
-                return ss.str();
-            }
-#endif
             std::string progress_bar(float current, float min, float max, int width) {
                 if (current < min || current > max) {
                     return "OUT OF BOUNDS";
