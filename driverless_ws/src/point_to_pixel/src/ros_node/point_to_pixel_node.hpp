@@ -101,6 +101,8 @@ private:
 
     std::mutex l_img_mutex;
     std::mutex r_img_mutex;
+    std::mutex velocity_mutex;
+    std::mutex yaw_mutex;
 
     // ROS2 Publisher and Subscribers
     rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cone_pub_;

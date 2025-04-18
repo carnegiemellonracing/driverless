@@ -310,9 +310,10 @@
         geometry_msgs::msg::TwistStamped::SharedPtr velocity_msg;
 
         // Check if deque empty
-        // yaw_mutex.lock();
+        yaw_mutex.lock();
         if (yaw_deque.empty())
         {
+            yaw_mutex.unlock();
             RCLCPP_WARN(get_logger(), "Yaw deque is empty! Cannot find matching yaw.");
             return std::make_pair(nullptr, nullptr);
         }
@@ -328,12 +329,13 @@
                 yaw_msg = yaw;
             }
         }
-        // yaw_mutex.unlock();
+        yaw_mutex.unlock();
 
         // Check if deque empty
-        // velocity_mutex.lock();
+        velocity_mutex.lock();
         if (velocity_deque.empty())
         {
+            velocity_mutex.unlock();
             RCLCPP_WARN(get_logger(), "Velocity deque is empty! Cannot find matching velocity.");
             return std::make_pair(nullptr, nullptr);
         }
@@ -348,7 +350,7 @@
                 velocity_msg = velocity;
             }
         }
-        // velocity_mutex.unlock();
+        velocity_mutex.unlock();
 
         // Return closest velocity, yaw pair if found
         if (yaw_msg != NULL && velocity_msg != NULL)
@@ -827,23 +829,27 @@
     #endif
 
     void PointToPixelNode::velocity_callback(geometry_msgs::msg::TwistStamped::SharedPtr msg)
-    {
+    {   
+        velocity_mutex.lock();
         // Deque Management and Updating
         while (velocity_deque.size() >= max_deque_size)
         {
             velocity_deque.pop_front();
         }
         velocity_deque.push_back(msg);
+        velocity_mutex.unlock();
     }
 
     void PointToPixelNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::SharedPtr msg)
     {
+        yaw_mutex.lock();
         // Deque Management and Updating
         while (yaw_deque.size() >= max_deque_size)
         {
             yaw_deque.pop_front();
         }
         yaw_deque.push_back(msg);
+        yaw_mutex.unlock();
     }
 
     int main(int argc, char **argv)
