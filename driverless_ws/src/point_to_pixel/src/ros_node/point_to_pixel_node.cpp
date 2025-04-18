@@ -459,7 +459,7 @@
         // Logging Actions
         #if timing
             auto start_time = high_resolution_clock::now();
-            int64_t ms_time_since_lidar_2 = (get_clock()->now().nanoseconds() - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e6;
+            uint64_t ms_time_since_lidar_2 = (get_clock()->now().nanoseconds() - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e6;
         #endif
 
         RCLCPP_INFO(get_logger(), "Received message with %zu cones", msg->cone_array.size());
@@ -516,8 +516,8 @@
 
         // Timing Variables
         #if timing
-            int transform_time = 0;
-            int coloring_time = 0;
+            uint64_t transform_time = 0;
+            uint64_t coloring_time = 0;
         #endif
 
         #if save_frames
@@ -566,11 +566,12 @@
         // Iterate through all points in /cpp_cones message
         for (size_t i = 0; i < msg->cone_array.size(); i++) {
             #if timing
-                auto loop_start = high_resolution_clock::now();
+            auto loop_start = high_resolution_clock::now();
             #endif
             
             // Transform Point
             std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair = transform_point(
+                get_logger(),
                 msg->cone_array[i].cone_points[0],
                 {long_lat_l, long_lat_r},
                 {global_dyaw_l, global_dyaw_r},
@@ -578,17 +579,17 @@
             );
 
             #if timing
-                // Time for transform
-                auto loop_transform = high_resolution_clock::now();
-                transform_time = transform_time + std::chrono::duration_cast<std::chrono::milliseconds>(loop_transform - loop_start).count();
+            // Time for transform
+            auto loop_transform = high_resolution_clock::now();
+            transform_time += std::chrono::duration_cast<std::chrono::nanoseconds>(loop_transform - loop_start).count();
             #endif
 
             int cone_class = get_cone_class(pixel_pair, frame_pair, detection_pair);
 
             #if timing
-                // Time for coloring
-                auto loop_coloring = high_resolution_clock::now();
-                coloring_time = coloring_time + std::chrono::duration_cast<std::chrono::milliseconds>(loop_coloring - loop_transform).count();
+            // Time for coloring
+            auto loop_coloring = high_resolution_clock::now();
+            coloring_time += std::chrono::duration_cast<std::chrono::nanoseconds>(loop_coloring - loop_transform).count();
             #endif
 
             point_msg.x = msg->cone_array[i].cone_points[0].x;
@@ -680,25 +681,27 @@
 
             #endif
 
-            // add transformed points to frame
-            for (int i = 0; i < yellow_transformed_pixels.size(); i++) {
-                cv::circle(frame_pair.first, yellow_transformed_pixels[i].first, 2, cv::Scalar(0, 255, 255), 2);
-                cv::circle(frame_pair.second, yellow_transformed_pixels[i].second, 2, cv::Scalar(0, 255, 255), 2);
+            // Add transformed points to frame
+            for (size_t i = 0; i < yellow_transformed_pixels.size(); i++) {
+                // Correctly mapped yellow pixels are green    
+                cv::circle(frame_pair.first, yellow_transformed_pixels[i].first, 2, cv::Scalar(0, 255, 0), 5);
+                cv::circle(frame_pair.second, yellow_transformed_pixels[i].second, 2, cv::Scalar(0, 255, 0), 5);
             }
 
-            for (int i = 0; i < blue_transformed_pixels.size(); i++) {
-                cv::circle(frame_pair.first, blue_transformed_pixels[i].first, 2, cv::Scalar(255, 0, 0), 2);
-                cv::circle(frame_pair.second, blue_transformed_pixels[i].second, 2, cv::Scalar(255, 0, 0), 2);
+            for (size_t i = 0; i < blue_transformed_pixels.size(); i++) {
+                // Correctly mapped blue pixels are red    
+                cv::circle(frame_pair.first, blue_transformed_pixels[i].first, 2, cv::Scalar(0, 0, 255), 5);
+                cv::circle(frame_pair.second, blue_transformed_pixels[i].second, 2, cv::Scalar(0, 0, 255), 5);
             }
 
-            for (int i = 0; i < orange_transformed_pixels.size(); i++) {
-                cv::circle(frame_pair.first, orange_transformed_pixels[i].first, 2, cv::Scalar(0, 69, 255), 2);
-                cv::circle(frame_pair.second, orange_transformed_pixels[i].second, 2, cv::Scalar(0, 69, 255), 2);
+            for (size_t i = 0; i < orange_transformed_pixels.size(); i++) {
+                cv::circle(frame_pair.first, orange_transformed_pixels[i].first, 2, cv::Scalar(0, 69, 255), 5);
+                cv::circle(frame_pair.second, orange_transformed_pixels[i].second, 2, cv::Scalar(0, 69, 255), 5);
             }
             
-            for (int i = 0; i < unknown_transformed_pixels.size(); i++) {
-                cv::circle(frame_pair.first, unknown_transformed_pixels[i].first, 2, cv::Scalar(0, 0, 0), 2);
-                cv::circle(frame_pair.second, unknown_transformed_pixels[i].second, 2, cv::Scalar(0, 0, 0), 2);
+            for (size_t i = 0; i < unknown_transformed_pixels.size(); i++) {
+                cv::circle(frame_pair.first, unknown_transformed_pixels[i].first, 2, cv::Scalar(0, 0, 0), 5);
+                cv::circle(frame_pair.second, unknown_transformed_pixels[i].second, 2, cv::Scalar(0, 0, 0), 5);
             }
             
             save_mutex.lock();
@@ -724,12 +727,14 @@
             auto end_time = high_resolution_clock::now();
             auto stamp_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
             auto ms_time_since_lidar = (get_clock()->now().nanoseconds() - stamp_time) / 1e6;
+            auto ms_transform_time = transform_time / 1e6;
+            auto ms_coloring_time = coloring_time / 1e6;
 
             RCLCPP_INFO(get_logger(), "Get Camera Frame  %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(camera_time - start_time).count());
             RCLCPP_INFO(get_logger(), "Total Transform and Coloring Time  %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(transform_coloring_time - camera_time).count());
-            RCLCPP_INFO(get_logger(), "--Total Transform Time  %ld ms.", transform_time);
-            RCLCPP_INFO(get_logger(), "--Total Coloring Time  %ld ms.", coloring_time);
-            RCLCPP_INFO(get_logger(), "--Total Ordering Time  %ld ms.", ordering_time);
+            RCLCPP_INFO(get_logger(), "--Total Transform Time  %ld ms.", ms_transform_time);
+            RCLCPP_INFO(get_logger(), "--Total Coloring Time  %ld ms.", ms_coloring_time);
+            RCLCPP_INFO(get_logger(), "Total Ordering Time  %ld ms.", ordering_time);
             auto time_diff = end_time - start_time;
             RCLCPP_INFO(get_logger(), "Total PPM Time %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(time_diff).count());
             RCLCPP_INFO(get_logger(), "Total Time from Lidar:  %ld ms.", (uint64_t) ms_time_since_lidar);

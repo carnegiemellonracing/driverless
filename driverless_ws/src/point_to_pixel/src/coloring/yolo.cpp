@@ -121,6 +121,7 @@ namespace coloring {
                     }
 
                     // Draw bounding box (assuming class color is handled elsewhere)
+                    cv::rectangle(canvas, cv::Rect(x, y, width, height), color, cv::FILLED);
                     cv::rectangle(frame, cv::Rect(x, y, width, height), color, 2);
                 }
             }
@@ -164,6 +165,10 @@ namespace coloring {
             net.setInput(blob);
             std::vector<cv::Mat> outputs;
             net.forward(outputs, net.getUnconnectedOutLayersNames());
+
+            float* data = (float*)outputs[0].data;
+            int num_detections = outputs[0].size[1];  // 25200
+            int attributes = outputs[0].size[2];      // 10
 
             // Return the detection results
             return outputs;
