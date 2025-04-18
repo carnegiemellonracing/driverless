@@ -58,6 +58,7 @@ private:
     std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> yaw_deque;
     static constexpr int max_deque_size = 100;
     static constexpr int max_timesteps_in_cone_history = 10;
+    static constexpr int max_long_term_history_size = 300;
 
     std::queue<ObsConeInfo> yellow_cone_history;
     std::queue<ObsConeInfo> blue_cone_history;
@@ -85,5 +86,5 @@ private:
     void motion_model_on_cone_history(std::queue<ObsConeInfo>& cone_history, std::pair<double, double> global_xy_change);
     // void add_lidar_point_to_cone_history(std::queue<ObsConeInfo>& cone_history, geometry_msgs::msg::Vector3 lidar_point);
     void maintain_cone_history_lifespans(std::queue<ObsConeInfo>& cone_history);
-    float find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point, double yaw);
+    double find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point, double yaw);
 };

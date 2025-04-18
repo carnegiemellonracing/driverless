@@ -188,9 +188,10 @@ void ConeHistoryTestNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::Share
  * @param lidar_point This is a point in CMR/local car frame. This needs to be transformed into global frame for comparison
  * @return float 
  */
-float ConeHistoryTestNode::find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point, double yaw)
+double ConeHistoryTestNode::find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point, double yaw)
 {
-    float min_dist = std::numeric_limits<float>::max();
+    double cur_min_dist = std::numeric_limits<double>::max();
+    // RCLCPP_INFO(get_logger(), "Initilalized min_dist: %lf | Cone history size: %d", cur_min_dist, cone_history.size());
     for (int i = 0; i < cone_history.size(); i++)
     {
         ObsConeInfo cone_info = cone_history.front();
@@ -211,22 +212,23 @@ float ConeHistoryTestNode::find_closest_distance_in_cone_history(std::queue<ObsC
         double dx = (cone_info.cur_car_to_observer_x + global_observer_to_cone_x) - global_car_to_lidar_x;
         double dy = (cone_info.cur_car_to_observer_y + global_observer_to_cone_y) - global_car_to_lidar_y;
         
-        float dist = sqrt(pow(dx, 2) + pow(dy, 2));
-        if (dist < min_dist)
+        double dist = (double)sqrt(pow(dx, 2) + pow(dy, 2));
+        if (dist < cur_min_dist)
         {
-            min_dist = dist;
+            cur_min_dist = dist;
         }
         cone_history.push(cone_info);
     }
-    return min_dist;
+    // RCLCPP_INFO(get_logger(), "Final min_dist: %lf", cur_min_dist);
+    return cur_min_dist;
 }
 
 int ConeHistoryTestNode::classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point, double yaw) {
     // Find the closest point wrt yellow points
-    float min_dist_from_yellow = find_closest_distance_in_cone_history(yellow_cone_history, lidar_point, yaw);
+    double min_dist_from_yellow = find_closest_distance_in_cone_history(yellow_cone_history, lidar_point, yaw);
 
     // Find the closest point wrt blue points
-    float min_dist_from_blue = find_closest_distance_in_cone_history(blue_cone_history, lidar_point, yaw);
+    double min_dist_from_blue = find_closest_distance_in_cone_history(blue_cone_history, lidar_point, yaw);
 
     // Between the 2 colors, determine which is closer
     if (min_dist_from_blue < min_dist_from_yellow && min_dist_from_blue < min_dist_th) { // most like a blue cone 
@@ -354,12 +356,21 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
         point.y = msg->blue_cones[i].y;
         point.z = 0;
         // Check if you have an old or new cone
-        float min_dist = find_closest_distance_in_cone_history(blue_cone_history, point, cur_yaw);
+        double min_dist = find_closest_distance_in_cone_history(long_term_blue_cone_history, point, cur_yaw);
+        RCLCPP_INFO(get_logger(), "Min dist blue old history: %f", min_dist);
         if (min_dist > min_dist_th) { // Greater than the threshold means that its far away from everything enough, we believe it's new
             long_term_blue_cone_history.emplace(0.0, 0.0, cur_yaw, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
         }
     }
-    
+    while (long_term_blue_cone_history.size() > max_long_term_history_size) {
+        long_term_blue_cone_history.pop();
+    }
+
+    while (long_term_yellow_cone_history.size() > max_long_term_history_size)
+    {
+        long_term_yellow_cone_history.pop();
+    }
+
     for (int i= 0; i < msg->yellow_cones.size(); i++) {
         yellow_cone_history.emplace(0.0, 0.0, cur_yaw, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
         geometry_msgs::msg::Vector3 point;
@@ -367,7 +378,8 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
         point.y = msg->yellow_cones[i].y;
         point.z = 0;
         // Check if you have an old or new cone
-        float min_dist = find_closest_distance_in_cone_history(yellow_cone_history, point, cur_yaw);
+        double min_dist = find_closest_distance_in_cone_history(long_term_yellow_cone_history, point, cur_yaw);
+        RCLCPP_INFO(get_logger(), "Min dist yellow old history: %f", min_dist);
         if (min_dist > min_dist_th) { // Greater than the threshold means that its far away from everything enough, we believe it's new
             long_term_yellow_cone_history.emplace(0.0, 0.0, cur_yaw, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
         }
