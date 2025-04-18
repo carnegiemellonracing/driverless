@@ -48,6 +48,9 @@ private:
 
     std::queue<ObsConeInfo> yellow_cone_history;
     std::queue<ObsConeInfo> blue_cone_history;
+    std::queue<ObsConeInfo> long_term_blue_cone_history;
+    std::queue<ObsConeInfo> long_term_yellow_cone_history;
+    double min_dist_th = 0.5;
 
     uint64_t prev_time_stamp;
 

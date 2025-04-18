@@ -76,8 +76,8 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> transform_point(
     // std::cout << "Projection Matrix Right:\n" << ss_r.str().c_str() << std::endl;
 
     // Convert point to Eigen Vector4d (homogeneous coordinates)
-    std::pair<double, double> lidar_pt_l_xy = motion_model_on_point(ds_pair.first, point.x, point.y, left_right_dyaw.first);
-    std::pair<double, double> lidar_pt_r_xy = motion_model_on_point(ds_pair.second, point.x, point.y, left_right_dyaw.second);
+    // std::pair<double, double> lidar_pt_l_xy = motion_model_on_point(ds_pair.first, point.x, point.y, left_right_dyaw.first);
+    // std::pair<double, double> lidar_pt_r_xy = motion_model_on_point(ds_pair.second, point.x, point.y, left_right_dyaw.second);
     // Eigen::Vector4d lidar_pt_l(lidar_pt_l_xy.first, lidar_pt_l_xy.second, point.z, 1.0);
     // Eigen::Vector4d lidar_pt_r(lidar_pt_r_xy.first, lidar_pt_r_xy.second, point.z, 1.0);
 

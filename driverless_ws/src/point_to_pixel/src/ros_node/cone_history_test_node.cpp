@@ -167,7 +167,10 @@ float ConeHistoryTestNode::find_closest_distance_in_cone_history(std::queue<ObsC
     {
         ObsConeInfo cone_info = cone_history.front();
         cone_history.pop();
-        float dist = sqrt(pow(cone_info.cur_car_to_observer_position_x + lidar_point.x, 2) + pow(cone_info.cur_car_to_observer_position_y + lidar_point.y, 2));
+        float dx = (cone_info.cur_car_to_observer_position_x + cone_info.observer_position_to_cone_x) - lidar_point.x;
+        float dy = (cone_info.cur_car_to_observer_position_y + cone_info.observer_position_to_cone_y) - lidar_point.y;
+        
+        float dist = sqrt(pow(dx, 2) + pow(dy, 2));
         if (dist < min_dist)
         {
             min_dist = dist;
@@ -185,11 +188,23 @@ int ConeHistoryTestNode::classify_through_data_association(geometry_msgs::msg::V
     float min_dist_from_blue = find_closest_distance_in_cone_history(blue_cone_history, lidar_point);
 
     // Between the 2 colors, determine which is closer
-    if (min_dist_from_blue <= min_dist_from_yellow) { // most like a blue cone 
+    if (min_dist_from_blue < min_dist_from_yellow && min_dist_from_blue < min_dist_th) { // most like a blue cone 
         return 2;
-    } else if (min_dist_from_yellow <= min_dist_from_blue) {
+    } else if (min_dist_from_yellow < min_dist_from_blue && min_dist_from_yellow < min_dist_th) {
         return 1;
-    }   
+    } else {
+        min_dist_from_yellow = find_closest_distance_in_cone_history(long_term_yellow_cone_history, lidar_point);
+        min_dist_from_blue = find_closest_distance_in_cone_history(long_term_blue_cone_history, lidar_point);
+        if (min_dist_from_blue < min_dist_from_yellow && min_dist_from_blue < min_dist_th) { // most like a blue cone 
+            return 2;
+        } else if (min_dist_from_yellow < min_dist_from_blue && min_dist_from_yellow < min_dist_th) {
+            return 1;
+        } else {
+            RCLCPP_INFO(get_logger(), "No classification possible: min_dist_from_blue: %f | min_dist_from_yellow: %f", min_dist_from_blue, min_dist_from_yellow);
+            return -1;
+        }
+
+    }
 }
 
 void ConeHistoryTestNode::motion_model_on_cone_history(std::queue<ObsConeInfo>& cone_history, std::pair<double, double> long_lat_change) {
@@ -273,8 +288,10 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
 
 
     RCLCPP_INFO(get_logger(), "-------------Processing Cones--------------"); 
-    RCLCPP_INFO(get_logger(), "\tNumber of blue cones: %zu", msg->blue_cones.size());
-    RCLCPP_INFO(get_logger(), "\tNumber of yellow cones: %zu", msg->yellow_cones.size());
+    RCLCPP_INFO(get_logger(), "\tNumber of blue cones received: %zu", msg->blue_cones.size());
+    RCLCPP_INFO(get_logger(), "\tNumber of yellow cones received: %zu", msg->yellow_cones.size());
+    RCLCPP_INFO(get_logger(), "\tNumber of old blue cones: %zu", long_term_blue_cone_history.size());
+    RCLCPP_INFO(get_logger(), "\tNumber of old yellow cones: %zu", long_term_yellow_cone_history.size());
     std::vector<geometry_msgs::msg::Point> blue_cones_to_publish = msg->blue_cones;
     std::vector<geometry_msgs::msg::Point> yellow_cones_to_publish = msg->yellow_cones;
     
@@ -284,10 +301,26 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
 
     for (int i= 0; i < msg->blue_cones.size(); i++) {
         blue_cone_history.emplace(0.0f, 0.0f, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
+        geometry_msgs::msg::Vector3 point;
+        point.x = msg->blue_cones[i].x;
+        point.y = msg->blue_cones[i].y;
+        point.z = 0;
+        float min_dist = find_closest_distance_in_cone_history(blue_cone_history, point);
+        if (min_dist < min_dist_th) {
+            long_term_blue_cone_history.emplace(0.0f, 0.0f, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
+        }
     }
     
     for (int i= 0; i < msg->yellow_cones.size(); i++) {
         yellow_cone_history.emplace(0.0f, 0.0f, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
+        geometry_msgs::msg::Vector3 point;
+        point.x = msg->yellow_cones[i].x;
+        point.y = msg->yellow_cones[i].y;
+        point.z = 0;
+        float min_dist = find_closest_distance_in_cone_history(yellow_cone_history, point);
+        if (min_dist < min_dist_th) {
+            long_term_yellow_cone_history.emplace(0.0f, 0.0f, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
+        }
     }
     RCLCPP_INFO(get_logger(), "-------------End Processing Cones--------------\n");
 
@@ -298,6 +331,8 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     RCLCPP_INFO(get_logger(), "-------------End Motion Modeling On Cones--------------\n");
 
     int num_unable_to_classify_cones = 0;
+    RCLCPP_INFO(this->get_logger(), "Num blue_cones_in_history: %d", blue_cone_history.size());
+    RCLCPP_INFO(this->get_logger(), "Num yellow_cones_in_history: %d", yellow_cone_history.size());
     for (int i = 0; i < msg->unknown_color_cones.size(); i++) {
         RCLCPP_INFO(get_logger(), "-------------Classifying Cone--------------\n");
         geometry_msgs::msg::Vector3 lidar_point;
@@ -313,15 +348,12 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
             case 1:
                 RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as yellow", msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
                 yellow_cones_to_publish.push_back(msg->unknown_color_cones[i]);
-                yellow_cone_history.emplace(0.0f, 0.0f, msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y, 0);
                 break;
             //blue 
             case 2:
                 RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as blue", msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
                 blue_cones_to_publish.push_back(msg->unknown_color_cones[i]);
-                blue_cone_history.emplace(0.0f, 0.0f, msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y, 0);
                 break;
-
             default: 
                 num_unable_to_classify_cones++;
                 RCLCPP_INFO(this->get_logger(), "\tUnable to classify cone @ (%f, %f)", 
@@ -331,7 +363,7 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
         }
     }
 
-    
+    RCLCPP_INFO(this->get_logger(), "Num unclassified cones: %d", num_unable_to_classify_cones);
 
     // Create the associated cones message
     interfaces::msg::ConeArray associated_cones_msg_;
