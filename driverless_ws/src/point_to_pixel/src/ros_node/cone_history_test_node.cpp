@@ -252,6 +252,12 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     double time_diff_seconds = (cur_time_stamp - prev_time_stamp) / 1e9;
 
     std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> cur_velocity_yaw = get_velocity_yaw(msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec);
+
+    if (cur_velocity_yaw.first == nullptr || cur_velocity_yaw.second == nullptr) {
+        return;
+    }
+
+
     double cur_velocity_x = cur_velocity_yaw.first->twist.linear.x;
     double cur_velocity_y = cur_velocity_yaw.first->twist.linear.y;
     double cur_yaw = cur_velocity_yaw.second->vector.z;
