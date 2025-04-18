@@ -2,7 +2,6 @@
 
     // Standard Imports
     #include <deque>
-    #include <queue>
     #include <memory>
     #include <chrono>
     #include <filesystem>
@@ -30,6 +29,14 @@
         // ---------------------------------------------------------------------------
         //                               PARAMETERS
         // ---------------------------------------------------------------------------
+
+        // Initialize Empty Image Deques
+        img_deque_l = {};
+        img_deque_r = {};
+
+        // Initialize Empty Velocity/Yaw Deques
+        velocity_deque = {};
+        yaw_deque = {};
 
         // Projection matrix that takes LiDAR points to pixels
         std::vector<double> param_default(12, 1.0f); 
@@ -264,11 +271,6 @@
         // Launch camera thread
         launch_camera_communication().detach();
 
-        #if save_frames
-        // Launch frame saving thread
-        launch_frame_saving().detach();
-        #endif
-
         // Initialization Complete Message Suite
         RCLCPP_INFO(get_logger(), "Point to Pixel Node INITIALIZED");
         #if verbose
@@ -310,11 +312,10 @@
         geometry_msgs::msg::TwistStamped::SharedPtr velocity_msg;
 
         // Check if deque empty
-        yaw_mutex.lock();
+        // yaw_mutex.lock();
         if (yaw_deque.empty())
         {
-            yaw_mutex.unlock();
-            RCLCPP_WARN(get_logger(), "Yaw deque is empty! Cannot find matching yaw.");
+            RCLCPP_INFO(get_logger(), "Yaw deque is empty! Cannot find matching yaw.");
             return std::make_pair(nullptr, nullptr);
         }
 
@@ -329,14 +330,13 @@
                 yaw_msg = yaw;
             }
         }
-        yaw_mutex.unlock();
+        // yaw_mutex.unlock();
 
         // Check if deque empty
-        velocity_mutex.lock();
+        // velocity_mutex.lock();
         if (velocity_deque.empty())
         {
-            velocity_mutex.unlock();
-            RCLCPP_WARN(get_logger(), "Velocity deque is empty! Cannot find matching velocity.");
+            RCLCPP_INFO(get_logger(), "Velocity deque is empty! Cannot find matching velocity.");
             return std::make_pair(nullptr, nullptr);
         }
 
@@ -350,7 +350,7 @@
                 velocity_msg = velocity;
             }
         }
-        velocity_mutex.unlock();
+        // velocity_mutex.unlock();
 
         // Return closest velocity, yaw pair if found
         if (yaw_msg != NULL && velocity_msg != NULL)
@@ -365,12 +365,12 @@
     // Wrapper function for retrieving the color of cone by combining output from both cameras
     int PointToPixelNode::get_cone_class(
         std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
-        std::pair<cv::Mat, cv::Mat> frame_pair,
+        std::pair<cv::Mat, cv::Mat> frame_tuple,
         std::pair<std::vector<cv::Mat> , std::vector<cv::Mat> > detection_pair
     ) {
         return coloring::get_cone_class(
             pixel_pair,
-            frame_pair,
+            frame_tuple,
             detection_pair,
             yellow_filter_low,
             yellow_filter_high,
@@ -459,7 +459,7 @@
         // Logging Actions
         #if timing
             auto start_time = high_resolution_clock::now();
-            uint64_t ms_time_since_lidar_2 = (get_clock()->now().nanoseconds() - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e6;
+            int64_t ms_time_since_lidar_2 = (get_clock()->now().nanoseconds() - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1000;
         #endif
 
         RCLCPP_INFO(get_logger(), "Received message with %zu cones", msg->cone_array.size());
@@ -478,7 +478,7 @@
         std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple = get_camera_frame(msg->header.stamp);
         if (std::get<1>(frame_tuple).empty() || std::get<3>(frame_tuple).empty())
         {
-            RCLCPP_WARN(get_logger(), "No frame, likely an empty frame deque");
+            RCLCPP_WARN(get_logger(), "No frame, likely an empty frame queue");
             return;
         }
         std::pair<cv::Mat, cv::Mat> frame_pair = std::make_pair(std::get<1>(frame_tuple), std::get<3>(frame_tuple));
@@ -516,8 +516,8 @@
 
         // Timing Variables
         #if timing
-            uint64_t transform_time = 0;
-            uint64_t coloring_time = 0;
+            int transform_time = 0;
+            int coloring_time = 0;
         #endif
 
         #if save_frames
@@ -564,14 +564,15 @@
         std::vector<Cone> unordered_blue_cones;
 
         // Iterate through all points in /cpp_cones message
+
+        // TODO: In loop, draw pixels
         for (size_t i = 0; i < msg->cone_array.size(); i++) {
             #if timing
-            auto loop_start = high_resolution_clock::now();
+                auto loop_start = high_resolution_clock::now();
             #endif
             
             // Transform Point
             std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair = transform_point(
-                get_logger(),
                 msg->cone_array[i].cone_points[0],
                 {long_lat_l, long_lat_r},
                 {global_dyaw_l, global_dyaw_r},
@@ -579,17 +580,17 @@
             );
 
             #if timing
-            // Time for transform
-            auto loop_transform = high_resolution_clock::now();
-            transform_time += std::chrono::duration_cast<std::chrono::nanoseconds>(loop_transform - loop_start).count();
+                // Time for transform
+                auto loop_transform = high_resolution_clock::now();
+                transform_time = transform_time + std::chrono::duration_cast<std::chrono::microseconds>(loop_transform - loop_start).count();
             #endif
 
             int cone_class = get_cone_class(pixel_pair, frame_pair, detection_pair);
 
             #if timing
-            // Time for coloring
-            auto loop_coloring = high_resolution_clock::now();
-            coloring_time += std::chrono::duration_cast<std::chrono::nanoseconds>(loop_coloring - loop_transform).count();
+                // Time for coloring
+                auto loop_coloring = high_resolution_clock::now();
+                coloring_time = coloring_time + std::chrono::duration_cast<std::chrono::microseconds>(loop_coloring - loop_transform).count();
             #endif
 
             point_msg.x = msg->cone_array[i].cone_points[0].x;
@@ -640,10 +641,59 @@
             }
         }
 
+
+        #if save_frames && camera_callback_count == 0
+            camera_callback_count += 1;
+            camera_callback_count %= frame_interval;
+            // cv::Mat frame_l = frame_pair.first;
+            // cv::Mat frame_r = frame_pair.second;
+            // TODO: desature if needed by converting to hsv and lowering saturation
+
+            #if use_yolo
+            // Add Yolo Bounding Boxes to frame
+
+            std::cout << "Adding bounding boxes to image" << std::endl;
+
+            cv::Mat frame_l_canvas = frame_pair.first.clone();
+            cv::Mat frame_r_canvas = frame_pair.second.clone();
+            float alpha = .3;
+
+            coloring::yolo::draw_bounding_boxes(frame_pair.first, frame_l_canvas, detection_l, frame_pair.first.cols, frame_pair.first.rows, confidence_threshold);
+            coloring::yolo::draw_bounding_boxes(frame_pair.second, frame_r_canvas, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows, confidence_threshold);
+
+            #endif
+
+            // add transformed points to frame
+            for (int i = 0; i < yellow_transformed_pixels.size(); i++) {
+                cv::circle(frame_pair.first, yellow_transformed_pixels[i].first, 5, cv::Scalar(0, 255, 255), 2);
+                cv::circle(frame_pair.second, yellow_transformed_pixels[i].second, 5, cv::Scalar(0, 255, 255), 2);
+            }
+
+            for (int i = 0; i < blue_transformed_pixels.size(); i++) {
+                cv::circle(frame_pair.first, blue_transformed_pixels[i].first, 5, cv::Scalar(255, 0, 0), 2);
+                cv::circle(frame_pair.second, blue_transformed_pixels[i].second, 5, cv::Scalar(255, 0, 0), 2);
+            }
+
+            for (int i = 0; i < orange_transformed_pixels.size(); i++) {
+                cv::circle(frame_pair.first, orange_transformed_pixels[i].first, 5, cv::Scalar(0, 69, 255), 2);
+                cv::circle(frame_pair.second, orange_transformed_pixels[i].second, 5, cv::Scalar(0, 69, 255), 2);
+            }
+            
+            for (int i = 0; i < unknown_transformed_pixels.size(); i++) {
+                cv::circle(frame_pair.first, unknown_transformed_pixels[i].first, 5, cv::Scalar(0, 0, 0), 2);
+                cv::circle(frame_pair.second, unknown_transformed_pixels[i].second, 5, cv::Scalar(0, 0, 0), 2);
+            }
+
+            // Save frame
+            save_frame(
+                std::make_pair(std::get<0>(frame_tuple), frame_pair.first),
+                std::make_pair(std::get<2>(frame_tuple), frame_pair.second)
+            );
+        #endif
+
         #if timing
             auto transform_coloring_time = high_resolution_clock::now();
         #endif
-
 
         if (!unordered_yellow_cones.empty()) {
             std::vector<Cone> ordered_yellow = orderConesByPathDirection(unordered_yellow_cones);
@@ -661,54 +711,7 @@
 
         #if timing
             auto end_ordering_time = high_resolution_clock::now();
-            auto ordering_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_ordering_time - transform_coloring_time).count();
-        #endif
-
-        #if save_frames
-        if (camera_callback_count == 10) {
-            camera_callback_count = 0;
-            #if use_yolo
-            // Add Yolo Bounding Boxes to frame
-
-            std::cout << "Adding bounding boxes to image" << std::endl;
-
-            cv::Mat frame_l_canvas = frame_pair.first.clone();
-            cv::Mat frame_r_canvas = frame_pair.second.clone();
-            float alpha = .3;
-
-            coloring::yolo::draw_bounding_boxes(frame_pair.first, frame_l_canvas, detection_l, frame_pair.first.cols, frame_pair.first.rows, confidence_threshold);
-            coloring::yolo::draw_bounding_boxes(frame_pair.second, frame_r_canvas, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows, confidence_threshold);
-
-            #endif
-
-            // Add transformed points to frame
-            for (size_t i = 0; i < yellow_transformed_pixels.size(); i++) {
-                // Correctly mapped yellow pixels are green    
-                cv::circle(frame_pair.first, yellow_transformed_pixels[i].first, 2, cv::Scalar(0, 255, 0), 5);
-                cv::circle(frame_pair.second, yellow_transformed_pixels[i].second, 2, cv::Scalar(0, 255, 0), 5);
-            }
-
-            for (size_t i = 0; i < blue_transformed_pixels.size(); i++) {
-                // Correctly mapped blue pixels are red    
-                cv::circle(frame_pair.first, blue_transformed_pixels[i].first, 2, cv::Scalar(0, 0, 255), 5);
-                cv::circle(frame_pair.second, blue_transformed_pixels[i].second, 2, cv::Scalar(0, 0, 255), 5);
-            }
-
-            for (size_t i = 0; i < orange_transformed_pixels.size(); i++) {
-                cv::circle(frame_pair.first, orange_transformed_pixels[i].first, 2, cv::Scalar(0, 69, 255), 5);
-                cv::circle(frame_pair.second, orange_transformed_pixels[i].second, 2, cv::Scalar(0, 69, 255), 5);
-            }
-            
-            for (size_t i = 0; i < unknown_transformed_pixels.size(); i++) {
-                cv::circle(frame_pair.first, unknown_transformed_pixels[i].first, 2, cv::Scalar(0, 0, 0), 5);
-                cv::circle(frame_pair.second, unknown_transformed_pixels[i].second, 2, cv::Scalar(0, 0, 0), 5);
-            }
-            
-            save_mutex.lock();
-            save_queue.push(frame_tuple);
-            save_mutex.unlock();
-        }
-        camera_callback_count += 1;
+            auto ordering_time = std::chrono::duration_cast<std::chrono::microseconds>(end_ordering_time - transform_coloring_time).count();
         #endif
 
         int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
@@ -725,32 +728,30 @@
 
         #if timing
             auto end_time = high_resolution_clock::now();
-            auto stamp_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
-            auto ms_time_since_lidar = (get_clock()->now().nanoseconds() - stamp_time) / 1e6;
-            auto ms_transform_time = transform_time / 1e6;
-            auto ms_coloring_time = coloring_time / 1e6;
+            auto stamp_time = msg->header.stamp;
+            auto ms_time_since_lidar = get_clock()->now() - stamp_time;
 
-            RCLCPP_INFO(get_logger(), "Get Camera Frame  %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(camera_time - start_time).count());
-            RCLCPP_INFO(get_logger(), "Total Transform and Coloring Time  %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(transform_coloring_time - camera_time).count());
-            RCLCPP_INFO(get_logger(), "--Total Transform Time  %ld ms.", ms_transform_time);
-            RCLCPP_INFO(get_logger(), "--Total Coloring Time  %ld ms.", ms_coloring_time);
-            RCLCPP_INFO(get_logger(), "Total Ordering Time  %ld ms.", ordering_time);
+            RCLCPP_INFO(get_logger(), "Get Camera Frame  %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(camera_time - start_time).count());
+            RCLCPP_INFO(get_logger(), "Total Transform and Coloring Time  %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(transform_coloring_time - camera_time).count());
+            RCLCPP_INFO(get_logger(), "--Total Transform Time  %ld microseconds.", transform_time);
+            RCLCPP_INFO(get_logger(), "--Total Coloring Time  %ld microseconds.", coloring_time);
+            RCLCPP_INFO(get_logger(), "--Total Ordering Time  %ld microseconds.", ordering_time);
             auto time_diff = end_time - start_time;
-            RCLCPP_INFO(get_logger(), "Total PPM Time %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(time_diff).count());
-            RCLCPP_INFO(get_logger(), "Total Time from Lidar:  %ld ms.", (uint64_t) ms_time_since_lidar);
-            RCLCPP_INFO(get_logger(), "Total Time from Lidar to start  %ld ms.", ms_time_since_lidar_2);
+            RCLCPP_INFO(get_logger(), "Total PPM Time %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(time_diff).count());
+            RCLCPP_INFO(get_logger(), "Total Time from Lidar  %ld microseconds.", ms_time_since_lidar.nanoseconds() / 1000);
+            RCLCPP_INFO(get_logger(), "Total Time from Lidar to start  %ld microseconds.", ms_time_since_lidar_2);
         #endif
         
         cone_pub_->publish(message);
     }
 
     #if save_frames
-    void PointToPixelNode::save_frame(std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple)
+    void PointToPixelNode::save_frame(std::pair<uint64_t, cv::Mat> frame_l, std::pair<uint64_t, cv::Mat> frame_r)
     {
-        std::string l_filename = save_path + std::to_string(std::get<0>(frame_tuple)) + ".png";
-        std::string r_filename = save_path + std::to_string(std::get<2>(frame_tuple)) + ".png";
-        cv::imwrite(l_filename, std::get<1>(frame_tuple));
-        cv::imwrite(r_filename, std::get<3>(frame_tuple));
+        std::string l_filename = save_path + std::to_string(frame_l.first) + ".png";
+        std::string r_filename = save_path + std::to_string(frame_r.first) + ".png";
+        cv::imwrite(l_filename, frame_l.second);
+        cv::imwrite(r_filename, frame_r.second);
     }
     #endif
 
@@ -780,6 +781,8 @@
             false, // left_camera==false
             inner == 1
         );
+
+        // std::cout << "Pushing frame_l to deque" << std::endl;
 
         // Deque Management and Updating
         l_img_mutex.lock();
@@ -812,49 +815,28 @@
             }};
     }
 
-    #if save_frames
-    std::thread PointToPixelNode::launch_frame_saving()
-    {
-        return std::thread{
-            [this]
-            {
-                while (rclcpp::ok)
-                {
-                    save_mutex.lock();
-                    if(!save_queue.empty()) {
-                        save_frame(save_queue.front());
-                        save_queue.pop();
-                    }
-                    save_mutex.unlock();
-                    // Save a frame every half second
-                    rclcpp::sleep_for(std::chrono::milliseconds(1));
-                }
-            }};
-    }
-    #endif
-
     void PointToPixelNode::velocity_callback(geometry_msgs::msg::TwistStamped::SharedPtr msg)
-    {   
-        velocity_mutex.lock();
+    {
         // Deque Management and Updating
+        // velocity_mutex.lock();
         while (velocity_deque.size() >= max_deque_size)
         {
             velocity_deque.pop_front();
         }
         velocity_deque.push_back(msg);
-        velocity_mutex.unlock();
+        // velocity_mutex.unlock();
     }
 
     void PointToPixelNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::SharedPtr msg)
     {
-        yaw_mutex.lock();
         // Deque Management and Updating
+        // yaw_mutex.lock();
         while (yaw_deque.size() >= max_deque_size)
         {
             yaw_deque.pop_front();
         }
         yaw_deque.push_back(msg);
-        yaw_mutex.unlock();
+        // yaw_mutex.unlock();
     }
 
     int main(int argc, char **argv)

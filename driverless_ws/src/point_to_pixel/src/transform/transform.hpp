@@ -4,7 +4,6 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/eigen.hpp>
 #include "geometry_msgs/msg/vector3.hpp"
-#include "rclcpp/rclcpp.hpp"
 
 /**
  * @brief Transforms a 3D point in LiDAR space to 2D pixel coordinates in camera space
@@ -15,7 +14,6 @@
  * @return std::pair<Eigen::Vector2d, Eigen::Vector2d> Pixel coordinates in both cameras
  */
 std::pair<Eigen::Vector3d, Eigen::Vector3d> transform_point(
-    const rclcpp::Logger &logger,
     geometry_msgs::msg::Vector3 &point,
     std::pair<std::pair<double, double>, std::pair<double, double>> ds_pair,
     std::pair<double, double> left_right_dyaw,
