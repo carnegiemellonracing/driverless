@@ -72,63 +72,63 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
     size_t number_of_rows_not_skipped = 0;
     for (size_t row = 0; row < rows; ++row)
     {
-        // We check up to -2 and +2
-        // also holy garbage code right here
-        if (chosen_column.has_value()) { // TODO: add additional bounds checking
-            size_t chosen_column_value = chosen_column.value();
-            if (chosen_column_value < cols - 2 && chosen_column_value >= 2) {
-                if (zero_to_right) {
-                    /*
-                    1 1 0 0
-                    1 1 0 0
+        // // We check up to -2 and +2
+        // // also holy garbage code right here
+        // if (chosen_column.has_value()) { // TODO: add additional bounds checking
+        //     size_t chosen_column_value = chosen_column.value();
+        //     if (chosen_column_value < cols - 2 && chosen_column_value >= 2) {
+        //         if (zero_to_right) {
+        //             /*
+        //             1 1 0 0
+        //             1 1 0 0
 
-                    1 1 0 0 
-                    1 1 1 0
+        //             1 1 0 0 
+        //             1 1 1 0
 
-                    1 1 0 0
-                    1 0 0 0
-                    */
-                    double center_label = nodePredictor({xx[row][chosen_column_value], yy[row][chosen_column_value]}, model);
-                    if (is_colored_one(center_label)) {
-                        if (!is_colored_one(nodePredictor({xx[row][chosen_column_value + 1], yy[row][chosen_column_value + 1]}, model))) {
-                            chosen_column = chosen_column_value;
-                            continue;
-                        } else if (!is_colored_one(nodePredictor({xx[row][chosen_column_value + 2], yy[row][chosen_column_value + 2]}, model))) {
-                            chosen_column = chosen_column_value + 1;
-                            continue;
-                        }
-                    } else {
-                        if (is_colored_one(nodePredictor({xx[row][chosen_column_value - 1], yy[row][chosen_column_value - 1]}, model))) {
-                            chosen_column = chosen_column_value - 1;
-                            continue;
-                        }
-                    }
-                } else {
-                    /*
-                    0 0 1 1
-                    0 0 1 1
+        //             1 1 0 0
+        //             1 0 0 0
+        //             */
+        //             double center_label = nodePredictor({xx[row][chosen_column_value], yy[row][chosen_column_value]}, model);
+        //             if (is_colored_one(center_label)) {
+        //                 if (!is_colored_one(nodePredictor({xx[row][chosen_column_value + 1], yy[row][chosen_column_value + 1]}, model))) {
+        //                     chosen_column = chosen_column_value;
+        //                     continue;
+        //                 } else if (!is_colored_one(nodePredictor({xx[row][chosen_column_value + 2], yy[row][chosen_column_value + 2]}, model))) {
+        //                     chosen_column = chosen_column_value + 1;
+        //                     continue;
+        //                 }
+        //             } else {
+        //                 if (is_colored_one(nodePredictor({xx[row][chosen_column_value - 1], yy[row][chosen_column_value - 1]}, model))) {
+        //                     chosen_column = chosen_column_value - 1;
+        //                     continue;
+        //                 }
+        //             }
+        //         } else {
+        //             /*
+        //             0 0 1 1
+        //             0 0 1 1
 
-                    0 0 1 1
-                    0 1 1 1
-                    */
-                // ^ Notice how the +'s and -'s are all swapped from the previous one, we can refactor this later
-                    if (is_colored_one(nodePredictor({xx[row][chosen_column_value], yy[row][chosen_column_value]}, model))) {
-                        if (!is_colored_one(nodePredictor({xx[row][chosen_column_value - 1], yy[row][chosen_column_value - 1]}, model))) {
-                            chosen_column = chosen_column_value;
-                            continue;
-                        } else if (!is_colored_one(nodePredictor({xx[row][chosen_column_value - 2], yy[row][chosen_column_value - 2]}, model))) {
-                            chosen_column = chosen_column_value - 1;
-                            continue;
-                        }
-                    } else {
-                        if (is_colored_one(nodePredictor({xx[row][chosen_column_value + 1], yy[row][chosen_column_value + 1]}, model))) {
-                            chosen_column = chosen_column_value + 1;
-                            continue;
-                        }
-                    }
-                }
-            }
-        }
+        //             0 0 1 1
+        //             0 1 1 1
+        //             */
+        //         // ^ Notice how the +'s and -'s are all swapped from the previous one, we can refactor this later
+        //             if (is_colored_one(nodePredictor({xx[row][chosen_column_value], yy[row][chosen_column_value]}, model))) {
+        //                 if (!is_colored_one(nodePredictor({xx[row][chosen_column_value - 1], yy[row][chosen_column_value - 1]}, model))) {
+        //                     chosen_column = chosen_column_value;
+        //                     continue;
+        //                 } else if (!is_colored_one(nodePredictor({xx[row][chosen_column_value - 2], yy[row][chosen_column_value - 2]}, model))) {
+        //                     chosen_column = chosen_column_value - 1;
+        //                     continue;
+        //                 }
+        //             } else {
+        //                 if (is_colored_one(nodePredictor({xx[row][chosen_column_value + 1], yy[row][chosen_column_value + 1]}, model))) {
+        //                     chosen_column = chosen_column_value + 1;
+        //                     continue;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         // predict left and right labels
         number_of_rows_not_skipped++;
         std::vector<double> left_node = {xx[row][0], yy[row][0]};
@@ -173,7 +173,9 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
                     }
                 }
             }
-            boundary_points.emplace(xx[row][chosen_column.value()], yy[row][chosen_column.value()]);
+            if (chosen_column.has_value()) {
+                boundary_points.emplace(xx[row][chosen_column.value()], yy[row][chosen_column.value()]);
+            }
 
         } else {
             // Reset chosen_column so we don't propagate error
@@ -181,7 +183,7 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
         }
     }
 
-    std::cout << "Skipped: " << rows - number_of_rows_not_skipped << "/" << rows << std::endl;
+    // std::cout << "Skipped: " << rows - number_of_rows_not_skipped << "/" << rows << std::endl;
 
     std::optional<size_t> chosen_row = std::nullopt;
     bool zero_below = true;
