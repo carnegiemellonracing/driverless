@@ -14,6 +14,23 @@ std::pair<double, double> global_frame_to_local_frame(
     return std::make_pair(cmr_x, cmr_y);
 }
 
+/** 
+ * @brief Used for determining the position of a cone in global frame given local frame information
+ */
+std::pair<double, double> local_to_global_frame(
+    std::pair<double, double> cmr_x_cmr_y_change, 
+    double yaw
+)
+{
+    double cmr_x = cmr_x_cmr_y_change.first;
+    double cmr_y = cmr_x_cmr_y_change.second;
+
+    double global_x = cmr_y * std::cos(yaw * M_PI / 180.0) + cmr_x * std::sin(yaw * M_PI / 180.0);
+    double global_y = cmr_y * std::sin(yaw * M_PI / 180.0) - cmr_x * std::cos(yaw * M_PI / 180.0);
+
+    return std::make_pair(global_x, global_y);
+}
+
 ConeHistoryTestNode::ConeHistoryTestNode() : Node("cone_history_test_node") 
 {
     // Initialize the velocity and yaw deques
@@ -160,15 +177,35 @@ void ConeHistoryTestNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::Share
     // yaw_mutex.unlock();
 }
 
-float ConeHistoryTestNode::find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point)
+/**
+ * @brief 
+ * 
+ * @param cone_history 
+ * @param lidar_point This is a point in CMR/local car frame. This needs to be transformed into global frame for comparison
+ * @return float 
+ */
+float ConeHistoryTestNode::find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point, double yaw)
 {
     float min_dist = std::numeric_limits<float>::max();
     for (int i = 0; i < cone_history.size(); i++)
     {
         ObsConeInfo cone_info = cone_history.front();
         cone_history.pop();
-        float dx = (cone_info.cur_car_to_observer_position_x + cone_info.observer_position_to_cone_x) - lidar_point.x;
-        float dy = (cone_info.cur_car_to_observer_position_y + cone_info.observer_position_to_cone_y) - lidar_point.y;
+
+        // Transforming the lidar point into global_frame
+        std::pair<double, double> local_lidar_point_xy = std::make_pair(lidar_point.x, lidar_point.y);
+        std::pair<double, double> global_car_to_lidar = local_to_global_frame(local_lidar_point_xy, yaw);
+        double global_car_to_lidar_x = global_car_to_lidar.first;
+        double global_car_to_lidar_y = global_car_to_lidar.second;
+
+        // Transforming the observer_position to lidar point information into global_frame
+        std::pair<double, double> local_observer_to_cone_xy = std::make_pair(cone_info.observer_position_to_cone_x, cone_info.observer_position_to_cone_y);
+        std::pair<double, double> global_observer_to_cone = local_to_global_frame(local_observer_to_cone_xy, cone_info.observer_yaw);
+        double global_observer_to_cone_x = global_observer_to_cone.first;
+        double global_observer_to_cone_y = global_observer_to_cone.second;
+
+        double dx = (cone_info.cur_car_to_observer_x + global_observer_to_cone_x) - global_car_to_lidar_x;
+        double dy = (cone_info.cur_car_to_observer_y + global_observer_to_cone_y) - global_car_to_lidar_y;
         
         float dist = sqrt(pow(dx, 2) + pow(dy, 2));
         if (dist < min_dist)
@@ -180,12 +217,12 @@ float ConeHistoryTestNode::find_closest_distance_in_cone_history(std::queue<ObsC
     return min_dist;
 }
 
-int ConeHistoryTestNode::classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point) {
+int ConeHistoryTestNode::classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point, double yaw) {
     // Find the closest point wrt yellow points
-    float min_dist_from_yellow = find_closest_distance_in_cone_history(yellow_cone_history, lidar_point);
+    float min_dist_from_yellow = find_closest_distance_in_cone_history(yellow_cone_history, lidar_point, yaw);
 
     // Find the closest point wrt blue points
-    float min_dist_from_blue = find_closest_distance_in_cone_history(blue_cone_history, lidar_point);
+    float min_dist_from_blue = find_closest_distance_in_cone_history(blue_cone_history, lidar_point, yaw);
 
     // Between the 2 colors, determine which is closer
     if (min_dist_from_blue < min_dist_from_yellow && min_dist_from_blue < min_dist_th) { // most like a blue cone 
@@ -193,8 +230,8 @@ int ConeHistoryTestNode::classify_through_data_association(geometry_msgs::msg::V
     } else if (min_dist_from_yellow < min_dist_from_blue && min_dist_from_yellow < min_dist_th) {
         return 1;
     } else {
-        min_dist_from_yellow = find_closest_distance_in_cone_history(long_term_yellow_cone_history, lidar_point);
-        min_dist_from_blue = find_closest_distance_in_cone_history(long_term_blue_cone_history, lidar_point);
+        min_dist_from_yellow = find_closest_distance_in_cone_history(long_term_yellow_cone_history, lidar_point, yaw);
+        min_dist_from_blue = find_closest_distance_in_cone_history(long_term_blue_cone_history, lidar_point, yaw);
         if (min_dist_from_blue < min_dist_from_yellow && min_dist_from_blue < min_dist_th) { // most like a blue cone 
             return 2;
         } else if (min_dist_from_yellow < min_dist_from_blue && min_dist_from_yellow < min_dist_th) {
@@ -207,7 +244,18 @@ int ConeHistoryTestNode::classify_through_data_association(geometry_msgs::msg::V
     }
 }
 
-void ConeHistoryTestNode::motion_model_on_cone_history(std::queue<ObsConeInfo>& cone_history, std::pair<double, double> long_lat_change) {
+/**
+ * @brief This function will treat the current car position as world origin, and motion model the other
+ * observer positions to be with respect to the current observer position/cur car position (in 
+ * globla frame).
+ * The reason why we do this is because the further away from 0, 0 you are, the 
+ * less accurate you become. We would want our current position to be 0, 0 and have other positions
+ * build off from here. 
+ * 
+ * @param cone_history 
+ * @param global_xy_change 
+ */
+void ConeHistoryTestNode::motion_model_on_cone_history(std::queue<ObsConeInfo>& cone_history, std::pair<double, double> global_xy_change) {
     /**
      * Note: In the case that you plan to multithread the code in the future, 
      * this expression is moved out because cone_history's size changes 
@@ -217,23 +265,12 @@ void ConeHistoryTestNode::motion_model_on_cone_history(std::queue<ObsConeInfo>& 
 
     for (int i = 0; i < cone_history_size; i++) {
         ObsConeInfo cone_info = cone_history.front();
-        cone_info.cur_car_to_observer_position_y -= long_lat_change.first;
-        cone_info.cur_car_to_observer_position_x -= long_lat_change.second;
+        cone_info.cur_car_to_observer_x += global_xy_change.first;
+        cone_info.cur_car_to_observer_y += global_xy_change.second;
         cone_history.pop();
         cone_history.push(cone_info);
     }
 }
-
-// void ConeHistoryTestNode::add_lidar_point_to_cone_history(std::queue<ObsConeInfo>& cone_history, geometry_msgs::msg::Vector3 lidar_point) {
-//     ObsConeInfo cone_info = {
-//         .cur_car_to_observer_position_x = lidar_point.x,
-//         .cur_car_to_observer_position_y = lidar_point.y,
-//         .observer_position_to_cone_x = 0.0f,
-//         .observer_position_to_cone_y = 0.0f,
-//         .lifespan = 0
-//     };
-//     cone_history.push(cone_info);
-// }
 
 void ConeHistoryTestNode::maintain_cone_history_lifespans(std::queue<ObsConeInfo>& cone_history) {
     int cone_history_size = cone_history.size();
@@ -285,6 +322,15 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     
     double global_change_dx = cur_velocity_x * time_diff_seconds;
     double global_change_dy = cur_velocity_y * time_diff_seconds;
+    std::pair<double, double> global_xy_change = std::make_pair(global_change_dx, global_change_dy);
+
+    RCLCPP_INFO(get_logger(), "-------------Start Motion Modeling On Cone History--------------\n");
+    motion_model_on_cone_history(blue_cone_history, global_xy_change);
+    motion_model_on_cone_history(yellow_cone_history, global_xy_change);
+    motion_model_on_cone_history(long_term_blue_cone_history, global_xy_change);
+    motion_model_on_cone_history(long_term_yellow_cone_history, global_xy_change);
+
+    RCLCPP_INFO(get_logger(), "-------------End Motion Modeling On Cone History--------------\n");
 
 
     RCLCPP_INFO(get_logger(), "-------------Processing Cones--------------"); 
@@ -296,39 +342,36 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     std::vector<geometry_msgs::msg::Point> yellow_cones_to_publish = msg->yellow_cones;
     
 
-    std::pair<double, double> long_lat_l = global_frame_to_local_frame(std::make_pair(global_change_dx, global_change_dy), cur_yaw);
-
 
     for (int i= 0; i < msg->blue_cones.size(); i++) {
-        blue_cone_history.emplace(0.0f, 0.0f, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
+        blue_cone_history.emplace(0.0, 0.0, cur_yaw, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
         geometry_msgs::msg::Vector3 point;
         point.x = msg->blue_cones[i].x;
         point.y = msg->blue_cones[i].y;
         point.z = 0;
-        float min_dist = find_closest_distance_in_cone_history(blue_cone_history, point);
-        if (min_dist < min_dist_th) {
-            long_term_blue_cone_history.emplace(0.0f, 0.0f, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
+        // Check if you have an old or new cone
+        float min_dist = find_closest_distance_in_cone_history(blue_cone_history, point, cur_yaw);
+        if (min_dist > min_dist_th) { // Greater than the threshold means that its far away from everything enough, we believe it's new
+            long_term_blue_cone_history.emplace(0.0, 0.0, cur_yaw, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
         }
     }
     
     for (int i= 0; i < msg->yellow_cones.size(); i++) {
-        yellow_cone_history.emplace(0.0f, 0.0f, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
+        yellow_cone_history.emplace(0.0, 0.0, cur_yaw, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
         geometry_msgs::msg::Vector3 point;
         point.x = msg->yellow_cones[i].x;
         point.y = msg->yellow_cones[i].y;
         point.z = 0;
-        float min_dist = find_closest_distance_in_cone_history(yellow_cone_history, point);
-        if (min_dist < min_dist_th) {
-            long_term_yellow_cone_history.emplace(0.0f, 0.0f, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
+        // Check if you have an old or new cone
+        float min_dist = find_closest_distance_in_cone_history(yellow_cone_history, point, cur_yaw);
+        if (min_dist > min_dist_th) { // Greater than the threshold means that its far away from everything enough, we believe it's new
+            long_term_yellow_cone_history.emplace(0.0, 0.0, cur_yaw, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
         }
     }
     RCLCPP_INFO(get_logger(), "-------------End Processing Cones--------------\n");
 
     // Classify each unknown cone.
-    RCLCPP_INFO(get_logger(), "-------------Start Motion Modeling On Cones--------------\n");
-    motion_model_on_cone_history(blue_cone_history, long_lat_l);
-    motion_model_on_cone_history(yellow_cone_history, long_lat_l);
-    RCLCPP_INFO(get_logger(), "-------------End Motion Modeling On Cones--------------\n");
+
 
     int num_unable_to_classify_cones = 0;
     RCLCPP_INFO(this->get_logger(), "Num blue_cones_in_history: %d", blue_cone_history.size());
@@ -340,7 +383,7 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
         lidar_point.y = msg->unknown_color_cones[i].y;
         lidar_point.z = msg->unknown_color_cones[i].z;
         RCLCPP_INFO(get_logger(), "\t Point: (%f, %f, %f)", lidar_point.x, lidar_point.y, lidar_point.z);
-        int cone_class = classify_through_data_association(lidar_point);
+        int cone_class = classify_through_data_association(lidar_point, cur_yaw);
 
         // Classify and add the newly classified cone to the cone history
         switch (cone_class) {

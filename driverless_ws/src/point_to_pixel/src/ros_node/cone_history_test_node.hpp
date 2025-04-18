@@ -14,25 +14,38 @@
 #include <chrono>
 #include <filesystem>
 
-struct ObsConeInfo {
-    double cur_car_to_observer_position_x;
-    double cur_car_to_observer_position_y;
 
+/**
+ * @brief We motion model on the position of the car to the observer, instead
+ * of thinking in global frame wrt to the start. This is because we want the 
+ * current position to be the most accurate, and other positions to be less accurate.
+ * 
+ */
+struct ObsConeInfo {
+    // Global frame
+    double cur_car_to_observer_x;
+    double cur_car_to_observer_y;
+    double observer_yaw;
+
+    // CMR/Local frame 
     double observer_position_to_cone_x;
     double observer_position_to_cone_y;
+
     int lifespan;
 
     ObsConeInfo (
-        double car_to_observer_x, 
-        double car_to_observer_y, 
-        double observer_to_cone_x,
-        double observer_to_cone_y,
-        double ls
-    ) : cur_car_to_observer_position_x(car_to_observer_x),
-      cur_car_to_observer_position_y(car_to_observer_y),
-      observer_position_to_cone_x(observer_to_cone_x),
-      observer_position_to_cone_y(observer_to_cone_y),
-      lifespan(ls) {}
+        double input_cur_car_to_observer_x, 
+        double input_cur_car_to_observer_y, 
+        double input_observer_yaw,
+        double input_observer_position_to_cone_x,
+        double input_observer_position_to_cone_y,
+        int input_ls
+    ) : cur_car_to_observer_x(input_cur_car_to_observer_x),
+      cur_car_to_observer_y(input_cur_car_to_observer_y),
+      observer_yaw(input_observer_yaw),
+      observer_position_to_cone_x(input_observer_position_to_cone_x),
+      observer_position_to_cone_y(input_observer_position_to_cone_y),
+      lifespan(input_ls) {}
 
 };
 class ConeHistoryTestNode : public rclcpp::Node {
@@ -68,9 +81,9 @@ private:
 
     rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr associated_cones_pub_;
 
-    int classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point);
-    void motion_model_on_cone_history(std::queue<ObsConeInfo>& cone_history, std::pair<double, double> long_lat_change);
+    int classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point, double yaw);
+    void motion_model_on_cone_history(std::queue<ObsConeInfo>& cone_history, std::pair<double, double> global_xy_change);
     // void add_lidar_point_to_cone_history(std::queue<ObsConeInfo>& cone_history, geometry_msgs::msg::Vector3 lidar_point);
     void maintain_cone_history_lifespans(std::queue<ObsConeInfo>& cone_history);
-    float find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point);
+    float find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point, double yaw);
 };
