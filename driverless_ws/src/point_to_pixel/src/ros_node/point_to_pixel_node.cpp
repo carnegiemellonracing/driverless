@@ -2,6 +2,7 @@
 
     // Standard Imports
     #include <deque>
+    #include <queue>
     #include <memory>
     #include <chrono>
     #include <filesystem>
@@ -29,14 +30,6 @@
         // ---------------------------------------------------------------------------
         //                               PARAMETERS
         // ---------------------------------------------------------------------------
-
-        // Initialize Empty Image Deques
-        img_deque_l = {};
-        img_deque_r = {};
-
-        // Initialize Empty Velocity/Yaw Deques
-        velocity_deque = {};
-        yaw_deque = {};
 
         // Projection matrix that takes LiDAR points to pixels
         std::vector<double> param_default(12, 1.0f); 
@@ -271,6 +264,11 @@
         // Launch camera thread
         launch_camera_communication().detach();
 
+        #if save_frames
+        // Launch frame saving thread
+        launch_frame_saving().detach();
+        #endif
+
         // Initialization Complete Message Suite
         RCLCPP_INFO(get_logger(), "Point to Pixel Node INITIALIZED");
         #if verbose
@@ -365,12 +363,12 @@
     // Wrapper function for retrieving the color of cone by combining output from both cameras
     int PointToPixelNode::get_cone_class(
         std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
-        std::pair<cv::Mat, cv::Mat> frame_tuple,
+        std::pair<cv::Mat, cv::Mat> frame_pair,
         std::pair<std::vector<cv::Mat> , std::vector<cv::Mat> > detection_pair
     ) {
         return coloring::get_cone_class(
             pixel_pair,
-            frame_tuple,
+            frame_pair,
             detection_pair,
             yellow_filter_low,
             yellow_filter_high,
@@ -478,7 +476,7 @@
         std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple = get_camera_frame(msg->header.stamp);
         if (std::get<1>(frame_tuple).empty() || std::get<3>(frame_tuple).empty())
         {
-            RCLCPP_WARN(get_logger(), "No frame, likely an empty frame queue");
+            RCLCPP_WARN(get_logger(), "No frame, likely an empty frame deque");
             return;
         }
         std::pair<cv::Mat, cv::Mat> frame_pair = std::make_pair(std::get<1>(frame_tuple), std::get<3>(frame_tuple));
@@ -582,7 +580,7 @@
             #if timing
                 // Time for transform
                 auto loop_transform = high_resolution_clock::now();
-                transform_time = transform_time + std::chrono::duration_cast<std::chrono::microseconds>(loop_transform - loop_start).count();
+                transform_time = transform_time + std::chrono::duration_cast<std::chrono::milliseconds>(loop_transform - loop_start).count();
             #endif
 
             int cone_class = get_cone_class(pixel_pair, frame_pair, detection_pair);
@@ -590,7 +588,7 @@
             #if timing
                 // Time for coloring
                 auto loop_coloring = high_resolution_clock::now();
-                coloring_time = coloring_time + std::chrono::duration_cast<std::chrono::microseconds>(loop_coloring - loop_transform).count();
+                coloring_time = coloring_time + std::chrono::duration_cast<std::chrono::milliseconds>(loop_coloring - loop_transform).count();
             #endif
 
             point_msg.x = msg->cone_array[i].cone_points[0].x;
@@ -684,11 +682,9 @@
                 cv::circle(frame_pair.second, unknown_transformed_pixels[i].second, 5, cv::Scalar(0, 0, 0), 2);
             }
 
-            // Save frame
-            save_frame(
-                std::make_pair(std::get<0>(frame_tuple), frame_pair.first),
-                std::make_pair(std::get<2>(frame_tuple), frame_pair.second)
-            );
+            save_mutex.lock();
+            save_queue.push(frame_tuple);
+            save_mutex.unlock();
         #endif
 
         #if timing
@@ -711,7 +707,7 @@
 
         #if timing
             auto end_ordering_time = high_resolution_clock::now();
-            auto ordering_time = std::chrono::duration_cast<std::chrono::microseconds>(end_ordering_time - transform_coloring_time).count();
+            auto ordering_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_ordering_time - transform_coloring_time).count();
         #endif
 
         int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
@@ -731,27 +727,27 @@
             auto stamp_time = msg->header.stamp;
             auto ms_time_since_lidar = get_clock()->now() - stamp_time;
 
-            RCLCPP_INFO(get_logger(), "Get Camera Frame  %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(camera_time - start_time).count());
-            RCLCPP_INFO(get_logger(), "Total Transform and Coloring Time  %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(transform_coloring_time - camera_time).count());
-            RCLCPP_INFO(get_logger(), "--Total Transform Time  %ld microseconds.", transform_time);
-            RCLCPP_INFO(get_logger(), "--Total Coloring Time  %ld microseconds.", coloring_time);
-            RCLCPP_INFO(get_logger(), "--Total Ordering Time  %ld microseconds.", ordering_time);
+            RCLCPP_INFO(get_logger(), "Get Camera Frame  %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(camera_time - start_time).count());
+            RCLCPP_INFO(get_logger(), "Total Transform and Coloring Time  %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(transform_coloring_time - camera_time).count());
+            RCLCPP_INFO(get_logger(), "--Total Transform Time  %ld ms.", transform_time);
+            RCLCPP_INFO(get_logger(), "--Total Coloring Time  %ld ms.", coloring_time);
+            RCLCPP_INFO(get_logger(), "--Total Ordering Time  %ld ms.", ordering_time);
             auto time_diff = end_time - start_time;
-            RCLCPP_INFO(get_logger(), "Total PPM Time %ld microseconds.", std::chrono::duration_cast<std::chrono::microseconds>(time_diff).count());
-            RCLCPP_INFO(get_logger(), "Total Time from Lidar  %ld microseconds.", ms_time_since_lidar.nanoseconds() / 1000);
-            RCLCPP_INFO(get_logger(), "Total Time from Lidar to start  %ld microseconds.", ms_time_since_lidar_2);
+            RCLCPP_INFO(get_logger(), "Total PPM Time %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(time_diff).count());
+            RCLCPP_INFO(get_logger(), "Total Time from Lidar  %ld ms.", ms_time_since_lidar.nanoseconds() / 1000);
+            RCLCPP_INFO(get_logger(), "Total Time from Lidar to start  %ld ms.", ms_time_since_lidar_2);
         #endif
         
         cone_pub_->publish(message);
     }
 
     #if save_frames
-    void PointToPixelNode::save_frame(std::pair<uint64_t, cv::Mat> frame_l, std::pair<uint64_t, cv::Mat> frame_r)
+    void PointToPixelNode::save_frame(std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple)
     {
-        std::string l_filename = save_path + std::to_string(frame_l.first) + ".png";
-        std::string r_filename = save_path + std::to_string(frame_r.first) + ".png";
-        cv::imwrite(l_filename, frame_l.second);
-        cv::imwrite(r_filename, frame_r.second);
+        std::string l_filename = save_path + std::to_string(std::get<0>(frame_tuple)) + ".png";
+        std::string r_filename = save_path + std::to_string(std::get<2>(frame_tuple)) + ".png";
+        cv::imwrite(l_filename, std::get<1>(frame_tuple));
+        cv::imwrite(r_filename, std::get<3>(frame_tuple));
     }
     #endif
 
@@ -815,28 +811,45 @@
             }};
     }
 
+    #if save_frames
+    std::thread PointToPixelNode::launch_frame_saving()
+    {
+        return std::thread{
+            [this]
+            {
+                while (rclcpp::ok)
+                {
+                    save_mutex.lock();
+                    if(!save_queue.empty()) {
+                        save_frame(save_queue.front());
+                        save_queue.pop();
+                    }
+                    save_mutex.unlock();
+                    // Save a frame every half second
+                    rclcpp::sleep_for(std::chrono::milliseconds(500));
+                }
+            }};
+    }
+    #endif
+
     void PointToPixelNode::velocity_callback(geometry_msgs::msg::TwistStamped::SharedPtr msg)
     {
         // Deque Management and Updating
-        // velocity_mutex.lock();
         while (velocity_deque.size() >= max_deque_size)
         {
             velocity_deque.pop_front();
         }
         velocity_deque.push_back(msg);
-        // velocity_mutex.unlock();
     }
 
     void PointToPixelNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::SharedPtr msg)
     {
         // Deque Management and Updating
-        // yaw_mutex.lock();
         while (yaw_deque.size() >= max_deque_size)
         {
             yaw_deque.pop_front();
         }
         yaw_deque.push_back(msg);
-        // yaw_mutex.unlock();
     }
 
     int main(int argc, char **argv)
