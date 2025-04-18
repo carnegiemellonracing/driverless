@@ -41,6 +41,10 @@ ConeHistoryTestNode::ConeHistoryTestNode() : Node("cone_history_test_node")
     prev_time_stamp = -1;
 
     // Initialize subscribers
+    blue_cone_history = {};
+    yellow_cone_history = {};
+    long_term_yellow_cone_history = {};
+    long_term_blue_cone_history = {};
 
     // Subscriber that reads the input topic that contains an array of cone_point arrays from LiDAR stack
     auto cone_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
