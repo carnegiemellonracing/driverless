@@ -190,17 +190,47 @@ static int set_global_can_handle(canHandle *global_handle) {
 }
 
 static int cmr_can_init(int channel, bool verbose) {
-    canHandle hnd;
-    canStatus stat;
 
     if(verbose){
         debug_printf("Sending a CAN message on channel %d\n", channel);
     }
 
     canInitializeLibrary();
+    canStatus stat;
 
-    set_global_can_handle(&transmission_can_handle);
-    set_global_can_handle(&receive_can_handle);
+    transmission_can_handle = canOpenChannel(0,
+                         canOPEN_EXCLUSIVE /*| canOPEN_REQUIRE_EXTENDED*/ | canOPEN_ACCEPT_VIRTUAL);
+    if (transmission_can_handle < 0) {
+        debug_printf("canOpenChannel %d", 0);
+        check("", hnd);
+        return -1;
+    }
+
+    stat = canSetBusParams(transmission_can_handle, canBITRATE_500K, 0, 0, 0, 0, 0);
+    check("canSetBusParams", stat);
+    if (stat != canOK) {
+        return -2;
+    }
+
+    stat = canBusOn(transmission_can_handle);
+    check("canBusOn", stat);
+    if (stat != canOK) {
+        return -3;
+    }
+    
+    receive_can_handle = canOpenChannel(0,
+                         canOPEN_EXCLUSIVE /*| canOPEN_REQUIRE_EXTENDED*/ | canOPEN_ACCEPT_VIRTUAL);
+    if (receive_can_handle < 0) {
+        debug_printf("canOpenChannel %d", 0);
+        check("", hnd);
+        return -4;
+    }
+
+    stat = canBusOn(receive_can_handle);
+    check("canBusOn", stat);
+    if (stat != canOK) {
+        return -5;
+    }
 
     signal(SIGINT, cmr_can_error_exit);
     return 0;
@@ -223,8 +253,6 @@ static int cmr_can_tx(int channel, long id, void* msg, unsigned int msgLen, bool
     }
     return 0;
 }
-
-
 
 int initializeCan(void) {
     return cmr_can_init(0, false);
@@ -282,7 +310,6 @@ int sendFinishedCommand(){
 }
 
 uint16_t cmr_can_rx(int channel, long id) {
-    canHandle hnd = receive_can_handle;
     canStatus stat;
     bool seen;
     do {
@@ -293,7 +320,7 @@ uint16_t cmr_can_rx(int channel, long id) {
         unsigned long time;
     
 
-        stat = canReadWait(hnd, &curId, &msg, &dlc, &flag, &time, READ_WAIT_INFINITE);
+        stat = canReadWait(receive_can_handle, &curId, &msg, &dlc, &flag, &time, READ_WAIT_INFINITE);
 
         if (stat == canOK) {
             msgCounter++;
