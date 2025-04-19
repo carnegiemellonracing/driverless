@@ -28,7 +28,7 @@ namespace controls {
     using PositionLLAMsg = geometry_msgs::msg::Vector3Stamped;
     using IMUAccelerationMsg = geometry_msgs::msg::Vector3Stamped;
 
-    using SwangleMsg = std_msgs::msg::Float32;
+    using SwangleMsg = interfaces::msg::Swangle;
 
     /* ROS Topics */
     constexpr const char *swangle_topic_name = "testnode swangle";
