@@ -130,7 +130,7 @@ namespace controls {
                 const float rear_wheel_speed = state[state_whl_speed_r_idx];
 
                 //unpackages action
-                const float steering_angle = action[action_swangle_idx];
+                const float steering_angle = action[action_requested_swangle_idx];
                 float torque_front, torque_rear;
                 switch (torque_mode) {
                     case TorqueMode::AWD:

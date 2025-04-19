@@ -221,7 +221,7 @@ namespace controls {
                         break;
 
                     case Record::Type::Swangle:
-                        state[state_swangle_idx] = record_iter->swangle;
+                        state[state_actual_swangle_idx] = record_iter->swangle;
                         ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
 
                     default:

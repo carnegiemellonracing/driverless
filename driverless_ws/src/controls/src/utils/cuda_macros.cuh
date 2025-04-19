@@ -10,6 +10,7 @@
 #define ONLINE_DYNAMICS_FUNC controls::model::sysid::dynamics
 #define CENTRIPEDAL_ACCEL_FUNC controls::model::sysid::centripedal_accel
 #else
+#define ONLINE_SIM_DYNAMICS_MODEL_FUNC controls::model::sim_slipless::dynamics
 #define ONLINE_DYNAMICS_FUNC controls::model::slipless::dynamics
 #define CENTRIPEDAL_ACCEL_FUNC controls::model::slipless::centripedal_accel
 #endif

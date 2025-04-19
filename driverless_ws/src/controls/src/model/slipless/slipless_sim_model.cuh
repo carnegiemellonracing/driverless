@@ -12,10 +12,11 @@
 
 namespace controls {
     namespace model {
-        namespace slipless_swangle {
+        namespace sim_slipless {
             static float calc_swangle(const float curr_swangle, const float requested_swangle, float timestep) {
-                float delta_swangle = (requested_swangle - curr_swangle) / actuator_angular_speed;
+                float delta_swangle = (requested_swangle - curr_swangle) * actuator_angular_speed;
                 // (theta0 - theta1) / (theta/t) = t
+
 
                 float swangle_ = curr_swangle + delta_swangle * timestep;
 
@@ -31,8 +32,8 @@ namespace controls {
              * @param[in] timestep Model time step in seconds.
              */
             __host__ __device__ static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
-                const float swangle = action[action_swangle_idx];
-                const float curr_swangle = state[state_swangle_request_idx];
+                const float swangle = action[action_requested_swangle_idx];
+                const float curr_swangle = state[state_actual_swangle_idx];
                 float swangle_ = calc_swangle(curr_swangle, swangle, timestep);
 
                 const float state_tmp[4] = {
@@ -43,7 +44,7 @@ namespace controls {
                 };
 
                 const float action_tmp[2] = {
-                    action[action_swangle_idx],
+                    action[action_requested_swangle_idx],
                     action[action_torque_idx]
                 };
 
@@ -53,7 +54,7 @@ namespace controls {
 
                 memcpy(next_state, next_state_tmp, sizeof(next_state_tmp));
 
-                next_state[state_swangle_request_idx] = swangle_;
+                next_state[state_actual_swangle_idx] = swangle_;
             }
         }
     }

@@ -93,7 +93,7 @@ namespace controls {
 
                 // printf("x: %f, y: %f, yaw: %f, speed: %f\n", x, y, yaw, speed);
 
-                const float swangle = -action[action_swangle_idx]; // ^ This is negated, because the model expects yaw and swangle to have the same direction
+                const float swangle = -action[action_requested_swangle_idx]; // ^ This is negated, because the model expects yaw and swangle to have the same direction
                 // wheel torque
                 const float torque = action[action_torque_idx] * gear_ratio;
 

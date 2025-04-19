@@ -99,7 +99,7 @@ namespace controls {
 
                 // printf("x: %f, y: %f, yaw: %f, speed: %f\n", x, y, yaw, speed);
 
-                const float swangle = -action[action_swangle_idx];
+                const float swangle = -action[action_requested_swangle_idx];
                 // wheel torque
                 const float torque = action[action_torque_idx] * gear_ratio;
 

@@ -174,9 +174,9 @@ namespace controls {
     constexpr uint8_t state_y_idx = 1;
     constexpr uint8_t state_yaw_idx = 2;
     constexpr uint8_t state_speed_idx = 3;
-    constexpr uint8_t state_swangle_idx = 4;
+    constexpr uint8_t state_actual_swangle_idx = 4;
 
-    constexpr uint8_t action_swangle_idx = 0;
+    constexpr uint8_t action_requested_swangle_idx = 0;
     constexpr uint8_t action_torque_idx = 1;
 
 

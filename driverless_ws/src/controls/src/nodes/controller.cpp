@@ -545,7 +545,7 @@ namespace controls {
 
             static Action msg_to_action(const ActionMsg& msg) {
                 Action action;
-                action[action_swangle_idx] = msg.swangle;
+                action[action_requested_swangle_idx] = msg.swangle;
                 action[action_torque_idx] = msg.torque_fl + msg.torque_fr + msg.torque_rl + msg.torque_rr;
                 return action;
             }
@@ -584,7 +584,7 @@ namespace controls {
                 action_signal.velocity_rpm = can_max_velocity_rpm;
                 
 
-                action_signal.rack_displacement_adc = swangle_to_adc(action[action_swangle_idx]);
+                action_signal.rack_displacement_adc = swangle_to_adc(action[action_requested_swangle_idx]);
                 return action_signal;   
             }
 
@@ -593,7 +593,7 @@ namespace controls {
             ActionMsg ControllerNode::action_to_msg(const Action &action) {
                 interfaces::msg::ControlAction msg;
 
-                msg.swangle = action[action_swangle_idx];
+                msg.swangle = action[action_requested_swangle_idx];
                 msg.torque_fl = action[action_torque_idx] / 4;
                 msg.torque_fr = action[action_torque_idx] / 4;
                 msg.torque_rl = action[action_torque_idx] / 4;

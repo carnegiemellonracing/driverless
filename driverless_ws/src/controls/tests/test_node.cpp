@@ -231,6 +231,11 @@ namespace controls {
               m_swangle_publisher{create_publisher<SwangleMsg>(swangle_topic_name, swangle_qos)},
 
               m_config_dict{config_dict},
+              m_world_state{{std::stof(m_config_dict["initial_x"]), 
+                std::stof(m_config_dict["initial_y"]), 
+                std::stof(m_config_dict["initial_yaw"]), 
+                std::stof(m_config_dict["initial_speed"]),
+                std::stof(m_config_dict["initial_swangle"])}},
               m_all_segments{parse_segments_specification(getenv("DRIVERLESS") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
 
               m_lookahead{std::stof(m_config_dict["look_ahead"])},
@@ -283,6 +288,8 @@ namespace controls {
             m_start_line.push_back(m_all_right_cones[0]);
             m_end_line.push_back(m_all_left_cones.back());
             m_end_line.push_back(m_all_right_cones.back());
+
+            
             update_track_time();
         }
         float distanceToLine(glm::fvec2 point, std::vector<glm::fvec2> line) {
@@ -549,8 +556,8 @@ namespace controls {
                 static_cast<float>(adj_msg.swangle),
                 static_cast<float>(adj_msg.torque_fl + adj_msg.torque_fr + adj_msg.torque_rl + adj_msg.torque_rr)
             };
-            float next_state[4];
-            std::array<float, 4> orig_world_state = m_world_state;
+            float next_state[5];
+            std::array<float, 5> orig_world_state = m_world_state;
 
             double sim_time = m_time.nanoseconds() / 1.0e9;
             m_time = get_clock()->now();
@@ -563,7 +570,7 @@ namespace controls {
             g_car_poses.push_back(std::make_tuple(world_state_vec, m_world_state[2], m_time.seconds() - m_start_time.seconds()));
             
             SwangleMsg msg;
-            msg.data = m_world_state[3];
+            msg.data = m_world_state[4];
             m_swangle_publisher->publish(msg);
         }
 

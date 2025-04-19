@@ -70,7 +70,7 @@ namespace controls {
 
             cuda_globals::sample_curv_state(world_state, cent_curv_pose, cent_out_of_bounds);
 
-            const float centripedal_accel = CENTRIPEDAL_ACCEL_FUNC(world_state[state_speed_idx], action[action_swangle_idx]);
+            const float centripedal_accel = CENTRIPEDAL_ACCEL_FUNC(world_state[state_speed_idx], action[action_requested_swangle_idx]);
             const float abs_centripedal_accel = fabsf(centripedal_accel);
 
             if (abs_centripedal_accel > lat_tractive_capability) {
@@ -112,7 +112,7 @@ namespace controls {
             const float deriv_cost = first ?
                 0 :
                 fabsf(action[action_torque_idx] - last_taken_action[action_torque_idx]) / controller_period * torque_1Nps_cost
-              + fabsf(action[action_swangle_idx] - last_taken_action[action_swangle_idx]) / controller_period * swangle_1radps_cost
+              + fabsf(action[action_requested_swangle_idx] - last_taken_action[action_requested_swangle_idx]) / controller_period * swangle_1radps_cost
               ;
 
             float total_cost;
