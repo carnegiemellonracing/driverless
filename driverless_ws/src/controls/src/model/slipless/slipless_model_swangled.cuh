@@ -13,16 +13,13 @@
 namespace controls {
     namespace model {
         namespace slipless_swangle {
-
-
-
-            static float propogated_swangle(const float curr_swangle, const float requested_swangle) {
+            static float calc_swangle(const float curr_swangle, const float requested_swangle, float timestep) {
                 float delta_swangle = (requested_swangle - curr_swangle) / actuator_angular_speed;
                 // (theta0 - theta1) / (theta/t) = t
 
-                float propogated_swangle = curr_swangle + delta_swangle * approx_propogation_delay;
+                float swangle_ = curr_swangle + delta_swangle * timestep;
 
-                return propogated_swangle;
+                return swangle_;
             }
 
 
@@ -36,7 +33,7 @@ namespace controls {
             __host__ __device__ static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
                 const float swangle = action[action_swangle_idx];
                 const float curr_swangle = state[state_swangle_request_idx];
-                float propogated_swangle_ = propogated_swangle(curr_swangle, swangle);
+                float swangle_ = calc_swangle(curr_swangle, swangle, timestep);
 
                 const float state_tmp[4] = {
                     state[state_x_idx],
@@ -56,7 +53,7 @@ namespace controls {
 
                 memcpy(next_state, next_state_tmp, sizeof(next_state_tmp));
 
-                next_state[state_swangle_request_idx] = propogated_swangle_;
+                next_state[state_swangle_request_idx] = swangle_;
             }
         }
     }
