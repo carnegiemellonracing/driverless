@@ -23,6 +23,7 @@
 #include <random>
 #include <map>
 #include <stack>
+#include <queue>
 
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
@@ -566,8 +567,18 @@ namespace controls {
             RCLCPP_INFO(get_logger(), "-----------Action Received-----------");
             RCLCPP_INFO_STREAM(get_logger(), "X: " << m_world_state[0] << " Y: " << m_world_state[1] << " Yaw: " << m_world_state[2] << " Speed: " << m_world_state[3]);
             RCLCPP_INFO_STREAM(get_logger(), "Swangle: " << msg.swangle * (180 / M_PI) << "deg Torque f: " << msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr);
+             RCLCPP_INFO_STREAM(get_logger(), "Action_Queue Length: " << m_action_queue.size());
+            m_action_queue.push(msg);
+            if(m_action_queue.size() > int(prop_delay / (controller_period*1000))) { //prop_delay is in ms / 100ms  ~ 5 time steps
+                m_last_action_msg = msg;
+                m_last_action_msg.swangle = m_action_queue.front().swangle;
+                m_action_queue.pop();
+            }
+            else{
+                m_last_action_msg = msg;
+                m_last_action_msg.swangle = 0;
+            }
 
-            m_last_action_msg = msg;
         }
         /**
          * Fills output vector (some field of a ROS message) with the points in input vector starting at start and ending at end
@@ -783,6 +794,9 @@ int main(int argc, char* argv[]){
 
     controls::tests::g_config_dict = config_dict;
 
+
+    //Start of action queue
+
     // for(const auto & elem : config_dict)
     // {
     //     std::cout << elem.first << " " << elem.second << " " << "\n";
@@ -806,6 +820,7 @@ int main(int argc, char* argv[]){
     
     auto node = std::make_shared<controls::tests::TestNode>(config_dict);
 
+    
     rclcpp::on_shutdown(controls::tests::detect_all_collisions);
 
     rclcpp::spin(node);
