@@ -1,14 +1,6 @@
 #include "cones.hpp"
 
 namespace cones {
-    struct Cone {
-        geometry_msgs::msg::Point point;
-        double distance;
-        Cone(const geometry_msgs::msg::Point& p) : point(p) {
-            distance = std::sqrt(p.x * p.x + p.y * p.y);
-        }
-    };
-
     int get_cone_class(
         std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
         std::pair<cv::Mat, cv::Mat> frame_pair,
@@ -83,7 +75,7 @@ namespace cones {
         else return -1;
     }
 
-    Cone findClosestCone(const std::vector<Cone>& cones) {
+    Cone find_closest_cone(const std::vector<Cone>& cones) {
         if (cones.empty()) {
             throw std::runtime_error("Empty cone list");
         }
@@ -94,11 +86,11 @@ namespace cones {
             });
     }
 
-    double calculateAngle(const Cone& from, const Cone& to) {
+    double calculate_angle(const Cone& from, const Cone& to) {
         return std::atan2(to.point.y - from.point.y, to.point.x - from.point.x);
     }
 
-    std::vector<Cone> orderConesByPathDirection(const std::vector<Cone>& unordered_cones) {
+    std::vector<Cone> order_cones(const std::vector<Cone>& unordered_cones) {
         if (unordered_cones.size() <= 1) {
             return unordered_cones;
         }
@@ -107,7 +99,7 @@ namespace cones {
         std::vector<Cone> remaining_cones = unordered_cones;
         
         // Start with the closest cone to origin
-        Cone current_cone = findClosestCone(remaining_cones);
+        Cone current_cone = find_closest_cone(remaining_cones);
         ordered_cones.push_back(current_cone);
         
         // Remove the first cone from remaining cones
@@ -125,8 +117,8 @@ namespace cones {
             // Find next best cone based on distance and angle continuation
             auto next_cone_it = std::min_element(remaining_cones.begin(), remaining_cones.end(),
                 [&](const Cone& a, const Cone& b) {
-                    double angle_a = calculateAngle(current_cone, a);
-                    double angle_b = calculateAngle(current_cone, b);
+                    double angle_a = calculate_angle(current_cone, a);
+                    double angle_b = calculate_angle(current_cone, b);
                     
                     // Calculate angle differences
                     double angle_diff_a = std::abs(angle_a - prev_angle);
@@ -143,7 +135,7 @@ namespace cones {
 
             current_cone = *next_cone_it;
             ordered_cones.push_back(current_cone);
-            prev_angle = calculateAngle(ordered_cones[ordered_cones.size()-2], current_cone);
+            prev_angle = calculate_angle(ordered_cones[ordered_cones.size()-2], current_cone);
             remaining_cones.erase(next_cone_it);
         }
 

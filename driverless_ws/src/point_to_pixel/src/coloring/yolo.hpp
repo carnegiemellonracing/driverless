@@ -4,7 +4,7 @@
 #include <opencv2/dnn.hpp>
 #include <Eigen/Dense>
 
-namespace coloring {
+namespace cones {
     namespace yolo {
         /**
          * @brief Uses YOLO to determine cone color

@@ -2,6 +2,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <Eigen/Dense>
+#include <geometry_msgs/msg/point.hpp>
 #include "hsv.hpp"
 #include "yolo.hpp"
 
@@ -31,6 +32,16 @@ namespace cones
             double confidence_threshold
         );
     }
+
+    struct Cone
+    {
+        geometry_msgs::msg::Point point;
+        double distance;
+        Cone(const geometry_msgs::msg::Point &p) : point(p)
+        {
+            distance = std::sqrt(p.x * p.x + p.y * p.y);
+        }
+    };
 
     /**
      * @brief Determines cone class from pixel pairs across cameras
@@ -69,7 +80,7 @@ namespace cones
      * @return std::vector<Cone> Vector of ordered cones
      */
 
-    std::vector<Cone> orderConesByPathDirection(const std::vector<Cone>& unordered_cones);}
+    std::vector<Cone> order_cones(const std::vector<Cone>& unordered_cones);
 
     /**
      * @brief Finds the next closest cone to the first cone in the vector
@@ -77,7 +88,7 @@ namespace cones
      * @param cones Vector of cones
      * @return Cone Closest cone
      */
-    Cone findClosestCone(const std::vector<Cone>& cones);
+    Cone find_closest_cone(const std::vector<Cone>& cones);
 
     /**
      * @brief Calculates the angle between two cones
@@ -86,4 +97,5 @@ namespace cones
      * @param to Second cone
      * @return double Angle in radians
      */
-    double calculateAngle(const Cone& from, const Cone& to);
+    double calculate_angle(const Cone& from, const Cone& to);
+}

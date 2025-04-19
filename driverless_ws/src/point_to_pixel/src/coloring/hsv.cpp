@@ -1,6 +1,6 @@
 #include "hsv.hpp"
 
-namespace coloring {
+namespace cones {
     namespace hsv {
         std::pair<int, double> get_color(
             Eigen::Vector3d& pixel,

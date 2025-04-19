@@ -55,7 +55,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(POINT_TO_PIXEL_SRC  
   src/transform/transform.cpp
   src/camera/camera.cpp
-  src/coloring/coloring.cpp
+  src/coloring/cones.cpp
   src/coloring/hsv.cpp
   src/coloring/yolo.cpp
   src/ros_node/point_to_pixel_node.cpp

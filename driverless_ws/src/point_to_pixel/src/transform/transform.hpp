@@ -3,7 +3,8 @@
 #include <Eigen/Dense>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/eigen.hpp>
-#include "geometry_msgs/msg/vector3.hpp"
+#include "geometry_msgs/msg/vector3_stamped.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 /**
@@ -45,9 +46,9 @@ std::pair<double, double> global_frame_to_local_frame(
  */
 std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_velocity_yaw(
     const rclcpp::Logger &logger,
-    const std::mutex &yaw_mutex,
-    const std::mutex &velocity_mutex,
-    const std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> &velocity_deque;
-    const std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> &yaw_deque;
-    uint64_t frameTime,
+    std::mutex *yaw_mutex,
+    std::mutex *velocity_mutex,
+    const std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> &velocity_deque,
+    const std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> &yaw_deque,
+    uint64_t frameTime
 );

@@ -3,7 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Dense>
 
-namespace coloring {
+namespace cones {
     namespace hsv {
         /**
          * @brief Uses HSV color filtering to determine cone color

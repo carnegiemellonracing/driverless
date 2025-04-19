@@ -1,38 +1,25 @@
-    #include "point_to_pixel_node.hpp"
+#include "point_to_pixel_node.hpp"
 
-    // Project Headers
-    #include "../transform/transform.hpp"
-    #include "../camera/camera.hpp"
-    #include "../coloring/coloring.hpp"
+// Constructor definition
+PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
+    params([]() {sl_oc::video::VideoParams p; p.res = sl_oc::video::RESOLUTION::HD1080; p.fps = sl_oc::video::FPS::FPS_30; return p;}()),
+    cap_l(sl_oc::video::VideoCapture(params)),
+    cap_r(sl_oc::video::VideoCapture(params))
+{
+    // ---------------------------------------------------------------------------
+    //                              CAMERA INITIALIZATION
+    // ---------------------------------------------------------------------------
 
-    // Standard Imports
-    #include <deque>
-    #include <queue>
-    #include <memory>
-    #include <chrono>
-    #include <filesystem>
-
-    // Constructor definition
-    PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
-        params([]() {sl_oc::video::VideoParams p; p.res = sl_oc::video::RESOLUTION::HD1080; p.fps = sl_oc::video::FPS::FPS_30; return p;}()),
-        cap_l(sl_oc::video::VideoCapture(params)),
-        cap_r(sl_oc::video::VideoCapture(params))
-    {
-        // ---------------------------------------------------------------------------
-        //                              CAMERA INITIALIZATION
-        // ---------------------------------------------------------------------------
-
-        // Initialize cameras
-        if (!initialize_camera(cap_l, 0, map_left_x_ll, map_left_y_ll, map_right_x_lr, map_right_y_lr, get_logger())) {
-            rclcpp::shutdown(); // Shutdown node if camera initialization fails
-            return;
-        }
-        
-        if (!initialize_camera(cap_r, 2, map_left_x_rl, map_left_y_rl, map_right_x_rr, map_right_y_rr, get_logger())) {
-            rclcpp::shutdown(); // Shutdown node if camera initialization fails
-            return;
-        }
-    #endif
+    // Initialize cameras
+    if (!initialize_camera(cap_l, 0, map_left_x_ll, map_left_y_ll, map_right_x_lr, map_right_y_lr, get_logger())) {
+        rclcpp::shutdown(); // Shutdown node if camera initialization fails
+        return;
+    }
+    
+    if (!initialize_camera(cap_r, 2, map_left_x_rl, map_left_y_rl, map_right_x_rr, map_right_y_rr, get_logger())) {
+        rclcpp::shutdown(); // Shutdown node if camera initialization fails
+        return;
+    }
 
     // Default Color Parameters
     std::vector<long int> ly_filter_default{0, 0, 0};
@@ -287,7 +274,7 @@ int PointToPixelNode::get_cone_class(
     std::pair<cv::Mat, cv::Mat> frame_pair,
     std::pair<std::vector<cv::Mat> , std::vector<cv::Mat> > detection_pair
 ) {
-    return coloring::get_cone_class(
+    return cones::get_cone_class(
         pixel_pair,
         frame_pair,
         detection_pair,
@@ -343,12 +330,12 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
         #endif
 
         // Process frames with YOLO
-        std::vector<cv::Mat> detection_l = coloring::yolo::process_frame(std::get<1>(frame_tuple), net);
+        std::vector<cv::Mat> detection_l = cones::yolo::process_frame(std::get<1>(frame_tuple), net);
         #if timing
         auto yolo_l_end_time = high_resolution_clock::now();
         #endif
 
-        std::vector<cv::Mat> detection_r = coloring::yolo::process_frame(std::get<3>(frame_tuple), net);
+        std::vector<cv::Mat> detection_r = cones::yolo::process_frame(std::get<3>(frame_tuple), net);
         #if timing
             auto yolo_r_end_time = high_resolution_clock::now();
             RCLCPP_INFO(get_logger(), "Total yolo time %llu ms", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_start_time).count());
@@ -367,11 +354,11 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     #endif
 
     // Motion modeling for both frames
-    auto [velocity_l_camera_frame, yaw_l_camera_frame] = get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, std::get<0>(frame_tuple));
-    auto [velocity_r_camera_frame, yaw_r_camera_frame] = get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, std::get<2>(frame_tuple));
+    auto [velocity_l_camera_frame, yaw_l_camera_frame] = get_velocity_yaw(get_logger(), &yaw_mutex, &velocity_mutex, velocity_deque, yaw_deque, std::get<0>(frame_tuple));
+    auto [velocity_r_camera_frame, yaw_r_camera_frame] = get_velocity_yaw(get_logger(), &yaw_mutex, &velocity_mutex, velocity_deque, yaw_deque, std::get<2>(frame_tuple));
 
     auto current_lidar_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
-    auto [velocity_lidar_frame, yaw_lidar_frame] = get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, current_lidar_time);
+    auto [velocity_lidar_frame, yaw_lidar_frame] = get_velocity_yaw(get_logger(), &yaw_mutex, &velocity_mutex, velocity_deque, yaw_deque, current_lidar_time);
 
     if (velocity_lidar_frame == nullptr || yaw_lidar_frame == nullptr)
     {
@@ -477,14 +464,14 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
 
     // Cone ordering
     if (!unordered_yellow_cones.empty()) {
-        std::vector<cones::Cone> ordered_yellow = cones::orderConesByPathDirection(unordered_yellow_cones);
+        std::vector<cones::Cone> ordered_yellow = cones::order_cones(unordered_yellow_cones);
         for (const auto& cone : ordered_yellow) {
             message.yellow_cones.push_back(cone.point);
         }
     }
 
     if (!unordered_blue_cones.empty()) {
-        std::vector<cones::Cone> ordered_blue = cones::orderConesByPathDirection(unordered_blue_cones);
+        std::vector<cones::Cone> ordered_blue = cones::order_cones(unordered_blue_cones);
         for (const auto& cone : ordered_blue) {
             message.blue_cones.push_back(cone.point);
         }
@@ -506,8 +493,8 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
         cv::Mat frame_r_canvas = frame_pair.second.clone();
         float alpha = .3;
 
-        coloring::yolo::draw_bounding_boxes(frame_pair.first, frame_l_canvas, detection_l, frame_pair.first.cols, frame_pair.first.rows, confidence_threshold);
-        coloring::yolo::draw_bounding_boxes(frame_pair.second, frame_r_canvas, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows, confidence_threshold);
+        cones::yolo::draw_bounding_boxes(frame_pair.first, frame_l_canvas, detection_l, frame_pair.first.cols, frame_pair.first.rows, confidence_threshold);
+        cones::yolo::draw_bounding_boxes(frame_pair.second, frame_r_canvas, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows, confidence_threshold);
 
         #endif
 

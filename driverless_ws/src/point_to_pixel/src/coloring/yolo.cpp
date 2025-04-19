@@ -1,7 +1,7 @@
 #include "yolo.hpp"
 #include <vector>
 
-namespace coloring {
+namespace cones {
     namespace yolo {
         std::pair<int, double> get_color(
             Eigen::Vector3d& pixel,
@@ -17,6 +17,7 @@ namespace coloring {
             float x_scale = static_cast<float>(cols) / 640.0f;
             float y_scale = static_cast<float>(rows) / 640.0f;
 
+            float prob = 0.0f; // Store higher probability here
             std::vector<std::pair<double, int>> boxes = {}; // Vector of (dist from center, cone class)
             
             // Loop through detections
@@ -39,16 +40,16 @@ namespace coloring {
                     // If pixel is inside the bounding box add color to the vector of all boxes pixel is in
                     if (pixel(0) > x && pixel(0) < x + width && pixel(1) > y && pixel(1) < y + height) {
                         int c_c;
-                        float conf = 0.0f;
 
                         for (int j = 0; j < 5; j++) {
-                            if (data[i * attributes + j + 5] > conf) {
+                            if (data[i * attributes + j + 5] > prob) {
                                 c_c = j;
-                                conf = data[i * attributes + j + 5];
+                                prob = data[i * attributes + j + 5];
                             };
                         }
 
-                        float dist_from_center = std::sqrt((pixel(0) - cx * x_scale)**2 + (pixel(1) - cy * y_scale)**2);
+                        float dist_from_center = std::sqrt((pixel(0) - cx * x_scale) *(pixel(0) - cx * x_scale) + 
+                                                           (pixel(1) - cy * y_scale) * (pixel(1) - cy * y_scale));
                         boxes.push_back(std::make_pair(dist_from_center, c_c));
                     }
                 }
@@ -65,13 +66,13 @@ namespace coloring {
 
                 switch (cone_class) {
                     case 0:
-                        return std::make_pair(2, conf);  // Blue
+                        return std::make_pair(2, prob); // Blue
                     case 4:
-                        return std::make_pair(1, conf);  // Yellow
+                        return std::make_pair(1, prob); // Yellow
                     case 2:
-                        return std::make_pair(0, conf);  // Orange
+                        return std::make_pair(0, prob); // Orange
                     case 3:
-                        return std::make_pair(0, conf);  // Big Orange
+                        return std::make_pair(0, prob); // Big Orange
                     default:
                         return std::make_pair(-1, 0.0);  // Unknown
                 }
