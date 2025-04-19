@@ -26,6 +26,7 @@ namespace controls {
             // on_pose is not used, for future proofing
             void on_pose(const PoseMsg& pose_msg) override;
             void on_position_lla(const PositionLLAMsg& position_lla_msg) override;
+            void on_swangle(const SwangleMsg& swangle_msg) override;
 
 
             void render_and_sync(State state) override;

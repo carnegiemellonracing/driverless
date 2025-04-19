@@ -40,6 +40,8 @@ namespace controls {
 
             void record_yaw(float yaw, rclcpp::Time time);
 
+            void record_swangle(float swangle, rclcpp::Time time);
+
             /**
              * @brief "main" projection function. Projects the state of the car at a given time, from the most
              * recent pose record and the history of actions and speeds since that pose record.

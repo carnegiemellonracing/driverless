@@ -11,7 +11,7 @@
 #include <interfaces/msg/controller_info.hpp>
 #include <geometry_msgs/msg/vector3_stamped.hpp>
 #include <interfaces/msg/cone_array.hpp>
-#include "std_msgs/msg/float32.hpp"
+#include <interfaces/msg/swangle.hpp>
 namespace controls {
     /// ROS Message Types
     ///@TODO: why not use std_msgs/Header for our custom messages?

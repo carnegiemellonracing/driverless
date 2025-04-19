@@ -144,6 +144,14 @@ namespace controls {
             });
         }
 
+        void StateProjector::record_swangle(float swangle, rclcpp::Time time) {
+            m_history_since_pose.insert(Record {
+                .swangle = swangle,
+                .time = time,
+                .type = Record::Type::Swangle
+            });
+        }
+
         static void record_state(size_t time_ns, const State& state, std::stringstream& output_stream) {
             if (log_state_projection_history) {
                 output_stream << "[0]Time: " << time_ns << "ns|||";

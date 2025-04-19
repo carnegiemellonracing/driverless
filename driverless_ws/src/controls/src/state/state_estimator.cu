@@ -374,6 +374,12 @@ namespace controls {
             m_state_projector.record_position_lla(pair.first, pair.second, position_lla_msg.header.stamp);
         }
 
+        void StateEstimator_Impl::on_swangle(const SwangleMsg& swangle_msg) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+            const float swangle = swangle_msg.data;
+            m_state_projector.record_swangle(swangle, swangle_msg.header.stamp);
+        }
+
         static SplineMsg spline_frames_to_msg(std::vector<glm::fvec2> frames_vec) {
             SplineMsg frames_msg;
             frames_msg.frames.reserve(frames_vec.size());

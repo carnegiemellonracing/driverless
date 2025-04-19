@@ -276,6 +276,7 @@ namespace controls {
                 RCLCPP_DEBUG(get_logger(), "Received swangle: %f", swangle_msg.data);
                 float swangle = swangle_msg.data;
                 m_last_swangle = swangle;
+                m_state_estimator->on_swangle(swangle_msg);
             }
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
