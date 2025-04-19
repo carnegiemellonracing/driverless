@@ -94,6 +94,8 @@ namespace controls {
             rclcpp::Publisher<TwistMsg>::SharedPtr m_twist_publisher;
             rclcpp::Publisher<ConeMsg>::SharedPtr m_cone_publisher;
 
+            rclcpp::Publisher<SwangleMsg>::SharedPtr m_swangle_publisher;
+
             rclcpp::TimerBase::SharedPtr m_track_timer;
             rclcpp::TimerBase::SharedPtr m_gps_timer;
             rclcpp::TimerBase::SharedPtr m_sim_timer;

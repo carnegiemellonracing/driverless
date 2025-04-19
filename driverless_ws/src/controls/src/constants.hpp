@@ -15,6 +15,7 @@ namespace controls {
         POSITIONLLA_YAW_SPEED
     };
     extern float approx_propogation_delay;
+    extern float actuator_angular_speed;
     extern bool follow_midline_only;
     extern bool testing_on_rosbag;
     extern bool ingest_midline;
@@ -57,7 +58,7 @@ namespace controls {
     constexpr uint32_t num_samples = 64 * 1024; ///< Number of trajectories sampled each controller step
     constexpr uint32_t num_timesteps = 16; ///< Number of controller steps simulated into the future
     constexpr uint8_t action_dims = 2; ///< \f$q\f$, dimensions of @ref Action
-    constexpr uint8_t state_dims = 4; ///< \f$p\f$, dimensions of @ref State
+    constexpr uint8_t state_dims = 5; ///< \f$p\f$, dimensions of @ref State
     constexpr float temperature = 1.0f; ///< Convergence speed/stability tradeoff, see LaTeX for more details
     constexpr unsigned long long seed = 0; ///< For brownian pseudo-RNG.
     /// Number of elements in the tensor containing all the sampled action trajectories.
@@ -173,6 +174,7 @@ namespace controls {
     constexpr uint8_t state_y_idx = 1;
     constexpr uint8_t state_yaw_idx = 2;
     constexpr uint8_t state_speed_idx = 3;
+    constexpr uint8_t state_swangle_idx = 4;
 
     constexpr uint8_t action_swangle_idx = 0;
     constexpr uint8_t action_torque_idx = 1;

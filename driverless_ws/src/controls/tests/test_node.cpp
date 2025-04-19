@@ -228,6 +228,8 @@ namespace controls {
               m_twist_publisher{create_publisher<TwistMsg>(world_twist_topic_name, world_twist_qos)},
               m_cone_publisher{create_publisher<ConeMsg>(cone_topic_name, spline_qos)},
 
+              m_swangle_publisher{create_publisher<SwangleMsg>(swangle_topic_name, swangle_qos)},
+
               m_config_dict{config_dict},
               m_all_segments{parse_segments_specification(getenv("DRIVERLESS") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
 
@@ -559,6 +561,10 @@ namespace controls {
             glm::fvec2 world_state_vec {m_world_state[0], m_world_state[1]};
             
             g_car_poses.push_back(std::make_tuple(world_state_vec, m_world_state[2], m_time.seconds() - m_start_time.seconds()));
+            
+            SwangleMsg msg;
+            msg.data = m_world_state[3];
+            m_swangle_publisher->publish(msg);
         }
 
 
