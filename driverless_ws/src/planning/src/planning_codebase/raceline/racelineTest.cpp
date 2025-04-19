@@ -18,7 +18,58 @@ double ftom(int a){
     return (double) a * 0.3048;
 }
 
-/* Squidward track */
+void parseConesFromFile(const std::string& filename, std::vector<std::pair<double, double>>& blue_cones,
+                                                     std::vector<std::pair<double, double>>& yellow_cones) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+    std::cerr << "Error: Could not open file " << filename << std::endl;
+    return;
+    }
+
+    std::string line;
+
+    while (std::getline(file, line)) {
+    // Skip empty lines
+    if (line.empty()) continue;
+
+    // Find the colon positions
+    size_t type_pos = line.find(' ');
+    size_t first_colon = line.find(':', type_pos);
+    size_t second_colon = line.find(':', first_colon + 1);
+
+    if (type_pos == std::string::npos || 
+    first_colon == std::string::npos || 
+    second_colon == std::string::npos) {
+    std::cerr << "Warning: Invalid line format - " << line << std::endl;
+    continue;
+    }
+
+    // Extract cone type (b or y)
+    std::string cone_type = line.substr(type_pos + 1, 1);
+
+    // Extract x and y coordinates
+    std::string x_str = line.substr(first_colon + 1, second_colon - first_colon - 1);
+    std::string y_str = line.substr(second_colon + 1);
+
+    try {
+    double x = std::stod(x_str);
+    double y = std::stod(y_str);
+
+    if (cone_type == "b") {
+    blue_cones.emplace_back(x, y);
+    } else if (cone_type == "y") {
+    yellow_cones.emplace_back(x, y);
+    } else {
+    std::cerr << "Warning: Unknown cone type '" << cone_type << "' in line: " << line << std::endl;
+    }
+    } catch (const std::exception& e) {
+    std::cerr << "Warning: Could not parse coordinates in line: " << line << " - " << e.what() << std::endl;
+    }
+    }
+
+    file.close();
+}
+
 void createSquidwardTrack(std::vector<std::tuple<double,double,int>> &blue_cones,
                             std::vector<std::tuple<double,double,int>> &yellow_cones) {
     yellow_cones = {
@@ -54,26 +105,8 @@ void createSquidwardTrack(std::vector<std::tuple<double,double,int>> &blue_cones
     };
 }
 
-// semi circle with straight line after, should gen 3 splines, 2 for semicircle, 1 for straight
-// std::vector<std::pair<double,double>> yellow_cones = {
-//     std::make_pair(0, 20),
-//     std::make_pair(9.25, 17.73),
-//     std::make_pair(17.5, 9.68),
-//     std::make_pair(20, 0),
-//     std::make_pair(18.25, -8.18),
-//     std::make_pair(13.24, -14.99),
-//     std::make_pair(0, -20), 
-    // std::make_pair(-5, -20),
-    // std::make_pair(-10, -20),
-    // std::make_pair(0, -20)  
-// };
-
-// wave 1 spline
-/* Wave spline */
-
 void createWaveTrack(std::vector<std::pair<double, double>> &blue_cones, 
                         std::vector<std::pair<double, double>> &yellow_cones) {
-
 
     yellow_cones = {
         std::make_pair(0, 20),
@@ -148,7 +181,6 @@ void createParabToStraightTrack(std::vector<std::pair<double, double>> &blue_con
     };                
 }
 
-
 void print_poly(std::ofstream& outFile, Spline x, Spline y) {
     outFile << "(["<< x.spl_poly.nums(0) << "," << x.spl_poly.nums(1) << ","
      << x.spl_poly.nums(2) << "," << x.spl_poly.nums(3) << "]," 
@@ -160,7 +192,7 @@ int main() {
     std::vector<std::tuple<double, double, int>> blue_cones = {};
     std::vector<std::tuple<double, double, int>> yellow_cones = {};
     
-    createSquidwardTrack(blue_cones, yellow_cones);
+    parseConesFromFile("slam_cones.txt", blue_cones, yellow_cones);
     
     int max_total_raceline_gen_time = std::numeric_limits<int>::min();
     std::vector<std::vector<double>> sample_raceline_splines;
