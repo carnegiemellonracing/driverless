@@ -32,10 +32,12 @@
 #include <tuple>
 #include <vector>
 
-#include <utils/macros.hpp>
+#include <model/steering/test_node_steering_model_host.h>
 #include <utils/general_utils.hpp>
 
 namespace controls {
+
+    float test_node_actuator_angular_speed;
     namespace tests {
 
         std::vector<std::tuple<glm::fvec2, float, float>> g_car_poses; // <(x,y), heading, time of state>
@@ -561,7 +563,7 @@ namespace controls {
 
             double sim_time = m_time.nanoseconds() / 1.0e9;
             m_time = get_clock()->now();
-            HOST_DYNAMICS_FUNC(orig_world_state.data(), action, m_world_state.data(), m_time.nanoseconds() / 1.0e9 - sim_time);
+            controls::model_host::test_node_steering::dynamics(orig_world_state.data(), action, m_world_state.data(), m_time.nanoseconds() / 1.0e9 - sim_time);
 
             update_visible_indices();
             update_track_time();
@@ -795,6 +797,7 @@ int main(int argc, char* argv[]){
     }
 
     controls::tests::g_config_dict = config_dict;
+    controls::test_node_actuator_angular_speed = std::stof(config_dict["test_node_actuator_angular_speed"]);
 
     // for(const auto & elem : config_dict)
     // {

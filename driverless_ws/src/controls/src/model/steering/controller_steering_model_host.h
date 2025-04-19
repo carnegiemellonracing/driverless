@@ -10,13 +10,14 @@
 #include <model/sysid/sysid_model_host.h>
 
 namespace controls {
+    extern float controller_actuator_angular_speed;
+
     namespace model_host {
         namespace steering {
             // moves curr_swangle towards requested_swangle (both have the same axes)
             static float calc_swangle(const float curr_swangle, const float requested_swangle, float timestep) {
-                float delta_swangle = (requested_swangle - curr_swangle) * actuator_angular_speed;
+                float delta_swangle = (requested_swangle - curr_swangle) * controller_actuator_angular_speed;
                 // (theta0 - theta1) / (theta/t) = t
-
 
                 float swangle_ = curr_swangle + delta_swangle * timestep;
 

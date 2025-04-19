@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include <model/steering/steering_model_host.h>
+#include <model/steering/controller_steering_model_host.h>
 
 namespace controls {
     namespace model {

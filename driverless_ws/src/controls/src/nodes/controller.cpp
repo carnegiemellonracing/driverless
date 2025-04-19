@@ -43,7 +43,7 @@ namespace controls {
     bool publish_spline;
     bool log_state_projection_history;
     bool no_midline_controller;
-
+    float controller_actuator_angular_speed;
 
 
 
@@ -769,7 +769,6 @@ static int process_config_file(std::string config_file_path) {
     }
 
     approx_propogation_delay = std::stof(config_dict["approx_propogation_delay"]);
-    actuator_angular_speed = std::stof(config_dict["actuator_angular_speed"]);
     follow_midline_only = config_dict["follow_midline_only"] == "true" ? true : false;
 
     testing_on_rosbag = config_dict["testing_on_rosbag"] == "true" ? true : false;
@@ -786,6 +785,7 @@ static int process_config_file(std::string config_file_path) {
     
     publish_spline = config_dict["publish_spline"] == "true" ? true : false;
     log_state_projection_history = config_dict["log_state_projection_history"] == "true" ? true : false;
+    controller_actuator_angular_speed = std::stof(config_dict["controller_actuator_angular_speed"]); 
 
     return 0;
 }
