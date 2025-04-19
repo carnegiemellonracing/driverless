@@ -85,12 +85,16 @@ namespace controls {
                 
             
                 
-                m_slam_subscription = create_subscription<SlamMsg>(
+                m_slam_pose_subscription = create_subscription<SlamPoseMsg>(
                     slam_pose_topic_name, slam_pose_qos,
+                    [this](const SlamMsg::SharedPtr msg)
+                    { slam_pose_callback(*msg); },
+                    options);
+                m_slam_chunk_subscription = create_subscription<SlamMsg>(
+                    slam_chunk_topic_name, slam_chunk_qos,
                     [this](const SlamMsg::SharedPtr msg)
                     { slam_callback(*msg); },
                     options);
-            
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
 
             launch_aim_communication().detach();
@@ -276,6 +280,14 @@ namespace controls {
                     m_state_estimator->on_pose(pose_msg);
                 }
 
+            }
+            void ControllerNode::slam_callback(const SlamMsg &slam_msg) {
+                RCLCPP_DEBUG(get_logger(), "Received slam message");
+
+                {
+                    std::lock_guard<std::mutex> guard {m_state_mut};
+                    m_state_estimator->on_slam(slam_msg);
+                }
             }
 
             void ControllerNode::pid_callback(const PIDMsg& pid_msg) {

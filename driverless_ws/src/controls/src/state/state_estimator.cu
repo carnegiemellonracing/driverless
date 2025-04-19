@@ -65,7 +65,7 @@ namespace controls {
             // std::cout << "Recording action " << action[0] << ", " << action[1] << " at time " << time.nanoseconds() << std::endl;
 
             // change to assert(!m_pose_record.has_value() || time >= m_pose_record.value().time)
-            assert(m_pose_record.has_value() && time >= m_pose_record.value().time
+            assert(m_slam_pose_record.has_value() && time >= m_slam_pose_record.value().time
                 && "call me marty mcfly the way im time traveling");
 
             m_history_since_pose.insert(Record {
@@ -80,7 +80,7 @@ namespace controls {
         void StateProjector::record_speed(float speed, rclcpp::Time time) {
             // std::cout << "Recording speed " << speed << " at time " << time.nanoseconds() << std::endl;
 
-            if (m_pose_record.has_value() && time < m_pose_record.value().time) {
+            if (m_slam_pose_record.has_value() && time < m_slam_pose_record.value().time) {
                 if (time > m_init_speed.time) {
                     m_init_speed = Record {
                         .speed = speed,
@@ -99,37 +99,41 @@ namespace controls {
             // print_history();
         }
 
-        void StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time) {
+        void StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time, int chunk = 9999999) {
             // std::cout << "Recording pose " << x << ", " << y << ", " << yaw << " at time " << time.nanoseconds() << std::endl;
+            
 
-            m_pose_record = Record {
-                .pose = {
-                    .x = x,
-                    .y = y,
-                    .yaw = yaw
+            m_slam_pose_record = Record {
+                .slamPose = {
+                    .current_chunk_id = chunk,
+                    .pose = {
+                        .x = x,
+                        .y = y,
+                        .yaw = yaw
+                    }
                 },
                 .time = time,
-                .type = Record::Type::Pose
+                .type = Record::Type::SlamPose
             };
 
             auto record_iter = m_history_since_pose.begin();
             for (; record_iter != m_history_since_pose.end(); ++record_iter) {
-                if (record_iter->time > time) {
-                    break;
-                }
+            if (record_iter->time > time) {
+                break;
+            }
 
-                switch (record_iter->type) {
-                    case Record::Type::Action:
-                        m_init_action = *record_iter;
-                        break;
+            switch (record_iter->type) {
+                case Record::Type::Action:
+                m_init_action = *record_iter;
+                break;
 
-                    case Record::Type::Speed:
-                        m_init_speed = *record_iter;
-                        break;
+                case Record::Type::Speed:
+                m_init_speed = *record_iter;
+                break;
 
-                    default:
-                        throw new std::runtime_error("bruh. invalid record type bruh. (in record pose)");
-                }
+                default:
+                throw new std::runtime_error("bruh. invalid record type bruh. (in record pose)");
+            }
             }
 
             m_history_since_pose.erase(m_history_since_pose.begin(), record_iter);
@@ -138,17 +142,17 @@ namespace controls {
         }
 
         State StateProjector::project(const rclcpp::Time& time, LoggerFunc logger) const {
-            assert(m_pose_record.has_value() && "State projector has not recieved first pose");
+            assert(m_slam_pose_record.has_value() && "State projector has not recieved first pose");
             // std::cout << "Projecting to " << time.nanoseconds() << std::endl;
 
             State state;
-            state[state_x_idx] = m_pose_record.value().pose.x;
-            state[state_y_idx] = m_pose_record.value().pose.y;
-            state[state_yaw_idx] = m_pose_record.value().pose.yaw;
+            state[state_x_idx] = m_slam_pose_record.value().pose.x;
+            state[state_y_idx] = m_slam_pose_record.value().pose.y;
+            state[state_yaw_idx] = m_slam_pose_record.value().pose.yaw;
             state[state_speed_idx] = m_init_speed.speed;
 
             const auto first_time = m_history_since_pose.empty() ? time : m_history_since_pose.begin()->time;
-            const float delta_time = (first_time.nanoseconds() - m_pose_record.value().time.nanoseconds()) / 1e9f;
+            const float delta_time = (first_time.nanoseconds() - m_slam_pose_record.value().time.nanoseconds()) / 1e9f;
             // std::cout << "delta time: " << delta_time << std::endl;
             assert(delta_time > 0 && "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
             // simulates up to first_time
@@ -188,7 +192,7 @@ namespace controls {
         }
 
         bool StateProjector::is_ready() const {
-            return m_pose_record.has_value();
+            return m_slam_pose_record.has_value();
         }
 
 
@@ -304,7 +308,7 @@ namespace controls {
         StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger)
             : m_mutex {mutex}, m_logger {logger}, m_logger_obj {rclcpp::get_logger("")} {
             std::lock_guard<std::mutex> guard {mutex};
-
+            extern std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
             m_logger("initializing state estimator");
 #ifdef DISPLAY
             m_gl_window = utils::create_sdl2_gl_window(
@@ -477,7 +481,7 @@ namespace controls {
 #endif
 
             if constexpr (reset_pose_on_cone) {
-                m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
+                m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp,0);
             }
             
             m_logger("finished state estimator cone processing");
@@ -503,6 +507,72 @@ namespace controls {
                 pose_msg.header.stamp);
         }
 
+        void StateEstimator_Impl::on_slam_pose(const SlamPoseMsg& slam_msg) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            m_state_projector.record_pose(
+                slam_msg.pose.position.x, slam_msg.pose.position.y, slam_msg.pose.orientation.z,
+                slam_msg.header.stamp, slam_msg.current_chunk_id);
+        }
+
+        void StateEstimator_Impl::on_slam(const SlamMsg& slam_msg, const rclcpp::Time& time) {
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            m_logger("beginning state estimator SLAM processing");
+
+            // Populate the slam_chunks map with the incoming SLAM message
+            auto& chunk = m_slam_chunks[slam_msg.chunk_id.data];
+            chunk.first = process_ros_points(slam_msg.blue_cones);
+            chunk.second = process_ros_points(slam_msg.yellow_cones);
+
+            // Clear the current left and right cone points
+            m_left_cone_points.clear();
+            m_right_cone_points.clear();
+
+            // Iterate through the map and aggregate all cone points
+            for (const auto& [chunk_id, cones] : m_slam_chunks) {
+            m_left_cone_points.insert(m_left_cone_points.end(), cones.first.begin(), cones.first.end());
+            m_right_cone_points.insert(m_right_cone_points.end(), cones.second.begin(), cones.second.end());
+            }
+
+            float svm_time = 0.0f;
+
+            if constexpr (!ingest_midline) {
+            midline::Cones cones;
+            for (const auto& cone : m_left_cone_points) {
+                cones.addBlueCone(cone.x, cone.y, 0);
+            }
+            for (const auto& cone : m_right_cone_points) {
+                cones.addYellowCone(cone.x, cone.y, 0);
+            }
+
+            auto svm_start = std::chrono::high_resolution_clock::now();
+            auto spline_frames = midline::svm_slow::cones_to_midline(cones);
+            auto svm_end = std::chrono::high_resolution_clock::now();
+            svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
+
+            m_spline_frames.clear();
+            for (const auto& frame : spline_frames) {
+                paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
+                m_spline_frames.emplace_back(frame.first, frame.second);
+            }
+            }
+
+    #ifdef DISPLAY
+            m_all_left_cone_points.clear();
+            m_all_right_cone_points.clear();
+
+            m_all_left_cone_points = process_ros_points(slam_msg.orange_cones);
+            m_all_right_cone_points = process_ros_points(slam_msg.unknown_color_cones);
+            m_raceline_points = process_ros_points(slam_msg.big_orange_cones);
+    #endif
+
+            if constexpr (reset_pose_on_cone) {
+            m_state_projector.record_pose(0, 0, M_PI_2, time, 0);
+            }
+
+            m_logger("finished state estimator SLAM processing");
+        }
 
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};

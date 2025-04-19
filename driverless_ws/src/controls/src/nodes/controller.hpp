@@ -54,6 +54,8 @@ namespace controls {
 
             void slam_callback(const SlamMsg& slam_msg);
 
+            void slam_pose_callback(const SlamPoseMsg& slam_pose_msg);
+
             /**
              * Callback for world twist subscription. Forwards message to `StateEstimator::on_world_twist`, and notifies MPPI
              * thread of the dirty state. Likely from GPS.
@@ -110,6 +112,7 @@ namespace controls {
             rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;
             rclcpp::Subscription<PIDMsg>::SharedPtr m_pid_subscription;
             rclcpp::Subscription<SlamMsg>::SharedPtr m_slam_subscription; ///< Subscribes to SLAM chunks
+            rclcpp::Subscription<SlamPoseMsg>::SharedPtr m_slam_pose_subscription; ///< Subscribes to SLAM pose
             // ConeArray = /lidar_node_cones
 
             /**
