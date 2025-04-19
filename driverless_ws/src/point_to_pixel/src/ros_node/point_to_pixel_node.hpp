@@ -9,14 +9,6 @@
 #include "interfaces/msg/cone_list.hpp"
 #include "interfaces/msg/cone_array.hpp"
 
-<<<<<<< Updated upstream
-=======
-// Project Headers
-#include "../transform/transform.hpp"
-#include "../camera/camera.hpp"
-#include "../coloring/cones.hpp"
-
->>>>>>> Stashed changes
 using std::chrono::duration;
 using std::chrono::duration_cast;
 using std::chrono::high_resolution_clock;

@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
     #include "point_to_pixel_node.hpp"
 
     // Project Headers
@@ -32,58 +31,6 @@
         if (!initialize_camera(cap_r, 2, map_left_x_rl, map_left_y_rl, map_right_x_rr, map_right_y_rr, get_logger())) {
             rclcpp::shutdown(); // Shutdown node if camera initialization fails
             return;
-=======
-#include "point_to_pixel_node.hpp"
-
-// Standard Imports
-#include <deque>
-#include <queue>
-#include <memory>
-#include <chrono>
-#include <filesystem>
-
-// Constructor definition
-PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
-    params([]() {sl_oc::video::VideoParams p; p.res = sl_oc::video::RESOLUTION::HD1080; p.fps = sl_oc::video::FPS::FPS_30; return p;}()),
-    cap_l(sl_oc::video::VideoCapture(params)),
-    cap_r(sl_oc::video::VideoCapture(params))
-{
-    // ---------------------------------------------------------------------------
-    //                              CAMERA INITIALIZATION
-    // ---------------------------------------------------------------------------
-
-    // Initialize cameras
-    if (!initialize_camera(cap_l, 0, map_left_x_ll, map_left_y_ll, map_right_x_lr, map_right_y_lr, get_logger())) {
-        rclcpp::shutdown(); // Shutdown node if camera initialization fails
-        return;
-    }
-    
-    if (!initialize_camera(cap_r, 2, map_left_x_rl, map_left_y_rl, map_right_x_rr, map_right_y_rr, get_logger())) {
-        rclcpp::shutdown(); // Shutdown node if camera initialization fails
-        return;
-    }
-    // ---------------------------------------------------------------------------
-    //                               PARAMETERS
-    // ---------------------------------------------------------------------------
-
-    // Projection matrix that takes LiDAR points to pixels
-    std::vector<double> param_default(12, 1.0f); 
-
-    declare_parameter("projection_matrix_ll", param_default);
-    declare_parameter("projection_matrix_rl", param_default);
-    declare_parameter("projection_matrix_lr", param_default);
-    declare_parameter("projection_matrix_rr", param_default);
-
-    // Threshold that determines whether it reports the color on a cone or not
-    declare_parameter("confidence_threshold", 0.25);
-
-    #if use_yolo
-        // Load YOLO Model
-        net = coloring::yolo::init_model(yolo_model_path);
-        if (net.empty()) {
-            RCLCPP_ERROR(get_logger(), "Error Loading YOLO Model");
-            rclcpp::shutdown();
->>>>>>> Stashed changes
         }
     #endif
 
@@ -528,7 +475,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     auto transform_coloring_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_transform_coloring_time - yolo_r_end_time).count();
     #endif
 
-
+    // Cone ordering
     if (!unordered_yellow_cones.empty()) {
         std::vector<cones::Cone> ordered_yellow = cones::orderConesByPathDirection(unordered_yellow_cones);
         for (const auto& cone : ordered_yellow) {
@@ -548,150 +495,19 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     auto ordering_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_ordering_time - end_transform_coloring_time).count();
     #endif
 
+    // Frame annotation
     #if save_frames
     if (camera_callback_count == frame_interval) {
         camera_callback_count = 0;
         #if use_yolo
         // Add Yolo Bounding Boxes to frame
 
-<<<<<<< Updated upstream
-            #if timing
-            auto yolo_l_start_time = high_resolution_clock::now();
-            #endif
-
-            // Process frames with YOLO
-            std::vector<cv::Mat> detection_l = coloring::yolo::process_frame(std::get<1>(frame_tuple), net);
-            #if timing
-            auto yolo_l_end_time = high_resolution_clock::now();
-            #endif
-
-            std::vector<cv::Mat> detection_r = coloring::yolo::process_frame(std::get<3>(frame_tuple), net);
-            #if timing
-                auto yolo_r_end_time = high_resolution_clock::now();
-                RCLCPP_INFO(get_logger(), "Total yolo time %llu ms", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_start_time).count());
-                RCLCPP_INFO(get_logger(), "\t - Left yolo time %llu ms", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_l_end_time - yolo_l_start_time).count());
-                RCLCPP_INFO(get_logger(), "\t - Right yolo time %llu ms", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_end_time).count());
-            #endif
-            
-            std::pair<std::vector<cv::Mat> , std::vector<cv::Mat> > detection_pair = std::make_pair(detection_l, detection_r);
-        #else
-            // Initialize empty matrix if not YOLO
-            std::pair<std::vector<cv::Mat> , std::vector<cv::Mat>> detection_pair = std::make_pair(nullptr, nullptr);
-        #endif
-
-        #if save_frames
-        std::vector<std::pair<cv::Point, cv::Point>> unknown_transformed_pixels, yellow_transformed_pixels, blue_transformed_pixels, orange_transformed_pixels;
-        #endif
-
-        // Motion modeling for both frames
-        auto [velocity_l_camera_frame, yaw_l_camera_frame] = get_velocity_yaw(std::get<0>(frame_tuple));
-        auto [velocity_r_camera_frame, yaw_r_camera_frame] = get_velocity_yaw(std::get<2>(frame_tuple));
-
-        auto current_lidar_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
-        auto [velocity_lidar_frame, yaw_lidar_frame] = get_velocity_yaw(current_lidar_time);
-        
-
-        // If we cannot find a matching velocity or yaw we return early
-        if (velocity_lidar_frame == nullptr || yaw_lidar_frame == nullptr)
-        {
-            return;
-        }
-
-        double dt_l = (std::get<0>(frame_tuple) - current_lidar_time) / 1e9;
-        double dt_r = (std::get<2>(frame_tuple) - current_lidar_time) / 1e9;
-
-        double average_velocity_l_x = (velocity_l_camera_frame->twist.linear.x + velocity_lidar_frame->twist.linear.x) / 2;
-        double average_velocity_l_y = (velocity_l_camera_frame->twist.linear.y + velocity_lidar_frame->twist.linear.y) / 2;
-        double average_velocity_r_x = (velocity_r_camera_frame->twist.linear.x + velocity_lidar_frame->twist.linear.x) / 2;
-        double average_velocity_r_y = (velocity_r_camera_frame->twist.linear.y + velocity_lidar_frame->twist.linear.y) / 2;
-
-        auto global_dx_l = average_velocity_l_x * dt_l;
-        auto global_dy_l = average_velocity_l_y * dt_l;
-        auto global_dyaw_l = yaw_l_camera_frame->vector.z - yaw_lidar_frame->vector.z;
-
-        auto global_dx_r = average_velocity_r_x * dt_r;
-        auto global_dy_r = average_velocity_r_y * dt_r;
-        auto global_dyaw_r = yaw_r_camera_frame->vector.z - yaw_lidar_frame->vector.z;
-
-        double yaw_lidar_rad = yaw_lidar_frame->vector.z * M_PI / 180;
-
-        std::pair<double, double> global_frame_change_l = std::make_pair(global_dx_l, global_dy_l);
-        std::pair<double, double> long_lat_l = global_frame_to_local_frame(global_frame_change_l, yaw_lidar_rad);
-
-        std::pair<double, double> global_frame_change_r = std::make_pair(global_dx_r, global_dy_r);
-        std::pair<double, double> long_lat_r = global_frame_to_local_frame(global_frame_change_r, yaw_lidar_rad);
-
-        std::vector<Cone> unordered_yellow_cones;
-        std::vector<Cone> unordered_blue_cones;
-
-        // Iterate through all points in /cpp_cones message
-        for (size_t i = 0; i < msg->cone_array.size(); i++) {
-            // Transform Point
-            std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair = transform_point(
-                get_logger(),
-                msg->cone_array[i].cone_points[0],
-                {long_lat_l, long_lat_r},
-                {global_dyaw_l, global_dyaw_r},
-                {projection_matrix_l, projection_matrix_r}
-            );
-
-            int cone_class = get_cone_class(pixel_pair, frame_pair, detection_pair);
-
-            point_msg.x = msg->cone_array[i].cone_points[0].x;
-            point_msg.y = msg->cone_array[i].cone_points[0].y;
-            point_msg.z = 0.0; 
-
-            switch (cone_class) {
-                case 0:
-                    message.yellow_cones.push_back(point_msg);
-                    #if save_frames
-                        orange_transformed_pixels.push_back(
-                            std::make_pair(
-                                cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))), 
-                                cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))
-                            )
-                        );
-                    #endif
-                    break;
-                case 1:
-                    // message.yellow_cones.push_back(point_msg);
-                    unordered_yellow_cones.push_back(Cone(point_msg));
-                    #if save_frames
-                    yellow_transformed_pixels.push_back(
-                        std::make_pair(
-                            cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
-                            cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))));
-                    #endif
-                    break;
-                case 2:
-                    // message.blue_cones.push_back(point_msg);
-                    unordered_blue_cones.push_back(Cone(point_msg));
-                    #if save_frames
-                    blue_transformed_pixels.push_back(
-                        std::make_pair(
-                            cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
-                            cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))));
-                    #endif
-                    break;
-                default:
-                    message.unknown_color_cones.push_back(point_msg);
-                    #if save_frames
-                    unknown_transformed_pixels.push_back(
-                        std::make_pair(
-                            cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
-                            cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))));
-                    #endif
-                    break;
-            }
-        }
-=======
         cv::Mat frame_l_canvas = frame_pair.first.clone();
         cv::Mat frame_r_canvas = frame_pair.second.clone();
         float alpha = .3;
 
         coloring::yolo::draw_bounding_boxes(frame_pair.first, frame_l_canvas, detection_l, frame_pair.first.cols, frame_pair.first.rows, confidence_threshold);
         coloring::yolo::draw_bounding_boxes(frame_pair.second, frame_r_canvas, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows, confidence_threshold);
->>>>>>> Stashed changes
 
         #endif
 
@@ -728,9 +544,9 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     auto end_drawing_time = high_resolution_clock::now();
     auto drawing_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_drawing_time - end_ordering_time).count();
     #endif
-
     #endif
     
+    // Publish message and log
     int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
     int yellow_cones = message.yellow_cones.size();
     int blue_cones = message.blue_cones.size();
