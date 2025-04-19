@@ -212,6 +212,10 @@ namespace controls {
                         ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
                         break;
 
+                    case Record::Type::Swangle:
+                        state[state_swangle_idx] = record_iter->swangle;
+                        ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
+
                     default:
                         break;
                 }

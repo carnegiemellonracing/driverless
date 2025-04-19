@@ -8,7 +8,7 @@
 namespace controls {
     /// Control action: currently steering wheel angle and forward throttle
     using Action = std::array<float, action_dims>;
-    /// Vehicle state: currently inertial x, y, yaw, speed
+    /// Vehicle state: currently inertial x, y, yaw, speed, requested swangle
     using State = std::array<float, state_dims>;
 
 

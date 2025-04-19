@@ -79,6 +79,8 @@ namespace controls {
 
             void rosbag_action_callback(const ActionMsg& rosbag_action_msg);
 
+            void swangle_callback(const SwangleMsg& swangle_msg);
+
             /**
              * Publishes a control action to the `control_action` topic.
              *
@@ -122,6 +124,8 @@ namespace controls {
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription; ///< Subscribes to intertial quaternion
             rclcpp::Subscription<PositionLLAMsg>::SharedPtr m_position_lla_subscription;
 
+            rclcpp::Subscription<SwangleMsg>::SharedPtr m_swangle_subscription;
+
 
             /**
              * Mutex protecting `m_state_estimator`. This needs to be acquired when forwarding callbacks to the
@@ -157,6 +161,7 @@ namespace controls {
             float m_last_speed;
             float m_last_x_velocity;
             float m_last_y_velocity;
+            float m_last_swangle;
             rclcpp::Time m_last_imu_acceleration_time;
             State get_state_under_strategy(rclcpp::Time current_time);
             state::NaiveStateTracker m_naive_state_tracker;

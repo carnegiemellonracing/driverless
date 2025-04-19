@@ -33,6 +33,7 @@ void send_finished_ignore_error() {
 namespace controls {
     // global runtime variables
     float approx_propogation_delay;
+    float actuator_angular_speed;
     bool follow_midline_only;
     bool testing_on_rosbag;
     bool ingest_midline;
@@ -143,6 +144,12 @@ namespace controls {
                 world_position_lla_topic_name, world_pose_qos,
                 [this](const PositionLLAMsg::SharedPtr msg)
                 { world_position_lla_callback(*msg); },
+                auxiliary_state_options);
+
+            m_swangle_subscription = create_subscription<SwangleMsg>(
+                swangle_topic_name, swangle_qos,
+                [this](const SwangleMsg::SharedPtr msg)
+                { swangle_callback(*msg); },
                 auxiliary_state_options);
 
             if (testing_on_rosbag) {
@@ -265,6 +272,11 @@ namespace controls {
                 }
             }
 
+            void ControllerNode::swangle_callback(const SwangleMsg& swangle_msg) {
+                RCLCPP_DEBUG(get_logger(), "Received swangle: %f", swangle_msg.data);
+                float swangle = swangle_msg.data;
+                m_last_swangle = swangle;
+            }
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
 

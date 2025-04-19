@@ -65,7 +65,8 @@ namespace controls {
                     Speed,
                     Pose,
                     PositionLLA,
-                    Yaw
+                    Yaw,
+                    Swangle
                 };
 
                 union {
@@ -84,6 +85,8 @@ namespace controls {
                     } position_lla;
 
                     float yaw;
+
+                    float swangle;
                 };
 
                 rclcpp::Time time;

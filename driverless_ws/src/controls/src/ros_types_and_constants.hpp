@@ -11,7 +11,7 @@
 #include <interfaces/msg/controller_info.hpp>
 #include <geometry_msgs/msg/vector3_stamped.hpp>
 #include <interfaces/msg/cone_array.hpp>
-
+#include "std_msgs/msg/float32.hpp"
 namespace controls {
     /// ROS Message Types
     ///@TODO: why not use std_msgs/Header for our custom messages?
@@ -28,7 +28,10 @@ namespace controls {
     using PositionLLAMsg = geometry_msgs::msg::Vector3Stamped;
     using IMUAccelerationMsg = geometry_msgs::msg::Vector3Stamped;
 
+    using SwangleMsg = std_msgs::msg::Float32;
+
     /* ROS Topics */
+    constexpr const char *swangle_topic_name = "testnode swangle";
 
     constexpr const char *controller_node_name = "controller";
     constexpr const char *control_action_topic_name = "control_action";
@@ -64,6 +67,8 @@ namespace controls {
         ),
         best_effort_profile);
 
+
+    const rclcpp::QoS swangle_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS control_action_qos = best_effort_qos;
     const rclcpp::QoS spline_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS state_qos (rclcpp::KeepLast(1));
@@ -75,6 +80,7 @@ namespace controls {
     const rclcpp::QoS imu_accel_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_position_lla_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS republished_perc_cones_qos (rclcpp::KeepLast(1));
+    
     
     constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
 
