@@ -48,7 +48,7 @@ public:
     #endif
 
     #if save_frames
-    static constexpr int frame_interval = 5;
+    static constexpr int frame_interval = 10;
     static constexpr char save_path[] = "src/point_to_pixel/img_log/";
     #endif
 

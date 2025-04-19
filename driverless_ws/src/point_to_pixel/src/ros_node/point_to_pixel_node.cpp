@@ -649,7 +649,7 @@
         #endif
 
         #if save_frames
-        if (camera_callback_count == 10) {
+        if (camera_callback_count == frame_interval) {
             camera_callback_count = 0;
             #if use_yolo
             // Add Yolo Bounding Boxes to frame
