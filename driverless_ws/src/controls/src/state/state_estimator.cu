@@ -433,6 +433,7 @@ namespace controls {
         float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
+            assert(m_slam_chunks.empty() && "m_slam_chunks map is not empty");
             paranoid_assert(cone_msg.blue_cones.size() > 0);
             paranoid_assert(cone_msg.yellow_cones.size() > 0);
 
@@ -481,7 +482,7 @@ namespace controls {
 #endif
 
             if constexpr (reset_pose_on_cone) {
-                m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp,0);
+                m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp, 0);
             }
             
             m_logger("finished state estimator cone processing");
@@ -507,12 +508,39 @@ namespace controls {
                 pose_msg.header.stamp);
         }
 
-        void StateEstimator_Impl::on_slam_pose(const SlamPoseMsg& slam_msg) {
+        float StateEstimator_Impl::on_slam_pose(const SlamPoseMsg& slam_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_state_projector.record_pose(
-                slam_msg.pose.position.x, slam_msg.pose.position.y, slam_msg.pose.orientation.z,
-                slam_msg.header.stamp, slam_msg.current_chunk_id);
+            slam_msg.pose.position.x, slam_msg.pose.position.y, slam_msg.pose.orientation.z,
+            slam_msg.header.stamp, slam_msg.current_chunk_id);
+
+            float svm_time = 0.0f;
+
+            if constexpr (!ingest_midline) {
+            midline::Cones cones;
+
+            for (const auto& cone : slam_msg.blue_cones) {
+            cones.addBlueCone(cone.x, cone.y, 0);
+            }
+            for (const auto& cone : slam_msg.yellow_cones) {
+            cones.addYellowCone(cone.x, cone.y, 0);
+            }
+
+            auto svm_start = std::chrono::high_resolution_clock::now();
+            auto spline_frames = midline::svm_slow::cones_to_midline(cones);
+            auto svm_end = std::chrono::high_resolution_clock::now();
+            svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
+
+            m_spline_frames.clear();
+            for (const auto& frame : spline_frames) {
+            paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
+            m_spline_frames.emplace_back(frame.first, frame.second);
+            }
+            }
+
+            m_logger("finished state estimator SLAM pose processing");
+            return svm_time;
         }
 
         void StateEstimator_Impl::on_slam(const SlamMsg& slam_msg, const rclcpp::Time& time) {
@@ -535,41 +563,6 @@ namespace controls {
             m_right_cone_points.insert(m_right_cone_points.end(), cones.second.begin(), cones.second.end());
             }
 
-            float svm_time = 0.0f;
-
-            if constexpr (!ingest_midline) {
-            midline::Cones cones;
-            for (const auto& cone : m_left_cone_points) {
-                cones.addBlueCone(cone.x, cone.y, 0);
-            }
-            for (const auto& cone : m_right_cone_points) {
-                cones.addYellowCone(cone.x, cone.y, 0);
-            }
-
-            auto svm_start = std::chrono::high_resolution_clock::now();
-            auto spline_frames = midline::svm_slow::cones_to_midline(cones);
-            auto svm_end = std::chrono::high_resolution_clock::now();
-            svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
-
-            m_spline_frames.clear();
-            for (const auto& frame : spline_frames) {
-                paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
-                m_spline_frames.emplace_back(frame.first, frame.second);
-            }
-            }
-
-    #ifdef DISPLAY
-            m_all_left_cone_points.clear();
-            m_all_right_cone_points.clear();
-
-            m_all_left_cone_points = process_ros_points(slam_msg.orange_cones);
-            m_all_right_cone_points = process_ros_points(slam_msg.unknown_color_cones);
-            m_raceline_points = process_ros_points(slam_msg.big_orange_cones);
-    #endif
-
-            if constexpr (reset_pose_on_cone) {
-            m_state_projector.record_pose(0, 0, M_PI_2, time, 0);
-            }
 
             m_logger("finished state estimator SLAM processing");
         }

@@ -35,7 +35,7 @@ namespace controls {
              * @param time The time at which the vehicle had the pose. Since the pose is inferred from the spline, this
              * should be when the LIDAR points first came in.
              */
-            void record_pose(float x, float y, float yaw, rclcpp::Time time);
+            void record_pose(float x, float y, float yaw, rclcpp::Time time,int32_t slam_id);
 
             /**
              * @brief "main" projection function. Projects the state of the car at a given time, from the most
@@ -55,25 +55,34 @@ namespace controls {
         private:
             /// Historical record type
             struct Record {
-                enum class Type {
-                    Action,
-                    Speed,
-                    Pose
-                };
+            enum class Type {
+                Action,
+                Speed,
+                SlamPose
+            };
 
-                union {
-                    Action action;
-                    float speed;
+            union {
+                Action action;
+                float speed;
 
-                    struct {
-                        float x;
-                        float y;
-                        float yaw;
-                    } pose;
-                };
+                struct {
+                float x;
+                float y;
+                float yaw;
+                } pose;
 
-                rclcpp::Time time;
-                Type type;
+                struct {
+                uint32_t current_chunk_id;
+                struct {
+                    float x;
+                    float y;
+                    float yaw;
+                } pose;
+                } slamPose;
+            };
+
+            rclcpp::Time time;
+            Type type;
             };
 
             /// Prints the elements of m_history_since_pose, for debugging purposes.
@@ -121,7 +130,7 @@ namespace controls {
 
             void on_spline(const SplineMsg& spline_msg) override;
             float on_cone(const ConeMsg& cone_msg) override;
-            void on_slam_pose(const SlamMsg& slam_pose_msg) override;
+            float on_slam_pose(const SlamPoseMsg& slam_pose_msg) override;
             void on_slam(const SlamMsg& slam_msg, const rclcpp::Time &time) override;
             void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) override;
             // on_pose is not used, for future proofing
@@ -143,7 +152,7 @@ namespace controls {
             std::vector<glm::fvec2> get_all_right_cone_points() override;
             std::vector<glm::fvec2> get_left_cone_points() override;
             std::vector<glm::fvec2> get_right_cone_points() override;
-            std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks() override
+            std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks() override;
             std::vector<glm::fvec2> get_raceline_points();
             std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> get_all_cone_points() override;
             std::vector<float> get_vertices() override;
