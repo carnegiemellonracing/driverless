@@ -143,6 +143,7 @@ namespace controls {
             std::vector<glm::fvec2> get_all_right_cone_points() override;
             std::vector<glm::fvec2> get_left_cone_points() override;
             std::vector<glm::fvec2> get_right_cone_points() override;
+            std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks() override
             std::vector<glm::fvec2> get_raceline_points();
             std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> get_all_cone_points() override;
             std::vector<float> get_vertices() override;
