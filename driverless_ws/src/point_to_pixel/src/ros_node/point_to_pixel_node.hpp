@@ -9,11 +9,6 @@
 #include "interfaces/msg/cone_list.hpp"
 #include "interfaces/msg/cone_array.hpp"
 
-// Project Headers
-#include "../transform/transform.hpp"
-#include "../camera/camera.hpp"
-#include "../coloring/coloring.hpp"
-
 using std::chrono::duration;
 using std::chrono::duration_cast;
 using std::chrono::high_resolution_clock;

@@ -1,5 +1,10 @@
     #include "point_to_pixel_node.hpp"
 
+    // Project Headers
+    #include "../transform/transform.hpp"
+    #include "../camera/camera.hpp"
+    #include "../coloring/coloring.hpp"
+
     // Standard Imports
     #include <deque>
     #include <queue>
@@ -529,14 +534,16 @@
 
         auto current_lidar_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
         auto [velocity_lidar_frame, yaw_lidar_frame] = get_velocity_yaw(current_lidar_time);
+        
 
+        // If we cannot find a matching velocity or yaw we return early
         if (velocity_lidar_frame == nullptr || yaw_lidar_frame == nullptr)
         {
             return;
         }
 
-        double dt_l = (std::get<0>(frame_tuple) - current_lidar_time) / 1e9; //::max( 0.0, time_diff_l );
-        double dt_r = (std::get<2>(frame_tuple) - current_lidar_time) / 1e9; // time_diffstd::max( 0.0, time_diff_r );
+        double dt_l = (std::get<0>(frame_tuple) - current_lidar_time) / 1e9;
+        double dt_r = (std::get<2>(frame_tuple) - current_lidar_time) / 1e9;
 
         double average_velocity_l_x = (velocity_l_camera_frame->twist.linear.x + velocity_lidar_frame->twist.linear.x) / 2;
         double average_velocity_l_y = (velocity_l_camera_frame->twist.linear.y + velocity_lidar_frame->twist.linear.y) / 2;
