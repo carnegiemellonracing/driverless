@@ -711,7 +711,11 @@ namespace controls {
             
             return m_right_cone_points;
         }
+        virtual std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks(){
+            std::lock_guard<std::mutex> guard {m_mutex};
 
+            return m_slam_chunks;
+        }
         // *****REVIEW: not be needed for display
         std::vector<glm::fvec2> StateEstimator_Impl::get_raceline_points(){
             std::lock_guard<std::mutex> guard {m_mutex};

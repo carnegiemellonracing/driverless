@@ -123,6 +123,7 @@ namespace controls {
 
             virtual std::vector<glm::fvec2> get_all_left_cone_points() =0;
             virtual std::vector<glm::fvec2> get_all_right_cone_points() =0;
+            virtual std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks() = 0;
             virtual std::vector<glm::fvec2> get_left_cone_points() = 0;
             virtual std::vector<glm::fvec2> get_right_cone_points() = 0;
             virtual std::vector<glm::fvec2> get_raceline_points() =0;
