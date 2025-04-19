@@ -6,6 +6,7 @@
 #include <memory>
 #include <cstdint>
 #include <cmath>
+#include <std_msgs/msg/float32.hpp>
 
 /**
  * A ROS2 node that sends control actions to the vehicle.
@@ -50,6 +51,7 @@ private:
    * @return Current steering angle in radians
    */
   float calculate_steering_angle();
+  std::thread launch_can_swangle_listener();
 
   // Store the command line arguments for straight mode
   int16_t front_torque_mNm_;
@@ -63,6 +65,7 @@ private:
   float angle_degrees_ = 0.0f;
   float period_seconds_ = 1.0f;
   rclcpp::Time start_time_;
+  std::mutex can_mutex_;
   
   // Timer for periodic execution
   rclcpp::TimerBase::SharedPtr timer_;

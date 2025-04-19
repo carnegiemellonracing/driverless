@@ -24,12 +24,6 @@ ControlSenderNode::ControlSenderNode(int16_t front_torque_mNm, int16_t back_torq
   sinusoid_mode_(false),
   pvalue_(pvalue),
   feedforward_(feedforward)
-  m_can_swangle_publisher{
-    create_publisher<CANSwangleMsg>(
-        "/can_swangle",
-        can_swangle_qos
-    )
-  },
 {
   // Convert angle from degrees to radians, then to ADC value
   float angle_rad = angle_degrees * M_PI / 180.0f;
@@ -121,12 +115,14 @@ void ControlSenderNode::timer_callback()
   }
   
   // Call sendControlAction with the provided arguments
+  can_mutex_.lock();
   int result = sendControlAction(
     front_torque_mNm_,
     back_torque_mNm_,
     velocity_rpm_,
     rack_displacement_adc_
   );
+  can_mutex_.unlock();
   
 
   RCLCPP_INFO(this->get_logger(), "Sending control action with parameters: front_torque_mNm: %d, back_torque_mNm: %d, velocity_rpm: %u, rack_displacement_adc: %u", 
@@ -152,17 +148,17 @@ void ControlSenderNode::timer_callback()
   }
 }
 
-std::thread ControllerNode::launch_can_swangle_listener() {
+std::thread ControlSenderNode::launch_can_swangle_listener() {
     return std::thread{
         [this]
         {
             while (rclcpp::ok)
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(can_swangle_listener_period_ms));
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                can_mutex_.lock();
                 float swangle_reading = receiveSwangle();
-                CANSwangleMsg msg;
-                msg.data = swangle_reading;
-                m_can_swangle_publisher->publish(msg);
+                can_mutex_.unlock();
+                RCLCPP_INFO(this->get_logger(), "Received swangle reading: %f", swangle_reading);
                 
         
             }

@@ -161,7 +161,7 @@ static void cleanup_handle(canHandle hnd) {
 
 static void cmr_can_error_exit(int signal) {
     cleanup_handle(transmission_can_handle);
-    cleanup_handle(receive_can_handle);
+    // cleanup_handle(receive_can_handle);
 }
 
 static int set_global_can_handle(canHandle *global_handle) {
@@ -202,7 +202,7 @@ static int cmr_can_init(int channel, bool verbose) {
                          canOPEN_EXCLUSIVE /*| canOPEN_REQUIRE_EXTENDED*/ | canOPEN_ACCEPT_VIRTUAL);
     if (transmission_can_handle < 0) {
         debug_printf("canOpenChannel %d", 0);
-        check("", hnd);
+        check("", transmission_can_handle);
         return -1;
     }
 
@@ -217,20 +217,22 @@ static int cmr_can_init(int channel, bool verbose) {
     if (stat != canOK) {
         return -3;
     }
-    
-    receive_can_handle = canOpenChannel(0,
-                         canOPEN_EXCLUSIVE /*| canOPEN_REQUIRE_EXTENDED*/ | canOPEN_ACCEPT_VIRTUAL);
-    if (receive_can_handle < 0) {
-        debug_printf("canOpenChannel %d", 0);
-        check("", hnd);
-        return -4;
-    }
 
-    stat = canBusOn(receive_can_handle);
-    check("canBusOn", stat);
-    if (stat != canOK) {
-        return -5;
-    }
+    receive_can_handle = transmission_can_handle;
+    
+    // receive_can_handle = canOpenChannel(0,
+    //                      canOPEN_EXCLUSIVE /*| canOPEN_REQUIRE_EXTENDED*/ | canOPEN_ACCEPT_VIRTUAL);
+    // if (receive_can_handle < 0) {
+    //     debug_printf("canOpenChannel %d", 0);
+    //     check("", receive_can_handle);
+    //     return -4;
+    // }
+
+    // stat = canBusOn(receive_can_handle);
+    // check("canBusOn", stat);
+    // if (stat != canOK) {
+    //     return -5;
+    // }
 
     signal(SIGINT, cmr_can_error_exit);
     return 0;
@@ -332,7 +334,7 @@ uint16_t cmr_can_rx(int channel, long id) {
                 if(curId == id) {
                     seen = true;
                     debug_printf("(%u) id:%ld dlc:%u data: ", msgCounter, id, dlc);
-                    return ((((uint16_t) msg[2]) << 8) | msg[3]);
+                    return ((((uint16_t) msg[3]) << 8) | msg[2]);
                     if (dlc > 8) {
                         dlc = 8;
                     }
@@ -342,7 +344,7 @@ uint16_t cmr_can_rx(int channel, long id) {
                 }
 
             }
-            debug_printf(" flags:0x%x time:%lu\n", flag, time);
+            // debug_printf(" flags:0x%x time:%lu\n", flag, time);
         } else {
             if (errno == 0) {
                 check("\ncanReadWait", stat);
