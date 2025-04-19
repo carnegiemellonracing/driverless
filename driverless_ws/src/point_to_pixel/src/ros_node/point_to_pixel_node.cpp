@@ -464,11 +464,11 @@
     {
         // Logging Actions
         #if timing
-            auto start_time = high_resolution_clock::now();
-            uint64_t ms_time_since_lidar_2 = (get_clock()->now().nanoseconds() - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e6;
+        auto start_time = high_resolution_clock::now();
+        uint64_t ms_time_since_lidar_2 = (get_clock()->now().nanoseconds() - msg->header.stamp.sec * 1e9 - msg->header.stamp.nanosec) / 1e6;
         #endif
 
-        RCLCPP_INFO(get_logger(), "Received message with %zu cones", msg->cone_array.size());
+        // RCLCPP_INFO(get_logger(), "Received message with %zu cones \n", msg->cone_array.size());
 
         // Message Definition
         interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
@@ -490,40 +490,33 @@
         std::pair<cv::Mat, cv::Mat> frame_pair = std::make_pair(std::get<1>(frame_tuple), std::get<3>(frame_tuple));
 
         #if timing
-            auto camera_time = high_resolution_clock::now();
+        auto camera_time = high_resolution_clock::now();
         #endif
 
         #if use_yolo
 
             #if timing
-                auto yolo_l_start_time = high_resolution_clock::now();
+            auto yolo_l_start_time = high_resolution_clock::now();
             #endif
+
             // Process frames with YOLO
             std::vector<cv::Mat> detection_l = coloring::yolo::process_frame(std::get<1>(frame_tuple), net);
-
             #if timing
-                auto yolo_l_end_time = high_resolution_clock::now();
+            auto yolo_l_end_time = high_resolution_clock::now();
             #endif
+
             std::vector<cv::Mat> detection_r = coloring::yolo::process_frame(std::get<3>(frame_tuple), net);
             #if timing
                 auto yolo_r_end_time = high_resolution_clock::now();
-                
                 RCLCPP_INFO(get_logger(), "Total yolo time %llu ms", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_start_time).count());
                 RCLCPP_INFO(get_logger(), "\t - Left yolo time %llu ms", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_l_end_time - yolo_l_start_time).count());
                 RCLCPP_INFO(get_logger(), "\t - Right yolo time %llu ms", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_end_time).count());
-
             #endif
             
             std::pair<std::vector<cv::Mat> , std::vector<cv::Mat> > detection_pair = std::make_pair(detection_l, detection_r);
         #else
             // Initialize empty matrix if not YOLO
             std::pair<std::vector<cv::Mat> , std::vector<cv::Mat>> detection_pair = std::make_pair(nullptr, nullptr);
-        #endif
-
-        // Timing Variables
-        #if timing
-            uint64_t transform_time = 0;
-            uint64_t coloring_time = 0;
         #endif
 
         #if save_frames
@@ -571,10 +564,6 @@
 
         // Iterate through all points in /cpp_cones message
         for (size_t i = 0; i < msg->cone_array.size(); i++) {
-            #if timing
-            auto loop_start = high_resolution_clock::now();
-            #endif
-            
             // Transform Point
             std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair = transform_point(
                 get_logger(),
@@ -584,19 +573,7 @@
                 {projection_matrix_l, projection_matrix_r}
             );
 
-            #if timing
-            // Time for transform
-            auto loop_transform = high_resolution_clock::now();
-            transform_time += std::chrono::duration_cast<std::chrono::nanoseconds>(loop_transform - loop_start).count();
-            #endif
-
             int cone_class = get_cone_class(pixel_pair, frame_pair, detection_pair);
-
-            #if timing
-            // Time for coloring
-            auto loop_coloring = high_resolution_clock::now();
-            coloring_time += std::chrono::duration_cast<std::chrono::nanoseconds>(loop_coloring - loop_transform).count();
-            #endif
 
             point_msg.x = msg->cone_array[i].cone_points[0].x;
             point_msg.y = msg->cone_array[i].cone_points[0].y;
@@ -647,7 +624,8 @@
         }
 
         #if timing
-            auto transform_coloring_time = high_resolution_clock::now();
+        auto end_transform_coloring_time = high_resolution_clock::now();
+        auto transform_coloring_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_transform_coloring_time - yolo_r_end_time).count();
         #endif
 
 
@@ -666,8 +644,8 @@
         }
 
         #if timing
-            auto end_ordering_time = high_resolution_clock::now();
-            auto ordering_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_ordering_time - transform_coloring_time).count();
+        auto end_ordering_time = high_resolution_clock::now();
+        auto ordering_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_ordering_time - end_transform_coloring_time).count();
         #endif
 
         #if save_frames
@@ -675,8 +653,6 @@
             camera_callback_count = 0;
             #if use_yolo
             // Add Yolo Bounding Boxes to frame
-
-            std::cout << "Adding bounding boxes to image" << std::endl;
 
             cv::Mat frame_l_canvas = frame_pair.first.clone();
             cv::Mat frame_r_canvas = frame_pair.second.clone();
@@ -715,48 +691,56 @@
             save_mutex.unlock();
         }
         camera_callback_count += 1;
+
+        #if timing
+        auto end_drawing_time = high_resolution_clock::now();
+        auto drawing_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_drawing_time - end_ordering_time).count();
         #endif
 
+        #endif
+        
         int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
         int yellow_cones = message.yellow_cones.size();
         int blue_cones = message.blue_cones.size();
         int orange_cones = message.orange_cones.size();
         int unknown_color_cones = message.unknown_color_cones.size();
         
-        RCLCPP_INFO(
-            get_logger(), 
-            "Transform callback triggered. Published %d cones. %d yellow, %d blue, %d orange, and %d unknown.", 
-            cones_published, yellow_cones, blue_cones, orange_cones, unknown_color_cones
-        );
+        // RCLCPP_INFO(
+        //     get_logger(), 
+        //     "Published %d yellow, %d blue, %d orange, and %d unknown cones.", 
+        //     yellow_cones, blue_cones, orange_cones, unknown_color_cones
+        // );
 
         #if timing
             auto end_time = high_resolution_clock::now();
             auto stamp_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
             auto ms_time_since_lidar = (get_clock()->now().nanoseconds() - stamp_time) / 1e6;
-            auto ms_transform_time = transform_time / 1e6;
-            auto ms_coloring_time = coloring_time / 1e6;
 
             RCLCPP_INFO(get_logger(), "Get Camera Frame  %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(camera_time - start_time).count());
-            RCLCPP_INFO(get_logger(), "Total Transform and Coloring Time  %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(transform_coloring_time - camera_time).count());
-            RCLCPP_INFO(get_logger(), "--Total Transform Time  %ld ms.", ms_transform_time);
-            RCLCPP_INFO(get_logger(), "--Total Coloring Time  %ld ms.", ms_coloring_time);
-            RCLCPP_INFO(get_logger(), "Total Ordering Time  %ld ms.", ordering_time);
+            RCLCPP_INFO(get_logger(), "Total Transform and Coloring Time  %ld ms.", transform_coloring_time);
+            RCLCPP_INFO(get_logger(), "Total Drawing Time  %ld ms.", drawing_time);
+            RCLCPP_INFO(get_logger(), "Total Ordering Time  %ld ms. \n", ordering_time);
             auto time_diff = end_time - start_time;
             RCLCPP_INFO(get_logger(), "Total PPM Time %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(time_diff).count());
             RCLCPP_INFO(get_logger(), "Total Time from Lidar:  %ld ms.", (uint64_t) ms_time_since_lidar);
             RCLCPP_INFO(get_logger(), "Total Time from Lidar to start  %ld ms.", ms_time_since_lidar_2);
+            RCLCPP_INFO(get_logger(), "----------------------------------------------");
         #endif
         
         cone_pub_->publish(message);
     }
 
     #if save_frames
-    void PointToPixelNode::save_frame(std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple)
+    void PointToPixelNode::save_frame(const rclcpp::Logger &logger, std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple)
     {
-        std::string l_filename = save_path + std::to_string(std::get<0>(frame_tuple)) + ".png";
-        std::string r_filename = save_path + std::to_string(std::get<2>(frame_tuple)) + ".png";
+        auto start = std::chrono::high_resolution_clock::now();
+        std::string l_filename = save_path + std::to_string(std::get<0>(frame_tuple)) + ".bmp";
+        std::string r_filename = save_path + std::to_string(std::get<2>(frame_tuple)) + ".bmp";
         cv::imwrite(l_filename, std::get<1>(frame_tuple));
         cv::imwrite(r_filename, std::get<3>(frame_tuple));
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        RCLCPP_INFO(logger, "Saved frame in %ld ms.", duration.count());
     }
     #endif
 
@@ -828,7 +812,7 @@
                 {
                     save_mutex.lock();
                     if(!save_queue.empty()) {
-                        save_frame(save_queue.front());
+                        save_frame(get_logger(), save_queue.front());
                         save_queue.pop();
                     }
                     save_mutex.unlock();

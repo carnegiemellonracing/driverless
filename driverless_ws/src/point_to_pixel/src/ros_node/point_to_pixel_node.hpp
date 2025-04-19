@@ -25,7 +25,7 @@ using std::placeholders::_1;
 #define use_yolo 1 // 0: HSV Coloring | 1: YOLO Coloring
 #define timing 1  // Prints timing suite at end of every callback
 #define inner 1    // Uses inner lens of ZEDS (if 0 uses the outer lens)
-#define save_frames 0 // Writes every 5th frame to img_log folder
+#define save_frames 1 // Writes every 5th frame to img_log folder
 
 struct Cone {
     geometry_msgs::msg::Point point;
@@ -135,7 +135,7 @@ private:
     uint64_t camera_callback_count;
     // Deque of img pairs from a specific time
     std::queue<std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat>> save_queue;
-    void save_frame(std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple);
+    void save_frame(const rclcpp::Logger &logger, std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple);
     std::thread launch_frame_saving();
     std::mutex save_mutex;
     #endif
