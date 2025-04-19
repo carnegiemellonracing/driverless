@@ -31,7 +31,7 @@ namespace controls {
     using SwangleMsg = interfaces::msg::Swangle;
 
     /* ROS Topics */
-    constexpr const char *swangle_topic_name = "testnode swangle";
+    constexpr const char *swangle_topic_name = "testnode_swangle";
 
     constexpr const char *controller_node_name = "controller";
     constexpr const char *control_action_topic_name = "control_action";
