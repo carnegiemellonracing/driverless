@@ -16,9 +16,14 @@ namespace coloring {
 
             float x_scale = static_cast<float>(cols) / 640.0f;
             float y_scale = static_cast<float>(rows) / 640.0f;
+
+            std::vector<std::pair<double, int>> boxes = {}; // Vector of (dist from center, cone class)
             
+            // Loop through detections
             for (int i = 0; i < num_detections; i++) {
                 float confidence = data[i * attributes + 4];
+
+                // If YOLO is more confident than threshold...
                 if (confidence > confidence_threshold) {
                     float cx = data[i * attributes];
                     float cy = data[i * attributes + 1];
@@ -31,37 +36,47 @@ namespace coloring {
                     int width = static_cast<int>(w * x_scale);
                     int height = static_cast<int>(h * y_scale);
 
-                    // If pixel is inside the bounding box color it
+                    // If pixel is inside the bounding box add color to the vector of all boxes pixel is in
                     if (pixel(0) > x && pixel(0) < x + width && pixel(1) > y && pixel(1) < y + height) {
-                        
-                        int cone_class;
+                        int c_c;
                         float conf = 0.0f;
 
                         for (int j = 0; j < 5; j++) {
                             if (data[i * attributes + j + 5] > conf) {
-                                cone_class = j;
+                                c_c = j;
                                 conf = data[i * attributes + j + 5];
                             };
                         }
 
-                        cv::Scalar color;
-
-                        switch (cone_class) {
-                            case 0:
-                                return std::make_pair(2, conf);  // Blue
-                            case 4:
-                                return std::make_pair(1, conf);  // Yellow
-                            case 2:
-                                return std::make_pair(0, conf);  // Orange
-                            case 3:
-                                return std::make_pair(0, conf);  // Big Orange
-                            default:
-                                return std::make_pair(-1, 0.0);  // Unknown
-                        }
+                        float dist_from_center = std::sqrt((pixel(0) - cx * x_scale)**2 + (pixel(1) - cy * y_scale)**2);
+                        boxes.push_back(std::make_pair(dist_from_center, c_c));
                     }
                 }
             }
+            
+            if (boxes.size() > 0) {
 
+                // Find closest box
+                double smallest;
+                int cone_class;
+                for (int i = 0; i < boxes.size(); i++) {
+                    if (boxes[i].first < smallest) cone_class = boxes[i].second;
+                }
+
+                switch (cone_class) {
+                    case 0:
+                        return std::make_pair(2, conf);  // Blue
+                    case 4:
+                        return std::make_pair(1, conf);  // Yellow
+                    case 2:
+                        return std::make_pair(0, conf);  // Orange
+                    case 3:
+                        return std::make_pair(0, conf);  // Big Orange
+                    default:
+                        return std::make_pair(-1, 0.0);  // Unknown
+                }
+            }
+            
             // No detection
             return std::make_pair(-1, 0.0);
         }

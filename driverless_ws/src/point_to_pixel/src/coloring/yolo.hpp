@@ -24,6 +24,18 @@ namespace coloring {
             double confidence_threshold
         );
         
+        /**
+         * @brief Labels image frames with bounding boxes. Works with references.
+         * 
+         * @param frame image frame 
+         * @param canvas clone of image frame. Gets merged to image frame to have a see-through box
+         * @param detections output of YOLO model
+         * @param cols Image columns
+         * @param rows Image rows
+         * @param confidence_threshold Use bounding box if YOLO conf is higher than threshold
+         * 
+         * @return Nothing, directly applies bounding boxes to the input images.
+         */
         void draw_bounding_boxes(
             cv::Mat& frame,
             cv::Mat& canvas,
