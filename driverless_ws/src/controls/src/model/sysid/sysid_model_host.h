@@ -8,7 +8,6 @@
 #pragma once
 #include <constants.hpp>
 
-
 namespace controls {
     namespace model_host {
         namespace sysid {
