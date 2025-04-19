@@ -59,21 +59,6 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> transform_point(
     std::pair<double, double> left_right_dyaw,
     const std::pair<Eigen::Matrix<double, 3, 4>, Eigen::Matrix<double, 3, 4>> &projection_matrix_pair)
 {
-    std::stringstream ss_l;
-    std::stringstream ss_r;
-
-    // // Iterate over the rows and columns of the matrix and format the output
-    // for (int i = 0; i < projection_matrix_l.rows(); ++i){
-    //     for (int j = 0; j < projection_matrix_l.cols(); ++j){
-    //         ss_l << projection_matrix_l(i, j) << " ";
-    //         ss_r << projection_matrix_r(i, j) << " ";
-    //     }
-    //     ss_l << "\n";
-    //     ss_r << "\n";
-    // }
-    // // Log the projection_matrix using ROS 2 logger
-    // std::cout << "Projection Matrix Left:\n" << ss_l.str().c_str() << std::endl;
-    // std::cout << "Projection Matrix Right:\n" << ss_r.str().c_str() << std::endl;
 
     // Convert point to Eigen Vector4d (homogeneous coordinates)
     // std::pair<double, double> lidar_pt_l_xy = motion_model_on_point(ds_pair.first, point.x, point.y, left_right_dyaw.first);
@@ -101,7 +86,79 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> transform_point(
     Eigen::Vector3d pixel_l(transformed_l(0) / transformed_l(2), transformed_l(1) / transformed_l(2), distance_l);
     Eigen::Vector3d pixel_r(transformed_r(0) / transformed_r(2), transformed_r(1) / transformed_r(2), distance_r);
 
-    // std::cout << pixel_l(0) << " " << pixel_l(1) << std::endl;
-
     return std::make_pair(pixel_l, pixel_r);
+}
+
+std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_velocity_yaw(
+    const rclcpp::Logger &logger,
+    const std::mutex &yaw_mutex,
+    const std::mutex &velocity_mutex,
+    const std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> &velocity_deque;
+    const std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> &yaw_deque;
+    uint64_t frameTime,
+
+) {
+    geometry_msgs::msg::TwistStamped::SharedPtr closest_velocity_msg;
+    geometry_msgs::msg::Vector3Stamped::SharedPtr closest_yaw_msg;
+
+    geometry_msgs::msg::Vector3Stamped::SharedPtr yaw_msg;
+    geometry_msgs::msg::TwistStamped::SharedPtr velocity_msg;
+
+    // Check if deque empty
+    yaw_mutex.lock();
+    if (yaw_deque.empty())
+    {
+        yaw_mutex.unlock();
+        RCLCPP_WARN(logger, "Yaw deque is empty! Cannot find matching yaw.");
+        return std::make_pair(nullptr, nullptr);
+    }
+
+    yaw_msg = yaw_deque.back(); // in case all messages are before camera
+    for (size_t i = 0; i < yaw_deque.size(); i++) {
+        uint64_t yaw_time_ns = yaw_deque[i]->header.stamp.sec * 1e9 + yaw_deque[i]->header.stamp.nanosec;
+        if (yaw_time_ns >= frameTime)
+        {
+            yaw_msg = yaw_deque[i];
+            if (i > 0) { // interpolate with the previous
+                auto prev_yaw_msg = yaw_deque[i - 1];
+                auto prev_yaw_ts = prev_yaw_msg->header.stamp.sec * 1e9 + prev_yaw_msg->header.stamp.nanosec;
+                auto yaw = prev_yaw_msg->vector.z + (yaw_msg->vector.z - prev_yaw_msg->vector.z) * (frameTime - prev_yaw_ts) / (yaw_time_ns - prev_yaw_ts);
+                yaw_msg = std::make_shared<geometry_msgs::msg::Vector3Stamped>();
+                yaw_msg->vector.z = yaw;
+            }
+            break;
+        }
+    }
+    yaw_mutex.unlock();
+
+    // Check if deque empty
+    velocity_mutex.lock();
+    if (velocity_deque.empty())
+    {
+        velocity_mutex.unlock();
+        RCLCPP_WARN(logger, "Velocity deque is empty! Cannot find matching velocity.");
+        return std::make_pair(nullptr, nullptr);
+    }
+
+    velocity_msg = velocity_deque.back();
+    // Iterate through deque to find the closest frame by timestamp
+    for (const auto &velocity : velocity_deque)
+    {
+        uint64_t velocity_time_ns = velocity->header.stamp.sec * 1e9 + velocity->header.stamp.nanosec;
+        if (velocity_time_ns >= frameTime)
+        {
+            velocity_msg = velocity;
+            break;
+        }
+    }
+    velocity_mutex.unlock();
+
+    // Return closest velocity, yaw pair if found
+    if (yaw_msg != NULL && velocity_msg != NULL)
+    {
+        return std::make_pair(velocity_msg, yaw_msg);
+    }
+
+    RCLCPP_INFO(logger, "Callback time out of range! Cannot find matching velocity or yaw.");
+    return std::make_pair(nullptr, nullptr);
 }

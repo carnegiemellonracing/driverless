@@ -9,6 +9,14 @@
 #include "interfaces/msg/cone_list.hpp"
 #include "interfaces/msg/cone_array.hpp"
 
+<<<<<<< Updated upstream
+=======
+// Project Headers
+#include "../transform/transform.hpp"
+#include "../camera/camera.hpp"
+#include "../coloring/cones.hpp"
+
+>>>>>>> Stashed changes
 using std::chrono::duration;
 using std::chrono::duration_cast;
 using std::chrono::high_resolution_clock;
@@ -22,14 +30,6 @@ using std::placeholders::_1;
 #define inner 1    // Uses inner lens of ZEDS (if 0 uses the outer lens)
 #define save_frames 1 // Writes every 5th frame to img_log folder
 
-struct Cone {
-    geometry_msgs::msg::Point point;
-    double distance;
-    Cone(const geometry_msgs::msg::Point& p) : point(p) {
-        distance = std::sqrt(p.x * p.x + p.y * p.y);
-    }
-};
-
 class PointToPixelNode : public rclcpp::Node
 {
 public:
@@ -37,11 +37,13 @@ public:
     PointToPixelNode();
     static constexpr int max_deque_size = 100;
 
+    // YOLO constants
     #if use_yolo
     static constexpr char yolo_model_path[] = "src/point_to_pixel/config/yolov5_model_params.onnx";
     // static constexpr char yolo_model_path[] = "src/point_to_pixel/config/best164.onnx";
     #endif
 
+    // Frame saving constants
     #if save_frames
     static constexpr int frame_interval = 10;
     static constexpr char save_path[] = "src/point_to_pixel/img_log/";
@@ -51,16 +53,33 @@ public:
     // static constexpr int zed_two_sn; // Right side zed
 
 private:
-    // Image Deque
+    // ROS2 Publisher and Subscribers
+    rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cone_pub_;
+    rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr cone_sub_;
+    rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr velocity_sub_;
+    rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr yaw_sub_;
+
+    // Data Structure Declarations
     std::deque<std::pair<uint64_t, cv::Mat>> img_deque_l;
     std::deque<std::pair<uint64_t, cv::Mat>> img_deque_r;
     std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> velocity_deque;
     std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> yaw_deque;
+    #if save_frames
+    std::queue<std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat>> save_queue;
+    #endif
 
-
+    // Mutexes Declarations for thread safety
+    std::mutex l_img_mutex;
+    std::mutex r_img_mutex;
+    std::mutex velocity_mutex;
+    std::mutex yaw_mutex;
+    #if save_frames
+    std::mutex save_mutex;
+    #endif
+    
+    // ROS Arg Parameters
     Eigen::Matrix<double, 3, 4> projection_matrix_l;
     Eigen::Matrix<double, 3, 4> projection_matrix_r;
-
     double confidence_threshold;
     cv::Scalar yellow_filter_high;
     cv::Scalar yellow_filter_low;
@@ -69,69 +88,92 @@ private:
     cv::Scalar orange_filter_high;
     cv::Scalar orange_filter_low;
 
-    // Topic Callback Functions
-    void cone_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
-    void velocity_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg);
-    void yaw_callback(const geometry_msgs::msg::Vector3Stamped::SharedPtr msg);
-
-    // Camera Callback Functions
-    void camera_callback();
-    rclcpp::TimerBase::SharedPtr camera_timer_;
-
     // Camera Objects and Parameters
     sl_oc::video::VideoParams params;
     sl_oc::video::VideoCapture cap_l;
     sl_oc::video::VideoCapture cap_r;
-
     sl_oc::video::Frame canvas;
     sl_oc::video::Frame frame_l;
     sl_oc::video::Frame frame_r;
+    #if save_frames
+    uint64_t camera_callback_count;
+    #endif
 
     // Rectification maps
     cv::Mat map_left_x_ll, map_left_y_ll;
     cv::Mat map_right_x_lr, map_right_y_lr;
-
     cv::Mat map_left_x_rl, map_left_y_rl;
     cv::Mat map_right_x_rr, map_right_y_rr;
-
-    std::mutex l_img_mutex;
-    std::mutex r_img_mutex;
-    std::mutex velocity_mutex;
-    std::mutex yaw_mutex;
-
-    // ROS2 Publisher and Subscribers
-    rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cone_pub_;
-    rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr cone_sub_;
-    rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr velocity_sub_;
-    rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr yaw_sub_;
-
-    // Helper functions with implementations in separate files
-    std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> get_camera_frame(rclcpp::Time callbackTime);
-    int get_cone_class(std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
-                      std::pair<cv::Mat, cv::Mat> frame_pair,
-                      std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair);
-
-    // Ordering function and helpers
-    Cone findClosestCone(const std::vector<Cone>& cones);
-    double calculateAngle(const Cone& from, const Cone& to);
-    std::vector<Cone> orderConesByPathDirection(const std::vector<Cone>& unordered_cones);
-
-    // Cone state propogation
-    std::pair<double, double> getMotionEstimate(double velocity, double angle, double dt);
-    std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_velocity_yaw(uint64_t callbackTime);
-
-    std::thread launch_camera_communication();
 
     #if use_yolo
     cv::dnn::Net net; // YOLO Model
     #endif
 
+    // Threads for camera callback and frame saving
+    std::thread launch_camera_communication();
     #if save_frames
-    uint64_t camera_callback_count;
-    // Deque of img pairs from a specific time
-    std::queue<std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat>> save_queue;
-    void save_frame(const rclcpp::Logger &logger, std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple);
     std::thread launch_frame_saving();
-    std::mutex save_mutex;
+    #endif
+
+    /**
+     * @brief Triggers full point to pixel pipeline. First retrieves closest camera frames L and R to lidar timestamp and
+     * runs YOLO detection on both frames. Then loops through each cone point in topic callback, transforms it to camera space
+     * and determines the color of the cone by seeing which bounding box it falls under. Final cone vectors are then ordered 
+     * and published.
+     * 
+     * @param msg from /cpp_cones topic of type PPMConeArray
+     * @return void but publishes to /perc_cones topic of type ConeArray
+     */
+    void cone_callback(const interfaces::msg::PPMConeArray::SharedPtr msg);
+
+    /**
+     * @brief Topic callback for velocity. Updates the velocity deque with the latest velocity message.
+     * 
+     * @param msg from /filter/twist topic of type TwistStamped
+     * @return void
+     */
+    void velocity_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg);
+
+    /**
+     * @brief Topic callback for yaw. Updates the yaw deque with the latest yaw message.
+     * 
+     * @param msg from /filter/euler topic of type Vector3Stamped
+     * @return void
+     */
+    void yaw_callback(const geometry_msgs::msg::Vector3Stamped::SharedPtr msg);
+
+    /**
+     * @brief Threaded callback for capturing frames from left and right cameras. Captures and rectifies frames 
+     * from both cameras, then updates the image deques with the captured frame and corresponding timestamp.
+     */
+    void camera_callback();
+
+    /**
+     * @brief Wrapper function responsible for retriving camera frames closest to the lidar timestamp.
+     * 
+     * @param callbackTime Time of the lidar frame
+     * @return std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> Tuple containing the timestamps and frames from both cameras
+     */
+    std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> get_camera_frame(rclcpp::Time callbackTime);
+
+    /**
+     * @brief Wrapper function for retrieving the color of cone by combining output from both cameras
+     * 
+     * @param pixel_pair Pixel coordinates in both cameras
+     * @param frame_pair Frames from both cameras
+     * @param detection_pair YOLO detection results (Unused if not using YOLO)
+     */
+    int get_cone_class(std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
+                      std::pair<cv::Mat, cv::Mat> frame_pair,
+                      std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair);
+    
+    #if save_frames
+    /**
+     * @brief Saves the frame to the specified path.
+     * 
+     * @param logger ROS Logger for logging messages
+     * @param frame_tuple Tuple containing the timestamps and frames from both cameras
+     */
+    void save_frame(const rclcpp::Logger &logger, std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple);
     #endif
 };

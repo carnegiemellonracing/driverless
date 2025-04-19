@@ -5,8 +5,8 @@
 #include "hsv.hpp"
 #include "yolo.hpp"
 
-    // Forward declarations
-    namespace coloring
+// Forward declarations
+namespace cones
 {
     namespace hsv {
         std::pair<int, double> get_color(
@@ -61,4 +61,29 @@
         double confidence_threshold,
         bool use_yolo
     );
-}
+
+    /**
+     * @brief Orders cones by their path direction
+     * 
+     * @param unordered_cones Vector of unordered cones
+     * @return std::vector<Cone> Vector of ordered cones
+     */
+
+    std::vector<Cone> orderConesByPathDirection(const std::vector<Cone>& unordered_cones);}
+
+    /**
+     * @brief Finds the next closest cone to the first cone in the vector
+     * 
+     * @param cones Vector of cones
+     * @return Cone Closest cone
+     */
+    Cone findClosestCone(const std::vector<Cone>& cones);
+
+    /**
+     * @brief Calculates the angle between two cones
+     * 
+     * @param from First cone
+     * @param to Second cone
+     * @return double Angle in radians
+     */
+    double calculateAngle(const Cone& from, const Cone& to);
