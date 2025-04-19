@@ -20,8 +20,9 @@ double ftom(int a){
     return (double) a * 0.3048;
 }
 
-void parseConesFromFile(const std::string& filename, std::vector<std::pair<double, double>>& blue_cones,
-                                                     std::vector<std::pair<double, double>>& yellow_cones) {
+void parseConesFromFile(const std::string& filename, 
+                       std::vector<std::tuple<double, double, int>>& blue_cones,
+                       std::vector<std::tuple<double, double, int>>& yellow_cones) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error: Could not open file " << filename << std::endl;
@@ -29,6 +30,8 @@ void parseConesFromFile(const std::string& filename, std::vector<std::pair<doubl
     }
 
     std::string line;
+    int blue_id = 0;
+    int yellow_id = 0;
 
     while (std::getline(file, line)) {
         // Skip empty lines
@@ -52,13 +55,13 @@ void parseConesFromFile(const std::string& filename, std::vector<std::pair<doubl
         std::string y_str = line.substr(second_colon + 1);
 
         try {
-        double x = std::stod(x_str);
-        double y = std::stod(y_str);
+            double x = std::stod(x_str);
+            double y = std::stod(y_str);
 
             if (cone_type == "b") {
-                blue_cones.emplace_back(x, y);
+                blue_cones.emplace_back(x, y, blue_id++);
             } else if (cone_type == "y") {
-                yellow_cones.emplace_back(x, y);
+                yellow_cones.emplace_back(x, y, yellow_id++);
             } else {
                 std::cerr << "Warning: Unknown cone type '" << cone_type << "' in line: " << line << std::endl;
             }
