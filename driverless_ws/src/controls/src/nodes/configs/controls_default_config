@@ -26,3 +26,5 @@ state_projection_mode: model_multiset
 publish_spline: true
 log_state_projection_history: false
 no_midline_controller: false
+
+actuator_angular_speed: 0.005f;

@@ -769,6 +769,7 @@ static int process_config_file(std::string config_file_path) {
     }
 
     approx_propogation_delay = std::stof(config_dict["approx_propogation_delay"]);
+    actuator_angular_speed = std::stof(config_dict["actuator_angular_speed"]);
     follow_midline_only = config_dict["follow_midline_only"] == "true" ? true : false;
 
     testing_on_rosbag = config_dict["testing_on_rosbag"] == "true" ? true : false;
@@ -785,6 +786,7 @@ static int process_config_file(std::string config_file_path) {
     
     publish_spline = config_dict["publish_spline"] == "true" ? true : false;
     log_state_projection_history = config_dict["log_state_projection_history"] == "true" ? true : false;
+
     return 0;
 }
 
