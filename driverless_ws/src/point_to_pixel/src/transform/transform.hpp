@@ -46,8 +46,8 @@ std::pair<double, double> global_frame_to_local_frame(
  */
 std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_velocity_yaw(
     const rclcpp::Logger &logger,
-    std::mutex *yaw_mutex,
-    std::mutex *velocity_mutex,
+    std::mutex &yaw_mutex,
+    std::mutex &velocity_mutex,
     const std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> &velocity_deque,
     const std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> &yaw_deque,
     uint64_t frameTime

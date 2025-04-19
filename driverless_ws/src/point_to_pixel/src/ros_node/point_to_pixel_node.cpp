@@ -354,11 +354,11 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     #endif
 
     // Motion modeling for both frames
-    auto [velocity_l_camera_frame, yaw_l_camera_frame] = get_velocity_yaw(get_logger(), &yaw_mutex, &velocity_mutex, velocity_deque, yaw_deque, std::get<0>(frame_tuple));
-    auto [velocity_r_camera_frame, yaw_r_camera_frame] = get_velocity_yaw(get_logger(), &yaw_mutex, &velocity_mutex, velocity_deque, yaw_deque, std::get<2>(frame_tuple));
+    auto [velocity_l_camera_frame, yaw_l_camera_frame] = get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, std::get<0>(frame_tuple));
+    auto [velocity_r_camera_frame, yaw_r_camera_frame] = get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, std::get<2>(frame_tuple));
 
     auto current_lidar_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
-    auto [velocity_lidar_frame, yaw_lidar_frame] = get_velocity_yaw(get_logger(), &yaw_mutex, &velocity_mutex, velocity_deque, yaw_deque, current_lidar_time);
+    auto [velocity_lidar_frame, yaw_lidar_frame] = get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, current_lidar_time);
 
     if (velocity_lidar_frame == nullptr || yaw_lidar_frame == nullptr)
     {

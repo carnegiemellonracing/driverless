@@ -90,8 +90,8 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> transform_point(
 
 std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_velocity_yaw(
     const rclcpp::Logger &logger,
-    std::mutex *yaw_mutex,
-    std::mutex *velocity_mutex,
+    std::mutex &yaw_mutex,
+    std::mutex &velocity_mutex,
     const std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> &velocity_deque,
     const std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> &yaw_deque,
     uint64_t frameTime
@@ -103,10 +103,10 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
     geometry_msgs::msg::TwistStamped::SharedPtr velocity_msg;
 
     // Check if deque empty
-    yaw_mutex->lock();
+    yaw_mutex.lock();
     if (yaw_deque.empty())
     {
-        yaw_mutex->unlock();
+        yaw_mutex.unlock();
         RCLCPP_WARN(logger, "Yaw deque is empty! Cannot find matching yaw.");
         return std::make_pair(nullptr, nullptr);
     }
@@ -127,13 +127,13 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
             break;
         }
     }
-    yaw_mutex->unlock();
+    yaw_mutex.unlock();
 
     // Check if deque empty
-    velocity_mutex->lock();
+    velocity_mutex.lock();
     if (velocity_deque.empty())
     {
-        velocity_mutex->unlock();
+        velocity_mutex.unlock();
         RCLCPP_WARN(logger, "Velocity deque is empty! Cannot find matching velocity.");
         return std::make_pair(nullptr, nullptr);
     }
@@ -149,7 +149,7 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
             break;
         }
     }
-    velocity_mutex->unlock();
+    velocity_mutex.unlock();
 
     // Return closest velocity, yaw pair if found
     if (yaw_msg != NULL && velocity_msg != NULL)
