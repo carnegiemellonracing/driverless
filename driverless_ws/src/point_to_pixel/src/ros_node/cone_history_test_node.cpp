@@ -79,7 +79,7 @@ ConeHistoryTestNode::ConeHistoryTestNode() : Node("cone_history_test_node")
 
     // Initialize publishers
     associated_cones_pub_ = create_publisher<interfaces::msg::ConeArray>(
-        "/associated_cones", 
+        "/associated_perc_cones", 
         10
     );
 }
@@ -98,30 +98,40 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
     geometry_msgs::msg::TwistStamped::SharedPtr velocity_msg;
 
     // Check if deque empty
-    // yaw_mutex.lock();
+    yaw_mutex.lock();
     if (yaw_deque.empty())
     {
+        yaw_mutex.unlock();
         RCLCPP_INFO(get_logger(), "Yaw deque is empty! Cannot find matching yaw.");
         return std::make_pair(nullptr, nullptr);
     }
 
     yaw_msg = yaw_deque.back();
     // Iterate through deque to find the closest frame by timestamp
-    for (const auto &yaw : yaw_deque)
+    for (size_t i = 0; i < yaw_deque.size(); i++)
     {   
-        uint64_t yaw_time_ns = yaw->header.stamp.sec * 1e9 + yaw->header.stamp.nanosec;
+        uint64_t yaw_time_ns = yaw_deque[i]->header.stamp.sec * 1e9 + yaw_deque[i]->header.stamp.nanosec;
 
         if (yaw_time_ns >= frameTime)
         {
-            yaw_msg = yaw;
+            yaw_msg = yaw_deque[i];
+            if (i > 0)
+            {
+                auto prev_yaw_ts = yaw_deque[i-1]->header.stamp.sec * 1e9 + yaw_deque[i-1]->header.stamp.nanosec;
+                auto yaw = yaw_deque[i-1]->vector.z + (yaw_msg->vector.z - yaw_deque[i-1]->vector.z) * (frameTime - prev_yaw_ts) / (yaw_time_ns - prev_yaw_ts);
+                yaw_msg = std::make_shared<geometry_msgs::msg::Vector3Stamped>();
+                yaw_msg->vector.z = yaw;
+            }
+            break;
         }
     }
-    // yaw_mutex.unlock();
+    yaw_mutex.unlock();
 
     // Check if deque empty
-    // velocity_mutex.lock();
+    velocity_mutex.lock();
     if (velocity_deque.empty())
     {
+        velocity_mutex.unlock();
         RCLCPP_INFO(get_logger(), "Velocity deque is empty! Cannot find matching velocity.");
         return std::make_pair(nullptr, nullptr);
     }
@@ -136,7 +146,7 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
             velocity_msg = velocity;
         }
     }
-    // velocity_mutex.unlock();
+    velocity_mutex.unlock();
 
     // Return closest velocity, yaw pair if found
     if (yaw_msg != NULL && velocity_msg != NULL)
@@ -156,13 +166,13 @@ std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vecto
 void ConeHistoryTestNode::velocity_callback(geometry_msgs::msg::TwistStamped::SharedPtr msg)
 {
     // Deque Management and Updating
-    // velocity_mutex.lock();
+    velocity_mutex.lock();
     while (velocity_deque.size() >= max_deque_size)
     {
         velocity_deque.pop_front();
     }
     velocity_deque.push_back(msg);
-    // velocity_mutex.unlock();
+    velocity_mutex.unlock();
 }
 
 /** 
@@ -172,13 +182,13 @@ void ConeHistoryTestNode::velocity_callback(geometry_msgs::msg::TwistStamped::Sh
 void ConeHistoryTestNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::SharedPtr msg)
 {
     // Deque Management and Updating
-    // yaw_mutex.lock();
+    yaw_mutex.lock();
     while (yaw_deque.size() >= max_deque_size)
     {
         yaw_deque.pop_front();
     }
     yaw_deque.push_back(msg);
-    // yaw_mutex.unlock();
+    yaw_mutex.unlock();
 }
 
 /**

@@ -64,7 +64,7 @@ private:
     std::queue<ObsConeInfo> blue_cone_history;
     std::queue<ObsConeInfo> long_term_blue_cone_history;
     std::queue<ObsConeInfo> long_term_yellow_cone_history;
-    double min_dist_th = 0.5;
+    double min_dist_th = 0.25;
 
     uint64_t prev_time_stamp;
 
@@ -81,6 +81,9 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr yaw_sub_;
 
     rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr associated_cones_pub_;
+
+    std::mutex velocity_mutex;
+    std::mutex yaw_mutex;
 
     int classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point, double yaw);
     void motion_model_on_cone_history(std::queue<ObsConeInfo>& cone_history, std::pair<double, double> global_xy_change);
