@@ -691,24 +691,38 @@ namespace controls {
 
 #ifdef DISPLAY
         std::vector<glm::fvec2> StateEstimator_Impl::get_all_left_cone_points() {
-            std::lock_guard<std::mutex> guard {m_mutex};        
-            return m_all_left_cone_points;
+            std::lock_guard<std::mutex> guard {m_mutex};
+
+            std::vector<glm::fvec2> all_left_cones;
+            auto slam_chunks = get_slam_chunks();
+            for (const auto& [chunk_id, cones] : slam_chunks) {
+            all_left_cones.insert(all_left_cones.end(), cones.first.begin(), cones.first.end());
+            }
+
+            return all_left_cones;
         }
 
         std::vector<glm::fvec2> StateEstimator_Impl::get_all_right_cone_points() {
             std::lock_guard<std::mutex> guard {m_mutex};
-            
-            return m_all_right_cone_points;
+
+            std::vector<glm::fvec2> all_right_cones;
+            auto slam_chunks = get_slam_chunks();
+            for (const auto& [chunk_id, cones] : slam_chunks) {
+            all_right_cones.insert(all_right_cones.end(), cones.second.begin(), cones.second.end());
+            }
+
+            return all_right_cones;
         }
 
         std::vector<glm::fvec2> StateEstimator_Impl::get_left_cone_points() {
-            std::lock_guard<std::mutex> guard {m_mutex};        
+            std::lock_guard<std::mutex> guard {m_mutex};
+
             return m_left_cone_points;
         }
 
         std::vector<glm::fvec2> StateEstimator_Impl::get_right_cone_points() {
             std::lock_guard<std::mutex> guard {m_mutex};
-            
+
             return m_right_cone_points;
         }
         virtual std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks(){

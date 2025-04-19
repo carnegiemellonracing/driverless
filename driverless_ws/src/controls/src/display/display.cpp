@@ -486,6 +486,8 @@ namespace controls {
                 m_all_left_cone_points = m_state_estimator->get_all_left_cone_points();
                 m_all_right_cone_points = m_state_estimator->get_all_right_cone_points();
 
+                m_slam_chunks = m_state_estimator->get_slam_chunks();
+
                 m_left_cone_points = m_state_estimator->get_left_cone_points();
                 m_right_cone_points = m_state_estimator->get_right_cone_points();
                 m_raceline_points = m_state_estimator->get_raceline_points();
