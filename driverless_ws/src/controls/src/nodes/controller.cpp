@@ -115,7 +115,10 @@ namespace controls {
 #endif
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
-
+                if (!m_slam_chunks.empty()) {
+                    RCLCPP_DEBUG(get_logger(), "Skipping cone_callback as m_slam_chunks is not empty");
+                    return;
+                }
                 m_mppi_controller->set_follow_midline_only(follow_midline_only);
                 m_state_estimator->set_follow_midline_only(follow_midline_only);
 
@@ -288,6 +291,31 @@ namespace controls {
                     std::lock_guard<std::mutex> guard {m_state_mut};
                     m_state_estimator->on_slam(slam_msg);
                 }
+            }
+
+            void ControllerNode::slam_pose_callback(const SlamPoseMsg &slam_pose_msg) {
+                RCLCPP_DEBUG(get_logger(), "Received slam pose message");
+                m_state_estimator->on_slam_pose(slam_pose_msg);
+                m_mppi_controller->set_follow_midline_only(follow_midline_only);
+                m_state_estimator->set_follow_midline_only(follow_midline_only);
+                left_cones = m_state_estimator->get_left_cone_points();
+                right_cones = m_state_estimator->get_right_cone_points();
+                std::stringstream ss;
+                ss << "Received slam pose: "
+                   << "x: " << slam_pose_msg.x
+                   << ", y: " << slam_pose_msg.y
+                   << ", yaw: " << slam_pose_msg.yaw
+                   << ", speed: " << slam_pose_msg.speed;
+                ss << "Left cones size: " << left_cones.size() << ", Right cones size: " << right_cones.size() << std::endl;
+                RCLCPP_DEBUG(get_logger(), ss.str().c_str());
+                
+                
+                std::unique_lock<std::mutex> guard {m_state_mut};
+
+                auto start_time = std::chrono::high_resolution_clock::now();
+
+                auto cone_process_start = std::chrono::high_resolution_clock::now();
+
             }
 
             void ControllerNode::pid_callback(const PIDMsg& pid_msg) {

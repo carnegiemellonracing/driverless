@@ -63,7 +63,7 @@ namespace controls {
             * @brief Callback for slam_pose messages. Updates the state estimator with the new pose from slam
             * @param slam_pose The slam_pose message
             */
-            virtual void on_slam_pose(const SlamPoseMsg& slam_pose) =0;
+            virtual float on_slam_pose(const SlamPoseMsg& slam_pose) =0;
 
         
             /**      
@@ -73,7 +73,7 @@ namespace controls {
             */
 
 
-          virtual void on_slam(const SlamMsg& slam_msg,rclcpp::Time time) =0;
+          virtual void on_slam(const SlamMsg& slam_msg,rclcpp::Time& time) =0;
         
 
 
