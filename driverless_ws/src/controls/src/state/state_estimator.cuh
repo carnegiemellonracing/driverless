@@ -89,6 +89,9 @@ namespace controls {
             /// most recent and only pose (new pose implies a new coord. frame, throw away data in old coord. frame)
             /// only nullopt before first pose received
             std::optional<Record> m_pose_record = std::nullopt;
+            std::optional<Record> m_slam_pose_record = std::nullopt;
+            
+            std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
 
             /// Helper binary operator for sorting records by time, needed for the multiset.
             struct CompareRecordTimes {
@@ -118,6 +121,8 @@ namespace controls {
 
             void on_spline(const SplineMsg& spline_msg) override;
             float on_cone(const ConeMsg& cone_msg) override;
+            void on_slam_pose(const SlamMsg& slam_pose_msg) override;
+            void on_slam(const SlamMsg& slam_msg, const rclcpp::Time &time) override;
             void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) override;
             // on_pose is not used, for future proofing
             void on_pose(const PoseMsg& pose_msg) override;
@@ -138,6 +143,7 @@ namespace controls {
             std::vector<glm::fvec2> get_all_right_cone_points() override;
             std::vector<glm::fvec2> get_left_cone_points() override;
             std::vector<glm::fvec2> get_right_cone_points() override;
+            std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks() override
             std::vector<glm::fvec2> get_raceline_points();
             std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> get_all_cone_points() override;
             std::vector<float> get_vertices() override;

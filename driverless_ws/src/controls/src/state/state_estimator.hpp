@@ -59,6 +59,25 @@ namespace controls {
           */
          virtual void on_twist(const TwistMsg& twist_msg, const rclcpp::Time &time) =0;
 
+            /**
+            * @brief Callback for slam_pose messages. Updates the state estimator with the new pose from slam
+            * @param slam_pose The slam_pose message
+            */
+            virtual void on_slam_pose(const SlamPoseMsg& slam_pose) =0;
+
+        
+            /**      
+            * @brief Callback for slam messages. Updates the state estimator with the new slam message.
+            * @param slam_msg The slam message
+            * @param time The time the slam message is accurate to.
+            */
+
+
+          virtual void on_slam(const SlamMsg& slam_msg,rclcpp::Time time) =0;
+        
+
+
+
          /**
           * @brief Callback for pose messages. Can be used for state projection, but currently unused.
           * Reason: position given by spline instead, yaw given by steering wheel angle. Pose meanwhile is noisy?
@@ -104,6 +123,7 @@ namespace controls {
 
             virtual std::vector<glm::fvec2> get_all_left_cone_points() =0;
             virtual std::vector<glm::fvec2> get_all_right_cone_points() =0;
+            virtual std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks() = 0;
             virtual std::vector<glm::fvec2> get_left_cone_points() = 0;
             virtual std::vector<glm::fvec2> get_right_cone_points() = 0;
             virtual std::vector<glm::fvec2> get_raceline_points() =0;

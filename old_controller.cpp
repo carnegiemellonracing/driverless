@@ -18,6 +18,8 @@
 #include "controller.hpp"
 #include <sstream>
 #include <utils/general_utils.hpp>
+#include <utils/ros_utils.hpp>
+#include <state/naive_state_tracker.hpp>
 
 
 // This is to fit into the ROS API
@@ -52,50 +54,80 @@ namespace controls {
               m_p_value {0.1}
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
-            rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group{
+            rclcpp::CallbackGroup::SharedPtr main_control_loop_callback_group{
+                create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};
+            
+            rclcpp::CallbackGroup::SharedPtr auxiliary_state_callback_group{
                 create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive)};
 
-            rclcpp::SubscriptionOptions options{};
-            options.callback_group = state_estimation_callback_group;
+            rclcpp::SubscriptionOptions main_control_loop_options{};
+            main_control_loop_options.callback_group = main_control_loop_callback_group;
+
+
+            rclcpp::SubscriptionOptions auxiliary_state_options{};
+            auxiliary_state_options.callback_group = auxiliary_state_callback_group;
 
 
                 m_cone_subscription = create_subscription<ConeMsg>(
                     cone_topic_name, spline_qos, //was cone_qos but that didn't exist, publisher uses spline_qos
                     [this] (const ConeMsg::SharedPtr msg) { cone_callback(*msg); },
-                    options
+                    main_control_loop_options
                 );
 
                 m_world_twist_subscription = create_subscription<TwistMsg>(
                     world_twist_topic_name, world_twist_qos,
                     [this] (const TwistMsg::SharedPtr msg) { world_twist_callback(*msg); },
-                    options
+                    auxiliary_state_options
                 );
 
-                m_world_pose_subscription = create_subscription<PoseMsg>(
-                    world_pose_topic_name, world_pose_qos,
-                    [this](const PoseMsg::SharedPtr msg)
-                    { world_pose_callback(*msg); },
-                    options);
+            m_world_pose_subscription = create_subscription<PoseMsg>(
+                world_pose_topic_name, world_pose_qos,
+                [this](const PoseMsg::SharedPtr msg)
+                { world_pose_callback(*msg); },
+                auxiliary_state_options);
 
             m_pid_subscription = create_subscription<PIDMsg>(
                 pid_topic_name, pid_qos,
                 [this](const PIDMsg::SharedPtr msg)
                 { pid_callback(*msg); },
-                options);  
-                
+                auxiliary_state_options);  
+
+            m_imu_accel_subscription = create_subscription<IMUAccelerationMsg>(
+                imu_accel_topic_name, imu_accel_qos,
+                [this](const IMUAccelerationMsg::SharedPtr msg)
+                { imu_accel_callback(*msg); },
+                auxiliary_state_options);
+
+            m_world_quat_subscription = create_subscription<QuatMsg>(
+                world_quat_topic_name, world_quat_qos,
+                [this](const QuatMsg::SharedPtr msg)
+                { world_quat_callback(*msg); },
+                auxiliary_state_options);
+
+            m_position_lla_subscription = create_subscription<PositionLLAMsg>(
+                world_position_lla_topic_name, world_pose_qos,
+                [this](const PositionLLAMsg::SharedPtr msg)
+                { world_position_lla_callback(*msg); },
+                auxiliary_state_options);
+
             
-                
-                m_slam_pose_subscription = create_subscription<SlamPoseMsg>(
-                    slam_pose_topic_name, slam_pose_qos,
-                    [this](const SlamMsg::SharedPtr msg)
-                    { slam_pose_callback(*msg); },
-                    options);
-                m_slam_chunk_subscription = create_subscription<SlamMsg>(
-                    slam_chunk_topic_name, slam_chunk_qos,
-                    [this](const SlamMsg::SharedPtr msg)
-                    { slam_callback(*msg); },
-                    options);
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
+            if constexpr (send_to_can) {
+                int can_init_result = initializeCan();
+                if (can_init_result < 0)
+                {
+                    std::cout << "Can failed to initialize with error " << can_init_result << std::endl;
+                    throw std::runtime_error("Failed to initialize can");
+                }
+                sendPIDConstants(default_p, default_feedforward);
+            }
+
+            if constexpr (testing_on_breezway) {
+                m_last_imu_acceleration_time = get_clock()->now();
+                m_last_x_velocity = 0.0f;
+                m_last_y_velocity = 0.0f;
+            }
+
 
             launch_aim_communication().detach();
         }
@@ -113,6 +145,83 @@ namespace controls {
                 return ss.str();
             }
 #endif
+            std::string progress_bar(float current, float min, float max, int width) {
+                if (current < min || current > max) {
+                    return "OUT OF BOUNDS";
+                }
+                float progress = (current - min)/(max - min);
+                int pos = static_cast<int>(progress * width);
+                std::string bar;
+                if (pos < width / 2)
+                {
+                    bar = "[" + std::string(std::max(0, pos), ' ') + "\033[31m" + std::string(width / 2 - pos, '|') + "\033[0m" + "|" + std::string(width / 2, ' ') + "]";
+                }
+                else if (pos > width / 2)
+                {
+                    bar = "[" + std::string(width / 2, ' ') + "|" + "\033[32m" + std::string(std::max(0, pos - width / 2), '|') + "\033[0m" + std::string(width - pos, ' ') + "]";
+                }
+                else
+                {
+                    bar = "[" + std::string(width / 2, ' ') + "|" + std::string(width / 2, ' ') + "]";
+                }
+                return bar;
+            }
+            std::string swangle_bar(float current, float min, float max, int width) {
+                if (current < min || current > max)
+                {
+                    return "OUT OF BOUNDS";
+                }
+                float progress = (current - min)/(max - min);
+                int pos = static_cast<int>(progress * width);
+                std::string bar;
+                if (pos < width / 2)
+                {
+                    bar = "[" + std::string(std::max(0, pos), ' ') + "\033[31m+\033[0m" + std::string(width / 2 - pos-1, ' ') + "|" + std::string(width / 2, ' ') + "]";
+                }
+                else if (pos > width / 2){
+                    bar = "[" + std::string(width / 2, ' ') + "|" + std::string(std::max(0, pos - width / 2), ' ') + "\033[32m+\033[0m" + std::string(width - pos-1, ' ') + "]";
+                }
+                else{
+                    bar = "[" + std::string(width / 2, ' ') + "\033[33m+\033[0m" + std::string(width / 2, ' ') + "]";
+                }
+
+                return bar;
+            }
+            State ControllerNode::get_state_under_strategy() {
+                switch (state_projection_mode) {
+                    case StateProjectionMode::MODEL_MULTISET: {
+                        std::optional<State> proj_curr_state_opt = m_state_estimator->project_state(get_clock()->now());
+                        if (proj_curr_state_opt.has_value()) {
+                            return proj_curr_state_opt.value();
+                        } else {
+                            RCLCPP_WARN(get_logger(), "Failed to project state, using naive speed only");
+                            return {0.0f, 0.0f, M_PI_2, m_last_speed};
+                        }
+                        break;
+                    }
+                    case StateProjectionMode::NAIVE_SPEED_ONLY:
+                        if constexpr (!testing_on_rosbag) {
+                            m_state_estimator->project_state(get_clock()->now());
+                        }
+                        return {0.0f, 0.0f, M_PI_2, m_last_speed};
+                        break;
+                    case StateProjectionMode::POSITIONLLA_YAW_SPEED: {
+                        m_state_estimator->project_state(get_clock()->now());
+                        std::optional<PositionAndYaw> position_and_yaw_opt = m_naive_state_tracker.get_relative_position_and_yaw();
+                        if (position_and_yaw_opt.has_value()) {
+                            return {position_and_yaw_opt.value().first.first, position_and_yaw_opt.value().first.second, position_and_yaw_opt.value().second, m_last_speed};
+                        } else {
+                            RCLCPP_WARN(get_logger(), "Failed to get position and yaw, using naive speed only");
+                            return {0.0f, 0.0f, M_PI_2, m_last_speed};
+                        }
+                        break;
+                    }
+                    default:
+                        RCLCPP_WARN(get_logger(), "unknown state projection mode");
+                        return {};
+                }
+            }
+
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
 
@@ -129,46 +238,60 @@ namespace controls {
                 ss << "Length of big orange cones: " << cone_msg.big_orange_cones.size() << std::endl;
                 RCLCPP_DEBUG(get_logger(), ss.str().c_str());
 
-                // * We want to manually lock the state mutex here, so use a unique_lock
-                std::unique_lock<std::mutex> state_lock {m_state_mut};
+
+                // save for info publishing later, since might be changed during iteration
+                rclcpp::Time cone_arrival_time = cone_msg.header.stamp;
 
                 // record time to estimate speed of the entire pipeline
                 auto start_time = std::chrono::high_resolution_clock::now();
 
                 // Process cones and report timing
-                auto cone_process_start = std::chrono::high_resolution_clock::now();
-                float svm_time = m_state_estimator->on_cone(cone_msg);
-                auto cone_process_end = std::chrono::high_resolution_clock::now();
-                m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
-                m_last_svm_time = svm_time;
+                Action action {};
+                State proj_curr_state {};
+                std::chrono::_V2::system_clock::time_point cone_process_start, cone_process_end, project_start, project_end, sync_start, sync_end, gen_action_start, gen_action_end;
 
-                RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
+                try {
+                    {
+                        std::lock_guard<std::mutex> guard {m_state_mut};
+                        cone_process_start = std::chrono::high_resolution_clock::now();
+                        float svm_time = m_state_estimator->on_cone(cone_msg);
+                        m_naive_state_tracker.record_cone_seen_time(cone_msg.header.stamp);
+                        cone_process_end = std::chrono::high_resolution_clock::now();
+                        m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(cone_process_end - cone_process_start).count();
+                        m_last_svm_time = svm_time;
 
-                // save for info publishing later, since might be changed during iteration
-                rclcpp::Time cone_arrival_time = cone_msg.header.stamp;
+                        RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
 
-                // send state to device (i.e. cuda globals)
-                // (also serves to lock state since nothing else updates gpu state)
-                RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                auto project_start = std::chrono::high_resolution_clock::now();
-                State proj_curr_state = m_state_estimator->project_state(get_clock()->now());
-                auto project_end = std::chrono::high_resolution_clock::now();
 
-                // * Let state callbacks proceed, so unlock the state mutex
-                state_lock.unlock();
+                        // send state to device (i.e. cuda globals)
+                        // (also serves to lock state since nothing else updates gpu state)
+                        RCLCPP_DEBUG(get_logger(), "syncing state to device");
+                        project_start = std::chrono::high_resolution_clock::now();
+                        proj_curr_state = get_state_under_strategy();
+                        project_end = std::chrono::high_resolution_clock::now();
 
-                // send state to device
-                auto sync_start = std::chrono::high_resolution_clock::now();
-                m_state_estimator->render_and_sync(proj_curr_state);
-                // auto duration_vec = m_state_estimator->sync_to_device(get_clock()->now());
-                auto sync_end = std::chrono::high_resolution_clock::now();
+                        // * Let state callbacks proceed, so unlock the state mutex
+                    }
 
-                // we don't need the host state anymore, so release the lock and let state callbacks proceed
+                    // send state to device
+                    sync_start = std::chrono::high_resolution_clock::now();
+                    m_state_estimator->render_and_sync(proj_curr_state);
+                    sync_end = std::chrono::high_resolution_clock::now();
 
-                // run mppi, and write action to the write buffer
-                auto gen_action_start = std::chrono::high_resolution_clock::now();
-                Action action = m_mppi_controller->generate_action();
-                auto gen_action_end = std::chrono::high_resolution_clock::now();
+                    // we don't need the host state anymore, so release the lock and let state callbacks proceed
+
+                    // run mppi, and write action to the write buffer
+                    gen_action_start = std::chrono::high_resolution_clock::now();
+                    action = m_mppi_controller->generate_action();
+                    gen_action_end = std::chrono::high_resolution_clock::now();
+
+                } catch (const ControllerError& e) {
+                    RCLCPP_ERROR(get_logger(), "Error generating action: %s, taking next averaged action instead", e.what());
+                    gen_action_start = std::chrono::high_resolution_clock::now();
+                    action = m_mppi_controller->get_next_averaged_action();
+                    gen_action_end = std::chrono::high_resolution_clock::now();
+                }
+
                 publish_action(action);
                 m_last_action_signal = action_to_signal(action);
                 std::string error_str;
@@ -246,16 +369,19 @@ namespace controls {
                     finish_time - start_time);
 
                 // can't use high res clock since need to be aligned with other nodes
-                auto total_time_elapsed = (get_clock()->now().nanoseconds() - cone_arrival_time.nanoseconds()) / 1000000;
+                RCLCPP_WARN(get_logger(), "Current time %ld", get_clock()->now().nanoseconds());
+                RCLCPP_WARN(get_logger(), "Cone arrival time %ld", cone_arrival_time.nanoseconds());
+
+                auto total_time_elapsed = get_clock()->now() - cone_arrival_time;    
 
                 interfaces::msg::ControllerInfo info{};
                 info.action = action_to_msg(action);
                 info.proj_state = state_to_msg(proj_curr_state);
-                info.projection_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(sync_end - sync_start)).count(); // duration_vec[0].count();
-                info.render_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(project_end - project_start)).count();
+                info.projection_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(project_end - project_start)).count(); // duration_vec[0].count();
+                info.render_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(sync_end - sync_start)).count();
                 info.mppi_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(gen_action_end - gen_action_start)).count();
                 info.latency_ms = time_elapsed.count();
-                info.total_latency_ms = total_time_elapsed;
+                info.total_latency_ms = total_time_elapsed.seconds() * 1000 + total_time_elapsed.nanoseconds() / 1000000;
 
                 publish_and_print_info(info, error_str);
             }
@@ -263,10 +389,14 @@ namespace controls {
             void ControllerNode::world_twist_callback(const TwistMsg &twist_msg) {
                 RCLCPP_DEBUG(get_logger(), "Received twist");
 
+                if constexpr (!testing_on_breezway) {
 
                 {
                     std::lock_guard<std::mutex> guard {m_state_mut};
                     m_state_estimator->on_twist(twist_msg, twist_msg.header.stamp);
+                    m_last_speed = twist_msg_to_speed(twist_msg);
+                }
+
                 }
 
             }
@@ -281,17 +411,38 @@ namespace controls {
                 }
 
             }
-            void ControllerNode::slam_callback(const SlamMsg &slam_msg) {
-                RCLCPP_DEBUG(get_logger(), "Received slam message");
-
-                {
-                    std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_slam(slam_msg);
-                }
-            }
 
             void ControllerNode::pid_callback(const PIDMsg& pid_msg) {
                 m_p_value = pid_msg.x;
+                if constexpr (send_to_can) {
+                    sendPIDConstants(m_p_value, 0);
+                }
+                RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
+            }
+
+            void ControllerNode::imu_accel_callback(const IMUAccelerationMsg& imu_accel_msg) {
+                if constexpr (testing_on_breezway) {
+                    float time_since_last_imu_acceleration_s = get_clock()->now().seconds() - m_last_imu_acceleration_time.seconds();
+                    // GPS and controller/dv frame are different
+                    m_last_x_velocity = m_last_x_velocity - imu_accel_msg.vector.y * time_since_last_imu_acceleration_s;
+                    m_last_y_velocity = m_last_y_velocity + imu_accel_msg.vector.x * time_since_last_imu_acceleration_s;
+                    m_last_imu_acceleration_time = get_clock()->now();
+                    m_last_speed = std::sqrt(m_last_x_velocity * m_last_x_velocity + m_last_y_velocity * m_last_y_velocity);
+                }
+            }
+            
+            void ControllerNode::world_quat_callback(const QuatMsg& quat_msg) {
+                if constexpr (state_projection_mode == StateProjectionMode::POSITIONLLA_YAW_SPEED) {
+                    m_naive_state_tracker.record_quaternion(quat_msg);
+                }
+                m_state_estimator->on_quat(quat_msg);
+            }
+
+            void ControllerNode::world_position_lla_callback(const PositionLLAMsg& position_lla_msg) {
+                if constexpr (state_projection_mode == StateProjectionMode::POSITIONLLA_YAW_SPEED) {
+                    m_naive_state_tracker.record_positionlla(position_lla_msg);
+                }
+                m_state_estimator->on_position_lla(position_lla_msg);
             }
 
             void ControllerNode::publish_action(const Action& action) {
@@ -302,6 +453,7 @@ namespace controls {
             static uint8_t swangle_to_rackdisplacement(float swangle) {
                 return 0;
             }
+
 
 
 
@@ -366,12 +518,17 @@ namespace controls {
             }
 
             void ControllerNode::publish_and_print_info(interfaces::msg::ControllerInfo info, const std::string& additional_info) {
-                m_info_publisher->publish(info);
+                // m_info_publisher->publish(info);
                 std::stringstream ss;
 
                 ss
                     << "Action:\n"
                     << "  swangle (rad): " << info.action.swangle << "\n"
+                    << swangle_bar(info.action.swangle,min_swangle, max_swangle,40) << "\n"
+                    << progress_bar(info.action.torque_fl, min_torque, max_torque, 40) << "\n"
+                    << progress_bar(info.action.torque_fr, min_torque, max_torque, 40) << "\n"
+                    << progress_bar(info.action.torque_rl, min_torque, max_torque, 40) << "\n"
+                    << progress_bar(info.action.torque_rr, min_torque, max_torque, 40) << "\n"
                     << "  torque_fl (Nm): " << info.action.torque_fl << "\n"
                     << "  torque_fr (Nm): " << info.action.torque_fr << "\n"
                     << "  torque_rl (Nm): " << info.action.torque_rl << "\n"
@@ -388,8 +545,9 @@ namespace controls {
                     << "MPPI Step Latency (ms): " << info.mppi_latency_ms << "\n"
                     << "Controls Latency (ms): " << info.latency_ms << "\n"
                     << "Total Latency (ms): " << info.total_latency_ms << "\n"
-                    << additional_info
-                    << std::endl;
+                    << get_clock()->get_clock_type()
+                << additional_info
+                << std::endl;
 
                 std::string info_str = ss.str();
 
@@ -405,19 +563,22 @@ namespace controls {
                     {
                         while (rclcpp::ok)
                         {
-                            // std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
+                            std::this_thread::sleep_for(std::chrono::milliseconds(aim_signal_period_ms));
                             auto current_time = std::chrono::high_resolution_clock::now();
                             // std::cout << "Time: " << std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 << std::endl;
-                            if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
+
+                            // if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
                                 auto start = std::chrono::steady_clock::now();
                                 ActionSignal last_action_signal = m_last_action_signal;
-                                sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
+                                if constexpr (send_to_can) {
+                                    // FYI, velocity_rpm is determined from the speed threshold
+                                    sendControlAction(last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
+                                    RCLCPP_DEBUG(get_logger(), "Sending action signal %d, %d, %u, %u\n", last_action_signal.front_torque_mNm, last_action_signal.back_torque_mNm, last_action_signal.velocity_rpm, last_action_signal.rack_displacement_adc);
+                                }
                                 auto end = std::chrono::steady_clock::now();
-                                RCLCPP_WARN(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
-
-                                sendPIDConstants(m_p_value, 0);
-                                RCLCPP_WARN(get_logger(), "send Kp %f", m_p_value);
-                            }
+                                RCLCPP_DEBUG(get_logger(), "sendControlAction took %ld ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+                            // }
+                            // }
                         }
                         std::cout << "I just got terminated in another way lol\n";
                         send_finished_ignore_error();

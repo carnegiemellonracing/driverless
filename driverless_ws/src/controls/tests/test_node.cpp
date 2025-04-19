@@ -240,8 +240,8 @@ namespace controls {
 
               m_log_file{getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_logs"], std::ios_base::trunc},
 
-              m_is_loop{m_config_dict["is_loop"] == "true"}
-              m_slam_chunks{0},
+              m_is_loop{m_config_dict["is_loop"] == "true"},
+              m_slam_chunks{0}
         {   
             std::cout << m_lookahead << std::endl;
             std::cout << m_all_segments.size() << std::endl;
@@ -249,13 +249,13 @@ namespace controls {
             // m_lookahead = std::stof(m_config_dict["look_ahead"]);
             // m_lookahead_squared = m_lookahead * m_lookahead;
             
-            glm::fvec2 curr_pos {0, 0}; // TODO: this is just to test what happens if the car starts OOB
-            // glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
+            // glm::fvec2 curr_pos {0, 0}; // TODO: this is just to test what happens if the car starts OOB
+            glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
             float curr_heading = m_world_state[2];
             int chunk_id = 0;
             for (const auto& seg : m_all_segments) {
                 SlamMsg chunk_info;
-                chunk_id = chunk++;
+                chunk_id = chunk_id++;
                 if (seg.type == SegmentType::ARC) {
                     
                     float next_heading = arc_rad_adjusted(curr_heading + seg.heading_change);
@@ -270,9 +270,24 @@ namespace controls {
                     curr_pos = spline.back();
                     curr_heading = next_heading;
 
-                    chunk_info.chunk_id = chunk_id;
-                    chunk_info.blue_cones = left;
-                    chunk_info.yellow_cones = right;
+                    chunk_info.chunk_id.data = chunk_id;
+                    for (const auto &point : left)
+                    {
+                        geometry_msgs::msg::Point p;
+                        p.x = point.x;
+                        p.y = point.y;
+                        p.z = 0.0; // Assuming 2D points
+                        chunk_info.blue_cones.push_back(p);
+                    }
+
+                    for (const auto &point : right)
+                    {
+                        geometry_msgs::msg::Point p;
+                        p.x = point.x;
+                        p.y = point.y;
+                        p.z = 0.0; // Assuming 2D points
+                        chunk_info.yellow_cones.push_back(p);
+                    }
                     m_slam_publisher->publish(chunk_info);
 
                     m_slam_chunks[chunk_id] = std::make_pair(left, right);
@@ -286,9 +301,24 @@ namespace controls {
 
                     curr_pos = spline.back();
 
-                    chunk_info.chunk_id = chunk_id;
-                    chunk_info.blue_cones = left;
-                    chunk_info.yellow_cones = right;
+                    chunk_info.chunk_id.data = chunk_id;
+                    for (const auto &point : left)
+                    {
+                        geometry_msgs::msg::Point p;
+                        p.x = point.x;
+                        p.y = point.y;
+                        p.z = 0.0; 
+                        chunk_info.blue_cones.push_back(p);
+                    }
+
+                    for (const auto &point : right)
+                    {
+                        geometry_msgs::msg::Point p;
+                        p.x = point.x;
+                        p.y = point.y;
+                        p.z = 0.0; 
+                        chunk_info.yellow_cones.push_back(p);
+                    }
                     m_slam_publisher->publish(chunk_info);
 
                     m_slam_chunks[chunk_id] = std::make_pair(left, right);
@@ -350,7 +380,7 @@ namespace controls {
             }
             return prev_closest;
         }
-
+        
         static size_t find_furthest_point(const std::vector<glm::fvec2>& points, glm::fvec2 position, float lookahead_squared, size_t prev_furthest, size_t prev_closest) {
             // this will eventually terminate if prev_closest is sane
             while (get_squared_distance(points.at(prev_furthest), position) < lookahead_squared) {
