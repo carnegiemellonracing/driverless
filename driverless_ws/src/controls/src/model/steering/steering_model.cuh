@@ -48,7 +48,6 @@ namespace controls {
             __host__ __device__ static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
                 const float requested_swangle = action[action_requested_swangle_idx];
                 const float curr_swangle = state[state_actual_swangle_idx];
-                const float swangle = calc_swangle(curr_swangle, requested_swangle, timestep);
 
                 const float state_tmp[4] = {
                     state[state_x_idx],
@@ -58,7 +57,7 @@ namespace controls {
                 };
 
                 const float action_tmp[2] = {
-                    swangle,
+                    curr_swangle,
                     action[action_torque_idx]
                 };
 
@@ -70,6 +69,7 @@ namespace controls {
                 next_state[state_y_idx] = next_state_tmp[state_y_idx];
                 next_state[state_yaw_idx] = next_state_tmp[state_yaw_idx];
                 next_state[state_speed_idx] = next_state_tmp[state_speed_idx];
+                const float swangle = calc_swangle(curr_swangle, requested_swangle, timestep);
 
                 next_state[state_actual_swangle_idx] = swangle;
             }
