@@ -10,19 +10,32 @@
 #include <model/sysid/sysid_model.cuh>
 
 namespace controls {
-    constexpr float device_controller_actuator_angular_speed = 8.0f;
+    constexpr float device_controller_actuator_angular_speed = 2.0f;
 
     namespace model {
         namespace steering {
             // moves curr_swangle towards requested_swangle (both have the same axes)
-            __host__ __device__ static float calc_swangle(const float curr_swangle, const float requested_swangle, const float timestep) {
-                float delta_swangle = (requested_swangle - curr_swangle) * device_controller_actuator_angular_speed;
-                // (theta0 - theta1) / (theta/t) = t
+                __host__ __device__ static float calc_swangle_integrated(const float curr_swangle, const float requested_swangle, const float timestep) {
+                    int num_steps = int(floor(timestep / 0.01f)) - 1; // sim step
+                    float swangle = curr_swangle;
+                    for (int i = 0; i < num_steps; i++)
+                    {
+                        swangle += (requested_swangle - swangle) * device_controller_actuator_angular_speed * 0.01f;
+                    }
+                    swangle += (requested_swangle - swangle) * device_controller_actuator_angular_speed * (timestep - num_steps * 0.01f);
 
-                float swangle_ = curr_swangle + delta_swangle * timestep;
+                    return swangle;
+                }
 
-                return swangle_;
-            }
+                __host__ __device__ static float calc_swangle(const float curr_swangle, const float requested_swangle, const float timestep)
+                {
+                    float delta_swangle = (requested_swangle - curr_swangle) * device_controller_actuator_angular_speed;
+                    // (theta0 - theta1) / (theta/t) = t
+
+                    float swangle_ = curr_swangle + delta_swangle * timestep;
+
+                    return swangle_;
+                }
 
 
             /**

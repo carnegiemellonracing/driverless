@@ -27,4 +27,4 @@ publish_spline: true
 log_state_projection_history: false
 no_midline_controller: false
 
-controller_actuator_angular_speed: 8.0f
+controller_actuator_angular_speed: 2.0f

@@ -15,9 +15,23 @@ namespace controls {
     namespace model_host {
         namespace steering {
             // moves curr_swangle towards requested_swangle (both have the same axes)
+            static float calc_swangle_integrated(const float curr_swangle, const float requested_swangle, float timestep)
+            {
+                int num_steps = int(floor(timestep / 0.01f)) - 1; // sim step
+                float swangle = curr_swangle;
+                for (int i = 0; i < num_steps; i++)
+                {
+                    swangle += (requested_swangle - swangle) * controller_actuator_angular_speed * 0.01f;
+                }
+                swangle += (requested_swangle - swangle) * controller_actuator_angular_speed * (timestep - num_steps * 0.01f);
+
+                return swangle;
+            }
+
+            // moves curr_swangle towards requested_swangle (both have the same axes)
             static float calc_swangle(const float curr_swangle, const float requested_swangle, float timestep) {
+
                 float delta_swangle = (requested_swangle - curr_swangle) * controller_actuator_angular_speed;
-                // (theta0 - theta1) / (theta/t) = t
 
                 float swangle_ = curr_swangle + delta_swangle * timestep;
 
