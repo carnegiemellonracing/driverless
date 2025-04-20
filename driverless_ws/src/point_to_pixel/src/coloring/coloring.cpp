@@ -1,12 +1,10 @@
 #include "coloring.hpp"
-#include "hsv.hpp"
-#include "yolo.hpp"
 
 namespace coloring {
     int get_cone_class(
         std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
         std::pair<cv::Mat, cv::Mat> frame_pair,
-        std::pair<cv::Mat, cv::Mat> detection_pair,
+        std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair,
         const cv::Scalar& yellow_filter_low,
         const cv::Scalar& yellow_filter_high,
         const cv::Scalar& blue_filter_low,
