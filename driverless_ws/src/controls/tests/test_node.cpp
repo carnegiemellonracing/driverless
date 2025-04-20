@@ -564,6 +564,7 @@ namespace controls {
             double sim_time = m_time.nanoseconds() / 1.0e9;
             m_time = get_clock()->now();
             controls::model_host::test_node_steering::dynamics(orig_world_state.data(), action, m_world_state.data(), m_time.nanoseconds() / 1.0e9 - sim_time);
+            RCLCPP_WARN(get_logger(), "Swangle:%f|%f|%f", adj_msg.swangle, m_world_state[4], sim_time);
 
             update_visible_indices();
             update_track_time();
