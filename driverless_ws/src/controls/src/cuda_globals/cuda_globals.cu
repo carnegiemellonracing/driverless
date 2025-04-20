@@ -7,7 +7,7 @@ namespace controls {
         __constant__ cudaTextureObject_t curv_frame_lookup_tex;
         __constant__ CurvFrameLookupTexInfo curv_frame_lookup_tex_info;
 
-        __constant__ float curr_state[state_dims] = {0, 0, 0, 0};
+        __constant__ float curr_state[state_dims] = {0, 0, 0, 0, 0};
 
         //TODO: throttle vs torque (write down units, maybe also add in mapping to IRL)
         constexpr float swangle_swangle_std = 0.1; ///< Standard deviation for swangle distribution

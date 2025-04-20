@@ -6,10 +6,16 @@
 #include <model/steering/steering_model.cuh>
 
 // ^ I think this is a macro because we didn't want to use a function object
-#ifdef USESYSID
-#define ONLINE_DYNAMICS_FUNC controls::model::sysid::dynamics
-#define CENTRIPEDAL_ACCEL_FUNC controls::model::sysid::centripedal_accel
+
+#ifdef STEERING_MODEL
+    #define ONLINE_DYNAMICS_FUNC controls::model::steering::dynamics
+    #define CENTRIPEDAL_ACCEL_FUNC controls::model::sysid::centripedal_accel
 #else
-#define ONLINE_DYNAMICS_FUNC controls::model::slipless::dynamics
-#define CENTRIPEDAL_ACCEL_FUNC controls::model::slipless::centripedal_accel
+    #ifdef USESYSID
+    #define ONLINE_DYNAMICS_FUNC controls::model::sysid::dynamics
+    #define CENTRIPEDAL_ACCEL_FUNC controls::model::sysid::centripedal_accel
+    #else
+    #define ONLINE_DYNAMICS_FUNC controls::model::slipless::dynamics
+    #define CENTRIPEDAL_ACCEL_FUNC controls::model::slipless::centripedal_accel
+    #endif
 #endif

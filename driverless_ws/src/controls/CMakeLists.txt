@@ -50,6 +50,10 @@ if (PARANOID)
   add_compile_options(-DPARANOID)
 endif()
 
+if (STEERING_MODEL)
+  add_compile_options(-DSTEERING_MODEL)
+endif()
+
 if (DATA)
   message("HELLO DATA IS ON")
   add_compile_options(-DDATA)

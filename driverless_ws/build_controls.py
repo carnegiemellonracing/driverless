@@ -12,6 +12,7 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--rosbag", action="store_true")
     parser.add_argument("--no_sysid_model", action="store_true")
     parser.add_argument("--no_display", action="store_true")
+    parser.add_argument("-m", "--steering_model", action="store_true")
 
     args = parser.parse_args()
     command = "colcon build --cmake-clean-cache --packages-up-to controls --cmake-args"
@@ -29,6 +30,8 @@ if __name__ == "__main__":
         command += " -DUSESYSID=ON"
     if args.rosbag:
         command += " -DROSBAG=ON"
+    if args.steering_model:
+        command += " -DSTEERING_MODEL=ON"
 
     os.system(command)
 

@@ -145,11 +145,23 @@ namespace controls {
         }
 
         void StateProjector::record_swangle(float swangle, rclcpp::Time time) {
-            m_history_since_pose.insert(Record {
-                .swangle = swangle,
-                .time = time,
-                .type = Record::Type::Swangle
-            });
+            if (m_pose_record.has_value() && time < m_pose_record.value().time) {
+                if (time > m_init_swangle.time) {
+                    m_init_swangle = Record {
+                        .swangle = swangle,
+                        .time = time,
+                        .type = Record::Type::Swangle
+                    };
+                }
+            }
+            else {
+                m_history_since_pose.insert(Record {
+                    .swangle = swangle,
+                    .time = time,
+                    .type = Record::Type::Swangle
+                });
+            }
+
         }
 
         static void record_state(size_t time_ns, const State& state, std::stringstream& output_stream) {
@@ -181,6 +193,7 @@ namespace controls {
             state[state_y_idx] = m_pose_record.value().pose.y;
             state[state_yaw_idx] = m_pose_record.value().pose.yaw;
             state[state_speed_idx] = m_init_speed.speed;
+            state[state_actual_swangle_idx] = m_init_swangle.swangle;
             record_state(m_pose_record.value().time.nanoseconds(), state, predicted_ss);
 
             const auto first_time = m_history_since_pose.empty() ? time : m_history_since_pose.begin()->time;
@@ -220,10 +233,11 @@ namespace controls {
                         ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
                         break;
 
-                    case Record::Type::Swangle:
-                        state[state_actual_swangle_idx] = record_iter->swangle;
-                        ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
-
+// #ifdef STEERING_MODEL
+//                     case Record::Type::Swangle:
+//                         state[state_actual_swangle_idx] = record_iter->swangle;
+//                         ONLINE_DYNAMICS_FUNC(state.data(), last_action.data(), state.data(), delta_time);
+// #endif
                     default:
                         break;
                 }

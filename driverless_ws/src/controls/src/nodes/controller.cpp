@@ -635,6 +635,7 @@ namespace controls {
                 msg.y = state[state_y_idx];
                 msg.yaw = state[state_yaw_idx];
                 msg.speed = state[state_speed_idx];
+                msg.actual_swangle = state[state_actual_swangle_idx];
 
                 return msg;
             }
@@ -664,6 +665,7 @@ namespace controls {
                     << "  y (m): " << info.proj_state.y << "\n"
                     << "  yaw (rad): " << info.proj_state.yaw << "\n"
                     << "  speed (m/s): " << info.proj_state.speed << "\n"
+                    << "  actual swangle (rad): " << info.proj_state.actual_swangle << "\n"
                     // << "Cone Processing Latency (ms)" << m_last_cone_process_time << "\n"
                     << "SVM Latency (ms): " << m_last_cone_process_time << "\n"
                     << "State Projection Latency (ms): " << info.projection_latency_ms << "\n"

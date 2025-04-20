@@ -564,7 +564,7 @@ namespace controls {
             double sim_time = m_time.nanoseconds() / 1.0e9;
             m_time = get_clock()->now();
             controls::model_host::test_node_steering::dynamics(orig_world_state.data(), action, m_world_state.data(), m_time.nanoseconds() / 1.0e9 - sim_time);
-            RCLCPP_WARN(get_logger(), "Swangle:%f|%f|%f", adj_msg.swangle, m_world_state[4], sim_time);
+            // RCLCPP_WARN(get_logger(), "Swangle:%f|%f|%f", adj_msg.swangle, m_world_state[4], sim_time);
 
             update_visible_indices();
             update_track_time();
@@ -580,7 +580,7 @@ namespace controls {
 
         void TestNode::on_action(const interfaces::msg::ControlAction& msg) {
             RCLCPP_INFO(get_logger(), "-----------Action Received-----------");
-            RCLCPP_INFO_STREAM(get_logger(), "X: " << m_world_state[0] << " Y: " << m_world_state[1] << " Yaw: " << m_world_state[2] << " Speed: " << m_world_state[3]);
+            RCLCPP_INFO_STREAM(get_logger(), "X: " << m_world_state[0] << " Y: " << m_world_state[1] << " Yaw: " << m_world_state[2] << " Speed: " << m_world_state[3] << " Swangle: " << m_world_state[4]);
             RCLCPP_INFO_STREAM(get_logger(), "Swangle: " << msg.swangle * (180 / M_PI) << "deg Torque f: " << msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr);
 
             m_last_action_msg = msg;

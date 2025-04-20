@@ -105,6 +105,7 @@ namespace controls {
             /// "Default" speed to be used until a recorded speed is available
             /// @note direction of velocity is inferred from swangle
             Record m_init_speed { .speed = 0, .time = rclcpp::Time(0UL, default_clock_type), .type = Record::Type::Speed};
+            Record m_init_swangle { .swangle = 0, .time = rclcpp::Time(0UL, default_clock_type), .type = Record::Type::Swangle};
             /// most recent and only pose (new pose implies a new coord. frame, throw away data in old coord. frame)
             /// only nullopt before first pose received
             std::optional<Record> m_pose_record = std::nullopt;
