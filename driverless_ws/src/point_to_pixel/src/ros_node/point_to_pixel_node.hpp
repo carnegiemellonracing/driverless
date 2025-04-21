@@ -3,7 +3,7 @@
 // Project Headers
 #include "../transform/transform.hpp"
 #include "../camera/camera.hpp"
-#include "../coloring/cones.hpp"
+#include "../cones/cones.hpp"
 
 // ROS2 imports
 #include "rclcpp/rclcpp.hpp"
@@ -80,6 +80,8 @@ private:
     #endif
     
     // ROS Arg Parameters
+    std::vector<double> param_l;
+    std::vector<double> param_r;
     Eigen::Matrix<double, 3, 4> projection_matrix_l;
     Eigen::Matrix<double, 3, 4> projection_matrix_r;
     double confidence_threshold;
