@@ -21,15 +21,14 @@ namespace cones {
 
         // Identify the color at the transformed image pixel
         if (use_yolo) {
-            pixel_l = yolo::get_color(
+            pixel_l = coloring::yolo::get_color(
                 pixel_pair.first, 
                 detection_pair.first, 
                 frame_pair.first.cols, 
                 frame_pair.first.rows,
                 confidence_threshold
             );
-            
-            pixel_r = yolo::get_color(
+            pixel_r = coloring::yolo::get_color(
                 pixel_pair.second, 
                 detection_pair.second, 
                 frame_pair.second.cols, 
@@ -37,7 +36,7 @@ namespace cones {
                 confidence_threshold
             );
         } else {
-            pixel_l = hsv::get_color(
+            pixel_l = coloring::hsv::get_color(
                 pixel_pair.first, 
                 frame_pair.first,
                 yellow_filter_low,
@@ -49,7 +48,7 @@ namespace cones {
                 confidence_threshold
             );
             
-            pixel_r = hsv::get_color(
+            pixel_r = coloring::hsv::get_color(
                 pixel_pair.second, 
                 frame_pair.second,
                 yellow_filter_low,
@@ -75,7 +74,7 @@ namespace cones {
         else return -1;
     }
 
-    Cone find_closest_cone(const std::vector<Cone>& cones) {
+    Cone find_closest_cone(const Cones& cones) {
         if (cones.empty()) {
             throw std::runtime_error("Empty cone list");
         }
@@ -90,13 +89,13 @@ namespace cones {
         return std::atan2(to.point.y - from.point.y, to.point.x - from.point.x);
     }
 
-    std::vector<Cone> order_cones(const std::vector<Cone>& unordered_cones) {
+    Cones order_cones(const Cones& unordered_cones) {
         if (unordered_cones.size() <= 1) {
             return unordered_cones;
         }
 
-        std::vector<Cone> ordered_cones;
-        std::vector<Cone> remaining_cones = unordered_cones;
+        Cones ordered_cones;
+        Cones remaining_cones = unordered_cones;
         
         // Start with the closest cone to origin
         Cone current_cone = find_closest_cone(remaining_cones);

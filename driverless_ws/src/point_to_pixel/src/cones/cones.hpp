@@ -9,30 +9,6 @@
 // Forward declarations
 namespace cones
 {
-    namespace hsv {
-        std::pair<int, double> get_color(
-            Eigen::Vector3d& pixel,
-            cv::Mat image,
-            const cv::Scalar& yellow_filter_low,
-            const cv::Scalar& yellow_filter_high,
-            const cv::Scalar& blue_filter_low,
-            const cv::Scalar& blue_filter_high,
-            const cv::Scalar& orange_filter_low,
-            const cv::Scalar& orange_filter_high,
-            double confidence_threshold
-        );
-    }
-
-    namespace yolo {
-        std::pair<int, double> get_color(
-            Eigen::Vector3d& pixel,
-            float *detection,
-            int cols,
-            int rows,
-            double confidence_threshold
-        );
-    }
-
     struct Cone
     {
         geometry_msgs::msg::Point point;
@@ -42,6 +18,13 @@ namespace cones
             distance = std::sqrt(p.x * p.x + p.y * p.y);
         }
     };
+    typedef std::vector<Cone> Cones;
+
+    struct TrackBounds
+    {
+        Cones yellow;
+        Cones blue;
+    }
 
     /**
      * @brief Determines cone class from pixel pairs across cameras
@@ -77,10 +60,10 @@ namespace cones
      * @brief Orders cones by their path direction
      * 
      * @param unordered_cones Vector of unordered cones
-     * @return std::vector<Cone> Vector of ordered cones
+     * @return Cones Vector of ordered cones
      */
 
-    std::vector<Cone> order_cones(const std::vector<Cone>& unordered_cones);
+    Cones order_cones(const Cones& unordered_cones);
 
     /**
      * @brief Finds the next closest cone to the first cone in the vector
@@ -88,7 +71,7 @@ namespace cones
      * @param cones Vector of cones
      * @return Cone Closest cone
      */
-    Cone find_closest_cone(const std::vector<Cone>& cones);
+    Cone find_closest_cone(const Cones& cones);
 
     /**
      * @brief Calculates the angle between two cones

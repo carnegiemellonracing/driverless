@@ -1,69 +1,100 @@
 #pragma once
-
 #include <videocapture.hpp>
-#include <ocv_display.hpp>
 #include <calibration.hpp>
 #include "rclcpp/rclcpp.hpp"
-
 #include <opencv2/opencv.hpp>
 // Standard Imports
 #include <deque>
 #include <cmath>
+#include <mutex>
 
-/**
- * @brief Finds the closest frame to a callback time from the image deque
- * 
- * @param img_deque Image deque with timestamps
- * @param callbackTime The time to find a matching frame for
- * @param logger ROS logger for error reporting
- * @return cv::Mat The closest frame
- */
-std::pair<uint64_t, cv::Mat> find_closest_frame(
-    const std::deque<std::pair<uint64_t, cv::Mat>> &img_deque,
-    const rclcpp::Time &callbackTime,
-    const rclcpp::Logger &logger
-);
+namespace camera {
+    struct Camera {
+        sl_oc::video::VideoCapture cap;
+        cv::Mat map_left_x;
+        cv::Mat map_left_y;
+        cv::Mat map_right_x;
+        cv::Mat map_right_y;
+        int device_id;
+        
+        Camera(sl_oc::video::VideoCapture& cap_in,
+            const cv::Mat& map_left_x_in,
+            const cv::Mat& map_left_y_in,
+            const cv::Mat& map_right_x_in,
+            const cv::Mat& map_right_y_in,
+            int device_id_in) :
+            cap(cap_in),
+            map_left_x(map_left_x_in),
+            map_left_y(map_left_y_in),
+            map_right_x(map_right_x_in),
+            map_right_y(map_right_y_in),
+            device_id(device_id_in)
+        {}
+    };
 
-/**
- * @brief Initialize ZED camera with rectification matrices and calibration
- * 
- * @param cap The video capture object
- * @param device_id Device ID for the camera
- * @param map_left_x Output parameter for left x rectification map
- * @param map_left_y Output parameter for left y rectification map
- * @param map_right_x Output parameter for right x rectification map
- * @param map_right_y Output parameter for right y rectification map
- * @param logger ROS logger for status messages
- * @return bool Success status
- */
-bool initialize_camera(
-    sl_oc::video::VideoCapture &cap,
-    int device_id,
-    cv::Mat &map_left_x,
-    cv::Mat &map_left_y,
-    cv::Mat &map_right_x,
-    cv::Mat &map_right_y,
-    const rclcpp::Logger &logger);
+    /**
+     * @brief Finds the closest frame to a callback time from the image deque
+     *
+     * @param img_deque Image deque with timestamps
+     * @param callbackTime The time to find a matching frame for
+     * @param logger ROS logger for error reporting
+     * @return std::pair<uint64_t, cv::Mat> The closest frame with timestamp
+     */
+    std::pair<uint64_t, cv::Mat> find_closest_frame(
+        const std::deque<std::pair<uint64_t, cv::Mat>> &img_deque,
+        const rclcpp::Time &callbackTime,
+        const rclcpp::Logger &logger
+    );
 
-/**
- * @brief Captures and rectifies a frame from a ZED camera
- * 
- * @param cap The video capture object
- * @param map_left_x Left x rectification map
- * @param map_left_y Left y rectification map
- * @param map_right_x Right x rectification map
- * @param map_right_y Right y rectification map
- * @param left_camera If using left sided zed set to true
- * @param use_inner_lens If using inner lenses set to true
- * @return cv::Mat The rectified frame
- */
-std::pair<uint64_t, cv::Mat> capture_and_rectify_frame(
-    const rclcpp::Logger &logger,
-    sl_oc::video::VideoCapture& cap,
-    const cv::Mat& map_left_x,
-    const cv::Mat& map_left_y,
-    const cv::Mat& map_right_x,
-    const cv::Mat& map_right_y,
-    bool left_camera,
-    bool use_inner_lens
-);
+    /**
+     * @brief Initialize ZED camera with rectification matrices and calibration
+     *
+     * @param cam Camera struct to initialize
+     * @param logger ROS logger for status messages
+     * @return bool Success status
+     */
+    bool initialize_camera(
+        Camera &cam,
+        const rclcpp::Logger &logger
+    );
+
+    /**
+     * @brief Captures and rectifies a frame from a ZED camera
+     *
+     * @param logger ROS logger for status messages
+     * @param cam Camera struct containing capture and rectification maps
+     * @param left_camera If using left sided zed set to true
+     * @param use_inner_lens If using inner lenses set to true
+     * @return std::pair<uint64_t, cv::Mat> The timestamp and rectified frame
+     */
+    std::pair<uint64_t, cv::Mat> capture_and_rectify_frame(
+        const rclcpp::Logger &logger,
+        const Camera &cam,
+        bool left_camera,
+        bool use_inner_lens
+    );
+
+    /**
+     * @brief Capture and saves freeze frames for calibration
+     *
+     * @param logger ROS logger for status messages
+     * @param left_cam Left camera struct
+     * @param right_cam Right camera struct
+     * @param l_img_mutex Mutex for left image deque
+     * @param r_img_mutex Mutex for right image deque
+     * @param img_deque_l Deque for left image frames
+     * @param img_deque_r Deque for right image frames
+     * @param use_inner_lens If using inner lenses set to true
+     */
+    void capture_freezes(
+        const rclcpp::Logger &logger,
+        const Camera &left_cam,
+        const Camera &right_cam,
+        std::mutex &l_img_mutex,
+        std::mutex &r_img_mutex,
+        std::deque<std::pair<uint64_t, cv::Mat>> &img_deque_l,
+        std::deque<std::pair<uint64_t, cv::Mat>> &img_deque_r,
+        bool use_inner_lens
+    );
+
+}

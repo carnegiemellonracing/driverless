@@ -92,22 +92,16 @@ private:
     cv::Scalar orange_filter_high;
     cv::Scalar orange_filter_low;
 
-    // Camera Objects and Parameters
+    // Camera params
     sl_oc::video::VideoParams params;
-    sl_oc::video::VideoCapture cap_l;
-    sl_oc::video::VideoCapture cap_r;
-    sl_oc::video::Frame canvas;
-    sl_oc::video::Frame frame_l;
-    sl_oc::video::Frame frame_r;
+    
+    // Camera objects
+    camera::Camera left_cam;
+    camera::Camera right_cam;
+    
     #if save_frames
     uint64_t camera_callback_count;
     #endif
-
-    // Rectification maps
-    cv::Mat map_left_x_ll, map_left_y_ll;
-    cv::Mat map_right_x_lr, map_right_y_lr;
-    cv::Mat map_left_x_rl, map_left_y_rl;
-    cv::Mat map_right_x_rr, map_right_y_rr;
 
     #if use_yolo
     cv::dnn::Net net; // YOLO Model
@@ -151,9 +145,14 @@ private:
      * from both cameras, then updates the image deques with the captured frame and corresponding timestamp.
      */
     void camera_callback();
+    
+    /**
+     * @brief Captures freeze frames for calibration
+     */
+    void capture_freezes();
 
     /**
-     * @brief Wrapper function responsible for retriving camera frames closest to the lidar timestamp.
+     * @brief Wrapper function responsible for retrieving camera frames closest to the lidar timestamp.
      * 
      * @param callbackTime Time of the lidar frame
      * @return std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> Tuple containing the timestamps and frames from both cameras

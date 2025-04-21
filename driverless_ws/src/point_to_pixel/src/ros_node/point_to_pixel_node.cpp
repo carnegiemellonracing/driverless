@@ -3,20 +3,20 @@
 // Constructor definition
 PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     params([]() {sl_oc::video::VideoParams p; p.res = sl_oc::video::RESOLUTION::HD1080; p.fps = sl_oc::video::FPS::FPS_30; return p;}()),
-    cap_l(sl_oc::video::VideoCapture(params)),
-    cap_r(sl_oc::video::VideoCapture(params))
+    left_cam(sl_oc::video::VideoCapture(params), cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 0),
+    right_cam(sl_oc::video::VideoCapture(params), cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 2)
 {
     // ---------------------------------------------------------------------------
     //                              CAMERA INITIALIZATION
     // ---------------------------------------------------------------------------
 
     // Initialize cameras
-    if (!initialize_camera(cap_l, 0, map_left_x_ll, map_left_y_ll, map_right_x_lr, map_right_y_lr, get_logger())) {
+    if (!camera::initialize_camera(left_cam, get_logger())) {
         rclcpp::shutdown(); // Shutdown node if camera initialization fails
         return;
     }
     
-    if (!initialize_camera(cap_r, 2, map_left_x_rl, map_left_y_rl, map_right_x_rr, map_right_y_rr, get_logger())) {
+    if (!camera::initialize_camera(right_cam, get_logger())) {
         rclcpp::shutdown(); // Shutdown node if camera initialization fails
         return;
     }
@@ -103,6 +103,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
         return;
     }
     #endif
+    
     // ---------------------------------------------------------------------------
     //                              ROS2 OBJECTS
     // ---------------------------------------------------------------------------
@@ -186,85 +187,11 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
         RCLCPP_INFO(get_logger(), "Saving Frames", save_path);
     #endif
 
-
     // Wait for cameras to initialize auto exposure and brightness settings
     rclcpp::sleep_for(std::chrono::seconds(3));
 
     // Capture and rectify frames for calibration
-    std::pair<uint64_t, cv::Mat> frame_ll = capture_and_rectify_frame(
-        get_logger(),
-        cap_l,
-        map_left_x_ll,
-        map_left_y_ll,
-        map_right_x_lr,
-        map_right_y_lr,
-        true, // left_camera==true
-        false // outer == false
-    );
-
-    if (frame_ll.second.empty()) {
-        RCLCPP_ERROR(get_logger(), "Failed to capture frame from left camera left frame.");
-    };
-
-    std::pair<uint64_t, cv::Mat> frame_lr = capture_and_rectify_frame(
-        get_logger(),
-        cap_l,
-        map_left_x_ll,
-        map_left_y_ll,
-        map_right_x_lr,
-        map_right_y_lr,
-        true, // left_camera==true
-        true // inner == true
-    );
-
-    if (frame_lr.second.empty()) {
-        RCLCPP_ERROR(get_logger(), "Failed to capture frame from left camera right frame.");
-    };
-
-        // Capture and rectify frames for calibration
-    std::pair<uint64_t, cv::Mat> frame_rr = capture_and_rectify_frame(
-        get_logger(),
-        cap_r,
-        map_left_x_rl,
-        map_left_y_rl,
-        map_right_x_rr,
-        map_right_y_rr,
-        false, // right_camera==false
-        false // outer == false
-    );
-
-    if (frame_rr.second.empty()) {
-        RCLCPP_ERROR(get_logger(), "Failed to capture frame from right camera right frame.");
-    };
-
-    std::pair<uint64_t, cv::Mat> frame_rl = capture_and_rectify_frame(
-        get_logger(),
-        cap_r,
-        map_left_x_rl,
-        map_left_y_rl,
-        map_right_x_rr,
-        map_right_y_rr,
-        false, // right_camera==false
-        true // inner == true
-    );
-
-    if (frame_rl.second.empty()) {
-        RCLCPP_ERROR(get_logger(), "Failed to capture frame from right camera left frame.");
-    };
-
-    // Save freeze images
-    cv::imwrite("src/point_to_pixel/config/freeze_ll.png", frame_ll.second);
-    cv::imwrite("src/point_to_pixel/config/freeze_lr.png", frame_lr.second);
-    cv::imwrite("src/point_to_pixel/config/freeze_rr.png", frame_rr.second);
-    cv::imwrite("src/point_to_pixel/config/freeze_rl.png", frame_rl.second);
-
-    l_img_mutex.lock();
-    img_deque_l.push_back(std::make_pair(frame_lr.first, frame_lr.second));
-    l_img_mutex.unlock();
-
-    r_img_mutex.lock();
-    img_deque_r.push_back(std::make_pair(frame_rl.first, frame_rl.second));
-    r_img_mutex.unlock();
+    capture_freezes();
 
     // Launch camera thread
     launch_camera_communication().detach();
@@ -280,21 +207,73 @@ std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> PointToPixelNode::get_camera_fr
 {
     // Get closest frame from each camera
     l_img_mutex.lock();
-    std::pair<uint64_t, cv::Mat> closestFrame_l = find_closest_frame(img_deque_l, callbackTime, get_logger());
+    std::pair<uint64_t, cv::Mat> closestFrame_l = camera::find_closest_frame(img_deque_l, callbackTime, get_logger());
     l_img_mutex.unlock();
 
     r_img_mutex.lock();
-    std::pair<uint64_t, cv::Mat> closestFrame_r = find_closest_frame(img_deque_r, callbackTime, get_logger());
+    std::pair<uint64_t, cv::Mat> closestFrame_r = camera::find_closest_frame(img_deque_r, callbackTime, get_logger());
     r_img_mutex.unlock();
 
     return std::make_tuple(closestFrame_l.first, closestFrame_l.second, closestFrame_r.first, closestFrame_r.second);
+}
+
+// Implementation of capture_freezes method
+void PointToPixelNode::capture_freezes()
+{
+    // Use the camera namespace's capture_freezes function
+    camera::capture_freezes(
+        get_logger(),
+        left_cam,
+        right_cam,
+        l_img_mutex,
+        r_img_mutex,
+        img_deque_l,
+        img_deque_r,
+        inner == 1
+    );
+}
+
+// Camera Callback (Populates and maintain deque)
+void PointToPixelNode::camera_callback()
+{
+    // Capture and rectify frame from left camera
+    std::pair<uint64_t, cv::Mat> frame_l = camera::capture_and_rectify_frame(
+        get_logger(),
+        left_cam,
+        true, // left_camera==true
+        inner == 1
+    );
+
+    // Capture and rectify frame from right camera
+    std::pair<uint64_t, cv::Mat> frame_r = camera::capture_and_rectify_frame(
+        get_logger(),
+        right_cam,
+        false, // right_camera==false
+        inner == 1
+    );
+
+    // Deque Management and Updating
+    l_img_mutex.lock();
+    while (img_deque_l.size() >= max_deque_size) {
+        img_deque_l.pop_front();
+    }
+    img_deque_l.push_back(frame_l);
+    l_img_mutex.unlock();
+
+    r_img_mutex.lock();
+    while (img_deque_r.size() >= max_deque_size) {
+        img_deque_r.pop_front();
+    }
+
+    img_deque_r.push_back(frame_r);
+    r_img_mutex.unlock();
 }
 
 // Wrapper function for retrieving the color of cone by combining output from both cameras
 int PointToPixelNode::get_cone_class(
     std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
     std::pair<cv::Mat, cv::Mat> frame_pair,
-    std::pair<std::vector<cv::Mat> , std::vector<cv::Mat> > detection_pair
+    std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair
 ) {
     return cones::get_cone_class(
         pixel_pair,
@@ -354,12 +333,12 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     #endif
 
     // Get YOLO detection outputs
-    std::vector<cv::Mat> detection_l = cones::yolo::process_frame(std::get<1>(frame_tuple), net);
+    std::vector<cv::Mat> detection_l = cones::coloring::yolo::process_frame(std::get<1>(frame_tuple), net);
     #if timing
     auto yolo_l_end_time = high_resolution_clock::now();
     #endif
 
-    std::vector<cv::Mat> detection_r = cones::yolo::process_frame(std::get<3>(frame_tuple), net);
+    std::vector<cv::Mat> detection_r = cones::coloring::yolo::process_frame(std::get<3>(frame_tuple), net);
     #if timing
     auto yolo_r_end_time = high_resolution_clock::now();
 
@@ -368,18 +347,18 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     RCLCPP_INFO(get_logger(), "\t - Right yolo time %llu ms \n", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_end_time).count());
     #endif
     
-    std::pair<std::vector<cv::Mat> , std::vector<cv::Mat> > detection_pair = std::make_pair(detection_l, detection_r);
+    std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair = std::make_pair(detection_l, detection_r);
     #else
     // Initialize empty matrix if not YOLO
-    std::pair<std::vector<cv::Mat> , std::vector<cv::Mat>> detection_pair = std::make_pair(nullptr, nullptr);
+    std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair = std::make_pair(std::vector<cv::Mat>(), std::vector<cv::Mat>());
     #endif
 
     // Motion modeling for both frames
-    auto [velocity_l_camera_frame, yaw_l_camera_frame] = get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, std::get<0>(frame_tuple));
-    auto [velocity_r_camera_frame, yaw_r_camera_frame] = get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, std::get<2>(frame_tuple));
+    auto [velocity_l_camera_frame, yaw_l_camera_frame] = transform::get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, std::get<0>(frame_tuple));
+    auto [velocity_r_camera_frame, yaw_r_camera_frame] = transform::get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, std::get<2>(frame_tuple));
 
     auto current_lidar_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
-    auto [velocity_lidar_frame, yaw_lidar_frame] = get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, current_lidar_time);
+    auto [velocity_lidar_frame, yaw_lidar_frame] = transform::get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, current_lidar_time);
 
     if (velocity_lidar_frame == nullptr || yaw_lidar_frame == nullptr)
     {
@@ -405,14 +384,13 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     double yaw_lidar_rad = yaw_lidar_frame->vector.z * M_PI / 180;
 
     std::pair<double, double> global_frame_change_l = std::make_pair(global_dx_l, global_dy_l);
-    std::pair<double, double> long_lat_l = global_frame_to_local_frame(global_frame_change_l, yaw_lidar_rad);
+    std::pair<double, double> long_lat_l = transform::global_frame_to_local_frame(global_frame_change_l, yaw_lidar_rad);
 
     std::pair<double, double> global_frame_change_r = std::make_pair(global_dx_r, global_dy_r);
-    std::pair<double, double> long_lat_r = global_frame_to_local_frame(global_frame_change_r, yaw_lidar_rad);
+    std::pair<double, double> long_lat_r = transform::global_frame_to_local_frame(global_frame_change_r, yaw_lidar_rad);
 
     // Declare point and cone vectors
-    std::vector<cones::Cone> unordered_yellow_cones;
-    std::vector<cones::Cone> unordered_blue_cones;
+    cones::TrackBounds unordered;
     #if save_frames
     std::vector<std::pair<cv::Point, cv::Point>> unknown_transformed_pixels, yellow_transformed_pixels, blue_transformed_pixels, orange_transformed_pixels;
     #endif
@@ -420,7 +398,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     // Iterate through all points in /cpp_cones message
     for (size_t i = 0; i < msg->cone_array.size(); i++) {
         // Motion model lidar point then transform to camera space
-        std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair = transform_point(
+        std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair = transform::transform_point(
             get_logger(),
             msg->cone_array[i].cone_points[0],
             {long_lat_l, long_lat_r},
@@ -450,7 +428,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
                 break;
             case 1:
                 // message.yellow_cones.push_back(point_msg);
-                unordered_yellow_cones.push_back(cones::Cone(point_msg));
+                unordered.yellow.push_back(cones::Cone(point_msg));
 
                 #if save_frames
                 yellow_transformed_pixels.push_back(
@@ -461,7 +439,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
                 break;
             case 2:
                 // message.blue_cones.push_back(point_msg);
-                unordered_blue_cones.push_back(cones::Cone(point_msg));
+                unordered.blue.push_back(cones::Cone(point_msg));
 
                 #if save_frames
                 blue_transformed_pixels.push_back(
@@ -489,15 +467,17 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     #endif
 
     // Cone ordering
-    if (!unordered_yellow_cones.empty()) {
-        std::vector<cones::Cone> ordered_yellow = cones::order_cones(unordered_yellow_cones);
+    cones::TrackBounds ordered;
+    
+    if (!unordered.yellow.empty()) {
+        ordered.yellow = cones::order_cones(unordered.yellow);
         for (const auto& cone : ordered_yellow) {
             message.yellow_cones.push_back(cone.point);
         }
     }
 
-    if (!unordered_blue_cones.empty()) {
-        std::vector<cones::Cone> ordered_blue = cones::order_cones(unordered_blue_cones);
+    if (!unordered.blue.empty()) {
+        ordered.blue ordered_blue = cones::order_cones(unordered.blue);
         for (const auto& cone : ordered_blue) {
             message.blue_cones.push_back(cone.point);
         }
@@ -593,67 +573,6 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     cone_pub_->publish(message);
 }
 
-#if save_frames
-void PointToPixelNode::save_frame(const rclcpp::Logger &logger, std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple)
-{
-    auto start = std::chrono::high_resolution_clock::now();
-    std::string l_filename = save_path + std::to_string(std::get<0>(frame_tuple)) + ".bmp";
-    std::string r_filename = save_path + std::to_string(std::get<2>(frame_tuple)) + ".bmp";
-    cv::imwrite(l_filename, std::get<1>(frame_tuple));
-    cv::imwrite(r_filename, std::get<3>(frame_tuple));
-    
-    #if timing
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    RCLCPP_INFO(logger, "Saved frame in %ld ms.", duration.count());
-    #endif
-}
-#endif
-
-// Camera Callback (Populates and maintain deque)
-void PointToPixelNode::camera_callback()
-{
-    // Capture and rectify frame from camera l
-    std::pair<uint64_t, cv::Mat> frame_l = capture_and_rectify_frame(
-        get_logger(),
-        cap_l,
-        map_left_x_ll,
-        map_left_y_ll,
-        map_right_x_lr,
-        map_right_y_lr,
-        true, // left_camera==true
-        inner == 1
-    );
-
-    // Capture and rectify frame from camera r
-    std::pair<uint64_t, cv::Mat> frame_r = capture_and_rectify_frame(
-        get_logger(),
-        cap_r,
-        map_left_x_rl,
-        map_left_y_rl,
-        map_right_x_rr,
-        map_right_y_rr,
-        false, // left_camera==false
-        inner == 1
-    );
-
-    // Deque Management and Updating
-    l_img_mutex.lock();
-    while (img_deque_l.size() >= max_deque_size) {
-        img_deque_l.pop_front();
-    }
-    img_deque_l.push_back(frame_l);
-    l_img_mutex.unlock();
-
-    r_img_mutex.lock();
-    while (img_deque_r.size() >= max_deque_size) {
-        img_deque_r.pop_front();
-    }
-
-    img_deque_r.push_back(frame_r);
-    r_img_mutex.unlock();
-}
-
 // Launches camera thread
 std::thread PointToPixelNode::launch_camera_communication() {
     return std::thread{
@@ -669,6 +588,21 @@ std::thread PointToPixelNode::launch_camera_communication() {
 }
 
 #if save_frames
+void PointToPixelNode::save_frame(const rclcpp::Logger &logger, std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple)
+{
+    auto start = std::chrono::high_resolution_clock::now();
+    std::string l_filename = save_path + std::to_string(std::get<0>(frame_tuple)) + ".bmp";
+    std::string r_filename = save_path + std::to_string(std::get<2>(frame_tuple)) + ".bmp";
+    cv::imwrite(l_filename, std::get<1>(frame_tuple));
+    cv::imwrite(r_filename, std::get<3>(frame_tuple));
+    
+    #if timing
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    RCLCPP_INFO(logger, "Saved frame in %ld ms.", duration.count());
+    #endif
+}
+
 std::thread PointToPixelNode::launch_frame_saving()
 {
     return std::thread{
@@ -682,7 +616,7 @@ std::thread PointToPixelNode::launch_frame_saving()
                     save_queue.pop();
                 }
                 save_mutex.unlock();
-                // Save a frame every half second
+                // Check for new frames every millisecond
                 rclcpp::sleep_for(std::chrono::milliseconds(1));
             }
         }};
