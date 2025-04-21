@@ -8,6 +8,7 @@
 #include <bits/stdc++.h>
 #include <thread>
 #include <atomic>
+#include <cassert>
 
 #include "rclcpp/rclcpp.hpp" // For propper logging
 #include <pcl/point_cloud.h>
@@ -228,8 +229,14 @@ inline void expandCluster(
 inline PointCloud<PointXYZI> computeCentroids(
   PointCloud<PointXYZI> &cloud,
   const unordered_map<int, vector<int>> &clusters) {
+<<<<<<< Updated upstream
+=======
+  printf("Computing centroids\n");
+>>>>>>> Stashed changes
   PointCloud<PointXYZI> centroids;
   centroids.points.reserve(clusters.size());
+
+  assert(false);
 
   for (const auto &kv : clusters) {
     const auto &indices = kv.second;
@@ -246,7 +253,11 @@ inline PointCloud<PointXYZI> computeCentroids(
       sum_z += cloud.points[idx].z;
     }
 
+<<<<<<< Updated upstream
     std::cout << "min_z: " << min_z << ", max_z: " << max_z << std::endl;
+=======
+    printf("min_z: %f, max_z: %f\n", min_z, max_z);
+>>>>>>> Stashed changes
 
     const int num_levels = 3;
     std::vector<std::pair<double, int>> levels(num_levels);
@@ -281,7 +292,11 @@ inline PointCloud<PointXYZI> computeCentroids(
       } else {
         levels[i].first = 0.0;
       }
+<<<<<<< Updated upstream
       std::cout << "Level " << i << ": " << levels[i].first << std::endl;
+=======
+      printf("Level %d: %f\n", i, levels[i].first);
+>>>>>>> Stashed changes
     }
 
     int state = 0;
@@ -370,6 +385,10 @@ inline PointCloud<PointXYZI> computeCentroids(
 
 // DBSCAN that works on a PointCloud<PointXYZ>
 inline PointCloud<PointXYZI> DBSCAN(PointCloud<PointXYZI> &cloud, double epsilon, int min_points) {
+<<<<<<< Updated upstream
+=======
+  printf("DBSCANNING\n");                 
+>>>>>>> Stashed changes
 
   vector<bool> visited(cloud.points.size(), false);
   vector<int> cluster(cloud.points.size(), -1);
