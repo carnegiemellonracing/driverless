@@ -39,7 +39,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(CONE_HISTORY_TEST_NODE_SRC  
   src/transform/transform.cpp
-  src/ros_node/cone_history_test_node.cpp
+  src/nodes/cone_history_test_node.cpp
   src/cones/svm/svm_recoloring.cpp
   src/cones/svm/svm.cpp
   src/cones/svm/svm_recoloring.cpp
@@ -58,7 +58,7 @@ set(POINT_TO_PIXEL_SRC
   src/cones/cones.cpp
   src/cones/hsv.cpp
   src/cones/yolo.cpp
-  src/ros_node/point_to_pixel_node.cpp
+  src/nodes/point_to_pixel_node.cpp
 )
 
 # Cone History Test Executable
