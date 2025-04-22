@@ -37,19 +37,18 @@ include_directories(~/Documents/driverless-packages/zed-open-capture/include)
 include_directories(~/Documents/driverless-packages/zed-open-capture/examples/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-# set(CONE_HISTORY_TEST_NODE_SRC  
-#   src/ros_node/cone_history_test_node.cpp
-# )
-# add_executable(cone_history_test_node ${CONE_HISTORY_TEST_NODE_SRC} )
-# ament_target_dependencies(cone_history_test_node rclcpp interfaces geometry_msgs)
-# target_include_directories(cone_history_test_node PUBLIC
-#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#   $<INSTALL_INTERFACE:include>)
+set(CONE_HISTORY_TEST_NODE_SRC  
+  src/ros_node/cone_history_test_node.cpp
+)
+add_executable(cone_history_test_node ${CONE_HISTORY_TEST_NODE_SRC} )
+ament_target_dependencies(cone_history_test_node rclcpp interfaces geometry_msgs)
+target_include_directories(cone_history_test_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
 
-# install(TARGETS cone_history_test_node
-#   DESTINATION lib/${PROJECT_NAME})
-
-
+install(TARGETS cone_history_test_node
+  DESTINATION lib/${PROJECT_NAME})
+  
 ###############################
 
 set(POINT_TO_PIXEL_SRC  

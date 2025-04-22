@@ -96,6 +96,8 @@ private:
     sl_oc::video::VideoParams params;
     
     // Camera objects
+    sl_oc::video::VideoCapture cap_l;
+    sl_oc::video::VideoCapture cap_r;
     camera::Camera left_cam;
     camera::Camera right_cam;
     

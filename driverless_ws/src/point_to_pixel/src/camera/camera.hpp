@@ -1,8 +1,11 @@
 #pragma once
+
 #include <videocapture.hpp>
+#include <ocv_display.hpp>
 #include <calibration.hpp>
 #include "rclcpp/rclcpp.hpp"
 #include <opencv2/opencv.hpp>
+
 // Standard Imports
 #include <deque>
 #include <cmath>
@@ -10,18 +13,19 @@
 
 namespace camera {
     struct Camera {
-        sl_oc::video::VideoCapture cap;
+        sl_oc::video::VideoCapture &cap;
         cv::Mat map_left_x;
         cv::Mat map_left_y;
         cv::Mat map_right_x;
         cv::Mat map_right_y;
         int device_id;
         
-        Camera(sl_oc::video::VideoCapture& cap_in,
-            const cv::Mat& map_left_x_in,
-            const cv::Mat& map_left_y_in,
-            const cv::Mat& map_right_x_in,
-            const cv::Mat& map_right_y_in,
+        Camera(
+            sl_oc::video::VideoCapture &cap_in,
+            const cv::Mat &map_left_x_in,
+            const cv::Mat &map_left_y_in,
+            const cv::Mat &map_right_x_in,
+            const cv::Mat &map_right_y_in,
             int device_id_in) :
             cap(cap_in),
             map_left_x(map_left_x_in),

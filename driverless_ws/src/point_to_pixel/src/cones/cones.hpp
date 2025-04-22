@@ -24,7 +24,7 @@ namespace cones
     {
         Cones yellow;
         Cones blue;
-    }
+    };
 
     /**
      * @brief Determines cone class from pixel pairs across cameras

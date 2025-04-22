@@ -114,8 +114,29 @@ namespace camera {
             // Extract relevant part of the image from side-by-side
             raw = frameBGR(cv::Rect(index));
             
+            if (map_x.empty() || map_y.empty()) {
+                RCLCPP_ERROR(logger, "Mapping matrices are empty for camera.");
+                return std::make_pair(frame.timestamp, raw.clone());
+            }
+
+            // Type check for rectification matrices
+            cv::Mat map_x_float, map_y_float;
+    
+            if (map_x.type() != CV_32F) {
+                map_x.convertTo(map_x_float, CV_32F);
+            } else {
+                map_x_float = map_x;
+            }
+            
+            if (map_y.type() != CV_32F) {
+                map_y.convertTo(map_y_float, CV_32F);
+            } else {
+                map_y_float = map_y;
+            }
+
+
             // Apply rectification
-            cv::remap(raw, rect, map_x, map_y, cv::INTER_LINEAR);
+            cv::remap(raw, rect, map_x_float, map_y_float, cv::INTER_LINEAR);
             
             return std::make_pair(frame.timestamp, rect);
         } else {

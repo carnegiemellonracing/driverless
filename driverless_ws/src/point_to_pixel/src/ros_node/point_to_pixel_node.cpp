@@ -3,8 +3,10 @@
 // Constructor definition
 PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     params([]() {sl_oc::video::VideoParams p; p.res = sl_oc::video::RESOLUTION::HD1080; p.fps = sl_oc::video::FPS::FPS_30; return p;}()),
-    left_cam(sl_oc::video::VideoCapture(params), cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 0),
-    right_cam(sl_oc::video::VideoCapture(params), cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 2)
+    cap_l(sl_oc::video::VideoCapture(params)),
+    cap_r(sl_oc::video::VideoCapture(params)),
+    left_cam(cap_l, cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 0),
+    right_cam(cap_r, cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 2)
 {
     // ---------------------------------------------------------------------------
     //                              CAMERA INITIALIZATION
@@ -97,7 +99,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     orange_filter_low = cv::Scalar(lo_filt_arr[0], lo_filt_arr[1], lo_filt_arr[2]);
     
     #if use_yolo
-    net = cones::yolo::init_model(yolo_model_path);
+    net = cones::coloring::yolo::init_model(yolo_model_path);
     if (net.empty()) {
         RCLCPP_ERROR(get_logger(), "Failed to load YOLO model");
         return;
@@ -191,8 +193,8 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     rclcpp::sleep_for(std::chrono::seconds(3));
 
     // Capture and rectify frames for calibration
-    capture_freezes();
-
+    camera::capture_freezes(get_logger(), left_cam, right_cam, l_img_mutex, r_img_mutex, img_deque_l, img_deque_r, inner == 1);
+    std::cout << "here" << std::endl;
     // Launch camera thread
     launch_camera_communication().detach();
 
@@ -324,6 +326,9 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
 
     #if timing
     auto camera_time = high_resolution_clock::now();
+    uint64_t ms_lidar_camera_diff_l = (std::get<0>(frame_tuple) - msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec) / 1e6;
+    uint64_t ms_lidar_camera_diff_r = (std::get<2>(frame_tuple) - msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec) / 1e6;
+    RCLCPP_INFO(get_logger(), "Camera Diff L: %llu ms | Camera Diff R: %llu ms", ms_lidar_camera_diff_l, ms_lidar_camera_diff_r);
     #endif
 
     // Process frames with YOLO
@@ -343,8 +348,9 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     auto yolo_r_end_time = high_resolution_clock::now();
 
     RCLCPP_INFO(get_logger(), "Total yolo time %llu ms", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_start_time).count());
-    RCLCPP_INFO(get_logger(), "\t - Left yolo time %llu ms", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_l_end_time - yolo_l_start_time).count());
-    RCLCPP_INFO(get_logger(), "\t - Right yolo time %llu ms \n", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_end_time).count());
+    RCLCPP_INFO(get_logger(), "\t - Left yolo time %llu ms | Right yolo time %llu ms", 
+                std::chrono::duration_cast<std::chrono::milliseconds>(yolo_l_end_time - yolo_l_start_time).count(), 
+                std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_end_time).count());
     #endif
     
     std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair = std::make_pair(detection_l, detection_r);
@@ -471,14 +477,14 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     
     if (!unordered.yellow.empty()) {
         ordered.yellow = cones::order_cones(unordered.yellow);
-        for (const auto& cone : ordered_yellow) {
+        for (const auto& cone : ordered.yellow) {
             message.yellow_cones.push_back(cone.point);
         }
     }
 
     if (!unordered.blue.empty()) {
-        ordered.blue ordered_blue = cones::order_cones(unordered.blue);
-        for (const auto& cone : ordered_blue) {
+        ordered.blue = cones::order_cones(unordered.blue);
+        for (const auto& cone : ordered.blue) {
             message.blue_cones.push_back(cone.point);
         }
     }
@@ -499,8 +505,8 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
         cv::Mat frame_r_canvas = frame_pair.second.clone();
         float alpha = .3;
 
-        cones::yolo::draw_bounding_boxes(frame_pair.first, frame_l_canvas, detection_l, frame_pair.first.cols, frame_pair.first.rows, confidence_threshold);
-        cones::yolo::draw_bounding_boxes(frame_pair.second, frame_r_canvas, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows, confidence_threshold);
+        cones::coloring::yolo::draw_bounding_boxes(frame_pair.first, frame_l_canvas, detection_l, frame_pair.first.cols, frame_pair.first.rows, confidence_threshold);
+        cones::coloring::yolo::draw_bounding_boxes(frame_pair.second, frame_r_canvas, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows, confidence_threshold);
 
         #endif
 
@@ -538,19 +544,6 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     auto drawing_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_drawing_time - end_ordering_time).count();
     #endif
     #endif
-    
-    // Publish message and log
-    int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size();
-    int yellow_cones = message.yellow_cones.size();
-    int blue_cones = message.blue_cones.size();
-    int orange_cones = message.orange_cones.size();
-    int unknown_color_cones = message.unknown_color_cones.size();
-    
-    RCLCPP_INFO(
-        get_logger(), 
-        "Published %d yellow, %d blue, %d orange, and %d unknown cones.", 
-        yellow_cones, blue_cones, orange_cones, unknown_color_cones
-    );
 
     #if timing
     auto end_time = high_resolution_clock::now();
@@ -565,9 +558,21 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     RCLCPP_INFO(get_logger(), "Total Cone Ordering Time  %ld ms. \n", ordering_time);
     auto time_diff = end_time - start_time;
     RCLCPP_INFO(get_logger(), "Total PPM Time %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(time_diff).count());
-    RCLCPP_INFO(get_logger(), "Total Time from Lidar to start  %ld ms.", ms_time_since_lidar_2);
-    RCLCPP_INFO(get_logger(), "Total Time from Lidar:  %ld ms.", (uint64_t) ms_time_since_lidar);
+    RCLCPP_INFO(get_logger(), "Time from Lidar to start  %ld ms.", ms_time_since_lidar_2);
+    RCLCPP_INFO(get_logger(), "Time from Lidar:  %ld ms.", (uint64_t) ms_time_since_lidar);
     #endif
+
+    // Publish message and log
+    int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size() + message.unknown_color_cones.size();
+    int yellow_cones = message.yellow_cones.size();
+    int blue_cones = message.blue_cones.size();
+    int orange_cones = message.orange_cones.size();
+    int unknown_color_cones = message.unknown_color_cones.size();
+    
+    RCLCPP_INFO(get_logger(), "Published %d total cones.", cones_published);
+    RCLCPP_INFO(get_logger(), "%d yellow cones, %d blue cones, %d orange cones, %d unknown color cones.\n",
+    yellow_cones, blue_cones, orange_cones, unknown_color_cones);
+
     RCLCPP_INFO(get_logger(), "----------------------------------------------");
     
     cone_pub_->publish(message);
