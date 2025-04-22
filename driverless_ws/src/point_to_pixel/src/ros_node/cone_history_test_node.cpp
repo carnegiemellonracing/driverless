@@ -1,6 +1,5 @@
 #include "cone_history_test_node.hpp"
 
-
 std::pair<double, double> global_frame_to_local_frame(
     std::pair<double, double> global_frame_change,
     double yaw)
@@ -257,7 +256,6 @@ int ConeHistoryTestNode::classify_through_data_association(geometry_msgs::msg::V
             RCLCPP_INFO(get_logger(), "No classification possible: min_dist_from_blue: %f | min_dist_from_yellow: %f", min_dist_from_blue, min_dist_from_yellow);
             return -1;
         }
-
     }
 }
 
@@ -304,6 +302,7 @@ void ConeHistoryTestNode::maintain_cone_history_lifespans(std::queue<ObsConeInfo
         }
     }
 }
+
 /**
  * @brief Store cones that are classified blue and yellow into our cone histories
  * For unknown cones, these will be what we are classifying 
@@ -349,18 +348,18 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
 
     RCLCPP_INFO(get_logger(), "-------------End Motion Modeling On Cone History--------------\n");
 
-
     RCLCPP_INFO(get_logger(), "-------------Processing Cones--------------"); 
     RCLCPP_INFO(get_logger(), "\tNumber of blue cones received: %zu", msg->blue_cones.size());
     RCLCPP_INFO(get_logger(), "\tNumber of yellow cones received: %zu", msg->yellow_cones.size());
     RCLCPP_INFO(get_logger(), "\tNumber of old blue cones: %zu", long_term_blue_cone_history.size());
     RCLCPP_INFO(get_logger(), "\tNumber of old yellow cones: %zu", long_term_yellow_cone_history.size());
-    std::vector<geometry_msgs::msg::Point> blue_cones_to_publish = msg->blue_cones;
-    std::vector<geometry_msgs::msg::Point> yellow_cones_to_publish = msg->yellow_cones;
     
-
-
-    for (int i= 0; i < msg->blue_cones.size(); i++) {
+    cones::TrackBounds cones_to_publish;
+    
+    for (int i = 0; i < msg->blue_cones.size(); i++) {
+        cones::Cone cone(msg->blue_cones[i]);
+        cones_to_publish.blue.push_back(cone);
+        
         blue_cone_history.emplace(0.0, 0.0, cur_yaw, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
         geometry_msgs::msg::Vector3 point;
         point.x = msg->blue_cones[i].x;
@@ -372,16 +371,20 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
             long_term_blue_cone_history.emplace(0.0, 0.0, cur_yaw, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
         }
     }
+    
     while (long_term_blue_cone_history.size() > max_long_term_history_size) {
         long_term_blue_cone_history.pop();
     }
 
-    while (long_term_yellow_cone_history.size() > max_long_term_history_size)
-    {
+    while (long_term_yellow_cone_history.size() > max_long_term_history_size) {
         long_term_yellow_cone_history.pop();
     }
 
-    for (int i= 0; i < msg->yellow_cones.size(); i++) {
+    // Fix for type difference: Convert geometry_msgs::msg::Point to cones::Cone
+    for (int i = 0; i < msg->yellow_cones.size(); i++) {
+        cones::Cone cone(msg->yellow_cones[i]);
+        cones_to_publish.yellow.push_back(cone);
+        
         yellow_cone_history.emplace(0.0, 0.0, cur_yaw, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
         geometry_msgs::msg::Vector3 point;
         point.x = msg->yellow_cones[i].x;
@@ -396,11 +399,10 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     RCLCPP_INFO(get_logger(), "-------------End Processing Cones--------------\n");
 
     // Classify each unknown cone.
-
-
     int num_unable_to_classify_cones = 0;
     RCLCPP_INFO(this->get_logger(), "Num blue_cones_in_history: %d", blue_cone_history.size());
     RCLCPP_INFO(this->get_logger(), "Num yellow_cones_in_history: %d", yellow_cone_history.size());
+    
     for (int i = 0; i < msg->unknown_color_cones.size(); i++) {
         RCLCPP_INFO(get_logger(), "-------------Classifying Cone--------------\n");
         geometry_msgs::msg::Vector3 lidar_point;
@@ -413,15 +415,21 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
         // Classify and add the newly classified cone to the cone history
         switch (cone_class) {
             //yellow
-            case 1:
-                RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as yellow", msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
-                yellow_cones_to_publish.push_back(msg->unknown_color_cones[i]);
+            case 1: {
+                RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as yellow", 
+                           msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
+                cones::Cone cone(msg->unknown_color_cones[i]);
+                cones_to_publish.yellow.push_back(cone);
                 break;
+            }
             //blue 
-            case 2:
-                RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as blue", msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
-                blue_cones_to_publish.push_back(msg->unknown_color_cones[i]);
+            case 2: {
+                RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as blue", 
+                           msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
+                cones::Cone cone(msg->unknown_color_cones[i]);
+                cones_to_publish.blue.push_back(cone);
                 break;
+            }
             default: 
                 num_unable_to_classify_cones++;
                 RCLCPP_INFO(this->get_logger(), "\tUnable to classify cone @ (%f, %f)", 
@@ -430,15 +438,26 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
                 break;    
         }
     }
-
     RCLCPP_INFO(this->get_logger(), "Num unclassified cones: %d", num_unable_to_classify_cones);
 
     // Create the associated cones message
     interfaces::msg::ConeArray associated_cones_msg_;
     associated_cones_msg_.header.stamp = msg->header.stamp;
     associated_cones_msg_.header.frame_id = msg->header.frame_id;
-    associated_cones_msg_.blue_cones = blue_cones_to_publish;
-    associated_cones_msg_.yellow_cones = yellow_cones_to_publish;
+
+    cones::TrackBounds recolored_cones_to_publish = cones::recoloring::first_svm::recolor_cones(cones_to_publish);
+
+    if (!recolored_cones_to_publish.yellow.empty()) {
+        for (const auto& cone : cones::order_cones(recolored_cones_to_publish.yellow)) {
+            associated_cones_msg_.yellow_cones.push_back(cone.point);
+        }
+    }
+
+    if (!recolored_cones_to_publish.blue.empty()) {
+        for (const auto& cone : cones::order_cones(recolored_cones_to_publish.blue)) {
+            associated_cones_msg_.blue_cones.push_back(cone.point);
+        }
+    }
 
     // Publish the associated cones
     associated_cones_pub_->publish(associated_cones_msg_);
@@ -449,7 +468,6 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     // Update the cone histories
     maintain_cone_history_lifespans(blue_cone_history);
     maintain_cone_history_lifespans(yellow_cone_history);
-    
 }
 
 int main(int argc, char **argv)

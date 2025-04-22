@@ -5,6 +5,7 @@
 #include "geometry_msgs/msg/twist_stamped.hpp"
 
 #include "interfaces/msg/cone_array.hpp"
+#include "../cones/svm/svm_recoloring.hpp"
 
 
 // Standard Imports

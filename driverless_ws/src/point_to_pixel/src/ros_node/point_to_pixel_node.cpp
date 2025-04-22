@@ -277,7 +277,21 @@ int PointToPixelNode::get_cone_class(
     std::pair<cv::Mat, cv::Mat> frame_pair,
     std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair
 ) {
-    return cones::get_cone_class(
+    #if use_yolo
+    return cones::coloring::yolo::get_cone_class(
+        pixel_pair,
+        frame_pair,
+        detection_pair,
+        yellow_filter_low,
+        yellow_filter_high,
+        blue_filter_low,
+        blue_filter_high,
+        orange_filter_low,
+        orange_filter_high,
+        confidence_threshold
+    );
+    #else
+    return cones::coloring::hsv::get_cone_class(
         pixel_pair,
         frame_pair,
         detection_pair,
@@ -288,8 +302,8 @@ int PointToPixelNode::get_cone_class(
         orange_filter_low,
         orange_filter_high,
         confidence_threshold,
-        use_yolo == 1
     );
+    #endif
 }
 
 // Topic callback definition

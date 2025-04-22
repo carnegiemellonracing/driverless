@@ -23,8 +23,8 @@ namespace cones
             cones::TrackBounds recolor_cones(cones::TrackBounds track_bounds) {
                 
                 // Constants
-                const int augment_angle_degrees = 60;
-                const double radius = 2.0;
+                const int augment_angle_degrees = 30;
+                const double radius = 0.5;
 
                 auto total_start = std::chrono::high_resolution_clock::now();
             
