@@ -38,22 +38,26 @@ include_directories(~/Documents/driverless-packages/zed-open-capture/examples/in
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(CONE_HISTORY_TEST_NODE_SRC  
+  src/transform/transform.cpp
   src/ros_node/cone_history_test_node.cpp
 )
 add_executable(cone_history_test_node ${CONE_HISTORY_TEST_NODE_SRC} )
-ament_target_dependencies(cone_history_test_node rclcpp interfaces geometry_msgs)
+ament_target_dependencies(cone_history_test_node rclcpp interfaces geometry_msgs Eigen3)
 target_include_directories(cone_history_test_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
 install(TARGETS cone_history_test_node
   DESTINATION lib/${PROJECT_NAME})
-  
+
 ###############################
 
 set(POINT_TO_PIXEL_SRC  
   src/transform/transform.cpp
   src/camera/camera.cpp
+  src/cones/svm/svm.cpp
+  src/cones/svm/svm_recoloring.cpp
+  src/cones/svm/first_svm.cpp
   src/cones/cones.cpp
   src/cones/hsv.cpp
   src/cones/yolo.cpp
@@ -62,7 +66,7 @@ set(POINT_TO_PIXEL_SRC
 
 # Point to Pixel Executable
 add_executable(point_to_pixel ${POINT_TO_PIXEL_SRC})
-ament_target_dependencies(point_to_pixel rclcpp interfaces geometry_msgs Eigen3 OpenCV)
+ament_target_dependencies(point_to_pixel rclcpp interfaces geometry_msgs OpenCV)
 
 target_include_directories(point_to_pixel PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

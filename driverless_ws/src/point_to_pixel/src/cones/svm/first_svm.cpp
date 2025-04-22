@@ -41,11 +41,11 @@ namespace cones
                 
                 // augment dataset to make it better for SVM training
                 cones::TrackBounds augmented_cones = track_bounds;
-                supplementCones(augmented_cones);
-                augmented_cones = augmentConesCircle(augmented_cones, augment_angle_degrees, radius);
+                cones::supplement_cones(augmented_cones);
+                cones::augment_cones_circle(augmented_cones, augment_angle_degrees, radius);
             
                 // acquire the feature matrix and label vector
-                std::pair<std::vector<std::vector<double>>, std::vector<double>> xy = conesToXY(augmented_cones);
+                std::pair<std::vector<std::vector<double>>, std::vector<double>> xy = cones::cones_to_xy(augmented_cones);
                 std::vector<std::vector<double>> X = xy.first;
                 std::vector<double> y = xy.second;
             
@@ -110,7 +110,7 @@ namespace cones
                 param.svm_type = C_SVC;
                 param.kernel_type = POLY;
                 param.degree = 3;
-                param.C = 1.0;
+                param.C = 1.0; // represents trade-off between maximizing margin and minimizing misclassification [Lower = more margin, more misclassification (good for recoloring)]
                 param.coef0 = 1.0;
                 param.gamma = gamma_scale;
                 param.cache_size = 200;
@@ -146,14 +146,14 @@ namespace cones
                 // Process original blue cones
                 for (const auto& cone : track_bounds.blue) {
                     // Extract cone XY
-                    std::vector<double> features = coneToFeatures(cone);
+                    std::vector<double> features = cone_to_features(cone);
                     
-                    // Use SVM to predict the class (blue=2.0, yellow=1.0)
-                    double predicted_class = nodePredictor(features, model);
+                    // Use SVM to predict the class (blue=1.0, yellow=0.0)
+                    double predicted_class = cones::recoloring::node_predictor(features, model);
                     
-                    if (predicted_class == 2.0) {  // Blue
+                    if (predicted_class == 1.0) {  // Blue
                         recolored_track_bounds.blue.push_back(cone);
-                    } else if (predicted_class == 1.0) {  // Yellow
+                    } else if (predicted_class == 0.0) {  // Yellow
                         recolored_track_bounds.yellow.push_back(cone);
                     }
                 }
@@ -161,14 +161,14 @@ namespace cones
                 // Process original yellow cones
                 for (const auto& cone : track_bounds.yellow) {
                     // Extract cone XY
-                    std::vector<double> features = coneToFeatures(cone);
+                    std::vector<double> features = cone_to_features(cone);
                     
-                    // Use SVM to predict the class (blue=2.0, yellow=1.0)
-                    double predicted_class = nodePredictor(features, model);
+                    // Use SVM to predict the class (blue=1.0, yellow=0.0)
+                    double predicted_class = cones::recoloring::node_predictor(features, model);
 
-                    if (predicted_class == 2.0) {  // Blue
+                    if (predicted_class == 1.0) {  // Blue
                         recolored_track_bounds.blue.push_back(cone);
-                    } else if (predicted_class == 1.0) {  // Yellow
+                    } else if (predicted_class == 0.0) {  // Yellow
                         recolored_track_bounds.yellow.push_back(cone);
                     }
                 }
@@ -206,84 +206,6 @@ namespace cones
                 std::cout << "===========================\n\n";
             
                 return recolored_track_bounds;
-            }
-            
-            // Helper function to extract XY from a cone
-            std::vector<double> coneToFeatures(const cones::Cone& cone) {
-                std::vector<double> features;
-                features.push_back(cone.point.x);
-                features.push_back(cone.point.y);
-                return features;
-            }
-            
-            // Helper function to convert TrackBounds to XY training data
-            std::pair<std::vector<std::vector<double>>, std::vector<double>> conesToXY(const cones::TrackBounds& track_bounds) {
-                std::vector<std::vector<double>> X;
-                std::vector<double> y;
-                
-                // Process yellow cones (label 0.0)
-                for (const auto& cone : track_bounds.yellow) {
-                    std::vector<double> features = coneToFeatures(cone);
-                    X.push_back(features);
-                    y.push_back(1.0);  // Yellow label
-                }
-                
-                // Process blue cones (label 1.0)
-                for (const auto& cone : track_bounds.blue) {
-                    std::vector<double> features = coneToFeatures(cone);
-                    X.push_back(features);
-                    y.push_back(2.0);  // Blue label
-                }
-                
-                return {X, y};
-            }
-            
-            // Add dummy cones
-            void supplementCones(const cones::TrackBounds& track_bounds) {
-                track_bounds.yellow.push_back(cones::Cone(-2.0, -1.0, 0));
-                track_bounds.blue.push_back(cones::Cone(2.0, -1.0, 0));
-            }
-            
-            // Function to augment cones by rotating them around the origin
-            cones::TrackBounds augmentConesCircle(const cones::TrackBounds& track_bounds, int degrees, double radius) {
-                cones::TrackBounds augmented = track_bounds;
-                        
-                // Convert angle from degrees to radians
-                double angle_radians = degrees * (M_PI / 180.0);
-                
-                // Create vector of angles around the circle
-                std::vector<double> angles;
-                for (double angle = 0; angle < 2 * M_PI; angle += angle_radians) {
-                    angles.push_back(angle);
-                }
-                
-                // Augment blue cones
-                std::vector<cones::Cone> blue_extra;
-                for (const auto& cone : track_bounds.blue) {
-                    for (const auto& angle : angles) {
-                        // Create a new cone rotated around the circle
-                        double new_x = cone.point.x + radius * std::cos(angle);
-                        double new_y = cone.point.y + radius * std::sin(angle);
-                        blue_extra.push_back(cones::Cone(new_x, new_y, cone.point.z));
-                    }
-                }
-                
-                // Augment yellow cones
-                std::vector<cones::Cone> yellow_extra;
-                for (const auto& cone : track_bounds.yellow) {
-                    for (const auto& angle : angles) {
-                        // Create a new cone rotated around the circle
-                        double new_x = cone.point.x + radius * std::cos(angle);
-                        double new_y = cone.point.y + radius * std::sin(angle);
-                        yellow_extra.push_back(cones::Cone(new_x, new_y, cone.point.z));
-                    }
-                }
-                
-                // Add augmented cones to the original lists
-                augmented.blue.insert(augmented.blue.end(), blue_extra.begin(), blue_extra.end());
-                augmented.yellow.insert(augmented.yellow.end(), yellow_extra.begin(), yellow_extra.end());
-                
-                return augmented;
             }
         }
     }

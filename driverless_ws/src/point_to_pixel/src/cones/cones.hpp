@@ -81,4 +81,12 @@ namespace cones
      * @return double Angle in radians
      */
     double calculate_angle(const Cone& from, const Cone& to);
+
+    std::vector<double> cone_to_features(const Cone& cone);
+
+    std::pair<std::vector<std::vector<double>>, std::vector<double>> cones_to_xy(const TrackBounds& track_bounds);
+
+    void supplement_cones(TrackBounds &track_bounds);
+
+    void augment_cones_circle(TrackBounds &track_bounds, int degrees, double radius);
 }

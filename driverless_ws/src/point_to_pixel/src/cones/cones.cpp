@@ -140,4 +140,98 @@ namespace cones {
 
         return ordered_cones;
     }
+
+    // Helper function to extract XY from a cone
+    std::vector<double> cone_to_features(const Cone &cone) {
+        std::vector<double> features;
+        features.push_back(cone.point.x);
+        features.push_back(cone.point.y);
+        return features;
+    }
+    
+    // Helper function to convert TrackBounds to XY training data
+    std::pair<std::vector<std::vector<double>>, std::vector<double>> cones_to_xy(const TrackBounds &track_bounds) {
+        std::vector<std::vector<double>> X;
+        std::vector<double> y;
+        
+        // Process yellow cones (label 0.0)
+        for (const auto& cone : track_bounds.yellow) {
+            std::vector<double> features = cone_to_features(cone);
+            X.push_back(features);
+            y.push_back(0.0);  // Yellow label
+        }
+        
+        // Process blue cones (label 1.0)
+        for (const auto& cone : track_bounds.blue) {
+            std::vector<double> features = cone_to_features(cone);
+            X.push_back(features);
+            y.push_back(1.0);  // Blue label
+        }
+        
+        return {X, y};
+    }
+    
+    // Add dummy cones
+    void supplement_cones(TrackBounds &track_bounds) {
+
+        geometry_msgs::msg::Point yellow_cone;
+        yellow_cone.x = -2.0;
+        yellow_cone.y = 1.0;
+        yellow_cone.z = 0;
+
+        track_bounds.yellow.push_back(yellow_cone);
+
+        geometry_msgs::msg::Point blue_cone;
+        blue_cone.x = 2.0;
+        blue_cone.y = 1.0;
+        blue_cone.z = 0;
+        
+        track_bounds.blue.push_back(blue_cone);
+    }
+    
+    // Adds a ring of circles around a cone
+    void augment_cones_circle(TrackBounds &track_bounds, int degrees, double radius) {
+        // Convert angle from degrees to radians
+        double angle_radians = degrees * (M_PI / 180.0);
+        
+        // Create vector of angles around the circle
+        std::vector<double> angles;
+        for (double angle = 0; angle < 2 * M_PI; angle += angle_radians) {
+            angles.push_back(angle);
+        }
+        
+        // Augment blue cones
+        std::vector<Cone> blue_extra;
+        for (const auto& cone : track_bounds.blue) {
+            for (const auto& angle : angles) {
+                // Create a new cone rotated around the circle
+                double new_x = cone.point.x + radius * std::cos(angle);
+                double new_y = cone.point.y + radius * std::sin(angle);
+                geometry_msgs::msg::Point new_blue;
+                new_blue.x = new_x;
+                new_blue.y = new_y;
+                new_blue.z = cone.point.z;
+                blue_extra.push_back(new_blue);
+            }
+        }
+        
+        // Augment yellow cones
+        std::vector<Cone> yellow_extra;
+        for (const auto& cone : track_bounds.yellow) {
+            for (const auto& angle : angles) {
+                // Create a new cone rotated around the circle
+                double new_x = cone.point.x + radius * std::cos(angle);
+                double new_y = cone.point.y + radius * std::sin(angle);
+                geometry_msgs::msg::Point new_yellow;
+                new_yellow.x = new_x;
+                new_yellow.y = new_y;
+                new_yellow.z = cone.point.z;
+                yellow_extra.push_back(new_yellow);
+            }
+        }
+        
+        // Add augmented cones to the original lists
+        track_bounds.blue.insert(track_bounds.blue.end(), blue_extra.begin(), blue_extra.end());
+        track_bounds.yellow.insert(track_bounds.yellow.end(), yellow_extra.begin(), yellow_extra.end());
+    }
 }

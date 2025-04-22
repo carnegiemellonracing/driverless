@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cones.hpp"
+#include "../cones.hpp"
 #include "svm.hpp"
 
 namespace cones {
@@ -15,5 +15,7 @@ namespace cones {
              */
             cones::TrackBounds recolor_cones(cones::TrackBounds track_bounds);
         }
+
+        double node_predictor(const std::vector<double> &cone, const svm_model *model);
     }
 }
