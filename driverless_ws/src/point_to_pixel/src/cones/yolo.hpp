@@ -4,6 +4,8 @@
 #include <opencv2/dnn.hpp>
 #include <Eigen/Dense>
 
+#define box_heuristic 0 // 0: none, 1: distance from center, 2: depth
+
 namespace cones {
     namespace coloring {
         namespace yolo {
