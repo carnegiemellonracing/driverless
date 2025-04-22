@@ -1,5 +1,5 @@
 namespace cones {
-	namespace recoloring {
+	namespace recolouring {
 #ifndef _LIBSVM_H
 #define _LIBSVM_H
 

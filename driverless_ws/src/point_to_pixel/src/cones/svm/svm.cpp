@@ -13,7 +13,7 @@
 #endif
 
 namespace cones {
-	namespace recoloring {
+	namespace recolouring {
 
 
 		int libsvm_version = LIBSVM_VERSION;

@@ -40,10 +40,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(CONE_HISTORY_TEST_NODE_SRC  
   src/transform/transform.cpp
   src/nodes/cone_history_test_node.cpp
-  src/cones/svm/svm_recoloring.cpp
+  src/cones/svm/svm_recolour.cpp
   src/cones/svm/svm.cpp
-  src/cones/svm/svm_recoloring.cpp
-  src/cones/svm/first_svm.cpp
   src/cones/cones.cpp
 )
 
@@ -53,8 +51,7 @@ set(POINT_TO_PIXEL_SRC
   src/transform/transform.cpp
   src/camera/camera.cpp
   src/cones/svm/svm.cpp
-  src/cones/svm/svm_recoloring.cpp
-  src/cones/svm/first_svm.cpp
+  src/cones/svm/svm_recolour.cpp
   src/cones/cones.cpp
   src/cones/hsv.cpp
   src/cones/yolo.cpp

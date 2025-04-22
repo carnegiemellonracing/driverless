@@ -445,16 +445,16 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     associated_cones_msg_.header.stamp = msg->header.stamp;
     associated_cones_msg_.header.frame_id = msg->header.frame_id;
 
-    cones::TrackBounds recolored_cones_to_publish = cones::recoloring::first_svm::recolor_cones(cones_to_publish);
+    cones::TrackBounds recoloured_cones_to_publish = cones::recolouring::recolour_cones(cones_to_publish);
 
-    if (!recolored_cones_to_publish.yellow.empty()) {
-        for (const auto& cone : cones::order_cones(recolored_cones_to_publish.yellow)) {
+    if (!recoloured_cones_to_publish.yellow.empty()) {
+        for (const auto& cone : cones::order_cones(recoloured_cones_to_publish.yellow)) {
             associated_cones_msg_.yellow_cones.push_back(cone.point);
         }
     }
 
-    if (!recolored_cones_to_publish.blue.empty()) {
-        for (const auto& cone : cones::order_cones(recolored_cones_to_publish.blue)) {
+    if (!recoloured_cones_to_publish.blue.empty()) {
+        for (const auto& cone : cones::order_cones(recoloured_cones_to_publish.blue)) {
             associated_cones_msg_.blue_cones.push_back(cone.point);
         }
     }
