@@ -64,7 +64,7 @@ private:
     // Data Structure Declarations
     std::deque<std::pair<uint64_t, cv::Mat>> img_deque_l;
     std::deque<std::pair<uint64_t, cv::Mat>> img_deque_r;
-    std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> velocity_deque;
+    std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> vel_deque;
     std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> yaw_deque;
     #if save_frames
     std::queue<std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat>> save_queue;
@@ -73,7 +73,7 @@ private:
     // Mutexes Declarations for thread safety
     std::mutex l_img_mutex;
     std::mutex r_img_mutex;
-    std::mutex velocity_mutex;
+    std::mutex vel_mutex;
     std::mutex yaw_mutex;
     #if save_frames
     std::mutex save_mutex;
@@ -132,7 +132,7 @@ private:
      * @param msg from /filter/twist topic of type TwistStamped
      * @return void
      */
-    void velocity_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg);
+    void vel_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg);
 
     /**
      * @brief Topic callback for yaw. Updates the yaw deque with the latest yaw message.

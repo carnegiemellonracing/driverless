@@ -130,7 +130,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     velocity_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>(
         "/filter/twist", 
         10, 
-        [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg) {velocity_callback(msg);},
+        [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg) {vel_callback(msg);},
         velocity_options
     );
 
@@ -151,7 +151,6 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     // Clear directory
     #if save_frames
     camera_callback_count = 0;
-
     try
     {
         if (std::filesystem::remove_all(save_path))
@@ -194,7 +193,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
 
     // Capture and rectify frames for calibration
     camera::capture_freezes(get_logger(), left_cam, right_cam, l_img_mutex, r_img_mutex, img_deque_l, img_deque_r, inner == 1);
-    std::cout << "here" << std::endl;
+    
     // Launch camera thread
     launch_camera_communication().detach();
 
@@ -320,16 +319,12 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     // Message Definition
     interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
     message.header = msg->header;
-    message.controller_receive_time = msg->header.stamp; 
-    message.blue_cones = std::vector<geometry_msgs::msg::Point> {};
-    message.yellow_cones = std::vector<geometry_msgs::msg::Point> {};
-    message.orange_cones = std::vector<geometry_msgs::msg::Point> {};
-    message.unknown_color_cones = std::vector<geometry_msgs::msg::Point> {};
+    message.controller_receive_time = msg->header.stamp;
     geometry_msgs::msg::Point point_msg;
 
     // Returns first frame captured after lidar timestamp in the form: (timestamp_l, frame_l, timestamp_r, frame_r)
     std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> frame_tuple = get_camera_frame(msg->header.stamp);
-    std::pair<cv::Mat, cv::Mat> frame_pair = std::make_pair(std::get<1>(frame_tuple), std::get<3>(frame_tuple));
+    std::pair<cv::Mat, cv::Mat> frame_pair = {std::get<1>(frame_tuple), std::get<3>(frame_tuple)};
 
     // Check that frame is not empty
     if (frame_pair.first.empty() || frame_pair.second.empty())
@@ -344,6 +339,40 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     uint64_t ms_lidar_camera_diff_r = (std::get<2>(frame_tuple) - msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec) / 1e6;
     RCLCPP_INFO(get_logger(), "Camera Diff L: %llu ms | Camera Diff R: %llu ms", ms_lidar_camera_diff_l, ms_lidar_camera_diff_r);
     #endif
+
+    // Motion modeling for both frames
+    auto [vel_l_camera_frame, yaw_l_camera_frame] = transform::get_vel_yaw(get_logger(), yaw_mutex, vel_mutex, vel_deque, yaw_deque, std::get<0>(frame_tuple));
+    auto [vel_r_camera_frame, yaw_r_camera_frame] = transform::get_vel_yaw(get_logger(), yaw_mutex, vel_mutex, vel_deque, yaw_deque, std::get<2>(frame_tuple));
+
+    auto current_lidar_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
+    auto [vel_lidar_frame, yaw_lidar_frame] = transform::get_vel_yaw(get_logger(), yaw_mutex, vel_mutex, vel_deque, yaw_deque, current_lidar_time);
+
+    if (vel_lidar_frame == nullptr || yaw_lidar_frame == nullptr)
+    {
+        RCLCPP_ERROR(get_logger(), "Could not get velocity and yaw from lidar");
+        return;
+    }
+
+    double dt_l = (std::get<0>(frame_tuple) > current_lidar_time) ? (std::get<0>(frame_tuple) - current_lidar_time) / 1e9 : 0.0;
+    double avg_vel_l_x = (vel_l_camera_frame->twist.linear.x + vel_lidar_frame->twist.linear.x) / 2;
+    double avg_vel_l_y = (vel_l_camera_frame->twist.linear.y + vel_lidar_frame->twist.linear.y) / 2;
+    auto global_dx_l = avg_vel_l_x * dt_l;
+    auto global_dy_l = avg_vel_l_y * dt_l;
+    std::pair<double, double> global_frame_change_l = {global_dx_l, global_dy_l};
+    auto global_dyaw_l = yaw_l_camera_frame->vector.z - yaw_lidar_frame->vector.z;
+
+    double dt_r = (std::get<2>(frame_tuple) > current_lidar_time) ? (std::get<2>(frame_tuple) - current_lidar_time) / 1e9 : 0.0;
+    double avg_vel_r_x = (vel_r_camera_frame->twist.linear.x + vel_lidar_frame->twist.linear.x) / 2;
+    double avg_vel_r_y = (vel_r_camera_frame->twist.linear.y + vel_lidar_frame->twist.linear.y) / 2;
+    auto global_dx_r = avg_vel_r_x * dt_r;
+    auto global_dy_r = avg_vel_r_y * dt_r;
+    auto global_dyaw_r = yaw_r_camera_frame->vector.z - yaw_lidar_frame->vector.z;
+    std::pair<double, double> global_frame_change_r = {global_dx_r, global_dy_r};
+
+    double yaw_lidar_rad = yaw_lidar_frame->vector.z * M_PI / 180;
+
+    std::pair<double, double> long_lat_l = transform::global_frame_to_local_frame(global_frame_change_l, yaw_lidar_rad);
+    std::pair<double, double> long_lat_r = transform::global_frame_to_local_frame(global_frame_change_r, yaw_lidar_rad);
 
     // Process frames with YOLO
     #if use_yolo
@@ -367,47 +396,11 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
                 std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_end_time).count());
     #endif
     
-    std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair = std::make_pair(detection_l, detection_r);
+    std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair = {detection_l, detection_r};
     #else
     // Initialize empty matrix if not YOLO
-    std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair = std::make_pair(std::vector<cv::Mat>(), std::vector<cv::Mat>());
+    std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair = {std::vector<cv::Mat>(), std::vector<cv::Mat>()};
     #endif
-
-    // Motion modeling for both frames
-    auto [velocity_l_camera_frame, yaw_l_camera_frame] = transform::get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, std::get<0>(frame_tuple));
-    auto [velocity_r_camera_frame, yaw_r_camera_frame] = transform::get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, std::get<2>(frame_tuple));
-
-    auto current_lidar_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
-    auto [velocity_lidar_frame, yaw_lidar_frame] = transform::get_velocity_yaw(get_logger(), yaw_mutex, velocity_mutex, velocity_deque, yaw_deque, current_lidar_time);
-
-    if (velocity_lidar_frame == nullptr || yaw_lidar_frame == nullptr)
-    {
-        return;
-    }
-
-    double dt_l = (std::get<0>(frame_tuple) < current_lidar_time) ? (current_lidar_time - std::get<0>(frame_tuple)) / 1e9 : 0;
-    double dt_r = (std::get<2>(frame_tuple) < current_lidar_time) ? (current_lidar_time - std::get<2>(frame_tuple)) / 1e9 : 0;
-
-    double average_velocity_l_x = (velocity_l_camera_frame->twist.linear.x + velocity_lidar_frame->twist.linear.x) / 2;
-    double average_velocity_l_y = (velocity_l_camera_frame->twist.linear.y + velocity_lidar_frame->twist.linear.y) / 2;
-    double average_velocity_r_x = (velocity_r_camera_frame->twist.linear.x + velocity_lidar_frame->twist.linear.x) / 2;
-    double average_velocity_r_y = (velocity_r_camera_frame->twist.linear.y + velocity_lidar_frame->twist.linear.y) / 2;
-
-    auto global_dx_l = average_velocity_l_x * dt_l;
-    auto global_dy_l = average_velocity_l_y * dt_l;
-    auto global_dyaw_l = yaw_l_camera_frame->vector.z - yaw_lidar_frame->vector.z;
-
-    auto global_dx_r = average_velocity_r_x * dt_r;
-    auto global_dy_r = average_velocity_r_y * dt_r;
-    auto global_dyaw_r = yaw_r_camera_frame->vector.z - yaw_lidar_frame->vector.z;
-
-    double yaw_lidar_rad = yaw_lidar_frame->vector.z * M_PI / 180;
-
-    std::pair<double, double> global_frame_change_l = std::make_pair(global_dx_l, global_dy_l);
-    std::pair<double, double> long_lat_l = transform::global_frame_to_local_frame(global_frame_change_l, yaw_lidar_rad);
-
-    std::pair<double, double> global_frame_change_r = std::make_pair(global_dx_r, global_dy_r);
-    std::pair<double, double> long_lat_r = transform::global_frame_to_local_frame(global_frame_change_r, yaw_lidar_rad);
 
     // Declare point and cone vectors
     cones::TrackBounds unordered;
@@ -438,11 +431,9 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
                 message.yellow_cones.push_back(point_msg);
 
                 #if save_frames
-                    orange_transformed_pixels.push_back(
-                        std::make_pair(
-                            cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))), 
-                            cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))
-                        )
+                    orange_transformed_pixels.emplace_back(
+                        cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))), 
+                        cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))
                     );
                 #endif
                 break;
@@ -451,10 +442,10 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
                 unordered.yellow.push_back(cones::Cone(point_msg));
 
                 #if save_frames
-                yellow_transformed_pixels.push_back(
-                    std::make_pair(
-                        cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
-                        cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))));
+                yellow_transformed_pixels.emplace_back(
+                    cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
+                    cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))
+                );
                 #endif
                 break;
             case 2:
@@ -462,20 +453,20 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
                 unordered.blue.push_back(cones::Cone(point_msg));
 
                 #if save_frames
-                blue_transformed_pixels.push_back(
-                    std::make_pair(
-                        cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
-                        cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))));
+                blue_transformed_pixels.emplace_back(
+                    cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
+                    cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))
+                );
                 #endif
                 break;
             default:
                 message.unknown_color_cones.push_back(point_msg);
 
                 #if save_frames
-                unknown_transformed_pixels.push_back(
-                    std::make_pair(
-                        cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
-                        cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))));
+                unknown_transformed_pixels.emplace_back(
+                    cv::Point(static_cast<int>(pixel_pair.first.head(2)(0)), static_cast<int>(pixel_pair.first.head(2)(1))),
+                    cv::Point(static_cast<int>(pixel_pair.second.head(2)(0)), static_cast<int>(pixel_pair.second.head(2)(1)))
+                );
                 #endif
                 break;
         }
@@ -522,7 +513,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
         cones::coloring::yolo::draw_bounding_boxes(frame_pair.first, frame_l_canvas, detection_l, frame_pair.first.cols, frame_pair.first.rows, confidence_threshold);
         cones::coloring::yolo::draw_bounding_boxes(frame_pair.second, frame_r_canvas, detection_pair.second, frame_pair.second.cols, frame_pair.second.rows, confidence_threshold);
 
-        #endif
+        #endif // use_yolo
 
         // Add transformed points to frame
         for (size_t i = 0; i < yellow_transformed_pixels.size(); i++) {
@@ -556,8 +547,8 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     #if timing
     auto end_drawing_time = high_resolution_clock::now();
     auto drawing_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_drawing_time - end_ordering_time).count();
-    #endif
-    #endif
+    #endif // timing
+    #endif // save_frames
 
     #if timing
     auto end_time = high_resolution_clock::now();
@@ -568,13 +559,13 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     RCLCPP_INFO(get_logger(), "Total Transform and Coloring Time  %ld ms.", transform_coloring_time);
     #if save_frames
     RCLCPP_INFO(get_logger(), "Total Frame Annotation Time  %ld ms.", drawing_time);
-    #endif
+    #endif // save_frames
     RCLCPP_INFO(get_logger(), "Total Cone Ordering Time  %ld ms. \n", ordering_time);
     auto time_diff = end_time - start_time;
     RCLCPP_INFO(get_logger(), "Total PPM Time %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(time_diff).count());
     RCLCPP_INFO(get_logger(), "Time from Lidar to start  %ld ms.", ms_time_since_lidar_2);
     RCLCPP_INFO(get_logger(), "Time from Lidar:  %ld ms.", (uint64_t) ms_time_since_lidar);
-    #endif
+    #endif // timing
 
     // Publish message and log
     int cones_published = message.orange_cones.size() + message.yellow_cones.size() + message.blue_cones.size() + message.unknown_color_cones.size();
@@ -635,23 +626,22 @@ std::thread PointToPixelNode::launch_frame_saving()
                     save_queue.pop();
                 }
                 save_mutex.unlock();
-                // Check for new frames every millisecond
                 rclcpp::sleep_for(std::chrono::milliseconds(1));
             }
         }};
 }
 #endif
 
-void PointToPixelNode::velocity_callback(geometry_msgs::msg::TwistStamped::SharedPtr msg)
+void PointToPixelNode::vel_callback(geometry_msgs::msg::TwistStamped::SharedPtr msg)
 {   
-    velocity_mutex.lock();
+    vel_mutex.lock();
     // Deque Management and Updating
-    while (velocity_deque.size() >= max_deque_size)
+    while (vel_deque.size() >= max_deque_size)
     {
-        velocity_deque.pop_front();
+        vel_deque.pop_front();
     }
-    velocity_deque.push_back(msg);
-    velocity_mutex.unlock();
+    vel_deque.push_back(msg);
+    vel_mutex.unlock();
 }
 
 void PointToPixelNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::SharedPtr msg)

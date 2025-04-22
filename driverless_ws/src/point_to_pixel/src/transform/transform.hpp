@@ -39,17 +39,17 @@ namespace transform {
      *
      * @param logger Logger for logging messages
      * @param yaw_mutex Mutex for yaw deque
-     * @param velocity_mutex Mutex for velocity deque
-     * @param velocity_deque Deque of velocity messages
+     * @param vel_mutex Mutex for velocity deque
+     * @param vel_deque Deque of velocity messages
      * @param yaw_deque Deque of yaw messages
      * @param frameTime Time of the frame in nanoseconds
      * @return std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr>
      */
-    std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_velocity_yaw(
+    std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_vel_yaw(
         const rclcpp::Logger &logger,
         std::mutex &yaw_mutex,
-        std::mutex &velocity_mutex,
-        const std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> &velocity_deque,
+        std::mutex &vel_mutex,
+        const std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> &vel_deque,
         const std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> &yaw_deque,
         uint64_t frameTime
     );

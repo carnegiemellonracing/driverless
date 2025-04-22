@@ -89,19 +89,19 @@ namespace transform {
         return std::make_pair(pixel_l, pixel_r);
     }
 
-    std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_velocity_yaw(
+    std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_vel_yaw(
         const rclcpp::Logger &logger,
         std::mutex &yaw_mutex,
-        std::mutex &velocity_mutex,
-        const std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> &velocity_deque,
+        std::mutex &vel_mutex,
+        const std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> &vel_deque,
         const std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> &yaw_deque,
         uint64_t frameTime
     ) {
-        geometry_msgs::msg::TwistStamped::SharedPtr closest_velocity_msg;
+        geometry_msgs::msg::TwistStamped::SharedPtr closest_vel_msg;
         geometry_msgs::msg::Vector3Stamped::SharedPtr closest_yaw_msg;
 
         geometry_msgs::msg::Vector3Stamped::SharedPtr yaw_msg;
-        geometry_msgs::msg::TwistStamped::SharedPtr velocity_msg;
+        geometry_msgs::msg::TwistStamped::SharedPtr vel_msg;
 
         // Check if deque empty
         yaw_mutex.lock();
@@ -131,34 +131,27 @@ namespace transform {
         yaw_mutex.unlock();
 
         // Check if deque empty
-        velocity_mutex.lock();
-        if (velocity_deque.empty())
+        vel_mutex.lock();
+        if (vel_deque.empty())
         {
-            velocity_mutex.unlock();
+            vel_mutex.unlock();
             RCLCPP_WARN(logger, "Velocity deque is empty! Cannot find matching velocity.");
             return std::make_pair(nullptr, nullptr);
         }
 
-        velocity_msg = velocity_deque.back();
+        vel_msg = vel_deque.back();
         // Iterate through deque to find the closest frame by timestamp
-        for (const auto &velocity : velocity_deque)
+        for (const auto &vel : vel_deque)
         {
-            uint64_t velocity_time_ns = velocity->header.stamp.sec * 1e9 + velocity->header.stamp.nanosec;
-            if (velocity_time_ns >= frameTime)
+            uint64_t vel_time_ns = vel->header.stamp.sec * 1e9 + vel->header.stamp.nanosec;
+            if (vel_time_ns >= frameTime)
             {
-                velocity_msg = velocity;
+                vel_msg = vel;
                 break;
             }
         }
-        velocity_mutex.unlock();
+        vel_mutex.unlock();
 
-        // Return closest velocity, yaw pair if found
-        if (yaw_msg != NULL && velocity_msg != NULL)
-        {
-            return std::make_pair(velocity_msg, yaw_msg);
-        }
-
-        RCLCPP_INFO(logger, "Callback time out of range! Cannot find matching velocity or yaw.");
-        return std::make_pair(nullptr, nullptr);
+        return std::make_pair(vel_msg, yaw_msg);
     }
 }
