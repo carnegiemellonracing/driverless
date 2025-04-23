@@ -29,7 +29,7 @@ namespace yolo {
             frame_pair.first.rows,
             confidence_threshold
         );
-        std::cout << "Above is left camera, below is right camera" << std::endl;
+        
         pixel_r = coloring::yolo::get_color(
             pixel_pair.second, 
             detection_pair.second, 
@@ -88,9 +88,6 @@ namespace yolo {
                 int y = static_cast<int>((cy - h / 2) * y_scale);
                 int width = static_cast<int>(w * x_scale);
                 int height = static_cast<int>(h * y_scale);
-
-                // std::cout << "Width: " << width << ", Height: " << height << std::endl;
-                // std::cout << "X: " << x << ", Y: " << y << std::endl;
 
                 // If pixel is inside the bounding box add color to the vector of all boxes pixel is in
                 if (pixel(0) > x && pixel(0) < x + width && pixel(1) > y && pixel(1) < y + height) {

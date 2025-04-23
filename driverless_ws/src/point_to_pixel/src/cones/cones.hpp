@@ -51,12 +51,28 @@ namespace cones
      * @return double Angle in radians
      */
     double calculate_angle(const Cone& from, const Cone& to);
-
-    std::vector<double> cone_to_features(const Cone& cone);
-
+    
+    /**
+     * @brief Converts TrackBounds, a struct containing yellow cone vector and blue cone vector, to XY training data
+     * 
+     * @param track_bounds TrackBounds stuct
+     * @return std::pair<std::vector<std::vector<double>>, std::vector<double>> Feature matrix and label vector
+     */
     std::pair<std::vector<std::vector<double>>, std::vector<double>> cones_to_xy(const TrackBounds& track_bounds);
 
+    /**
+     * @brief Adds dummy cones to the side of the car, blue on left and yellow on right
+     * 
+     * @param track_bounds TrackBounds struct
+     */
     void supplement_cones(TrackBounds &track_bounds);
 
+    /**
+     * @brief Augments data by adding cones in a circular pattern around the original cone, currently unused.
+     * 
+     * @param track_bounds TrackBounds struct
+     * @param degrees Degrees to augment
+     * @param radius Radius of the circle
+     */
     void augment_cones_circle(TrackBounds &track_bounds, int degrees, double radius);
 }

@@ -338,7 +338,6 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     auto camera_time = high_resolution_clock::now();
     uint64_t ms_lidar_camera_diff_l = (std::get<0>(frame_tuple) - msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec) / 1e6;
     uint64_t ms_lidar_camera_diff_r = (std::get<2>(frame_tuple) - msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec) / 1e6;
-    RCLCPP_INFO(get_logger(), "Camera Diff L: %llu ms | Camera Diff R: %llu ms", ms_lidar_camera_diff_l, ms_lidar_camera_diff_r);
     #endif
 
     // Motion modeling for both frames
@@ -379,35 +378,30 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     #if use_yolo
     #if timing
     auto yolo_l_start_time = high_resolution_clock::now();
-    #endif
+    #endif // use_yolo
 
     // Get YOLO detection outputs
     std::vector<cv::Mat> detection_l = cones::coloring::yolo::process_frame(std::get<1>(frame_tuple), net);
     #if timing
     auto yolo_l_end_time = high_resolution_clock::now();
-    #endif
+    #endif // timing
 
     std::vector<cv::Mat> detection_r = cones::coloring::yolo::process_frame(std::get<3>(frame_tuple), net);
     #if timing
     auto yolo_r_end_time = high_resolution_clock::now();
-
-    RCLCPP_INFO(get_logger(), "Total yolo time %llu ms", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_start_time).count());
-    RCLCPP_INFO(get_logger(), "\t - Left yolo time %llu ms | Right yolo time %llu ms", 
-                std::chrono::duration_cast<std::chrono::milliseconds>(yolo_l_end_time - yolo_l_start_time).count(), 
-                std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_end_time).count());
-    #endif
+    #endif // timing
     
     std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair = {detection_l, detection_r};
     #else
     // Initialize empty matrix if not YOLO
     std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair = {std::vector<cv::Mat>(), std::vector<cv::Mat>()};
-    #endif
+    #endif // use_yolo
 
     // Declare point and cone vectors
     cones::TrackBounds unordered;
     #if save_frames
     std::vector<std::pair<cv::Point, cv::Point>> unknown_transformed_pixels, yellow_transformed_pixels, blue_transformed_pixels, orange_transformed_pixels;
-    #endif
+    #endif // save_frames
 
     // Iterate through all points in /cpp_cones message
     for (size_t i = 0; i < msg->cone_array.size(); i++) {
@@ -559,6 +553,12 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     auto stamp_time = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
     auto ms_time_since_lidar = (get_clock()->now().nanoseconds() - stamp_time) / 1e6;
 
+
+    RCLCPP_INFO(get_logger(), "Total yolo time %llu ms", std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_start_time).count());
+    RCLCPP_INFO(get_logger(), "\t - Left yolo time %llu ms | Right yolo time %llu ms", 
+                std::chrono::duration_cast<std::chrono::milliseconds>(yolo_l_end_time - yolo_l_start_time).count(), 
+                std::chrono::duration_cast<std::chrono::milliseconds>(yolo_r_end_time - yolo_l_end_time).count());
+    RCLCPP_INFO(get_logger(), "Camera Diff L: %llu ms | Camera Diff R: %llu ms", ms_lidar_camera_diff_l, ms_lidar_camera_diff_r);
     RCLCPP_INFO(get_logger(), "Get Camera Time  %ld ms.", std::chrono::duration_cast<std::chrono::milliseconds>(camera_time - start_time).count());
     RCLCPP_INFO(get_logger(), "Total Transform and Coloring Time  %ld ms.", transform_coloring_time);
     #if save_frames
@@ -582,7 +582,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     RCLCPP_INFO(get_logger(), "%d yellow cones, %d blue cones, %d orange cones, %d unknown color cones.\n",
     yellow_cones, blue_cones, orange_cones, unknown_color_cones);
 
-    RCLCPP_INFO(get_logger(), "----------------------------------------------");
+    RCLCPP_INFO(get_logger(), "==============END=OF=CALLBACK==============");
     
     cone_pub_->publish(message);
 }

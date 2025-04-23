@@ -67,14 +67,6 @@ namespace cones {
 
         return ordered_cones;
     }
-
-    // Helper function to extract XY from a cone
-    std::vector<double> cone_to_features(const Cone &cone) {
-        std::vector<double> features;
-        features.push_back(cone.point.x);
-        features.push_back(cone.point.y);
-        return features;
-    }
     
     // Helper function to convert TrackBounds to XY training data
     std::pair<std::vector<std::vector<double>>, std::vector<double>> cones_to_xy(const TrackBounds &track_bounds) {
@@ -83,15 +75,13 @@ namespace cones {
         
         // Process yellow cones (label 0.0)
         for (const auto& cone : track_bounds.yellow) {
-            std::vector<double> features = cone_to_features(cone);
-            X.push_back(features);
+            X.push_back({cone.point.x, cone.point.y});
             y.push_back(0.0);  // Yellow label
         }
         
         // Process blue cones (label 1.0)
         for (const auto& cone : track_bounds.blue) {
-            std::vector<double> features = cone_to_features(cone);
-            X.push_back(features);
+            X.push_back({cone.point.x, cone.point.y});
             y.push_back(1.0);  // Blue label
         }
         
