@@ -6,6 +6,8 @@
 
 #include "interfaces/msg/cone_array.hpp"
 
+#include "../cones/svm/svm_recolour.hpp"
+
 
 // Standard Imports
 #include <deque>
