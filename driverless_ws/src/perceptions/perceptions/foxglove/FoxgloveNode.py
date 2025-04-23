@@ -189,8 +189,7 @@ class FoxgloveNode(Node):
                 f"{len(msg.blue_cones):<3} Blue Cones | "
                 f"{len(msg.yellow_cones):<3} Yellow Cones | "
                 f"{len(msg.orange_cones):<3} Orange Cones | "
-                f"{len(msg.big_orange_cones):<3} Big Orange Cones | "
-                f"{len(msg.unknown_color_cones):<3} Unknown Color Cones"
+                f"{len(msg.big_orange_cones):<3} Big Orange Cones | " f"{len(msg.unknown_color_cones):<3} Unknown Color Cones"
             )
         point_cloud = self.create_colored_point_cloud(msg)
         self.associated_cone_publisher.publish(point_cloud)

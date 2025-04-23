@@ -76,7 +76,7 @@ private:
     static constexpr int max_long_term_history_size = 300;
 
     std::vector<ObsConeInfo> cone_history;
-    double min_dist_th = 0.25;
+    double min_dist_th = 0.15;
 
     uint64_t prev_time_stamp;
 
@@ -99,11 +99,11 @@ private:
     std::mutex cone_history_mutex;
 
 
-    std::tuple<int, double> find_closest_cone_id(std::pair<double, double> global_cone_position);
+    std::pair<int, double> find_closest_cone_id(std::pair<double, double> global_cone_position);
     std::pair<double, double> lidar_point_to_global_cone_position(geometry_msgs::msg::Vector3 lidar_point, std::pair<double, double> cur_position, double yaw);
     int determine_color(int id);
     int classify_through_data_association(std::pair<double, double> global_cone_position);
     void maintain_cone_history_lifespans(std::queue<ObsConeInfo>& cone_history);
     double find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point, double yaw);
-    void update_cone_history_with_colored_cone(std::vector<geometry_msgs::msg::Point> cone_msg, std::pair<double, double> cur_position, double cur_yaw);
+    void update_cone_history_with_colored_cone(std::vector<geometry_msgs::msg::Point> cone_msg, std::pair<double, double> cur_position, double cur_yaw, int color);
 };

@@ -216,12 +216,12 @@ std::pair<double, double> ConeHistoryTestNode::lidar_point_to_global_cone_positi
     return std::make_pair(global_lidar_point_x, global_lidar_point_y);
 }
 
-std::tuple<int, double> ConeHistoryTestNode::find_closest_cone_id(std::pair<double, double> global_cone_position)
+std::pair<int, double> ConeHistoryTestNode::find_closest_cone_id(std::pair<double, double> global_cone_position)
 {
     double min_dist = std::numeric_limits<double>::max();
     int min_id = -1;
 
-    cone_history_mutex.lock();
+    // cone_history_mutex.lock();
     for (int i = 0; i < cone_history.size(); i++)
     {
         ObsConeInfo cone_info = cone_history.at(i);
@@ -234,7 +234,7 @@ std::tuple<int, double> ConeHistoryTestNode::find_closest_cone_id(std::pair<doub
             min_id = i;
         }
     }
-    cone_history_mutex.unlock();
+    // cone_history_mutex.unlock();
 
     return std::make_pair(min_id, min_dist);
 
@@ -251,18 +251,18 @@ void ConeHistoryTestNode::update_cone_history_with_colored_cone(std::vector<geom
 
         std::pair<double, double> global_cone_position = lidar_point_to_global_cone_position(point, cur_position, cur_yaw);
         // !todo use a semaphore so that multiple threads can read
-        cone_history_mutex.lock();
+        // cone_history_mutex.lock();
         std::pair<int, double> nearest_cone = find_closest_cone_id(global_cone_position);
-        cone_history_mutex.unlock();
+        // cone_history_mutex.unlock();
 
         if (nearest_cone.second > min_dist_th) { // Greater than the threshold means that its far away from everything enough, we believe it's new
-            cone_history_mutex.lock();
+            // cone_history_mutex.lock();
             cone_history.emplace_back(global_cone_position.first, global_cone_position.second, nearest_cone.first);
-            cone_history_mutex.unlock();
+            // cone_history_mutex.unlock();
         } else { // Old cone
             int min_id = nearest_cone.first; 
             //Update with the current position
-            cone_history_mutex.lock();
+            // cone_history_mutex.lock();
             cone_history.at(min_id).global_cone_x = global_cone_position.first;
             cone_history.at(min_id).global_cone_y = global_cone_position.second;
 
@@ -272,19 +272,19 @@ void ConeHistoryTestNode::update_cone_history_with_colored_cone(std::vector<geom
             } else if (color == 2) {// blue
                 cone_history.at(min_id).times_seen_blue++;
             }
-            cone_history_mutex.unlock();
+            // cone_history_mutex.unlock();
         }
     }
 }
 
 int ConeHistoryTestNode::classify_through_data_association(std::pair<double, double> global_cone_position) {
-    cone_history_mutex.lock();
+    // cone_history_mutex.lock();
     std::pair<int, double> nearest_cone = find_closest_cone_id( global_cone_position);
-    cone_history_mutex.unlock();
+    // cone_history_mutex.unlock();
 
-    cone_history_mutex.lock();
+    // cone_history_mutex.lock();
     int cone_color = determine_color(nearest_cone.first);
-    cone_history_mutex.unlock();
+    // cone_history_mutex.unlock();
     return cone_color;
 }
 
@@ -333,15 +333,15 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     RCLCPP_INFO(get_logger(), "-------------Processing Cones--------------"); 
     RCLCPP_INFO(get_logger(), "\tNumber of blue cones received: %zu", msg->blue_cones.size());
     RCLCPP_INFO(get_logger(), "\tNumber of yellow cones received: %zu", msg->yellow_cones.size());
-    cone_history_mutex.lock();
+    // cone_history_mutex.lock();
     RCLCPP_INFO(get_logger(), "\tNumber of old cones: %zu", cone_history.size());
-    cone_history_mutex.unlock();
+    // cone_history_mutex.unlock();
     std::vector<geometry_msgs::msg::Point> blue_cones_to_publish = msg->blue_cones;
     std::vector<geometry_msgs::msg::Point> yellow_cones_to_publish = msg->yellow_cones;
     
 
-    update_cone_history_with_colored_cone(msg->blue_cones, cur_position, cur_yaw);
-    update_cone_history_with_colored_cone(msg->yellow_cones, cur_position, cur_yaw);
+    update_cone_history_with_colored_cone(msg->blue_cones, cur_position, cur_yaw, 2);
+    update_cone_history_with_colored_cone(msg->yellow_cones, cur_position, cur_yaw, 1);
     
     RCLCPP_INFO(get_logger(), "-------------End Processing Cones--------------\n");
 
