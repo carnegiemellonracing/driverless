@@ -1,5 +1,6 @@
 #include "cone_history_test_node.hpp"
 
+
 std::pair<double, double> global_frame_to_local_frame(
     std::pair<double, double> global_frame_change,
     double yaw)
@@ -40,10 +41,7 @@ ConeHistoryTestNode::ConeHistoryTestNode() : Node("cone_history_test_node")
     prev_time_stamp = -1;
 
     // Initialize subscribers
-    blue_cone_history = {};
-    yellow_cone_history = {};
-    long_term_yellow_cone_history = {};
-    long_term_blue_cone_history = {};
+    cone_history = {};
 
     // Subscriber that reads the input topic that contains an array of cone_point arrays from LiDAR stack
     auto cone_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
@@ -191,116 +189,103 @@ void ConeHistoryTestNode::yaw_callback(geometry_msgs::msg::Vector3Stamped::Share
     yaw_mutex.unlock();
 }
 
+
 /**
- * @brief 
+ * @brief Determine the color of the cone indicated by ID by 
+ * which color it was seen the most with. 
  * 
  * @param cone_history 
- * @param lidar_point This is a point in CMR/local car frame. This needs to be transformed into global frame for comparison
- * @return float 
+ * @param id 
  */
-double ConeHistoryTestNode::find_closest_distance_in_cone_history(std::queue<ObsConeInfo> &cone_history, geometry_msgs::msg::Vector3 lidar_point, double yaw)
-{
-    double cur_min_dist = std::numeric_limits<double>::max();
-    // RCLCPP_INFO(get_logger(), "Initilalized min_dist: %lf | Cone history size: %d", cur_min_dist, cone_history.size());
-    for (int i = 0; i < cone_history.size(); i++)
-    {
-        ObsConeInfo cone_info = cone_history.front();
-        cone_history.pop();
+int ConeHistoryTestNode::determine_color(int id) {
+    ObsConeInfo cone_info = cone_history.at(id);
 
-        // Transforming the lidar point into global_frame
-        std::pair<double, double> local_lidar_point_xy = std::make_pair(lidar_point.x, lidar_point.y);
-        std::pair<double, double> global_car_to_lidar = local_to_global_frame(local_lidar_point_xy, yaw);
-        double global_car_to_lidar_x = global_car_to_lidar.first;
-        double global_car_to_lidar_y = global_car_to_lidar.second;
-
-        // Transforming the observer_position to lidar point information into global_frame
-        std::pair<double, double> local_observer_to_cone_xy = std::make_pair(cone_info.observer_position_to_cone_x, cone_info.observer_position_to_cone_y);
-        std::pair<double, double> global_observer_to_cone = local_to_global_frame(local_observer_to_cone_xy, cone_info.observer_yaw);
-        double global_observer_to_cone_x = global_observer_to_cone.first;
-        double global_observer_to_cone_y = global_observer_to_cone.second;
-
-        double dx = (cone_info.cur_car_to_observer_x + global_observer_to_cone_x) - global_car_to_lidar_x;
-        double dy = (cone_info.cur_car_to_observer_y + global_observer_to_cone_y) - global_car_to_lidar_y;
-        
-        double dist = (double)sqrt(pow(dx, 2) + pow(dy, 2));
-        if (dist < cur_min_dist)
-        {
-            cur_min_dist = dist;
-        }
-        cone_history.push(cone_info);
-    }
-    // RCLCPP_INFO(get_logger(), "Final min_dist: %lf", cur_min_dist);
-    return cur_min_dist;
-}
-
-int ConeHistoryTestNode::classify_through_data_association(geometry_msgs::msg::Vector3 lidar_point, double yaw) {
-    // Find the closest point wrt yellow points
-    double min_dist_from_yellow = find_closest_distance_in_cone_history(yellow_cone_history, lidar_point, yaw);
-
-    // Find the closest point wrt blue points
-    double min_dist_from_blue = find_closest_distance_in_cone_history(blue_cone_history, lidar_point, yaw);
-
-    // Between the 2 colors, determine which is closer
-    if (min_dist_from_blue < min_dist_from_yellow && min_dist_from_blue < min_dist_th) { // most like a blue cone 
+    if (cone_info.times_seen_blue > cone_info.times_seen_yellow) {
         return 2;
-    } else if (min_dist_from_yellow < min_dist_from_blue && min_dist_from_yellow < min_dist_th) {
+    } else if (cone_info.times_seen_blue < cone_info.times_seen_yellow) {
         return 1;
     } else {
-        min_dist_from_yellow = find_closest_distance_in_cone_history(long_term_yellow_cone_history, lidar_point, yaw);
-        min_dist_from_blue = find_closest_distance_in_cone_history(long_term_blue_cone_history, lidar_point, yaw);
-        if (min_dist_from_blue < min_dist_from_yellow && min_dist_from_blue < min_dist_th) { // most like a blue cone 
-            return 2;
-        } else if (min_dist_from_yellow < min_dist_from_blue && min_dist_from_yellow < min_dist_th) {
-            return 1;
-        } else {
-            RCLCPP_INFO(get_logger(), "No classification possible: min_dist_from_blue: %f | min_dist_from_yellow: %f", min_dist_from_blue, min_dist_from_yellow);
-            return -1;
+        return -1; // ! determine what to do in this inconclusive case 
+    }
+}
+
+std::pair<double, double> ConeHistoryTestNode::lidar_point_to_global_cone_position(geometry_msgs::msg::Vector3 lidar_point, std::pair<double, double> cur_position, double yaw) {
+    std::pair<double, double> lidar_point_from_car_global = local_to_global_frame(std::make_pair(lidar_point.x, lidar_point.y), yaw);
+    double global_lidar_point_x = cur_position.first + lidar_point_from_car_global.first;
+    double global_lidar_point_y = cur_position.second + lidar_point_from_car_global.second;
+    return std::make_pair(global_lidar_point_x, global_lidar_point_y);
+}
+
+std::pair<int, double> ConeHistoryTestNode::find_closest_cone_id(std::pair<double, double> global_cone_position)
+{
+    double min_dist = std::numeric_limits<double>::max();
+    int min_id = -1;
+
+    // cone_history_mutex.lock();
+    for (int i = 0; i < cone_history.size(); i++)
+    {
+        ObsConeInfo cone_info = cone_history.at(i);
+        double diff_x = cone_info.global_cone_x - global_cone_position.first;
+        double diff_y = cone_info.global_cone_y - global_cone_position.second;
+        double dist = sqrt(pow(diff_x, 2) + pow(diff_y, 2));
+
+        if (dist < min_dist) {
+            min_dist = dist;
+            min_id = i;
+        }
+    }
+    // cone_history_mutex.unlock();
+
+    return std::make_pair(min_id, min_dist);
+
+    
+}
+
+
+void ConeHistoryTestNode::update_cone_history_with_colored_cone(std::vector<geometry_msgs::msg::Point> cone_msg, std::pair<double, double> cur_position, double cur_yaw, int color) {
+    for (int i= 0; i < cone_msg.size(); i++) {
+        geometry_msgs::msg::Vector3 point;
+        point.x = cone_msg[i].x;
+        point.y = cone_msg[i].y;
+        point.z = 0;
+
+        std::pair<double, double> global_cone_position = lidar_point_to_global_cone_position(point, cur_position, cur_yaw);
+        // !todo use a semaphore so that multiple threads can read
+        // cone_history_mutex.lock();
+        std::pair<int, double> nearest_cone = find_closest_cone_id(global_cone_position);
+        // cone_history_mutex.unlock();
+
+        if (nearest_cone.second > min_dist_th) { // Greater than the threshold means that its far away from everything enough, we believe it's new
+            // cone_history_mutex.lock();
+            cone_history.emplace_back(global_cone_position.first, global_cone_position.second, nearest_cone.first);
+            // cone_history_mutex.unlock();
+        } else { // Old cone
+            int min_id = nearest_cone.first; 
+            //Update with the current position
+            // cone_history_mutex.lock();
+            cone_history.at(min_id).global_cone_x = global_cone_position.first;
+            cone_history.at(min_id).global_cone_y = global_cone_position.second;
+
+            //Update the current counters
+            if (color == 1) {// yellow
+                cone_history.at(min_id).times_seen_yellow++;
+            } else if (color == 2) {// blue
+                cone_history.at(min_id).times_seen_blue++;
+            }
+            // cone_history_mutex.unlock();
         }
     }
 }
 
-/**
- * @brief This function will treat the current car position as world origin, and motion model the other
- * observer positions to be with respect to the current observer position/cur car position (in 
- * globla frame).
- * The reason why we do this is because the further away from 0, 0 you are, the 
- * less accurate you become. We would want our current position to be 0, 0 and have other positions
- * build off from here. 
- * 
- * @param cone_history 
- * @param global_xy_change 
- */
-void ConeHistoryTestNode::motion_model_on_cone_history(std::queue<ObsConeInfo>& cone_history, std::pair<double, double> global_xy_change) {
-    /**
-     * Note: In the case that you plan to multithread the code in the future, 
-     * this expression is moved out because cone_history's size changes 
-     * during each iteration.
-     */
-    int cone_history_size = cone_history.size();
+int ConeHistoryTestNode::classify_through_data_association(std::pair<double, double> global_cone_position) {
+    // cone_history_mutex.lock();
+    std::pair<int, double> nearest_cone = find_closest_cone_id( global_cone_position);
+    // cone_history_mutex.unlock();
 
-    for (int i = 0; i < cone_history_size; i++) {
-        ObsConeInfo cone_info = cone_history.front();
-        cone_info.cur_car_to_observer_x += global_xy_change.first;
-        cone_info.cur_car_to_observer_y += global_xy_change.second;
-        cone_history.pop();
-        cone_history.push(cone_info);
-    }
-}
-
-void ConeHistoryTestNode::maintain_cone_history_lifespans(std::queue<ObsConeInfo>& cone_history) {
-    int cone_history_size = cone_history.size();
-
-    for (int i = 0; i < cone_history_size; i++) {
-        ObsConeInfo cone_info = cone_history.front();
-        cone_history.pop();
-        assert(cone_info.lifespan <= max_timesteps_in_cone_history);
-        if (cone_info.lifespan == max_timesteps_in_cone_history) {
-            continue;
-        } else {
-            cone_info.lifespan++;
-            cone_history.push(cone_info);
-        }
-    }
+    // cone_history_mutex.lock();
+    int cone_color = determine_color(nearest_cone.first);
+    // cone_history_mutex.unlock();
+    return cone_color;
 }
 
 /**
@@ -330,7 +315,6 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     RCLCPP_INFO(get_logger(), "\tTime diff: %f", time_diff_seconds);
     RCLCPP_INFO(get_logger(), "\tVelocity: %f, %f", cur_velocity_yaw.first->twist.linear.x, cur_velocity_yaw.first->twist.linear.y);
     RCLCPP_INFO(get_logger(), "\tYaw: %f", cur_velocity_yaw.second->vector.z);
-    RCLCPP_INFO(get_logger(), "-------------End Motion Modeling--------------\n");
 
     double cur_velocity_x = cur_velocity_yaw.first->twist.linear.x;
     double cur_velocity_y = cur_velocity_yaw.first->twist.linear.y;
@@ -339,97 +323,55 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     double global_change_dx = cur_velocity_x * time_diff_seconds;
     double global_change_dy = cur_velocity_y * time_diff_seconds;
     std::pair<double, double> global_xy_change = std::make_pair(global_change_dx, global_change_dy);
+    std::pair<double, double> new_position = std::make_pair(cur_position.first + global_xy_change.first, cur_position.second + global_xy_change.second);
+    cur_position = new_position;
 
-    RCLCPP_INFO(get_logger(), "-------------Start Motion Modeling On Cone History--------------\n");
-    motion_model_on_cone_history(blue_cone_history, global_xy_change);
-    motion_model_on_cone_history(yellow_cone_history, global_xy_change);
-    motion_model_on_cone_history(long_term_blue_cone_history, global_xy_change);
-    motion_model_on_cone_history(long_term_yellow_cone_history, global_xy_change);
+    RCLCPP_INFO(get_logger(), "-------------End Motion Modeling--------------\n");
+    
 
-    RCLCPP_INFO(get_logger(), "-------------End Motion Modeling On Cone History--------------\n");
 
     RCLCPP_INFO(get_logger(), "-------------Processing Cones--------------"); 
     RCLCPP_INFO(get_logger(), "\tNumber of blue cones received: %zu", msg->blue_cones.size());
     RCLCPP_INFO(get_logger(), "\tNumber of yellow cones received: %zu", msg->yellow_cones.size());
-    RCLCPP_INFO(get_logger(), "\tNumber of old blue cones: %zu", long_term_blue_cone_history.size());
-    RCLCPP_INFO(get_logger(), "\tNumber of old yellow cones: %zu", long_term_yellow_cone_history.size());
+    // cone_history_mutex.lock();
+    RCLCPP_INFO(get_logger(), "\tNumber of old cones: %zu", cone_history.size());
+    // cone_history_mutex.unlock();
+    std::vector<geometry_msgs::msg::Point> blue_cones_to_publish = msg->blue_cones;
+    std::vector<geometry_msgs::msg::Point> yellow_cones_to_publish = msg->yellow_cones;
     
-    cones::TrackBounds cones_to_publish;
-    
-    for (int i = 0; i < msg->blue_cones.size(); i++) {
-        cones::Cone cone(msg->blue_cones[i]);
-        cones_to_publish.blue.push_back(cone);
-        
-        blue_cone_history.emplace(0.0, 0.0, cur_yaw, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
-        geometry_msgs::msg::Vector3 point;
-        point.x = msg->blue_cones[i].x;
-        point.y = msg->blue_cones[i].y;
-        point.z = 0;
-        // Check if you have an old or new cone
-        double min_dist = find_closest_distance_in_cone_history(long_term_blue_cone_history, point, cur_yaw);
-        if (min_dist > min_dist_th) { // Greater than the threshold means that its far away from everything enough, we believe it's new
-            long_term_blue_cone_history.emplace(0.0, 0.0, cur_yaw, msg->blue_cones[i].x, msg->blue_cones[i].y, 0);
-        }
-    }
-    
-    while (long_term_blue_cone_history.size() > max_long_term_history_size) {
-        long_term_blue_cone_history.pop();
-    }
 
-    while (long_term_yellow_cone_history.size() > max_long_term_history_size) {
-        long_term_yellow_cone_history.pop();
-    }
-
-    // Fix for type difference: Convert geometry_msgs::msg::Point to cones::Cone
-    for (int i = 0; i < msg->yellow_cones.size(); i++) {
-        cones::Cone cone(msg->yellow_cones[i]);
-        cones_to_publish.yellow.push_back(cone);
-        
-        yellow_cone_history.emplace(0.0, 0.0, cur_yaw, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
-        geometry_msgs::msg::Vector3 point;
-        point.x = msg->yellow_cones[i].x;
-        point.y = msg->yellow_cones[i].y;
-        point.z = 0;
-        // Check if you have an old or new cone
-        double min_dist = find_closest_distance_in_cone_history(long_term_yellow_cone_history, point, cur_yaw);
-        if (min_dist > min_dist_th) { // Greater than the threshold means that its far away from everything enough, we believe it's new
-            long_term_yellow_cone_history.emplace(0.0, 0.0, cur_yaw, msg->yellow_cones[i].x, msg->yellow_cones[i].y, 0);
-        }
-    }
+    update_cone_history_with_colored_cone(msg->blue_cones, cur_position, cur_yaw, 2);
+    update_cone_history_with_colored_cone(msg->yellow_cones, cur_position, cur_yaw, 1);
+    
     RCLCPP_INFO(get_logger(), "-------------End Processing Cones--------------\n");
 
     // Classify each unknown cone.
+
+
     int num_unable_to_classify_cones = 0;
-    RCLCPP_INFO(this->get_logger(), "Num blue_cones_in_history: %d", blue_cone_history.size());
-    RCLCPP_INFO(this->get_logger(), "Num yellow_cones_in_history: %d", yellow_cone_history.size());
-    
     for (int i = 0; i < msg->unknown_color_cones.size(); i++) {
         RCLCPP_INFO(get_logger(), "-------------Classifying Cone--------------\n");
         geometry_msgs::msg::Vector3 lidar_point;
         lidar_point.x = msg->unknown_color_cones[i].x;
         lidar_point.y = msg->unknown_color_cones[i].y;
         lidar_point.z = msg->unknown_color_cones[i].z;
-        RCLCPP_INFO(get_logger(), "\t Point: (%f, %f, %f)", lidar_point.x, lidar_point.y, lidar_point.z);
-        int cone_class = classify_through_data_association(lidar_point, cur_yaw);
+        std::pair<double, double> global_cone_position = lidar_point_to_global_cone_position(lidar_point, cur_position, cur_yaw);
+        RCLCPP_INFO(get_logger(), "\t Global Point: (%f, %f)", global_cone_position.first, global_cone_position.second);
+        RCLCPP_INFO(get_logger(), "\t Point: (%f, %f)", lidar_point.x, lidar_point.y);
+        int cone_class = classify_through_data_association(global_cone_position);
 
         // Classify and add the newly classified cone to the cone history
         switch (cone_class) {
             //yellow
-            case 1: {
-                RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as yellow", 
-                           msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
-                cones::Cone cone(msg->unknown_color_cones[i]);
-                cones_to_publish.yellow.push_back(cone);
+            case 1:
+                RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as yellow", msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
+                yellow_cones_to_publish.push_back(msg->unknown_color_cones[i]);
                 break;
-            }
             //blue 
-            case 2: {
-                RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as blue", 
-                           msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
-                cones::Cone cone(msg->unknown_color_cones[i]);
-                cones_to_publish.blue.push_back(cone);
+            case 2:
+                RCLCPP_INFO(this->get_logger(), "\tClassified cone @ (%f, %f) as blue", msg->unknown_color_cones[i].x, msg->unknown_color_cones[i].y);
+                blue_cones_to_publish.push_back(msg->unknown_color_cones[i]);
                 break;
-            }
             default: 
                 num_unable_to_classify_cones++;
                 RCLCPP_INFO(this->get_logger(), "\tUnable to classify cone @ (%f, %f)", 
@@ -438,6 +380,7 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
                 break;    
         }
     }
+
     RCLCPP_INFO(this->get_logger(), "Num unclassified cones: %d", num_unable_to_classify_cones);
 
     // Create the associated cones message
@@ -459,15 +402,16 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
         }
     }
 
+    // associated_cones_msg_.blue_cones = blue_cones_to_publish;
+    // associated_cones_msg_.yellow_cones = yellow_cones_to_publish;
+
     // Publish the associated cones
     associated_cones_pub_->publish(associated_cones_msg_);
 
     // Update the previous time stamp
     prev_time_stamp = cur_time_stamp;
 
-    // Update the cone histories
-    maintain_cone_history_lifespans(blue_cone_history);
-    maintain_cone_history_lifespans(yellow_cone_history);
+    
 }
 
 int main(int argc, char **argv)
