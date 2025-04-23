@@ -29,6 +29,7 @@ namespace yolo {
             frame_pair.first.rows,
             confidence_threshold
         );
+        std::cout << "Above is left camera, below is right camera" << std::endl;
         pixel_r = coloring::yolo::get_color(
             pixel_pair.second, 
             detection_pair.second, 
@@ -51,7 +52,7 @@ namespace yolo {
 
     float depth_to_box_height(float depth) {
         // Map depth to box height
-        return depth; // TODO: MAP THIS
+        return (15.6f - 198.0f / depth);
     }
 
     std::pair<int, double> get_color(
@@ -88,6 +89,9 @@ namespace yolo {
                 int width = static_cast<int>(w * x_scale);
                 int height = static_cast<int>(h * y_scale);
 
+                // std::cout << "Width: " << width << ", Height: " << height << std::endl;
+                // std::cout << "X: " << x << ", Y: " << y << std::endl;
+
                 // If pixel is inside the bounding box add color to the vector of all boxes pixel is in
                 if (pixel(0) > x && pixel(0) < x + width && pixel(1) > y && pixel(1) < y + height) {
                     int c_c;
@@ -119,7 +123,7 @@ namespace yolo {
         if (boxes.size() > 0) {
 
             // Find closest box
-            double smallest = std::get<0>(boxes[0]);
+            double smallest = std::get<0>(boxes[0]) + 1.0;
             int cone_class = -1;
             double prob = 0.0;
             for (int i = 0; i < boxes.size(); i++) {

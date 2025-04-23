@@ -102,14 +102,14 @@ namespace cones {
     void supplement_cones(TrackBounds &track_bounds) {
 
         geometry_msgs::msg::Point yellow_cone;
-        yellow_cone.x = -2.0;
+        yellow_cone.x = 2.0;
         yellow_cone.y = 1.0;
         yellow_cone.z = 0;
 
         track_bounds.yellow.push_back(yellow_cone);
 
         geometry_msgs::msg::Point blue_cone;
-        blue_cone.x = 2.0;
+        blue_cone.x = -2.0;
         blue_cone.y = 1.0;
         blue_cone.z = 0;
         

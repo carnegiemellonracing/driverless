@@ -445,7 +445,7 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     associated_cones_msg_.header.stamp = msg->header.stamp;
     associated_cones_msg_.header.frame_id = msg->header.frame_id;
 
-    cones::TrackBounds recoloured_cones_to_publish = cones::recolouring::recolour_cones(cones_to_publish);
+    cones::TrackBounds recoloured_cones_to_publish = cones::recolouring::recolour_cones(cones_to_publish, 10.0);
 
     if (!recoloured_cones_to_publish.yellow.empty()) {
         for (const auto& cone : cones::order_cones(recoloured_cones_to_publish.yellow)) {

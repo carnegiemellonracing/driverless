@@ -29,7 +29,7 @@ namespace recolouring {
         return value;
     }
     
-    cones::TrackBounds recolour_cones(cones::TrackBounds track_bounds) {
+    cones::TrackBounds recolour_cones(cones::TrackBounds track_bounds, double C) {
         
         // Constants
         const int augment_angle_degrees = 30;
@@ -51,7 +51,7 @@ namespace recolouring {
         // augment dataset to make it better for SVM training
         cones::TrackBounds augmented_cones = track_bounds;
         cones::supplement_cones(augmented_cones);
-        cones::augment_cones_circle(augmented_cones, augment_angle_degrees, radius);
+        // cones::augment_cones_circle(augmented_cones, augment_angle_degrees, radius);
     
         // acquire the feature matrix and label vector
         std::pair<std::vector<std::vector<double>>, std::vector<double>> xy = cones::cones_to_xy(augmented_cones);
@@ -119,7 +119,7 @@ namespace recolouring {
         param.svm_type = C_SVC;
         param.kernel_type = POLY;
         param.degree = 3;
-        param.C = 10.0; // represents trade-off between maximizing margin and minimizing misclassification [Lower = more margin, more misclassification (good for recoloring)]
+        param.C = C; // represents trade-off between maximizing margin and minimizing misclassification [Lower = more margin, more misclassification (good for recoloring)]
         param.coef0 = 1.0;
         param.gamma = gamma_scale;
         param.cache_size = 200;

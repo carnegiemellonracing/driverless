@@ -30,7 +30,7 @@ using std::placeholders::_1;
 #define use_yolo 1 // 0: HSV Coloring | 1: YOLO Coloring
 #define timing 1  // Prints timing suite at end of every callback
 #define inner 1    // Uses inner lens of ZEDS (if 0 uses the outer lens)
-#define save_frames 1 // Writes every 5th frame to img_log folder
+#define save_frames 0 // Writes every 5th frame to img_log folder
 
 class PointToPixelNode : public rclcpp::Node
 {
@@ -38,6 +38,7 @@ public:
     // Constructor declaration
     PointToPixelNode();
     static constexpr int max_deque_size = 100;
+    static constexpr double svm_C = 5.0;
 
     // YOLO constants
     #if use_yolo
@@ -100,14 +101,13 @@ private:
     sl_oc::video::VideoCapture cap_r;
     camera::Camera left_cam;
     camera::Camera right_cam;
-    
     #if save_frames
     uint64_t camera_callback_count;
-    #endif
+    #endif // save_frames
 
     #if use_yolo
     cv::dnn::Net net; // YOLO Model
-    #endif
+    #endif // use_yolo
 
     // Threads for camera callback and frame saving
     std::thread launch_camera_communication();

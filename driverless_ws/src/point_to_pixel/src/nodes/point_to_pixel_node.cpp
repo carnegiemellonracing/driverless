@@ -1,4 +1,5 @@
 #include "point_to_pixel_node.hpp"
+#include "../cones/svm/svm_recolour.hpp"
 
 // Constructor definition
 PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
@@ -43,7 +44,7 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     std::vector<double> param_default(12, 0.0);
 
     // Confidence Threshold
-    declare_parameter("confidence_threshold", 0.01);
+    declare_parameter("confidence_threshold", 0.25);
 
     // Load Projection Matrix if inner is set to true, then load lr and rl, else load ll and rr
     #if inner
@@ -476,6 +477,9 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     auto end_transform_coloring_time = high_resolution_clock::now();
     auto transform_coloring_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_transform_coloring_time - yolo_r_end_time).count();
     #endif
+
+    // Recolouring
+    unordered = cones::recolouring::recolour_cones(unordered, svm_C);
 
     // Cone ordering
     cones::TrackBounds ordered;
