@@ -153,6 +153,15 @@ namespace controls {
                 auxiliary_state_options);
             }
 
+            if (ingest_midline) {
+                m_spline_subscription = create_subscription<SplineMsg>(
+                    spline_topic_name, spline_qos,
+                    [this](const SplineMsg::SharedPtr msg)
+                    { spline_callback(*msg); },
+                    auxiliary_state_options
+                );
+            }
+
             
             // TODO: m_state_mut never gets initialized? I guess default construction is alright;
             if (send_to_can) {
@@ -263,6 +272,11 @@ namespace controls {
                         RCLCPP_WARN(get_logger(), "unknown state projection mode");
                         return {};
                 }
+            }
+
+            void ControllerNode::spline_callback(const SplineMsg& spline_msg) {
+                std::lock_guard<std::mutex> guard(m_state_mut);
+                m_state_estimator->on_spline(spline_msg);
             }
 
 
