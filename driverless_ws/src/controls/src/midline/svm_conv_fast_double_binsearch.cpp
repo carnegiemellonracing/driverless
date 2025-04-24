@@ -78,9 +78,13 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
     {
         // We check up to -2 and +2
         // also holy garbage code right here
-        if (chosen_column.has_value()) { // TODO: add additional bounds checking
+        if (chosen_column.has_value() && row > 0) { // TODO: add additional bounds checking
             size_t chosen_column_value = chosen_column.value();
-            boundary_points.emplace(xx[row][chosen_column_value], yy[row][chosen_column_value]);
+            double boundary_point_x = xx[row - 1][chosen_column_value];
+            double boundary_point_y = yy[row - 1][chosen_column_value];
+            paranoid_assert(is_colored_one(nodePredictor({boundary_point_x, boundary_point_y}, model)));
+            boundary_points.emplace(boundary_point_x, boundary_point_y);
+
             if (chosen_column_value < cols - 2 && chosen_column_value >= 2) {
                     /*
                     1 1 0 0
@@ -118,6 +122,7 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
                     }
                 
             }
+        
         }
         // predict left and right labels
         number_of_rows_not_skipped++;
@@ -170,7 +175,7 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
         }
     }
 
-    RCLCPP_INFO(rclcpp::get_logger("SVM FAST"), "Rows Skipped: %d / %ld\n", rows - number_of_rows_not_skipped, rows);
+    RCLCPP_DEBUG(rclcpp::get_logger("SVM FAST"), "Rows Skipped: %ld / %ld\n", rows - number_of_rows_not_skipped, rows);
 
     std::optional<size_t> chosen_row = std::nullopt;
     bool zero_below = true;
@@ -178,9 +183,14 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
 
     for (size_t col = 0; col < cols; ++col)
     {
-        if (chosen_row.has_value()) {
+        if (chosen_row.has_value() && col > 0) {
             size_t chosen_row_value = chosen_row.value();
-            boundary_points.emplace(xx[chosen_row_value][col], yy[chosen_row_value][col]);
+            double boundary_point_x = xx[chosen_row_value][col - 1];
+            double boundary_point_y = yy[chosen_row_value][col - 1];
+            paranoid_assert(is_colored_one(nodePredictor({boundary_point_x, boundary_point_y}, model)));
+
+            boundary_points.emplace(boundary_point_x, boundary_point_y);
+            
             if (chosen_row_value < rows - 2 && chosen_row_value >= 2) {
                 /*
                 1 1 0 0
@@ -218,6 +228,7 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
                     }
                 }
             }
+            
         }
         number_of_cols_not_skipped++;
         // predict left and right labels
@@ -269,7 +280,7 @@ conesList boundaryDetection(const std::vector<std::vector<double>> &xx, const st
             chosen_row = std::nullopt;
         }
     }
-    RCLCPP_INFO(rclcpp::get_logger("SVM FAST"), "Cols Skipped: %d / %ld\n", cols - number_of_cols_not_skipped, cols);
+    RCLCPP_DEBUG(rclcpp::get_logger("SVM FAST"), "Cols Skipped: %ld / %ld\n", cols - number_of_cols_not_skipped, cols);
 
     //TODO: turn set back into vector
     std::vector<std::pair<double, double>> boundary_points_out (boundary_points.begin(), boundary_points.end());

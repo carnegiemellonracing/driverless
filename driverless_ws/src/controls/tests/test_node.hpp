@@ -131,7 +131,9 @@ namespace controls {
             float m_spline_end_heading = 0;
             ActionMsg m_last_action_msg;
             std::queue<ActionMsg> m_action_queue;
-            int prop_delay = 500;
+            std::queue<ConeMsg> m_cone_queue;
+            std::queue<SplineMsg> m_spline_queue;
+            int prop_delay = 0;
             //int torque_delay = 100;
 
 

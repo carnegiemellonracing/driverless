@@ -560,6 +560,34 @@ namespace controls {
             glm::fvec2 world_state_vec {m_world_state[0], m_world_state[1]};
             
             g_car_poses.push_back(std::make_tuple(world_state_vec, m_world_state[2], m_time.seconds() - m_start_time.seconds()));
+            if (m_spline_queue.size() > 0) {
+                    rclcpp::Duration spline_duration = m_time - rclcpp::Time(m_spline_queue.front().header.stamp);
+                    if (spline_duration.nanoseconds() * 1e9 > std::stof(g_config_dict["approx_perceptions_delay"]))
+                    {
+                        m_spline_publisher->publish(m_spline_queue.front());
+                        m_spline_queue.pop();
+                    }
+            }
+            if (m_cone_queue.size() > 0) {
+                rclcpp::Time front_time = rclcpp::Time(m_cone_queue.front().header.stamp);
+                rclcpp::Duration cone_duration = m_time - front_time;
+                // std::cout << "m_time: " << m_time.nanoseconds() << std::endl;
+                // std::cout << "front_time: " << front_time.nanoseconds() << std::endl;
+                
+                // std::cout << "cone duration: " << cone_duration.nanoseconds() << std::endl;
+
+                if (cone_duration.nanoseconds() > 1e9 * std::stof(g_config_dict["approx_perceptions_delay"]))
+                {
+                    ConeMsg to_publish = m_cone_queue.front();
+                    builtin_interfaces::msg::Time current_time = m_time;
+                    // RCLCPP_INFO_STREAM(get_logger(), "Sim Cone Time: " << to_publish.header.stamp.sec << "." << to_publish.header.stamp.nanosec << "\n");
+                    // RCLCPP_INFO_STREAM(get_logger(), "Current Sim Time: " << current_time.sec << "." << current_time.nanosec << "" << "\n");
+                    m_cone_publisher->publish(to_publish);
+                    m_cone_queue.pop();
+                }
+            }
+
+
         }
 
 
@@ -641,8 +669,9 @@ namespace controls {
             spline_msg.header.stamp = curr_time;
             cone_msg.header.stamp = curr_time;
 
-            m_spline_publisher->publish(spline_msg);
-            m_cone_publisher->publish(cone_msg);
+            m_spline_queue.push(spline_msg);
+            m_cone_queue.push(cone_msg);
+            std::cout << "pushed to queue" << std::endl;
         }
  
 

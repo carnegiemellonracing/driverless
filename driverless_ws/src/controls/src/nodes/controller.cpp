@@ -298,8 +298,9 @@ namespace controls {
 
                 // save for info publishing later, since might be changed during iteration
                 rclcpp::Time lidar_points_seen_time = cone_msg.header.stamp;
+                // RCLCPP_INFO_STREAM(get_logger(), "Lidar Time: " << cone_msg.header.stamp.sec << "." << cone_msg.header.stamp.nanosec << "\n");
 
-                rclcpp::Time cone_callback_time = get_clock()->now();
+                    rclcpp::Time cone_callback_time = get_clock()->now();
                 rclcpp::Time time_to_project_till;
                 if (testing_on_rosbag)
                 {
