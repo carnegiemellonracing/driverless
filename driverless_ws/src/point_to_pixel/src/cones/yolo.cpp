@@ -52,7 +52,7 @@ namespace yolo {
 
     float depth_to_box_height(float depth) {
         // Map depth to box height
-        return (15.6f - 198.0f / depth);
+        return (15.6f + 198.0f / depth);
     }
 
     std::pair<int, double> get_color(

@@ -16,7 +16,7 @@ namespace cones {
         return std::atan2(to.point.y - from.point.y, to.point.x - from.point.x);
     }
 
-    Cones order_cones(const Cones& unordered_cones) {
+    Cones order_cones(const Cones& unordered_cones, double max_distance_threshold) {
         if (unordered_cones.size() <= 1) {
             return unordered_cones;
         }
@@ -51,15 +51,25 @@ namespace cones {
                     double angle_diff_b = std::abs(angle_b - prev_angle);
                     
                     // Combine distance and angle criteria
-                    double score_a = 0.7 * (a.distance / current_cone.distance) + 
-                                0.3 * angle_diff_a;
-                    double score_b = 0.7 * (b.distance / current_cone.distance) + 
-                                0.3 * angle_diff_b;
+                    double score_a = std::pow(std::abs(a.point.x - current_cone.point.x), 2) + std::pow(std::abs(a.point.y - current_cone.point.y), 2);
+                    double score_b = std::pow(std::abs(b.point.x - current_cone.point.x), 2) + std::pow(std::abs(b.point.y - current_cone.point.y), 2);
+                    // double score_a = 0.7 * (a.distance / current_cone.distance) + 
+                    //             0.3 * angle_diff_a;
+                    // double score_b = 0.7 * (b.distance / current_cone.distance) + 
+                    //             0.3 * angle_diff_b;
                     
                     return score_a < score_b;
                 });
 
-            current_cone = *next_cone_it;
+            auto next_cone = *next_cone_it;
+
+            // Check if next cone is more than {max_threshold} meters away
+            auto bw_cone_dist = std::sqrt(std::pow(std::abs(next_cone.point.x - current_cone.point.x), 2) + std::pow(std::abs(next_cone.point.y - current_cone.point.y), 2));
+            if (bw_cone_dist > max_distance_threshold) {
+                break;
+            }
+
+            current_cone = next_cone;
             ordered_cones.push_back(current_cone);
             prev_angle = calculate_angle(ordered_cones[ordered_cones.size()-2], current_cone);
             remaining_cones.erase(next_cone_it);

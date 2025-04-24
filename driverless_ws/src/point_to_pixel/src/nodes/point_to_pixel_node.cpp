@@ -476,18 +476,18 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     unordered = cones::recolouring::recolour_cones(unordered, svm_C);
 
     // Cone ordering
-    cones::TrackBounds ordered;
+    // cones::TrackBounds ordered;
     
     if (!unordered.yellow.empty()) {
-        ordered.yellow = cones::order_cones(unordered.yellow);
-        for (const auto& cone : ordered.yellow) {
+        // ordered.yellow = cones::order_cones(unordered.yellow, max_distance_threshold);
+        for (const auto& cone : unordered.yellow) {
             message.yellow_cones.push_back(cone.point);
         }
     }
 
     if (!unordered.blue.empty()) {
-        ordered.blue = cones::order_cones(unordered.blue);
-        for (const auto& cone : ordered.blue) {
+        // ordered.blue = cones::order_cones(unordered.blue, max_distance_threshold);
+        for (const auto& cone : unordered.blue) {
             message.blue_cones.push_back(cone.point);
         }
     }

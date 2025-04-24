@@ -79,6 +79,7 @@ private:
 
     std::vector<ObsConeInfo> cone_history;
     double min_dist_th = 0.15;
+    double max_order_dist = 5.0; // meters
 
     uint64_t prev_time_stamp;
 

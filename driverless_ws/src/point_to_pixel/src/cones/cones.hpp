@@ -30,10 +30,11 @@ namespace cones
      * @brief Orders cones by their path direction
      * 
      * @param unordered_cones Vector of unordered cones
+     * @param max_distance_threshold Maximum distance between two cones before ordering clips detected cones
      * @return Cones Vector of ordered cones
      */
 
-    Cones order_cones(const Cones& unordered_cones);
+    Cones order_cones(const Cones& unordered_cones, double max_distance_threshold);
 
     /**
      * @brief Finds the next closest cone to the first cone in the vector
