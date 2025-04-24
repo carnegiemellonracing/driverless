@@ -5,7 +5,7 @@ from tf2_ros import TransformBroadcaster
 from geometry_msgs.msg import TransformStamped, Point
 from sensor_msgs.msg import PointCloud2
 from visualization_msgs.msg import Marker, MarkerArray
-from interfaces.msg import ConeArray, SplineFrames
+from interfaces.msg import ConeArray, SplineFrames, PPMConeArray, PPMConePoints
 from perceptions.topics import POINT_TOPIC, POINT_2_TOPIC
 import numpy as np
 import argparse
@@ -49,6 +49,10 @@ class FoxgloveNode(Node):
             MarkerArray, 'cone_markers', 
             qos_profile=BEST_EFFORT_QOS_PROFILE
         )
+        self.colored_cone_publisher = self.create_publisher(
+            MarkerArray, 'colored_cone_markers', 
+            qos_profile=BEST_EFFORT_QOS_PROFILE
+        )
         self.spline_publisher = self.create_publisher(
             MarkerArray, 'spline_markers', 
             qos_profile=BEST_EFFORT_QOS_PROFILE
@@ -56,6 +60,11 @@ class FoxgloveNode(Node):
 
         self.cone_subscriber = self.create_subscription(
             ConeArray, '/perc_cones', 
+            self.colored_cone_array_callback, 
+            qos_profile=BEST_EFFORT_QOS_PROFILE
+        )
+        self.cone_subscriber = self.create_subscription(
+            PPMConeArray, '/cpp_cones', 
             self.cone_array_callback, 
             qos_profile=BEST_EFFORT_QOS_PROFILE
         )
@@ -131,7 +140,31 @@ class FoxgloveNode(Node):
             z = 0.25 * S
         return [x, y, z, w]
 
-    def cone_array_callback(self, msg: ConeArray):
+    def cone_array_callback(self, msg: PPMConeArray):
+        marker_array = MarkerArray()
+        marker_id = 0
+        for cone_points in msg.cone_array:
+            cone = cone_points.cone_points[0]
+            marker = Marker()
+            marker.header.frame_id = 'hesai_lidar'
+            marker.header.stamp = msg.header.stamp
+            marker.ns = "cone_markers"
+            marker.id = marker_id
+            marker.type = Marker.CUBE
+            marker.action = Marker.ADD
+            marker.pose.position.x = cone.x
+            marker.pose.position.y = cone.y
+            marker.pose.position.z = 0.0
+            marker.pose.orientation.w = 1.0
+            marker.scale.x = 0.2
+            marker.scale.y = 0.2
+            marker.scale.z = 0.2
+            marker.color.a = 1.0
+            marker_array.markers.append(marker)
+            marker_id += 1
+        self.cone_publisher.publish(marker_array)
+    
+    def colored_cone_array_callback(self, msg: ConeArray):
         if self.print_counts:
             print(
                 f"{len(msg.blue_cones):<3} Blue Cones | "
@@ -141,12 +174,12 @@ class FoxgloveNode(Node):
                 f"{len(msg.unknown_color_cones):<3} Unknown Color Cones"
             )
         marker_array = self.create_marker_array(msg)
-        self.cone_publisher.publish(marker_array)
+        self.colored_cone_publisher.publish(marker_array)
 
     def create_marker_array(self, msg: ConeArray):
         marker_array = MarkerArray()
         marker_id = 0
-        namespace = "cone_markers"
+        namespace = "colored_cone_markers"
 
         def add_cones(cones, color):
             nonlocal marker_id

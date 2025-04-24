@@ -58,6 +58,7 @@ bool initialize_camera(
  * @return cv::Mat The rectified frame
  */
 std::pair<uint64_t, cv::Mat> capture_and_rectify_frame(
+    const rclcpp::Logger &logger,
     sl_oc::video::VideoCapture& cap,
     const cv::Mat& map_left_x,
     const cv::Mat& map_left_y,
