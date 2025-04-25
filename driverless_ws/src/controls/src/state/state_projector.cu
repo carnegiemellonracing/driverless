@@ -88,8 +88,10 @@ namespace controls {
 
         }
 
-        void StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time) {
+        std::optional<State> StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time) {
             // std::cout << "Recording pose " << x << ", " << y << ", " << yaw << " at time " << time.nanoseconds() << std::endl;
+
+            std::optional<State> delta_state = project(time, [](const char * message){});
 
             m_pose_record = Record {
                 .pose = {
@@ -122,6 +124,7 @@ namespace controls {
             }
 
             m_history_since_pose.erase(m_history_since_pose.begin(), record_iter);
+            return delta_state;
 
         }
 

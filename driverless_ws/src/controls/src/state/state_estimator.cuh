@@ -3,6 +3,7 @@
 #include <cuda_globals/cuda_globals.cuh>
 #include <thrust/device_vector.h>
 #include <utils/gl_utils.hpp>
+#include <deque>
 
 #include "state_estimator.hpp"
 #include "state_projector.cuh"
@@ -200,6 +201,17 @@ namespace controls {
             LoggerFunc m_logger; ///< The logger function to be used.
             rclcpp::Logger m_logger_obj; ///< Logger object (belonging to the node)
             std::mutex& m_mutex; ///< Mutex to prevent multiple method calls from happening simultaneously
+
+            struct OldSpline {
+                std::vector<glm::fvec2> old_spline_frames;
+                State relative_state_to_previous;
+                size_t num_blue_cones;
+                size_t num_yellow_cones; 
+                rclcpp::Time timestamp;
+            };
+
+            std::deque<OldSpline> m_spline_history;
+            std::optional<std::pair<OldSpline, float>> get_best_old_spline(rclcpp::Time current_time); 
         };
 
     }

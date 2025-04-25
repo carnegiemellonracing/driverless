@@ -386,6 +386,32 @@ namespace controls {
             return frames_msg;
         }
 
+        static float compute_score(size_t num_blue_cones, size_t num_yellow_cones, rclcpp::Duration time_diff) {
+            const size_t smaller_num_cones = std::min(num_blue_cones, num_yellow_cones);
+            const size_t total_num_cones = num_blue_cones + num_yellow_cones;
+            const float num_seconds = time_diff.nanoseconds() / 1e9f;
+            const float score = smaller_num_cones_multiplier * smaller_num_cones + total_num_cones_multiplier * total_num_cones + seconds_since_spline_multiplier * num_seconds;
+            return score;
+        }
+
+
+        std::optional<std::pair<StateEstimator_Impl::OldSpline, float>> StateEstimator_Impl::get_best_old_spline(rclcpp::Time current_time) {
+            std::optional<std::pair<StateEstimator_Impl::OldSpline, float>> best_spline_and_score = std::nullopt;
+            for (auto& old_spline : m_spline_history) {
+                const auto time_diff = current_time - old_spline.timestamp;
+                const float score = compute_score(old_spline.num_blue_cones, old_spline.num_yellow_cones, time_diff);
+                if (best_spline_and_score.has_value()) {
+                    if (score > best_spline_and_score.value().second) {
+                        best_spline_and_score = std::make_pair(old_spline, score);
+                    }
+                } else {
+                    best_spline_and_score = std::make_pair(old_spline, score);
+                }
+            }
+            
+            return best_spline_and_score;
+        } 
+
 
         float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg, rclcpp::Publisher<SplineMsg>::SharedPtr cone_publisher) {
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -403,35 +429,63 @@ namespace controls {
 
             float svm_time = 0.0f;
 
+
+
+            // I need this above the spline calculation because I want to get the delta state
+            std::optional<State> delta_state_opt;
+            if constexpr (reset_pose_on_cone) {
+                delta_state_opt = m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
+            }
+
             if (!ingest_midline && !no_midline_controller) {
 
-                midline::Cones cones;
-                for (const auto& cone : m_left_cone_points) {
-                    cones.addBlueCone(cone.x, cone.y, 0);
-                }
-                for (const auto& cone : m_right_cone_points) {
-                    cones.addYellowCone(cone.x, cone.y, 0);
-                }
+                // Come up with a way to weight between 
+                const float this_cone_score = compute_score(cone_msg.blue_cones.size(), cone_msg.yellow_cones.size(), rclcpp::Duration::from_seconds(0));
+                const std::optional<std::pair<OldSpline, float>> best_spline_and_score = get_best_old_spline(cone_msg.header.stamp);
+                if (best_spline_and_score.has_value() && best_spline_and_score.value().second > this_cone_score) {
+                    m_spline_frames = best_spline_and_score.value().first.old_spline_frames;
+                    svm_time = 0.0f;
+                } else {
 
-                // // TODO: convert this to using std::transform
-                auto svm_start = std::chrono::high_resolution_clock::now();            
-                auto spline_frames = midline::svm_test::cones_to_midline(cones);
-                // auto spline_frames = midline::svm_slow::cones_to_midline(cones);
-                // auto _ = midline::svm_test::cones_to_midline(cones);
-                auto svm_end = std::chrono::high_resolution_clock::now();
-                svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
-                m_spline_frames.clear();
-                for (const auto& frame : spline_frames) {
-                    paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
-                    m_spline_frames.emplace_back(frame.first, frame.second);
-                }
-                if (m_spline_frames.size() < 2) {
-                    paranoid_assert(cone_msg.blue_cones.size() == 0 && cone_msg.yellow_cones.size() == 0);
-                }
-                if (publish_spline) {
-                    cone_publisher->publish(spline_frames_to_msg(m_spline_frames));
-                }
+                    midline::Cones cones;
+                    for (const auto& cone : m_left_cone_points) {
+                        cones.addBlueCone(cone.x, cone.y, 0);
+                    }
+                    for (const auto& cone : m_right_cone_points) {
+                        cones.addYellowCone(cone.x, cone.y, 0);
+                    }
 
+                    // // TODO: convert this to using std::transform
+                    auto svm_start = std::chrono::high_resolution_clock::now();            
+                    auto spline_frames = midline::svm_test::cones_to_midline(cones);
+                    // auto spline_frames = midline::svm_slow::cones_to_midline(cones);
+                    // auto _ = midline::svm_test::cones_to_midline(cones);
+                    auto svm_end = std::chrono::high_resolution_clock::now();
+                    svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
+                    m_spline_frames.clear();
+                    for (const auto& frame : spline_frames) {
+                        paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
+                        m_spline_frames.emplace_back(frame.first, frame.second);
+                    }
+                    if (m_spline_frames.size() < 2) {
+                        paranoid_assert(cone_msg.blue_cones.size() == 0 && cone_msg.yellow_cones.size() == 0);
+                    }
+                    if (publish_spline) {
+                        cone_publisher->publish(spline_frames_to_msg(m_spline_frames));
+                    }
+
+                    assert(delta_state_opt.has_value()); 
+                    OldSpline old_spline;
+                    old_spline.old_spline_frames = m_spline_frames;
+                    old_spline.relative_state_to_previous = delta_state_opt.value();
+                    old_spline.num_blue_cones = cone_msg.blue_cones.size();
+                    old_spline.num_yellow_cones = cone_msg.yellow_cones.size();
+                    old_spline.timestamp = cone_msg.header.stamp;
+                    m_spline_history.push_back(old_spline);
+                    if (m_spline_history.size() > maximum_spline_history_length) {
+                        m_spline_history.pop_front();
+                    }
+                }
             }
 
 #ifdef DISPLAY
@@ -446,9 +500,6 @@ namespace controls {
             }
 #endif
 
-            if constexpr (reset_pose_on_cone) {
-                m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
-            }
             
             m_logger("finished state estimator cone processing");
             return svm_time;

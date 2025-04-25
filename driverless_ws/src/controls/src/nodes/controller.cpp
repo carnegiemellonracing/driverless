@@ -43,6 +43,11 @@ namespace controls {
     bool log_state_projection_history;
     bool no_midline_controller;
 
+    float smaller_num_cones_multiplier;
+    float total_num_cones_multiplier;
+    float seconds_since_spline_multiplier;
+    size_t maximum_spline_history_length;
+
 
 
 
@@ -786,6 +791,12 @@ static int process_config_file(std::string config_file_path) {
     
     publish_spline = config_dict["publish_spline"] == "true" ? true : false;
     log_state_projection_history = config_dict["log_state_projection_history"] == "true" ? true : false;
+
+
+    smaller_num_cones_multiplier = std::stof(config_dict["smaller_num_cones_multiplier"]);
+    total_num_cones_multiplier = std::stof(config_dict["total_num_cones_multiplier"]);
+    seconds_since_spline_multiplier = std::stof(config_dict["seconds_since_spline_multiplier"]);
+    maximum_spline_history_length = std::stoul(config_dict["maximum_spline_history_length"]);
     return 0;
 }
 

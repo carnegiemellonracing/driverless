@@ -34,7 +34,7 @@ namespace controls {
              * @param time The time at which the vehicle had the pose. Since the pose is inferred from the spline, this
              * should be when the LIDAR points first came in.
              */
-            void record_pose(float x, float y, float yaw, rclcpp::Time time);
+            std::optional<State> record_pose(float x, float y, float yaw, rclcpp::Time time);
 
             void record_position_lla(float x, float y, rclcpp::Time time);
 

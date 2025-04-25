@@ -26,3 +26,8 @@ state_projection_mode: model_multiset
 publish_spline: true
 log_state_projection_history: false
 no_midline_controller: false
+
+smaller_num_cones_multiplier: 6.0f
+total_num_cones_multiplier: 1.0f
+seconds_since_spline_multiplier: -5.0f
+maximum_spline_history_length: 10

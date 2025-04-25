@@ -24,6 +24,10 @@ namespace controls {
     extern bool publish_spline;
     extern bool log_state_projection_history;
     extern bool no_midline_controller;
+    extern float smaller_num_cones_multiplier;
+    extern float total_num_cones_multiplier;
+    extern float seconds_since_spline_multiplier;
+    extern size_t maximum_spline_history_length;
 
 
     // Testing stuff
