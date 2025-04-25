@@ -197,6 +197,23 @@ namespace controls {
             }
         )";
 
+        constexpr const char *fragment_source_double_cone = R"(
+            #version 330 core
+
+            in vec2 o_world_pose;
+
+            out vec4 FragColor;
+
+            uniform sampler2D left_track_texture;
+            uniform sampler2D right_track_texture;
+
+            void main() {
+                vec4 color1 = texture(left_track_texture, o_world_pose / 2.0 + 0.5);
+                vec4 color2 = texture(right_track_texture, o_world_pose / 2.0 + 0.5);
+                FragColor = vec4(color1.x, 0, color2.x, color1.w);
+            }
+        )";
+
         // methods
 
         // Constructor
@@ -232,8 +249,8 @@ namespace controls {
             m_logger("compiling state estimator shaders");
             
             m_fake_track_shader_program = utils::compile_shader(vertex_source_fake_track, fragment_source_fake_track);
-            m_gl_path_shader = utils::compile_shader(vertex_source, fragment_source);
-
+            m_curv_frame_lookup_shader_program = utils::compile_shader(vertex_source, fragment_source);
+            m_double_cone_shader_program = utils::compile_shader(vertex_source, fragment_source_double_cone);
             m_logger("setting state estimator gl properties");
 
             glViewport(0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width);
@@ -241,7 +258,14 @@ namespace controls {
             m_logger("generating state estimator gl buffers");
             gen_curv_frame_lookup_framebuffer();
             gen_gl_path(m_gl_path);
-            gen_fake_track();
+            gen_fake_track(m_midline_fake_track);
+            if (no_midline_controller) {
+                gen_fake_track(m_left_fake_track);
+                gen_fake_track(m_right_fake_track);
+            }
+
+
+
 
             glFinish();
             utils::make_gl_current_or_except(m_gl_window, nullptr);
@@ -269,14 +293,14 @@ namespace controls {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
 
-        void StateEstimator_Impl::gen_fake_track() {
+        void StateEstimator_Impl::gen_fake_track(FakeTrackInfo& fake_track_info) {
             // generate the framebuffer for the fake track
-            glGenFramebuffers(1, &m_fake_track_fbo);
-            glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
+            glGenFramebuffers(1, &fake_track_info.fbo);
+            glBindFramebuffer(GL_FRAMEBUFFER, fake_track_info.fbo);
 
             // generate texture
-            glGenTextures(1, &m_fake_track_texture_color);
-            glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
+            glGenTextures(1, &fake_track_info.texture_color);
+            glBindTexture(GL_TEXTURE_2D, fake_track_info.texture_color);
 
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width, 0, GL_RGBA, GL_FLOAT, NULL);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -284,7 +308,7 @@ namespace controls {
             glBindTexture(GL_TEXTURE_2D, 0);
 
             // attach it to currently bound framebuffer object
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_fake_track_texture_color, 0); 
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fake_track_info.texture_color, 0); 
             
             GLuint depth_rbo;
 
@@ -299,7 +323,7 @@ namespace controls {
             // reset framebuffer to default
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-            gen_gl_path(m_fake_track_path);
+            gen_gl_path(fake_track_info.path);
         }
 
         StateEstimator_Impl::~StateEstimator_Impl() {
@@ -379,7 +403,7 @@ namespace controls {
 
             float svm_time = 0.0f;
 
-            if (!ingest_midline) {
+            if (!ingest_midline && !no_midline_controller) {
 
                 midline::Cones cones;
                 for (const auto& cone : m_left_cone_points) {
@@ -458,6 +482,9 @@ namespace controls {
         }
 
         void StateEstimator_Impl::render_and_sync(State state) {
+            if (no_midline_controller && m_follow_midline_only) {
+                throw std::runtime_error("No mildine controller + follow midline only doesn't make any sense");
+            }
             std::lock_guard<std::mutex> guard {m_mutex};
             
             // Timing variables
@@ -511,7 +538,12 @@ namespace controls {
             buffer_cones_time = current_time - last_time;
             last_time = current_time;
             
-            fill_path_buffers_spline();
+            if (!no_midline_controller) {
+                fill_path_buffers_for_fake_track(m_midline_fake_track, m_spline_frames);
+            } else {
+                fill_path_buffers_for_fake_track(m_left_fake_track, m_left_cone_points);
+                fill_path_buffers_for_fake_track(m_right_fake_track, m_right_cone_points);
+            }
             current_time = sync_now<log_render_and_sync_timing>();
             buffer_spline_time = current_time - last_time;
             last_time = current_time;
@@ -524,7 +556,13 @@ namespace controls {
 
             // render the lookup table
             m_logger("rendering curv frame lookup table...");
-            render_fake_track();
+            if (!no_midline_controller) {
+                render_fake_track(m_midline_fake_track);
+            } else {
+                render_fake_track(m_left_fake_track);
+                render_fake_track(m_right_fake_track);
+            }
+
             current_time = sync_now<log_render_and_sync_timing>();
             fake_track_time = current_time - last_time;
             last_time = current_time;
@@ -712,6 +750,8 @@ namespace controls {
             ));
         }
 
+        
+
         void StateEstimator_Impl::gen_tex_info(glm::fvec2 car_pos) {
             float xmin = car_pos.x;
             float ymin = car_pos.y;
@@ -725,13 +765,29 @@ namespace controls {
                 ymax = std::max(ymax, frame.y);
             }
 
+            for (const glm::fvec2 frame : m_left_cone_points)
+            {
+                xmin = std::min(xmin, frame.x);
+                xmax = std::max(xmax, frame.x);
+                ymin = std::min(ymin, frame.y);
+                ymax = std::max(ymax, frame.y);
+            }
+
+            for (const glm::fvec2 frame : m_right_cone_points)
+            {
+                xmin = std::min(xmin, frame.x);
+                xmax = std::max(xmax, frame.x);
+                ymin = std::min(ymin, frame.y);
+                ymax = std::max(ymax, frame.y);
+            }
+
             m_curv_frame_lookup_tex_info.xcenter = (xmax + xmin) / 2;
             m_curv_frame_lookup_tex_info.ycenter = (ymax + ymin) / 2;
             m_curv_frame_lookup_tex_info.width = std::max(xmax - xmin, ymax - ymin) + car_padding * 2;
         }
 
-        void StateEstimator_Impl::render_fake_track() {
-            glBindFramebuffer(GL_FRAMEBUFFER, m_fake_track_fbo);
+        void StateEstimator_Impl::render_fake_track(FakeTrackInfo &fake_track_info) {
+            glBindFramebuffer(GL_FRAMEBUFFER, fake_track_info.fbo);
 
             if (m_follow_midline_only) {
                 // ^ Replaces the texture with the render buffer (the final target)
@@ -750,22 +806,8 @@ namespace controls {
             glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
             glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
-            glBindVertexArray(m_fake_track_path.vao);
-            glDrawElements(GL_TRIANGLES, (m_spline_frames.size() * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
-
-#ifdef DISPLAY
-            if (display_on) {
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fake_track_fbo);
-                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-                glBlitFramebuffer(
-                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
-                    GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-                SDL_GL_SwapWindow(m_gl_window);
-            }
-
-#endif
+            glBindVertexArray(fake_track_info.path.vao);
+            glDrawElements(GL_TRIANGLES, (fake_track_info.num_elements * 6 - 2) * 3, GL_UNSIGNED_INT, nullptr);
         }
 
         void StateEstimator_Impl::render_curv_frame_lookup() {
@@ -776,16 +818,44 @@ namespace controls {
             // (technically 2 rendering passes are done - color and depth)
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT); // TODO: remove depth buffer
-            // use a shader program
-            glUseProgram(m_gl_path_shader);
-            // set the relevant scale and center uniforms (constants) in the shader program
-            glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
-            glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
-            glBindVertexArray(m_gl_path.vao);
-            glBindTexture(GL_TEXTURE_2D, m_fake_track_texture_color);
-            glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
+            if (!no_midline_controller) {
+                // use a shader program
+                glUseProgram(m_curv_frame_lookup_shader_program);
+                // set the relevant scale and center uniforms (constants) in the shader program
+                glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
+                glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
 
+                glBindVertexArray(m_gl_path.vao);
+                glBindTexture(GL_TEXTURE_2D, m_midline_fake_track.texture_color);
+                glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
+            } else {
+                glUseProgram(m_double_cone_shader_program);
+                glUniform1f(shader_scale_loc, 2.0f / m_curv_frame_lookup_tex_info.width);
+                glUniform2f(shader_center_loc, m_curv_frame_lookup_tex_info.xcenter, m_curv_frame_lookup_tex_info.ycenter);
+
+                glBindVertexArray(m_gl_path.vao);
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, m_left_fake_track.texture_color);
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, m_right_fake_track.texture_color);
+                glDrawArrays(GL_TRIANGLES, 0, m_num_triangles*3);
+            }
+            
+
+
+#ifdef DISPLAY
+            if (display_on) {
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, m_curv_frame_lookup_fbo);
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+                glBlitFramebuffer(
+                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    0, 0, curv_frame_lookup_tex_width, curv_frame_lookup_tex_width,
+                    GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+                SDL_GL_SwapWindow(m_gl_window);
+            }
+#endif
 
         }
 
@@ -945,8 +1015,8 @@ namespace controls {
          * Given spline frames, fills a framebuffer object with the fake track corresponding to the spline. Used for track progress.
          * The framebuffer object will be used as a texture object to be sampled from the state estimator.
          */
-        void StateEstimator_Impl::fill_path_buffers_spline() {
-            for (const auto& frame : m_spline_frames) {
+        void StateEstimator_Impl::fill_path_buffers_for_fake_track(FakeTrackInfo &fake_track_info, const std::vector<glm::fvec2>& base_points) {
+            for (const auto& frame : base_points) {
                 paranoid_assert(!isnan_vec(frame));
             }
             struct Vertex {
@@ -963,7 +1033,7 @@ namespace controls {
             };
 
             const float radius = fake_track_width * 0.5f;
-            const size_t n = m_spline_frames.size();
+            const size_t n = base_points.size();
 
             if (n < 2) {
                 throw ControllerError("less than 2 spline frames! (bruh saket and/or saket)");
@@ -974,8 +1044,8 @@ namespace controls {
 
             float total_progress = 0;
             for (size_t i = 0; i < n - 1; i++) {
-                glm::fvec2 p1 = m_spline_frames[i];
-                glm::fvec2 p2 = m_spline_frames[i + 1];
+                glm::fvec2 p1 = base_points[i];
+                glm::fvec2 p2 = base_points[i + 1];
 
                 glm::fvec2 unit_vec = glm::length(p2 - p1) != 0 ? glm::normalize(p2 - p1) : glm::fvec2(0, 0);
                 // This creates a longitudinal buffer at the start and the end of the spline for the fake track to be rendered
@@ -993,7 +1063,7 @@ namespace controls {
                 float segment_heading = std::atan2(disp.y, disp.x);
 
 
-                glm::fvec2 prev = i == 0 ? p1 : m_spline_frames[i - 1];
+                glm::fvec2 prev = i == 0 ? p1 : base_points[i - 1];
                 float secant_heading = std::atan2(p2.y - prev.y, p2.x - prev.x);
 
                 glm::fvec2 dir = glm::normalize(disp);
@@ -1055,11 +1125,13 @@ namespace controls {
                 total_progress += new_progress;
             }
 
-            glBindBuffer(GL_ARRAY_BUFFER, m_fake_track_path.vbo);
+            glBindBuffer(GL_ARRAY_BUFFER, fake_track_info.path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_fake_track_path.ebo);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fake_track_info.path.ebo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
+
+            fake_track_info.num_elements = base_points.size();
         }
     }
 }

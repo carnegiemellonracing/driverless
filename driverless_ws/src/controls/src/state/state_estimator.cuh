@@ -58,6 +58,14 @@ namespace controls {
             ~StateEstimator_Impl() override;
 
         private:
+            struct FakeTrackInfo
+            {
+                GLuint fbo;
+                GLuint texture_color;
+                utils::GLObj path;
+                size_t num_elements;
+            };
+
             /// Index into where the uniform scale is stored for vertex shader to reference.
             constexpr static GLint shader_scale_loc = 0;
             /// Index into where the uniform center is stored for vertex shader to reference.
@@ -67,7 +75,7 @@ namespace controls {
             /// in m_curv_frame_lookup_tex_info.
             void gen_tex_info(glm::fvec2 car_pos);
 
-            void render_fake_track();
+            void render_fake_track(FakeTrackInfo &fake_track_info);
             /**
              * Render the lookup table into m_curv_frame_lookup_fbo
              */
@@ -93,7 +101,7 @@ namespace controls {
              */
             void gen_curv_frame_lookup_framebuffer();
 
-            void gen_fake_track();
+            void gen_fake_track(FakeTrackInfo &fake_track_info);
 
             /**
              * Creates the buffers to be used, as well as the descriptions of how the buffers are laid out.
@@ -108,7 +116,7 @@ namespace controls {
              * and the triples of vertex indices that represent triangles respectively.
              */
             void fill_path_buffers_cones();
-            void fill_path_buffers_spline();
+            void fill_path_buffers_for_fake_track(FakeTrackInfo &fake_track_info, const std::vector<glm::fvec2>& base_points);
 
             struct Vertex {
                 struct {
@@ -161,9 +169,12 @@ namespace controls {
             /// Render buffer object. Render target for the fbo, used to map to CUDA memory
             GLuint m_curv_frame_lookup_rbo;
 
-            GLuint m_fake_track_fbo;
-            GLuint m_fake_track_texture_color;
-            utils::GLObj m_fake_track_path;
+
+
+            FakeTrackInfo m_midline_fake_track;
+            FakeTrackInfo m_left_fake_track;
+            FakeTrackInfo m_right_fake_track;
+
             GLuint m_fake_track_shader_program; 
 
             /**
@@ -174,7 +185,9 @@ namespace controls {
              */
             utils::GLObj m_gl_path;
 
-            GLuint m_gl_path_shader; ///< Shader program to be used. Composed of vertex and fragment shaders.
+            GLuint m_curv_frame_lookup_shader_program; ///< Shader program to be used. Composed of vertex and fragment shaders.
+
+            GLuint m_double_cone_shader_program;
 
             /// OpenGL context, stores all the information associated with this instance.
             SDL_GLContext m_gl_context;

@@ -5,6 +5,7 @@
 #include <rclcpp/rclcpp.hpp>
 // Note: these header files are part of the ROS2 standard libraries
 #include <ros_types_and_constants.hpp>
+#include <utils/general_utils.hpp>
 //TODO: these should all be inline constexpr (not currently broken because not ODR-used)
 
 namespace controls {
@@ -22,6 +23,7 @@ namespace controls {
     extern StateProjectionMode state_projection_mode;
     extern bool publish_spline;
     extern bool log_state_projection_history;
+    extern bool no_midline_controller;
 
 
     // Testing stuff
@@ -36,7 +38,7 @@ namespace controls {
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
 
-    constexpr float maximum_speed_ms = 5.0f;
+    constexpr float maximum_speed_ms = 7.0f;
     constexpr float whl_radius = 0.215f;
     constexpr float gear_ratio = 14.0f;
 
@@ -69,7 +71,7 @@ namespace controls {
     constexpr float swangle_1radps_cost = 0.0f;
         // DEPRECATED
         constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
-    constexpr float target_speed = 4.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
+    constexpr float target_speed = 5.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 
     // Cost params
@@ -141,17 +143,17 @@ namespace controls {
     constexpr float understeer_slope = 0.0f; ///< How much car understeers as speed increases. See @rst :doc:`/source/explainers/slipless_model` @endrst.
 
     /// Maximum forward acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
-    constexpr float long_tractive_capability = 3.0f;
+    constexpr float long_tractive_capability = 5.0f;
     /// Maximum centripetal acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
     /// Usually slightly more than @c long_tractive_capability
-    constexpr float lat_tractive_capability = 5.0f;
+    constexpr float lat_tractive_capability = 7.0f;
     constexpr float brake_enable_speed = 1.0f;
     /// Maximum torque request (N m)
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
     constexpr float min_torque = -saturating_motor_torque;
     constexpr float max_torque = saturating_motor_torque;
-    constexpr float min_swangle = -20 * M_PI / 180.0f; //19 radians
-    constexpr float max_swangle = 20 * M_PI / 180.0f;
+    constexpr float min_swangle_rad = degrees_to_radians(-20.0f); 
+    constexpr float max_swangle_rad = degrees_to_radians(20.0f);
     /// Time from MPPI control action request to physical change, in sec
     // TODO: Re-estimate since Falcon (steering motor) replacement
     constexpr float approx_mppi_time = 0.020f; ///< Time from MPPI launch to control action calculation, in sec

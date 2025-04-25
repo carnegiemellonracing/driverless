@@ -41,6 +41,7 @@ namespace controls {
     StateProjectionMode state_projection_mode;
     bool publish_spline;
     bool log_state_projection_history;
+    bool no_midline_controller;
 
 
 
@@ -150,6 +151,15 @@ namespace controls {
                 [this](const ActionMsg::SharedPtr msg)
                 { rosbag_action_callback(*msg); },
                 auxiliary_state_options);
+            }
+
+            if (ingest_midline) {
+                m_spline_subscription = create_subscription<SplineMsg>(
+                    spline_topic_name, spline_qos,
+                    [this](const SplineMsg::SharedPtr msg)
+                    { spline_callback(*msg); },
+                    auxiliary_state_options
+                );
             }
 
             
@@ -262,6 +272,11 @@ namespace controls {
                         RCLCPP_WARN(get_logger(), "unknown state projection mode");
                         return {};
                 }
+            }
+
+            void ControllerNode::spline_callback(const SplineMsg& spline_msg) {
+                std::lock_guard<std::mutex> guard(m_state_mut);
+                m_state_estimator->on_spline(spline_msg);
             }
 
 
@@ -636,7 +651,7 @@ namespace controls {
                 ss
                     << "Action:\n"
                     << "  swangle (rad): " << info.action.swangle << "\n"
-                    << swangle_bar(info.action.swangle,min_swangle, max_swangle,40) << "\n"
+                    << swangle_bar(info.action.swangle,min_swangle_rad, max_swangle_rad,40) << "\n"
                     << progress_bar(info.action.torque_fl, min_torque, max_torque, 40) << "\n"
                     << progress_bar(info.action.torque_fr, min_torque, max_torque, 40) << "\n"
                     << progress_bar(info.action.torque_rl, min_torque, max_torque, 40) << "\n"
@@ -761,6 +776,7 @@ static int process_config_file(std::string config_file_path) {
     ingest_midline = config_dict["ingest_midline"] == "true" ? true : false;
     send_to_can = config_dict["send_to_can"] == "true" ? true : false;
     display_on = config_dict["display_on"] == "true" ? true : false;
+    no_midline_controller = config_dict["no_midline_controller"] == "true" ? true : false;
     if (config_dict["state_projection_mode"] == "model_multiset") {
         state_projection_mode = StateProjectionMode::MODEL_MULTISET;
     } else if (config_dict["state_projection_mode"] == "naive_speed_only") {
@@ -779,7 +795,7 @@ static int process_config_file(std::string config_file_path) {
 
 int main(int argc, char *argv[]) {
     using namespace controls;
-    std::string default_config_path = "conf1";
+    std::string default_config_path = "controls_default_config";
     std::string config_file_path;
     if (argc < 2)
     {
