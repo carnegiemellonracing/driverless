@@ -75,6 +75,9 @@ namespace controls {
     const rclcpp::QoS imu_accel_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS world_position_lla_qos (rclcpp::KeepLast(1));
     const rclcpp::QoS republished_perc_cones_qos (rclcpp::KeepLast(1));
+
+    const rmw_qos_profile_t keep_last_profile = spline_qos.get_rmw_qos_profile();
+
     
     constexpr rcl_clock_type_t default_clock_type = RCL_ROS_TIME;
 

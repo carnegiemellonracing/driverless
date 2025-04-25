@@ -18,7 +18,7 @@ follow_midline_only: true
 approx_propogation_delay: 0.5f
 offset_1m_cost: 10.0f
 
-testing_on_rosbag: false
+testing_on_rosbag: true
 ingest_midline: false
 send_to_can: false
 display_on: true

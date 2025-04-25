@@ -180,8 +180,8 @@ namespace controls {
                 m_last_y_velocity = 0.0f;
             }
 
-            republished_sub.subscribe(this, "republished cones", best_effort_profile);
-            associated_sub.subscribe(this, "associated cones", best_effort_profile);
+            republished_sub.subscribe(this, "/perc_cones_republished", keep_last_profile);
+            associated_sub.subscribe(this, "/associated_perc_cones", keep_last_profile);
             synchronizer = std::make_shared<message_filters::Synchronizer<MySyncPolicy>>(MySyncPolicy(10), republished_sub, associated_sub),
 
                 launch_aim_communication().detach();
