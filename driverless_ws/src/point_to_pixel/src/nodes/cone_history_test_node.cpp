@@ -74,11 +74,17 @@ ConeHistoryTestNode::ConeHistoryTestNode() : Node("cone_history_test_node")
         { yaw_callback(msg); },
         yaw_options);
 
-    // Initialize publishers
-    associated_cones_pub_ = create_publisher<interfaces::msg::ConeArray>(
-        "/associated_perc_cones", 
-        10
+    republished_perc_cones_sub_ = create_subscription<interfaces::msg::ConeArray>(
+        "/perc_cones_republished",
+        10,
+        [this](const interfaces::msg::ConeArray::SharedPtr msg)
+        { republished_cone_callback(msg); }
     );
+
+        // Initialize publishers
+    associated_cones_pub_ = create_publisher<interfaces::msg::ConeArray>(
+        "/associated_perc_cones",
+        10);
 }
 
 /**
@@ -288,6 +294,16 @@ int ConeHistoryTestNode::classify_through_data_association(std::pair<double, dou
     return cone_color;
 }
 
+void ConeHistoryTestNode::republished_cone_callback(const interfaces::msg::ConeArray::SharedPtr republished_cone_msg)
+{
+    controller_receive_time_ = republished_cone_msg->controller_receive_time;
+    while (controller_receive_time_ready_.load()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    controller_receive_time_ready_.store(true);
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
+}
+
 /**
  * @brief Store cones that are classified blue and yellow into our cone histories
  * For unknown cones, these will be what we are classifying 
@@ -297,6 +313,12 @@ int ConeHistoryTestNode::classify_through_data_association(std::pair<double, dou
  */
 void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr msg) 
 {
+    while (!controller_receive_time_ready_.load()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    msg->controller_receive_time = controller_receive_time_;
+    controller_receive_time_ready_.store(false);
+
     uint64_t cur_time_stamp = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;
     if (prev_time_stamp == -1) {
         prev_time_stamp = cur_time_stamp;

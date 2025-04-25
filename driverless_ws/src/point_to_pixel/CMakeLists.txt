@@ -17,6 +17,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED) 
 find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(builtin_interfaces REQUIRED)
 
 set(OpenCV_DIR /home/chip/Downloads/opencv/build/)
 find_package(OpenCV REQUIRED)
@@ -60,7 +61,7 @@ set(POINT_TO_PIXEL_SRC
 
 # Cone History Test Executable
 add_executable(cone_history_test_node ${CONE_HISTORY_TEST_NODE_SRC} )
-ament_target_dependencies(cone_history_test_node rclcpp interfaces geometry_msgs Eigen3 OpenCV)
+ament_target_dependencies(cone_history_test_node rclcpp interfaces geometry_msgs Eigen3 OpenCV builtin_interfaces)
 target_include_directories(cone_history_test_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)

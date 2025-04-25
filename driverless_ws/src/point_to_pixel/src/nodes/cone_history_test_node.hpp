@@ -15,7 +15,7 @@
 #include <memory>
 #include <chrono>
 #include <filesystem>
-
+#include <atomic>
 
 /**
  * @brief We motion model on the position of the car to the observer, instead
@@ -78,7 +78,7 @@ private:
     static constexpr int max_long_term_history_size = 300;
 
     std::vector<ObsConeInfo> cone_history;
-    double min_dist_th = 0.15;
+    double min_dist_th = 0.25;
     double max_order_dist = 5.0; // meters
 
     uint64_t prev_time_stamp;
@@ -87,6 +87,7 @@ private:
 
     // Motion Modeling Callbacks
     void cone_callback(const interfaces::msg::ConeArray::SharedPtr cone_msg);
+    void republished_cone_callback(const interfaces::msg::ConeArray::SharedPtr republished_cone_msg);
     void velocity_callback(const geometry_msgs::msg::TwistStamped::SharedPtr msg);
     void yaw_callback(const geometry_msgs::msg::Vector3Stamped::SharedPtr msg);
 
@@ -94,13 +95,16 @@ private:
     rclcpp::Subscription<interfaces::msg::ConeArray>::SharedPtr perc_cones_sub_;
     rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr velocity_sub_;
     rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr yaw_sub_;
+    rclcpp::Subscription<interfaces::msg::ConeArray>::SharedPtr republished_perc_cones_sub_;
 
     rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr associated_cones_pub_;
 
     std::mutex velocity_mutex;
     std::mutex yaw_mutex;
     std::mutex cone_history_mutex;
-
+    std::mutex controller_receive_time_mutex;
+    builtin_interfaces::msg::Time controller_receive_time_;
+    std::atomic<bool> controller_receive_time_ready_;
 
     std::pair<int, double> find_closest_cone_id(std::pair<double, double> global_cone_position);
     std::pair<double, double> lidar_point_to_global_cone_position(geometry_msgs::msg::Vector3 lidar_point, std::pair<double, double> cur_position, double yaw);
