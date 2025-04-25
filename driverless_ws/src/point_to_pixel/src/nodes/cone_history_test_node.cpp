@@ -56,7 +56,7 @@ ConeHistoryTestNode::ConeHistoryTestNode() : Node("cone_history_test_node")
 
     // auto velocity_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions velocity_options;
-    velocity_options.callback_group = cone_callback_group_;
+    velocity_options.callback_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     velocity_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>(
         "/filter/twist",
         10,
@@ -66,7 +66,7 @@ ConeHistoryTestNode::ConeHistoryTestNode() : Node("cone_history_test_node")
 
     // auto yaw_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions yaw_options;
-    yaw_options.callback_group = cone_callback_group_;
+    yaw_options.callback_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);                 
     yaw_sub_ = create_subscription<geometry_msgs::msg::Vector3Stamped>(
         "/filter/euler",
         10,
@@ -74,14 +74,16 @@ ConeHistoryTestNode::ConeHistoryTestNode() : Node("cone_history_test_node")
         { yaw_callback(msg); },
         yaw_options);
 
+    rclcpp::SubscriptionOptions republished_cone_options;
+    republished_cone_options.callback_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     republished_perc_cones_sub_ = create_subscription<interfaces::msg::ConeArray>(
         "/perc_cones_republished",
         10,
         [this](const interfaces::msg::ConeArray::SharedPtr msg)
-        { republished_cone_callback(msg); }
-    );
+        { republished_cone_callback(msg); },
+        republished_cone_options);
 
-        // Initialize publishers
+    // Initialize publishers
     associated_cones_pub_ = create_publisher<interfaces::msg::ConeArray>(
         "/associated_perc_cones",
         10);
