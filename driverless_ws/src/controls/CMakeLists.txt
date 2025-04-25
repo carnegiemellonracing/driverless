@@ -33,6 +33,7 @@ find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GSL REQUIRED)
 find_package(Threads REQUIRED)
+find_package(message_filters REQUIRED)
 # find_package(Math REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
@@ -155,7 +156,7 @@ target_include_directories(can_lib INTERFACE ${CANLIB_INCLUDE})
 add_executable(controller src/nodes/controller.cpp src/can/cmr_can.c)
 
 target_link_libraries(controller controls_lib Threads::Threads m can_lib)
-ament_target_dependencies(controller rclcpp interfaces builtin_interfaces)
+ament_target_dependencies(controller rclcpp interfaces builtin_interfaces message_filters)
 
 install(
         TARGETS controller

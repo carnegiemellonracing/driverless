@@ -24,6 +24,7 @@
 #include <state/naive_state_tracker.hpp>
 
 
+
 // This is to fit into the ROS API
 void send_finished_ignore_error() {
     std::cout << "I just got terminated lol\n";
@@ -103,11 +104,11 @@ namespace controls {
             }
 
 
-                m_cone_subscription = create_subscription<ConeMsg>(
-                    desired_cone_topic_name, spline_qos, //was cone_qos but that didn't exist, publisher uses spline_qos
-                    [this] (const ConeMsg::SharedPtr msg) { cone_callback(*msg); },
-                    main_control_loop_options
-                );
+                // m_cone_subscription = create_subscription<ConeMsg>(
+                //     desired_cone_topic_name, spline_qos, //was cone_qos but that didn't exist, publisher uses spline_qos
+                //     [this] (const ConeMsg::SharedPtr msg) { cone_callback(*msg); },
+                //     main_control_loop_options
+                // );
 
                 m_world_twist_subscription = create_subscription<TwistMsg>(
                     world_twist_topic_name, world_twist_qos,
@@ -182,6 +183,11 @@ namespace controls {
 
 
             launch_aim_communication().detach();
+
+            
+            synchronizer = std::make_shared<message_filters::Synchronizer<MySyncPolicy>>(republished_sub, associated_sub);
+            synchronizer->registerCallback(std::bind(&synced_cones_callback, this, std::placeholders::_1, std::placeholders::_2));
+
         }
 
 
@@ -280,11 +286,15 @@ namespace controls {
             }
 
 
-            void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
+            void ControllerNode::synced_cones_callback(const ConeMsg& republished_cone_msg, const ConeMsg& associated_cone_msg) {
 
                 m_mppi_controller->set_follow_midline_only(follow_midline_only);
                 m_state_estimator->set_follow_midline_only(follow_midline_only);
 
+                assert(testing_on_rosbag);
+
+                ConeMsg cone_msg = associated_cone_msg;
+                cone_msg.controller_receive_time = republished_cone_msg.controller_receive_time;
                                 
                 std::stringstream ss;
                 ss << "Received cones: " << std::endl;
@@ -301,6 +311,7 @@ namespace controls {
 
                 rclcpp::Time cone_callback_time = get_clock()->now();
                 rclcpp::Time time_to_project_till;
+
                 if (testing_on_rosbag)
                 {
                     time_to_project_till = cone_msg.controller_receive_time;

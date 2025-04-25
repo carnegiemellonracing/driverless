@@ -16,6 +16,11 @@
 #include <condition_variable>
 #include <state/naive_state_tracker.hpp>
 
+#include <message_filters/subscriber.h>
+#include <message_filters/synchronizer.h>
+#include <message_filters/sync_policies/approximate_time.h>
+
+
 
 namespace controls {
     namespace nodes {
@@ -43,6 +48,14 @@ namespace controls {
 
         private:
 
+            using MySyncPolicy = message_filters::sync_policies::ApproximateTime<ConeMsg, ConeMsg>;
+
+            message_filters::Subscriber<ConeMsg> republished_sub;
+            message_filters::Subscriber<ConeMsg> associated_sub;
+            std::shared_ptr<message_filters::Synchronizer<MySyncPolicy>> synchronizer;
+
+
+
             /**
              * Callback for spline subscription. Forwards message to `StateEstimator::on_spline`, and notifies MPPI
              * thread of the dirty state.
@@ -51,7 +64,9 @@ namespace controls {
              */
             void spline_callback(const SplineMsg& spline_msg);
 
-            void cone_callback(const ConeMsg& cone_msg);
+            // void cone_callback(const ConeMsg& cone_msg);
+
+            void synced_cones_callback(const ConeMsg& republished_cone_msg, const ConeMsg& associated_cone_msg);
 
             /**
              * Callback for world twist subscription. Forwards message to `StateEstimator::on_world_twist`, and notifies MPPI
