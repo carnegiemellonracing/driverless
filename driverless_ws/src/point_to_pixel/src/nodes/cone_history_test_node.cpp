@@ -56,7 +56,7 @@ ConeHistoryTestNode::ConeHistoryTestNode() : Node("cone_history_test_node")
 
     // auto velocity_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions velocity_options;
-    velocity_options.callback_group = cone_callback_group_;
+    velocity_options.callback_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     velocity_sub_ = create_subscription<geometry_msgs::msg::TwistStamped>(
         "/filter/twist",
         10,
@@ -66,7 +66,7 @@ ConeHistoryTestNode::ConeHistoryTestNode() : Node("cone_history_test_node")
 
     // auto yaw_callback_group_ = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     rclcpp::SubscriptionOptions yaw_options;
-    yaw_options.callback_group = cone_callback_group_;
+    yaw_options.callback_group = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     yaw_sub_ = create_subscription<geometry_msgs::msg::Vector3Stamped>(
         "/filter/euler",
         10,
