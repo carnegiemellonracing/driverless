@@ -73,14 +73,13 @@ namespace controls {
                       controller_info_qos)},
 
               m_spline_publisher{
-                create_publisher<SplineMsg>(
-                    spline_topic_name,
-                    spline_qos
-                )
-              },
+                  create_publisher<SplineMsg>(
+                      spline_topic_name,
+                      spline_qos)},
 
-              m_data_trajectory_log{"mppi_inputs.txt", std::ios::out},
-              m_p_value{0.1}
+
+        m_data_trajectory_log{"mppi_inputs.txt", std::ios::out},
+            m_p_value{0.1}
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
             rclcpp::CallbackGroup::SharedPtr main_control_loop_callback_group{
@@ -181,13 +180,13 @@ namespace controls {
                 m_last_y_velocity = 0.0f;
             }
 
+            republished_sub.subscribe(this, "republished cones", best_effort_profile);
+            associated_sub.subscribe(this, "associated cones", best_effort_profile);
+            synchronizer = std::make_shared<message_filters::Synchronizer<MySyncPolicy>>(MySyncPolicy(10), republished_sub, associated_sub),
 
-            launch_aim_communication().detach();
+                launch_aim_communication().detach();
 
-            
-            synchronizer = std::make_shared<message_filters::Synchronizer<MySyncPolicy>>(republished_sub, associated_sub);
-            synchronizer->registerCallback(std::bind(&synced_cones_callback, this, std::placeholders::_1, std::placeholders::_2));
-
+            synchronizer->registerCallback(&ControllerNode::synced_cones_callback, this);
         }
 
 

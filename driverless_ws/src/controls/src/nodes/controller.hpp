@@ -48,11 +48,6 @@ namespace controls {
 
         private:
 
-            using MySyncPolicy = message_filters::sync_policies::ApproximateTime<ConeMsg, ConeMsg>;
-
-            message_filters::Subscriber<ConeMsg> republished_sub;
-            message_filters::Subscriber<ConeMsg> associated_sub;
-            std::shared_ptr<message_filters::Synchronizer<MySyncPolicy>> synchronizer;
 
 
 
@@ -67,6 +62,12 @@ namespace controls {
             // void cone_callback(const ConeMsg& cone_msg);
 
             void synced_cones_callback(const ConeMsg& republished_cone_msg, const ConeMsg& associated_cone_msg);
+
+            using MySyncPolicy = message_filters::sync_policies::ApproximateTime<ConeMsg, ConeMsg>;
+
+            message_filters::Subscriber<ConeMsg> republished_sub;
+            message_filters::Subscriber<ConeMsg> associated_sub;
+            std::shared_ptr<message_filters::Synchronizer<MySyncPolicy>> synchronizer;
 
             /**
              * Callback for world twist subscription. Forwards message to `StateEstimator::on_world_twist`, and notifies MPPI
