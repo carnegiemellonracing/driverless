@@ -78,7 +78,7 @@ private:
     static constexpr int max_long_term_history_size = 300;
 
     std::vector<ObsConeInfo> cone_history;
-    double min_dist_th = 0.15;
+    double min_dist_th = 0.5;
     double max_order_dist = 5.0; // meters
 
     uint64_t prev_time_stamp;
