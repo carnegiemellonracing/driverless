@@ -201,6 +201,8 @@ namespace controls {
             m_spline = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_trajectory_shader_program);
             m_left_cone_trajectory = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 0.0f, 1.0f, 1.0f}, 3, m_trajectory_shader_program);
             m_right_cone_trajectory = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 1.0f, 0.0f, 1.0f}, 3, m_trajectory_shader_program);
+            m_left_cone_trajectory_underlay = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 0.0f, 1.0f, 0.1f}, 3, m_trajectory_shader_program);
+            m_right_cone_trajectory_underlay = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 1.0f, 0.0f, 0.1f}, 3, m_trajectory_shader_program);
         }
 
         void Display::init_best_guess() {
@@ -305,6 +307,15 @@ namespace controls {
             m_spline->draw();
         }
 
+        void Display::fill_trajectory(const std::vector<glm::fvec2>& points, Display::DrawableLine* trajectory) {
+            trajectory->vertex_buf = std::vector<float>(points.size() * 2);
+            for (size_t i = 0; i < points.size(); i++) {
+                //Draw trajectory line
+                trajectory->vertex_buf[2 * i] = points[i].x;
+                trajectory->vertex_buf[2 * i + 1] = points[i].y;
+            }
+        }
+
         void Display::draw_cones()
         {
             assert(m_left_cone_trajectory != nullptr);
@@ -312,25 +323,17 @@ namespace controls {
             bool real_life = (m_all_left_cone_points.size() == 0);
             const auto& left_cone_points = (real_life ? m_left_cone_points : m_all_left_cone_points);
             const auto& right_cone_points = (real_life ? m_right_cone_points : m_all_right_cone_points);
-            m_left_cone_trajectory->vertex_buf = std::vector<float>(left_cone_points.size() * 2);
-            for (size_t i = 0; i < left_cone_points.size(); i++) {
-                //Draw trajectory line
-                m_left_cone_trajectory->vertex_buf[2 * i] = left_cone_points[i].x;
-                m_left_cone_trajectory->vertex_buf[2 * i + 1] = left_cone_points[i].y;
-            }
-
-            m_right_cone_trajectory->vertex_buf = std::vector<float>(right_cone_points.size() * 2);
-            for (size_t i = 0; i < right_cone_points.size(); i++) {
-                // Draw trajectory line
-                m_right_cone_trajectory->vertex_buf[2 * i] = right_cone_points[i].x;
-                m_right_cone_trajectory->vertex_buf[2 * i + 1] = right_cone_points[i].y;
-            }
-
+            fill_trajectory(m_left_cone_points, m_left_cone_trajectory.get());
+            fill_trajectory(m_right_cone_points, m_right_cone_trajectory.get());
+            fill_trajectory(m_all_left_cone_points, m_left_cone_trajectory_underlay.get());
+            fill_trajectory(m_all_right_cone_points, m_right_cone_trajectory_underlay.get());
 
             m_left_cone_trajectory->draw();
             m_right_cone_trajectory->draw();
             m_left_cone_trajectory->draw_points();
             m_right_cone_trajectory->draw_points();
+            m_left_cone_trajectory_underlay->draw_points();
+            m_right_cone_trajectory_underlay->draw_points();
         }
 
         void Display::draw_best_guess() {
