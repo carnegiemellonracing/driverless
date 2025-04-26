@@ -395,21 +395,60 @@ namespace controls {
         }
 
 
-        std::optional<std::pair<StateEstimator_Impl::OldSpline, float>> StateEstimator_Impl::get_best_old_spline(rclcpp::Time current_time) {
-            std::optional<std::pair<StateEstimator_Impl::OldSpline, float>> best_spline_and_score = std::nullopt;
-            for (auto& old_spline : m_spline_history) {
+        std::optional<std::pair<std::vector<glm::fvec2>, float>> StateEstimator_Impl::get_best_old_spline(rclcpp::Time current_time, State final_delta_state) {
+            if (m_spline_history.size() == 0) {
+                return std::nullopt;
+            }
+            std::vector<glm::fvec2> best_spline;
+            float best_score = FLT_MIN;
+            std::deque<StateEstimator_Impl::OldSpline>::iterator best_spline_iter;
+            for (auto iter = m_spline_history.begin(); iter != m_spline_history.end(); iter++) {
+                StateEstimator_Impl::OldSpline old_spline = *iter;
                 const auto time_diff = current_time - old_spline.timestamp;
                 const float score = compute_score(old_spline.num_blue_cones, old_spline.num_yellow_cones, time_diff);
-                if (best_spline_and_score.has_value()) {
-                    if (score > best_spline_and_score.value().second) {
-                        best_spline_and_score = std::make_pair(old_spline, score);
-                    }
-                } else {
-                    best_spline_and_score = std::make_pair(old_spline, score);
+                if (score > best_score) {
+                    best_spline = old_spline.old_spline_frames;
+                    best_score = score;
+                    best_spline_iter = iter;
                 }
+
+            }
+
+            // Now we need to compute the transformation from best_spline to the current frame
+            best_spline_iter++;
+            State aggregate_delta_state;
+            float last_absolute_yaw = M_PI_2;
+            for (auto iter = best_spline_iter; iter != m_spline_history.end(); iter++) {
+                StateEstimator_Impl::OldSpline old_spline = *iter;
+                State relative_state_to_previous = old_spline.relative_state_to_previous;
+                float yaw_difference = relative_state_to_previous[state_yaw_idx] - M_PI_2;
+                glm::fvec2 state_difference = rotate_point({relative_state_to_previous[state_x_idx], 
+                    relative_state_to_previous[state_y_idx]}, last_absolute_yaw - M_PI_2);
+
+                aggregate_delta_state[state_x_idx] += state_difference.x;
+                aggregate_delta_state[state_y_idx] += state_difference.y;
+                aggregate_delta_state[state_yaw_idx] += yaw_difference;
+
+                last_absolute_yaw += yaw_difference;
+            }
+
+            glm::fvec2 state_difference = rotate_point({final_delta_state[state_x_idx], 
+                final_delta_state[state_y_idx]}, last_absolute_yaw - M_PI_2);
+            aggregate_delta_state[state_x_idx] += state_difference.x;
+            aggregate_delta_state[state_y_idx] += state_difference.y;
+            aggregate_delta_state[state_yaw_idx] += final_delta_state[state_yaw_idx];
+
+            // Now given aggregate delta state, I need to transform the best_spline into the current frame
+            std::vector<glm::fvec2> best_spline_frames_transformed;
+            best_spline_frames_transformed.reserve(best_spline.size());
+            
+            for (auto& p : best_spline) {
+                glm::fvec2 rel_point = p - glm::fvec2{aggregate_delta_state[state_x_idx], aggregate_delta_state[state_y_idx]};
+                glm::fvec2 rotated_point = rotate_point(rel_point, -aggregate_delta_state[state_yaw_idx]);
+                best_spline_frames_transformed.push_back(rotated_point);
             }
             
-            return best_spline_and_score;
+            return std::make_pair(best_spline_frames_transformed, best_score);
         } 
 
 
@@ -437,13 +476,15 @@ namespace controls {
                 delta_state_opt = m_state_projector.record_pose(0, 0, M_PI_2, cone_msg.header.stamp);
             }
 
+            // Might also need to && delta_state_opt.has_value()
             if (!ingest_midline && !no_midline_controller) {
+                assert(delta_state_opt.has_value()); 
 
                 // Come up with a way to weight between 
                 const float this_cone_score = compute_score(cone_msg.blue_cones.size(), cone_msg.yellow_cones.size(), rclcpp::Duration::from_seconds(0));
-                const std::optional<std::pair<OldSpline, float>> best_spline_and_score = get_best_old_spline(cone_msg.header.stamp);
+                const std::optional<std::pair<std::vector<glm::vec2>, float>> best_spline_and_score = get_best_old_spline(cone_msg.header.stamp);
                 if (best_spline_and_score.has_value() && best_spline_and_score.value().second > this_cone_score) {
-                    m_spline_frames = best_spline_and_score.value().first.old_spline_frames;
+                    m_spline_frames = best_spline_and_score.value().first;
                     svm_time = 0.0f;
                 } else {
 
@@ -470,22 +511,22 @@ namespace controls {
                     if (m_spline_frames.size() < 2) {
                         paranoid_assert(cone_msg.blue_cones.size() == 0 && cone_msg.yellow_cones.size() == 0);
                     }
-                    if (publish_spline) {
-                        cone_publisher->publish(spline_frames_to_msg(m_spline_frames));
-                    }
-
-                    assert(delta_state_opt.has_value()); 
-                    OldSpline old_spline;
-                    old_spline.old_spline_frames = m_spline_frames;
-                    old_spline.relative_state_to_previous = delta_state_opt.value();
-                    old_spline.num_blue_cones = cone_msg.blue_cones.size();
-                    old_spline.num_yellow_cones = cone_msg.yellow_cones.size();
-                    old_spline.timestamp = cone_msg.header.stamp;
-                    m_spline_history.push_back(old_spline);
-                    if (m_spline_history.size() > maximum_spline_history_length) {
-                        m_spline_history.pop_front();
-                    }
                 }
+                if (publish_spline) {
+                    cone_publisher->publish(spline_frames_to_msg(m_spline_frames));
+                }
+
+                OldSpline old_spline;
+                old_spline.old_spline_frames = m_spline_frames;
+                old_spline.relative_state_to_previous = delta_state_opt.value();
+                old_spline.num_blue_cones = cone_msg.blue_cones.size();
+                old_spline.num_yellow_cones = cone_msg.yellow_cones.size();
+                old_spline.timestamp = cone_msg.header.stamp;
+                m_spline_history.push_back(old_spline);
+                if (m_spline_history.size() > maximum_spline_history_length) {
+                    m_spline_history.pop_front();
+                }
+                
             }
 
 #ifdef DISPLAY

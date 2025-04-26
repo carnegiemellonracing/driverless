@@ -211,7 +211,7 @@ namespace controls {
             };
 
             std::deque<OldSpline> m_spline_history;
-            std::optional<std::pair<OldSpline, float>> get_best_old_spline(rclcpp::Time current_time); 
+            std::optional<std::pair<std::vector<glm::fvec2>, float>> get_best_old_spline(rclcpp::Time current_time, State delta_state); 
         };
 
     }
