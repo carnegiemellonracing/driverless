@@ -91,7 +91,12 @@ namespace controls {
         std::optional<State> StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time) {
             // std::cout << "Recording pose " << x << ", " << y << ", " << yaw << " at time " << time.nanoseconds() << std::endl;
 
-            std::optional<State> delta_state = project(time, [](const char * message){});
+            std::optional<State> delta_state;
+            if (!m_pose_record.has_value()) {
+                delta_state = std::nullopt;
+            } else {
+                delta_state = project(time, [](const char * message){});
+            }
 
             m_pose_record = Record {
                 .pose = {
@@ -167,6 +172,7 @@ namespace controls {
             }
         }
 
+        // ! This function makes the implicit assumption that the "time" argument is after everything inside m_history_since_pose
         std::optional<State> StateProjector::project(const rclcpp::Time& time, LoggerFunc logger_func) const {
             paranoid_assert(m_pose_record.has_value() && "State projector has not recieved first pose");
 
@@ -191,13 +197,27 @@ namespace controls {
 
             rclcpp::Time sim_time = first_time;
             Action last_action = m_init_action.action;
+            int counter = 0;
             for (auto record_iter = m_history_since_pose.begin(); record_iter != m_history_since_pose.end(); ++record_iter) {
                 // checks if we're on last record
-                const auto next_time = std::next(record_iter) == m_history_since_pose.end() ? time : std::next(record_iter)->time;
+                // const auto next_time = std::next(record_iter) == m_history_since_pose.end() ? time : std::next(record_iter)->time;
+                bool should_break = false;
+                rclcpp::Time next_time;
+                if (std::next(record_iter) == m_history_since_pose.end()) {
+                    next_time = time;
+                } else {
+                    rclcpp::Time next_time_in_history = std::next(record_iter)->time;
+                    if (next_time_in_history > time) {
+                        next_time = time;
+                        should_break = true;
+                    } else {
+                        next_time  = next_time_in_history;
+                    }
+                }
 
                 const float delta_time = (next_time - sim_time).nanoseconds() / 1e9f;
                 if (delta_time < 0) {
-                    RCLCPP_WARN(m_logger_obj, "RUH ROH. Delta time for propogation delay simulation within the while loop  was negative.   : (");
+                    RCLCPP_WARN(m_logger_obj, "RUH ROH. Delta time for propogation delay simulation within the while loop  was negative.   : (. Iteration count: %d, delta time: %f, empty_history: %s", counter, delta_time, bool_to_string(m_history_since_pose.empty()));
                     return std::nullopt;
                 }
 
@@ -222,6 +242,10 @@ namespace controls {
                 record_state(next_time.nanoseconds(), state, predicted_ss);
 
                 sim_time = next_time;
+                counter++;
+                if (should_break) {
+                    break;
+                }
             }
             if (log_state_projection_history) {
                 std::string log_location = getenv("ROS_LOG_DIR") + std::string{"/state_projection_history.txt"};

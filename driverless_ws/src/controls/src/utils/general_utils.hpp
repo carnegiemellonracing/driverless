@@ -55,6 +55,10 @@ namespace controls {
         return radians * 180.0f / M_PI;
     }
 
+    inline std::string bool_to_string(bool b) {
+        return b ? "true" : "false";
+    }
+
 
 }
 

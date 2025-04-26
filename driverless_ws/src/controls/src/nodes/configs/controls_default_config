@@ -15,7 +15,7 @@ root_dir: /driverless_ws/src/controls/
 #=====================
  
 follow_midline_only: true
-approx_propogation_delay: 0.5f
+approx_propogation_delay: 0.0f
 offset_1m_cost: 10.0f
 
 testing_on_rosbag: false
@@ -27,7 +27,7 @@ publish_spline: true
 log_state_projection_history: false
 no_midline_controller: false
 
-smaller_num_cones_multiplier: 6.0f
-total_num_cones_multiplier: 1.0f
-seconds_since_spline_multiplier: -5.0f
+smaller_num_cones_multiplier: 0.0f
+total_num_cones_multiplier: 0.0f
+seconds_since_spline_multiplier: 5.0f
 maximum_spline_history_length: 10

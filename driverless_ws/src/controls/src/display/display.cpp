@@ -127,8 +127,8 @@ namespace controls {
         }
 
         std::vector<float> Display::DrawableLine::fill_triangle_points(){
-            constexpr float radius = .25;
-            constexpr float sqr3b2 = .866;
+            const float radius = .25 * thickness / 3.0f;
+            const float sqr3b2 = .866 * thickness / 3.0f;
             std::vector<float> output_triangle_points;
             output_triangle_points.reserve(vertex_buf.size() * 3);
             
@@ -201,8 +201,8 @@ namespace controls {
             m_spline = std::make_unique<DrawableLine>(glm::fvec4 {1.0f, 1.0f, 1.0f, 1.0f}, 2, m_trajectory_shader_program);
             m_left_cone_trajectory = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 0.0f, 1.0f, 1.0f}, 3, m_trajectory_shader_program);
             m_right_cone_trajectory = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 1.0f, 0.0f, 1.0f}, 3, m_trajectory_shader_program);
-            m_left_cone_trajectory_underlay = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 0.0f, 1.0f, 0.1f}, 3, m_trajectory_shader_program);
-            m_right_cone_trajectory_underlay = std::make_unique<DrawableLine>(glm::fvec4 {0.0f, 1.0f, 0.0f, 0.1f}, 3, m_trajectory_shader_program);
+            m_left_cone_trajectory_underlay = std::make_unique<DrawableLine>(glm::fvec4 {0.7f, 0.85f, 0.9f, 0.0f}, 5, m_trajectory_shader_program);
+            m_right_cone_trajectory_underlay = std::make_unique<DrawableLine>(glm::fvec4 {0.56f, 1.0f, 0.56f, 0.0f}, 5, m_trajectory_shader_program);
         }
 
         void Display::init_best_guess() {
@@ -330,10 +330,10 @@ namespace controls {
 
             m_left_cone_trajectory->draw();
             m_right_cone_trajectory->draw();
+            m_left_cone_trajectory_underlay->draw_points();
+            // m_right_cone_trajectory_underlay->draw_points();
             m_left_cone_trajectory->draw_points();
             m_right_cone_trajectory->draw_points();
-            m_left_cone_trajectory_underlay->draw_points();
-            m_right_cone_trajectory_underlay->draw_points();
         }
 
         void Display::draw_best_guess() {
