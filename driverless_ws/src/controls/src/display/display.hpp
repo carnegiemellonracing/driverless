@@ -58,6 +58,8 @@ namespace controls {
                 GLuint VAO;
             };
 
+            void fill_trajectory(const std::vector<glm::fvec2>& points, Display::DrawableLine* trajectory);
+
             void init_gl(SDL_Window* window);
             void init_img();
             void init_trajectories();
@@ -92,8 +94,8 @@ namespace controls {
             std::unique_ptr<DrawableLine> m_spline = nullptr;
 			std::unique_ptr<DrawableLine> m_left_cone_trajectory = nullptr;
 			std::unique_ptr<DrawableLine> m_right_cone_trajectory = nullptr;
-            std::unique_ptr<DrawableLine> m_left_cone_trajectory_visible = nullptr;
-            std::unique_ptr<DrawableLine> m_right_cone_trajectory_visible = nullptr;
+            std::unique_ptr<DrawableLine> m_left_cone_trajectory_underlay = nullptr;
+            std::unique_ptr<DrawableLine> m_right_cone_trajectory_underlay = nullptr;
             std::unique_ptr<DrawableLine> m_best_guess = nullptr;
 
 
