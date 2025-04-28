@@ -91,6 +91,8 @@ namespace controls {
              */
             void publish_action(const Action& action);
 
+            void rosbag_action_callback(const ActionMsg& action_msg);
+
             /**
              * Launch MPPI thread, which loops the following routine persitently:
              *  - Wait to be notified that the state is dirty
@@ -121,10 +123,12 @@ namespace controls {
 
             rclcpp::Publisher<ActionMsg>::SharedPtr m_action_publisher;
             rclcpp::Publisher<InfoMsg>::SharedPtr m_info_publisher;
+            rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_republisher
             rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription;
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription;
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription;
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription;
+            rclcpp::Subscription<ActionMsg>::SharedPtr m_rosbag_action_subscriber;
 
             /**
              * Mutex protecting `m_state_estimator`. This needs to be acquired when forwarding callbacks or waiting
@@ -137,6 +141,7 @@ namespace controls {
              * callbacks notify it. `m_state_mut` must be acquired before waiting on this.
              */
             std::condition_variable m_state_cond_var;
+            SplineMsg m_last_spline_msg;
         };
     }
 }

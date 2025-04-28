@@ -51,7 +51,17 @@ namespace controls {
                             controller_info_topic_name,
                             controller_info_qos
                         )
-                  } {
+                  },
+
+                  m_spline_republisher {
+                    create_publisher<SplineMsg>(
+                        republished_spline_topic_name,
+                        spline_qos
+                    )
+                  }
+                  
+                  
+                  {
 
                 // create a callback group that prevents state and spline callbacks from being executed concurrently
                 rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group {
@@ -60,8 +70,16 @@ namespace controls {
                 rclcpp::SubscriptionOptions options {};
                 options.callback_group = state_estimation_callback_group;
 
+                const char* desired_spline_topic_name;
+                if constexpr (testing_on_rosbag) {
+                    desired_spline_topic_name = republished_spline_topic_name;
+                } else {
+                    desired_spline_topic_name = spline_topic_name;
+                }
+    
+
                 m_spline_subscription = create_subscription<SplineMsg>(
-                    spline_topic_name, spline_qos,
+                    desired_spline_topic_name, spline_qos,
                     [this] (const SplineMsg::SharedPtr msg) { spline_callback(*msg); },
                     options
                 );
@@ -78,10 +96,34 @@ namespace controls {
                     options
                 );
 
+                m_rosbag_action_subscriber = create_subscription<ActionMsg> (
+                    control_action_topic_name, control_action_qos,
+                    [this] (const ActionMsg::SharedPtr msg) { rosbag_action_callback(*msg); },
+                    options
+                );
+
                 launch_can().detach();
                 // start mppi :D
                 // this won't immediately begin publishing, since it waits for the first dirty state
                 launch_mppi().detach();
+            }
+
+
+            static Action msg_to_action(const ActionMsg& action_msg) {
+                Action action;
+                float torque = msg.torque_fl + msg.torque_fr + msg.torque_rl + msg.torque_rr;
+                action[action_torque_idx] = torque;
+                action[action_swangle_idx] = msg.swangle;
+                return action;
+            }
+
+            void ControllerNode::rosbag_action_callback(const ActionMsg& action_msg) {
+                std::lock_guard<std::mutex> guard {m_state_mut};
+                if constexpr (testing_on_rosbag) {
+                    rclcpp::Time action_publish_time = action_msg.header.stamp;
+                    Action action = msg_to_action(action_msg);
+                    m_state_estimator->record_control_action(action, action_publish_time);
+                }
             }
 
             void ControllerNode::spline_callback(const SplineMsg& spline_msg) {
@@ -91,6 +133,7 @@ namespace controls {
                     std::lock_guard<std::mutex> guard {m_state_mut};
                     m_state_estimator->on_spline(spline_msg);
                 }
+                m_last_spline_msg = spline_msg;
 
                 notify_state_dirty();
             }
@@ -189,7 +232,27 @@ namespace controls {
                         // send state to device (i.e. cuda globals)
                         // (also serves to lock state since nothing else updates gpu state)
                         RCLCPP_DEBUG(get_logger(), "syncing state to device");
-                        m_state_estimator->sync_to_device(get_clock()->now());
+
+                        rclcpp::Time projection_time = get_clock()->now();
+                        rclcpp::Time time_to_project_till;
+                        if constexpr (testing_on_rosbag)
+                        {
+                            time_to_project_till = m_last_spline_msg.header.stamp;
+                        }
+                        else
+                        {
+                            time_to_project_till = projection_time;
+                        }
+
+
+
+                        m_state_estimator->sync_to_device(time_to_project_till);
+
+                        if constexpr (!testing_on_rosbag) {
+                            SplineMsg spline_msg = m_last_spline_msg;
+                            spline_msg.header.stamp = time_to_project_till;
+                            m_spline_republisher->publish(spline_msg);
+                        }
 
 
                         // we don't need the host state anymore, so release the lock and let state callbacks proceed
@@ -197,10 +260,17 @@ namespace controls {
 
                         // run mppi, and write action to the write buffer
                         Action action = m_mppi_controller->generate_action();
-                        publish_action(action);
+
+                        auto action_publish_time = get_clock()->now();
+                        ActionMsg action_msg = action_to_msg(action);
+                        action_msg.header.stamp = action_publish_time;
+                        if constexpr (!testing_on_rosbag) {
+                            m_action_publisher->publish(action_msg);
+                            m_state_estimator->record_control_action(action, action_publish_time);
+                        }
+                        
                         m_last_action_signal = action_to_signal(action);
 
-                        m_state_estimator->record_control_action(action, get_clock()->now());
 
                         // calculate and print time elapsed
                         auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -270,6 +340,7 @@ namespace controls {
 
                 return msg;
             }
+
 
             StateMsg ControllerNode::state_to_msg(const State &state) {
                 StateMsg msg;

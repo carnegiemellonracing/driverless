@@ -6,10 +6,12 @@ namespace controls {
     /* ROS moments */
     constexpr bool send_to_can = false;
     constexpr int aim_signal_period_ms = 98;
+    constexpr bool testing_on_rosbag = false;
 
     constexpr const char *controller_node_name = "controller";
     constexpr const char *control_action_topic_name = "control_action";
     constexpr const char *spline_topic_name = "spline";
+    constexpr const char *republished_spline_topic_name = "republished_spline";
     constexpr const char *state_topic_name = "state";
     constexpr const char *world_twist_topic_name = "filter/twist";
     constexpr const char *world_quat_topic_name = "filter/quaternion";
@@ -75,6 +77,7 @@ namespace controls {
 
     constexpr float speed_off_1mps_cost = 1.0f;
     constexpr float out_of_bounds_cost = 100.0f;
+
 
 
     // State Estimation
