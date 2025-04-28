@@ -123,7 +123,7 @@ namespace controls {
 
             rclcpp::Publisher<ActionMsg>::SharedPtr m_action_publisher;
             rclcpp::Publisher<InfoMsg>::SharedPtr m_info_publisher;
-            rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_republisher
+            rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_republisher;
             rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription;
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription;
             rclcpp::Subscription<QuatMsg>::SharedPtr m_world_quat_subscription;

@@ -109,7 +109,7 @@ namespace controls {
             }
 
 
-            static Action msg_to_action(const ActionMsg& action_msg) {
+            static Action msg_to_action(const ActionMsg& msg) {
                 Action action;
                 float torque = msg.torque_fl + msg.torque_fr + msg.torque_rl + msg.torque_rr;
                 action[action_torque_idx] = torque;
