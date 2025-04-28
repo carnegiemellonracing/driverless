@@ -3,6 +3,13 @@
 #include <rclcpp/rclcpp.hpp>
 
 namespace controls {
+    constexpr float rolling_drag_constant_kN = 0.147287f;
+    constexpr float rolling_drag_linear = 12.604f;
+    constexpr float rolling_drag_squared = 0.0f;
+    constexpr float understeer_slope_squared = 0.28980572;
+    constexpr float torque_efficiency = 0.75152479f;
+
+
     /* ROS moments */
     constexpr bool send_to_can = true;
     constexpr int aim_signal_period_ms = 98;
@@ -70,10 +77,10 @@ namespace controls {
     // Cost params
 
     constexpr float offset_1m_cost = 10.0f;
-    constexpr float target_speed = 2.0f;
+    constexpr float target_speed = 3.0f;
     constexpr float whl_radius = 0.2286;
     constexpr float gear_ratio = 15.0f;
-    constexpr uint16_t can_max_velocity_rpm = static_cast<uint16_t>((target_speed * 1.5f * 60.0f * gear_ratio) / (2 * M_PI * whl_radius));
+    constexpr uint16_t can_max_velocity_rpm = static_cast<uint16_t>((2 * target_speed * 1.5f * 60.0f * gear_ratio) / (2 * M_PI * whl_radius));
 
     constexpr float speed_off_1mps_cost = 1.0f;
     constexpr float out_of_bounds_cost = 100.0f;
@@ -91,20 +98,20 @@ namespace controls {
 
 
     // Car params
+    constexpr float cg_to_front = 0.83855;
+    constexpr float cg_to_rear = 0.71145; // Also rear of car
+    constexpr float car_mass = 210.0f;
 
-    constexpr float cg_to_front = 0.775;
-    constexpr float cg_to_rear = 0.775;
     constexpr float cg_to_nose = 1.5f;
     constexpr float whl_base = 2.0f;
 
-    constexpr float car_mass = 250.0f;
     constexpr float rolling_drag = 100.0f; // N
-    constexpr float long_tractive_capability = 1.0f; // m/s^2
-    constexpr float lat_tractive_capability = 2.0f; // m/s^2
+    constexpr float long_tractive_capability = 3.0f; // m/s^2
+    constexpr float lat_tractive_capability = 5.0f; // m/s^2
     constexpr float understeer_slope = 0.0f;
     constexpr float brake_enable_speed = 1.0f;
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
-    constexpr float approx_propogation_delay = 0.56f;  // sec
+    constexpr float approx_propogation_delay = 0.1f;  // sec
     constexpr float approx_mppi_time = 0.02f; // sec
 
     enum class TorqueMode
@@ -113,7 +120,7 @@ namespace controls {
         FWD,
         RWD
     };
-    constexpr TorqueMode torque_mode = TorqueMode::FWD;
+    constexpr TorqueMode torque_mode = TorqueMode::AWD;
 
 
     // Indices

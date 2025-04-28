@@ -201,13 +201,8 @@ namespace controls {
                         break;
                     }
                 }
-                action_signal.front_torque_mNm = abs(action_signal.front_torque_mNm);
-                action_signal.back_torque_mNm = abs(action_signal.back_torque_mNm);
-                if (action[action_torque_idx] < 0) {
-                    action_signal.velocity_rpm = 0;
-                } else {
-                    action_signal.velocity_rpm = can_max_velocity_rpm;
-                }
+                action_signal.velocity_rpm = can_max_velocity_rpm;
+                
 
                 action_signal.rack_displacement_adc = swangle_to_adc(action[action_swangle_idx]);
                 return action_signal; 
