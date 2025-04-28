@@ -34,7 +34,7 @@ from perc22a.mergers.merger_factory import \
     create_all_merger, \
     create_any_merger
 
-from interfaces.msg import SplineFrames
+from interfaces.msg import SplineFrames, ConeArray
 from geometry_msgs.msg import Point
 
 import perceptions.ros.utils.conversions as conv
@@ -65,10 +65,13 @@ class EndToEndNode(Node):
 
         # data subscribers
         self.point_subscriber = self.create_subscription(PointCloud2, POINT_TOPIC, self.points_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
-        self.twist_subscriber = self.create_subscription(TwistStamped, TWIST_TOPIC, self.twist_callback, qos_profile=RELIABLE_QOS_PROFILE)
-        self.quat_subscriber = self.create_subscription(QuaternionStamped, QUAT_TOPIC, self.quat_callback, qos_profile=RELIABLE_QOS_PROFILE)
+        self.twist_subscriber = self.create_subscription(TwistStamped, TWIST_TOPIC, self.twist_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
+        self.quat_subscriber = self.create_subscription(QuaternionStamped, QUAT_TOPIC, self.quat_callback, qos_profile=BEST_EFFORT_QOS_PROFILE)
 
         # publishers
+        self.cone_pub = self.create_publisher(msg_type=ConeArray,
+                                              topic="/perc_cones",
+                                              qos_profile=BEST_EFFORT_QOS_PROFILE)
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
                                                  topic="/spline",
                                                  qos_profile=BEST_EFFORT_QOS_PROFILE)
@@ -158,6 +161,7 @@ class EndToEndNode(Node):
         
         msg.frames = points
         msg.orig_data_stamp = data_time.to_msg()
+        self.cone_pub.publish(conv.cones_to_msg(cones))
         self.midline_pub.publish(msg)
 
         # done publishing spline
