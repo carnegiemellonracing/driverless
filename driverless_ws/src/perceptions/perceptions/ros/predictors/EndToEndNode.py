@@ -161,7 +161,11 @@ class EndToEndNode(Node):
         
         msg.frames = points
         msg.orig_data_stamp = data_time.to_msg()
-        # self.cone_pub.publish(conv.cones_to_msg(cones))
+        cone_msg = conv.cones_to_msg(cones)
+        cone_msg.controller_receive_time = self.get_clock().now().to_msg()
+        cone_msg.header.stamp = data_time.to_msg()
+        
+        self.cone_pub.publish(cone_msg)
         self.midline_pub.publish(msg)
 
         # done publishing spline
