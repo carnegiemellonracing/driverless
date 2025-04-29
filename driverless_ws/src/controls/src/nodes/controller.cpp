@@ -678,7 +678,7 @@ namespace controls {
 
                 std::string info_str = ss.str();
 
-                std::cout << clear_term_sequence << info_str << std::flush;
+                std::cout << info_str << std::flush;
                 RCLCPP_INFO_STREAM(get_logger(), "mppi step complete. info:\n"
                                                      << info_str);
             }
