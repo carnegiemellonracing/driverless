@@ -67,6 +67,8 @@ setup(
             'cone_node_any = perceptions.ros.utils.ConeNode:main_any',
             'cone_node_any_debug = perceptions.ros.utils.ConeNode:main_any_debug',
 
+            'cone_info_node = perceptions.ros.utils.ConeInfoNode:main',
+
             # simulated cones
             'cone_sim_node = perceptions.ros.sim.ConeSimNode:main',
             'cone_sim_node_debug = perceptions.ros.sim.ConeSimNode:main_debug',
