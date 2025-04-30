@@ -182,6 +182,8 @@ namespace controls {
                 RCLCPP_WARN(m_logger_obj, "RUH ROH. Delta time for propogation delay simulation was negative.   : (");
                 return std::nullopt;
             }
+            RCLCPP_WARN(m_logger_obj, "Speed before projection: %f", m_init_speed.speed);
+            std::cout << "Speed before projection: " << m_init_speed.speed << std::endl;
             // simulates up to first_time
             ONLINE_DYNAMICS_FUNC(state.data(), m_init_action.action.data(), state.data(), delta_time);
             record_state(first_time.nanoseconds(), state, predicted_ss);
@@ -229,6 +231,9 @@ namespace controls {
                 fs << predicted_ss.str();
                 fs << "---- END PREDICTION ----" << std::endl;
             }
+            RCLCPP_WARN(m_logger_obj, "Speed after projection: %f", state[state_speed_idx]);
+            std::cout << "Speed after projection: " << state[state_speed_idx] << std::endl;
+
 
             return std::optional<State> {state};
         }

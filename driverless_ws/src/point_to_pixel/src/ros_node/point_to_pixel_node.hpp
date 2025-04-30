@@ -17,15 +17,16 @@
 using std::chrono::duration;
 using std::chrono::duration_cast;
 using std::chrono::high_resolution_clock;
+
 using std::chrono::milliseconds;
 using std::placeholders::_1;
 
 // BUILD FLAGS
-#define viz 1      // Prints color detection outputs of every point
-#define verbose 1  // Prints transform matrix and transformed pixel of every point
-#define use_yolo 0 // 0: HSV Coloring | 1: YOLO Coloring
-#define timing 1   // Prints timing suite at end of every callback
+#define verbose 0  // Prints transform matrix and transformed pixel of every point
+#define use_yolo 1 // 0: HSV Coloring | 1: YOLO Coloring
+#define timing 1  // Prints timing suite at end of every callback
 #define inner 1    // Uses inner lens of ZEDS (if 0 uses the outer lens)
+#define save_frames 0 // Writes every 5th frame to img_log folder
 
 struct Cone {
     geometry_msgs::msg::Point point;
@@ -40,7 +41,18 @@ class PointToPixelNode : public rclcpp::Node
 public:
     // Constructor declaration
     PointToPixelNode();
-    static constexpr int max_deque_size = 10;
+    static constexpr int max_deque_size = 100;
+
+    #if use_yolo
+    static constexpr char yolo_model_path[] = "src/point_to_pixel/config/yolov5_model_params.onnx";
+    // static constexpr char yolo_model_path[] = "src/point_to_pixel/config/best164.onnx";
+    #endif
+
+    #if save_frames
+    static constexpr int frame_interval = 5;
+    static constexpr char save_path[] = "src/point_to_pixel/img_log/";
+    #endif
+
     // static constexpr int zed_one_sn; // Left side zed
     // static constexpr int zed_two_sn; // Right side zed
 
@@ -92,6 +104,7 @@ private:
     std::mutex r_img_mutex;
     std::mutex velocity_mutex;
     std::mutex yaw_mutex;
+    std::mutex net_mutex;
 
     // ROS2 Publisher and Subscribers
     rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cone_pub_;
@@ -103,7 +116,7 @@ private:
     std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> get_camera_frame(rclcpp::Time callbackTime);
     int get_cone_class(std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
                       std::pair<cv::Mat, cv::Mat> frame_pair,
-                      std::pair<cv::Mat, cv::Mat> detection_pair);
+                      std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair);
 
     // Ordering function and helpers
     Cone findClosestCone(const std::vector<Cone>& cones);
@@ -114,7 +127,14 @@ private:
     std::pair<double, double> getMotionEstimate(double velocity, double angle, double dt);
     std::pair<geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr> get_velocity_yaw(uint64_t callbackTime);
 
-#if use_yolo
+    std::thread launch_camera_communication();
+
+    #if use_yolo
     cv::dnn::Net net; // YOLO Model
-#endif
+    #endif
+
+    #if save_frames
+    uint64_t camera_callback_count;
+    void save_frame(std::pair<uint64_t, cv::Mat> frame_l, std::pair<uint64_t, cv::Mat> frame_r);
+    #endif
 };

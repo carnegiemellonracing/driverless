@@ -2,9 +2,12 @@
 
 #include <opencv2/opencv.hpp>
 #include <Eigen/Dense>
+#include "hsv.hpp"
+#include "yolo.hpp"
 
-// Forward declarations
-namespace coloring {
+    // Forward declarations
+    namespace coloring
+{
     namespace hsv {
         std::pair<int, double> get_color(
             Eigen::Vector3d& pixel,
@@ -22,7 +25,7 @@ namespace coloring {
     namespace yolo {
         std::pair<int, double> get_color(
             Eigen::Vector3d& pixel,
-            cv::Mat detection,
+            float *detection,
             int cols,
             int rows,
             double confidence_threshold
@@ -48,7 +51,7 @@ namespace coloring {
     int get_cone_class(
         std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
         std::pair<cv::Mat, cv::Mat> frame_pair,
-        std::pair<cv::Mat, cv::Mat> detection_pair,
+        std::pair<std::vector<cv::Mat>, std::vector<cv::Mat>> detection_pair,
         const cv::Scalar& yellow_filter_low,
         const cv::Scalar& yellow_filter_high,
         const cv::Scalar& blue_filter_low,

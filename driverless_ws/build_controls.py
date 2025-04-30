@@ -14,7 +14,7 @@ if __name__ == "__main__":
     parser.add_argument("--no_display", action="store_true")
 
     args = parser.parse_args()
-    command = "colcon build --packages-up-to controls --cmake-args"
+    command = "colcon build --cmake-clean-cache --packages-up-to controls --cmake-args"
     if args.asserts:
         command += " -DPARANOID=ON"
     if args.debug:

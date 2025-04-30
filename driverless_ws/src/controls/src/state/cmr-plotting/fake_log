@@ -1,0 +1,86 @@
+[WARN] [1745958731.299138106] []: Speed before projection: 0.000000
+[WARN] [1745958731.299224260] []: Speed after projection: 0.000000
+[WARN] [1745958731.320148433] [controller]: Current time 1745958731320147955
+[WARN] [1745958731.320227075] [controller]: Cone arrival time 1745958731235718831
+[INFO] [1745958731.320284357] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0371646
+[                    |  [32m+[0m                 ]
+[                    |[32m||[0m                  ]
+[                    |[32m||[0m                  ]
+[                    |[32m||[0m                  ]
+[                    |[32m||[0m                  ]
+  torque_fl (Nm): 1.66307
+  torque_fr (Nm): 1.66307
+  torque_rl (Nm): 1.66307
+  torque_rr (Nm): 1.66307
+Projected State:
+  x (m): 0
+  y (m): 0
+  yaw (rad): 1.5708
+  speed (m/s): 0
+SVM Latency (ms): 0
+State Projection Latency (ms): 0
+OpenGL Render Latency (ms): 13
+MPPI Step Latency (ms): 7
+Controls Latency (ms): 21
+Total Latency (ms): 84
+1
+
+[WARN] [1745958731.398500724] []: Speed before projection: 0.000000
+[WARN] [1745958731.398560112] []: Speed after projection: 0.071550
+[WARN] [1745958731.419297360] [controller]: Current time 1745958731419296806
+[WARN] [1745958731.419335842] [controller]: Cone arrival time 1745958731335016224
+[INFO] [1745958731.419376938] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0532525
+[                    |   [32m+[0m                ]
+[                    |[32m||||[0m                ]
+[                    |[32m||||[0m                ]
+[                    |[32m||||[0m                ]
+[                    |[32m||||[0m                ]
+  torque_fl (Nm): 2.96401
+  torque_fr (Nm): 2.96401
+  torque_rl (Nm): 2.96401
+  torque_rr (Nm): 2.96401
+Projected State:
+  x (m): 6.00465e-05
+  y (m): 0.00351841
+  yaw (rad): 1.57071
+  speed (m/s): 0.0715501
+SVM Latency (ms): 0
+State Projection Latency (ms): 0
+OpenGL Render Latency (ms): 14
+MPPI Step Latency (ms): 6
+Controls Latency (ms): 20
+Total Latency (ms): 84
+1
+
+[WARN] [1745958731.496398960] []: Speed before projection: 0.000000
+[WARN] [1745958731.496456985] []: Speed after projection: 0.243271
+[WARN] [1745958731.527289075] [controller]: Current time 1745958731527288645
+[WARN] [1745958731.527325730] [controller]: Cone arrival time 1745958731435501585
+[INFO] [1745958731.527364056] [controller]: mppi step complete. info:
+Action:
+  swangle (rad): 0.0628982
+[                    |   [32m+[0m                ]
+[                    |[32m||||[0m                ]
+[                    |[32m||||[0m                ]
+[                    |[32m||||[0m                ]
+[                    |[32m||||[0m                ]
+  torque_fl (Nm): 3.19061
+  torque_fr (Nm): 3.19061
+  torque_rl (Nm): 3.19061
+  torque_rr (Nm): 3.19061
+Projected State:
+  x (m): 0.000440791
+  y (m): 0.0188863
+  yaw (rad): 1.57018
+  speed (m/s): 0.243271
+SVM Latency (ms): 0
+State Projection Latency (ms): 0
+OpenGL Render Latency (ms): 22
+MPPI Step Latency (ms): 8
+Controls Latency (ms): 30
+Total Latency (ms): 91
+1
