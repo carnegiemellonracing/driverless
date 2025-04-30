@@ -71,10 +71,10 @@ class EndToEndNode(Node):
         # publishers
         self.cone_pub = self.create_publisher(msg_type=ConeArray,
                                               topic="/perc_cones",
-                                              qos_profile=BEST_EFFORT_QOS_PROFILE)
+                                              qos_profile=RELIABLE_QOS_PROFILE)
         self.midline_pub = self.create_publisher(msg_type=SplineFrames,
                                                  topic="/spline",
-                                                 qos_profile=BEST_EFFORT_QOS_PROFILE)
+                                                 qos_profile=RELIABLE_QOS_PROFILE)
 
         # parts of the pipeline 
         self.predictor = self.init_predictor()
