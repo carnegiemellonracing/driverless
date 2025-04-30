@@ -8,6 +8,17 @@
 #include <utils/general_utils.hpp>
 //TODO: these should all be inline constexpr (not currently broken because not ODR-used)
 
+/*
+Things different:
+- whl_radius
+- gear_ratio
+- cg_to_nose
+- no whl_base
+- car_mass
+
+*/
+
+
 namespace controls {
     enum class StateProjectionMode {
         MODEL_MULTISET,
