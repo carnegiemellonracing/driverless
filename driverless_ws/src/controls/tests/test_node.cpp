@@ -241,13 +241,23 @@ namespace controls {
         {
             std::cout << m_lookahead << std::endl;
             std::cout << m_all_segments.size() << std::endl;
+            m_world_state[0] = std::stof(m_config_dict["initial_x"]);
+            std::cout << "got here" << std::endl;
+
+            m_world_state[1] = std::stof(m_config_dict["initial_y"]);
+            std::cout << "got here" << std::endl;
+            m_world_state[2] = degrees_to_radians(std::stof(m_config_dict["initial_yaw_deg"]));
+            std::cout << "got here" << std::endl;
+
+            m_world_state[3] = std::stof(m_config_dict["initial_v"]);
             // m_all_segmentsd = parse_segments_specification(m_config_dict["root_dir"] + m_config_dict["track_specs"]);
             // m_lookahead = std::stof(m_config_dict["look_ahead"]);
             // m_lookahead_squared = m_lookahead * m_lookahead;
-            
+            std::cout << "got here" << std::endl;
+
             glm::fvec2 curr_pos {0, 0}; // TODO: this is just to test what happens if the car starts OOB
             // glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
-            float curr_heading = m_world_state[2];
+            float curr_heading = M_PI_2;
             for (const auto& seg : m_all_segments) {
                 if (seg.type == SegmentType::ARC) {
                     float next_heading = arc_rad_adjusted(curr_heading + seg.heading_change);
@@ -283,6 +293,7 @@ namespace controls {
             m_end_line.push_back(m_all_left_cones.back());
             m_end_line.push_back(m_all_right_cones.back());
             update_track_time();
+            std::cout << "got here" << std::endl;
         }
         float distanceToLine(glm::fvec2 point, std::vector<glm::fvec2> line) {
             glm::fvec2 s_l = line[0];
