@@ -37,14 +37,34 @@ include_directories(~/Documents/driverless-packages/zed-open-capture/include)
 include_directories(~/Documents/driverless-packages/zed-open-capture/examples/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+set(CONE_HISTORY_TEST_NODE_SRC  
+  src/transform/transform.cpp
+  src/nodes/cone_history_test_node.cpp
+  src/cones/svm/svm_recolour.cpp
+  src/cones/svm/svm.cpp
+  src/cones/cones.cpp
+)
+
+###############################
+
 set(POINT_TO_PIXEL_SRC  
   src/transform/transform.cpp
   src/camera/camera.cpp
-  src/coloring/coloring.cpp
-  src/coloring/hsv.cpp
-  src/coloring/yolo.cpp
-  src/ros_node/point_to_pixel_node.cpp
+  src/cones/svm/svm.cpp
+  src/cones/svm/svm_recolour.cpp
+  src/cones/cones.cpp
+  src/cones/hsv.cpp
+  src/cones/yolo.cpp
+  src/nodes/point_to_pixel_node.cpp
 )
+
+# Cone History Test Executable
+add_executable(cone_history_test_node ${CONE_HISTORY_TEST_NODE_SRC} )
+ament_target_dependencies(cone_history_test_node rclcpp interfaces geometry_msgs Eigen3 OpenCV)
+target_include_directories(cone_history_test_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_compile_features(cone_history_test_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
 # Point to Pixel Executable
 add_executable(point_to_pixel ${POINT_TO_PIXEL_SRC})
@@ -69,12 +89,17 @@ target_link_libraries(point_to_pixel
   ${OpenCV_LIBS})  # Link OpenCV
 target_compile_definitions(point_to_pixel PUBLIC VIDEO_MOD_AVAILABLE)
 
-# target_link_libraries(point_to_pixel_debug
-#   ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so)  # Link ZED SDK library
-# target_compile_definitions(point_to_pixel_debug PUBLIC VIDEO_MOD_AVAILABLE)
+target_link_libraries(cone_history_test_node
+  ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so  # Link ZED SDK library
+  ${OpenCV_LIBS})  # Link OpenCV
+target_compile_definitions(cone_history_test_node PUBLIC VIDEO_MOD_AVAILABLE)
 
 install(TARGETS point_to_pixel
   DESTINATION lib/${PROJECT_NAME})
+
+install(TARGETS cone_history_test_node
+  DESTINATION lib/${PROJECT_NAME})
+
 
 # Install wrapper script
 install(

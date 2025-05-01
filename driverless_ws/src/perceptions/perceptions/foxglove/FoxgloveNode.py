@@ -3,13 +3,14 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 from tf2_ros import TransformBroadcaster
 from geometry_msgs.msg import TransformStamped, Point
-from sensor_msgs.msg import PointCloud2
+from sensor_msgs.msg import PointCloud2, PointField
 from visualization_msgs.msg import Marker, MarkerArray
 from interfaces.msg import ConeArray, SplineFrames, PPMConeArray, PPMConePoints
 from perceptions.topics import POINT_TOPIC, POINT_2_TOPIC
 import numpy as np
 import argparse
 import sys
+import struct
 
 NODE_NAME = 'foxglove_node'
 
@@ -45,22 +46,35 @@ class FoxgloveNode(Node):
         ])
 
         # Publishers and Subscribers
+        # Replace MarkerArray publishers with PointCloud2 publishers
         self.cone_publisher = self.create_publisher(
-            MarkerArray, 'cone_markers', 
+            PointCloud2, 'cone_points', 
             qos_profile=BEST_EFFORT_QOS_PROFILE
         )
         self.colored_cone_publisher = self.create_publisher(
-            MarkerArray, 'colored_cone_markers', 
+            PointCloud2, 'colored_cone_points', 
             qos_profile=BEST_EFFORT_QOS_PROFILE
         )
+        self.associated_cone_publisher = self.create_publisher(
+            PointCloud2, 'associated_cone_points', 
+            qos_profile=BEST_EFFORT_QOS_PROFILE
+        )
+        # Keep the spline publisher as MarkerArray
         self.spline_publisher = self.create_publisher(
             MarkerArray, 'spline_markers', 
             qos_profile=BEST_EFFORT_QOS_PROFILE
         )
 
+        # Subscribers remain the same
         self.cone_subscriber = self.create_subscription(
             ConeArray, '/perc_cones', 
             self.colored_cone_array_callback, 
+            qos_profile=BEST_EFFORT_QOS_PROFILE
+        )
+
+        self.cone_subscriber = self.create_subscription(
+            ConeArray, '/associated_perc_cones', 
+            self.associated_cone_array_callback, 
             qos_profile=BEST_EFFORT_QOS_PROFILE
         )
         self.cone_subscriber = self.create_subscription(
@@ -141,28 +155,21 @@ class FoxgloveNode(Node):
         return [x, y, z, w]
 
     def cone_array_callback(self, msg: PPMConeArray):
-        marker_array = MarkerArray()
-        marker_id = 0
+        # Create point cloud message for cones
+        point_cloud = self.create_point_cloud(msg.header.stamp, 'hesai_lidar')
+        
+        points = []
         for cone_points in msg.cone_array:
             cone = cone_points.cone_points[0]
-            marker = Marker()
-            marker.header.frame_id = 'hesai_lidar'
-            marker.header.stamp = msg.header.stamp
-            marker.ns = "cone_markers"
-            marker.id = marker_id
-            marker.type = Marker.CUBE
-            marker.action = Marker.ADD
-            marker.pose.position.x = cone.x
-            marker.pose.position.y = cone.y
-            marker.pose.position.z = 0.0
-            marker.pose.orientation.w = 1.0
-            marker.scale.x = 0.2
-            marker.scale.y = 0.2
-            marker.scale.z = 0.2
-            marker.color.a = 1.0
-            marker_array.markers.append(marker)
-            marker_id += 1
-        self.cone_publisher.publish(marker_array)
+            # x, y, z, rgb (packed as float)
+            # Default color: gray (128, 128, 128)
+            points.append([cone.x, cone.y, 0.0, self.pack_rgb(128, 128, 128)])
+        
+        if points:
+            point_cloud.data = self.pack_points(points)
+            point_cloud.width = len(points)
+        
+        self.cone_publisher.publish(point_cloud)
     
     def colored_cone_array_callback(self, msg: ConeArray):
         if self.print_counts:
@@ -173,55 +180,88 @@ class FoxgloveNode(Node):
                 f"{len(msg.big_orange_cones):<3} Big Orange Cones | "
                 f"{len(msg.unknown_color_cones):<3} Unknown Color Cones"
             )
-        marker_array = self.create_marker_array(msg)
-        self.colored_cone_publisher.publish(marker_array)
+        point_cloud = self.create_colored_point_cloud(msg)
+        self.colored_cone_publisher.publish(point_cloud)
 
-    def create_marker_array(self, msg: ConeArray):
-        marker_array = MarkerArray()
-        marker_id = 0
-        namespace = "colored_cone_markers"
-
-        def add_cones(cones, color):
-            nonlocal marker_id
-            for cone in cones:
-                marker = Marker()
-                marker.header.frame_id = 'hesai_lidar'
-                marker.header.stamp = msg.header.stamp
-                marker.ns = namespace
-                marker.id = marker_id
-                marker.type = Marker.CUBE
-                marker.action = Marker.ADD
-                marker.pose.position.x = cone.x
-                marker.pose.position.y = cone.y
-                marker.pose.position.z = 0.0
-                marker.pose.orientation.w = 1.0
-                marker.scale.x = 0.2
-                marker.scale.y = 0.2
-                marker.scale.z = 0.2
-                marker.color.r = color[0] / 255.0
-                marker.color.g = color[1] / 255.0
-                marker.color.b = color[2] / 255.0
-                marker.color.a = 1.0
-                marker_array.markers.append(marker)
-                marker_id += 1
-
-        add_cones(msg.blue_cones, [0, 0, 255])
-        add_cones(msg.yellow_cones, [255, 255, 0])
-        add_cones(msg.orange_cones, [255, 165, 0])
-        add_cones(msg.big_orange_cones, [255, 69, 0])
-        add_cones(msg.unknown_color_cones, [128, 128, 128])
-
-        for old_id in range(marker_id, self.last_marker_count):
-            delete_marker = Marker()
-            delete_marker.header.frame_id = 'hesai_lidar'
-            delete_marker.header.stamp = msg.header.stamp
-            delete_marker.ns = namespace
-            delete_marker.id = old_id
-            delete_marker.action = Marker.DELETE
-            marker_array.markers.append(delete_marker)
-
-        self.last_marker_count = marker_id
-        return marker_array
+    def associated_cone_array_callback(self, msg: ConeArray):
+        if self.print_counts:
+            print(
+                f"{len(msg.blue_cones):<3} Blue Cones | "
+                f"{len(msg.yellow_cones):<3} Yellow Cones | "
+                f"{len(msg.orange_cones):<3} Orange Cones | "
+                f"{len(msg.big_orange_cones):<3} Big Orange Cones | " f"{len(msg.unknown_color_cones):<3} Unknown Color Cones"
+            )
+        point_cloud = self.create_colored_point_cloud(msg)
+        self.associated_cone_publisher.publish(point_cloud)
+    
+    def create_point_cloud(self, stamp, frame_id):
+        # Create a new PointCloud2 message
+        point_cloud = PointCloud2()
+        point_cloud.header.stamp = stamp
+        point_cloud.header.frame_id = frame_id
+        point_cloud.height = 1
+        point_cloud.width = 0  # Will set this later based on number of points
+        
+        # Define fields for x, y, z, and rgb (packed as float)
+        fields = [
+            PointField(name='x', offset=0, datatype=PointField.FLOAT32, count=1),
+            PointField(name='y', offset=4, datatype=PointField.FLOAT32, count=1),
+            PointField(name='z', offset=8, datatype=PointField.FLOAT32, count=1),
+            PointField(name='rgb', offset=12, datatype=PointField.FLOAT32, count=1)
+        ]
+        point_cloud.fields = fields
+        
+        point_cloud.is_bigendian = False
+        point_cloud.point_step = 16  # 4 fields * 4 bytes each (float32)
+        point_cloud.row_step = 0  # Will set this later
+        point_cloud.is_dense = True
+        
+        return point_cloud
+    
+    def pack_rgb(self, r, g, b):
+        # Pack RGB values into a single float
+        rgb = struct.unpack('f', struct.pack('I', (r << 16) | (g << 8) | b))[0]
+        return rgb
+    
+    def pack_points(self, points):
+        # Pack points into a byte array
+        points_data = bytearray()
+        for point in points:
+            points_data.extend(struct.pack('ffff', *point))
+        
+        return bytes(points_data)
+    
+    def create_colored_point_cloud(self, msg: ConeArray):
+        point_cloud = self.create_point_cloud(msg.header.stamp, 'hesai_lidar')
+        
+        points = []
+        
+        # Add blue cones: RGB(0, 0, 255)
+        for cone in msg.blue_cones:
+            points.append([cone.x, cone.y, 0.0, self.pack_rgb(0, 0, 255)])
+            
+        # Add yellow cones: RGB(255, 255, 0)
+        for cone in msg.yellow_cones:
+            points.append([cone.x, cone.y, 0.0, self.pack_rgb(255, 255, 0)])
+            
+        # Add orange cones: RGB(255, 165, 0)
+        for cone in msg.orange_cones:
+            points.append([cone.x, cone.y, 0.0, self.pack_rgb(255, 165, 0)])
+            
+        # Add big orange cones: RGB(255, 69, 0)
+        for cone in msg.big_orange_cones:
+            points.append([cone.x, cone.y, 0.0, self.pack_rgb(255, 69, 0)])
+            
+        # Add unknown cones: RGB(128, 128, 128)
+        for cone in msg.unknown_color_cones:
+            points.append([cone.x, cone.y, 0.0, self.pack_rgb(128, 128, 128)])
+        
+        if points:
+            point_cloud.data = self.pack_points(points)
+            point_cloud.width = len(points)
+            point_cloud.row_step = point_cloud.width * point_cloud.point_step
+        
+        return point_cloud
 
     def spline_callback(self, msg: SplineFrames):
         marker_array = MarkerArray()

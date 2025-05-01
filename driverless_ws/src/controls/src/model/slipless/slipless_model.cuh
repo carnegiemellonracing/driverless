@@ -8,6 +8,7 @@
 #pragma once
 #include <constants.hpp>
 #include <utils/cuda_utils.cuh>
+#include <cassert>
 
 namespace controls {
     namespace model {
@@ -86,6 +87,7 @@ namespace controls {
              * @param[in] timestep Model time step in seconds.
              */
             __host__ __device__ static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
+                assert(false);
                 const float x = state[state_x_idx];
                 const float y = state[state_y_idx];
                 const float yaw = state[state_yaw_idx];
