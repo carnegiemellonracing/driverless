@@ -15,7 +15,7 @@ root_dir: /driverless_ws/src/controls/
 #=====================
  
 follow_midline_only: true
-approx_propogation_delay: 0.4f
+approx_propogation_delay: 0.45f
 
 testing_on_rosbag: false
 ingest_midline: true

@@ -81,7 +81,7 @@ constexpr bool print_svm_timing = false;
     constexpr float torque_1Nps_cost = 0.0f;
     constexpr float swangle_1radps_cost = 0.0f;
         
-    constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline DEPRECATED
+    constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
     constexpr float target_speed = 5.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 
@@ -110,7 +110,7 @@ constexpr bool print_svm_timing = false;
     constexpr uint32_t curv_frame_lookup_tex_width = 512;
     constexpr float curv_frame_lookup_padding = 0; // meters
     /// Not real track width, used for curvilinear frame lookup table generation
-    constexpr float fake_track_width = 10.0f;
+    constexpr float fake_track_width = 20.0f;
     // mppi simulates a lot of shitty trajectories (naive brownian guess)
     /// Represents space the car occupies, used to calculate the size of the curvilinear lookup table.
     constexpr float car_padding = std::max(spline_frame_separation, M_SQRT2f32 * fake_track_width);
