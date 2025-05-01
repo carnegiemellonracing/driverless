@@ -608,7 +608,8 @@ namespace controls {
             RCLCPP_INFO_STREAM(get_logger(), "Swangle: " << msg.swangle * (180 / M_PI) << "deg Torque f: " << msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr);
              RCLCPP_INFO_STREAM(get_logger(), "Action_Queue Length: " << m_action_queue.size());
             m_action_queue.push(msg);
-            if(m_action_queue.size() > int(prop_delay / (controller_period*1000))) { //prop_delay is in ms / 100ms  ~ 5 time steps
+            if (m_action_queue.size() > int(steering_prop_delay_ms / (controller_period * 1000)))
+            { // prop_delay is in ms / 100ms  ~ 5 time steps
                 m_last_action_msg = msg;
                 m_last_action_msg.swangle = m_action_queue.front().swangle;
                 m_action_queue.pop();

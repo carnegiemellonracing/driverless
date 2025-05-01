@@ -133,7 +133,7 @@ namespace controls {
             std::queue<ActionMsg> m_action_queue;
             std::queue<ConeMsg> m_cone_queue;
             std::queue<SplineMsg> m_spline_queue;
-            int prop_delay = 0;
+            int steering_prop_delay_ms = 000; 
             //int torque_delay = 100;
 
 
