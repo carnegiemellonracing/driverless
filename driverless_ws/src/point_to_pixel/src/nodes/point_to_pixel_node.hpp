@@ -52,9 +52,6 @@ public:
     static constexpr char save_path[] = "src/point_to_pixel/img_log/";
     #endif
 
-    // static constexpr int zed_one_sn; // Left side zed
-    // static constexpr int zed_two_sn; // Right side zed
-
 private:
     // ROS2 Publisher and Subscribers
     rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cone_pub_;

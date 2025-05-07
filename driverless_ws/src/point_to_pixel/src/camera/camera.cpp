@@ -28,15 +28,118 @@ namespace camera {
         Camera &cam,
         const rclcpp::Logger &logger
     ) {
-        // Initialize video capture
-        if (!cam.cap.initializeVideo(cam.device_id)) {
-            RCLCPP_ERROR(logger, "Cannot open camera %d video capture", cam.device_id);
+        // Get list of video devices
+        std::map<int, std::pair<uint16_t, uint16_t>> device_info;
+        
+        // Check first 5 video devices
+        for (int device_id = 0; device_id < 10; device_id++) {
+            try {
+                std::string sysfs_path = "/sys/class/video4linux/video" + std::to_string(device_id);
+                if (!std::filesystem::exists(sysfs_path)) continue; 
+                
+                std::filesystem::path current_path = std::filesystem::path(sysfs_path) / "device";
+                if (!std::filesystem::exists(current_path)) continue;
+                
+                // Find USB info using vendor and product IDs
+                bool found_usb = false;
+                for (int i = 0; i < 4 && !found_usb; i++) {
+                    if (current_path.string().find("/usb") != std::string::npos) {
+                        std::filesystem::path vendor_path = current_path / "idVendor";
+                        std::filesystem::path product_path = current_path / "idProduct";
+                        
+                        if (std::filesystem::exists(vendor_path) && std::filesystem::exists(product_path)) {
+                            std::ifstream vendor_file(vendor_path);
+                            std::ifstream product_file(product_path);
+                            std::string vendor_id, product_id;
+                            
+                            // Check if file streams are valid and if reads were successful
+                            if (vendor_file >> vendor_id && product_file >> product_id) {
+                                uint16_t vid = std::stoi(vendor_id, nullptr, 16);
+                                uint16_t pid = std::stoi(product_id, nullptr, 16);
+                                
+                                // Save device info
+                                device_info[device_id] = {vid, pid};
+                                
+                                // Check for ZED cameras
+                                if (vid == ZED_VENDOR_ID && (pid == ZED_PRODUCT_ID || pid == ZED2_PRODUCT_ID)) {
+                                    found_usb = true;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    
+                    // Move back to parent directory
+                    std::filesystem::path parent_path = current_path / "..";
+                    if (!std::filesystem::exists(parent_path)) break;
+                    
+                    current_path = std::filesystem::canonical(parent_path);
+                }
+            } catch (const std::exception& e) {
+                // Gracefully skip if there is error
+                continue;
+            }
+        }
+        
+        // Lookup ZED device ids
+        int zed_device_id = -1;   // Original ZED (left camera)
+        int zed2_device_id = -1;  // ZED 2 (right camera)
+        
+        for (const auto& [dev_id, ids] : device_info) {
+            uint16_t vid = ids.first;
+            uint16_t pid = ids.second;
+            
+            if (vid == ZED_VENDOR_ID) {
+                if (pid == ZED_PRODUCT_ID && dev_id % 2 == 0) { // Ensure camera ids are either 0 or 2
+                    zed_device_id = dev_id;
+                    RCLCPP_INFO(logger, "Found ZED (left camera) at /dev/video%d", dev_id);
+                } else if (pid == ZED2_PRODUCT_ID && dev_id % 2 == 0) { // Ensure camera ids are either 0 or 2
+                    zed2_device_id = dev_id;
+                    RCLCPP_INFO(logger, "Found ZED 2 (right camera) at /dev/video%d", dev_id);
+                }
+            }
+        }
+        
+        // Early return if either camera doesn't exist
+        if (zed_device_id == -1 || zed2_device_id == -1) {
+            RCLCPP_ERROR(logger, "Could not find both ZED cameras. ZED: %d, ZED 2: %d", 
+                    zed_device_id, zed2_device_id);
             return false;
         }
         
-        RCLCPP_INFO(logger, "Connected to ZED camera %d. %s", cam.device_id, cam.cap.getDeviceName().c_str());
+        // Check if assigned device ID matches ZED device id
+        int correct_device_id;
+        if (cam.device_id == 0) {
+            // This should be the left camera (ZED)
+            correct_device_id = zed_device_id;
+        } else {
+            // This should be the right camera (ZED 2)
+            correct_device_id = zed2_device_id;
+        }
+        
+        // If incorrect, reassign correct device ID to cam object, but log first.
+        if (correct_device_id != cam.device_id) {
+            RCLCPP_INFO(logger, "Reassigning camera %d to use device ID %d",
+                    cam.device_id, correct_device_id);
+        }
+        
+        // Initialize video capture with the correct device ID
+        if (!cam.cap.initializeVideo(correct_device_id)) {
+            RCLCPP_ERROR(logger, "Cannot open camera %d video capture", correct_device_id);
+            return false;
+        }
+        if (cam.device_id == 0) {
+        RCLCPP_INFO(logger, "Connected to left ZED camera. %s", 
+                  cam.cap.getDeviceName().c_str());
+        } else {
+            RCLCPP_INFO(logger, "Connected to right ZED 2 camera. %s", 
+                        cam.cap.getDeviceName().c_str());
+        }
+        
+        // Assign correct device ID
+        cam.device_id = correct_device_id;
 
-        // Retrieve calibration file from Stereolabs server
+        // Camera Rectification
         int sn = cam.cap.getSerialNumber();
         std::string calibration_file;
         unsigned int serial_number = sn;
@@ -65,7 +168,7 @@ namespace camera {
         cam.cap.setAECAGC(true);
         cam.cap.setAutoWhiteBalance(true);
 
-        RCLCPP_INFO(logger, "ZED Camera %d Ready. %s", cam.device_id, cam.cap.getDeviceName().c_str());
+        RCLCPP_INFO(logger, "ZED Camera %d Ready. %s \n", cam.device_id, cam.cap.getDeviceName().c_str());
         
         return true;
     }
