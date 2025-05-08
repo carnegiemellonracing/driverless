@@ -309,13 +309,13 @@ namespace controls {
         {
             assert(m_left_cone_trajectory != nullptr);
             assert(m_right_cone_trajectory != nullptr);
-            const auto& left_cone_points = m_all_left_cone_points;
-            const auto& right_cone_points = m_all_right_cone_points;
+            const auto& left_cone_points = m_left_cone_points;
+            const auto& right_cone_points = m_right_cone_points;
             m_left_cone_trajectory->vertex_buf = std::vector<float>(left_cone_points.size() * 2);
             for (size_t i = 0; i < left_cone_points.size(); i++) {
                 //Draw trajectory line
-                m_left_cone_trajectory->vertex_buf[2 * i] = m_all_left_cone_points[i].x;
-                m_left_cone_trajectory->vertex_buf[2 * i + 1] = m_all_left_cone_points[i].y;
+                m_left_cone_trajectory->vertex_buf[2 * i] = m_left_cone_points[i].x;
+                m_left_cone_trajectory->vertex_buf[2 * i + 1] = m_left_cone_points[i].y;
             }
 
             m_right_cone_trajectory->vertex_buf = std::vector<float>(right_cone_points.size() * 2);
@@ -333,7 +333,7 @@ namespace controls {
         }
 
         void Display::draw_best_guess() {
-            const auto& frames = m_last_reduced_state_trajectory;
+            const auto& frames = m_last_state_trajectories;
 
             assert(m_best_guess != nullptr);
             m_best_guess->vertex_buf = std::vector<float>(frames.size() * 2);
@@ -489,7 +489,7 @@ namespace controls {
                 auto slam_chunks = m_state_estimator->get_slam_chunks();
 
                 m_state_estimator->get_offset_pixels(m_offset_image);
-                m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();
+                m_last_state_trajectories = m_controller->last_reduced_state_trajectory();
                 m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);
                 
                 m_left_cone_trajectory->vertex_buf = std::vector<float>(m_left_cone_points.size() * 2);
