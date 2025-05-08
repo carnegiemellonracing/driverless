@@ -115,8 +115,9 @@ namespace controls {
 #endif
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
-                if (!m_slam_chunks.empty()) {
-                    RCLCPP_DEBUG(get_logger(), "Skipping cone_callback as m_slam_chunks is not empty");
+                auto slam_chunks = m_state_estimator->get_slam_chunks();
+                if (!slam_chunks.empty()) {
+                    RCLCPP_DEBUG(get_logger(), "Skipping cone_callback as slam_chunks is not empty");
                     return;
                 }
                 m_mppi_controller->set_follow_midline_only(follow_midline_only);

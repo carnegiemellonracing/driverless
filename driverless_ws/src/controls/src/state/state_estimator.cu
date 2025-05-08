@@ -310,7 +310,7 @@ namespace controls {
         StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger)
             : m_mutex {mutex}, m_logger {logger}, m_logger_obj {rclcpp::get_logger("")} {
             std::lock_guard<std::mutex> guard {mutex};
-            extern std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
+            
             m_logger("initializing state estimator");
 #ifdef DISPLAY
             m_gl_window = utils::create_sdl2_gl_window(
@@ -435,7 +435,6 @@ namespace controls {
         float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            assert(m_slam_chunks.empty() && "m_slam_chunks map is not empty");
             paranoid_assert(cone_msg.blue_cones.size() > 0);
             paranoid_assert(cone_msg.yellow_cones.size() > 0);
 
@@ -506,17 +505,16 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_state_projector.record_pose(
-                pose_msg.pose.x, pose_msg.pose.y, pose_msg.pose.z,
+                pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.position.z,
                 pose_msg.header.stamp);
         }
 
         float StateEstimator_Impl::on_slam_pose(const SlamPoseMsg& slam_msg) {
-            std::cout << "Type of pose: " << typeid(slam_msg.pose).name() << std::endl;
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_state_projector.record_pose(
-            slam_msg.pose.x, slam_msg.pose.y, slam_msg.pose.z,
-            slam_msg.header.stamp, slam_msg.current_chunk_id.data);
+                slam_msg.pose.position.x, slam_msg.pose.position.y, slam_msg.pose.position.z,
+                slam_msg.header.stamp, slam_msg.current_chunk_id.data);
 
             float svm_time = 0.0f;
 
@@ -728,7 +726,7 @@ namespace controls {
 
             return m_right_cone_points;
         }
-        std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks(){
+        std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> StateEstimator_Impl::get_slam_chunks() {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             return m_slam_chunks;
