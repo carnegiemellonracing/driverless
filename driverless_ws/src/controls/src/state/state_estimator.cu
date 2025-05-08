@@ -513,7 +513,7 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_state_projector.record_pose(
-                slam_msg.pose.position.x, slam_msg.pose.position.y, slam_msg.pose.position.z,
+                slam_msg.pose.x, slam_msg.pose.y, slam_msg.pose.z,
                 slam_msg.header.stamp, slam_msg.current_chunk_id.data);
 
             float svm_time = 0.0f;
@@ -726,9 +726,7 @@ namespace controls {
 
             return m_right_cone_points;
         }
-        std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> StateEstimator_Impl::get_slam_chunks() {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
+        std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> StateEstimator_Impl::get_slam_chunks() const override {
             return m_slam_chunks;
         }
         // *****REVIEW: not be needed for display
