@@ -727,7 +727,7 @@ namespace controls {
             return m_right_cone_points;
         }
 
-        std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> StateEstimator_Impl::get_slam_chunks() const {
+        std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> StateEstimator_Impl::get_slam_chunks() {
             std::lock_guard<std::mutex> guard {m_mutex};
             return m_slam_chunks;
         }
