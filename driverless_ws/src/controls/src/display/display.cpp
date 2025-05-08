@@ -338,8 +338,8 @@ namespace controls {
             assert(m_best_guess != nullptr);
             m_best_guess->vertex_buf = std::vector<float>(frames.size() * 2);
             for (size_t i = 0; i < frames.size(); i++) {
-                m_best_guess->vertex_buf[2 * i] = frames[i].x;
-                m_best_guess->vertex_buf[2 * i + 1] = frames[i].y;
+                m_best_guess->vertex_buf[2 * i] = frames[i][0];  // x component
+                m_best_guess->vertex_buf[2 * i + 1] = frames[i][1];  // y component
             }
 
             m_best_guess->draw();
@@ -490,7 +490,6 @@ namespace controls {
 
                 m_state_estimator->get_offset_pixels(m_offset_image);
                 m_last_state_trajectories = m_controller->last_reduced_state_trajectory();
-                m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);
                 
                 m_left_cone_trajectory->vertex_buf = std::vector<float>(m_left_cone_points.size() * 2);
                 for (size_t i = 0; i < m_left_cone_points.size(); i++) {
