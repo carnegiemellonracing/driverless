@@ -111,7 +111,7 @@ namespace controls {
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
             rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;
             rclcpp::Subscription<PIDMsg>::SharedPtr m_pid_subscription;
-            rclcpp::Subscription<SlamMsg>::SharedPtr m_slam_subscription; ///< Subscribes to SLAM chunks
+            rclcpp::Subscription<SlamMsg>::SharedPtr m_slam_chunk_subscription; ///< Subscribes to SLAM chunks
             rclcpp::Subscription<SlamPoseMsg>::SharedPtr m_slam_pose_subscription; ///< Subscribes to SLAM pose
             // ConeArray = /lidar_node_cones
 
