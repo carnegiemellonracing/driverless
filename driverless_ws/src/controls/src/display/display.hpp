@@ -99,7 +99,7 @@ namespace controls {
 
             std::vector<glm::fvec2> m_raceline_points;
             std::unique_ptr<DrawableLine> m_raceline_line = nullptr;
-            std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
+            std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
 
             utils::GLObj m_offset_img_obj;
             GLuint m_offset_img_tex;

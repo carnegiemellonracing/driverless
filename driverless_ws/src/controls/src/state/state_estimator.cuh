@@ -72,7 +72,7 @@ namespace controls {
                 } pose;
 
                 struct {
-                uint32_t current_chunk_id;
+                int32_t current_chunk_id;
                 struct {
                     float x;
                     float y;
@@ -100,7 +100,7 @@ namespace controls {
             std::optional<Record> m_pose_record = std::nullopt;
             std::optional<Record> m_slam_pose_record = std::nullopt;
             
-            std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
+            std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
 
             /// Helper binary operator for sorting records by time, needed for the multiset.
             struct CompareRecordTimes {
@@ -152,7 +152,7 @@ namespace controls {
             std::vector<glm::fvec2> get_all_right_cone_points() override;
             std::vector<glm::fvec2> get_left_cone_points() override;
             std::vector<glm::fvec2> get_right_cone_points() override;
-            std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks() override;
+            std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks() override;
             std::vector<glm::fvec2> get_raceline_points();
             std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> get_all_cone_points() override;
             std::vector<float> get_vertices() override;
