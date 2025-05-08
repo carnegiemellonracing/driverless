@@ -296,10 +296,135 @@ namespace controls {
 
             void ControllerNode::slam_pose_callback(const SlamPoseMsg& slam_pose_msg) {
                 RCLCPP_DEBUG(get_logger(), "Received slam pose");
+                
+                // Set controller parameters
+                m_mppi_controller->set_follow_midline_only(follow_midline_only);
+                m_state_estimator->set_follow_midline_only(follow_midline_only);
+                
+                // * We want to manually lock the state mutex here, so use a unique_lock
+                std::unique_lock<std::mutex> state_lock {m_state_mut};
+
+                // record time to estimate speed of the entire pipeline
+                auto start_time = std::chrono::high_resolution_clock::now();
+
+                // Process slam pose and report timing
+                auto slam_process_start = std::chrono::high_resolution_clock::now();
+                m_state_estimator->on_slam_pose(slam_pose_msg);
+                auto slam_process_end = std::chrono::high_resolution_clock::now();
+                m_last_cone_process_time = std::chrono::duration_cast<std::chrono::milliseconds>(slam_process_end - slam_process_start).count();
+
+                RCLCPP_DEBUG(get_logger(), "mppi iteration beginning");
+
+                // save for info publishing later, since might be changed during iteration
+                rclcpp::Time slam_arrival_time = slam_pose_msg.header.stamp;
+
+                // send state to device (i.e. cuda globals)
+                // (also serves to lock state since nothing else updates gpu state)
+                RCLCPP_DEBUG(get_logger(), "syncing state to device");
+                auto project_start = std::chrono::high_resolution_clock::now();
+                State proj_curr_state = m_state_estimator->project_state(get_clock()->now());
+                auto project_end = std::chrono::high_resolution_clock::now();
+
+                // * Let state callbacks proceed, so unlock the state mutex
+                state_lock.unlock();
+
+                // send state to device
+                auto sync_start = std::chrono::high_resolution_clock::now();
+                m_state_estimator->render_and_sync(proj_curr_state);
+                auto sync_end = std::chrono::high_resolution_clock::now();
+
+                // run mppi, and write action to the write buffer
+                auto gen_action_start = std::chrono::high_resolution_clock::now();
+                Action action = m_mppi_controller->generate_action();
+                auto gen_action_end = std::chrono::high_resolution_clock::now();
+                publish_action(action);
+                m_last_action_signal = action_to_signal(action);
+                std::string error_str;
+
+#ifdef DATA
+                std::stringstream parameters_ss;
+                parameters_ss << "Swangle range: " << 19 * M_PI / 180 * 2 << "\nThrottle range: " << saturating_motor_torque * 2 << "\n";
+                RCLCPP_WARN_ONCE(get_logger(), parameters_ss.str().c_str());
+
+                std::vector<Action> percentage_diff_trajectory = m_mppi_controller->m_percentage_diff_trajectory;
+                std::vector<Action> averaged_trajectory = m_mppi_controller->m_averaged_trajectory;
+                std::vector<Action> last_action_trajectory = m_mppi_controller->m_last_action_trajectory_logging;
+                auto diff_statistics = m_mppi_controller->m_diff_statistics;
+
+                // Get all necessary data from state estimator
+                std::vector<glm::fvec2> frames = m_state_estimator->get_spline_frames();
+                std::vector<glm::fvec2> left_cones = m_state_estimator->get_left_cone_points();
+                std::vector<glm::fvec2> right_cones = m_state_estimator->get_right_cone_points();
+
+                // create debugging string
+                std::stringstream ss;
+                ss << "Spline (MPPI Input): \n";
+                ss << points_to_string(frames) << "\n";
+                ss << "Left cones (MPPI Input): \n";
+                ss << points_to_string(left_cones) << "\n";
+                ss << "Right cones (MPPI Input): \n";
+                ss << points_to_string(right_cones) << "\n";
+                ss << "Last action_trajectory (MPPI Input/Guess): \n";
+                for (const auto &action : last_action_trajectory)
                 {
-                    std::lock_guard<std::mutex> guard {m_state_mut};
-                    m_state_estimator->on_slam_pose(slam_pose_msg);
+                    ss << "[" << action[0] << ", " << action[1] << "], ";
                 }
+                ss << "\nAveraged Trajectory (MPPI Output): \n";
+                for (const auto &action : averaged_trajectory)
+                {
+                    ss << "[" << action[0] << ", " << action[1] << "], ";
+                }
+                ss << "\nPercentage Difference between Guess and Result: \n";
+                for (const auto &action : percentage_diff_trajectory)
+                {
+                    ss << "[" << action[0] << ", " << action[1] << "], ";
+                }
+                ss << "\nMean Swangle Error: " << diff_statistics.mean_swangle << std::endl;
+                ss << "Mean Torque Error: " << diff_statistics.mean_throttle << std::endl;
+                ss << "Max Swangle Error: " << diff_statistics.max_swangle << std::endl;
+                ss << "Max Torque Error: " << diff_statistics.max_throttle << std::endl;
+                error_str = ss.str();
+
+                // writing to logging file for sampling exploration
+                // write the state
+                for (int i = 0; i < state_dims - 1; i++)
+                {
+                    m_data_trajectory_log << proj_curr_state[i] << ",";
+                }
+                m_data_trajectory_log << proj_curr_state[state_dims - 1] << "|";
+                m_data_trajectory_log << vector_to_parseable_string(frames) << "|";
+                m_data_trajectory_log << vector_to_parseable_string(left_cones) << "|";
+                m_data_trajectory_log << vector_to_parseable_string(right_cones) << "|";
+                // write the guess trajectory
+                for (int i = 0; i < last_action_trajectory.size() - 1; i++)
+                {
+                    m_data_trajectory_log << last_action_trajectory[i][0] << " " << last_action_trajectory[i][1] << ",";
+                }
+                m_data_trajectory_log << last_action_trajectory[last_action_trajectory.size() - 1][0] << " " << last_action_trajectory[last_action_trajectory.size() - 1][1] << "\n";
+#endif
+
+                // this can happen concurrently with another state estimator callback, but the internal lock
+                // protects it.
+                m_state_estimator->record_control_action(action, get_clock()->now());
+
+                // calculate and print time elapsed
+                auto finish_time = std::chrono::high_resolution_clock::now();
+                auto time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    finish_time - start_time);
+
+                // can't use high res clock since need to be aligned with other nodes
+                auto total_time_elapsed = (get_clock()->now().nanoseconds() - slam_arrival_time.nanoseconds()) / 1000000;
+
+                interfaces::msg::ControllerInfo info{};
+                info.action = action_to_msg(action);
+                info.proj_state = state_to_msg(proj_curr_state);
+                info.projection_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(sync_end - sync_start)).count();
+                info.render_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(project_end - project_start)).count();
+                info.mppi_latency_ms = (std::chrono::duration_cast<std::chrono::milliseconds>(gen_action_end - gen_action_start)).count();
+                info.latency_ms = time_elapsed.count();
+                info.total_latency_ms = total_time_elapsed;
+
+                publish_and_print_info(info, error_str);
             }
 
             void ControllerNode::pid_callback(const PIDMsg& pid_msg) {
