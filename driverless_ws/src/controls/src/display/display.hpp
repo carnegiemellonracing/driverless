@@ -99,23 +99,17 @@ namespace controls {
 
             std::vector<glm::fvec2> m_raceline_points;
             std::unique_ptr<DrawableLine> m_raceline_line = nullptr;
-            std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
+            std::vector<glm::fvec2> m_left_cone_points;
+            std::vector<glm::fvec2> m_right_cone_points;
+            std::vector<glm::fvec2> m_spline_frames;
+            std::vector<float> m_last_state_trajectories;
+            state::StateEstimator::OffsetImage m_offset_image;
 
             utils::GLObj m_offset_img_obj;
             GLuint m_offset_img_tex;
 
             std::shared_ptr<mppi::MppiController> m_controller;
             std::shared_ptr<state::StateEstimator> m_state_estimator;
-
-            std::vector<glm::fvec2> m_spline_frames;
-            std::vector<glm::fvec2> m_all_left_cone_points;
-            std::vector<glm::fvec2> m_all_right_cone_points;
-            std::vector<glm::fvec2> m_left_cone_points;
-            std::vector<glm::fvec2> m_right_cone_points;
-            
-            std::vector<glm::fvec2> m_last_reduced_state_trajectory;
-            std::vector<float> m_last_state_trajectories;
-            state::StateEstimator::OffsetImage m_offset_image;
         };
     }
 }

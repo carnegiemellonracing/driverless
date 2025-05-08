@@ -19,6 +19,8 @@
 #include <cuda_constants.cuh>
 #include <cmath>
 #include <cuda_gl_interop.h>
+#include <typeinfo>
+#include <iostream>
 
 
 #include "state_estimator.cuh"
@@ -50,8 +52,8 @@ namespace controls {
                         std::cout << "Speed: " << record.speed << std::endl;
                         break;
 
-                    case Record::Type::Pose:
-                        std::cout << "Pose: " << record.pose.x << ", " << record.pose.y << ", " << record.pose.yaw << std::endl;
+                    case Record::Type::SlamPose:
+                        std::cout << "Pose: " << record.slamPose.pose.x << ", " << record.slamPose.pose.y << ", " << record.slamPose.pose.yaw << std::endl;
                         break;
 
                     default:
@@ -99,7 +101,7 @@ namespace controls {
             // print_history();
         }
 
-        void StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time, int chunk = 9999999) {
+        void StateProjector::record_pose(float x, float y, float yaw, rclcpp::Time time, int32_t chunk = 9999999) {
             // std::cout << "Recording pose " << x << ", " << y << ", " << yaw << " at time " << time.nanoseconds() << std::endl;
             
 
@@ -308,7 +310,7 @@ namespace controls {
         StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger)
             : m_mutex {mutex}, m_logger {logger}, m_logger_obj {rclcpp::get_logger("")} {
             std::lock_guard<std::mutex> guard {mutex};
-            extern std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
+            
             m_logger("initializing state estimator");
 #ifdef DISPLAY
             m_gl_window = utils::create_sdl2_gl_window(
@@ -433,7 +435,6 @@ namespace controls {
         float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            assert(m_slam_chunks.empty() && "m_slam_chunks map is not empty");
             paranoid_assert(cone_msg.blue_cones.size() > 0);
             paranoid_assert(cone_msg.yellow_cones.size() > 0);
 
@@ -504,7 +505,7 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_state_projector.record_pose(
-                pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.orientation.z,
+                pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.position.z,
                 pose_msg.header.stamp);
         }
 
@@ -512,36 +513,43 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_state_projector.record_pose(
-            slam_msg.pose.position.x, slam_msg.pose.position.y, slam_msg.pose.orientation.z,
-            slam_msg.header.stamp, slam_msg.current_chunk_id);
+                slam_msg.pose.x, slam_msg.pose.y, slam_msg.pose.z,
+                slam_msg.header.stamp, slam_msg.current_chunk_id.data);
 
             float svm_time = 0.0f;
 
             if constexpr (!ingest_midline) {
             midline::Cones cones;
-
-            for (const auto& cone : slam_msg.blue_cones) {
-            cones.addBlueCone(cone.x, cone.y, 0);
+            paranoid_assert(m_left_cone_points.size() > 0);
+            paranoid_assert(m_right_cone_points.size() > 0);
+            for(const auto& cone : m_left_cone_points) {
+                paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
+                cones.addBlueCone(cone.x, cone.y, 0);
             }
-            for (const auto& cone : slam_msg.yellow_cones) {
-            cones.addYellowCone(cone.x, cone.y, 0);
+            for(const auto& cone : m_right_cone_points) {
+                paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
+                cones.addYellowCone(cone.x, cone.y, 0);
             }
 
             auto svm_start = std::chrono::high_resolution_clock::now();
             auto spline_frames = midline::svm_slow::cones_to_midline(cones);
             auto svm_end = std::chrono::high_resolution_clock::now();
             svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
-
+            
             m_spline_frames.clear();
             for (const auto& frame : spline_frames) {
             paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
             m_spline_frames.emplace_back(frame.first, frame.second);
-            }
-            }
-
             m_logger("finished state estimator SLAM pose processing");
             return svm_time;
         }
+
+            }
+
+            }
+
+     
+        
 
         void StateEstimator_Impl::on_slam(const SlamMsg& slam_msg, const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -718,11 +726,12 @@ namespace controls {
 
             return m_right_cone_points;
         }
-        virtual std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks(){
-            std::lock_guard<std::mutex> guard {m_mutex};
 
+        std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> StateEstimator_Impl::get_slam_chunks() {
+            std::lock_guard<std::mutex> guard {m_mutex};
             return m_slam_chunks;
         }
+
         // *****REVIEW: not be needed for display
         std::vector<glm::fvec2> StateEstimator_Impl::get_raceline_points(){
             std::lock_guard<std::mutex> guard {m_mutex};

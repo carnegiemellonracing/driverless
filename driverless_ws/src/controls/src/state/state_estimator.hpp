@@ -73,7 +73,7 @@ namespace controls {
             */
 
 
-          virtual void on_slam(const SlamMsg& slam_msg,rclcpp::Time& time) =0;
+          virtual void on_slam(const SlamMsg& slam_msg,const rclcpp::Time& time) =0;
         
 
 
@@ -123,7 +123,7 @@ namespace controls {
 
             virtual std::vector<glm::fvec2> get_all_left_cone_points() =0;
             virtual std::vector<glm::fvec2> get_all_right_cone_points() =0;
-            virtual std::unordered_map<uint32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks() = 0;
+            virtual std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks() = 0;
             virtual std::vector<glm::fvec2> get_left_cone_points() = 0;
             virtual std::vector<glm::fvec2> get_right_cone_points() = 0;
             virtual std::vector<glm::fvec2> get_raceline_points() =0;
