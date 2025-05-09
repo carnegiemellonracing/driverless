@@ -11,6 +11,7 @@
 #include <limits>
 #include <cassert>
 #include "svm.hpp" // libSVM headers
+#include <glm/glm.hpp>
 
 #include "svm_conv.hpp"
 #include "cones.hpp"
@@ -387,7 +388,7 @@ namespace svm_slow {
             auto boundary_start = high_resolution_clock::now();
 
             // Find boundary points using a more robust approach
-            std::vector<glm::fvec2> boundary_points;
+            std::vector<std::pair<double, double>> boundary_points;
             
             // Create a grid of points between the cones
             float min_x = std::numeric_limits<float>::max();
@@ -396,17 +397,17 @@ namespace svm_slow {
             float max_y = std::numeric_limits<float>::lowest();
             
             for (const auto& cone : blue_cones) {
-                min_x = std::min(min_x, cone.x);
-                max_x = std::max(max_x, cone.x);
-                min_y = std::min(min_y, cone.y);
-                max_y = std::max(max_y, cone.y);
+                min_x = std::min(min_x, cone.first);
+                max_x = std::max(max_x, cone.first);
+                min_y = std::min(min_y, cone.second);
+                max_y = std::max(max_y, cone.second);
             }
             
             for (const auto& cone : yellow_cones) {
-                min_x = std::min(min_x, cone.x);
-                max_x = std::max(max_x, cone.x);
-                min_y = std::min(min_y, cone.y);
-                max_y = std::max(max_y, cone.y);
+                min_x = std::min(min_x, cone.first);
+                max_x = std::max(max_x, cone.first);
+                min_y = std::min(min_y, cone.second);
+                max_y = std::max(max_y, cone.second);
             }
             
             // Add some padding

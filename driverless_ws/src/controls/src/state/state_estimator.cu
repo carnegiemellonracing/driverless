@@ -558,22 +558,25 @@ namespace controls {
 
         void StateEstimator_Impl::on_slam(const SlamMsg& slam_msg, const rclcpp::Time& time) {
             // Process cones in global frame, just like on_cone
-            std::vector<glm::fvec2> blue_cones;
-            std::vector<glm::fvec2> yellow_cones;
-
-            // Convert SLAM cone points to glm::fvec2 format
+            std::vector<geometry_msgs::msg::Point> blue_points, yellow_points;
             for (const auto& point : slam_msg.blue_cones) {
-                blue_cones.emplace_back(point.x, point.y);
+                geometry_msgs::msg::Point p;
+                p.x = point.x;
+                p.y = point.y;
+                p.z = 0.0;
+                blue_points.push_back(p);
             }
             for (const auto& point : slam_msg.yellow_cones) {
-                yellow_cones.emplace_back(point.x, point.y);
+                geometry_msgs::msg::Point p;
+                p.x = point.x;
+                p.y = point.y;
+                p.z = 0.0;
+                yellow_points.push_back(p);
             }
-
-            // Process cones using the same method as on_cone
-            process_ros_points(blue_cones, yellow_cones);
+            process_ros_points(blue_points, yellow_points);
 
             // Store the processed cones in the SLAM chunks map
-            m_slam_chunks[slam_msg.chunk_id.data] = {blue_cones, yellow_cones};
+            m_slam_chunks[slam_msg.chunk_id.data] = {blue_points, yellow_points};
         }
 
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
