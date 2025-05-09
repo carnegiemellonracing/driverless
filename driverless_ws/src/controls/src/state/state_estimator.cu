@@ -519,37 +519,42 @@ namespace controls {
             float svm_time = 0.0f;
 
             if constexpr (!ingest_midline) {
-            midline::Cones cones;
-            paranoid_assert(m_left_cone_points.size() > 0);
-            paranoid_assert(m_right_cone_points.size() > 0);
-            for(const auto& cone : m_left_cone_points) {
-                paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
-                cones.addBlueCone(cone.x, cone.y, 0);
-            }
-            for(const auto& cone : m_right_cone_points) {
-                paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
-                cones.addYellowCone(cone.x, cone.y, 0);
+                midline::Cones cones;
+                paranoid_assert(m_all_left_cone_points.size() > 0);
+                paranoid_assert(m_all_right_cone_points.size() > 0);
+
+                // Clear the current points
+                m_left_cone_points.clear();
+                m_right_cone_points.clear();
+
+                // Copy from all cone points to current points
+                m_left_cone_points = m_all_left_cone_points;
+                m_right_cone_points = m_all_right_cone_points;
+
+                for(const auto& cone : m_left_cone_points) {
+                    paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
+                    cones.addBlueCone(cone.x, cone.y, 0);
+                }
+                for(const auto& cone : m_right_cone_points) {
+                    paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
+                    cones.addYellowCone(cone.x, cone.y, 0);
+                }
+
+                auto svm_start = std::chrono::high_resolution_clock::now();
+                auto spline_frames = midline::svm_slow::cones_to_midline(cones);
+                auto svm_end = std::chrono::high_resolution_clock::now();
+                svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
+                
+                m_spline_frames.clear();
+                for (const auto& frame : spline_frames) {
+                    paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
+                    m_spline_frames.emplace_back(frame.first, frame.second);
+                }
             }
 
-            auto svm_start = std::chrono::high_resolution_clock::now();
-            auto spline_frames = midline::svm_slow::cones_to_midline(cones);
-            auto svm_end = std::chrono::high_resolution_clock::now();
-            svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
-            
-            m_spline_frames.clear();
-            for (const auto& frame : spline_frames) {
-            paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
-            m_spline_frames.emplace_back(frame.first, frame.second);
             m_logger("finished state estimator SLAM pose processing");
             return svm_time;
         }
-
-            }
-
-            }
-
-     
-        
 
         void StateEstimator_Impl::on_slam(const SlamMsg& slam_msg, const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -561,16 +566,26 @@ namespace controls {
             chunk.first = process_ros_points(slam_msg.blue_cones);
             chunk.second = process_ros_points(slam_msg.yellow_cones);
 
-            // Clear the current left and right cone points
-            m_left_cone_points.clear();
-            m_right_cone_points.clear();
+#ifdef DISPLAY
+            // Clear and rebuild all cone points
+            m_all_left_cone_points.clear();
+            m_all_right_cone_points.clear();
 
-            // Iterate through the map and aggregate all cone points
-            for (const auto& [chunk_id, cones] : m_slam_chunks) {
-            m_left_cone_points.insert(m_left_cone_points.end(), cones.first.begin(), cones.first.end());
-            m_right_cone_points.insert(m_right_cone_points.end(), cones.second.begin(), cones.second.end());
+            // Get all chunk IDs and sort them to ensure consistent ordering
+            std::vector<int32_t> chunk_ids;
+            for (const auto& [chunk_id, _] : m_slam_chunks) {
+                chunk_ids.push_back(chunk_id);
             }
+            std::sort(chunk_ids.begin(), chunk_ids.end());
 
+            // Process all chunks to populate all cone points
+            for (const auto& chunk_id : chunk_ids) {
+                const auto& chunk = m_slam_chunks[chunk_id];
+                // Use blue cones for left and yellow cones for right
+                m_all_left_cone_points.insert(m_all_left_cone_points.end(), chunk.first.begin(), chunk.first.end());
+                m_all_right_cone_points.insert(m_all_right_cone_points.end(), chunk.second.begin(), chunk.second.end());
+            }
+#endif
 
             m_logger("finished state estimator SLAM processing");
         }
@@ -1064,91 +1079,3 @@ namespace controls {
             for (size_t i = 0; i < n - 1; i++) {
                 glm::fvec2 p1 = m_spline_frames[i];
                 glm::fvec2 p2 = m_spline_frames[i + 1];
-
-                glm::fvec2 unit_vec = glm::length(p2 - p1) != 0 ? glm::normalize(p2 - p1) : glm::fvec2(0, 0);
-                // This creates a longitudinal buffer at the start and the end of the spline for the fake track to be rendered
-                if (i == 0) {
-                    p1 = p1 - unit_vec * car_padding;
-                } else if (i == n - 2) {
-                    p2 = p2 + unit_vec * car_padding;
-                }
-
-                glm::fvec2 disp = p2 - p1;
-                float new_progress = glm::length(disp); // TODO: figure out a way to normalize without some arbitrary magic number
-                paranoid_assert(!isnan(new_progress));
-                // 1. go through the vector and divide based on total progress
-                // 2. set total progress to be a member variable, then use that as a uniform, thus passing it into the fragment shader
-                float segment_heading = std::atan2(disp.y, disp.x);
-
-
-                glm::fvec2 prev = i == 0 ? p1 : m_spline_frames[i - 1];
-                float secant_heading = std::atan2(p2.y - prev.y, p2.x - prev.x);
-
-                glm::fvec2 dir = glm::normalize(disp);
-                glm::fvec2 normal = glm::fvec2(-dir.y, dir.x);
-
-                glm::fvec2 low1 = p1 - normal * radius;
-                glm::fvec2 low2 = p2 - normal * radius;
-                glm::fvec2 high1 = p1 + normal * radius;
-                glm::fvec2 high2 = p2 + normal * radius;
-
-                if (i == 0)
-                {
-                    vertices.push_back({{p1.x, p1.y}, {total_progress, 0.0f, 0.0f}});
-                }
-                vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, 0.0f}});
-
-                // I set offset to be 1.0 to prevent plateauing
-                vertices.push_back({{low1.x, low1.y}, {total_progress, radius, 0.0f}});
-                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, radius, 0.0f}});
-                vertices.push_back({{high1.x, high1.y}, {total_progress, radius, 1.0f}});
-                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, radius, 1.0f}});
-
-                const GLuint p1i = i == 0 ? 0 : (i - 1) * 5 + 1;
-                const GLuint p2i = i * 5 + 1;
-                const GLuint l1i = i * 5 + 2;
-                const GLuint l2i = i * 5 + 3;
-                const GLuint h1i = i * 5 + 4;
-                const GLuint h2i = i * 5 + 5;
-
-                indices.push_back(p1i);
-                indices.push_back(p2i);
-                indices.push_back(h2i);
-
-                indices.push_back(h1i);
-                indices.push_back(p1i);
-                indices.push_back(h2i);
-
-                indices.push_back(l1i);
-                indices.push_back(l2i);
-                indices.push_back(p2i);
-
-                indices.push_back(p1i);
-                indices.push_back(l1i);
-                indices.push_back(p2i);
-
-                if (i > 0) {
-                    const GLuint lpi = (i - 1) * 5 + 3;
-                    const GLuint hpi = (i - 1) * 5 + 5;
-
-                    indices.push_back(hpi);
-                    indices.push_back(p1i);
-                    indices.push_back(h1i);
-
-                    indices.push_back(lpi);
-                    indices.push_back(l1i);
-                    indices.push_back(p1i);
-                }
-
-                total_progress += new_progress;
-            }
-
-            glBindBuffer(GL_ARRAY_BUFFER, m_fake_track_path.vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_fake_track_path.ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
-        }
-    }
-}
-
