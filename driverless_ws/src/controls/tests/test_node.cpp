@@ -249,16 +249,23 @@ namespace controls {
             
             glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
             float curr_heading = m_world_state[2];
-            int chunk_id = 0;
+            std::cout << "Initial position: (" << m_world_state[0] << ", " << m_world_state[1] << "), heading: " << curr_heading << std::endl;
             
+            int segment_count = 0;
             for (const auto& seg : m_all_segments) {
+                std::cout << "Processing segment " << segment_count << " of type " << (seg.type == SegmentType::ARC ? "ARC" : "STRAIGHT") << std::endl;
+                
                 if (seg.type == SegmentType::ARC) {
+                    std::cout << "  ARC segment - radius: " << seg.radius << ", heading_change: " << seg.heading_change << std::endl;
                     float next_heading = arc_rad_adjusted(curr_heading + seg.heading_change);
                     const auto& [spline, left, right] = arc_segment_with_cones(seg.radius, curr_pos, curr_heading, next_heading);
+                    
                     if (spline.empty()) {
                         std::cerr << "[WARNING] Empty spline generated for ARC segment: radius=" << seg.radius << ", heading_change=" << seg.heading_change << std::endl;
                         continue;
                     }
+                    
+                    std::cout << "  Generated " << spline.size() << " spline points, " << left.size() << " left cones, " << right.size() << " right cones" << std::endl;
                     
                     m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
                     m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
@@ -268,17 +275,18 @@ namespace controls {
                     
                     curr_pos = spline.back();
                     curr_heading = next_heading;
-                    
-                    // Store SLAM chunk
-                    m_slam_chunks[chunk_id] = std::make_pair(left, right);
-                    chunk_id++;
+                    std::cout << "  New position: (" << curr_pos.x << ", " << curr_pos.y << "), heading: " << curr_heading << std::endl;
                     
                 } else if (seg.type == SegmentType::STRAIGHT) {
+                    std::cout << "  STRAIGHT segment - length: " << seg.length << std::endl;
                     const auto& [spline, left, right] = straight_segment_with_cones(curr_pos, seg.length, curr_heading);
+                    
                     if (spline.empty()) {
                         std::cerr << "[WARNING] Empty spline generated for STRAIGHT segment: length=" << seg.length << std::endl;
                         continue;
                     }
+                    
+                    std::cout << "  Generated " << spline.size() << " spline points, " << left.size() << " left cones, " << right.size() << " right cones" << std::endl;
                     
                     m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
                     m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
@@ -287,12 +295,12 @@ namespace controls {
                     g_cones.insert(g_cones.end(), right.begin(), right.end());
 
                     curr_pos = spline.back();
-                    
-                    // Store SLAM chunk
-                    m_slam_chunks[chunk_id] = std::make_pair(left, right);
-                    chunk_id++;
+                    std::cout << "  New position: (" << curr_pos.x << ", " << curr_pos.y << "), heading: " << curr_heading << std::endl;
                 }
+                segment_count++;
             }
+            
+            std::cout << "Finished processing all segments" << std::endl;
             
             m_finish_line = curr_pos;  // Store finish line position
             update_visible_indices();   // Update visible indices for initial state
