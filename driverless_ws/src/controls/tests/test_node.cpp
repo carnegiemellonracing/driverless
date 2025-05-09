@@ -251,6 +251,9 @@ namespace controls {
             float curr_heading = m_world_state[2];
             std::cout << "Initial position: (" << m_world_state[0] << ", " << m_world_state[1] << "), heading: " << curr_heading << std::endl;
             
+            // Initialize m_spline_end_pos with initial position
+            m_spline_end_pos = curr_pos;
+            
             int segment_count = 0;
             for (const auto& seg : m_all_segments) {
                 std::cout << "Processing segment " << segment_count << " of type " << (seg.type == SegmentType::ARC ? "ARC" : "STRAIGHT") << std::endl;
