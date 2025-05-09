@@ -397,17 +397,17 @@ namespace svm_slow {
             float max_y = std::numeric_limits<float>::lowest();
             
             for (const auto& cone : blue_cones) {
-                min_x = std::min(min_x, cone.first);
-                max_x = std::max(max_x, cone.first);
-                min_y = std::min(min_y, cone.second);
-                max_y = std::max(max_y, cone.second);
+                min_x = std::min(min_x, static_cast<float>(cone[0]));
+                max_x = std::max(max_x, static_cast<float>(cone[0]));
+                min_y = std::min(min_y, static_cast<float>(cone[1]));
+                max_y = std::max(max_y, static_cast<float>(cone[1]));
             }
             
             for (const auto& cone : yellow_cones) {
-                min_x = std::min(min_x, cone.first);
-                max_x = std::max(max_x, cone.first);
-                min_y = std::min(min_y, cone.second);
-                max_y = std::max(max_y, cone.second);
+                min_x = std::min(min_x, static_cast<float>(cone[0]));
+                max_x = std::max(max_x, static_cast<float>(cone[0]));
+                min_y = std::min(min_y, static_cast<float>(cone[1]));
+                max_y = std::max(max_y, static_cast<float>(cone[1]));
             }
             
             // Add some padding

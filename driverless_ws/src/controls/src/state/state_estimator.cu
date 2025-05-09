@@ -573,10 +573,11 @@ namespace controls {
                 p.z = 0.0;
                 yellow_points.push_back(p);
             }
-            process_ros_points(blue_points, yellow_points);
 
-            // Store the processed cones in the SLAM chunks map
-            m_slam_chunks[slam_msg.chunk_id.data] = {blue_points, yellow_points};
+            // Process the points and store in SLAM chunks
+            auto processed_blue = process_ros_points(blue_points);
+            auto processed_yellow = process_ros_points(yellow_points);
+            m_slam_chunks[slam_msg.chunk_id.data] = std::make_pair(processed_blue, processed_yellow);
         }
 
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
@@ -622,7 +623,7 @@ namespace controls {
 
             m_logger("syncing world state to device");
 
-            CUDA_CALL(cudaMemcpyToSymbolAsync(cudaH_globals::curr_state, state.data(), state_dims * sizeof(float)));
+            CUDA_CALL(cudaMemcpyToSymbolAsync(cuda_globals::curr_state, state.data(), state_dims * sizeof(float)));
 
             m_logger("syncing spline frame lookup texture info to device");
             sync_tex_info();
