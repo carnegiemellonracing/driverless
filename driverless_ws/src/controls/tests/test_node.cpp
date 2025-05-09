@@ -244,6 +244,13 @@ namespace controls {
               m_slam_chunks{0},
               m_first_lap_complete{false}
         {   
+            // Initialize m_visible_indices
+            m_visible_indices = {0, 0, 0, 0, 0, 0};
+            
+            // Initialize start and end lines
+            m_start_line = {glm::fvec2(0, 0), glm::fvec2(1, 0)};
+            m_end_line = {glm::fvec2(0, 0), glm::fvec2(1, 0)};
+            
             std::cout << m_lookahead << std::endl;
             std::cout << m_all_segments.size() << std::endl;
             

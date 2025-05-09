@@ -105,6 +105,8 @@ namespace controls {
             std::vector<glm::fvec2> m_all_left_cones;
             std::vector<glm::fvec2> m_all_right_cones;
             std::vector<glm::fvec2> m_all_spline;
+            std::vector<glm::fvec2> m_start_line;
+            std::vector<glm::fvec2> m_end_line;
 
             struct Visibility {
                 size_t left_start_idx;
@@ -134,8 +136,6 @@ namespace controls {
             std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
 
             /// For lap tracking
-            std::vector<glm::fvec2> m_start_line;
-            std::vector<glm::fvec2> m_end_line;
             std::vector<glm::fvec2> m_raceline_points;
             bool m_seen_start = false;
             bool m_is_loop = false;
