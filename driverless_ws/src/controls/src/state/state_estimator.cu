@@ -519,37 +519,33 @@ namespace controls {
             float svm_time = 0.0f;
 
             if constexpr (!ingest_midline) {
-            midline::Cones cones;
-            paranoid_assert(m_left_cone_points.size() > 0);
-            paranoid_assert(m_right_cone_points.size() > 0);
-            for(const auto& cone : m_left_cone_points) {
-                paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
-                cones.addBlueCone(cone.x, cone.y, 0);
-            }
-            for(const auto& cone : m_right_cone_points) {
-                paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
-                cones.addYellowCone(cone.x, cone.y, 0);
+                midline::Cones cones;
+                paranoid_assert(m_left_cone_points.size() > 0);
+                paranoid_assert(m_right_cone_points.size() > 0);
+                for(const auto& cone : m_left_cone_points) {
+                    paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
+                    cones.addBlueCone(cone.x, cone.y, 0);
+                }
+                for(const auto& cone : m_right_cone_points) {
+                    paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
+                    cones.addYellowCone(cone.x, cone.y, 0);
+                }
+
+                auto svm_start = std::chrono::high_resolution_clock::now();
+                auto spline_frames = midline::svm_slow::cones_to_midline(cones);
+                auto svm_end = std::chrono::high_resolution_clock::now();
+                svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
+                
+                m_spline_frames.clear();
+                for (const auto& frame : spline_frames) {
+                    paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
+                    m_spline_frames.emplace_back(frame.first, frame.second);
+                }
             }
 
-            auto svm_start = std::chrono::high_resolution_clock::now();
-            auto spline_frames = midline::svm_slow::cones_to_midline(cones);
-            auto svm_end = std::chrono::high_resolution_clock::now();
-            svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
-            
-            m_spline_frames.clear();
-            for (const auto& frame : spline_frames) {
-            paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
-            m_spline_frames.emplace_back(frame.first, frame.second);
             m_logger("finished state estimator SLAM pose processing");
             return svm_time;
         }
-
-            }
-
-            }
-
-     
-        
 
         void StateEstimator_Impl::on_slam(const SlamMsg& slam_msg, const rclcpp::Time& time) {
             std::lock_guard<std::mutex> guard {m_mutex};
