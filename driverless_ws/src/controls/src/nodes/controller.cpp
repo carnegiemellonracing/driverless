@@ -49,7 +49,9 @@ namespace controls {
               },
 
               m_data_trajectory_log {"mppi_inputs.txt", std::ios::out},
-              m_p_value {0.1}
+              m_p_value {0.1},
+              m_controller_handoff_mut{},
+              m_using_slam{false}
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
             rclcpp::CallbackGroup::SharedPtr state_estimation_callback_group{
@@ -115,11 +117,19 @@ namespace controls {
 #endif
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
+                std::lock_guard<std::mutex> handoff_guard(m_controller_handoff_mut);
+                
                 auto slam_chunks = m_state_estimator->get_slam_chunks();
                 if (!slam_chunks.empty()) {
                     RCLCPP_DEBUG(get_logger(), "Skipping cone_callback as slam_chunks is not empty");
                     return;
                 }
+                
+                if (m_using_slam) {
+                    RCLCPP_DEBUG(get_logger(), "Skipping cone_callback as controller is using SLAM");
+                    return;
+                }
+                
                 m_mppi_controller->set_follow_midline_only(follow_midline_only);
                 m_state_estimator->set_follow_midline_only(follow_midline_only);
 
@@ -295,6 +305,8 @@ namespace controls {
             }
 
             void ControllerNode::slam_pose_callback(const SlamPoseMsg& slam_pose_msg) {
+                std::lock_guard<std::mutex> handoff_guard(m_controller_handoff_mut);
+                
                 RCLCPP_DEBUG(get_logger(), "Received slam pose");
                 
                 // Only run controller if we have slam chunks
@@ -302,6 +314,11 @@ namespace controls {
                 if (slam_chunks.empty()) {
                     RCLCPP_DEBUG(get_logger(), "Skipping slam_pose_callback as slam_chunks is empty");
                     return;
+                }
+                
+                if (!m_using_slam) {
+                    RCLCPP_INFO(get_logger(), "Handing off control from cone to SLAM");
+                    m_using_slam = true;
                 }
                 
                 // Set controller parameters
