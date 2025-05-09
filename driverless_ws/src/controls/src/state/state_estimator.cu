@@ -557,37 +557,23 @@ namespace controls {
         }
 
         void StateEstimator_Impl::on_slam(const SlamMsg& slam_msg, const rclcpp::Time& time) {
-            std::lock_guard<std::mutex> guard {m_mutex};
+            // Process cones in global frame, just like on_cone
+            std::vector<glm::fvec2> blue_cones;
+            std::vector<glm::fvec2> yellow_cones;
 
-            m_logger("beginning state estimator SLAM processing");
-
-            // Populate the slam_chunks map with the incoming SLAM message
-            auto& chunk = m_slam_chunks[slam_msg.chunk_id.data];
-            chunk.first = process_ros_points(slam_msg.blue_cones);
-            chunk.second = process_ros_points(slam_msg.yellow_cones);
-
-#ifdef DISPLAY
-            // Clear and rebuild all cone points
-            m_all_left_cone_points.clear();
-            m_all_right_cone_points.clear();
-
-            // Get all chunk IDs and sort them to ensure consistent ordering
-            std::vector<int32_t> chunk_ids;
-            for (const auto& [chunk_id, _] : m_slam_chunks) {
-                chunk_ids.push_back(chunk_id);
+            // Convert SLAM cone points to glm::fvec2 format
+            for (const auto& point : slam_msg.blue_cones) {
+                blue_cones.emplace_back(point.x, point.y);
             }
-            std::sort(chunk_ids.begin(), chunk_ids.end());
-
-            // Process all chunks to populate all cone points
-            for (const auto& chunk_id : chunk_ids) {
-                const auto& chunk = m_slam_chunks[chunk_id];
-                // Use blue cones for left and yellow cones for right
-                m_all_left_cone_points.insert(m_all_left_cone_points.end(), chunk.first.begin(), chunk.first.end());
-                m_all_right_cone_points.insert(m_all_right_cone_points.end(), chunk.second.begin(), chunk.second.end());
+            for (const auto& point : slam_msg.yellow_cones) {
+                yellow_cones.emplace_back(point.x, point.y);
             }
-#endif
 
-            m_logger("finished state estimator SLAM processing");
+            // Process cones using the same method as on_cone
+            process_ros_points(blue_cones, yellow_cones);
+
+            // Store the processed cones in the SLAM chunks map
+            m_slam_chunks[slam_msg.chunk_id.data] = {blue_cones, yellow_cones};
         }
 
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
@@ -633,7 +619,7 @@ namespace controls {
 
             m_logger("syncing world state to device");
 
-            CUDA_CALL(cudaMemcpyToSymbolAsync(cuda_globals::curr_state, state.data(), state_dims * sizeof(float)));
+            CUDA_CALL(cudaMemcpyToSymbolAsync(cudaH_globals::curr_state, state.data(), state_dims * sizeof(float)));
 
             m_logger("syncing spline frame lookup texture info to device");
             sync_tex_info();

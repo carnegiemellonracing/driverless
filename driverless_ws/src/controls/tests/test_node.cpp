@@ -671,15 +671,12 @@ namespace controls {
 
             const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
             const float car_heading = m_world_state[2];
-            
 
-            // transformation from world to car frame
-            auto gen_point = [&car_pos, car_heading](const glm::fvec2& point) {
+            // Keep all coordinates in global frame
+            auto gen_point = [](const glm::fvec2& point) {
                 geometry_msgs::msg::Point p;
-                glm::fvec2 rel_point = point - car_pos;
-                glm::fvec2 rotated_point = rotate_point(rel_point, M_PI_2 - car_heading);
-                p.x = rotated_point.x;
-                p.y = rotated_point.y;
+                p.x = point.x;
+                p.y = point.y;
                 return p;
             };
 

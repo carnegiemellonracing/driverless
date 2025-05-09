@@ -386,8 +386,76 @@ namespace svm_slow {
             // Boundary detection and post-processing timing
             auto boundary_start = high_resolution_clock::now();
 
-            // boundary detection
-            conesList boundary_points = boundaryDetection(Z, xx, yy);
+            // Find boundary points using a more robust approach
+            std::vector<glm::fvec2> boundary_points;
+            
+            // Create a grid of points between the cones
+            float min_x = std::numeric_limits<float>::max();
+            float max_x = std::numeric_limits<float>::lowest();
+            float min_y = std::numeric_limits<float>::max();
+            float max_y = std::numeric_limits<float>::lowest();
+            
+            for (const auto& cone : blue_cones) {
+                min_x = std::min(min_x, cone.x);
+                max_x = std::max(max_x, cone.x);
+                min_y = std::min(min_y, cone.y);
+                max_y = std::max(max_y, cone.y);
+            }
+            
+            for (const auto& cone : yellow_cones) {
+                min_x = std::min(min_x, cone.x);
+                max_x = std::max(max_x, cone.x);
+                min_y = std::min(min_y, cone.y);
+                max_y = std::max(max_y, cone.y);
+            }
+            
+            // Add some padding
+            float padding = 5.0f;
+            min_x -= padding;
+            max_x += padding;
+            min_y -= padding;
+            max_y += padding;
+            
+            // Create a grid of points
+            int grid_size = 100;
+            float dx = (max_x - min_x) / grid_size;
+            float dy = (max_y - min_y) / grid_size;
+            
+            // Find points where the classification changes
+            for (int i = 0; i < grid_size; i++) {
+                for (int j = 0; j < grid_size; j++) {
+                    float x = min_x + i * dx;
+                    float y = min_y + j * dy;
+                    
+                    svm_node node[3];
+                    node[0].index = 1;
+                    node[0].value = x;
+                    node[1].index = 2;
+                    node[1].value = y;
+                    node[2].index = -1;
+                    
+                    double prediction = svm_predict(model, node);
+                    
+                    // Check neighboring points
+                    if (i > 0 && j > 0 && i < grid_size - 1 && j < grid_size - 1) {
+                        svm_node node_left[3] = {{1, x - dx}, {2, y}, {-1, 0}};
+                        svm_node node_right[3] = {{1, x + dx}, {2, y}, {-1, 0}};
+                        svm_node node_up[3] = {{1, x}, {2, y + dy}, {-1, 0}};
+                        svm_node node_down[3] = {{1, x}, {2, y - dy}, {-1, 0}};
+                        
+                        double pred_left = svm_predict(model, node_left);
+                        double pred_right = svm_predict(model, node_right);
+                        double pred_up = svm_predict(model, node_up);
+                        double pred_down = svm_predict(model, node_down);
+                        
+                        // If any neighbor has a different prediction, this is a boundary point
+                        if (prediction != pred_left || prediction != pred_right || 
+                            prediction != pred_up || prediction != pred_down) {
+                            boundary_points.emplace_back(x, y);
+                        }
+                    }
+                }
+            }
 
             // sort boundary points 
             if (boundary_points.empty()) {

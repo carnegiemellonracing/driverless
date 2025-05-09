@@ -196,17 +196,17 @@ namespace controls {
             std::vector<std::vector<double>> blue_cones = cones.blue_cones;
             std::vector<std::vector<double>> yellow_cones = cones.yellow_cones;
 
-            // assigns blue cones a label of 0
+            // assigns blue cones a label of 1 (was 0)
             for (std::vector<double>& cone : blue_cones) {
                 if (cone.size() > 2) {
-                    cone[2] = 0.0;
+                    cone[2] = 1.0;
                 }
             }
 
-            // assigns yellow cones a label of 1
+            // assigns yellow cones a label of 0 (was 1)
             for (std::vector<double>& cone : yellow_cones) {
                 if (cone.size() > 2) {
-                    cone[2] = 1.0; 
+                    cone[2] = 0.0; 
                 }
             }
 
