@@ -111,7 +111,7 @@ namespace controls {
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
             rclcpp::Subscription<ConeMsg>::SharedPtr m_cone_subscription;
             rclcpp::Subscription<PIDMsg>::SharedPtr m_pid_subscription;
-            rclcpp::Subscription<SlamMsg>::SharedPtr m_slam_subscription; ///< Subscribes to SLAM chunks
+            rclcpp::Subscription<SlamMsg>::SharedPtr m_slam_chunk_subscription; ///< Subscribes to SLAM chunks
             rclcpp::Subscription<SlamPoseMsg>::SharedPtr m_slam_pose_subscription; ///< Subscribes to SLAM pose
             // ConeArray = /lidar_node_cones
 
@@ -146,6 +146,12 @@ namespace controls {
             std::atomic<bool> m_keep_sending_aim_signal = true;
             std::thread launch_aim_communication();
             float m_p_value;
+
+            /** Mutex for controller handoff synchronization */
+            std::mutex m_controller_handoff_mut;
+
+            /** Flag indicating whether SLAM is being used */
+            bool m_using_slam;
         };
     }
 }

@@ -310,7 +310,7 @@ namespace controls {
         StateEstimator_Impl::StateEstimator_Impl(std::mutex& mutex, LoggerFunc logger)
             : m_mutex {mutex}, m_logger {logger}, m_logger_obj {rclcpp::get_logger("")} {
             std::lock_guard<std::mutex> guard {mutex};
-            extern std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
+            
             m_logger("initializing state estimator");
 #ifdef DISPLAY
             m_gl_window = utils::create_sdl2_gl_window(
@@ -435,7 +435,6 @@ namespace controls {
         float StateEstimator_Impl::on_cone(const ConeMsg& cone_msg) {
             std::lock_guard<std::mutex> guard {m_mutex};
 
-            assert(m_slam_chunks.empty() && "m_slam_chunks map is not empty");
             paranoid_assert(cone_msg.blue_cones.size() > 0);
             paranoid_assert(cone_msg.yellow_cones.size() > 0);
 
@@ -506,75 +505,79 @@ namespace controls {
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_state_projector.record_pose(
-                pose_msg.pose.x, pose_msg.pose.y, pose_msg.pose.z,
+                pose_msg.pose.position.x, pose_msg.pose.position.y, pose_msg.pose.position.z,
                 pose_msg.header.stamp);
         }
 
         float StateEstimator_Impl::on_slam_pose(const SlamPoseMsg& slam_msg) {
-            std::cout << "Type of pose: " << typeid(slam_msg.pose).name() << std::endl;
             std::lock_guard<std::mutex> guard {m_mutex};
 
             m_state_projector.record_pose(
-            slam_msg.pose.x, slam_msg.pose.y, slam_msg.pose.z,
-            slam_msg.header.stamp, slam_msg.current_chunk_id.data);
+                slam_msg.pose.x, slam_msg.pose.y, slam_msg.pose.z,
+                slam_msg.header.stamp, slam_msg.current_chunk_id.data);
 
             float svm_time = 0.0f;
 
             if constexpr (!ingest_midline) {
-            midline::Cones cones;
-            paranoid_assert(m_left_cone_points.size() > 0);
-            paranoid_assert(m_right_cone_points.size() > 0);
-            for(const auto& cone : m_left_cone_points) {
-                paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
-                cones.addBlueCone(cone.x, cone.y, 0);
-            }
-            for(const auto& cone : m_right_cone_points) {
-                paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
-                cones.addYellowCone(cone.x, cone.y, 0);
+                midline::Cones cones;
+                paranoid_assert(m_all_left_cone_points.size() > 0);
+                paranoid_assert(m_all_right_cone_points.size() > 0);
+
+                // Clear the current points
+                m_left_cone_points.clear();
+                m_right_cone_points.clear();
+
+                // Copy from all cone points to current points
+                m_left_cone_points = m_all_left_cone_points;
+                m_right_cone_points = m_all_right_cone_points;
+
+                for(const auto& cone : m_left_cone_points) {
+                    paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
+                    cones.addBlueCone(cone.x, cone.y, 0);
+                }
+                for(const auto& cone : m_right_cone_points) {
+                    paranoid_assert(!isnan(cone.x) && !isnan(cone.y));
+                    cones.addYellowCone(cone.x, cone.y, 0);
+                }
+
+                auto svm_start = std::chrono::high_resolution_clock::now();
+                auto spline_frames = midline::svm_slow::cones_to_midline(cones);
+                auto svm_end = std::chrono::high_resolution_clock::now();
+                svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
+                
+                m_spline_frames.clear();
+                for (const auto& frame : spline_frames) {
+                    paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
+                    m_spline_frames.emplace_back(frame.first, frame.second);
+                }
             }
 
-            auto svm_start = std::chrono::high_resolution_clock::now();
-            auto spline_frames = midline::svm_slow::cones_to_midline(cones);
-            auto svm_end = std::chrono::high_resolution_clock::now();
-            svm_time = std::chrono::duration_cast<std::chrono::milliseconds>(svm_end - svm_start).count();
-            
-            m_spline_frames.clear();
-            for (const auto& frame : spline_frames) {
-            paranoid_assert(!isnan(frame.first) && !isnan(frame.second));
-            m_spline_frames.emplace_back(frame.first, frame.second);
             m_logger("finished state estimator SLAM pose processing");
             return svm_time;
         }
 
-            }
-
-            }
-
-     
-        
-
         void StateEstimator_Impl::on_slam(const SlamMsg& slam_msg, const rclcpp::Time& time) {
-            std::lock_guard<std::mutex> guard {m_mutex};
-
-            m_logger("beginning state estimator SLAM processing");
-
-            // Populate the slam_chunks map with the incoming SLAM message
-            auto& chunk = m_slam_chunks[slam_msg.chunk_id.data];
-            chunk.first = process_ros_points(slam_msg.blue_cones);
-            chunk.second = process_ros_points(slam_msg.yellow_cones);
-
-            // Clear the current left and right cone points
-            m_left_cone_points.clear();
-            m_right_cone_points.clear();
-
-            // Iterate through the map and aggregate all cone points
-            for (const auto& [chunk_id, cones] : m_slam_chunks) {
-            m_left_cone_points.insert(m_left_cone_points.end(), cones.first.begin(), cones.first.end());
-            m_right_cone_points.insert(m_right_cone_points.end(), cones.second.begin(), cones.second.end());
+            // Process cones in global frame, just like on_cone
+            std::vector<geometry_msgs::msg::Point> blue_points, yellow_points;
+            for (const auto& point : slam_msg.blue_cones) {
+                geometry_msgs::msg::Point p;
+                p.x = point.x;
+                p.y = point.y;
+                p.z = 0.0;
+                blue_points.push_back(p);
+            }
+            for (const auto& point : slam_msg.yellow_cones) {
+                geometry_msgs::msg::Point p;
+                p.x = point.x;
+                p.y = point.y;
+                p.z = 0.0;
+                yellow_points.push_back(p);
             }
 
-
-            m_logger("finished state estimator SLAM processing");
+            // Process the points and store in SLAM chunks
+            auto processed_blue = process_ros_points(blue_points);
+            auto processed_yellow = process_ros_points(yellow_points);
+            m_slam_chunks[slam_msg.chunk_id.data] = std::make_pair(processed_blue, processed_yellow);
         }
 
         void StateEstimator_Impl::record_control_action(const Action& action, const rclcpp::Time& time) {
@@ -728,11 +731,12 @@ namespace controls {
 
             return m_right_cone_points;
         }
-        std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> get_slam_chunks(){
-            std::lock_guard<std::mutex> guard {m_mutex};
 
+        std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> StateEstimator_Impl::get_slam_chunks() {
+            std::lock_guard<std::mutex> guard {m_mutex};
             return m_slam_chunks;
         }
+
         // *****REVIEW: not be needed for display
         std::vector<glm::fvec2> StateEstimator_Impl::get_raceline_points(){
             std::lock_guard<std::mutex> guard {m_mutex};
@@ -1066,90 +1070,56 @@ namespace controls {
                 glm::fvec2 p1 = m_spline_frames[i];
                 glm::fvec2 p2 = m_spline_frames[i + 1];
 
-                glm::fvec2 unit_vec = glm::length(p2 - p1) != 0 ? glm::normalize(p2 - p1) : glm::fvec2(0, 0);
-                // This creates a longitudinal buffer at the start and the end of the spline for the fake track to be rendered
-                if (i == 0) {
-                    p1 = p1 - unit_vec * car_padding;
-                } else if (i == n - 2) {
-                    p2 = p2 + unit_vec * car_padding;
+                glm::fvec2 tangent = p2 - p1;
+                glm::fvec2 normal = glm::fvec2(-tangent.y, tangent.x);
+                normal = glm::normalize(normal);
+
+                float length = glm::length(tangent);
+                float segment_length = length / n;
+
+                for (size_t j = 0; j <= n; j++) {
+                    float t = static_cast<float>(j) / n;
+                    float x = p1.x + t * tangent.x;
+                    float y = p1.y + t * tangent.y;
+
+                    float progress = total_progress + t * segment_length;
+                    float offset = radius * normal.x;
+                    float heading = atan2(normal.y, normal.x);
+
+                    vertices.push_back({{x, y}, {progress, offset, heading}});
                 }
 
-                glm::fvec2 disp = p2 - p1;
-                float new_progress = glm::length(disp); // TODO: figure out a way to normalize without some arbitrary magic number
-                paranoid_assert(!isnan(new_progress));
-                // 1. go through the vector and divide based on total progress
-                // 2. set total progress to be a member variable, then use that as a uniform, thus passing it into the fragment shader
-                float segment_heading = std::atan2(disp.y, disp.x);
-
-
-                glm::fvec2 prev = i == 0 ? p1 : m_spline_frames[i - 1];
-                float secant_heading = std::atan2(p2.y - prev.y, p2.x - prev.x);
-
-                glm::fvec2 dir = glm::normalize(disp);
-                glm::fvec2 normal = glm::fvec2(-dir.y, dir.x);
-
-                glm::fvec2 low1 = p1 - normal * radius;
-                glm::fvec2 low2 = p2 - normal * radius;
-                glm::fvec2 high1 = p1 + normal * radius;
-                glm::fvec2 high2 = p2 + normal * radius;
-
-                if (i == 0)
-                {
-                    vertices.push_back({{p1.x, p1.y}, {total_progress, 0.0f, 0.0f}});
-                }
-                vertices.push_back({{p2.x, p2.y}, {total_progress + new_progress, 0.0f, 0.0f}});
-
-                // I set offset to be 1.0 to prevent plateauing
-                vertices.push_back({{low1.x, low1.y}, {total_progress, radius, 0.0f}});
-                vertices.push_back({{low2.x, low2.y}, {total_progress + new_progress, radius, 0.0f}});
-                vertices.push_back({{high1.x, high1.y}, {total_progress, radius, 1.0f}});
-                vertices.push_back({{high2.x, high2.y}, {total_progress + new_progress, radius, 1.0f}});
-
-                const GLuint p1i = i == 0 ? 0 : (i - 1) * 5 + 1;
-                const GLuint p2i = i * 5 + 1;
-                const GLuint l1i = i * 5 + 2;
-                const GLuint l2i = i * 5 + 3;
-                const GLuint h1i = i * 5 + 4;
-                const GLuint h2i = i * 5 + 5;
-
-                indices.push_back(p1i);
-                indices.push_back(p2i);
-                indices.push_back(h2i);
-
-                indices.push_back(h1i);
-                indices.push_back(p1i);
-                indices.push_back(h2i);
-
-                indices.push_back(l1i);
-                indices.push_back(l2i);
-                indices.push_back(p2i);
-
-                indices.push_back(p1i);
-                indices.push_back(l1i);
-                indices.push_back(p2i);
-
-                if (i > 0) {
-                    const GLuint lpi = (i - 1) * 5 + 3;
-                    const GLuint hpi = (i - 1) * 5 + 5;
-
-                    indices.push_back(hpi);
-                    indices.push_back(p1i);
-                    indices.push_back(h1i);
-
-                    indices.push_back(lpi);
-                    indices.push_back(l1i);
-                    indices.push_back(p1i);
-                }
-
-                total_progress += new_progress;
+                total_progress += segment_length;
             }
 
-            glBindBuffer(GL_ARRAY_BUFFER, m_fake_track_path.vbo);
+            m_num_triangles = n * 2;
+            for (size_t i = 0; i < n; i++) {
+                indices.push_back(i * 2);
+                indices.push_back((i + 1) * 2);
+            }
+
+            for (size_t i = 0; i < n; i++) {
+                indices.push_back(i * 2 + 1);
+                indices.push_back((i + 1) * 2 + 1);
+            }
+
+            std::stringstream ss;
+            ss << "Start of right at: " << n;
+            for(size_t i = 0; i < indices.size(); i++){
+                ss << "Index: " << i << " Point x: " << vertices.at(indices.at(i)).world.x << "Point y: "<< vertices.at(indices.at(i)).world.y << "\n";
+            }
+            // if(indices.size() > 2) {
+            //     for(size_t i = 0; i < indices.size()-2; i += 3){
+            //         ss << "Index: " << indices.at(i) << " 2: " << indices.at(i+1) << " 3: " << indices.at(i+2) <<"------";
+            //     }
+            // }
+    
+            RCLCPP_DEBUG(m_logger_obj, ss.str().c_str());
+            glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
             glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_fake_track_path.ebo);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
         }
     }
 }
-

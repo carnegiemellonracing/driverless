@@ -100,8 +100,6 @@ namespace controls {
             std::optional<Record> m_pose_record = std::nullopt;
             std::optional<Record> m_slam_pose_record = std::nullopt;
             
-            std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
-
             /// Helper binary operator for sorting records by time, needed for the multiset.
             struct CompareRecordTimes {
                 bool operator() (const Record& a, const Record& b) const {
@@ -156,7 +154,6 @@ namespace controls {
             std::vector<glm::fvec2> get_raceline_points();
             std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>> get_all_cone_points() override;
             std::vector<float> get_vertices() override;
-            // std::vector<glm::fvec2> get_normals() override;
             void get_offset_pixels(OffsetImage& offset_image) override;
 #endif
 
@@ -170,6 +167,9 @@ namespace controls {
             constexpr static GLint shader_scale_loc = 0;
             /// Index into where the uniform center is stored for vertex shader to reference.
             constexpr static GLint shader_center_loc = 1;
+
+            std::mutex& m_mutex;  // Reference to the mutex
+            std::unordered_map<int32_t, std::pair<std::vector<glm::fvec2>, std::vector<glm::fvec2>>> m_slam_chunks;
 
             /// Calculates scale and center transformation from world to lookup table, stores
             /// in m_curv_frame_lookup_tex_info.
@@ -294,7 +294,6 @@ namespace controls {
 
             LoggerFunc m_logger; ///< The logger function to be used.
             rclcpp::Logger m_logger_obj; ///< Logger object (belonging to the node)
-            std::mutex& m_mutex; ///< Mutex to prevent multiple method calls from happening simultaneously
         };
 
     }

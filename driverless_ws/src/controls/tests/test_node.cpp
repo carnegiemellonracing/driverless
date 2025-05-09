@@ -233,7 +233,7 @@ namespace controls {
               m_slam_publisher{create_publisher<SlamMsg>(slam_chunk_topic_name, slam_chunk_qos)},
 
               m_config_dict{config_dict},
-              m_all_segments{parse_segments_specification(getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
+              m_all_segments{parse_segments_specification(std::string(getenv("HOME")) + "/" + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
 
               m_lookahead{std::stof(m_config_dict["look_ahead"])},
               m_lookahead_squared{m_lookahead * m_lookahead},
@@ -241,25 +241,41 @@ namespace controls {
               m_log_file{getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_logs"], std::ios_base::trunc},
 
               m_is_loop{m_config_dict["is_loop"] == "true"},
-              m_slam_chunks{0}
+              m_slam_chunks{0},
+              m_first_lap_complete{false}
         {   
+            // Initialize m_visible_indices
+            m_visible_indices = {0, 0, 0, 0, 0, 0};
+            
+            // Initialize start and end lines
+            m_start_line = {glm::fvec2(0, 0), glm::fvec2(1, 0)};
+            m_end_line = {glm::fvec2(0, 0), glm::fvec2(1, 0)};
+            
             std::cout << m_lookahead << std::endl;
             std::cout << m_all_segments.size() << std::endl;
-            // m_all_segmentsd = parse_segments_specification(m_config_dict["root_dir"] + m_config_dict["track_specs"]);
-            // m_lookahead = std::stof(m_config_dict["look_ahead"]);
-            // m_lookahead_squared = m_lookahead * m_lookahead;
             
-            // glm::fvec2 curr_pos {0, 0}; // TODO: this is just to test what happens if the car starts OOB
             glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
             float curr_heading = m_world_state[2];
-            int chunk_id = 0;
+            std::cout << "Initial position: (" << m_world_state[0] << ", " << m_world_state[1] << "), heading: " << curr_heading << std::endl;
+            
+            // Initialize m_spline_end_pos with initial position
+            m_spline_end_pos = curr_pos;
+            
+            int segment_count = 0;
             for (const auto& seg : m_all_segments) {
-                SlamMsg chunk_info;
-                chunk_id = chunk_id++;
+                std::cout << "Processing segment " << segment_count << " of type " << (seg.type == SegmentType::ARC ? "ARC" : "STRAIGHT") << std::endl;
+                
                 if (seg.type == SegmentType::ARC) {
-                    
+                    std::cout << "  ARC segment - radius: " << seg.radius << ", heading_change: " << seg.heading_change << std::endl;
                     float next_heading = arc_rad_adjusted(curr_heading + seg.heading_change);
                     const auto& [spline, left, right] = arc_segment_with_cones(seg.radius, curr_pos, curr_heading, next_heading);
+                    
+                    if (spline.empty()) {
+                        std::cerr << "[WARNING] Empty spline generated for ARC segment: radius=" << seg.radius << ", heading_change=" << seg.heading_change << std::endl;
+                        continue;
+                    }
+                    
+                    std::cout << "  Generated " << spline.size() << " spline points, " << left.size() << " left cones, " << right.size() << " right cones" << std::endl;
                     
                     m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
                     m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
@@ -269,30 +285,19 @@ namespace controls {
                     
                     curr_pos = spline.back();
                     curr_heading = next_heading;
-
-                    chunk_info.chunk_id.data = chunk_id;
-                    for (const auto &point : left)
-                    {
-                        geometry_msgs::msg::Point p;
-                        p.x = point.x;
-                        p.y = point.y;
-                        p.z = 0.0; // Assuming 2D points
-                        chunk_info.blue_cones.push_back(p);
-                    }
-
-                    for (const auto &point : right)
-                    {
-                        geometry_msgs::msg::Point p;
-                        p.x = point.x;
-                        p.y = point.y;
-                        p.z = 0.0; // Assuming 2D points
-                        chunk_info.yellow_cones.push_back(p);
-                    }
-                    m_slam_publisher->publish(chunk_info);
-
-                    m_slam_chunks[chunk_id] = std::make_pair(left, right);
+                    std::cout << "  New position: (" << curr_pos.x << ", " << curr_pos.y << "), heading: " << curr_heading << std::endl;
+                    
                 } else if (seg.type == SegmentType::STRAIGHT) {
+                    std::cout << "  STRAIGHT segment - length: " << seg.length << std::endl;
                     const auto& [spline, left, right] = straight_segment_with_cones(curr_pos, seg.length, curr_heading);
+                    
+                    if (spline.empty()) {
+                        std::cerr << "[WARNING] Empty spline generated for STRAIGHT segment: length=" << seg.length << std::endl;
+                        continue;
+                    }
+                    
+                    std::cout << "  Generated " << spline.size() << " spline points, " << left.size() << " left cones, " << right.size() << " right cones" << std::endl;
+                    
                     m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
                     m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
                     m_all_spline.insert(m_all_spline.end(), spline.begin(), spline.end());
@@ -300,48 +305,16 @@ namespace controls {
                     g_cones.insert(g_cones.end(), right.begin(), right.end());
 
                     curr_pos = spline.back();
-
-                    chunk_info.chunk_id.data = chunk_id;
-                    for (const auto &point : left)
-                    {
-                        geometry_msgs::msg::Point p;
-                        p.x = point.x;
-                        p.y = point.y;
-                        p.z = 0.0; 
-                        chunk_info.blue_cones.push_back(p);
-                    }
-
-                    for (const auto &point : right)
-                    {
-                        geometry_msgs::msg::Point p;
-                        p.x = point.x;
-                        p.y = point.y;
-                        p.z = 0.0; 
-                        chunk_info.yellow_cones.push_back(p);
-                    }
-                    m_slam_publisher->publish(chunk_info);
-
-                    m_slam_chunks[chunk_id] = std::make_pair(left, right);
+                    std::cout << "  New position: (" << curr_pos.x << ", " << curr_pos.y << "), heading: " << curr_heading << std::endl;
                 }
+                segment_count++;
             }
-            m_finish_line = curr_pos;
-            // Update visible indexes
-            update_visible_indices();
-
-            m_time = get_clock()->now();
-
-            // populate left and right cones using hashmap of slam chunks
-            // for (const auto& chunk : m_slam_chunks) {
-            //     const auto& [left, right] = chunk.second;
-            //     m_all_left_cones.insert(m_all_left_cones.end(), left.begin(), left.end());
-            //     m_all_right_cones.insert(m_all_right_cones.end(), right.begin(), right.end());
-            // }
-            // timing track stuff
-            m_start_line.push_back(m_all_left_cones[0]);
-            m_start_line.push_back(m_all_right_cones[0]);
-            m_end_line.push_back(m_all_left_cones.back());
-            m_end_line.push_back(m_all_right_cones.back());
-            update_track_time();
+            
+            std::cout << "Finished processing all segments" << std::endl;
+            
+            m_finish_line = curr_pos;  // Store finish line position
+            update_visible_indices();   // Update visible indices for initial state
+            m_time = get_clock()->now(); // Initialize time
         }
         float distanceToLine(glm::fvec2 point, std::vector<glm::fvec2> line) {
             glm::fvec2 s_l = line[0];
@@ -618,6 +591,50 @@ namespace controls {
             glm::fvec2 world_state_vec {m_world_state[0], m_world_state[1]};
             
             g_car_poses.push_back(std::make_tuple(world_state_vec, m_world_state[2], m_time.seconds() - m_start_time.seconds()));
+
+            // Check if we've completed the first lap
+            if (!m_first_lap_complete && m_seen_start) {
+                const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
+                float dist_to_finish = glm::distance(car_pos, m_finish_line);
+                if (dist_to_finish < 1.0f) {  // Within 1 meter of finish line
+                    m_first_lap_complete = true;
+                    RCLCPP_INFO(get_logger(), "First lap complete, publishing SLAM chunks");
+                    
+                    // Get all chunk IDs and sort them to ensure consistent ordering
+                    std::vector<int32_t> chunk_ids;
+                    for (const auto& [chunk_id, _] : m_slam_chunks) {
+                        chunk_ids.push_back(chunk_id);
+                    }
+                    std::sort(chunk_ids.begin(), chunk_ids.end());
+                    
+                    // Publish all SLAM chunks in order
+                    for (const auto& chunk_id : chunk_ids) {
+                        const auto& cones = m_slam_chunks[chunk_id];
+                        SlamMsg chunk_info;
+                        chunk_info.chunk_id.data = chunk_id;
+                        
+                        // Process blue cones (left side)
+                        for (const auto& point : cones.first) {
+                            geometry_msgs::msg::Point p;
+                            p.x = point.x;
+                            p.y = point.y;
+                            p.z = 0.0;
+                            chunk_info.blue_cones.push_back(p);
+                        }
+                        
+                        // Process yellow cones (right side)
+                        for (const auto& point : cones.second) {
+                            geometry_msgs::msg::Point p;
+                            p.x = point.x;
+                            p.y = point.y;
+                            p.z = 0.0;
+                            chunk_info.yellow_cones.push_back(p);
+                        }
+                        
+                        m_slam_publisher->publish(chunk_info);
+                    }
+                }
+            }
         }
 
 
@@ -654,15 +671,12 @@ namespace controls {
 
             const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1]};
             const float car_heading = m_world_state[2];
-            
 
-            // transformation from world to car frame
-            auto gen_point = [&car_pos, car_heading](const glm::fvec2& point) {
+            // Keep all coordinates in global frame
+            auto gen_point = [](const glm::fvec2& point) {
                 geometry_msgs::msg::Point p;
-                glm::fvec2 rel_point = point - car_pos;
-                glm::fvec2 rotated_point = rotate_point(rel_point, M_PI_2 - car_heading);
-                p.x = rotated_point.x;
-                p.y = rotated_point.y;
+                p.x = point.x;
+                p.y = point.y;
                 return p;
             };
 

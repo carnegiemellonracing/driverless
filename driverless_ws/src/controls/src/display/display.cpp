@@ -309,13 +309,13 @@ namespace controls {
         {
             assert(m_left_cone_trajectory != nullptr);
             assert(m_right_cone_trajectory != nullptr);
-            const auto& left_cone_points = m_all_left_cone_points;
-            const auto& right_cone_points = m_all_right_cone_points;
+            const auto& left_cone_points = m_left_cone_points;
+            const auto& right_cone_points = m_right_cone_points;
             m_left_cone_trajectory->vertex_buf = std::vector<float>(left_cone_points.size() * 2);
             for (size_t i = 0; i < left_cone_points.size(); i++) {
                 //Draw trajectory line
-                m_left_cone_trajectory->vertex_buf[2 * i] = m_all_left_cone_points[i].x;
-                m_left_cone_trajectory->vertex_buf[2 * i + 1] = m_all_left_cone_points[i].y;
+                m_left_cone_trajectory->vertex_buf[2 * i] = m_left_cone_points[i].x;
+                m_left_cone_trajectory->vertex_buf[2 * i + 1] = m_left_cone_points[i].y;
             }
 
             m_right_cone_trajectory->vertex_buf = std::vector<float>(right_cone_points.size() * 2);
@@ -333,13 +333,13 @@ namespace controls {
         }
 
         void Display::draw_best_guess() {
-            const auto& frames = m_last_reduced_state_trajectory;
+            const auto& frames = m_last_state_trajectories;
 
             assert(m_best_guess != nullptr);
             m_best_guess->vertex_buf = std::vector<float>(frames.size() * 2);
             for (size_t i = 0; i < frames.size(); i++) {
-                m_best_guess->vertex_buf[2 * i] = frames[i].x;
-                m_best_guess->vertex_buf[2 * i + 1] = frames[i].y;
+                m_best_guess->vertex_buf[2 * i] = frames[i];  // x component
+                m_best_guess->vertex_buf[2 * i + 1] = frames[i + 1];  // y component
             }
 
             m_best_guess->draw();
@@ -482,19 +482,20 @@ namespace controls {
 
                 glClear(GL_COLOR_BUFFER_BIT);
 
-                m_spline_frames = m_state_estimator->get_spline_frames();
-                m_all_left_cone_points = m_state_estimator->get_all_left_cone_points();
-                m_all_right_cone_points = m_state_estimator->get_all_right_cone_points();
-
-                m_slam_chunks = m_state_estimator->get_slam_chunks();
-
                 m_left_cone_points = m_state_estimator->get_left_cone_points();
                 m_right_cone_points = m_state_estimator->get_right_cone_points();
+                m_spline_frames = m_state_estimator->get_spline_frames();
                 m_raceline_points = m_state_estimator->get_raceline_points();
+                auto slam_chunks = m_state_estimator->get_slam_chunks();
 
                 m_state_estimator->get_offset_pixels(m_offset_image);
-                m_last_reduced_state_trajectory = m_controller->last_reduced_state_trajectory();
-                m_last_state_trajectories = m_controller->last_state_trajectories(num_samples_to_draw);
+                auto trajectory = m_controller->last_reduced_state_trajectory();
+                m_last_state_trajectories.clear();
+                m_last_state_trajectories.reserve(trajectory.size() * 2);
+                for (const auto& point : trajectory) {
+                    m_last_state_trajectories.push_back(point.x);
+                    m_last_state_trajectories.push_back(point.y);
+                }
                 
                 m_left_cone_trajectory->vertex_buf = std::vector<float>(m_left_cone_points.size() * 2);
                 for (size_t i = 0; i < m_left_cone_points.size(); i++) {
