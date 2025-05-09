@@ -233,7 +233,7 @@ namespace controls {
               m_slam_publisher{create_publisher<SlamMsg>(slam_chunk_topic_name, slam_chunk_qos)},
 
               m_config_dict{config_dict},
-              m_all_segments{parse_segments_specification(getenv("HOME") + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
+              m_all_segments{parse_segments_specification(std::string(getenv("HOME")) + "/" + m_config_dict["root_dir"] + m_config_dict["track_specs"])},
 
               m_lookahead{std::stof(m_config_dict["look_ahead"])},
               m_lookahead_squared{m_lookahead * m_lookahead},
