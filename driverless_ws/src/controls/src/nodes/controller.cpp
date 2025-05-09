@@ -120,15 +120,15 @@ namespace controls {
                 std::lock_guard<std::mutex> handoff_guard(m_controller_handoff_mut);
                 
                 auto slam_chunks = m_state_estimator->get_slam_chunks();
-                if (!slam_chunks.empty()) {
-                    RCLCPP_DEBUG(get_logger(), "Skipping cone_callback as slam_chunks is not empty");
+                if (slam_chunks.empty() == m_using_slam) {
+                    RCLCPP_WARN(get_logger(), "Mismatch detected: slam_chunks.empty() is %d, m_using_slam is %d", slam_chunks.empty(), m_using_slam);
+                }
+                if (!slam_chunks.empty() && m_using_slam) {
+                    RCLCPP_DEBUG(get_logger(), "Skipping cone_callback as slam_chunks is not empty and controller is using SLAM");
                     return;
                 }
-                
-                if (m_using_slam) {
-                    RCLCPP_DEBUG(get_logger(), "Skipping cone_callback as controller is using SLAM");
-                    return;
-                }
+
+             
                 
                 m_mppi_controller->set_follow_midline_only(follow_midline_only);
                 m_state_estimator->set_follow_midline_only(follow_midline_only);
