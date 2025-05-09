@@ -146,6 +146,12 @@ namespace controls {
             std::atomic<bool> m_keep_sending_aim_signal = true;
             std::thread launch_aim_communication();
             float m_p_value;
+
+            /** Mutex for controller handoff synchronization */
+            std::mutex m_controller_handoff_mut;
+
+            /** Flag indicating whether SLAM is being used */
+            bool m_using_slam;
         };
     }
 }

@@ -1079,3 +1079,57 @@ namespace controls {
             for (size_t i = 0; i < n - 1; i++) {
                 glm::fvec2 p1 = m_spline_frames[i];
                 glm::fvec2 p2 = m_spline_frames[i + 1];
+
+                glm::fvec2 tangent = p2 - p1;
+                glm::fvec2 normal = glm::fvec2(-tangent.y, tangent.x);
+                normal = glm::normalize(normal);
+
+                float length = glm::length(tangent);
+                float segment_length = length / n;
+
+                for (size_t j = 0; j <= n; j++) {
+                    float t = static_cast<float>(j) / n;
+                    float x = p1.x + t * tangent.x;
+                    float y = p1.y + t * tangent.y;
+
+                    float progress = total_progress + t * segment_length;
+                    float offset = radius * normal.x;
+                    float heading = atan2(normal.y, normal.x);
+
+                    vertices.push_back({{x, y}, {progress, offset, heading}});
+                }
+
+                total_progress += segment_length;
+            }
+
+            m_num_triangles = n * 2;
+            for (size_t i = 0; i < n; i++) {
+                indices.push_back(i * 2);
+                indices.push_back((i + 1) * 2);
+            }
+
+            for (size_t i = 0; i < n; i++) {
+                indices.push_back(i * 2 + 1);
+                indices.push_back((i + 1) * 2 + 1);
+            }
+
+            std::stringstream ss;
+            ss << "Start of right at: " << n;
+            for(size_t i = 0; i < indices.size(); i++){
+                ss << "Index: " << i << " Point x: " << vertices.at(indices.at(i)).world.x << "Point y: "<< vertices.at(indices.at(i)).world.y << "\n";
+            }
+            // if(indices.size() > 2) {
+            //     for(size_t i = 0; i < indices.size()-2; i += 3){
+            //         ss << "Index: " << indices.at(i) << " 2: " << indices.at(i+1) << " 3: " << indices.at(i+2) <<"------";
+            //     }
+            // }
+    
+            RCLCPP_DEBUG(m_logger_obj, ss.str().c_str());
+            glBindBuffer(GL_ARRAY_BUFFER, m_gl_path.vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_gl_path.ebo);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
+        }
+    }
+}

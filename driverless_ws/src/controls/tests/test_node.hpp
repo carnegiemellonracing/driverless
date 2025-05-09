@@ -143,6 +143,7 @@ namespace controls {
             rclcpp::Time m_end_time;
             size_t m_lap_count = 1;
             std::ofstream m_log_file;
+            bool m_first_lap_complete = false;
 
             /// For cone jittering
             std::normal_distribution<float> m_straight_jitter_gen {0, 0.25f};
