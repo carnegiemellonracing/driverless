@@ -1,270 +1,44 @@
---- stderr: controls
-In file included from [01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:30[m[K:
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.hpp:97:13:[m[K [01;31m[Kerror: [m[K‘[01m[Krcpcpp[m[K’ does not name a type
-   97 |             [01;31m[Krcpcpp[m[K::Publisher<SlamMsg>::SharedPtr m_slam_publisher;
-      |             [01;31m[K^~~~~~[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:[m[K In constructor ‘[01m[Kcontrols::tests::TestNode::TestNode(std::map<std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >)[m[K’:
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:231:15:[m[K [01;31m[Kerror: [m[Kclass ‘[01m[Kcontrols::tests::TestNode[m[K’ does not have any field named ‘[01m[Km_globalPose_publisher[m[K’
-  231 |               [01;31m[Km_globalPose_publisher[m[K{create_publisher<PoseMsg>(state_topic_name, state_qos)},
-      |               [01;31m[K^~~~~~~~~~~~~~~~~~~~~~[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:233:15:[m[K [01;31m[Kerror: [m[Kclass ‘[01m[Kcontrols::tests::TestNode[m[K’ does not have any field named ‘[01m[Km_slam_publisher[m[K’
-  233 |               [01;31m[Km_slam_publisher[m[K{create_publisher<SlamMsg>(slam_chunk_topic_name, slam_chunk_qos)},
-      |               [01;31m[K^~~~~~~~~~~~~~~~[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:244:15:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K{[m[K’ before ‘[01m[Km_slam_chunks[m[K’
-  244 |               [01;31m[Km_slam_chunks[m[K{0},
-      |               [01;31m[K^~~~~~~~~~~~~[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:[m[K At global scope:
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:244:15:[m[K [01;31m[Kerror: [m[K‘[01m[Km_slam_chunks[m[K’ does not name a type
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:244:31:[m[K [01;31m[Kerror: [m[Kexpected unqualified-id before ‘[01m[K,[m[K’ token
-  244 |               m_slam_chunks{0}[01;31m[K,[m[K
-      |                               [01;31m[K^[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:245:9:[m[K [01;31m[Kerror: [m[Kexpected unqualified-id before ‘[01m[K{[m[K’ token
-  245 |         [01;31m[K{[m[K
-      |         [01;31m[K^[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:[m[K In member function ‘[01m[Kvoid controls::tests::TestNode::update_visible_indices()[m[K’:
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:372:34:[m[K [01;31m[Kerror: [m[K‘[01m[Km_world_state[m[K’ was not declared in this scope
-  372 |             glm::fvec2 curr_pos {[01;31m[Km_world_state[m[K[0], m_world_state[1]};
-      |                                  [01;31m[K^~~~~~~~~~~~~[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:372:68:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kglm::vec<2, float, glm::packed_highp>::vec(<brace-enclosed initializer list>)[m[K’
-  372 |             glm::fvec2 curr_pos {m_world_state[0], m_world_state[1][01;31m[K}[m[K;
-      |                                                                    [01;31m[K^[m[K
-In file included from [01m[K/usr/include/glm/ext/vector_bool2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/vec2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/glm.hpp:116[m[K,
-                 from [01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:22[m[K:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:130:58:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<2, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  130 |                 GLM_FUNC_DECL GLM_CONSTEXPR GLM_EXPLICIT [01;36m[Kvec[m[K(vec<2, U, P> const& v);
-      |                                                          [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:130:58:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:126:58:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<4, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  126 |                 GLM_FUNC_DECL GLM_CONSTEXPR GLM_EXPLICIT [01;36m[Kvec[m[K(vec<4, U, P> const& v);
-      |                                                          [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:126:58:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:123:58:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<3, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  123 |                 GLM_FUNC_DECL GLM_CONSTEXPR GLM_EXPLICIT [01;36m[Kvec[m[K(vec<3, U, P> const& v);
-      |                                                          [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:123:58:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:117:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(const glm::vec<1, A, Q>&, const glm::vec<1, B, Q>&) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  117 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec<1, A, Q> const& x, vec<1, B, Q> const& y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:117:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:115:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(A, const glm::vec<1, B, Q>&) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  115 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(A x, vec<1, B, Q> const& y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:115:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:113:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(const glm::vec<1, A, Q>&, B) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  113 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec<1, A, Q> const& x, B y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:113:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:111:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(A, B) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  111 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(A x, B y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:111:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:107:54:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<1, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  107 |                 GLM_FUNC_DECL GLM_CONSTEXPR explicit [01;36m[Kvec[m[K(vec<1, U, P> const& v);
-      |                                                      [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:107:54:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:97:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<2, T, P>&) [with glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   97 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec<2, T, P> const& v);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:97:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-In file included from [01m[K/usr/include/glm/detail/type_vec2.hpp:398[m[K,
-                 from [01m[K/usr/include/glm/ext/vector_bool2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/vec2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/glm.hpp:116[m[K,
-                 from [01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:22[m[K:
-[01m[K/usr/include/glm/detail/type_vec2.inl:37:42:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr glm::vec<2, T, Q>::vec(T, T) [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   37 |         GLM_FUNC_QUALIFIER GLM_CONSTEXPR [01;36m[Kvec<2, T, Q>[m[K::vec(T _x, T _y)
-      |                                          [01;36m[K^~~~~~~~~~~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.inl:37:42:[m[K [01;36m[Knote: [m[K  conversion of argument 1 would be ill-formed:
-[01m[K/usr/include/glm/detail/type_vec2.inl:32:42:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr glm::vec<2, T, Q>::vec(T) [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   32 |         GLM_FUNC_QUALIFIER GLM_CONSTEXPR [01;36m[Kvec<2, T, Q>[m[K::vec(T scalar)
-      |                                          [01;36m[K^~~~~~~~~~~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.inl:32:42:[m[K [01;36m[Knote: [m[K  candidate expects 1 argument, 2 provided
-In file included from [01m[K/usr/include/glm/ext/vector_bool2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/vec2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/glm.hpp:116[m[K,
-                 from [01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:22[m[K:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:95:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr glm::vec<2, T, Q>::vec(const glm::vec<2, T, Q>&) [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   95 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec const& v) GLM_DEFAULT;
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:95:45:[m[K [01;36m[Knote: [m[K  candidate expects 1 argument, 2 provided
-[01m[K/usr/include/glm/detail/type_vec2.hpp:94:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kglm::vec<2, T, Q>::vec() [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   94 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K() GLM_DEFAULT;
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:94:45:[m[K [01;36m[Knote: [m[K  candidate expects 0 arguments, 2 provided
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:[m[K In member function ‘[01m[Kvoid controls::tests::TestNode::update_track_time()[m[K’:
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:386:34:[m[K [01;31m[Kerror: [m[K‘[01m[Km_world_state[m[K’ was not declared in this scope
-  386 |             glm::fvec2 curr_pos {[01;31m[Km_world_state[m[K[0], m_world_state[1]};
-      |                                  [01;31m[K^~~~~~~~~~~~~[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:386:68:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kglm::vec<2, float, glm::packed_highp>::vec(<brace-enclosed initializer list>)[m[K’
-  386 |             glm::fvec2 curr_pos {m_world_state[0], m_world_state[1][01;31m[K}[m[K;
-      |                                                                    [01;31m[K^[m[K
-In file included from [01m[K/usr/include/glm/ext/vector_bool2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/vec2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/glm.hpp:116[m[K,
-                 from [01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:22[m[K:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:130:58:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<2, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  130 |                 GLM_FUNC_DECL GLM_CONSTEXPR GLM_EXPLICIT [01;36m[Kvec[m[K(vec<2, U, P> const& v);
-      |                                                          [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:130:58:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:126:58:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<4, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  126 |                 GLM_FUNC_DECL GLM_CONSTEXPR GLM_EXPLICIT [01;36m[Kvec[m[K(vec<4, U, P> const& v);
-      |                                                          [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:126:58:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:123:58:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<3, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  123 |                 GLM_FUNC_DECL GLM_CONSTEXPR GLM_EXPLICIT [01;36m[Kvec[m[K(vec<3, U, P> const& v);
-      |                                                          [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:123:58:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:117:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(const glm::vec<1, A, Q>&, const glm::vec<1, B, Q>&) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  117 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec<1, A, Q> const& x, vec<1, B, Q> const& y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:117:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:115:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(A, const glm::vec<1, B, Q>&) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  115 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(A x, vec<1, B, Q> const& y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:115:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:113:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(const glm::vec<1, A, Q>&, B) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  113 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec<1, A, Q> const& x, B y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:113:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:111:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(A, B) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  111 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(A x, B y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:111:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:107:54:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<1, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  107 |                 GLM_FUNC_DECL GLM_CONSTEXPR explicit [01;36m[Kvec[m[K(vec<1, U, P> const& v);
-      |                                                      [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:107:54:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:97:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<2, T, P>&) [with glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   97 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec<2, T, P> const& v);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:97:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-In file included from [01m[K/usr/include/glm/detail/type_vec2.hpp:398[m[K,
-                 from [01m[K/usr/include/glm/ext/vector_bool2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/vec2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/glm.hpp:116[m[K,
-                 from [01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:22[m[K:
-[01m[K/usr/include/glm/detail/type_vec2.inl:37:42:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr glm::vec<2, T, Q>::vec(T, T) [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   37 |         GLM_FUNC_QUALIFIER GLM_CONSTEXPR [01;36m[Kvec<2, T, Q>[m[K::vec(T _x, T _y)
-      |                                          [01;36m[K^~~~~~~~~~~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.inl:37:42:[m[K [01;36m[Knote: [m[K  conversion of argument 1 would be ill-formed:
-[01m[K/usr/include/glm/detail/type_vec2.inl:32:42:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr glm::vec<2, T, Q>::vec(T) [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   32 |         GLM_FUNC_QUALIFIER GLM_CONSTEXPR [01;36m[Kvec<2, T, Q>[m[K::vec(T scalar)
-      |                                          [01;36m[K^~~~~~~~~~~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.inl:32:42:[m[K [01;36m[Knote: [m[K  candidate expects 1 argument, 2 provided
-In file included from [01m[K/usr/include/glm/ext/vector_bool2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/vec2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/glm.hpp:116[m[K,
-                 from [01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:22[m[K:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:95:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr glm::vec<2, T, Q>::vec(const glm::vec<2, T, Q>&) [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   95 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec const& v) GLM_DEFAULT;
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:95:45:[m[K [01;36m[Knote: [m[K  candidate expects 1 argument, 2 provided
-[01m[K/usr/include/glm/detail/type_vec2.hpp:94:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kglm::vec<2, T, Q>::vec() [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   94 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K() GLM_DEFAULT;
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:94:45:[m[K [01;36m[Knote: [m[K  candidate expects 0 arguments, 2 provided
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:[m[K In member function ‘[01m[Kvoid controls::tests::TestNode::on_sim()[m[K’:
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:580:53:[m[K [01;31m[Kerror: [m[K‘[01m[Km_world_state[m[K’ was not declared in this scope; did you mean ‘[01m[Korig_world_state[m[K’?
-  580 |             std::array<float, 4> orig_world_state = [01;31m[Km_world_state[m[K;
-      |                                                     [01;31m[K^~~~~~~~~~~~~[m[K
-      |                                                     [32m[Korig_world_state[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:588:75:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kglm::vec<2, float, glm::packed_highp>::vec(<brace-enclosed initializer list>)[m[K’
-  588 |             glm::fvec2 world_state_vec {m_world_state[0], m_world_state[1][01;31m[K}[m[K;
-      |                                                                           [01;31m[K^[m[K
-In file included from [01m[K/usr/include/glm/ext/vector_bool2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/vec2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/glm.hpp:116[m[K,
-                 from [01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:22[m[K:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:130:58:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<2, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  130 |                 GLM_FUNC_DECL GLM_CONSTEXPR GLM_EXPLICIT [01;36m[Kvec[m[K(vec<2, U, P> const& v);
-      |                                                          [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:130:58:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:126:58:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<4, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  126 |                 GLM_FUNC_DECL GLM_CONSTEXPR GLM_EXPLICIT [01;36m[Kvec[m[K(vec<4, U, P> const& v);
-      |                                                          [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:126:58:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:123:58:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<3, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  123 |                 GLM_FUNC_DECL GLM_CONSTEXPR GLM_EXPLICIT [01;36m[Kvec[m[K(vec<3, U, P> const& v);
-      |                                                          [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:123:58:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:117:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(const glm::vec<1, A, Q>&, const glm::vec<1, B, Q>&) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  117 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec<1, A, Q> const& x, vec<1, B, Q> const& y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:117:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:115:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(A, const glm::vec<1, B, Q>&) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  115 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(A x, vec<1, B, Q> const& y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:115:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:113:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(const glm::vec<1, A, Q>&, B) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  113 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec<1, A, Q> const& x, B y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:113:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:111:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class A, class B> constexpr glm::vec<2, T, Q>::vec(A, B) [with A = A; B = B; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  111 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(A x, B y);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:111:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:107:54:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class U, glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<1, U, P>&) [with U = U; glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-  107 |                 GLM_FUNC_DECL GLM_CONSTEXPR explicit [01;36m[Kvec[m[K(vec<1, U, P> const& v);
-      |                                                      [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:107:54:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:97:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<glm::qualifier P> constexpr glm::vec<2, T, Q>::vec(const glm::vec<2, T, P>&) [with glm::qualifier P = P; T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   97 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec<2, T, P> const& v);
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:97:45:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
-In file included from [01m[K/usr/include/glm/detail/type_vec2.hpp:398[m[K,
-                 from [01m[K/usr/include/glm/ext/vector_bool2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/vec2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/glm.hpp:116[m[K,
-                 from [01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:22[m[K:
-[01m[K/usr/include/glm/detail/type_vec2.inl:37:42:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr glm::vec<2, T, Q>::vec(T, T) [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   37 |         GLM_FUNC_QUALIFIER GLM_CONSTEXPR [01;36m[Kvec<2, T, Q>[m[K::vec(T _x, T _y)
-      |                                          [01;36m[K^~~~~~~~~~~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.inl:37:42:[m[K [01;36m[Knote: [m[K  conversion of argument 1 would be ill-formed:
-[01m[K/usr/include/glm/detail/type_vec2.inl:32:42:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr glm::vec<2, T, Q>::vec(T) [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   32 |         GLM_FUNC_QUALIFIER GLM_CONSTEXPR [01;36m[Kvec<2, T, Q>[m[K::vec(T scalar)
-      |                                          [01;36m[K^~~~~~~~~~~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.inl:32:42:[m[K [01;36m[Knote: [m[K  candidate expects 1 argument, 2 provided
-In file included from [01m[K/usr/include/glm/ext/vector_bool2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/vec2.hpp:5[m[K,
-                 from [01m[K/usr/include/glm/glm.hpp:116[m[K,
-                 from [01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:22[m[K:
-[01m[K/usr/include/glm/detail/type_vec2.hpp:95:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr glm::vec<2, T, Q>::vec(const glm::vec<2, T, Q>&) [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   95 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K(vec const& v) GLM_DEFAULT;
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:95:45:[m[K [01;36m[Knote: [m[K  candidate expects 1 argument, 2 provided
-[01m[K/usr/include/glm/detail/type_vec2.hpp:94:45:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kglm::vec<2, T, Q>::vec() [with T = float; glm::qualifier Q = glm::packed_highp][m[K’
-   94 |                 GLM_FUNC_DECL GLM_CONSTEXPR [01;36m[Kvec[m[K() GLM_DEFAULT;
-      |                                             [01;36m[K^~~[m[K
-[01m[K/usr/include/glm/detail/type_vec2.hpp:94:45:[m[K [01;36m[Knote: [m[K  candidate expects 0 arguments, 2 provided
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:[m[K In member function ‘[01m[Kvoid controls::tests::TestNode::publish_track()[m[K’:
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:625:41:[m[K [01;31m[Kerror: [m[K‘[01m[Km_world_state[m[K’ was not declared in this scope
-  625 |             const glm::fvec2 car_pos = {[01;31m[Km_world_state[m[K[0], m_world_state[1]};
-      |                                         [01;31m[K^~~~~~~~~~~~~[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:625:75:[m[K [01;31m[Kerror: [m[Kcould not convert ‘[01m[K{<expression error>, <expression error>}[m[K’ from ‘[01m[K<brace-enclosed initializer list>[m[K’ to ‘[01m[Kconst fvec2[m[K’ {aka ‘[01m[Kconst glm::vec<2, float, glm::packed_highp>[m[K’}
-  625 |             const glm::fvec2 car_pos = {m_world_state[0], m_world_state[1][01;31m[K}[m[K;
-      |                                                                           [01;31m[K^[m[K
-      |                                                                           [01;31m[K|[m[K
-      |                                                                           [01;31m[K<brace-enclosed initializer list>[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:677:13:[m[K [01;31m[Kerror: [m[K‘[01m[Km_globalPose_publisher[m[K’ was not declared in this scope; did you mean ‘[01m[Km_slam_pose_publisher[m[K’?
-  677 |             [01;31m[Km_globalPose_publisher[m[K->publish(global_pose);
-      |             [01;31m[K^~~~~~~~~~~~~~~~~~~~~~[m[K
-      |             [32m[Km_slam_pose_publisher[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:[m[K In member function ‘[01m[Kvoid controls::tests::TestNode::publish_twist()[m[K’:
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/tests/test_node.cpp:684:34:[m[K [01;31m[Kerror: [m[K‘[01m[Km_world_state[m[K’ was not declared in this scope
-  684 |             msg.twist.linear.x = [01;31m[Km_world_state[m[K[3];
-      |                                  [01;31m[K^~~~~~~~~~~~~[m[K
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/src/nodes/controller.cpp:[m[K In lambda function:
-[01m[K/home/controls_copy/driverless/driverless_ws/src/controls/src/nodes/controller.cpp:91:23:[m[K [01;31m[Kerror: [m[K‘[01m[Kslam_callback[m[K’ was not declared in this scope; did you mean ‘[01m[Kspline_callback[m[K’?
-   91 |                     { [01;31m[Kslam_callback[m[K(*msg); },
-      |                       [01;31m[K^~~~~~~~~~~~~[m[K
-      |                       [32m[Kspline_callback[m[K
-gmake[2]: *** [CMakeFiles/controls_test_node.dir/build.make:76: CMakeFiles/controls_test_node.dir/tests/test_node.cpp.o] Error 1
-gmake[1]: *** [CMakeFiles/Makefile2:227: CMakeFiles/controls_test_node.dir/all] Error 2
-gmake[1]: *** Waiting for unfinished jobs....
-gmake[2]: *** [CMakeFiles/controller.dir/build.make:76: CMakeFiles/controller.dir/src/nodes/controller.cpp.o] Error 1
-gmake[1]: *** [CMakeFiles/Makefile2:175: CMakeFiles/controller.dir/all] Error 2
-gmake: *** [Makefile:146: all] Error 2
----
-Failed   <<< controls [4.38s, exited with code 2]
+Perhaps you didn't pass in the simulation config file name, using default
+Looking for /home/controls/driverless/driverless_ws/src/controls/tests/sim_configs/sim1.conf
+Simulation config file found.
+#==================================
+#Simulation Config File Description
+#==================================
+name: Simulation Config File <Main>
+date: Nov 22, 2024
+by: Controls Sim Team
+
+#==========
+#File Paths
+#==========
+root_dir: /driverless/driverless_ws/src/controls/
+track_specs: tests/tracks/hybrid
+is_loop: true
+track_logs: log/test_node/output
+do_collision_detection: false
+collision_logs: log/test_node/collision_output
+
+#==================
+#Simulation Configs
+#==================
+
+#---Noise---
+straight_segment_mean: 0
+straight_segment_variance: 0.25
+straight_segment_noise_clip: 0.2
+arc_segment_mean: 0
+arc_segment_variance: 0.25
+arc_segment_noise_clip: 0.2
+
+#---Controller Stuff---
+look_ahead: 25
+
+#---Collision Detection---
+collision_threshold: 0.5
+car_width: 1.55
+car_length: 2.025
+remove_duplicates: true
+Track spec file exists.
+25
+20
+[ros2run]: Segmentation fault
