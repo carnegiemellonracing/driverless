@@ -4,6 +4,7 @@
 #include <types.hpp>
 #include <utils/general_utils.hpp>
 #include <cmath>
+#include <queue>
 namespace controls {
 
     inline float twist_msg_to_speed(const TwistMsg& twist_msg) {
@@ -44,4 +45,31 @@ namespace controls {
 
         return {LON_DEG_TO_METERS * longitude, LAT_DEG_TO_METERS * latitude};
     }
+
+
+    template <typename T> // ConeMsg, float (swangle), etc.
+    class PropagationSimulator {
+        public:
+            PropagationSimulator(float delay_ms) : m_delay_ms{delay_ms} {}
+            void push(T element, rclcpp::Time time) {
+                m_queue.emplace(element, time);
+            }
+
+            std::optional<T> maybe_pop(rclcpp::Time current_time) {
+                if (m_queue.size() > 0) {
+                    if (current_time.nanoseconds() - m_queue.front().second.nanoseconds() > m_delay_ms * 1e6) {
+                        auto ret = m_queue.front();
+                        m_queue.pop();
+                        return ret.first;
+                    }
+                }
+                return std::nullopt;
+            }
+
+        private:
+            float m_delay_ms;
+            using QueueElement = std::pair<T, rclcpp::Time>;
+            std::queue<QueueElement> m_queue;
+    };
+
 }
