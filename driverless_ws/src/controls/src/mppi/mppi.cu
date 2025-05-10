@@ -234,7 +234,7 @@ namespace controls {
             // make the normals brownian
             thrust::counting_iterator<size_t> indices {0};
             thrust::for_each(indices, indices + num_action_trajectories, TransformStdNormal {m_action_trajectories.data()});
-            /// TODO: why the prefix scan at the end?
+            /// TODO: why the prefix scan at the end? Probably to make it brownian
             prefix_scan(m_action_trajectories.data());
         }
 
@@ -264,7 +264,8 @@ namespace controls {
                 m_log_prob_densities.data(), 
                 m_last_action_trajectory.data(),
                 m_last_action,
-                m_follow_midline_only
+                m_follow_midline_only,
+                m_rng
             };
             // populates cost for each sample trajectory
             thrust::for_each(indices, indices + num_samples, populate_cost);
