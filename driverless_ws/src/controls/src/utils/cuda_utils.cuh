@@ -5,6 +5,7 @@
 #include <sstream>
 #include "general_utils.hpp"
 #include "constants.hpp"
+#include <curand_kernel.h>
 
 
 /** @brief indexes into a 3-dimensional tensor that is represented in memory as a single nested array.
@@ -157,6 +158,14 @@ namespace controls {
     template<typename T>
     __host__ __device__ static T clamp(T n, T low, T high) {
         return n > high ? high : n < low ? low : n;
+    }
+
+    __device__ static float clamp_uniform(float n, float low, float high, curandState* state) {
+        if (n < low || n > high) {
+            return curand_uniform(state) * (high - low) + low;
+        } else {
+            return n;
+        }
     }
 
     /// Converts degrees to radians

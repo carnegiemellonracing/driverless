@@ -21,6 +21,7 @@
 
 #include "types.cuh"
 #include <utils/general_utils.hpp>
+#include <curand_kernel.h>
 
 
 namespace controls {
@@ -270,6 +271,9 @@ namespace controls {
                 // Note that it is perfectly possible for initial position to be out_of_bounds (though undesirable)
                 // Since out_of_bounds_cost is not infinite, we still prioritize heading back into the bounds
 
+                curandState curand_state;
+                curand_init(i, 0, 0, &curand_state);
+
 
                 // for each timestep, calculate cost and add to get cost to go
                 // iterate through time because state depends on previous state (can't parallelize)
@@ -287,10 +291,11 @@ namespace controls {
                     for (uint32_t k = 0; k < action_dims; k++) {
                         const float recentered_brownian = action_trajectory_base[idx].data[k]
                                   + *IDX_3D(brownians, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, k));
-                        const float clamped_brownian = clamp(
+                        const float clamped_brownian = clamp_uniform(
                             recentered_brownian,
                             cuda_globals::action_min[k],
-                            cuda_globals::action_max[k]
+                            cuda_globals::action_max[k],
+                            &curand_state
                         );
                         // TODO: document what deadzoned means
                         const float deadzoned = k == action_torque_idx && x_curr[state_speed_idx] < brake_enable_speed ?
