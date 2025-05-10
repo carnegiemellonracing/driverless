@@ -182,7 +182,6 @@ namespace controls {
                     : perturbation {perturbation},
                       log_probability_densities {log_probability_densities} { }
 
-            // TODO: figure out what happened to magic_constant (ugly thing with square roots and determinant of covariance)
             __device__ void operator() (size_t idx) const {
                 float perturb[action_dims];
                 memcpy(&perturb, &perturbation.get()[idx * action_dims], sizeof(float) * action_dims);
@@ -203,6 +202,21 @@ namespace controls {
             }
 
         };
+
+        // Computes the operation v^TSv where S is perturbs_incr_var_inv
+        static __device__ float dot_with_action_matrix(const float* perturb) {
+            float res = 0;
+            for(uint8_t i= 0; i < action_dims; i++){
+
+                //Dot product of pertubations and ith column
+                const float intermediate =
+                    dot<float>(perturb, &cuda_globals::perturbs_incr_var_inv[i*action_dims], action_dims);
+
+                //part i of dot product of final dot product
+                res += intermediate * perturb[i];
+            }
+            return res;
+        }
 
         // Functors for cost calculation
 
@@ -310,7 +324,17 @@ namespace controls {
                         u_ij[k] = deadzoned;
                     }
 
-                    //TODO: you could also implement importance sampling here to take into account: 1. both clamping, 2. the brownian-ness
+                    // Importance sampling fix start (Comment this block out to restore it back to original behavior)
+                    float difference_from_mean[action_dims];
+                    for (uint32_t k = 0; k < action_dims; k++) {
+                        difference_from_mean[k] = u_ij[k] - action_trajectory_base[idx].data[k];
+                    }
+                    float dot_result = dot_with_action_matrix(difference_from_mean);
+                    dot_result = dot_result / (-2.f * j * controller_period);
+                    log_prob_densities[i * num_timesteps + j] = dot_result;
+                    // Importance sampling fix end
+
+
 
                     paranoid_assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
                     model(x_curr, u_ij, x_curr, controller_period);
