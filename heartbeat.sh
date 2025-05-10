@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd ~/Documents/driverless/driverless_ws
+source install/setup.bash && source /opt/ros/foxy/setup.bash
+
+while true; do
+sleep 5
+python3 /home/chip/Documents/driverless/pulse.py
+done
