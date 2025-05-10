@@ -229,7 +229,6 @@ namespace controls {
             bool follow_midline_only;
 
             const DeviceAction* action_trajectory_base;
-            const curandGenerator_t rng;
 
             PopulateCost(thrust::device_ptr<float> brownians,
                          thrust::device_ptr<float> sampled_action_trajectories,
@@ -240,9 +239,7 @@ namespace controls {
                          thrust::device_ptr<float> log_prob_densities,
                          const thrust::device_ptr<DeviceAction>& action_trajectory_base,
                          DeviceAction last_taken_action,
-                         bool follow_midline_only,
-                         curandGenerator_t rng
-                        )
+                         bool follow_midline_only)
                     : brownians {brownians.get()},
                       sampled_action_trajectories {sampled_action_trajectories.get()},
 #ifdef DISPLAY
@@ -252,8 +249,7 @@ namespace controls {
                       log_prob_densities {log_prob_densities.get()},
                       action_trajectory_base {action_trajectory_base.get()},
                       last_taken_action {last_taken_action},
-                      follow_midline_only {follow_midline_only},
-                      rng {rng}
+                      follow_midline_only {follow_midline_only}
                       {}
 
                       // i iterates over num_samples
