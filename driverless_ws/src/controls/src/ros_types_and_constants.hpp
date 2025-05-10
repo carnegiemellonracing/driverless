@@ -44,6 +44,7 @@ namespace controls {
     // for breezeway testing
     constexpr const char *imu_accel_topic_name = "imu/acceleration";
     constexpr const char *republished_perc_cones_topic_name = "perc_cones_republished";
+    constexpr const char *republished_control_action_topic_name = "control_action_republished";
 
     /// Profile for best effort communication
     static const rmw_qos_profile_t best_effort_profile = {

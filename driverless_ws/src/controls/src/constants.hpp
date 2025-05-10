@@ -99,7 +99,7 @@ constexpr bool print_svm_timing = false;
     constexpr float lookahead_behind_squared = 25.0f;
 
     // AIM communication stuff
-    constexpr int aim_signal_period_ms = 98;
+    constexpr int aim_signal_period_ms = 20;
     constexpr float default_p = 2.5f;
     constexpr float default_feedforward = 0.0f;
 
