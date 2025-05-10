@@ -8,6 +8,17 @@
 #include <utils/general_utils.hpp>
 //TODO: these should all be inline constexpr (not currently broken because not ODR-used)
 
+/*
+Things different:
+- whl_radius
+- gear_ratio
+- cg_to_nose
+- no whl_base
+- car_mass
+
+*/
+
+
 namespace controls {
     enum class StateProjectionMode {
         MODEL_MULTISET,
@@ -38,7 +49,7 @@ namespace controls {
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
 
-    constexpr float maximum_speed_ms = 7.0f;
+    constexpr float maximum_speed_ms = 10.0f;
     constexpr float whl_radius = 0.215f;
     constexpr float gear_ratio = 14.0f;
 
@@ -47,7 +58,7 @@ namespace controls {
     
     
     // Printing flags
-    constexpr bool print_svm_timing = false;
+constexpr bool print_svm_timing = false;
 
     // MPPI stuff
 
@@ -62,15 +73,15 @@ namespace controls {
     constexpr unsigned long long seed = 0; ///< For brownian pseudo-RNG.
     /// Number of elements in the tensor containing all the sampled action trajectories.
     constexpr uint32_t num_action_trajectories = action_dims * num_timesteps * num_samples;
-    /// Best guess of action trajectory when controller first starts.
+    /// Best guess of action tr ajectory when controller first starts.
     constexpr float init_action_trajectory[num_timesteps * action_dims] = {};
     constexpr float action_momentum = 0.0f; ///< How much of last action taken to retain in calculation of next action.
     constexpr float above_speed_threshold_cost = 1000.0f;
 
     constexpr float torque_1Nps_cost = 0.0f;
     constexpr float swangle_1radps_cost = 0.0f;
-        // DEPRECATED
-        constexpr float offset_1m_cost = 10.0f; ///< Cost for being 1m away from midline DEPRECATED
+        
+    constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline DEPRECATED
     constexpr float target_speed = 5.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
 
@@ -143,10 +154,10 @@ namespace controls {
     constexpr float understeer_slope = 0.0f; ///< How much car understeers as speed increases. See @rst :doc:`/source/explainers/slipless_model` @endrst.
 
     /// Maximum forward acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
-    constexpr float long_tractive_capability = 5.0f;
+constexpr float long_tractive_capability = 3.0f;
     /// Maximum centripetal acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
     /// Usually slightly more than @c long_tractive_capability
-    constexpr float lat_tractive_capability = 7.0f;
+    constexpr float lat_tractive_capability = 5.0f;
     constexpr float brake_enable_speed = 1.0f;
     /// Maximum torque request (N m)
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;

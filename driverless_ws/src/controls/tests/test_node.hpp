@@ -11,6 +11,7 @@
 #include <glm/common.hpp>
 #include <glm/common.hpp>
 #include <map>
+#include <queue>
 
 namespace controls {
     namespace tests {
@@ -38,7 +39,6 @@ namespace controls {
                 };
             };
         };
-
 
         class TestNode : public rclcpp::Node {
         public:
@@ -118,7 +118,7 @@ namespace controls {
 
             /// Stores the current state of the car (in Thomas model coordinates)
             // std::array<double, 13> m_world_state {0, 0, 0, 0, 0, 0, 0, 0, -3.0411, 0, 0, 0, 0};
-            std::array<float, 4> m_world_state {0, 0, M_PI_2, 0};
+            std::array<float, 4> m_world_state;
 
             rclcpp::Time m_time;
             std::mt19937 m_rng;
@@ -130,6 +130,12 @@ namespace controls {
             Visibility m_initial_visible_indices;
             float m_spline_end_heading = 0;
             ActionMsg m_last_action_msg;
+            std::queue<ActionMsg> m_action_queue;
+            std::queue<ConeMsg> m_cone_queue;
+            std::queue<SplineMsg> m_spline_queue;
+            int steering_prop_delay_ms = 000; 
+            //int torque_delay = 100;
+
 
             /// For lap tracking
             std::vector<glm::fvec2> m_start_line;

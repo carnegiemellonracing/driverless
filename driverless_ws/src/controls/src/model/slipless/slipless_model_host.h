@@ -7,6 +7,7 @@
 
 #pragma once
 #include <constants.hpp>
+#include <cassert>
 
 namespace controls {
     namespace model_host {
@@ -92,6 +93,8 @@ namespace controls {
              * @param[in] timestep Model time step in seconds.
              */
             static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
+                
+                assert(false);
                 const float x = state[state_x_idx];
                 const float y = state[state_y_idx];
                 const float yaw = state[state_yaw_idx];
