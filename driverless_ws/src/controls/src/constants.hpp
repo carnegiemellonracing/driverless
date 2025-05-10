@@ -165,6 +165,8 @@ constexpr float long_tractive_capability = 3.0f;
     constexpr float max_torque = saturating_motor_torque;
     constexpr float min_swangle_rad = degrees_to_radians(-20.0f); 
     constexpr float max_swangle_rad = degrees_to_radians(20.0f);
+    constexpr float max_swangle_rate = degrees_to_radians(50.0f);
+    constexpr float max_torque_rate = std::numeric_limits<float>::max();
     /// Time from MPPI control action request to physical change, in sec
     // TODO: Re-estimate since Falcon (steering motor) replacement
     constexpr float approx_mppi_time = 0.020f; ///< Time from MPPI launch to control action calculation, in sec
