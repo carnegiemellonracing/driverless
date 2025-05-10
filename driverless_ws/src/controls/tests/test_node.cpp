@@ -239,7 +239,8 @@ namespace controls {
 
               m_is_loop{m_config_dict["is_loop"] == "true"},
               m_cone_prop_sim {std::stof(m_config_dict["approx_perceptions_delay_ms"])},
-              m_spline_prop_sim {std::stof(m_config_dict["approx_perceptions_delay_ms"])}
+              m_spline_prop_sim {std::stof(m_config_dict["approx_perceptions_delay_ms"])},
+              m_swangle_prop_sim {std::stof(m_config_dict["approx_swangle_delay_ms"])}
         {
             std::cout << m_lookahead << std::endl;
             std::cout << m_all_segments.size() << std::endl;
@@ -555,6 +556,10 @@ namespace controls {
 
 
         void TestNode::on_sim() {
+            auto swangle_opt = m_swangle_prop_sim.maybe_pop(m_time);
+            if (swangle_opt.has_value()) {
+                m_last_action_msg.swangle = swangle_opt.value();
+            }
             ActionMsg adj_msg = m_last_action_msg;
 
             float action[2] = {
@@ -588,19 +593,9 @@ namespace controls {
             RCLCPP_INFO(get_logger(), "-----------Action Received-----------");
             RCLCPP_INFO_STREAM(get_logger(), "X: " << m_world_state[0] << " Y: " << m_world_state[1] << " Yaw: " << m_world_state[2] << " Speed: " << m_world_state[3]);
             RCLCPP_INFO_STREAM(get_logger(), "Swangle: " << msg.swangle * (180 / M_PI) << "deg Torque f: " << msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr);
-             RCLCPP_INFO_STREAM(get_logger(), "Action_Queue Length: " << m_action_queue.size());
-            m_action_queue.push(msg);
-            if (m_action_queue.size() > int(steering_prop_delay_ms / (controller_period * 1000)))
-            { // prop_delay is in ms / 100ms  ~ 5 time steps
-                m_last_action_msg = msg;
-                m_last_action_msg.swangle = m_action_queue.front().swangle;
-                m_action_queue.pop();
-            }
-            else{
-                m_last_action_msg = msg;
-                m_last_action_msg.swangle = 0;
-            }
 
+            m_swangle_prop_sim.push(msg.swangle, get_clock()->now());
+            m_last_action_msg = msg;
         }
         /**
          * Fills output vector (some field of a ROS message) with the points in input vector starting at start and ending at end

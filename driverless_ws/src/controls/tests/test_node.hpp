@@ -131,13 +131,11 @@ namespace controls {
             Visibility m_initial_visible_indices;
             float m_spline_end_heading = 0;
             ActionMsg m_last_action_msg;
-            std::queue<ActionMsg> m_action_queue;
+            
+            PropagationSimulator<float> m_swangle_prop_sim;
             PropagationSimulator<ConeMsg> m_cone_prop_sim;
             PropagationSimulator<SplineMsg> m_spline_prop_sim;
             
-            int steering_prop_delay_ms = 000; 
-            //int torque_delay = 100;
-
 
             /// For lap tracking
             std::vector<glm::fvec2> m_start_line;

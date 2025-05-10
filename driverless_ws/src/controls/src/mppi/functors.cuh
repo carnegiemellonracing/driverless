@@ -310,6 +310,8 @@ namespace controls {
                         u_ij[k] = deadzoned;
                     }
 
+                    //TODO: you could also implement importance sampling here to take into account: 1. both clamping, 2. the brownian-ness
+
                     paranoid_assert(!any_nan(u_ij, action_dims) && "Control was nan before model step");
                     model(x_curr, u_ij, x_curr, controller_period);
                     // printf("j: %i, x: %f, y: %f, yaw: %f, speed: %f\n", j, x_curr[state_x_idx], x_curr[state_yaw_idx], x_curr[state_yaw_idx], x_curr[state_speed_idx]);
