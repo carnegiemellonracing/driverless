@@ -297,9 +297,15 @@ namespace controls {
                             cuda_globals::action_max[k],
                             &curand_state
                         );
+                        const float clamped_brownian_again = clamp_uniform(
+                            clamped_brownian,
+                            last_taken_action.data[k] - cuda_globals::action_deriv_min[k] * controller_period * j,
+                            last_taken_action.data[k] + cuda_globals::action_deriv_max[k] * controller_period * j,
+                            &curand_state
+                        );
                         // TODO: document what deadzoned means
                         const float deadzoned = k == action_torque_idx && x_curr[state_speed_idx] < brake_enable_speed ?
-                            max(clamped_brownian, 0.0f) : clamped_brownian;
+                            max(clamped_brownian_again, 0.0f) : clamped_brownian_again;
 
                         u_ij[k] = deadzoned;
                     }
