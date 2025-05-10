@@ -156,11 +156,7 @@ namespace controls {
                     &std_normals.get()[action_idx],
                     action_dims);
 
-                std_normals.get()[idx] = clamp(
-                    res * m_sqrt_timestep,
-                    cuda_globals::action_deriv_min[action_dim] * controller_period, //TODO: clarify why it should depend on controller period
-                    // current theory is that with higher controller period, each action must be more drastic to achieve the same effect
-                    cuda_globals::action_deriv_max[action_dim] * controller_period);
+                std_normals.get()[idx] = res * m_sqrt_timestep;
             }
 
             private:
