@@ -12,6 +12,7 @@
 #include <glm/common.hpp>
 #include <map>
 #include <queue>
+#include <utils/ros_utils.hpp>
 
 namespace controls {
     namespace tests {
@@ -131,8 +132,9 @@ namespace controls {
             float m_spline_end_heading = 0;
             ActionMsg m_last_action_msg;
             std::queue<ActionMsg> m_action_queue;
-            std::queue<ConeMsg> m_cone_queue;
-            std::queue<SplineMsg> m_spline_queue;
+            PropagationSimulator<ConeMsg> m_cone_prop_sim;
+            PropagationSimulator<SplineMsg> m_spline_prop_sim;
+            
             int steering_prop_delay_ms = 000; 
             //int torque_delay = 100;
 
