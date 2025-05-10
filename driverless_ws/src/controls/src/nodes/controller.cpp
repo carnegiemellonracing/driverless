@@ -281,6 +281,7 @@ namespace controls {
 
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
+                m_start_actuating = true;
 
                 m_mppi_controller->set_follow_midline_only(follow_midline_only);
                 m_state_estimator->set_follow_midline_only(follow_midline_only);
@@ -698,7 +699,7 @@ namespace controls {
                             // if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
                                 auto start = std::chrono::steady_clock::now();
                                 ActionSignal last_action_signal = m_last_action_signal;
-                                if (send_to_can) {
+                                if (send_to_can && m_start_actuating) {
                                       sendPIDConstants(default_p, default_feedforward);
 
                                     // FYI, velocity_rpm is determined from the speed threshold

@@ -160,6 +160,7 @@ namespace controls {
             rclcpp::Time m_last_imu_acceleration_time;
             State get_state_under_strategy(rclcpp::Time current_time);
             state::NaiveStateTracker m_naive_state_tracker;
+            bool m_start_actuating = false; // don't start actuating until we get a valid cone callback
 
             // Stuff for the naive state estimator
             
