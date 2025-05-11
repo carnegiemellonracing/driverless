@@ -423,7 +423,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
 
         switch (cone_class) {
             case 0:
-                message.yellow_cones.push_back(point_msg);
+                message.orange_cones.push_back(point_msg);
 
                 #if save_frames
                     orange_transformed_pixels.emplace_back(
