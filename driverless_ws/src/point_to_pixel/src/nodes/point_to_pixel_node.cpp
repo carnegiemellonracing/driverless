@@ -106,6 +106,10 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
         return;
     }
     #endif
+
+    // Lap Counter Code -->
+    lap_counter = cones::LapCounter();
+    // <-- End of Lap Counter Code
     
     // ---------------------------------------------------------------------------
     //                              ROS2 OBJECTS
@@ -308,7 +312,7 @@ int PointToPixelNode::get_cone_class(
 
 // Topic callback definition
 void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
-{
+
     // Logging Actions
     #if timing
     auto start_time = high_resolution_clock::now();
@@ -472,6 +476,25 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     auto transform_coloring_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_transform_coloring_time - yolo_r_end_time).count();
     #endif
 
+    // Lap Counter Code -->
+    // check if any orange cones are within the orange_cone_lookahead
+    bool orange_detected = false;
+    if (!msg.orange_cones.empty()) {
+        for (const auto& point : msg.orange_cones) {
+            if (std::sqrt(point.x * point.x + point.y * point.y) < orange_cone_lookahead) {
+                orange_detected = true;
+                break;
+            }
+        }
+    }
+
+    bool lap_detected = lap_counter.update(orange_detected);
+
+    if (lap_detected) {
+        RCLCPP_INFO(get_logger(), "LAP DETECTED!");
+    }
+    // <-- End of Lap Counter Code
+
     // Recolouring
     unordered = cones::recolouring::recolour_cones(unordered, svm_C);
 
@@ -585,7 +608,7 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     RCLCPP_INFO(get_logger(), "==============END=OF=CALLBACK==============");
     
     cone_pub_->publish(message);
-}
+
 
 // Launches camera thread
 std::thread PointToPixelNode::launch_camera_communication() {

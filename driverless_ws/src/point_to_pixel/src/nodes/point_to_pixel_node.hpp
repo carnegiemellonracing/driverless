@@ -40,6 +40,9 @@ public:
     static constexpr int max_deque_size = 100;
     static constexpr double svm_C = 5.0;
 
+    // Lap Counter Params
+    static constexpr double orange_cone_lookahead = 3.; // detects orange cone if within 3 meters
+
     // YOLO constants
     #if use_yolo
     static constexpr char yolo_model_path[] = "src/point_to_pixel/config/yolov5_model_params.onnx";
@@ -89,6 +92,10 @@ private:
     cv::Scalar blue_filter_low;
     cv::Scalar orange_filter_high;
     cv::Scalar orange_filter_low;
+
+    // Lap Counter Object
+    cones::LapCounter lap_counter;
+
 
     // Camera params
     sl_oc::video::VideoParams params;

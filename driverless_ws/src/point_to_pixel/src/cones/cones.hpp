@@ -8,7 +8,58 @@
 
 // Forward declarations
 namespace cones
-{
+
+    /**
+     * @brief LapCounter class uses a binary random variable with bayesian
+     * update logic to detect then number of laps. It requires detection 
+     * updates at each step and several input probabilities for updating.
+     * 
+     * @param init_prob sets the initial state of the random variable.
+     * @param true_pos_rate is the rate of true positives of the sensors + 
+     * algorithm that are detecting orange cones.
+     * @param true_neg_rate is the rate of true negatives of the sensors +
+     * algorithm that are detective orange cones.
+     * @param decision_threshold is the cutoff for whether a cone is detected or not.
+     */
+    class LapCounter
+    {
+        private: 
+            double cone_prob;
+            bool cone_detected;
+            double tp_rate;
+            double tn_rate;
+            double decision_thresh;
+        
+        public:
+            int num_laps;
+
+            // Update binary bayesian variable
+            /**
+             * @brief Bayesian update state for LapCounter random variable
+             * 
+             * @param detected is true if we have at least one orange cone 
+             * within a certain (tunable) distance of the car\
+             * @return boolean that is true if a new lap has been counted
+             */
+            bool update(bool detected);
+
+            LapCounter(
+                double init_prob = .1, 
+                double true_pos_rate = .9, 
+                double true_neg_rate = .9,
+                double decision_threshold = .5
+            )
+            {
+                num_laps = 0;
+                cone_detected = false;
+                cone_prob = init_prob;
+                tp_rate = true_pos_rate;
+                tn_rate = true_neg_rate;
+                decision_thresh = decision_threshold;
+            }
+    
+    };
+
     struct Cone
     {
         geometry_msgs::msg::Point point;
@@ -76,4 +127,3 @@ namespace cones
      * @param radius Radius of the circle
      */
     void augment_cones_circle(TrackBounds &track_bounds, int degrees, double radius);
-}

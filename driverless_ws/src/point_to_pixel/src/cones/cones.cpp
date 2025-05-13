@@ -1,6 +1,32 @@
 #include "cones.hpp"
 
 namespace cones {
+
+    void LapCounter::update(bool detected) {
+
+        // Update Step
+        if (detected) {
+            cone_prob = (cone_prob * tp_rate) / (cone_prob * tp_rate + (1-cone_prob)*(1-tn_rate));
+        } else { // sensor detects no orange cone
+            cone_prob = (cone_prob * (1-tp_rate)) / (cone_prob * (1-tp_rate) + (1-cone_prob)*tn_rate);
+        }
+        
+        // Save previous detection decision for later comparision
+        bool prev_detected = cone_detected;
+
+        // Decision step
+        cone_detected = cone_prob > decision_thresh;
+
+        // Lap Counter Logic
+
+        // if we have seen an orange cone in previous step and currently don't see one...
+        if (prev_detected && !cone_detected) {
+            num_laps++;
+            return true;
+        }
+        return false;
+    }
+
     Cone find_closest_cone(const Cones& cones) {
         if (cones.empty()) {
             throw std::runtime_error("Empty cone list");
