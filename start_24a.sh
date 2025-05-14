@@ -8,6 +8,30 @@ tmux split-window -v -t pipeline:0.0 # Split the left pane (pane 0) vertically
 tmux split-window -v -t pipeline:0.2 # Split the right pane (pane 2) vertically
 tmux split-window -h -t pipeline:0.2 # Split the top right pane (pane 2) horizontally
 
+# CONTROLLER
+tmux send-keys -t pipeline:0.4 "nvidia-cuda-mps-control -d"  C-m
+sleep 1
+tmux send-keys -t pipeline:0.4 "$cd"  C-m
+tmux send-keys -t pipeline:0.4 "$source"  C-m
+tmux send-keys -t pipeline:0.4 '. ~/.bashrc'  C-m
+tmux send-keys -t pipeline:0.4 'ros2 run controls controller'  C-m
+
+# CONE HISTORY
+tmux send-keys -t pipeline:0.3 "$cd"  C-m
+tmux send-keys -t pipeline:0.3 "$source"  C-m
+tmux send-keys -t pipeline:0.3 'ros2 run point_to_pixel cone_history_test_node'  C-m
+
+# POINT TO PIXEL
+tmux send-keys -t pipeline:0.2 "$cd"  C-m
+tmux send-keys -t pipeline:0.2 "$source"  C-m
+tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
+tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
+tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
+tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
+tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
+tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
+# in case cameras are buggy
+
 # IMU
 tmux send-keys -t pipeline:0.0 "$cd"  C-m
 tmux send-keys -t pipeline:0.0 "$source"  C-m
@@ -25,31 +49,8 @@ tmux send-keys -t pipeline:0.1 "$cd"  C-m
 tmux send-keys -t pipeline:0.1 "$source"  C-m
 tmux send-keys -t pipeline:0.1 'sudo ptpd -m -i eno1'  C-m
 tmux send-keys -t pipeline:0.1 'chip22a'  C-m
+sleep 1
 tmux send-keys -t pipeline:0.1 'ros2 run hesai_ros_driver hesai_ros_driver_node'  C-m
-
-# POINT TO PIXEL
-tmux send-keys -t pipeline:0.2 "$cd"  C-m
-tmux send-keys -t pipeline:0.2 "$source"  C-m
-tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
-tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
-tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
-tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
-tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
-tmux send-keys -t pipeline:0.2 'ros2 run point_to_pixel p2p.sh'  C-m
-# in case cameras are buggy
-
-# CONE HISTORY
-tmux send-keys -t pipeline:0.3 "$cd"  C-m
-tmux send-keys -t pipeline:0.3 "$source"  C-m
-tmux send-keys -t pipeline:0.3 'ros2 run point_to_pixel cone_history_test_node'  C-m
-
-# CONTROLLER
-# Start mps daemon, idk what the command is rn
-tmux send-keys -t pipeline:0.4 "$cd"  C-m
-tmux send-keys -t pipeline:0.4 "$source"  C-m
-tmux send-keys -t pipeline:0.4 '. ~/.bashrc'  C-m
-tmux send-keys -t pipeline:0.4 'ros2 run controls controller'  C-m
-
 
 # ---------------IMU--------------------------PERCEPTIONS-----------
 # |                            0.0 |           0.2 |           0.3 |
