@@ -18,6 +18,10 @@ log.log
 **/*.npy
 **/*.png
 
+
+canUsbKvaserTesting/**
+
+
 **/__pycache__/
 driverless_ws/src/Model/output
 driverless_ws/src/Model/model.dSYM/Contents/Resources/Relocations/x86_64/model.yml

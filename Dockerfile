@@ -10,15 +10,16 @@ RUN apt update && apt install -y \
     git \
     wget \
     python3-pip \
-    libgl1-mesa-glx \
-    libgl1-mesa-dev \
     libxext6 \
     libxrender1 \
     libsm6 \
     locales \
     vim \
     tmux \
+    gdb \
     && locale-gen en_US.UTF-8
+
+  
 
 # ==== INSTALL ROS HUMBLE ====
 RUN apt -y install software-properties-common && add-apt-repository universe
@@ -41,6 +42,18 @@ RUN apt update && apt install -y \
 
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc
 
+# ==== NVIDIA OpenGL / GLVND ====
+
+RUN apt update && apt install -y \
+    libgl1-mesa-glx \
+    libglvnd0 \
+    libglx0 \
+    libegl1 \
+    libgles2 \
+    libgl1 \
+    mesa-utils \
+    && rm -rf /var/lib/apt/lists/*
+
 # ==== SET UP WORKING DIRECTORY ====
 WORKDIR /root/driverless/
 COPY ./driverless_ws/ /root/driverless/driverless_ws/
@@ -58,15 +71,16 @@ COPY ./canUsbKvaserTesting/linuxcan/ /root/canUsbKvaserTesting/linuxcan/
 
 # ==== SET UP ENV VARIABLES ====
 
-ENV CMAKE_PREFIX_PATH=/root/driverless/driverless_ws/install/controls:/root/driverless/driverless_ws/install/interfaces
-ENV AMENT_PREFIX_PATH=/root/driverless/driverless_ws/install/controls:/root/driverless/driverless_ws/install/interfaces:/opt/ros/humble
-ENV LINUXCAN_PATH=/root/canUsbKvaserTesting/linuxcan/
-ENV DRIVERLESS=/root/driverless/
+ENV CMAKE_PREFIX_PATH="/root/driverless/driverless_ws/install/controls:/root/driverless/driverless_ws/install/interfaces"
+ENV AMENT_PREFIX_PATH="/root/driverless/driverless_ws/install/controls:/root/driverless/driverless_ws/install/interfaces:/opt/ros/humble"
+
+ENV LINUXCAN_PATH="/root/canUsbKvaserTesting/linuxcan/"
+ENV DRIVERLESS="/root/driverless/"
+RUN echo "export LD_LIBRARY_PATH=$LINUXCAN_PATH/canlib:$LD_LIBRARY_PATH" >> /root/.bashrc
+ENV ROS_LOG_DIR=/root/driverless/logs/
 
 # ==== USEFUL ALIASES ====
 
-RUN echo "alias dv_src=\"source /root/driverless/driverless_ws/install/setup.bash\""
+RUN echo "alias dv_src=\"source /root/driverless/driverless_ws/install/setup.bash\"" >> /root/.bashrc
 
-# ==== SOURCE BASHRC ====
 
-RUN source /root/.bashrc
