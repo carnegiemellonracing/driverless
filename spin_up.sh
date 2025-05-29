@@ -13,6 +13,8 @@ xhost +local:root
 # The -e flag is used to set environment variables in the container.
 # The --rm flag is used to remove the container after it exits. (I.e., dooes not persist after exit)
 # The -it flag is used to run the container in interactive mode with a pseudo-TTY.
+
+# REQUIRES: canUsbKvaserTesting can be found in the home directory of the host machine.
 docker run --rm -it \
   --gpus all \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
