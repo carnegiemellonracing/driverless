@@ -1,7 +1,0 @@
-[INFO] [1738121517.627713271] [point_to_pixel]: Connected to ZED camera. /dev/video2
-[INFO] [1738121517.659987747] [point_to_pixel]: Connected to ZED camera. /dev/video0
-[INFO] [1738121517.661927327] [point_to_pixel]: Point to Pixel Node INITIALIZED
-[INFO] [1738121521.881022966] [point_to_pixel]: Received message with 1 cones
-[INFO] [1738121521.895609559] [point_to_pixel]: Point to Pixel Node INITIALIZED -1, 0.000000
-[INFO] [1738121521.898463347] [point_to_pixel]: Transform callback triggered.
-[INFO] [1738121533.368343982] [rclcpp]: signal_handler(signal_value=2)

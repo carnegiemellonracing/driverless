@@ -1,2 +1,0 @@
-[INFO] [1738121957.674397221] [point_to_pixel]: Connected to ZED camera. /dev/video0
-[ERROR] [1738121958.206880451] [point_to_pixel]: Cannot open camera 1 video capture
