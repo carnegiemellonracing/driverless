@@ -305,34 +305,30 @@ namespace controls {
                     for (uint32_t k = 0; k < action_dims; k++) {
                         const float recentered_brownian = action_trajectory_base[idx].data[k]
                                   + *IDX_3D(brownians, dim3(num_samples, num_timesteps, action_dims), dim3(i, j, k));
+                        const float lower_bound = std::max(cuda_globals::action_min[k], last_taken_action.data[k] - cuda_globals::action_deriv_max[k] * controller_period * (j + 1));
+                        const float upper_bound = std::min(cuda_globals::action_max[k], last_taken_action.data[k] + cuda_globals::action_deriv_max[k] * controller_period * (j + 1));
                         const float clamped_brownian = clamp_uniform(
                             recentered_brownian,
-                            cuda_globals::action_min[k],
-                            cuda_globals::action_max[k],
-                            &curand_state
-                        );
-                        const float clamped_brownian_again = clamp_uniform(
-                            clamped_brownian,
-                            last_taken_action.data[k] - cuda_globals::action_deriv_min[k] * controller_period * j,
-                            last_taken_action.data[k] + cuda_globals::action_deriv_max[k] * controller_period * j,
+                            lower_bound,
+                            upper_bound,
                             &curand_state
                         );
                         // TODO: document what deadzoned means
                         const float deadzoned = k == action_torque_idx && x_curr[state_speed_idx] < brake_enable_speed ?
-                            max(clamped_brownian_again, 0.0f) : clamped_brownian_again;
+                            max(clamped_brownian, 0.0f) : clamped_brownian;
 
                         u_ij[k] = deadzoned;
                     }
 
-                    // Importance sampling fix start (Comment this block out to restore it back to original behavior)
-                    float difference_from_mean[action_dims];
-                    for (uint32_t k = 0; k < action_dims; k++) {
-                        difference_from_mean[k] = u_ij[k] - action_trajectory_base[idx].data[k];
-                    }
-                    float dot_result = dot_with_action_matrix(difference_from_mean);
-                    dot_result = dot_result / (-2.f * j * controller_period);
-                    log_prob_densities[i * num_timesteps + j] = dot_result;
-                    // Importance sampling fix end
+                    // // Importance sampling fix start (Comment this block out to restore it back to original behavior)
+                    // float difference_from_mean[action_dims];
+                    // for (uint32_t k = 0; k < action_dims; k++) {
+                    //     difference_from_mean[k] = u_ij[k] - action_trajectory_base[idx].data[k];
+                    // }
+                    // float dot_result = dot_with_action_matrix(difference_from_mean);
+                    // dot_result = dot_result / (-2.f * j * controller_period);
+                    // log_prob_densities[i * num_timesteps + j] = dot_result;
+                    // // Importance sampling fix end
 
 
 

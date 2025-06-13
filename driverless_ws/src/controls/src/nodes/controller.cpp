@@ -649,6 +649,8 @@ namespace controls {
                 }
                 
                 std::stringstream ss;
+                assert(info.action.swangle <= max_swangle_rad);
+                assert(info.action.swangle >= min_swangle_rad);
 
                 ss
                     << "Action:\n"
