@@ -29,7 +29,6 @@ namespace controls {
 
         extern __constant__ const float action_min[action_dims]; ///< Minimum control action request
         extern __constant__ const float action_max[action_dims]; ///< Maximum control action request
-        extern __constant__ const float action_deriv_min[action_dims]; ///< Minimum perturbation to control action
         extern __constant__ const float action_deriv_max[action_dims]; ///< Maximum perturbation to control action
     }
 }
