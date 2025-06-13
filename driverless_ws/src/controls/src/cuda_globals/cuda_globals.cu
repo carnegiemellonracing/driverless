@@ -31,10 +31,6 @@ namespace controls {
         __constant__ const float action_max[action_dims] = {
             max_swangle_rad, max_torque
         };
-
-        __constant__ const float action_deriv_min[action_dims] = {
-            -max_swangle_rate, -max_torque_rate
-        };
         __constant__ const float action_deriv_max[action_dims] = {
             max_swangle_rate, max_torque_rate
         };
