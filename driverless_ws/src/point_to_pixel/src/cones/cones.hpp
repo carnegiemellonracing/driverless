@@ -7,7 +7,7 @@
 #include "yolo.hpp"
 
 // Forward declarations
-namespace cones
+namespace cones {
 
     /**
      * @brief LapCounter class uses a binary random variable with bayesian
@@ -127,3 +127,4 @@ namespace cones
      * @param radius Radius of the circle
      */
     void augment_cones_circle(TrackBounds &track_bounds, int degrees, double radius);
+}

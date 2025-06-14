@@ -2,7 +2,7 @@
 
 namespace cones {
 
-    void LapCounter::update(bool detected) {
+    bool LapCounter::update(bool detected) {
 
         // Update Step
         if (detected) {

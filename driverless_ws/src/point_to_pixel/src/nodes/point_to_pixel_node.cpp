@@ -311,7 +311,7 @@ int PointToPixelNode::get_cone_class(
 }
 
 // Topic callback definition
-void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::SharedPtr msg)
+void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::SharedPtr msg) {
 
     // Logging Actions
     #if timing
@@ -479,8 +479,8 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     // Lap Counter Code -->
     // check if any orange cones are within the orange_cone_lookahead
     bool orange_detected = false;
-    if (!msg.orange_cones.empty()) {
-        for (const auto& point : msg.orange_cones) {
+    if (!message.orange_cones.empty()) {
+        for (const auto& point : message.orange_cones) {
             if (std::sqrt(point.x * point.x + point.y * point.y) < orange_cone_lookahead) {
                 orange_detected = true;
                 break;
@@ -608,6 +608,8 @@ void PointToPixelNode::cone_callback(const interfaces::msg::PPMConeArray::Shared
     RCLCPP_INFO(get_logger(), "==============END=OF=CALLBACK==============");
     
     cone_pub_->publish(message);
+
+}
 
 
 // Launches camera thread
