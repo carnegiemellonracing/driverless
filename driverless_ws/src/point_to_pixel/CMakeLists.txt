@@ -66,6 +66,14 @@ target_include_directories(cone_history_test_node PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_compile_features(cone_history_test_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
+# Lap Counter Test Executable
+add_executable(lap_counter_test_node src/nodes/lap_counter_test_node.cpp src/cones/cones.cpp)
+ament_target_dependencies(lap_counter_test_node rclcpp interfaces geometry_msgs Eigen3 OpenCV)
+target_include_directories(lap_counter_test_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_compile_features(lap_counter_test_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+
 # Point to Pixel Executable
 add_executable(point_to_pixel ${POINT_TO_PIXEL_SRC})
 ament_target_dependencies(point_to_pixel rclcpp interfaces geometry_msgs Eigen3 OpenCV)
@@ -98,6 +106,9 @@ install(TARGETS point_to_pixel
   DESTINATION lib/${PROJECT_NAME})
 
 install(TARGETS cone_history_test_node
+  DESTINATION lib/${PROJECT_NAME})
+
+install(TARGETS lap_counter_test_node
   DESTINATION lib/${PROJECT_NAME})
 
 

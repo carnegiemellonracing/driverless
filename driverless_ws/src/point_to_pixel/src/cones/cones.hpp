@@ -43,6 +43,8 @@ namespace cones {
              */
             bool update(bool detected);
 
+            float get_cone_prob() { return cone_prob; }
+
             LapCounter(
                 double init_prob = .1, 
                 double true_pos_rate = .9, 
