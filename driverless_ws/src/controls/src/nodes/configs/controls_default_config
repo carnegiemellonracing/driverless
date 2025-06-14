@@ -25,4 +25,4 @@ state_projection_mode: model_multiset
 publish_spline: false
 log_state_projection_history: false
 no_midline_controller: false
-torque_delay_ms: 400.0f
+torque_delay_seconds: 0.4f

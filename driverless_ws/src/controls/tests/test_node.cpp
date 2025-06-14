@@ -238,9 +238,9 @@ namespace controls {
               m_log_file{getenv("DRIVERLESS") + m_config_dict["root_dir"] + m_config_dict["track_logs"], std::ios_base::trunc},
 
               m_is_loop{m_config_dict["is_loop"] == "true"},
-              m_cone_prop_sim {std::stof(m_config_dict["approx_perceptions_delay_ms"])},
-              m_spline_prop_sim {std::stof(m_config_dict["approx_perceptions_delay_ms"])},
-              m_swangle_prop_sim {std::stof(m_config_dict["approx_swangle_delay_ms"])}
+              m_cone_prop_sim {std::stof(m_config_dict["approx_perceptions_delay_seconds"])},
+              m_spline_prop_sim {std::stof(m_config_dict["approx_perceptions_delay_seconds"])},
+              m_swangle_prop_sim {std::stof(m_config_dict["approx_swangle_delay_seconds"])}
         {
             std::cout << m_lookahead << std::endl;
             std::cout << m_all_segments.size() << std::endl;

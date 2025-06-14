@@ -42,7 +42,7 @@ namespace controls {
     bool publish_spline;
     bool log_state_projection_history;
     bool no_midline_controller;
-    float torque_delay_ms;
+    float torque_delay_seconds;
 
 
 
@@ -85,7 +85,7 @@ namespace controls {
 
               m_data_trajectory_log{"mppi_inputs.txt", std::ios::out},
               m_p_value{0.1},
-              m_torque_prop_sim {torque_delay_ms}
+              m_torque_prop_sim {torque_delay_seconds}
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
             rclcpp::CallbackGroup::SharedPtr main_control_loop_callback_group{
@@ -805,7 +805,7 @@ static int process_config_file(std::string config_file_path) {
     
     publish_spline = config_dict["publish_spline"] == "true" ? true : false;
     log_state_projection_history = config_dict["log_state_projection_history"] == "true" ? true : false;
-    torque_delay_ms = std::stof(config_dict["torque_delay_ms"]);
+    torque_delay_seconds = std::stof(config_dict["torque_delay_seconds"]);
     return 0;
 }
 

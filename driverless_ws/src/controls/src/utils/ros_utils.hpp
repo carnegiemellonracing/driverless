@@ -50,14 +50,14 @@ namespace controls {
     template <typename T> // ConeMsg, float (swangle), etc.
     class PropagationSimulator {
         public:
-            PropagationSimulator(float delay_ms) : m_delay_ms{delay_ms} {}
+            PropagationSimulator(float delay_seconds) : m_delay_seconds{delay_seconds} {}
             void push(T element, rclcpp::Time time) {
                 m_queue.emplace(element, time);
             }
 
             std::optional<T> maybe_pop(rclcpp::Time current_time) {
                 if (m_queue.size() > 0) {
-                    if (current_time.nanoseconds() - m_queue.front().second.nanoseconds() > m_delay_ms * 1e6) {
+                    if (current_time.nanoseconds() - m_queue.front().second.nanoseconds() > m_delay_seconds * 1e9) {
                         auto ret = m_queue.front();
                         m_queue.pop();
                         return ret.first;
@@ -67,7 +67,7 @@ namespace controls {
             }
 
         private:
-            float m_delay_ms;
+            float m_delay_seconds;
             using QueueElement = std::pair<T, rclcpp::Time>;
             std::queue<QueueElement> m_queue;
     };
