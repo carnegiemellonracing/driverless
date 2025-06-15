@@ -187,6 +187,7 @@ public:
         }
       }
       //get distance azimuth reflection, etc.and put them into decode_packet
+      // TRIGOP CODE
       cout << "DecodePacket1 start\n";
       if(lidar_ptr_->DecodePacket(lidar_ptr_->frame_, packet) != 0) {
         continue;
@@ -255,9 +256,11 @@ public:
 
         //if the packet which contains split frame msgs is valid, it will be the first packet of new frame
         if(last_packet_is_valid) {
+          // TRIGOP CODE
           cout << "DecodePacket2 start\n";
           lidar_ptr_->DecodePacket(lidar_ptr_->frame_, packet);
 
+          // TRIGOP CODE
           cout << "XYZI1 start\n";
           lidar_ptr_->ComputeXYZI(packet_index);
 
@@ -269,6 +272,7 @@ public:
       else {
         //new decoded packet of one frame, put it into decoded_packets_buffer_ and compute xyzi of points
         if(lidar_ptr_->frame_.packet_num != packet_index) {
+          // TRIGOP CODE
           cout << "XYZI2 start\n";
           lidar_ptr_->ComputeXYZI(packet_index);
 
