@@ -248,6 +248,9 @@ inline void SourceDriver::SendPacket(const UdpFrame_t& msg, double timestamp)
 
 inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIRT>& msg)
 {
+  auto ros_end = std::chrono::high_resolution_clock::now();
+  cout << "Driver received point cloud at: " + ros_end + "\n";
+  
   pub_->publish(ToRosMsg(msg, frame_id_));
   #ifdef __CUDACC__
     filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));

@@ -156,6 +156,7 @@ Udp4_3Parser<T_Point>::~Udp4_3Parser() { LogInfo("release Udp4_3Parser"); }
 
 template<typename T_Point>
 int Udp4_3Parser<T_Point>::DecodePacket(LidarDecodedFrame<T_Point> &frame, const UdpPacket& udpPacket){
+  auto dp_start = std::chrono::high_resolution_clock::now();
   if (!this->get_correction_file_) {
     static bool printErrorBool = true;
     if (printErrorBool) {
@@ -278,11 +279,14 @@ int Udp4_3Parser<T_Point>::DecodePacket(LidarDecodedFrame<T_Point> &frame, const
     this->last_azimuth_ = u16Azimuth;    
   }
   frame.packet_num++;
+  auto dp_end = std::chrono::high_resolution_clock::now();
+  cout << "DP start: " + (dp_end - dp_start) + "\n";
   return 0;
 }
 
 template<typename T_Point>
 int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int packet_index){
+  auto xyzi_start = std::chrono::high_resolution_clock::now();
   for (int blockid = 0; blockid < frame.block_num; blockid++) {
     // T_Point point;
     int Azimuth = frame.pointData[packet_index * frame.per_points_num + blockid * frame.laser_num].azimuth;
@@ -353,6 +357,8 @@ int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int pa
     }
   }
   GeneralParser<T_Point>::FrameNumAdd();
+  auto xyzi_end = std::chrono::high_resolution_clock::now();
+  cout << "XYZI: " + (xyzi_end - xyzi_start) + "\n";
   return 0;
 }
 

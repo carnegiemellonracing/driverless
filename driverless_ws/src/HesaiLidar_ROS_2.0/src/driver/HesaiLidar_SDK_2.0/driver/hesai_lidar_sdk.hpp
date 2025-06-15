@@ -187,6 +187,7 @@ public:
         }
       }
       //get distance azimuth reflection, etc.and put them into decode_packet
+      cout << "DecodePacket1 start\n";
       if(lidar_ptr_->DecodePacket(lidar_ptr_->frame_, packet) != 0) {
         continue;
       }
@@ -207,7 +208,11 @@ public:
           // LogInfo("frame:%d   points:%u  packet:%d  time:%lf %lf",lidar_ptr_->frame_.frame_index,  lidar_ptr_->frame_.points_num, packet_index, lidar_ptr_->frame_.points[0].timestamp, lidar_ptr_->frame_.points[lidar_ptr_->frame_.points_num - 1].timestamp) ;
 
           //publish point cloud topic
-          if(point_cloud_cb_) point_cloud_cb_(lidar_ptr_->frame_);
+          if(point_cloud_cb_) {
+            auto ros_start = std::chrono::high_resolution_clock::now();
+            cout << "ROS published at: " + ros_start + "\n";
+            point_cloud_cb_(lidar_ptr_->frame_);
+          }
 
           //publish upd packet topic
           if(pkt_cb_) {
@@ -250,8 +255,12 @@ public:
 
         //if the packet which contains split frame msgs is valid, it will be the first packet of new frame
         if(last_packet_is_valid) {
+          cout << "DecodePacket2 start\n";
           lidar_ptr_->DecodePacket(lidar_ptr_->frame_, packet);
+
+          cout << "XYZI1 start\n";
           lidar_ptr_->ComputeXYZI(packet_index);
+
           lidar_ptr_->frame_.points_num += lidar_ptr_->frame_.per_points_num;
           udp_packet_frame.emplace_back(packet);
           packet_index++;
@@ -260,7 +269,9 @@ public:
       else {
         //new decoded packet of one frame, put it into decoded_packets_buffer_ and compute xyzi of points
         if(lidar_ptr_->frame_.packet_num != packet_index) {
+          cout << "XYZI2 start\n";
           lidar_ptr_->ComputeXYZI(packet_index);
+
           lidar_ptr_->frame_.points_num += lidar_ptr_->frame_.per_points_num;
           udp_packet_frame.emplace_back(packet);
           packet_index++;
