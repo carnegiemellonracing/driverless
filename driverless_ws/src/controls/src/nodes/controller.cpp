@@ -468,7 +468,7 @@ namespace controls {
                 rclcpp::Duration total_time_elapsed (0, 0);
                 if (testing_on_rosbag) {
                     // The first measures how long this function took, the second measures how long it took from lidar receiving points to this function getting called.
-                    total_time_elapsed = (get_clock()->now() - cone_callback_time) - (rclcpp::Time(cone_msg.controller_receive_time) - lidar_points_seen_time);
+                    total_time_elapsed = (get_clock()->now() - cone_callback_time) + (rclcpp::Time(cone_msg.controller_receive_time) - lidar_points_seen_time);
                 } else {
                     total_time_elapsed = get_clock()->now() - lidar_points_seen_time;
                 }

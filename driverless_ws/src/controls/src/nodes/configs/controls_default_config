@@ -15,14 +15,13 @@ root_dir: /driverless_ws/src/controls/
 #=====================
  
 follow_midline_only: true
-approx_propogation_delay: 0.4f
-
+approx_propogation_delay: 0.57f
 testing_on_rosbag: false
 ingest_midline: true
-send_to_can: false
-display_on: true
+send_to_can: true
+display_on: false
 state_projection_mode: model_multiset
 publish_spline: false
 log_state_projection_history: false
 no_midline_controller: false
-torque_delay_seconds: 0.4f
+torque_delay_seconds: 0.55f

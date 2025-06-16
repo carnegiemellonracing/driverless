@@ -49,7 +49,7 @@ namespace controls {
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
 
-    constexpr float maximum_speed_ms = 10.0f;
+    constexpr float maximum_speed_ms = 8.0f;
     constexpr float whl_radius = 0.215f;
     constexpr float gear_ratio = 14.0f;
 
@@ -82,8 +82,8 @@ constexpr bool print_svm_timing = false;
     constexpr float swangle_1radps_cost = 0.0f;
         
     constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline DEPRECATED
-    constexpr float target_speed = 5.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
-    constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
+    constexpr float target_speed = 4.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
+    constexpr float speed_off_1mps_cost = 2.0f; ///< Cost for being 1m/s below target_speed
 
     // Cost params
     constexpr float progress_cost_multiplier = 0.6f;

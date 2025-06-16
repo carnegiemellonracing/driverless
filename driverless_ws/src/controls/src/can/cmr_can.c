@@ -112,21 +112,19 @@ void notifyCallback(canNotifyData *data)
 
 uint16_t swangle_to_adc(float swangle)
 {
-
-    // int modulus = 4096;
+    int modulus = 4096;
     float swangle_in_degrees = swangle * 180 / (float) M_PI;
-    // int zero_adc = 3159;
-    // int min_adc = 2010;
-    // int max_adc = modulus + 212;
-    // float min_deg = -21.04;
-    // float max_deg = 23.6;
-    // float adc_deg_ratio = ((float)(max_adc - min_adc)) / ((max_deg - min_deg));
-    // int desired_adc = (int)(swangle_in_degrees * adc_deg_ratio) + zero_adc;
-    // paranoid_assert(min_adc < desired_adc && desired_adc < max_adc);
-    // uint16_t desired_adc_modded = (uint16_t)(desired_adc % modulus);
-    // return desired_adc_modded;
-    return (uint16_t)(3208.42 + 54.68 * swangle_in_degrees) % 4096;
-}
+    int zero_adc = 3100;
+    int min_adc = 2019;
+    int max_adc = modulus + 136;
+    float min_deg = -22.10;
+    float max_deg = 21.60;
+    float adc_deg_ratio = ((float)(max_adc - min_adc)) / ((max_deg - min_deg));
+    int desired_adc = (int)(swangle_in_degrees * adc_deg_ratio) + zero_adc;
+    paranoid_assert(min_adc < desired_adc && desired_adc < max_adc);
+    uint16_t desired_adc_modded = (uint16_t)(desired_adc % modulus);
+    return desired_adc_modded;
+} 
 
 static void cmr_can_error_exit(int signal) {
     canHandle hnd = current_can_handle; 
