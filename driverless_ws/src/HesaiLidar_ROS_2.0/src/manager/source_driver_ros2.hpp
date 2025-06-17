@@ -265,11 +265,11 @@ inline void SourceDriver::SendPacket(const UdpFrame_t &msg, double timestamp)
 inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIRT> &msg)
 {
   // Add timer
-  auto start_lidar_pub = std::chrono::high_resolution_clock::now();
-  pub_->publish(ToRosMsg(msg, frame_id_));
-  auto end_lidar_pub = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> duration_pub = end_lidar_pub - start_lidar_pub;
-  RCLCPP_INFO(node_ptr_->get_logger(), "/lidar_points Publishing time: %fms", duration_pub.count());
+  // auto start_lidar_pub = std::chrono::high_resolution_clock::now();
+  // pub_->publish(ToRosMsg(msg, frame_id_));
+  // auto end_lidar_pub = std::chrono::high_resolution_clock::now();
+  // std::chrono::duration<double, std::milli> duration_pub = end_lidar_pub - start_lidar_pub;
+  // RCLCPP_INFO(node_ptr_->get_logger(), "/lidar_points Publishing time: %fms", duration_pub.count());
 
 #ifdef __CUDACC__
   filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));

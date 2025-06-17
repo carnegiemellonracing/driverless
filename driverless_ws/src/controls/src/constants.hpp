@@ -49,7 +49,7 @@ namespace controls {
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
 
-    constexpr float maximum_speed_ms = 8.0f;
+    constexpr float maximum_speed_ms = 6.0f;
     constexpr float whl_radius = 0.215f;
     constexpr float gear_ratio = 14.0f;
 
@@ -71,7 +71,7 @@ constexpr bool print_svm_timing = false;
     constexpr uint8_t state_dims = 4; ///< \f$p\f$, dimensions of @ref State
     constexpr float temperature = 1.0f; ///< Convergence speed/stability tradeoff, see LaTeX for more details
     constexpr unsigned long long seed = 0; ///< For brownian pseudo-RNG.
-    /// Number of elements in the tensor containing all the sampled action trajectories.
+    /// Number of elements in the tensor containing all tXhe sampled action trajectories.
     constexpr uint32_t num_action_trajectories = action_dims * num_timesteps * num_samples;
     /// Best guess of action tr ajectory when controller first starts.
     constexpr float init_action_trajectory[num_timesteps * action_dims] = {};
@@ -82,7 +82,7 @@ constexpr bool print_svm_timing = false;
     constexpr float swangle_1radps_cost = 0.0f;
         
     constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline DEPRECATED
-    constexpr float target_speed = 4.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
+    constexpr float target_speed = 2.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 2.0f; ///< Cost for being 1m/s below target_speed
 
     // Cost params
