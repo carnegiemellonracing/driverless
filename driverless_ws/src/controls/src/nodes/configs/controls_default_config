@@ -19,7 +19,7 @@ approx_propogation_delay: 0.4f
 testing_on_rosbag: false
 ingest_midline: true
 send_to_can: true
-display_on: false
+display_on: true
 state_projection_mode: model_multiset
 publish_spline: false
 log_state_projection_history: false
