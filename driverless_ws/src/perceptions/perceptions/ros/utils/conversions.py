@@ -54,6 +54,10 @@ def pointcloud2_to_npy(pc2_msg: PointCloud2):
     points_arr[:,0] = points_raw['x'].reshape(-1)
     points_arr[:,1] = points_raw['y'].reshape(-1)
     points_arr[:,2] = points_raw['z'].reshape(-1)
+
+    # condition = points_arr[:, 0] < 2 and points_arr[:, 0] > -2
+    # filtered_indices = np.where(condition)
+    # points_arr = points_arr[filtered_indices]
     # points_arr[:,3] = points_raw['intensity'].reshape(-1)
     # points_arr[:,4] = points_raw['ring'].reshape(-1)
     # points_arr[:,5] = points_raw['timestamp'].reshape(-1)

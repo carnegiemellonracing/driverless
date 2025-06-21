@@ -49,7 +49,7 @@ namespace controls {
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
 
-    constexpr float maximum_speed_ms = 8.0f;
+    constexpr float maximum_speed_ms = 15.0f;
     constexpr float whl_radius = 0.215f;
     constexpr float gear_ratio = 14.0f;
 
@@ -82,7 +82,7 @@ constexpr bool print_svm_timing = false;
     constexpr float swangle_1radps_cost = 0.0f;
         
     constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline DEPRECATED
-    constexpr float target_speed = 4.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
+    constexpr float target_speed = 6.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
     constexpr float speed_off_1mps_cost = 2.0f; ///< Cost for being 1m/s below target_speed
 
     // Cost params
@@ -154,7 +154,7 @@ constexpr bool print_svm_timing = false;
     constexpr float understeer_slope = 0.0f; ///< How much car understeers as speed increases. See @rst :doc:`/source/explainers/slipless_model` @endrst.
 
     /// Maximum forward acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
-constexpr float long_tractive_capability = 3.0f;
+    constexpr float long_tractive_capability = 3.0f;
     /// Maximum centripetal acceleration in m/s^2. Can be an imposed limit or the actual physics limitation.
     /// Usually slightly more than @c long_tractive_capability
     constexpr float lat_tractive_capability = 5.0f;
@@ -163,8 +163,8 @@ constexpr float long_tractive_capability = 3.0f;
     constexpr float saturating_motor_torque = (long_tractive_capability + rolling_drag / car_mass) * car_mass * whl_radius / gear_ratio;
     constexpr float min_torque = -saturating_motor_torque;
     constexpr float max_torque = saturating_motor_torque;
-    constexpr float min_swangle_rad = degrees_to_radians(-20.0f); 
-    constexpr float max_swangle_rad = degrees_to_radians(20.0f);
+    constexpr float min_swangle_rad = degrees_to_radians(-13.0f); 
+    constexpr float max_swangle_rad = degrees_to_radians(13.0f);
     constexpr float max_swangle_rate = degrees_to_radians(50.0f);
     constexpr float max_torque_rate = std::numeric_limits<float>::max();
     /// Time from MPPI control action request to physical change, in sec

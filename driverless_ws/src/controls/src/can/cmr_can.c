@@ -114,11 +114,11 @@ uint16_t swangle_to_adc(float swangle)
 {
     int modulus = 4096;
     float swangle_in_degrees = swangle * 180 / (float) M_PI;
-    int zero_adc = 3100;
-    int min_adc = 2019;
-    int max_adc = modulus + 136;
-    float min_deg = -22.10;
-    float max_deg = 21.60;
+    int zero_adc = 3215;
+    int min_adc = 2397;
+    int max_adc = modulus + 205;
+    float min_deg = -13.4;
+    float max_deg = 21.4;
     float adc_deg_ratio = ((float)(max_adc - min_adc)) / ((max_deg - min_deg));
     int desired_adc = (int)(swangle_in_degrees * adc_deg_ratio) + zero_adc;
     paranoid_assert(min_adc < desired_adc && desired_adc < max_adc);
