@@ -282,7 +282,7 @@ int Udp4_3Parser<T_Point>::DecodePacket(LidarDecodedFrame<T_Point> &frame, const
   frame.packet_num++;
   // TRIGOP CODE
   auto dp_end = std::chrono::high_resolution_clock::now();
-  cout << "DP start: " + (dp_end - dp_start) + "\n";
+  std::cout << "DP start: " << (dp_end - dp_start).count() << "\n";
   return 0;
 }
 
@@ -363,7 +363,7 @@ int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int pa
   GeneralParser<T_Point>::FrameNumAdd();
   // TRIGOP CODE
   auto xyzi_end = std::chrono::high_resolution_clock::now();
-  cout << "XYZI: " + (xyzi_end - xyzi_start) + "\n";
+  std::cout << "XYZI: " << (xyzi_end - xyzi_start).count() << "\n";
   return 0;
 }
 
