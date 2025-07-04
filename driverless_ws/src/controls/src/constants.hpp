@@ -8,6 +8,17 @@
 #include <utils/general_utils.hpp>
 //TODO: these should all be inline constexpr (not currently broken because not ODR-used)
 
+/*
+Things different:
+- whl_radius
+- gear_ratio
+- cg_to_nose
+- no whl_base
+- car_mass
+
+*/
+
+
 namespace controls {
     enum class StateProjectionMode {
         MODEL_MULTISET,
@@ -38,7 +49,7 @@ namespace controls {
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
 
-    constexpr float maximum_speed_ms = 10.0f;
+    constexpr float maximum_speed_ms = 8.0f;
     constexpr float whl_radius = 0.215f;
     constexpr float gear_ratio = 14.0f;
 
@@ -69,10 +80,10 @@ constexpr bool print_svm_timing = false;
 
     constexpr float torque_1Nps_cost = 0.0f;
     constexpr float swangle_1radps_cost = 0.0f;
-        // DEPRECATED
-    constexpr float offset_1m_cost = 20.0f; ///< Cost for being 1m away from midline DEPRECATED
-    constexpr float target_speed = 5.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
-    constexpr float speed_off_1mps_cost = 1.0f; ///< Cost for being 1m/s below target_speed
+        
+    constexpr float offset_1m_cost = 5.0f; ///< Cost for being 1m away from midline DEPRECATED
+    constexpr float target_speed = 4.0f; ///< Linear cost for under target speed, NO cost for above, in m/s
+    constexpr float speed_off_1mps_cost = 2.0f; ///< Cost for being 1m/s below target_speed
 
     // Cost params
     constexpr float progress_cost_multiplier = 0.6f;
@@ -88,7 +99,7 @@ constexpr bool print_svm_timing = false;
     constexpr float lookahead_behind_squared = 25.0f;
 
     // AIM communication stuff
-    constexpr int aim_signal_period_ms = 98;
+    constexpr int aim_signal_period_ms = 20;
     constexpr float default_p = 2.5f;
     constexpr float default_feedforward = 0.0f;
 
@@ -154,6 +165,8 @@ constexpr float long_tractive_capability = 3.0f;
     constexpr float max_torque = saturating_motor_torque;
     constexpr float min_swangle_rad = degrees_to_radians(-20.0f); 
     constexpr float max_swangle_rad = degrees_to_radians(20.0f);
+    constexpr float max_swangle_rate = degrees_to_radians(50.0f);
+    constexpr float max_torque_rate = std::numeric_limits<float>::max();
     /// Time from MPPI control action request to physical change, in sec
     // TODO: Re-estimate since Falcon (steering motor) replacement
     constexpr float approx_mppi_time = 0.020f; ///< Time from MPPI launch to control action calculation, in sec

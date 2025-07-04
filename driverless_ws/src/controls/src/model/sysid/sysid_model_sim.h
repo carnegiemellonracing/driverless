@@ -1,5 +1,5 @@
 /**
- * @file model_host.h
+ * @file model.cuh
  * @brief Slipless dynamics model for MPPI and state estimation.
  *
  * For more information, see the @rst :doc:`overview </source/explainers/slipless_model>`. @endrst
@@ -7,12 +7,11 @@
 
 #pragma once
 #include <constants.hpp>
-#include <cassert>
+
 
 namespace controls {
-    namespace model_host {
-        namespace slipless {
-
+    namespace model_sim {
+        namespace sysid {
             template <typename T>
             static T clamp(T n, T low, T high)
             {
@@ -31,9 +30,14 @@ namespace controls {
              * @param[in] swangle Steering angle in radians.
              * @return Kinematic steering angle in radians.
              */
-            static float kinematic_swangle(const float speed, const float swangle) {
-                return swangle / (1 + understeer_slope * speed);
+            static float kinematic_swangle(const float speed, const float swangle, const float radius) {
+                return swangle / (1 + ((speed * speed) / radius) * (understeer_slope_squared / 10));
             }
+
+            static float turning_radius(const float swangle_) {
+              float ratio = (cg_to_front + cg_to_rear) / tanf(swangle_);
+              return sqrtf(cg_to_rear * cg_to_rear + ratio * ratio);
+             }
 
             /**
              * @brief Calculates angular speed. Since we assume uniform circular motion, this is the same as yaw rate.
@@ -49,7 +53,7 @@ namespace controls {
                 const float back_whl_to_center_of_rot = (cg_to_front + cg_to_rear) / tanf(kinematic_swangle_);
                 // speed / radius of rotation
                 return copysignf(
-                    speed / sqrtf(cg_to_rear * cg_to_rear + back_whl_to_center_of_rot * back_whl_to_center_of_rot),
+                    speed / turning_radius(kinematic_swangle_),
                     kinematic_swangle_
                 );
             }
@@ -65,19 +69,17 @@ namespace controls {
                     return 0;
                 }
 
-                const float kinematic_swangle_ = kinematic_swangle(speed, swangle);
+                const float kinematic_swangle_ = kinematic_swangle(speed, swangle, turning_radius(swangle));
                 // also equal to angular_speed * speed
                 const float back_whl_to_center_of_rot = (cg_to_front + cg_to_rear) / tanf(kinematic_swangle_);
                 return copysignf(
-                    speed * speed / sqrtf(cg_to_rear * cg_to_rear + back_whl_to_center_of_rot * back_whl_to_center_of_rot),
-                    kinematic_swangle_
-                );
+                    speed * speed / turning_radius(kinematic_swangle_),
+                    kinematic_swangle_);
             }
 
             /**
              * @brief Calculate slip angle. This is the angle between the direction the car is pointing (heading) and the direction the car is moving (trajectory).
              * It does not necessarily imply the car is slipping.
-             * This will have the same sign as kinematic_swangle.
              * @param[in] kinematic_swangle Kinematic steering angle in radians.
              * @return Slip angle in radians.
              */
@@ -93,8 +95,6 @@ namespace controls {
              * @param[in] timestep Model time step in seconds.
              */
             static void dynamics(const float state[], const float action[], float next_state[], float timestep) {
-                
-                assert(false);
                 const float x = state[state_x_idx];
                 const float y = state[state_y_idx];
                 const float yaw = state[state_yaw_idx];
@@ -106,7 +106,7 @@ namespace controls {
                 // wheel torque
                 const float torque = action[action_torque_idx] * gear_ratio;
 
-                float kinematic_swangle_ = kinematic_swangle(speed, swangle);
+                float kinematic_swangle_ = kinematic_swangle(speed, swangle, turning_radius(swangle));
                 float slip_angle_ = slip_angle(kinematic_swangle_);
 
                 // printf("swangle: %f, torque: %f\n", swangle, torque);
@@ -133,20 +133,17 @@ namespace controls {
                 }
 
                 // printf("sat_tire_torque: %f, torque_front: %f, torque_rear: %f\n", saturating_tire_torque, torque_front, torque_rear);
+                const float forward_force = (torque_efficiency * torque_front * cosf(swangle - slip_angle_) + torque_efficiency * torque_rear * cosf(slip_angle_)) / whl_radius;
+                const float backward_force = (rolling_drag_constant_kN * 1000 + rolling_drag_linear * speed + rolling_drag_squared * (speed * speed));
 
                 /// direction of the forces has to do with the actual swangle
-                const float next_speed_raw = speed +
-                    ((torque_front * cosf(swangle - slip_angle_) + torque_rear * cosf(slip_angle_)) / (whl_radius * car_mass)
-                    - rolling_drag / car_mass) * timestep;
+		const float next_speed_raw = speed + ((forward_force - backward_force) / car_mass) * timestep;
                 // car can't go backwards, negative torque is regenerative braking
-                const float next_speed = std::max(0.0f, next_speed_raw);
+		const float next_speed = std::max(0.0f, next_speed_raw);
 
-                const float speed2 = speed * speed;
-                const float next_speed2 = next_speed * next_speed;
-                const float dist_avg_speed = speed != next_speed ?
-                    2.0f/3.0f * (next_speed2 * next_speed - speed2 * speed) / (next_speed2 - speed2) : speed;
+                const float dist_avg_speed = (next_speed + speed) / 2;
 
-                kinematic_swangle_ = kinematic_swangle(dist_avg_speed, swangle);
+                kinematic_swangle_ = kinematic_swangle(dist_avg_speed, swangle, turning_radius(swangle));
 
                 // printf("kinematic_swangle_: %f, slip_angle_: %f\n", kinematic_swangle_, slip_angle_);
 
@@ -155,7 +152,7 @@ namespace controls {
 
                 // printf("next_speed_raw: %f, next_speed: %f, next_speed2: %f, dist_avg_speed: %f, angular_speed_: %f, next_yaw: %f\n", next_speed_raw, next_speed, next_speed2, dist_avg_speed, angular_speed_, next_yaw);
 
-                const float rear_to_center = (cg_to_rear + cg_to_front) / tanf(kinematic_swangle_);
+                const float rear_to_center = (cg_to_rear + cg_to_front) / (tanf(kinematic_swangle_) + 1e-10);
                 // either traveling straight or turning in circular motion
                 const float next_x = angular_speed_ == 0 ?
                     x + dist_avg_speed * cosf(yaw) * timestep

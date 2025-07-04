@@ -15,6 +15,7 @@
 #include <state/state_estimator.hpp>
 #include <condition_variable>
 #include <state/naive_state_tracker.hpp>
+#include <utils/ros_utils.hpp>
 
 
 namespace controls {
@@ -84,7 +85,8 @@ namespace controls {
              *
              * @param action Action to publish
              */
-            void publish_action(const Action& action, rclcpp::Time current_time);
+            void republish_action(const Action& action, rclcpp::Time current_time);
+            
 
             /// Converts MPPI control action output to a ROS2 message. Affected by drive mode (FWD, RWD, AWD).
             /// @param[in] action Control action - output of MPPI.
@@ -108,11 +110,12 @@ namespace controls {
             /** MPPI Controller instance */
             std::shared_ptr<mppi::MppiController> m_mppi_controller;
 
-            rclcpp::Publisher<ActionMsg>::SharedPtr m_action_publisher; ///< Publishes control action for actuators
+            rclcpp::Publisher<ActionMsg>::SharedPtr m_rosbag_action_publisher; ///< Publishes control action for actuators
+            rclcpp::Publisher<ActionMsg>::SharedPtr m_test_node_action_publisher; ///< Publishes control action for actuators
             rclcpp::Publisher<InfoMsg>::SharedPtr m_info_publisher; ///< Publishes controller info for debugging
             rclcpp::Publisher<ConeMsg>::SharedPtr m_perc_cones_republisher;
             rclcpp::Publisher<SplineMsg>::SharedPtr m_spline_publisher;
-            rclcpp::Subscription<ActionMsg>::SharedPtr m_action_subscription; ///< Exclusively for when replaying rosbags, and using it for state projection
+            rclcpp::Subscription<ActionMsg>::SharedPtr m_rosbag_action_subscription; ///< Exclusively for when replaying rosbags, and using it for state projection
             rclcpp::Subscription<SplineMsg>::SharedPtr m_spline_subscription; ///< Subscribes to path planning spline
             rclcpp::Subscription<TwistMsg>::SharedPtr m_world_twist_subscription; ///< Subscribes to intertial twist
             rclcpp::Subscription<PoseMsg>::SharedPtr m_world_pose_subscription; ///< Subscribes to inertial pose
@@ -149,7 +152,8 @@ namespace controls {
 
             ActionSignal action_to_signal(Action action);
 
-            ActionSignal m_last_action_signal;
+            Action m_action_to_actuate;
+
             std::thread m_aim_communication_thread;
             std::atomic<bool> m_keep_sending_aim_signal = true;
             std::thread launch_aim_communication();
@@ -160,6 +164,8 @@ namespace controls {
             rclcpp::Time m_last_imu_acceleration_time;
             State get_state_under_strategy(rclcpp::Time current_time);
             state::NaiveStateTracker m_naive_state_tracker;
+            bool m_start_actuating = false; // don't start actuating until we get a valid cone callback
+            PropagationSimulator<float> m_torque_prop_sim;
 
             // Stuff for the naive state estimator
             

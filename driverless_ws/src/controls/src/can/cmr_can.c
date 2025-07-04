@@ -112,7 +112,6 @@ void notifyCallback(canNotifyData *data)
 
 uint16_t swangle_to_adc(float swangle)
 {
-
     int modulus = 4096;
     float swangle_in_degrees = swangle * 180 / (float) M_PI;
     int zero_adc = 3100;
@@ -125,7 +124,7 @@ uint16_t swangle_to_adc(float swangle)
     paranoid_assert(min_adc < desired_adc && desired_adc < max_adc);
     uint16_t desired_adc_modded = (uint16_t)(desired_adc % modulus);
     return desired_adc_modded;
-}
+} 
 
 static void cmr_can_error_exit(int signal) {
     canHandle hnd = current_can_handle; 

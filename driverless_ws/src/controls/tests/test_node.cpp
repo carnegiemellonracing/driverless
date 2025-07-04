@@ -23,6 +23,7 @@
 #include <random>
 #include <map>
 #include <stack>
+#include <queue>
 
 #include <gsl/gsl_odeiv2.h>
 #include <gsl/gsl_errno.h>
@@ -236,17 +237,26 @@ namespace controls {
 
               m_log_file{getenv("DRIVERLESS") + m_config_dict["root_dir"] + m_config_dict["track_logs"], std::ios_base::trunc},
 
-              m_is_loop{m_config_dict["is_loop"] == "true"}
+              m_is_loop{m_config_dict["is_loop"] == "true"},
+              m_cone_prop_sim {std::stof(m_config_dict["approx_perceptions_delay_seconds"])},
+              m_spline_prop_sim {std::stof(m_config_dict["approx_perceptions_delay_seconds"])},
+              m_swangle_prop_sim {std::stof(m_config_dict["approx_swangle_delay_seconds"])}
         {
             std::cout << m_lookahead << std::endl;
             std::cout << m_all_segments.size() << std::endl;
+            m_world_state[0] = std::stof(m_config_dict["initial_x"]);
+
+            m_world_state[1] = std::stof(m_config_dict["initial_y"]);
+            m_world_state[2] = degrees_to_radians(std::stof(m_config_dict["initial_yaw_deg"]));
+
+            m_world_state[3] = std::stof(m_config_dict["initial_v"]);
             // m_all_segmentsd = parse_segments_specification(m_config_dict["root_dir"] + m_config_dict["track_specs"]);
             // m_lookahead = std::stof(m_config_dict["look_ahead"]);
             // m_lookahead_squared = m_lookahead * m_lookahead;
-            
+
             glm::fvec2 curr_pos {0, 0}; // TODO: this is just to test what happens if the car starts OOB
             // glm::fvec2 curr_pos {m_world_state[0], m_world_state[1]};
-            float curr_heading = m_world_state[2];
+            float curr_heading = M_PI_2;
             for (const auto& seg : m_all_segments) {
                 if (seg.type == SegmentType::ARC) {
                     float next_heading = arc_rad_adjusted(curr_heading + seg.heading_change);
@@ -282,6 +292,7 @@ namespace controls {
             m_end_line.push_back(m_all_left_cones.back());
             m_end_line.push_back(m_all_right_cones.back());
             update_track_time();
+            std::cout << "got here" << std::endl;
         }
         float distanceToLine(glm::fvec2 point, std::vector<glm::fvec2> line) {
             glm::fvec2 s_l = line[0];
@@ -541,6 +552,10 @@ namespace controls {
 
 
         void TestNode::on_sim() {
+            auto swangle_opt = m_swangle_prop_sim.maybe_pop(m_time);
+            if (swangle_opt.has_value()) {
+                m_last_action_msg.swangle = swangle_opt.value();
+            }
             ActionMsg adj_msg = m_last_action_msg;
 
             float action[2] = {
@@ -559,6 +574,14 @@ namespace controls {
             glm::fvec2 world_state_vec {m_world_state[0], m_world_state[1]};
             
             g_car_poses.push_back(std::make_tuple(world_state_vec, m_world_state[2], m_time.seconds() - m_start_time.seconds()));
+            auto spline_msg_opt = m_spline_prop_sim.maybe_pop(m_time);
+            if (spline_msg_opt.has_value()) {
+                m_spline_publisher->publish(spline_msg_opt.value());
+            }
+            auto cone_msg_opt = m_cone_prop_sim.maybe_pop(m_time);
+            if (cone_msg_opt.has_value()) {
+                m_cone_publisher->publish(cone_msg_opt.value());
+            }
         }
 
 
@@ -567,6 +590,7 @@ namespace controls {
             RCLCPP_INFO_STREAM(get_logger(), "X: " << m_world_state[0] << " Y: " << m_world_state[1] << " Yaw: " << m_world_state[2] << " Speed: " << m_world_state[3]);
             RCLCPP_INFO_STREAM(get_logger(), "Swangle: " << msg.swangle * (180 / M_PI) << "deg Torque f: " << msg.torque_fl + msg.torque_fr << " Torque r: " << msg.torque_rl + msg.torque_rr);
 
+            m_swangle_prop_sim.push(msg.swangle, get_clock()->now());
             m_last_action_msg = msg;
         }
         /**
@@ -630,8 +654,10 @@ namespace controls {
             spline_msg.header.stamp = curr_time;
             cone_msg.header.stamp = curr_time;
 
-            m_spline_publisher->publish(spline_msg);
-            m_cone_publisher->publish(cone_msg);
+            m_spline_prop_sim.push(spline_msg, curr_time);
+            m_cone_prop_sim.push(cone_msg, curr_time);
+
+            std::cout << "pushed to queue" << std::endl;
         }
  
 
@@ -783,6 +809,9 @@ int main(int argc, char* argv[]){
 
     controls::tests::g_config_dict = config_dict;
 
+
+    //Start of action queue
+
     // for(const auto & elem : config_dict)
     // {
     //     std::cout << elem.first << " " << elem.second << " " << "\n";
@@ -806,6 +835,7 @@ int main(int argc, char* argv[]){
     
     auto node = std::make_shared<controls::tests::TestNode>(config_dict);
 
+    
     rclcpp::on_shutdown(controls::tests::detect_all_collisions);
 
     rclcpp::spin(node);

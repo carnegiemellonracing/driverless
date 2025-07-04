@@ -42,6 +42,7 @@ namespace controls {
     bool publish_spline;
     bool log_state_projection_history;
     bool no_midline_controller;
+    float torque_delay_seconds;
 
 
 
@@ -60,10 +61,14 @@ namespace controls {
                       republished_perc_cones_topic_name,
                       republished_perc_cones_qos)},
 
-              m_action_publisher{
-                  // TODO: <ActionMsg>
-                  create_publisher<interfaces::msg::ControlAction>(
+              m_test_node_action_publisher{
+                  create_publisher<ActionMsg>(
                       control_action_topic_name,
+                      control_action_qos)},
+
+              m_rosbag_action_publisher{
+                  create_publisher<ActionMsg>(
+                      republished_control_action_topic_name,
                       control_action_qos)},
 
               m_info_publisher{
@@ -79,7 +84,8 @@ namespace controls {
               },
 
               m_data_trajectory_log{"mppi_inputs.txt", std::ios::out},
-              m_p_value{0.1}
+              m_p_value{0.1},
+              m_torque_prop_sim {torque_delay_seconds}
         {
             // create a callback group that prevents state and spline callbacks from being executed concurrently
             rclcpp::CallbackGroup::SharedPtr main_control_loop_callback_group{
@@ -146,8 +152,8 @@ namespace controls {
                 auxiliary_state_options);
 
             if (testing_on_rosbag) {
-                m_action_subscription = create_subscription<ActionMsg>(
-                control_action_topic_name, control_action_qos,
+                m_rosbag_action_subscription = create_subscription<ActionMsg>(
+                republished_control_action_topic_name, control_action_qos,
                 [this](const ActionMsg::SharedPtr msg)
                 { rosbag_action_callback(*msg); },
                 auxiliary_state_options);
@@ -281,6 +287,7 @@ namespace controls {
 
 
             void ControllerNode::cone_callback(const ConeMsg& cone_msg) {
+                m_start_actuating = true;
 
                 m_mppi_controller->set_follow_midline_only(follow_midline_only);
                 m_state_estimator->set_follow_midline_only(follow_midline_only);
@@ -298,8 +305,9 @@ namespace controls {
 
                 // save for info publishing later, since might be changed during iteration
                 rclcpp::Time lidar_points_seen_time = cone_msg.header.stamp;
+                // RCLCPP_INFO_STREAM(get_logger(), "Lidar Time: " << cone_msg.header.stamp.sec << "." << cone_msg.header.stamp.nanosec << "\n");
 
-                rclcpp::Time cone_callback_time = get_clock()->now();
+                    rclcpp::Time cone_callback_time = get_clock()->now();
                 rclcpp::Time time_to_project_till;
                 if (testing_on_rosbag)
                 {
@@ -370,14 +378,16 @@ namespace controls {
                     gen_action_end = std::chrono::high_resolution_clock::now();
                 }
 
-                auto action_time = get_clock()->now(); 
+                auto action_time = get_clock()->now();
+
                 if (!testing_on_rosbag) {
-                    publish_action(action, action_time);
+                    republish_action(action, action_time);
                     m_state_estimator->record_control_action(action, action_time);
                 }
 
-
-                m_last_action_signal = action_to_signal(action);
+                m_action_to_actuate[action_swangle_idx] = action[action_swangle_idx]; 
+                m_torque_prop_sim.push(action[action_torque_idx], action_time);
+            
                 std::string error_str;
 
 #ifdef DATA
@@ -458,7 +468,7 @@ namespace controls {
                 rclcpp::Duration total_time_elapsed (0, 0);
                 if (testing_on_rosbag) {
                     // The first measures how long this function took, the second measures how long it took from lidar receiving points to this function getting called.
-                    total_time_elapsed = (get_clock()->now() - cone_callback_time) - (rclcpp::Time(cone_msg.controller_receive_time) - lidar_points_seen_time);
+                    total_time_elapsed = (get_clock()->now() - cone_callback_time) + (rclcpp::Time(cone_msg.controller_receive_time) - lidar_points_seen_time);
                 } else {
                     total_time_elapsed = get_clock()->now() - lidar_points_seen_time;
                 }
@@ -537,10 +547,10 @@ namespace controls {
                 m_state_estimator->on_position_lla(position_lla_msg);
             }
 
-            void ControllerNode::publish_action(const Action& action, rclcpp::Time current_time) {
+            void ControllerNode::republish_action(const Action& action, rclcpp::Time current_time) {
                 auto msg = action_to_msg(action);
                 msg.header.stamp = current_time;
-                m_action_publisher->publish(msg);
+                m_rosbag_action_publisher->publish(msg);
             }
 
 
@@ -647,6 +657,8 @@ namespace controls {
                 }
                 
                 std::stringstream ss;
+                assert(info.action.swangle <= max_swangle_rad);
+                assert(info.action.swangle >= min_swangle_rad);
 
                 ss
                     << "Action:\n"
@@ -678,7 +690,7 @@ namespace controls {
 
                 std::string info_str = ss.str();
 
-                std::cout << clear_term_sequence << info_str << std::flush;
+                std::cout << info_str << std::flush;
                 RCLCPP_INFO_STREAM(get_logger(), "mppi step complete. info:\n"
                                                      << info_str);
             }
@@ -696,8 +708,15 @@ namespace controls {
 
                             // if (std::chrono::duration_cast<std::chrono::milliseconds>(current_time.time_since_epoch()).count() % 100 < 5) {
                                 auto start = std::chrono::steady_clock::now();
-                                ActionSignal last_action_signal = m_last_action_signal;
-                                if (send_to_can) {
+
+                                auto torque_opt = m_torque_prop_sim.maybe_pop(get_clock()->now());
+                                if (torque_opt.has_value()) {
+                                    m_action_to_actuate[action_torque_idx] = torque_opt.value();
+                                }
+                                m_test_node_action_publisher->publish(action_to_msg(m_action_to_actuate));
+
+                                ActionSignal last_action_signal = action_to_signal(m_action_to_actuate);
+                                if (send_to_can && m_start_actuating) {
                                       sendPIDConstants(default_p, default_feedforward);
 
                                     // FYI, velocity_rpm is determined from the speed threshold
@@ -786,6 +805,7 @@ static int process_config_file(std::string config_file_path) {
     
     publish_spline = config_dict["publish_spline"] == "true" ? true : false;
     log_state_projection_history = config_dict["log_state_projection_history"] == "true" ? true : false;
+    torque_delay_seconds = std::stof(config_dict["torque_delay_seconds"]);
     return 0;
 }
 

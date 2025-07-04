@@ -91,6 +91,7 @@ namespace controls {
 
             // not actually on device, just still in a device action struct
             DeviceAction host_action = m_last_action * action_momentum + (1 - action_momentum) * averaged_trajectory[0];
+            assert(std::abs(m_last_action.data[action_swangle_idx] - host_action.data[action_swangle_idx]) <= max_swangle_rate * controller_period);
             m_last_action = host_action;
             Action result_action = device_action_to_action(host_action);
 
