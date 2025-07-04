@@ -34,7 +34,7 @@ namespace controls {
     constexpr const char *control_action_topic_name = "control_action";
     constexpr const char *spline_topic_name = "spline";
     constexpr const char *state_topic_name = "state";
-    constexpr const char *cone_topic_name = "perc_cones"; //Is this right? didn't exist before
+    constexpr const char *cone_topic_name = "associated_perc_cones"; //Is this right? didn't exist before
     constexpr const char *world_twist_topic_name = "filter/twist";
     constexpr const char *world_quat_topic_name = "filter/quaternion";
     constexpr const char *world_pose_topic_name = "filter/pose";

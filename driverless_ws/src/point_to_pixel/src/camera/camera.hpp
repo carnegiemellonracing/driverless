@@ -10,8 +10,15 @@
 #include <deque>
 #include <cmath>
 #include <mutex>
+#include <filesystem>
 
 namespace camera {
+    // USB Vendor & Product IDs for ZED cameras
+    static constexpr uint16_t ZED_VENDOR_ID = 0x2b03;
+    static constexpr uint16_t ZED_PRODUCT_ID = 0xf582;   // Original ZED
+    static constexpr uint16_t ZED2_PRODUCT_ID = 0xf780;  // ZED 2
+
+
     struct Camera {
         sl_oc::video::VideoCapture &cap;
         cv::Mat map_left_x;
@@ -51,8 +58,9 @@ namespace camera {
     );
 
     /**
-     * @brief Initialize ZED camera with rectification matrices and calibration
-     *
+     * @brief Dynamically assigns camera ids and corrects initial id assigmment. Also initializes 
+     * ZED camera with intrinsic rectification matrices.
+     * 
      * @param cam Camera struct to initialize
      * @param logger ROS logger for status messages
      * @return bool Success status

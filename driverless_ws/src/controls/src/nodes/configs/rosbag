@@ -1,0 +1,28 @@
+#==================================
+#Simulation Config File Description
+#==================================
+name: Simulation Config File <Main>
+date: April 7, 2024
+by: Controls Sim Team
+ 
+#==========
+#File Paths
+#==========
+root_dir: /driverless_ws/src/controls/
+ 
+#=====================
+#Miscellaneous Configs
+#=====================
+ 
+follow_midline_only: true
+approx_propogation_delay: 0.4f
+
+testing_on_rosbag: true
+ingest_midline: false
+send_to_can: false
+display_on: true
+state_projection_mode: model_multiset
+publish_spline: false
+log_state_projection_history: false
+no_midline_controller: false
+torque_delay_seconds: 0.4f
