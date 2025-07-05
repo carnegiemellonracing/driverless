@@ -208,13 +208,15 @@ inline void SourceDriver::Init(const YAML::Node &config)
     driver_param.decoder_param.enable_udp_thread = false;
     subscription_spin_thread_ = new boost::thread(boost::bind(&SourceDriver::SpinRos2, this));
   }
-#ifdef __CUDACC__
-  driver_ptr_.reset(new HesaiLidarSdkGpu<LidarPointXYZIRT>());
-  driver_param.decoder_param.enable_parser_thread = false;
-#else
-  driver_ptr_.reset(new HesaiLidarSdk<LidarPointXYZIRT>());
-  driver_param.decoder_param.enable_parser_thread = true;
-#endif
+
+  #ifdef __CUDACC__
+    driver_ptr_.reset(new HesaiLidarSdkGpu<LidarPointXYZIRT>());
+    driver_param.decoder_param.enable_parser_thread = false;
+  #else
+    driver_ptr_.reset(new HesaiLidarSdk<LidarPointXYZIRT>());
+    driver_param.decoder_param.enable_parser_thread = true;
+  #endif // __CUDACC__
+
   driver_ptr_->RegRecvCallback(std::bind(&SourceDriver::SendPointCloud, this, std::placeholders::_1));
   if (driver_param.input_param.send_packet_ros && driver_param.input_param.source_type != DATA_FROM_ROS_PACKET)
   {
@@ -274,7 +276,7 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
 #ifdef __CUDACC__
   filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));
   cones_pub_->publish(ToRosMsgCones(msg, frame_id_));
-#else
+#else  
 #if dark_mode
   cone_pub_dark->publish(ToRosMsgConesCPP_dark(msg, frame_id_));
 #else
@@ -284,8 +286,8 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
   auto end_cone_pub = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> duration_cone_pub = end_cone_pub - start_cone_pub;
   RCLCPP_INFO(node_ptr_->get_logger(), "/cpp_cones Publishing time: %fms", duration_cone_pub.count());
-#endif
-#endif
+#endif // dark_mode
+#endif // __CUDACC__
   RCLCPP_INFO(node_ptr_->get_logger(), "lidar points to publish time: %fms", (node_ptr_->get_clock()->now().nanoseconds() - cone_msg.header.stamp.sec * 1e9 - cone_msg.header.stamp.nanosec) / 1e6);
 }
 

@@ -1078,6 +1078,7 @@ compute_xyzs_v4_3_impl<<<frame.packet_num, frame.block_num * frame.laser_num>>>(
 
   return 0;
 }
+
 template <typename T_Point>
 int Udp4_3ParserGpu<T_Point>::LoadCorrectionString(char *data) {
   try {
