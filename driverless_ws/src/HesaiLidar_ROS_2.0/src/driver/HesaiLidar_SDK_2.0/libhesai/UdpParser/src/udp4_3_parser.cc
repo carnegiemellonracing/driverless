@@ -291,11 +291,31 @@ int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int pa
   // TRIGOP CODE
   auto xyzi_start = std::chrono::high_resolution_clock::now();
 
+  int block_index_time = 0;
+  int block_corr_time = 0;
+  int laser_index_time = 0;
+  int laser_corr_time = 0;
+  int fov_transfer_time = 0;
+  int trig_calc_time = 0;
+  int transform_time = 0;
+  int frame_cast_time = 0;
+  bool transform_active = true;
+  if (transform_active) cout << "\tTransform active\n";
+
   for (int blockid = 0; blockid < frame.block_num; blockid++) {
     // T_Point point;
+
+    // Getting values
+    auto block_index_start = std::chrono::high_resolution_clock::now();
     int Azimuth = frame.pointData[packet_index * frame.per_points_num + blockid * frame.laser_num].azimuth;
     int field = 0;
+    auto block_index_end = std::chrono::high_resolution_clock::now();
+    block_index_time += (block_index_end - block_index_start).count();
+
+    // If need to correct, correct
     if ( this->get_correction_file_) {
+      std::cout << "\tCorrection file opened in block loop\n";
+      auto block_corr_start = std::chrono::high_resolution_clock::now();
       int count = 0;
       while (count < m_PandarAT_corrections.header.frame_number &&
              (((Azimuth + CIRCLE - m_PandarAT_corrections.l.start_frame[field]) % CIRCLE +
@@ -306,16 +326,27 @@ int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int pa
         count++;
       }
       if (count >= m_PandarAT_corrections.header.frame_number) continue;
+      auto block_corr_end = std::chrono::high_resolution_clock::now();
+      block_corr_time += (block_corr_end - block_corr_start).count();
     }
     
     auto elevation = 0;
     int azimuth = 0;
 
     for (int i = 0; i < frame.laser_num; i++) {
+
+      // Getting values
+      auto laser_index_start = std::chrono::high_resolution_clock::now();
       int point_index = packet_index * frame.per_points_num + blockid * frame.laser_num + i;  
       float distance = frame.pointData[point_index].distances * frame.distance_unit;
       Azimuth = frame.pointData[point_index].azimuth;
+      auto laser_index_end = std::chrono::high_resolution_clock::now();
+      laser_index_time += (laser_index_end - laser_index_start).count();
+
+      // Correct distance if needed
       if (this->get_correction_file_) {
+        std::cout << "\tCorrection file opened in laser loop\n";
+        auto laser_corr_start = std::chrono::high_resolution_clock::now();
         elevation = (m_PandarAT_corrections.l.elevation[i] +
                    m_PandarAT_corrections.GetElevationAdjustV3(i, Azimuth) *
                        kFineResolutionInt );
@@ -324,7 +355,11 @@ int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int pa
                          m_PandarAT_corrections.l.azimuth[i] +
                          m_PandarAT_corrections.GetAzimuthAdjustV3(i, Azimuth) * kFineResolutionInt);
         azimuth = (CIRCLE + azimuth) % CIRCLE;
+        auto laser_corr_end = std::chrono::high_resolution_clock::now();
+        laser_corr_time += (laser_corr_end - laser_corr_start).count();
       }
+
+      auto fov_transfer_start = std::chrono::high_resolution_clock::now();
       if (frame.config.fov_start != -1 && frame.config.fov_end != -1)
       {
         int fov_transfer = azimuth / 256 / 100;
@@ -333,6 +368,8 @@ int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int pa
           continue;
         }
       }
+      auto fov_transfer_end = std::chrono::high_resolution_clock::now();
+      fov_transfer_time += (fov_transfer_end - fov_transfer_start).count();
 
       // NEW CODE begin
       // x will be distance, y angle, z elevation
@@ -345,25 +382,49 @@ int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int pa
       // NEW CODE end
 
       /* OLD CODE:*/
+      auto trig_calc_start = std::chrono::high_resolution_clock::now();
       float xyDistance = distance * this->cos_all_angle_[(elevation)];
       float x = xyDistance * this->sin_all_angle_[(azimuth)];
       float y = xyDistance * this->cos_all_angle_[(azimuth)];
       float z = distance * this->sin_all_angle_[(elevation)];
-      this->TransformPoint(x, y, z);
+      auto trig_calc_end = std::chrono::high_resolution_clock::now();
+      trig_calc_time += (trig_calc_end - trig_calc_start).count();
+      
+      // Transforms the base frame of the lidar (no transformation, see config.yaml)
+      // We can probably get rid of this
+      // one test with this running, one test without
+      if (transform_active) {
+        auto transform_start = std::chrono::high_resolution_clock::now();
+        this->TransformPoint(x, y, z);
+        auto transform_end = std::chrono::high_resolution_clock::now();
+        transform_time += (transform_end - transform_start).count();
+      }
+
+      auto frame_cast_start = std::chrono::high_resolution_clock::now();
       setX(frame.points[point_index], x);
       setY(frame.points[point_index], y);
       setZ(frame.points[point_index], z);
-      /**/
       setIntensity(frame.points[point_index], frame.pointData[point_index].reflectivities);
       setConfidence(frame.points[point_index], frame.pointData[point_index].confidence);
       setTimestamp(frame.points[point_index], double(frame.sensor_timestamp[packet_index]) / kMicrosecondToSecond);
       setRing(frame.points[point_index], i);
+      auto frame_cast_end = std::chrono::high_resolution_clock::now();
+      frame_cast_time += (frame_cast_end - frame_cast_start).count();
     }
   }
   GeneralParser<T_Point>::FrameNumAdd();
   // TRIGOP CODE
   auto xyzi_end = std::chrono::high_resolution_clock::now();
-  std::cout << "XYZI: " << (xyzi_end - xyzi_start).count() << "\n";
+  
+  std::cout << "Total XYZI: " << std::chrono::duration_cast<std::chrono::nanoseconds>(xyzi_end - xyzi_start).count() << " ns\n";
+  std::cout << "\tBlock Index: " << std::chrono::duration_cast<std::chrono::nanoseconds>(block_index_time).count() << " ns\n";
+  std::cout << "\tBlock Correction: " << std::chrono::duration_cast<std::chrono::nanoseconds>(block_corr_time).count() << " ns\n";
+  std::cout << "\tLaser Index: " << std::chrono::duration_cast<std::chrono::nanoseconds>(laser_index_time).count() << " ns\n";
+  std::cout << "\tLaser Correction: " << std::chrono::duration_cast<std::chrono::nanoseconds>(laser_corr_time).count() << " ns\n";
+  std::cout << "\tFOV Transfer: " << std::chrono::duration_cast<std::chrono::nanoseconds>(fov_transfer_time).count() << " ns\n";
+  std::cout << "\tTrig Calc: " << std::chrono::duration_cast<std::chrono::nanoseconds>(trig_calc_time).count() << " ns\n";
+  std::cout << "\tTransform: " << std::chrono::duration_cast<std::chrono::nanoseconds>(transform_time).count() << " ns\n";
+  std::cout << "\tFrame Cast: " << std::chrono::duration_cast<std::chrono::nanoseconds>(frame_cast_time).count() << " ns\n";
   return 0;
 }
 

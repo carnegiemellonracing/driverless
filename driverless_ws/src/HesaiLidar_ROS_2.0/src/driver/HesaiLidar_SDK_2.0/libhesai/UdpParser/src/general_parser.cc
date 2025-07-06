@@ -334,12 +334,12 @@ void GeneralParser<T_Point>::TransformPoint(float& x, float& y, float& z)
   // y = target_rotate(1);
   // z = target_rotate(2);
 
-  float cosa = std::cos(transform_.roll);
-  float sina = std::sin(transform_.roll);
-  float cosb = std::cos(transform_.pitch);
-  float sinb = std::sin(transform_.pitch);
-  float cosc = std::cos(transform_.yaw);
-  float sinc = std::sin(transform_.yaw);
+  float cosa = std::cos(transform_.roll);   // 1
+  float sina = std::sin(transform_.roll);   // 0
+  float cosb = std::cos(transform_.pitch);  // 1
+  float sinb = std::sin(transform_.pitch);  // 0
+  float cosc = std::cos(transform_.yaw);    // 1
+  float sinc = std::sin(transform_.yaw);    // 0
 
   float x_ = cosb * cosc * x + (sina * sinb * cosc - cosa * sinc) * y +
               (sina * sinc + cosa * sinb * cosc) * z + transform_.x;
