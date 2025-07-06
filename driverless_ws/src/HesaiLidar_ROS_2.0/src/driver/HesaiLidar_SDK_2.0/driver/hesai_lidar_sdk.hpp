@@ -197,13 +197,18 @@ public:
       // if(packet_loss_tool_ == true) continue;
 
       //one frame is receive completely, split frame
+      auto last_pkt, first_pkt;
       if(lidar_ptr_->frame_.scan_complete) {
         // If it's not a timeout split frame, it will be one more packet
         bool last_packet_is_valid = (lidar_ptr_->frame_.packet_num != packet_index);
         lidar_ptr_->frame_.packet_num = packet_index;
+        if (frame_.packet_num == 0) 
+          first_pkt = std::chrono::high_resolution_clock::now();
         if (!last_packet_is_valid) {
           std::cout << "\t\t(Packet) Packet number: " << frame_.packet_num;
           std::cout << "\t\t(Driver) Packet index: " << packet_index << "\n";
+          last_pkt = std::chrono::high_resolution_clock::now();
+          std::cout << "Last packet received at: " << std::chrono::duration_cast<std::chrono::nanoseconds>(last_pkt - first_pkt).count() << " ns \n";
         }
         //waiting for parser thread compute xyzi of points in the same frame
         while(!lidar_ptr_->ComputeXYZIComplete(packet_index)) std::this_thread::sleep_for(std::chrono::microseconds(100));
