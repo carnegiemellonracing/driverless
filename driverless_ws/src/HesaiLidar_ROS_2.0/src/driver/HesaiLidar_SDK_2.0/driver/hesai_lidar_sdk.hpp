@@ -201,6 +201,10 @@ public:
         // If it's not a timeout split frame, it will be one more packet
         bool last_packet_is_valid = (lidar_ptr_->frame_.packet_num != packet_index);
         lidar_ptr_->frame_.packet_num = packet_index;
+        if (!last_packet_is_valid) {
+          std::cout << "\t\t(Packet) Packet number: " << frame_.packet_num;
+          std::cout << "\t\t(Driver) Packet index: " << packet_index << "\n";
+        }
         //waiting for parser thread compute xyzi of points in the same frame
         while(!lidar_ptr_->ComputeXYZIComplete(packet_index)) std::this_thread::sleep_for(std::chrono::microseconds(100));
         // uint32_t end =  GetMicroTickCount();
