@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.17)
 cmake_policy(SET CMP0048 NEW)
-project(hesai_ros_driver)
+project(hesai_ros_driver LANGUAGES CXX CUDA C) 
 
 #=======================================
 # Version information
@@ -17,7 +17,6 @@ configure_file(
 # Custom Point Type (XYZI, XYZIRT)
 #=======================================
 set(POINT_TYPE XYZI)
-
 find_package(PCL 1.3 REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
@@ -30,12 +29,10 @@ message(=============================================================)
 message("-- ROS_VERSION is $ENV{ROS_VERSION}")
 message(=============================================================)
 
-
 #========================
 # Project details / setup
 #========================
 set(PROJECT_NAME hesai_ros_driver)
-
 add_definitions(-DPROJECT_PATH="${PROJECT_SOURCE_DIR}")
 
 if (CMAKE_BUILD_TYPE STREQUAL "")
@@ -43,18 +40,23 @@ if (CMAKE_BUILD_TYPE STREQUAL "")
   add_definitions(-O3)
 endif()
 
-if($ENV{ROS_DISTRO} STREQUAL "humble")  # the ros2 humble requires c++17
-add_definitions(-std=c++17)
+# Set C++ standard
+if($ENV{ROS_DISTRO} STREQUAL "humble")
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CUDA_STANDARD 17)
 else()
-add_definitions(-std=c++14)
+  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CUDA_STANDARD 14)
 endif()
+
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 
 add_compile_options(-Wall)
 
 #========================
 # Dependencies Setup
 #========================
-
 #ROS#
 #Catkin#
 if($ENV{ROS_VERSION} MATCHES "1")
@@ -64,14 +66,12 @@ if($ENV{ROS_VERSION} MATCHES "1")
   set(ROS_LIBS ${roscpp_LIBRARIES} ${roslib_LIBRARIES})
   add_definitions(-DROS_FOUND)
   add_definitions(-DRUN_IN_ROS_WORKSPACE)
-
   find_package(catkin REQUIRED COMPONENTS
     roscpp
     sensor_msgs
     std_msgs
     message_generation
     roslib)
-
   add_message_files(
     FILES
     "UdpPacket.msg"
@@ -80,33 +80,24 @@ if($ENV{ROS_VERSION} MATCHES "1")
     "Ptp.msg"
     "Firetime.msg"
   )
-
   generate_messages(
     DEPENDENCIES
     std_msgs
   )
-
-
   catkin_package(CATKIN_DEPENDS 
     sensor_msgs 
     roslib)
-
 endif($ENV{ROS_VERSION} MATCHES "1")
 
 #ROS2#
 if($ENV{ROS_VERSION} MATCHES "2")
-
   find_package(rclcpp QUIET)
   if(rclcpp_FOUND)
-
     message(=============================================================)
     message("-- ROS2 Found. ROS2 Support is turned On.")
     message(=============================================================)
-
     add_definitions(-DROS2_FOUND)
     include_directories(${rclcpp_INCLUDE_DIRS})
-    set(CMAKE_CXX_STANDARD 14)
-
     find_package(ament_cmake REQUIRED)
     find_package(sensor_msgs REQUIRED)
     find_package(std_msgs REQUIRED)  
@@ -128,14 +119,11 @@ if($ENV{ROS_VERSION} MATCHES "2")
     ament_export_dependencies(rosidl_default_runtime)                 
     
   else(rclcpp_FOUND)
-
     message(=============================================================)
     message("-- ROS2 Not Found. ROS2 Support is turned Off.")
     message(=============================================================)
-
   endif(rclcpp_FOUND )
 endif($ENV{ROS_VERSION} MATCHES "2")
-
 
 #Others#
 find_package(yaml-cpp REQUIRED)
@@ -149,38 +137,36 @@ add_subdirectory(src/driver/HesaiLidar_SDK_2.0)
 #========================
 # Build Setup
 #========================
-
-# add_executable(hesai_ros_driver_node
-#                node/hesai_ros_driver_node.cpp
-#                src/manager/node_manager.cpp
-#                )
 find_package(Boost REQUIRED COMPONENTS thread)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
-# if install different cuda version, set the cuda path, like cuda-11.4
-# set(CUDA_TOOLKIT_ROOT_DIR /usr/local/cuda-11.4/)
-# find_package(CUDA REQUIRED) # Uncommented: Cuda Driver | Commented: CPP Driver
-# find_package(CUDA )
-
-if(CUDA_FOUND)
-  
+find_package(CUDAToolkit REQUIRED)
+if(CUDAToolkit_FOUND)
   message(=============================================================)
   message("-- CUDA Found. CUDA Support is turned On.")
+  message("-- CUDA Version: ${CUDAToolkit_VERSION}")
+  message("-- Thrust is included with CUDA")
   message(=============================================================)
 
-  link_directories($ENV{CUDA_PATH}/lib/x64)
-  set(CUDA_NVCC_FLAGS "-arch=sm_75;-O2")#根据具体GPU性能更改算力参数
-  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -rdc=true")
-  list(APPEND CUDA_NVCC_FLAGS -Xcompiler -fPIC)
-
-  CUDA_ADD_EXECUTABLE(hesai_ros_driver_node
+  set(CUDA_ARCH 75)
+  
+  # Create CUDA executable
+  add_executable(hesai_ros_driver_node
                 node/hesai_ros_driver_node.cu
                 src/manager/node_manager.cu
                 ./src/driver/HesaiLidar_SDK_2.0/libhesai/UdpParserGpu/src/buffer.cu
                 )
-  set(CUDA_LIBS "${CUDA_TOOLKIT_ROOT_DIR}/lib64/libcudart.so")
 
+  # Set CUDA properties
+  set_target_properties(hesai_ros_driver_node PROPERTIES
+    CUDA_STANDARD ${CMAKE_CUDA_STANDARD}
+    CUDA_STANDARD_REQUIRED ON
+    CUDA_SEPARABLE_COMPILATION ON
+    CUDA_ARCHITECTURES ${CUDA_ARCH}
+  )
+
+  # Link CUDA libraries (Thrust is automatically included)
   target_link_libraries(hesai_ros_driver_node                   
                 ${YAML_CPP_LIBRARIES}
                 ${Boost_LIBRARIES}
@@ -189,11 +175,11 @@ if(CUDA_FOUND)
                 ptcClient_lib
                 ptcParser_lib
                 log_lib
-                ${CUDA_LIBS}
-                # libhesai
-    )
-else(CUDA_FOUND)
+                CUDA::cudart
+                CUDA::cuda_driver
+  )
 
+else(CUDAToolkit_FOUND)
   message(=============================================================)
   message("-- CUDA Not Found. CUDA Support is turned Off.")
   message(=============================================================)
@@ -209,13 +195,11 @@ else(CUDA_FOUND)
               ptcClient_lib
               ptcParser_lib
               log_lib
-              # libhesai
   )            
+endif(CUDAToolkit_FOUND)
 
-endif(CUDA_FOUND)
-
-
-  target_include_directories(hesai_ros_driver_node PRIVATE
+# Include directories
+target_include_directories(hesai_ros_driver_node PRIVATE
   src/driver/HesaiLidar_SDK_2.0/
   src/driver/HesaiLidar_SDK_2.0/libhesai
   src/driver/HesaiLidar_SDK_2.0/libhesai/Lidar
@@ -251,9 +235,7 @@ if($ENV{ROS_VERSION} MATCHES "1")
           ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 endif($ENV{ROS_VERSION} MATCHES "1")
 
-
 #Ros2#
-
 if($ENV{ROS_VERSION} MATCHES "2")
   find_package(ament_index_cpp REQUIRED)
   ament_target_dependencies(hesai_ros_driver_node 
@@ -265,21 +247,15 @@ if($ENV{ROS_VERSION} MATCHES "2")
   "geometry_msgs" 
   "interfaces" 
   "sensor_msgs" 
-  # "tf2_geometry_msgs"
   )
   rosidl_target_interfaces(hesai_ros_driver_node  ${PROJECT_NAME} "rosidl_typesupport_cpp")
-
   install(TARGETS
     hesai_ros_driver_node
     DESTINATION lib/${PROJECT_NAME})
-
   install(DIRECTORY
     launch
     rviz
     DESTINATION share/${PROJECT_NAME})
     
-
   ament_package()
-
 endif($ENV{ROS_VERSION} MATCHES "2")
-
