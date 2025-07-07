@@ -157,6 +157,12 @@ public:
 
     uint32_t total_packet_count;
     uint32_t total_packet_loss_count;
+
+    //TRIGOP Code 
+    bool prev_frame_finished = false;
+    std::chrono::high_resolution_clock::time_point last_pkt, first_pkt;
+    // END TRIGOP Code
+
     while (is_thread_runing_)
     {
 
@@ -197,19 +203,26 @@ public:
       // if(packet_loss_tool_ == true) continue;
 
       //one frame is receive completely, split frame
-      auto last_pkt, first_pkt;
+
+      // TRIGOP CODE
+      if (prev_frame_finished) {
+        first_pkt = std::chrono::high_resolution_clock::now();
+        prev_frame_finished = false;
+      }
+
       if(lidar_ptr_->frame_.scan_complete) {
         // If it's not a timeout split frame, it will be one more packet
         bool last_packet_is_valid = (lidar_ptr_->frame_.packet_num != packet_index);
+
+        // TRIGOP CODE
+        std::cout << "\t\t(Packet) Packet number: " << lidar_ptr_->frame_.packet_num;
+        std::cout << "\t\t(Driver) Packet index: " << packet_index << "\n";
+        last_pkt = std::chrono::high_resolution_clock::now();
+        std::cout << "\t\tFirst/Last Packet time diff: " << std::chrono::duration_cast<std::chrono::nanoseconds>(last_pkt - first_pkt).count() << " ns \n";
+        prev_frame_finished = true;
+        
         lidar_ptr_->frame_.packet_num = packet_index;
-        if (frame_.packet_num == 0) 
-          first_pkt = std::chrono::high_resolution_clock::now();
-        if (!last_packet_is_valid) {
-          std::cout << "\t\t(Packet) Packet number: " << frame_.packet_num;
-          std::cout << "\t\t(Driver) Packet index: " << packet_index << "\n";
-          last_pkt = std::chrono::high_resolution_clock::now();
-          std::cout << "Last packet received at: " << std::chrono::duration_cast<std::chrono::nanoseconds>(last_pkt - first_pkt).count() << " ns \n";
-        }
+        
         //waiting for parser thread compute xyzi of points in the same frame
         while(!lidar_ptr_->ComputeXYZIComplete(packet_index)) std::this_thread::sleep_for(std::chrono::microseconds(100));
         // uint32_t end =  GetMicroTickCount();
