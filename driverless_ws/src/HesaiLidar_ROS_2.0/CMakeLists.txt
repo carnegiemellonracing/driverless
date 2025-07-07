@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.17)
 cmake_policy(SET CMP0048 NEW)
-project(hesai_ros_driver LANGUAGES CXX CUDA C) 
+project(hesai_ros_driver CXX CUDA C)
+
+set(CUDA_ARCH 75)
 
 #=======================================
 # Version information
@@ -40,7 +42,16 @@ if (CMAKE_BUILD_TYPE STREQUAL "")
   add_definitions(-O3)
 endif()
 
-# Set C++ standard
+# Set C++ and CUDA standard
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
+
+if(NOT CMAKE_CUDA_STANDARD)
+  set(CMAKE_CUDA_STANDARD 17)
+endif()
+
+# Set standard for ROS distro compatibility
 if($ENV{ROS_DISTRO} STREQUAL "humble")
   set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CUDA_STANDARD 17)
@@ -135,7 +146,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 add_subdirectory(src/driver/HesaiLidar_SDK_2.0)
 
 #========================
-# Build Setup
+# Build Setup - Modern CMake CUDA (like controls package)
 #========================
 find_package(Boost REQUIRED COMPONENTS thread)
 include_directories(${Boost_INCLUDE_DIRS})
@@ -148,37 +159,47 @@ if(CUDAToolkit_FOUND)
   message("-- CUDA Version: ${CUDAToolkit_VERSION}")
   message("-- Thrust is included with CUDA")
   message(=============================================================)
-
-  set(CUDA_ARCH 75)
-  
   # Create CUDA executable
   add_executable(hesai_ros_driver_node
                 node/hesai_ros_driver_node.cu
                 src/manager/node_manager.cu
-                ./src/driver/HesaiLidar_SDK_2.0/libhesai/UdpParserGpu/src/buffer.cu
-                )
+                ./src/driver/HesaiLidar_SDK_2.0/libhesai/UdpParserGpu/src/buffer.cu)
+
+  # Set CUDA compile options
+  target_compile_options(hesai_ros_driver_node PRIVATE 
+    $<$<COMPILE_LANGUAGE:CUDA>:
+      --use_fast_math 
+      --expt-relaxed-constexpr
+      --extended-lambda
+    >
+  )
+
+  target_compile_definitions(hesai_ros_driver_node PRIVATE
+    $<$<COMPILE_LANGUAGE:CUDA>:THRUST_IGNORE_CUB_VERSION_CHECK>
+    $<$<COMPILE_LANGUAGE:CUDA>:THRUST_IGNORE_CUB_VERSION_CHECK>
+  ) 
 
   # Set CUDA properties
   set_target_properties(hesai_ros_driver_node PROPERTIES
-    CUDA_STANDARD ${CMAKE_CUDA_STANDARD}
-    CUDA_STANDARD_REQUIRED ON
     CUDA_SEPARABLE_COMPILATION ON
     CUDA_ARCHITECTURES ${CUDA_ARCH}
+    CUDA_STANDARD ${CMAKE_CUDA_STANDARD}
+    CUDA_STANDARD_REQUIRED ON
   )
-
-  # Link CUDA libraries (Thrust is automatically included)
+  
+  # Link CUDA libraries (following modern CMake pattern)
   target_link_libraries(hesai_ros_driver_node                   
-                ${YAML_CPP_LIBRARIES}
-                ${Boost_LIBRARIES}
-                source_lib
-                container_lib
-                ptcClient_lib
-                ptcParser_lib
-                log_lib
-                CUDA::cudart
-                CUDA::cuda_driver
+    ${YAML_CPP_LIBRARIES}
+    ${Boost_LIBRARIES}
+    source_lib
+    container_lib
+    ptcClient_lib
+    ptcParser_lib
+    log_lib
+    udpParserGpu_lib
+    CUDA::cudart
   )
-
+                         
 else(CUDAToolkit_FOUND)
   message(=============================================================)
   message("-- CUDA Not Found. CUDA Support is turned Off.")

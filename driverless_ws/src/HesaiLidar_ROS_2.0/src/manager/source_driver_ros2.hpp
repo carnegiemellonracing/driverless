@@ -274,9 +274,10 @@ inline void SourceDriver::SendPointCloud(const LidarDecodedFrame<LidarPointXYZIR
   RCLCPP_INFO(node_ptr_->get_logger(), "/lidar_points Publishing time: %fms", duration_pub.count());
 
 #ifdef __CUDACC__
+  auto cone_msg = ToRosMsgCones(msg, frame_id_);
   filtered_pub_->publish(ToRosMsgFiltered(msg, frame_id_));
-  cones_pub_->publish(ToRosMsgCones(msg, frame_id_));
-#else  
+  cones_pub_->publish(cone_msg);
+#else
 #if dark_mode
   cone_pub_dark->publish(ToRosMsgConesCPP_dark(msg, frame_id_));
 #else

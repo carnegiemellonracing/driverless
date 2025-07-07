@@ -101,7 +101,7 @@ T_Point *Udp4_3ParserGpu<T_Point>::grace_and_conrad(const T_Point *points_ptr,
     auto polar_iter = thrust::make_transform_iterator(
         thrust::make_zip_iterator(thrust::make_tuple(device_memory_->d_points_buffer.begin(),
                                                      device_memory_->d_indices_buffer.begin())),
-        point_to_polar_functor<T_Point>());
+                                                     point_to_polar_functor<T_Point>());
 
     device_memory_->d_polar_buffer.resize(num_points);
     thrust::copy(polar_iter, polar_iter + num_points, device_memory_->d_polar_buffer.begin());

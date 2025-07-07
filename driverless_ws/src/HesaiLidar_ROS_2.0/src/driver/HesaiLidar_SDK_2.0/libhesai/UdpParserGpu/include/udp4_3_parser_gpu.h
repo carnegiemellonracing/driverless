@@ -49,6 +49,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <thrust/host_vector.h>
 #include <thrust/transform.h>
 #include <thrust/reduce.h>
+#include <thrust/sequence.h>
 #include <thrust/sort.h>
 #include <thrust/unique.h>
 #include <thrust/remove.h>
@@ -76,7 +77,7 @@ namespace lidar
   template <typename T_Point>
   struct DeviceMemoryMaster;
 
-  // Struct declarations
+  // Struct definitions
   struct Config
   {
     // GNC Params
@@ -87,8 +88,8 @@ namespace lidar
     static constexpr int NUM_BINS_DEFAULT = 10;  // Number of range bins
     static constexpr float RANGE_MIN = 0.0f;     // Minimum range (meters)
     static constexpr float INVALID_POINT_THRESHOLD = 0.01f; // Min x,y for valid points
-    static constexpr int MAX_SEGMENTS = 360;                // Maximum angular segments
-    static constexpr int MAX_BINS = 100;                    // Maximum range bins
+    static constexpr int MAX_SEGMENTS = 360;                // Maximum angular segments/slices (longitudinal)
+    static constexpr int MAX_BINS = 100;                    // Maximum range bins (latitudinal)
 
     // DBSCAN Params
     static constexpr float EPS_DEFAULT = 0.3f;    // DBSCAN epsilon (meters)
@@ -320,68 +321,72 @@ namespace lidar
   template <typename T_Point>
   class Udp4_3ParserGpu : public GeneralParserGpu<T_Point>
   {
-  private:
-    // Raw lidar point processing variables
-    bool corrections_loaded_;
-    int32_t *channel_azimuths_cu_;
-    int32_t *channel_elevations_cu_;
-    int8_t *dazis_cu;
-    int8_t *deles_cu;
-    PointDecodeData *point_data_cu_;
-    uint64_t *sensor_timestamp_cu_;
-    uint32_t *mirror_azi_begins_cu;
-    uint32_t *mirror_azi_ends_cu;
+    public:
+      Udp4_3ParserGpu();
+      ~Udp4_3ParserGpu();
 
-    // Central assets
-    std::unique_ptr<DeviceMemoryMaster<T_Point>> device_memory_;
-    std::unique_ptr<TimerManager> timers_;
-    GraceAndConradParams gnc_params_;
-    DbscanParams dbscan_params_;
-    ProcessingStats stats_;
-    Config config_;
+      // Core processing functions
+      virtual int ComputeXYZI(LidarDecodedFrame<T_Point> &frame);
+      virtual int load_correction_file(std::string correction_path);
+      virtual int load_correction_string(char *correction_string);
 
-    // Clustering and ground filtering functions
-    T_Point *grace_and_conrad(const T_Point *points_ptr, size_t num_points, int *num_filtered);
-    std::vector<T_Point> dbscan(const T_Point *points_ptr, size_t num_points);
-    void update_angle_range(const T_Point *points_ptr, size_t num_points);
-    void optimize_processing_parameters(size_t num_points);
+      // Param setters and getters
+      void set_grace_and_conrad_params(const GraceAndConradParams &params) { gnc_params_ = params; }
+      void set_dbscan_params(const DbscanParams &params) { dbscan_params_ = params; }
+      const GraceAndConradParams &get_grace_and_conrad_params() const { return gnc_params_; }
+      const DbscanParams &get_dbscan_params() const { return dbscan_params_; }
 
-  public:
-    Udp4_3ParserGpu();
-    ~Udp4_3ParserGpu();
+      // Processing functions have to be public because lambda functions are 
+      // defined by host and thus cannot access private members
+      T_Point *grace_and_conrad(const T_Point *points_ptr, size_t num_points, int *num_filtered);
+      std::vector<T_Point> dbscan(const T_Point *points_ptr, size_t num_points);
 
-    // Core processing functions - Fixed method name
-    virtual int ComputeXYZI(LidarDecodedFrame<T_Point> &frame);
-    virtual int load_correction_file(std::string correction_path);
-    virtual int load_correction_string(char *correction_string);
-
-    // Config setters and getters
-    void set_grace_and_conrad_params(const GraceAndConradParams &params) { gnc_params_ = params; }
-    void set_dbscan_params(const DbscanParams &params) { dbscan_params_ = params; }
-    const GraceAndConradParams &get_grace_and_conrad_params() const { return gnc_params_; }
-    const DbscanParams &get_dbscan_params() const { return dbscan_params_; }
-
-    // Performance monitoring
-    const ProcessingStats &get_stats() const { return stats_; }
-    void print_summary() const
-    {
-      if (timers_)
-        timers_->print_timing();
-      stats_.print_stats();
-    }
-
-    // Memory management
-    void preallocate_buffers(size_t max_points, int max_segments = Config::MAX_SEGMENTS,
-                              int max_bins = Config::MAX_BINS)
-    {
-      if (device_memory_)
+      // Performance monitoring
+      const ProcessingStats &get_stats() const { return stats_; }
+      void print_summary() const
       {
-        device_memory_->resize_buffers(max_points, max_segments, max_bins);
+        if (timers_)
+          timers_->print_timing();
+        stats_.print_stats();
       }
-    }
 
-    // Algorithm params
-    PandarATCorrections m_PandarAT_corrections;
+      // Memory management
+      void preallocate_buffers(size_t max_points, int max_segments = Config::MAX_SEGMENTS,
+                                int max_bins = Config::MAX_BINS)
+      {
+        if (device_memory_)
+        {
+          device_memory_->resize_buffers(max_points, max_segments, max_bins);
+        }
+      }
+
+      // Hesai corrections
+      PandarATCorrections m_PandarAT_corrections;
+      
+    private:
+      // Raw lidar point processing variables
+      bool corrections_loaded_;
+      int32_t *channel_azimuths_cu_;
+      int32_t *channel_elevations_cu_;
+      int8_t *dazis_cu;
+      int8_t *deles_cu;
+      PointDecodeData *point_data_cu_;
+      uint64_t *sensor_timestamp_cu_;
+      uint32_t *mirror_azi_begins_cu;
+      uint32_t *mirror_azi_ends_cu;
+
+      // Central assets
+      std::unique_ptr<DeviceMemoryMaster<T_Point>> device_memory_;
+      std::unique_ptr<TimerManager> timers_;
+      GraceAndConradParams gnc_params_;
+      DbscanParams dbscan_params_;
+      ProcessingStats stats_;
+      Config config_;
+
+      // Clustering and ground filtering functions
+      void update_angle_range(const T_Point *points_ptr, size_t num_points);
+      void optimize_processing_parameters(size_t num_points);
+
   };
 
   // Thrust functors
