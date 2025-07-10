@@ -1,13 +1,14 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
-from tf2_ros import TransformBroadcaster
-from geometry_msgs.msg import TransformStamped, Point
+
+from std_msgs.msg import Float64
+from geometry_msgs.msg import Point, TwistStamped
 from sensor_msgs.msg import PointCloud2, PointField
 from visualization_msgs.msg import Marker, MarkerArray
-from interfaces.msg import ConeArray, SplineFrames, PPMConeArray, PPMConePoints
+from interfaces.msg import ConeArray, SplineFrames, PPMConeArray
 from perceptions.topics import POINT_TOPIC, POINT_2_TOPIC
-import numpy as np
+import math
 import argparse
 import sys
 import struct
@@ -28,23 +29,6 @@ class FoxgloveNode(Node):
         self.last_marker_count = 0
         self.last_spline_marker_count = 0
 
-        # TF broadcaster
-        self.tf_broadcaster = TransformBroadcaster(self)
-
-        # Transformation matrices
-        self.tf_mat_left = np.array([
-            [0.76604444, -0.64278764, 0., -0.18901],
-            [0.64278764, 0.76604444, 0., 0.15407],
-            [0., 0., 1., 0.],
-            [0., 0., 0., 1.]
-        ])
-        self.tf_mat_right = np.array([
-            [0.76604444, 0.64278764, 0., -0.16541],
-            [-0.64278764, 0.76604444, 0., -0.12595],
-            [0., 0., 1., 0.],
-            [0., 0., 0., 1.]
-        ])
-
         # Publishers and Subscribers
         # Replace MarkerArray publishers with PointCloud2 publishers
         self.cone_publisher = self.create_publisher(
@@ -59,13 +43,17 @@ class FoxgloveNode(Node):
             PointCloud2, 'associated_cone_points', 
             qos_profile=BEST_EFFORT_QOS_PROFILE
         )
-        # Keep the spline publisher as MarkerArray
+
         self.spline_publisher = self.create_publisher(
             MarkerArray, 'spline_markers', 
             qos_profile=BEST_EFFORT_QOS_PROFILE
         )
 
-        # Subscribers remain the same
+        self.speed_publisher = self.create_publisher(
+            Float64, 'speed', 
+            qos_profile=BEST_EFFORT_QOS_PROFILE
+        )
+
         self.cone_subscriber = self.create_subscription(
             ConeArray, '/perc_cones', 
             self.colored_cone_array_callback, 
@@ -87,72 +75,12 @@ class FoxgloveNode(Node):
             self.spline_callback, 
             qos_profile=BEST_EFFORT_QOS_PROFILE
         )
-        self.point_1_subscriber = self.create_subscription(
-            PointCloud2, POINT_TOPIC, 
-            self.points_callback_1, 
+
+        self.speed_subscriber = self.create_subscription(
+            TwistStamped, '/filter/twist', 
+            self.speed_callback, 
             qos_profile=BEST_EFFORT_QOS_PROFILE
         )
-        self.point_2_subscriber = self.create_subscription(
-            PointCloud2, POINT_2_TOPIC,
-            self.points_callback_2,
-            qos_profile=BEST_EFFORT_QOS_PROFILE
-        )
-
-    def points_callback_1(self, msg: PointCloud2):
-        self.publish_tf(self.tf_mat_left, 'dual_lidar', 'hesai_lidar')
-
-    def points_callback_2(self, msg: PointCloud2):
-        self.publish_tf(self.tf_mat_right, 'dual_lidar', 'hesai_lidar2')
-
-    def publish_tf(self, tf_mat, parent_frame, child_frame):
-        t = TransformStamped()
-        t.header.stamp = self.get_clock().now().to_msg()
-        t.header.frame_id = parent_frame
-        t.child_frame_id = child_frame
-
-        # Extract translation directly from the transformation matrix
-        t.transform.translation.x = tf_mat[0, 3]
-        t.transform.translation.y = tf_mat[1, 3]
-        t.transform.translation.z = tf_mat[2, 3]
-
-        # Extract rotation matrix and convert to quaternion
-        rotation_matrix = tf_mat[:3, :3]
-        q = self.rotation_matrix_to_quaternion(rotation_matrix)
-        t.transform.rotation.x = q[0]
-        t.transform.rotation.y = q[1]
-        t.transform.rotation.z = q[2]
-        t.transform.rotation.w = q[3]
-
-        self.tf_broadcaster.sendTransform(t)
-
-    def rotation_matrix_to_quaternion(self, R):
-        # Convert rotation matrix to quaternion
-        trace = R[0, 0] + R[1, 1] + R[2, 2]
-        if trace > 0:
-            S = 0.5 / np.sqrt(trace + 1.0)
-            w = 0.25 / S
-            x = (R[2, 1] - R[1, 2]) * S
-            y = (R[0, 2] - R[2, 0]) * S
-            z = (R[1, 0] - R[0, 1]) * S
-        elif (R[0, 0] > R[1, 1]) and (R[0, 0] > R[2, 2]):
-            S = 2.0 * np.sqrt(1.0 + R[0, 0] - R[1, 1] - R[2, 2])
-            w = (R[2, 1] - R[1, 2]) / S
-            x = 0.25 * S
-            y = (R[0, 1] + R[1, 0]) / S
-            z = (R[0, 2] + R[2, 0]) / S
-        elif R[1, 1] > R[2, 2]:
-            S = 2.0 * np.sqrt(1.0 + R[1, 1] - R[0, 0] - R[2, 2])
-            w = (R[0, 2] - R[2, 0]) / S
-            x = (R[0, 1] + R[1, 0]) / S
-            y = 0.25 * S
-            z = (R[1, 2] + R[2, 1]) / S
-        else:
-            S = 2.0 * np.sqrt(1.0 + R[2, 2] - R[0, 0] - R[1, 1])
-            w = (R[1, 0] - R[0, 1]) / S
-            x = (R[0, 2] + R[2, 0]) / S
-            y = (R[1, 2] + R[2, 1]) / S
-            z = 0.25 * S
-        return [x, y, z, w]
 
     def cone_array_callback(self, msg: PPMConeArray):
         # Create point cloud message for cones
@@ -313,11 +241,17 @@ class FoxgloveNode(Node):
         marker_array.markers.append(car_marker)
 
         self.spline_publisher.publish(marker_array)
+    
+    def speed_callback(self, msg: TwistStamped):
+        speed_msg = Float64()
+        speed_msg.data = math.sqrt(msg.twist.linear.x ** 2 + msg.twist.linear.y ** 2)
+        self.speed_publisher.publish(speed_msg)
+
 
 def main(args=None):
     parser = argparse.ArgumentParser(description="Foxglove Node")
     parser.add_argument('-p', '--print', action='store_true', help="Print cone counts")
-    parsed_args = parser.parse_args(args=sys.argv[1:])
+    parsed_args = parser.parse_args(args=sys.argv[1:])  
 
     rclpy.init(args=args)
     node = FoxgloveNode(print_counts=parsed_args.print)
