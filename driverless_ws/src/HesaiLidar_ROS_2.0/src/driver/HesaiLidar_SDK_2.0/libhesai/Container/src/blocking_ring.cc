@@ -39,6 +39,7 @@ template <typename T, size_t N>
 bool BlockingRing<T, N>::try_pop_front(T& value) {
     LockC lock(_mutex);
     using namespace std::literals::chrono_literals;
+    // Wait up to 500ms for a packet to arrive in the queue
     bool ret = _condv.wait_for(lock, 500ms, std::bind(&Super::not_empty, this));
     if (ret) {
         value = Super::peek_front();

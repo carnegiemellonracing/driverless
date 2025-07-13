@@ -159,16 +159,35 @@ public:
     uint32_t total_packet_loss_count;
 
     //TRIGOP Code 
+    // Getting how long it takes for one frame's packets to come in (~50ms)
     bool prev_frame_finished = false;
     std::chrono::high_resolution_clock::time_point last_pkt, first_pkt;
+
+    // Getting how long it takes for a single packet to come in (lower bound for optimization)
+    std::chrono::high_resolution_clock::time_point pkt_recvd;
+    int times_failed = 0;
     // END TRIGOP Code
 
     while (is_thread_runing_)
     {
 
+      // TRIGOP code
+      if (times_failed == 0) pkt_recvd = std::chrono::high_resolution_clock::now();
+      // END TRIGOP code
+
       //get one packte from origin_packets_buffer_, which receive data from upd or pcap thread
       int ret = lidar_ptr_->GetOnePacket(packet);
-      if (ret == -1) continue;
+      if (ret == -1) {
+        ++times_failed;
+        continue;
+      }
+
+      // TRIGOP code
+      std::cout << "\t\tOne packet received in : " << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - pkt_recvd).count() << " ns \n";
+      std::cout << "\t\tAfter : " << times_failed << " attempts \n";
+      times_failed = 0;
+      // END TRIGOP code
+
       //get fault message
       if (packet.packet_len == kFaultMessageLength) {
         if(device_fault_port_ != 0){
