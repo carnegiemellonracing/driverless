@@ -192,6 +192,9 @@ int Lidar<T_Point>::Init(const DriverParam& param) {
     udp_parser_->GetParser()->EnablePacketLossTool(param.decoder_param.enable_packet_loss_tool);
     udp_parser_->GetParser()->EnablePacketTimeLossTool(param.decoder_param.enable_packet_timeloss_tool);
     udp_parser_->GetParser()->PacketTimeLossToolContinue(param.decoder_param.packet_timeloss_tool_continue);
+    // TRIGOP start
+    std::cout << "Correction file path: " << param.input_param.correction_file_path << "\n";
+    // TRIGOP END
     switch (param.input_param.source_type)
     {
     case 1: {

@@ -313,6 +313,7 @@ int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int pa
     block_index_time += (block_index_end - block_index_start);
 
     // If need to correct, correct
+    // Block correction only modifies local variable field, used in laser correction
     if ( this->get_correction_file_) {
       std::cout << "\tCorrection file opened in block loop\n";
       auto block_corr_start = std::chrono::high_resolution_clock::now();
@@ -344,6 +345,7 @@ int Udp4_3Parser<T_Point>::ComputeXYZI(LidarDecodedFrame<T_Point> &frame, int pa
       laser_index_time += (laser_index_end - laser_index_start);
 
       // Correct distance if needed
+      // Functions: GetElevationAdjustV3, GetAzimuthAdjustV3
       if (this->get_correction_file_) {
         // std::cout << "\tCorrection file opened in laser loop\n";
         auto laser_corr_start = std::chrono::high_resolution_clock::now();
