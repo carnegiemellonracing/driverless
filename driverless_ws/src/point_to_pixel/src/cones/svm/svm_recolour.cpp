@@ -30,11 +30,6 @@ namespace recolouring {
     }
     
     cones::TrackBounds recolour_cones(cones::TrackBounds track_bounds, double C) {
-        
-        // Constants
-        const int augment_angle_degrees = 30;
-        const double radius = 0.5;
-
         auto total_start = std::chrono::high_resolution_clock::now();
     
         // check if there are no blue or yellow cones
@@ -51,7 +46,6 @@ namespace recolouring {
         // augment dataset to make it better for SVM training
         cones::TrackBounds augmented_cones = track_bounds;
         cones::supplement_cones(augmented_cones);
-        // cones::augment_cones_circle(augmented_cones, augment_angle_degrees, radius);
     
         // acquire the feature matrix and label vector
         std::pair<std::vector<std::vector<double>>, std::vector<double>> xy = cones::cones_to_xy(augmented_cones);

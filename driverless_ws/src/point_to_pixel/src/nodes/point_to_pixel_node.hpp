@@ -1,6 +1,6 @@
 #pragma once
 
-// Project Headers
+// Headers
 #include "../transform/transform.hpp"
 #include "../camera/camera.hpp"
 #include "../cones/cones.hpp"
@@ -37,22 +37,21 @@ class PointToPixelNode : public rclcpp::Node
 public:
     // Constructor declaration
     PointToPixelNode();
+
+private:
+    // Constants
     static constexpr int max_deque_size = 100;
     static constexpr double svm_C = 5.0;
 
-    // YOLO constants
     #if use_yolo
     static constexpr char yolo_model_path[] = "src/point_to_pixel/config/yolov5_model_params.onnx";
-    // static constexpr char yolo_model_path[] = "src/point_to_pixel/config/best164.onnx";
-    #endif
+    #endif // use_yolo
 
-    // Frame saving constants
     #if save_frames
     static constexpr int frame_interval = 10;
-    static constexpr char save_path[] = "src/point_to_pixel/img_log/";
-    #endif
+    static constexpr char save_path[] = "src/point_to_pixel/freezes/img_log/";
+    #endif // save_frames
 
-private:
     // ROS2 Publisher and Subscribers
     rclcpp::Publisher<interfaces::msg::ConeArray>::SharedPtr cone_pub_;
     rclcpp::Subscription<interfaces::msg::PPMConeArray>::SharedPtr cone_sub_;
@@ -66,7 +65,7 @@ private:
     std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> yaw_deque;
     #if save_frames
     std::queue<std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat>> save_queue;
-    #endif
+    #endif // save_frames
 
     // Mutexes Declarations for thread safety
     std::mutex l_img_mutex;
@@ -75,7 +74,7 @@ private:
     std::mutex yaw_mutex;
     #if save_frames
     std::mutex save_mutex;
-    #endif
+    #endif // save_frames
     
     // ROS Arg Parameters
     std::vector<double> param_l;
@@ -110,7 +109,7 @@ private:
     std::thread launch_camera_communication();
     #if save_frames
     std::thread launch_frame_saving();
-    #endif
+    #endif // save_frames
 
     /**
      * @brief Triggers full point to pixel pipeline. First retrieves closest camera frames L and R to lidar timestamp and
