@@ -12,7 +12,6 @@
 #include <thread>
 #include <cstring>
 
-#include "svm_recolour.hpp"
 #include "svm.hpp"
 
 namespace cones {

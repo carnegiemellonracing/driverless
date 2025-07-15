@@ -1,5 +1,5 @@
 #include "../cones.hpp"
-#include "svm.hpp"
+#include "../../lib/svm_lib.hpp"
 
 namespace cones {
 namespace recolouring {

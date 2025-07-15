@@ -2,8 +2,8 @@
 #include <iostream>
 
 namespace camera {
-    std::pair<uint64_t, cv::Mat> find_closest_frame(
-        const std::deque<std::pair<uint64_t, cv::Mat>> &img_deque,
+    stamped_img Camera::find_closest_frame(
+        const std::deque<stamped_img> &img_deque,
         const rclcpp::Time &callbackTime,
         const rclcpp::Logger &logger
     ) {
@@ -24,8 +24,7 @@ namespace camera {
         return img_deque.back();
     }
 
-    bool initialize_camera(
-        Camera &cam,
+    bool Camera::initialize_camera(
         const rclcpp::Logger &logger
     ) {
         // Get list of video devices
@@ -109,7 +108,7 @@ namespace camera {
         
         // Check if assigned device ID matches ZED device id
         int correct_device_id;
-        if (cam.device_id == 0) {
+        if (this->device_id == 0) {
             // This should be the left camera (ZED)
             correct_device_id = zed_device_id;
         } else {
@@ -118,69 +117,69 @@ namespace camera {
         }
         
         // If incorrect, reassign correct device ID to cam object, but log first.
-        if (correct_device_id != cam.device_id) {
+        if (correct_device_id != this->device_id) {
             RCLCPP_INFO(logger, "Reassigning camera %d to use device ID %d",
-                    cam.device_id, correct_device_id);
+                    this->device_id, correct_device_id);
         }
         
         // Initialize video capture with the correct device ID
-        if (!cam.cap.initializeVideo(correct_device_id)) {
+        if (!this->cap.initializeVideo(correct_device_id)) {
             RCLCPP_ERROR(logger, "Cannot open camera %d video capture", correct_device_id);
             return false;
         }
-        if (cam.device_id == 0) {
+        if (this->device_id == 0) {
         RCLCPP_INFO(logger, "Connected to left ZED camera. %s", 
-                  cam.cap.getDeviceName().c_str());
+                  this->cap.getDeviceName().c_str());
         } else {
             RCLCPP_INFO(logger, "Connected to right ZED 2 camera. %s", 
-                        cam.cap.getDeviceName().c_str());
+                        this->cap.getDeviceName().c_str());
         }
         
         // Assign correct device ID
-        cam.device_id = correct_device_id;
+        this->device_id = correct_device_id;
 
         // Camera Rectification
-        int sn = cam.cap.getSerialNumber();
+        int sn = this->cap.getSerialNumber();
         std::string calibration_file;
         unsigned int serial_number = sn;
 
         // Download camera calibration file
         if (!sl_oc::tools::downloadCalibrationFile(serial_number, calibration_file)) {
-            RCLCPP_ERROR(logger, "Could not load calibration file from Stereolabs servers for Camera %d", cam.device_id);
+            RCLCPP_ERROR(logger, "Could not load calibration file from Stereolabs servers for Camera %d", this->device_id);
             return false;
         }
 
         // Get Frame size
         int w, h;
-        cam.cap.getFrameSize(w, h);
+        this->cap.getFrameSize(w, h);
         cv::Mat cameraMatrix_left, cameraMatrix_right;
 
         // Initialize calibration
         sl_oc::tools::initCalibration(
             calibration_file, 
             cv::Size(w / 2, h),
-            cam.map_left_x, cam.map_left_y, 
-            cam.map_right_x, cam.map_right_y,
+            this->map_left_x, this->map_left_y, 
+            this->map_right_x, this->map_right_y,
             cameraMatrix_left, cameraMatrix_right
         );
 
         // Set auto exposure and brightness
-        cam.cap.setAECAGC(true);
-        cam.cap.setAutoWhiteBalance(true);
+        this->cap.setAECAGC(true);
+        this->cap.setAutoWhiteBalance(true);
 
-        RCLCPP_INFO(logger, "ZED Camera %d Ready. %s \n", cam.device_id, cam.cap.getDeviceName().c_str());
+        RCLCPP_INFO(logger, "ZED Camera %d Ready. %s \n", this->device_id, this->cap.getDeviceName().c_str());
         
         return true;
     }
 
-    std::pair<uint64_t, cv::Mat> capture_and_rectify_frame(
+    stamped_img Camera::capture_and_rectify_frame(
         const rclcpp::Logger &logger,
         const Camera &cam,
         bool left_camera,
-        bool use_inner_lens
-    ) {
+        bool use_inner_lens)
+    {
         // Capture the frame
-        const sl_oc::video::Frame frame = cam.cap.getLastFrame();
+        const sl_oc::video::Frame frame = this->cap.getLastFrame();
 
         cv::Mat frameBGR, raw, rect;
         cv::Rect index; 
@@ -191,22 +190,22 @@ namespace camera {
         if (left_camera) {
             if (use_inner_lens) {
                 index = cv::Rect(frame.width / 2, 0, frame.width / 2, frame.height); // Right side of the frame
-                map_x = cam.map_right_x;
-                map_y = cam.map_right_y;
+                map_x = this->map_right_x;
+                map_y = this->map_right_y;
             } else {
                 index = cv::Rect(0, 0, frame.width / 2, frame.height); // Left side of the frame
-                map_x = cam.map_left_x;
-                map_y = cam.map_left_y;
+                map_x = this->map_left_x;
+                map_y = this->map_left_y;
             }
         } else {
             if (use_inner_lens) {
                 index = cv::Rect(0, 0, frame.width / 2, frame.height); // Left side of the frame
-                map_x = cam.map_left_x;
-                map_y = cam.map_left_y;
+                map_x = this->map_left_x;
+                map_y = this->map_left_y;
             } else {
                 index = cv::Rect(frame.width / 2, 0, frame.width / 2, frame.height); // Right side of the frame
-                map_x = cam.map_right_x;
-                map_y = cam.map_right_y;
+                map_x = this->map_right_x;
+                map_y = this->map_right_y;
             }
         }
 
@@ -247,18 +246,18 @@ namespace camera {
         }
     }
 
-    void capture_freezes(
+    void Camera::capture_freezes(
         const rclcpp::Logger &logger,
         const Camera &left_cam,
         const Camera &right_cam,
         std::mutex &l_img_mutex,
         std::mutex &r_img_mutex,
-        std::deque<std::pair<uint64_t, cv::Mat>> &img_deque_l,
-        std::deque<std::pair<uint64_t, cv::Mat>> &img_deque_r,
+        std::deque<stamped_img> &img_deque_l,
+        std::deque<stamped_img> &img_deque_r,
         bool use_inner_lens
     ) {
         // Capture and rectify frames for calibration from left camera
-        std::pair<uint64_t, cv::Mat> frame_ll = capture_and_rectify_frame(
+        stamped_img frame_ll = capture_and_rectify_frame(
             logger,
             left_cam,
             true,  // left_camera==true
@@ -269,7 +268,7 @@ namespace camera {
             RCLCPP_ERROR(logger, "Failed to capture frame from left camera left frame.");
         }
 
-        std::pair<uint64_t, cv::Mat> frame_lr = capture_and_rectify_frame(
+        stamped_img frame_lr = capture_and_rectify_frame(
             logger,
             left_cam,
             true,  // left_camera==true
@@ -281,7 +280,7 @@ namespace camera {
         }
 
         // Capture and rectify frames for calibration from right camera
-        std::pair<uint64_t, cv::Mat> frame_rr = capture_and_rectify_frame(
+        stamped_img frame_rr = capture_and_rectify_frame(
             logger,
             right_cam,
             false,  // right_camera==false
@@ -292,7 +291,7 @@ namespace camera {
             RCLCPP_ERROR(logger, "Failed to capture frame from right camera right frame.");
         }
 
-        std::pair<uint64_t, cv::Mat> frame_rl = capture_and_rectify_frame(
+        stamped_img frame_rl = capture_and_rectify_frame(
             logger,
             right_cam,
             false,  // right_camera==false

@@ -49,7 +49,7 @@ private:
 
     #if save_frames
     static constexpr int frame_interval = 10;
-    static constexpr char save_path[] = "src/point_to_pixel/freezes/img_log/";
+    static constexpr char save_path[] = "src/point_to_pixel/freezes/";
     #endif // save_frames
 
     // ROS2 Publisher and Subscribers
@@ -143,11 +143,6 @@ private:
      * from both cameras, then updates the image deques with the captured frame and corresponding timestamp.
      */
     void camera_callback();
-    
-    /**
-     * @brief Captures freeze frames for calibration
-     */
-    void capture_freezes();
 
     /**
      * @brief Wrapper function responsible for retrieving camera frames closest to the lidar timestamp.

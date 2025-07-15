@@ -3,12 +3,13 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Dense>
 #include <geometry_msgs/msg/point.hpp>
-#include "hsv.hpp"
-#include "yolo.hpp"
+#include "predictors/hsv.hpp"
+#include "predictors/yolo.hpp"
 
 // Forward declarations
 namespace cones
 {
+    // Cone types
     struct Cone
     {
         geometry_msgs::msg::Point point;
@@ -67,13 +68,4 @@ namespace cones
      * @param track_bounds TrackBounds struct
      */
     void supplement_cones(TrackBounds &track_bounds);
-
-    /**
-     * @brief Augments data by adding cones in a circular pattern around the original cone, currently unused.
-     * 
-     * @param track_bounds TrackBounds struct
-     * @param degrees Degrees to augment
-     * @param radius Radius of the circle
-     */
-    void augment_cones_circle(TrackBounds &track_bounds, int degrees, double radius);
 }

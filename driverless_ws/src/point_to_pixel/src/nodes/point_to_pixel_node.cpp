@@ -6,20 +6,20 @@ PointToPixelNode::PointToPixelNode() : Node("point_to_pixel"),
     params([]() {sl_oc::video::VideoParams p; p.res = sl_oc::video::RESOLUTION::HD1080; p.fps = sl_oc::video::FPS::FPS_30; return p;}()),
     cap_l(sl_oc::video::VideoCapture(params)),
     cap_r(sl_oc::video::VideoCapture(params)),
-    left_cam(cap_l, cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 0),
-    right_cam(cap_r, cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 2)
 {
     // ---------------------------------------------------------------------------
     //                              CAMERA INITIALIZATION
     // ---------------------------------------------------------------------------
 
+    left_cam = camera::Camera(cap_l, cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 0, get_logger());
+    right_cam = camera::Camera(cap_r, cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 1, get_logger());
     // Initialize cameras
-    if (!camera::initialize_camera(left_cam, get_logger())) {
+    if (!left_cam.initialize_camera(get_logger())) {
         rclcpp::shutdown(); // Shutdown node if camera initialization fails
         return;
     }
     
-    if (!camera::initialize_camera(right_cam, get_logger())) {
+    if (!right_cam.initialize_camera(get_logger())) {
         rclcpp::shutdown(); // Shutdown node if camera initialization fails
         return;
     }
@@ -217,22 +217,6 @@ std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> PointToPixelNode::get_camera_fr
     r_img_mutex.unlock();
 
     return std::make_tuple(closestFrame_l.first, closestFrame_l.second, closestFrame_r.first, closestFrame_r.second);
-}
-
-// Implementation of capture_freezes method
-void PointToPixelNode::capture_freezes()
-{
-    // Use the camera namespace's capture_freezes function
-    camera::capture_freezes(
-        get_logger(),
-        left_cam,
-        right_cam,
-        l_img_mutex,
-        r_img_mutex,
-        img_deque_l,
-        img_deque_r,
-        inner == 1
-    );
 }
 
 // Camera Callback (Populates and maintain deque)
