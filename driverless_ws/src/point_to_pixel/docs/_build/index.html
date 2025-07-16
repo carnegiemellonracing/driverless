@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Class PointToPixelNode" href="source/api_reference.html" /> 
+    <link rel="next" title="Overview" href="source/overview/overview.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,7 +43,9 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="source/api_reference.html">Class PointToPixelNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/explainers/explainers.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/implementation/api_reference.html">API Reference</a></li>
 </ul>
 
         </div>
@@ -81,34 +83,28 @@
 <p>Perceptions constitutes the system of the car that ingests and interprets sensor data from the environment.
 Via this interpretation, the perceptions module enables <a class="reference external" href="https://cmr.red/planning-docs">Path Planning</a> and <a class="reference external" href="https://cmr.red/controls-docs">Controls</a> modules to make high-level
 decisions to control the car.</p>
-<p>We employ a variety of sensors to accomplish this task:</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://www.hesaitech.com/product/at128/">HESAI AT128 Solid State LiDAR</a></p></li>
-<li><p><a class="reference external" href="https://www.stereolabs.com/products/zed-2">Dual ZED2 Stereo Cameras (only used for RGB frames)</a></p></li>
-<li><p><a class="reference external" href="https://www.movella.com/products/sensor-modules/xsens-mti-680g-rtk-gnss-ins">MTi-680G RTK GNSS/INS GPS</a></p></li>
-</ul>
-<p>Using these three sensors we efficiently generate an accurate local view of the track and cones.</p>
 <p>This documentation is meant to provide an introduction and high level conceptual overview to our perceptions pipeline.
 For more detail, including source code, please visit our <a class="reference external" href="https://github.com/carnegiemellonracing/driverless">GitHub repository</a></p>
-</section>
-<section id="what-data-do-we-work-with-and-where-does-it-go">
-<h2>What data do we work with and where does it go?<a class="headerlink" href="#what-data-do-we-work-with-and-where-does-it-go" title="Link to this heading"></a></h2>
-<p>Our LiDAR, a HESAI AT128 hybrid solid-state sensor is our primary source of depth information. Through the LiDAR we ingest a
-<a class="reference external" href="https://en.wikipedia.org/wiki/Point_cloud">point cloud</a>. We employ several processing algorithms (see <a class="reference external" href="source/explainers/cpp_processing">explainers</a>)
-eventually resulting in a set of points that represent the centroid of cones on the track in front of us.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>PLACEHOLDER FOR IMAGE of LiDAR?</p>
-</div>
-<p>From our cameras, we get our primary source color information. Through a <a class="reference external" href="https://en.wikipedia.org/wiki/Direct_linear_transformation">direct linear transform</a> we color our cone centroids from the previous step and pass them down the pipeline to <a class="reference external" href="https://cmr.red/planning-docs">Path Planning</a> and <a class="reference external" href="https://cmr.red/controls-docs">Controls</a>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>PLACEHOLDER FOR IMAGE of LiDAR?</p>
-</div>
+<p>Checkout the links below to learn more about our sensor stack and our main algorithms!</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="source/api_reference.html">Class PointToPixelNode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/overview/overview.html">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/overview/overview.html#the-perceptions-problem">The Perceptions Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/overview/overview.html#sensors">Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/overview/overview.html#what-data-do-we-work-with-and-where-does-it-go">What data do we work with and where does it go?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/explainers/explainers.html">Explainers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/lidar_module.html">LiDAR Module Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/explainers/coloring_module.html">Coloring Module Concepts</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/implementation/api_reference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/implementation/lidar_module.html">Perceptions LiDAR Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/implementation/coloring_module.html">Perceptions Coloring Module</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -118,7 +114,7 @@ eventually resulting in a set of points that represent the centroid of cones on 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="source/api_reference.html" class="btn btn-neutral float-right" title="Class PointToPixelNode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="source/overview/overview.html" class="btn btn-neutral float-right" title="Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
