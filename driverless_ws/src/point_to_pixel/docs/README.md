@@ -12,7 +12,7 @@
 - make sure you have the following dependencies installed
   
   - `doxygen` via apt-get
-  - `sphinx` and `breathe` via python pip: `pip install Sphinx breath` 
+  - `sphinx` and `breathe` via python pip: `pip install Sphinx breathe` 
   - sphinx read the docs theme via python pip: `pip install sphinx_rtd_theme`
 
 - `cd` into `point_to_pixel/docs` dir
