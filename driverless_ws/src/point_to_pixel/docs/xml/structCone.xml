@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="structCone" kind="struct" language="C++" prot="public">
+    <compoundname>Cone</compoundname>
+    <includes refid="point__to__pixel__node_8hpp" local="no">point_to_pixel_node.hpp</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structCone_1acfae2aa34365e904f4115c4539b43bad" prot="public" static="no" mutable="no">
+        <type>geometry_msgs::msg::Point</type>
+        <definition>geometry_msgs::msg::Point Cone::point</definition>
+        <argsstring></argsstring>
+        <name>point</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" line="32" column="31" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structCone_1aa1faccdc21361e772bbcd6acf8cbcf94" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Cone::distance</definition>
+        <argsstring></argsstring>
+        <name>distance</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" line="33" column="12" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structCone_1a552061dc9113dfe21cbe019ab30d8cf7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Cone::Cone</definition>
+        <argsstring>(const geometry_msgs::msg::Point &amp;p)</argsstring>
+        <name>Cone</name>
+        <param>
+          <type>const geometry_msgs::msg::Point &amp;</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" line="34" column="5" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" bodystart="34" bodyend="36"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" line="31" column="1" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" bodystart="31" bodyend="37"/>
+    <listofallmembers>
+      <member refid="structCone_1a552061dc9113dfe21cbe019ab30d8cf7" prot="public" virt="non-virtual"><scope>Cone</scope><name>Cone</name></member>
+      <member refid="structCone_1aa1faccdc21361e772bbcd6acf8cbcf94" prot="public" virt="non-virtual"><scope>Cone</scope><name>distance</name></member>
+      <member refid="structCone_1acfae2aa34365e904f4115c4539b43bad" prot="public" virt="non-virtual"><scope>Cone</scope><name>point</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

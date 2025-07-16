@@ -1,0 +1,247 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="classcones_1_1recolouring_1_1Solver__NU" kind="class" language="C++" prot="public">
+    <compoundname>cones::recolouring::Solver_NU</compoundname>
+    <basecompoundref refid="classcones_1_1recolouring_1_1Solver" prot="public" virt="non-virtual">cones::recolouring::Solver</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classcones_1_1recolouring_1_1Solver__NU_1aef8b5bae6f2bd1b8abb8cea681dedd5e" prot="private" static="no" mutable="no">
+        <type><ref refid="structcones_1_1recolouring_1_1Solver_1_1SolutionInfo" kindref="compound">SolutionInfo</ref> *</type>
+        <definition>SolutionInfo* cones::recolouring::Solver_NU::si</definition>
+        <argsstring></argsstring>
+        <name>si</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1063" column="14" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1063" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcones_1_1recolouring_1_1Solver__NU_1a42d425f51cfb4536b07ef876c780a496" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>cones::recolouring::Solver_NU::Solver_NU</definition>
+        <argsstring>()</argsstring>
+        <name>Solver_NU</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1053" column="1" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1053" bodyend="1053"/>
+      </memberdef>
+      <memberdef kind="function" id="classcones_1_1recolouring_1_1Solver__NU_1a4b09e0498a2c70fa3aaa54ff8cb78df0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::Solver_NU::Solve</definition>
+        <argsstring>(int l, const QMatrix &amp;Q, const double *p, const schar *y, double *alpha, double Cp, double Cn, double eps, SolutionInfo *si, int shrinking)</argsstring>
+        <name>Solve</name>
+        <param>
+          <type>int</type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcones_1_1recolouring_1_1QMatrix" kindref="compound">QMatrix</ref> &amp;</type>
+          <declname>Q</declname>
+        </param>
+        <param>
+          <type>const double *</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>const <ref refid="namespacecones_1_1recolouring_1aafa74a09b422a58660501c97d2b7d47f" kindref="member">schar</ref> *</type>
+          <declname>y</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>alpha</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Cp</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Cn</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>eps</declname>
+        </param>
+        <param>
+          <type><ref refid="structcones_1_1recolouring_1_1Solver_1_1SolutionInfo" kindref="compound">SolutionInfo</ref> *</type>
+          <declname>si</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>shrinking</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1054" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1054" bodyend="1060"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="classcones_1_1recolouring_1_1Solver__NU_1ab83e8d2c2cab5d8ce7ec3237a2356a58" prot="private" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>int</type>
+        <definition>int cones::recolouring::Solver_NU::select_working_set</definition>
+        <argsstring>(int &amp;i, int &amp;j)</argsstring>
+        <name>select_working_set</name>
+        <reimplements refid="classcones_1_1recolouring_1_1Solver_1a4137cfc3cbbbbec249da35c89a9ffc5e">select_working_set</reimplements>
+        <param>
+          <type>int &amp;</type>
+          <declname>i</declname>
+        </param>
+        <param>
+          <type>int &amp;</type>
+          <declname>j</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1064" column="5" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1071" bodyend="1181"/>
+      </memberdef>
+      <memberdef kind="function" id="classcones_1_1recolouring_1_1Solver__NU_1a388914a5a13a542884ac312b6007f40f" prot="private" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>double</type>
+        <definition>double cones::recolouring::Solver_NU::calculate_rho</definition>
+        <argsstring>()</argsstring>
+        <name>calculate_rho</name>
+        <reimplements refid="classcones_1_1recolouring_1_1Solver_1a48b080df764a2b624f84fcc99b3d61de">calculate_rho</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1065" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1259" bodyend="1307"/>
+      </memberdef>
+      <memberdef kind="function" id="classcones_1_1recolouring_1_1Solver__NU_1ab8f7ff179dc6aa8646e0106dbc400052" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cones::recolouring::Solver_NU::be_shrunk</definition>
+        <argsstring>(int i, double Gmax1, double Gmax2, double Gmax3, double Gmax4)</argsstring>
+        <name>be_shrunk</name>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Gmax1</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Gmax2</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Gmax3</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Gmax4</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1066" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1183" bodyend="1201"/>
+      </memberdef>
+      <memberdef kind="function" id="classcones_1_1recolouring_1_1Solver__NU_1a066ea084bb423a4b959aa838d7f2d3c8" prot="private" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::Solver_NU::do_shrinking</definition>
+        <argsstring>()</argsstring>
+        <name>do_shrinking</name>
+        <reimplements refid="classcones_1_1recolouring_1_1Solver_1a3f3dc4784549763badabd39295fa15e8">do_shrinking</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1067" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1203" bodyend="1257"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>cones::recolouring::Solver</label>
+        <link refid="classcones_1_1recolouring_1_1Solver"/>
+      </node>
+      <node id="1">
+        <label>cones::recolouring::Solver_NU</label>
+        <link refid="classcones_1_1recolouring_1_1Solver__NU"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>cones::recolouring::Solver</label>
+        <link refid="classcones_1_1recolouring_1_1Solver"/>
+        <childnode refid="3" relation="usage">
+          <edgelabel>Q</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>cones::recolouring::QMatrix</label>
+        <link refid="classcones_1_1recolouring_1_1QMatrix"/>
+      </node>
+      <node id="1">
+        <label>cones::recolouring::Solver_NU</label>
+        <link refid="classcones_1_1recolouring_1_1Solver__NU"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1050" column="1" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1051" bodyend="1068"/>
+    <listofallmembers>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a1b632ac9906f4514b9bbf0b7426f776a" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>active_set</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a72f0f0af6e9433b1f646b0740981d58f" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>active_size</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1ac85594a62c65821de0c38d5a6a49faf5" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>alpha</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1af3b2a414b0b25dba1e604c3e7a82dd3e" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>alpha_status</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver__NU_1ab8f7ff179dc6aa8646e0106dbc400052" prot="private" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>be_shrunk</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver__NU_1a388914a5a13a542884ac312b6007f40f" prot="private" virt="virtual"><scope>cones::recolouring::Solver_NU</scope><name>calculate_rho</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a13e578d765ae0156aae74fad82bb6b33" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>Cn</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a983b9eb45ca9823cac38db1208d43b8b" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>Cp</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver__NU_1a066ea084bb423a4b959aa838d7f2d3c8" prot="private" virt="virtual"><scope>cones::recolouring::Solver_NU</scope><name>do_shrinking</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a0217b2b90b9247c335d22b2ad358207f" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>eps</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a0e84712f6fc66acca04c10ef91b97e89af824081cd668bb81073e18743ed0fdb3" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>FREE</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a0daa152044f6300b6f0522e2987d09eb" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>G</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a497ac7b3ab3dc79be3ffbe2f73084929" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>G_bar</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a1bf068a99ca515c2a842995f3baa68a0" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>get_C</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a5cdde1369a0af835d28ec755410297d0" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>is_free</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a2cb9f9421e5083c05c06f5607ea634b9" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>is_lower_bound</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1aa7e1a52918a230734cccb4b19cc11a65" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>is_upper_bound</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a374de6539ec5a5b951a454f441cc4c2e" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>l</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a0e84712f6fc66acca04c10ef91b97e89ab60f6726735c61d56f7bf2c83b3a0a5a" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>LOWER_BOUND</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a6763b8ee21d464194441e6c5d914ccf8" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>p</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a564f2867e61fcab38dadd55e4231bc43" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>Q</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1aa9d2db4a99c6ddab02ba98972c021e72" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>QD</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a97cc71811b8275ca9f88956c94cdb175" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>reconstruct_gradient</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver__NU_1ab83e8d2c2cab5d8ce7ec3237a2356a58" prot="private" virt="virtual"><scope>cones::recolouring::Solver_NU</scope><name>select_working_set</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver__NU_1aef8b5bae6f2bd1b8abb8cea681dedd5e" prot="private" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>si</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver__NU_1a4b09e0498a2c70fa3aaa54ff8cb78df0" prot="public" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>Solve</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a2057d396f0ddc1b818cf199545f6d3e9" prot="public" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>Solver</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver__NU_1a42d425f51cfb4536b07ef876c780a496" prot="public" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>Solver_NU</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1ad384717a50db238b14aa11c183fd3f0e" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>swap_index</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a657d9a8ecdefccdfcbfb0c14f49a059b" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>unshrink</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1aee22a4cfee108628c6ed378b22110244" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>update_alpha_status</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1a0e84712f6fc66acca04c10ef91b97e89abc60d934b468c20c06559c52460757c6" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>UPPER_BOUND</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1ac17f6c370c7ce19efcaf2a4e24a16afd" prot="protected" virt="non-virtual"><scope>cones::recolouring::Solver_NU</scope><name>y</name></member>
+      <member refid="classcones_1_1recolouring_1_1Solver_1ad99f7fc52c5b5c3e0c617c5f12694562" prot="public" virt="virtual"><scope>cones::recolouring::Solver_NU</scope><name>~Solver</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

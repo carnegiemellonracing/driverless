@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="dir_68267d1309a1af8e8297ef4c3efbcdba" kind="dir">
+    <compoundname>/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src</compoundname>
+    <innerdir refid="dir_34519bff5ae72130fe71a8620cbf1fc0">/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera</innerdir>
+    <innerdir refid="dir_ef25f80acd96ad29f9d92f554f1cecf5">/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/coloring</innerdir>
+    <innerdir refid="dir_32d43c51194ec975354438882f57970d">/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones</innerdir>
+    <innerdir refid="dir_cc991f02b916c63837f278e2c65665ae">/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node</innerdir>
+    <innerdir refid="dir_f1045338104a6f1bc5c5f037b0ca9be2">/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/"/>
+  </compounddef>
+</doxygen>

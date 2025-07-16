@@ -1,0 +1,301 @@
+\hypertarget{classcones_1_1recolouring_1_1Solver}{}\doxysection{cones\+::recolouring\+::Solver Class Reference}
+\label{classcones_1_1recolouring_1_1Solver}\index{cones::recolouring::Solver@{cones::recolouring::Solver}}
+
+
+Inheritance diagram for cones\+::recolouring\+::Solver\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=186pt]{classcones_1_1recolouring_1_1Solver__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for cones\+::recolouring\+::Solver\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=186pt]{classcones_1_1recolouring_1_1Solver__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcones_1_1recolouring_1_1Solver_1_1SolutionInfo}{Solution\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a2057d396f0ddc1b818cf199545f6d3e9}{Solver}} ()
+\item 
+virtual \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_ad99f7fc52c5b5c3e0c617c5f12694562}{$\sim$\+Solver}} ()
+\item 
+void \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a8193f66b5046da81975998ffa1b12949}{Solve}} (int \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a374de6539ec5a5b951a454f441cc4c2e}{l}}, const \mbox{\hyperlink{classcones_1_1recolouring_1_1QMatrix}{QMatrix}} \&\mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a564f2867e61fcab38dadd55e4231bc43}{Q}}, const double $\ast$p\+\_\+, const \mbox{\hyperlink{namespacecones_1_1recolouring_aafa74a09b422a58660501c97d2b7d47f}{schar}} $\ast$y\+\_\+, double $\ast$alpha\+\_\+, double \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a983b9eb45ca9823cac38db1208d43b8b}{Cp}}, double \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a13e578d765ae0156aae74fad82bb6b33}{Cn}}, double \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a0217b2b90b9247c335d22b2ad358207f}{eps}}, \mbox{\hyperlink{structcones_1_1recolouring_1_1Solver_1_1SolutionInfo}{Solution\+Info}} $\ast$si, int shrinking)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a0e84712f6fc66acca04c10ef91b97e89ab60f6726735c61d56f7bf2c83b3a0a5a}{LOWER\+\_\+\+BOUND}}
+, \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a0e84712f6fc66acca04c10ef91b97e89abc60d934b468c20c06559c52460757c6}{UPPER\+\_\+\+BOUND}}
+, \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a0e84712f6fc66acca04c10ef91b97e89af824081cd668bb81073e18743ed0fdb3}{FREE}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a1bf068a99ca515c2a842995f3baa68a0}{get\+\_\+C}} (int i)
+\item 
+void \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_aee22a4cfee108628c6ed378b22110244}{update\+\_\+alpha\+\_\+status}} (int i)
+\item 
+bool \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_aa7e1a52918a230734cccb4b19cc11a65}{is\+\_\+upper\+\_\+bound}} (int i)
+\item 
+bool \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a2cb9f9421e5083c05c06f5607ea634b9}{is\+\_\+lower\+\_\+bound}} (int i)
+\item 
+bool \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a5cdde1369a0af835d28ec755410297d0}{is\+\_\+free}} (int i)
+\item 
+void \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_ad384717a50db238b14aa11c183fd3f0e}{swap\+\_\+index}} (int i, int j)
+\item 
+void \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a97cc71811b8275ca9f88956c94cdb175}{reconstruct\+\_\+gradient}} ()
+\item 
+virtual int \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a4137cfc3cbbbbec249da35c89a9ffc5e}{select\+\_\+working\+\_\+set}} (int \&i, int \&j)
+\item 
+virtual double \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a48b080df764a2b624f84fcc99b3d61de}{calculate\+\_\+rho}} ()
+\item 
+virtual void \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a3f3dc4784549763badabd39295fa15e8}{do\+\_\+shrinking}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a72f0f0af6e9433b1f646b0740981d58f}{active\+\_\+size}}
+\item 
+\mbox{\hyperlink{namespacecones_1_1recolouring_aafa74a09b422a58660501c97d2b7d47f}{schar}} $\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_ac17f6c370c7ce19efcaf2a4e24a16afd}{y}}
+\item 
+double $\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a0daa152044f6300b6f0522e2987d09eb}{G}}
+\item 
+char $\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_af3b2a414b0b25dba1e604c3e7a82dd3e}{alpha\+\_\+status}}
+\item 
+double $\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_ac85594a62c65821de0c38d5a6a49faf5}{alpha}}
+\item 
+const \mbox{\hyperlink{classcones_1_1recolouring_1_1QMatrix}{QMatrix}} $\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a564f2867e61fcab38dadd55e4231bc43}{Q}}
+\item 
+const double $\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_aa9d2db4a99c6ddab02ba98972c021e72}{QD}}
+\item 
+double \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a0217b2b90b9247c335d22b2ad358207f}{eps}}
+\item 
+double \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a983b9eb45ca9823cac38db1208d43b8b}{Cp}}
+\item 
+double \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a13e578d765ae0156aae74fad82bb6b33}{Cn}}
+\item 
+double $\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a6763b8ee21d464194441e6c5d914ccf8}{p}}
+\item 
+int $\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a1b632ac9906f4514b9bbf0b7426f776a}{active\+\_\+set}}
+\item 
+double $\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a497ac7b3ab3dc79be3ffbe2f73084929}{G\+\_\+bar}}
+\item 
+int \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a374de6539ec5a5b951a454f441cc4c2e}{l}}
+\item 
+bool \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver_a657d9a8ecdefccdfcbfb0c14f49a059b}{unshrink}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a0e84712f6fc66acca04c10ef91b97e89}\label{classcones_1_1recolouring_1_1Solver_a0e84712f6fc66acca04c10ef91b97e89}} 
+\doxysubsubsection{\texorpdfstring{anonymous enum}{anonymous enum}}
+{\footnotesize\ttfamily anonymous enum\hspace{0.3cm}{\ttfamily [protected]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LOWER\_BOUND@{LOWER\_BOUND}!cones::recolouring::Solver@{cones::recolouring::Solver}}\index{cones::recolouring::Solver@{cones::recolouring::Solver}!LOWER\_BOUND@{LOWER\_BOUND}}}\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a0e84712f6fc66acca04c10ef91b97e89ab60f6726735c61d56f7bf2c83b3a0a5a}\label{classcones_1_1recolouring_1_1Solver_a0e84712f6fc66acca04c10ef91b97e89ab60f6726735c61d56f7bf2c83b3a0a5a}} 
+LOWER\+\_\+\+BOUND&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UPPER\_BOUND@{UPPER\_BOUND}!cones::recolouring::Solver@{cones::recolouring::Solver}}\index{cones::recolouring::Solver@{cones::recolouring::Solver}!UPPER\_BOUND@{UPPER\_BOUND}}}\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a0e84712f6fc66acca04c10ef91b97e89abc60d934b468c20c06559c52460757c6}\label{classcones_1_1recolouring_1_1Solver_a0e84712f6fc66acca04c10ef91b97e89abc60d934b468c20c06559c52460757c6}} 
+UPPER\+\_\+\+BOUND&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FREE@{FREE}!cones::recolouring::Solver@{cones::recolouring::Solver}}\index{cones::recolouring::Solver@{cones::recolouring::Solver}!FREE@{FREE}}}\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a0e84712f6fc66acca04c10ef91b97e89af824081cd668bb81073e18743ed0fdb3}\label{classcones_1_1recolouring_1_1Solver_a0e84712f6fc66acca04c10ef91b97e89af824081cd668bb81073e18743ed0fdb3}} 
+FREE&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a2057d396f0ddc1b818cf199545f6d3e9}\label{classcones_1_1recolouring_1_1Solver_a2057d396f0ddc1b818cf199545f6d3e9}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!Solver@{Solver}}
+\index{Solver@{Solver}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{Solver()}{Solver()}}
+{\footnotesize\ttfamily cones\+::recolouring\+::\+Solver\+::\+Solver (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_ad99f7fc52c5b5c3e0c617c5f12694562}\label{classcones_1_1recolouring_1_1Solver_ad99f7fc52c5b5c3e0c617c5f12694562}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!````~Solver@{$\sim$Solver}}
+\index{````~Solver@{$\sim$Solver}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{$\sim$Solver()}{~Solver()}}
+{\footnotesize\ttfamily virtual cones\+::recolouring\+::\+Solver\+::$\sim$\+Solver (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a48b080df764a2b624f84fcc99b3d61de}\label{classcones_1_1recolouring_1_1Solver_a48b080df764a2b624f84fcc99b3d61de}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!calculate\_rho@{calculate\_rho}}
+\index{calculate\_rho@{calculate\_rho}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{calculate\_rho()}{calculate\_rho()}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::\+Solver\+::calculate\+\_\+rho (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a3f3dc4784549763badabd39295fa15e8}\label{classcones_1_1recolouring_1_1Solver_a3f3dc4784549763badabd39295fa15e8}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!do\_shrinking@{do\_shrinking}}
+\index{do\_shrinking@{do\_shrinking}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{do\_shrinking()}{do\_shrinking()}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::\+Solver\+::do\+\_\+shrinking (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a1bf068a99ca515c2a842995f3baa68a0}\label{classcones_1_1recolouring_1_1Solver_a1bf068a99ca515c2a842995f3baa68a0}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!get\_C@{get\_C}}
+\index{get\_C@{get\_C}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{get\_C()}{get\_C()}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::\+Solver\+::get\+\_\+C (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a5cdde1369a0af835d28ec755410297d0}\label{classcones_1_1recolouring_1_1Solver_a5cdde1369a0af835d28ec755410297d0}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!is\_free@{is\_free}}
+\index{is\_free@{is\_free}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{is\_free()}{is\_free()}}
+{\footnotesize\ttfamily bool cones\+::recolouring\+::\+Solver\+::is\+\_\+free (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a2cb9f9421e5083c05c06f5607ea634b9}\label{classcones_1_1recolouring_1_1Solver_a2cb9f9421e5083c05c06f5607ea634b9}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!is\_lower\_bound@{is\_lower\_bound}}
+\index{is\_lower\_bound@{is\_lower\_bound}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{is\_lower\_bound()}{is\_lower\_bound()}}
+{\footnotesize\ttfamily bool cones\+::recolouring\+::\+Solver\+::is\+\_\+lower\+\_\+bound (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_aa7e1a52918a230734cccb4b19cc11a65}\label{classcones_1_1recolouring_1_1Solver_aa7e1a52918a230734cccb4b19cc11a65}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!is\_upper\_bound@{is\_upper\_bound}}
+\index{is\_upper\_bound@{is\_upper\_bound}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{is\_upper\_bound()}{is\_upper\_bound()}}
+{\footnotesize\ttfamily bool cones\+::recolouring\+::\+Solver\+::is\+\_\+upper\+\_\+bound (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a97cc71811b8275ca9f88956c94cdb175}\label{classcones_1_1recolouring_1_1Solver_a97cc71811b8275ca9f88956c94cdb175}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!reconstruct\_gradient@{reconstruct\_gradient}}
+\index{reconstruct\_gradient@{reconstruct\_gradient}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{reconstruct\_gradient()}{reconstruct\_gradient()}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::\+Solver\+::reconstruct\+\_\+gradient (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a4137cfc3cbbbbec249da35c89a9ffc5e}\label{classcones_1_1recolouring_1_1Solver_a4137cfc3cbbbbec249da35c89a9ffc5e}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!select\_working\_set@{select\_working\_set}}
+\index{select\_working\_set@{select\_working\_set}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{select\_working\_set()}{select\_working\_set()}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::\+Solver\+::select\+\_\+working\+\_\+set (\begin{DoxyParamCaption}\item[{int \&}]{i,  }\item[{int \&}]{j }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a8193f66b5046da81975998ffa1b12949}\label{classcones_1_1recolouring_1_1Solver_a8193f66b5046da81975998ffa1b12949}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!Solve@{Solve}}
+\index{Solve@{Solve}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{Solve()}{Solve()}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::\+Solver\+::\+Solve (\begin{DoxyParamCaption}\item[{int}]{l,  }\item[{const \mbox{\hyperlink{classcones_1_1recolouring_1_1QMatrix}{QMatrix}} \&}]{Q,  }\item[{const double $\ast$}]{p\+\_\+,  }\item[{const \mbox{\hyperlink{namespacecones_1_1recolouring_aafa74a09b422a58660501c97d2b7d47f}{schar}} $\ast$}]{y\+\_\+,  }\item[{double $\ast$}]{alpha\+\_\+,  }\item[{double}]{Cp,  }\item[{double}]{Cn,  }\item[{double}]{eps,  }\item[{\mbox{\hyperlink{structcones_1_1recolouring_1_1Solver_1_1SolutionInfo}{Solution\+Info}} $\ast$}]{si,  }\item[{int}]{shrinking }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_ad384717a50db238b14aa11c183fd3f0e}\label{classcones_1_1recolouring_1_1Solver_ad384717a50db238b14aa11c183fd3f0e}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!swap\_index@{swap\_index}}
+\index{swap\_index@{swap\_index}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{swap\_index()}{swap\_index()}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::\+Solver\+::swap\+\_\+index (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_aee22a4cfee108628c6ed378b22110244}\label{classcones_1_1recolouring_1_1Solver_aee22a4cfee108628c6ed378b22110244}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!update\_alpha\_status@{update\_alpha\_status}}
+\index{update\_alpha\_status@{update\_alpha\_status}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{update\_alpha\_status()}{update\_alpha\_status()}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::\+Solver\+::update\+\_\+alpha\+\_\+status (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a1b632ac9906f4514b9bbf0b7426f776a}\label{classcones_1_1recolouring_1_1Solver_a1b632ac9906f4514b9bbf0b7426f776a}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!active\_set@{active\_set}}
+\index{active\_set@{active\_set}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{active\_set}{active\_set}}
+{\footnotesize\ttfamily int$\ast$ cones\+::recolouring\+::\+Solver\+::active\+\_\+set\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a72f0f0af6e9433b1f646b0740981d58f}\label{classcones_1_1recolouring_1_1Solver_a72f0f0af6e9433b1f646b0740981d58f}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!active\_size@{active\_size}}
+\index{active\_size@{active\_size}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{active\_size}{active\_size}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::\+Solver\+::active\+\_\+size\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_ac85594a62c65821de0c38d5a6a49faf5}\label{classcones_1_1recolouring_1_1Solver_ac85594a62c65821de0c38d5a6a49faf5}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!alpha@{alpha}}
+\index{alpha@{alpha}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{alpha}{alpha}}
+{\footnotesize\ttfamily double$\ast$ cones\+::recolouring\+::\+Solver\+::alpha\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_af3b2a414b0b25dba1e604c3e7a82dd3e}\label{classcones_1_1recolouring_1_1Solver_af3b2a414b0b25dba1e604c3e7a82dd3e}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!alpha\_status@{alpha\_status}}
+\index{alpha\_status@{alpha\_status}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{alpha\_status}{alpha\_status}}
+{\footnotesize\ttfamily char$\ast$ cones\+::recolouring\+::\+Solver\+::alpha\+\_\+status\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a13e578d765ae0156aae74fad82bb6b33}\label{classcones_1_1recolouring_1_1Solver_a13e578d765ae0156aae74fad82bb6b33}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!Cn@{Cn}}
+\index{Cn@{Cn}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{Cn}{Cn}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::\+Solver\+::\+Cn\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a983b9eb45ca9823cac38db1208d43b8b}\label{classcones_1_1recolouring_1_1Solver_a983b9eb45ca9823cac38db1208d43b8b}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!Cp@{Cp}}
+\index{Cp@{Cp}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{Cp}{Cp}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::\+Solver\+::\+Cp\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a0217b2b90b9247c335d22b2ad358207f}\label{classcones_1_1recolouring_1_1Solver_a0217b2b90b9247c335d22b2ad358207f}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!eps@{eps}}
+\index{eps@{eps}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{eps}{eps}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::\+Solver\+::eps\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a0daa152044f6300b6f0522e2987d09eb}\label{classcones_1_1recolouring_1_1Solver_a0daa152044f6300b6f0522e2987d09eb}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!G@{G}}
+\index{G@{G}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{G}{G}}
+{\footnotesize\ttfamily double$\ast$ cones\+::recolouring\+::\+Solver\+::G\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a497ac7b3ab3dc79be3ffbe2f73084929}\label{classcones_1_1recolouring_1_1Solver_a497ac7b3ab3dc79be3ffbe2f73084929}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!G\_bar@{G\_bar}}
+\index{G\_bar@{G\_bar}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{G\_bar}{G\_bar}}
+{\footnotesize\ttfamily double$\ast$ cones\+::recolouring\+::\+Solver\+::\+G\+\_\+bar\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a374de6539ec5a5b951a454f441cc4c2e}\label{classcones_1_1recolouring_1_1Solver_a374de6539ec5a5b951a454f441cc4c2e}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!l@{l}}
+\index{l@{l}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{l}{l}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::\+Solver\+::l\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a6763b8ee21d464194441e6c5d914ccf8}\label{classcones_1_1recolouring_1_1Solver_a6763b8ee21d464194441e6c5d914ccf8}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!p@{p}}
+\index{p@{p}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{p}{p}}
+{\footnotesize\ttfamily double$\ast$ cones\+::recolouring\+::\+Solver\+::p\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a564f2867e61fcab38dadd55e4231bc43}\label{classcones_1_1recolouring_1_1Solver_a564f2867e61fcab38dadd55e4231bc43}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!Q@{Q}}
+\index{Q@{Q}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{Q}{Q}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{classcones_1_1recolouring_1_1QMatrix}{QMatrix}}$\ast$ cones\+::recolouring\+::\+Solver\+::Q\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_aa9d2db4a99c6ddab02ba98972c021e72}\label{classcones_1_1recolouring_1_1Solver_aa9d2db4a99c6ddab02ba98972c021e72}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!QD@{QD}}
+\index{QD@{QD}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{QD}{QD}}
+{\footnotesize\ttfamily const double$\ast$ cones\+::recolouring\+::\+Solver\+::\+QD\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_a657d9a8ecdefccdfcbfb0c14f49a059b}\label{classcones_1_1recolouring_1_1Solver_a657d9a8ecdefccdfcbfb0c14f49a059b}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!unshrink@{unshrink}}
+\index{unshrink@{unshrink}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{unshrink}{unshrink}}
+{\footnotesize\ttfamily bool cones\+::recolouring\+::\+Solver\+::unshrink\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Solver_ac17f6c370c7ce19efcaf2a4e24a16afd}\label{classcones_1_1recolouring_1_1Solver_ac17f6c370c7ce19efcaf2a4e24a16afd}} 
+\index{cones::recolouring::Solver@{cones::recolouring::Solver}!y@{y}}
+\index{y@{y}!cones::recolouring::Solver@{cones::recolouring::Solver}}
+\doxysubsubsection{\texorpdfstring{y}{y}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespacecones_1_1recolouring_aafa74a09b422a58660501c97d2b7d47f}{schar}}$\ast$ cones\+::recolouring\+::\+Solver\+::y\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/aryalohia/\+CMR/24a/driverless/driverless\+\_\+ws/src/point\+\_\+to\+\_\+pixel/src/cones/svm/\mbox{\hyperlink{svm_8cpp}{svm.\+cpp}}\end{DoxyCompactItemize}

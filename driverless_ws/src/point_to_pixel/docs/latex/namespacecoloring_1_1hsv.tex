@@ -1,0 +1,44 @@
+\hypertarget{namespacecoloring_1_1hsv}{}\doxysection{coloring\+::hsv Namespace Reference}
+\label{namespacecoloring_1_1hsv}\index{coloring::hsv@{coloring::hsv}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::pair$<$ int, double $>$ \mbox{\hyperlink{namespacecoloring_1_1hsv_a81a6b3f18b42b0331d6d0b44c3c7b9f6}{get\+\_\+color}} (Eigen\+::\+Vector3d \&pixel, cv\+::\+Mat image, const cv\+::\+Scalar \&yellow\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&yellow\+\_\+filter\+\_\+high, const cv\+::\+Scalar \&blue\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&blue\+\_\+filter\+\_\+high, const cv\+::\+Scalar \&orange\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&orange\+\_\+filter\+\_\+high, double confidence\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Uses HSV color filtering to determine cone color. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacecoloring_1_1hsv_a81a6b3f18b42b0331d6d0b44c3c7b9f6}\label{namespacecoloring_1_1hsv_a81a6b3f18b42b0331d6d0b44c3c7b9f6}} 
+\index{coloring::hsv@{coloring::hsv}!get\_color@{get\_color}}
+\index{get\_color@{get\_color}!coloring::hsv@{coloring::hsv}}
+\doxysubsubsection{\texorpdfstring{get\_color()}{get\_color()}}
+{\footnotesize\ttfamily std\+::pair$<$ int, double $>$ coloring\+::hsv\+::get\+\_\+color (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector3d \&}]{pixel,  }\item[{cv\+::\+Mat}]{image,  }\item[{const cv\+::\+Scalar \&}]{yellow\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{yellow\+\_\+filter\+\_\+high,  }\item[{const cv\+::\+Scalar \&}]{blue\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{blue\+\_\+filter\+\_\+high,  }\item[{const cv\+::\+Scalar \&}]{orange\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{orange\+\_\+filter\+\_\+high,  }\item[{double}]{confidence\+\_\+threshold }\end{DoxyParamCaption})}
+
+
+
+Uses HSV color filtering to determine cone color. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pixel} & The pixel location to check \\
+\hline
+{\em image} & The image to analyze \\
+\hline
+{\em yellow\+\_\+filter\+\_\+low} & Lower HSV bound for yellow detection \\
+\hline
+{\em yellow\+\_\+filter\+\_\+high} & Upper HSV bound for yellow detection \\
+\hline
+{\em blue\+\_\+filter\+\_\+low} & Lower HSV bound for blue detection \\
+\hline
+{\em blue\+\_\+filter\+\_\+high} & Upper HSV bound for blue detection \\
+\hline
+{\em orange\+\_\+filter\+\_\+low} & Lower HSV bound for orange detection \\
+\hline
+{\em orange\+\_\+filter\+\_\+high} & Upper HSV bound for orange detection \\
+\hline
+{\em confidence\+\_\+threshold} & Minimum confidence to report a color \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::pair$<$int, double$>$ Color ID (-\/1, 0=orange, 1=yellow, 2=blue) and confidence 
+\end{DoxyReturn}

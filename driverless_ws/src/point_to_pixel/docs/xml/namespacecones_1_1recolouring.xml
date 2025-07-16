@@ -1,0 +1,1578 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="namespacecones_1_1recolouring" kind="namespace" language="C++">
+    <compoundname>cones::recolouring</compoundname>
+    <innerclass refid="classcones_1_1recolouring_1_1Cache" prot="public">cones::recolouring::Cache</innerclass>
+    <innerclass refid="classcones_1_1recolouring_1_1QMatrix" prot="public">cones::recolouring::QMatrix</innerclass>
+    <innerclass refid="classcones_1_1recolouring_1_1Kernel" prot="public">cones::recolouring::Kernel</innerclass>
+    <innerclass refid="classcones_1_1recolouring_1_1Solver" prot="public">cones::recolouring::Solver</innerclass>
+    <innerclass refid="classcones_1_1recolouring_1_1Solver__NU" prot="public">cones::recolouring::Solver_NU</innerclass>
+    <innerclass refid="classcones_1_1recolouring_1_1SVC__Q" prot="public">cones::recolouring::SVC_Q</innerclass>
+    <innerclass refid="classcones_1_1recolouring_1_1ONE__CLASS__Q" prot="public">cones::recolouring::ONE_CLASS_Q</innerclass>
+    <innerclass refid="classcones_1_1recolouring_1_1SVR__Q" prot="public">cones::recolouring::SVR_Q</innerclass>
+    <innerclass refid="structcones_1_1recolouring_1_1decision__function" prot="public">cones::recolouring::decision_function</innerclass>
+    <innerclass refid="structcones_1_1recolouring_1_1svm__node" prot="public">cones::recolouring::svm_node</innerclass>
+    <innerclass refid="structcones_1_1recolouring_1_1svm__problem" prot="public">cones::recolouring::svm_problem</innerclass>
+    <innerclass refid="structcones_1_1recolouring_1_1svm__parameter" prot="public">cones::recolouring::svm_parameter</innerclass>
+    <innerclass refid="structcones_1_1recolouring_1_1svm__model" prot="public">cones::recolouring::svm_model</innerclass>
+      <sectiondef kind="enum">
+      <memberdef kind="enum" id="namespacecones_1_1recolouring_1adec4febaf29e18f36ba49366cbff89d7" prot="public" static="no" strong="no">
+        <type></type>
+        <name>@1</name>
+        <enumvalue id="namespacecones_1_1recolouring_1adec4febaf29e18f36ba49366cbff89d7a64c588a43091fe2015ad801c84bb9caa" prot="public">
+          <name>C_SVC</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecones_1_1recolouring_1adec4febaf29e18f36ba49366cbff89d7aedcc70e59f8a857a3ab5d8178ec0b797" prot="public">
+          <name>NU_SVC</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecones_1_1recolouring_1adec4febaf29e18f36ba49366cbff89d7a3a4f47f0821d1b3a6ab974f399473fd0" prot="public">
+          <name>ONE_CLASS</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecones_1_1recolouring_1adec4febaf29e18f36ba49366cbff89d7a8991006d20c603c1b0f7a6bb09be4c6c" prot="public">
+          <name>EPSILON_SVR</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecones_1_1recolouring_1adec4febaf29e18f36ba49366cbff89d7a55188bb71a07da1bbd243450cc263e16" prot="public">
+          <name>NU_SVR</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="28" column="1" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" bodystart="29" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="enum" id="namespacecones_1_1recolouring_1a48dc3a39f4419f02e45c74a9bc5721cb" prot="public" static="no" strong="no">
+        <type></type>
+        <name>@2</name>
+        <enumvalue id="namespacecones_1_1recolouring_1a48dc3a39f4419f02e45c74a9bc5721cbaa8d9111940ff9ab8071533adb6410c32" prot="public">
+          <name>LINEAR</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecones_1_1recolouring_1a48dc3a39f4419f02e45c74a9bc5721cbaad65f81ce09b6517dc0ed32a0218a32f" prot="public">
+          <name>POLY</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecones_1_1recolouring_1a48dc3a39f4419f02e45c74a9bc5721cbaed0441dfddbe201f48367cf37eda866c" prot="public">
+          <name>RBF</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecones_1_1recolouring_1a48dc3a39f4419f02e45c74a9bc5721cbac541b2f737800c38c47674e33422e212" prot="public">
+          <name>SIGMOID</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecones_1_1recolouring_1a48dc3a39f4419f02e45c74a9bc5721cba1fe35071d1d6564bf2bae4bbeb1b1437" prot="public">
+          <name>PRECOMPUTED</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="36" column="1" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" bodystart="37" bodyend="43"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespacecones_1_1recolouring_1a7a8713c4c7111a8c1b718866c091934a" prot="public" static="no">
+        <type>float</type>
+        <definition>typedef float cones::recolouring::Qfloat</definition>
+        <argsstring></argsstring>
+        <name>Qfloat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="20" column="15" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacecones_1_1recolouring_1aafa74a09b422a58660501c97d2b7d47f" prot="public" static="no">
+        <type>signed char</type>
+        <definition>typedef signed char cones::recolouring::schar</definition>
+        <argsstring></argsstring>
+        <name>schar</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="21" column="21" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacecones_1_1recolouring_1ae319ba977a8b0f704cfe3a3e104f95aa" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int cones::recolouring::libsvm_version</definition>
+        <argsstring></argsstring>
+        <name>libsvm_version</name>
+        <initializer>= <ref refid="svm_8hpp_1ac7f5361b69ddd196a885f142b3c1d261" kindref="member">LIBSVM_VERSION</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="19" column="5" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="19" bodyend="-1" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="13" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacecones_1_1recolouring_1ab226f6044e8ea988aa2fd4b17934f3d4" prot="public" static="yes" mutable="no">
+        <type>void(*</type>
+        <definition>void(* cones::recolouring::svm_print_string) (const char *)</definition>
+        <argsstring>)(const char *)</argsstring>
+        <name>svm_print_string</name>
+        <initializer>= &amp;print_string_stdout</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="64" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacecones_1_1recolouring_1a595b260dcc922e8abb91e53d925429a7" prot="public" static="yes" mutable="no">
+        <type>const char *</type>
+        <definition>const char* cones::recolouring::svm_type_table[]</definition>
+        <argsstring>[]</argsstring>
+        <name>svm_type_table</name>
+        <initializer>=
+			{
+				&quot;c_svc&quot;, &quot;nu_svc&quot;, &quot;one_class&quot;, &quot;epsilon_svr&quot;, &quot;nu_svr&quot;, NULL}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2811" column="19" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2811" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacecones_1_1recolouring_1a81f14c20d03f1c26f84886aa9017d23e" prot="public" static="yes" mutable="no">
+        <type>const char *</type>
+        <definition>const char* cones::recolouring::kernel_type_table[]</definition>
+        <argsstring>[]</argsstring>
+        <name>kernel_type_table</name>
+        <initializer>=
+			{
+				&quot;linear&quot;, &quot;polynomial&quot;, &quot;rbf&quot;, &quot;sigmoid&quot;, &quot;precomputed&quot;, NULL}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2815" column="19" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2815" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacecones_1_1recolouring_1a8069b48b5eb09f61891aba9f69adb89c" prot="public" static="yes" mutable="no">
+        <type>char *</type>
+        <definition>char* cones::recolouring::line</definition>
+        <argsstring></argsstring>
+        <name>line</name>
+        <initializer>= NULL</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2928" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2928" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacecones_1_1recolouring_1a2d6963e88e7217e951260f1bfbbf36e2" prot="public" static="yes" mutable="no">
+        <type>int</type>
+        <definition>int cones::recolouring::max_line_len</definition>
+        <argsstring></argsstring>
+        <name>max_line_len</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2929" column="12" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2929" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1adfdfa6b2a715204ab8543425751b82a0" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>T</type>
+        <definition>static T cones::recolouring::min</definition>
+        <argsstring>(T x, T y)</argsstring>
+        <name>min</name>
+        <param>
+          <type>T</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="24" column="17" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="24" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a90f697527aeca69e11407a645944e263" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>T</type>
+        <definition>static T cones::recolouring::max</definition>
+        <argsstring>(T x, T y)</argsstring>
+        <name>max</name>
+        <param>
+          <type>T</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>T</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="28" column="17" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="28" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1ac77385c741cc1949468147b852331619" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>static void cones::recolouring::swap</definition>
+        <argsstring>(T &amp;x, T &amp;y)</argsstring>
+        <name>swap</name>
+        <param>
+          <type>T &amp;</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>T &amp;</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="31" column="20" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="31" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a1db0fc894c2c8f8aba7698f9a5f6fce6" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class S</type>
+          </param>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>static void cones::recolouring::clone</definition>
+        <argsstring>(T *&amp;dst, S *src, int n)</argsstring>
+        <name>clone</name>
+        <param>
+          <type>T *&amp;</type>
+          <declname>dst</declname>
+        </param>
+        <param>
+          <type>S *</type>
+          <declname>src</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="38" column="20" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="38" bodyend="42"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a4d98133f82f45e7ab1a43d6f2955a146" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>double</type>
+        <definition>static double cones::recolouring::powi</definition>
+        <argsstring>(double base, int times)</argsstring>
+        <name>powi</name>
+        <param>
+          <type>double</type>
+          <declname>base</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>times</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="43" column="22" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="43" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1afa8c09f51ad154382199b628ccf2e5f0" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void cones::recolouring::print_string_stdout</definition>
+        <argsstring>(const char *s)</argsstring>
+        <name>print_string_stdout</name>
+        <param>
+          <type>const char *</type>
+          <declname>s</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="59" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="59" bodyend="63"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1ab305caab4a9ff0eebdf7053ec891991e" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void cones::recolouring::info</definition>
+        <argsstring>(const char *fmt,...)</argsstring>
+        <name>info</name>
+        <param>
+          <type>const char *</type>
+          <declname>fmt</declname>
+        </param>
+        <param>
+          <type>...</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="76" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="76" bodyend="76"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a7a7c35b782cd2c40a86cbd24f341266b" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void cones::recolouring::solve_c_svc</definition>
+        <argsstring>(const svm_problem *prob, const svm_parameter *param, double *alpha, Solver::SolutionInfo *si, double Cp, double Cn)</argsstring>
+        <name>solve_c_svc</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>alpha</declname>
+        </param>
+        <param>
+          <type><ref refid="structcones_1_1recolouring_1_1Solver_1_1SolutionInfo" kindref="compound">Solver::SolutionInfo</ref> *</type>
+          <declname>si</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Cp</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Cn</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1495" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1495" bodyend="1531"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a8d434dac504f26558d0d90468fdc7ed8" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void cones::recolouring::solve_nu_svc</definition>
+        <argsstring>(const svm_problem *prob, const svm_parameter *param, double *alpha, Solver::SolutionInfo *si)</argsstring>
+        <name>solve_nu_svc</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>alpha</declname>
+        </param>
+        <param>
+          <type><ref refid="structcones_1_1recolouring_1_1Solver_1_1SolutionInfo" kindref="compound">Solver::SolutionInfo</ref> *</type>
+          <declname>si</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1533" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1533" bodyend="1586"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a8d07e06da767356a36dfa4bf27ebaef6" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void cones::recolouring::solve_one_class</definition>
+        <argsstring>(const svm_problem *prob, const svm_parameter *param, double *alpha, Solver::SolutionInfo *si)</argsstring>
+        <name>solve_one_class</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>alpha</declname>
+        </param>
+        <param>
+          <type><ref refid="structcones_1_1recolouring_1_1Solver_1_1SolutionInfo" kindref="compound">Solver::SolutionInfo</ref> *</type>
+          <declname>si</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1588" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1588" bodyend="1618"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1aadb536ccf5ee92c91e2a601039735897" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void cones::recolouring::solve_epsilon_svr</definition>
+        <argsstring>(const svm_problem *prob, const svm_parameter *param, double *alpha, Solver::SolutionInfo *si)</argsstring>
+        <name>solve_epsilon_svr</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>alpha</declname>
+        </param>
+        <param>
+          <type><ref refid="structcones_1_1recolouring_1_1Solver_1_1SolutionInfo" kindref="compound">Solver::SolutionInfo</ref> *</type>
+          <declname>si</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1620" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1620" bodyend="1656"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a01b9ef7317fb646bc5c2deb6bd8241e8" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void cones::recolouring::solve_nu_svr</definition>
+        <argsstring>(const svm_problem *prob, const svm_parameter *param, double *alpha, Solver::SolutionInfo *si)</argsstring>
+        <name>solve_nu_svr</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>alpha</declname>
+        </param>
+        <param>
+          <type><ref refid="structcones_1_1recolouring_1_1Solver_1_1SolutionInfo" kindref="compound">Solver::SolutionInfo</ref> *</type>
+          <declname>si</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1658" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1658" bodyend="1694"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1afd443b595e504c778bf47a35adb38847" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="structcones_1_1recolouring_1_1decision__function" kindref="compound">decision_function</ref></type>
+        <definition>static decision_function cones::recolouring::svm_train_one</definition>
+        <argsstring>(const svm_problem *prob, const svm_parameter *param, double Cp, double Cn)</argsstring>
+        <name>svm_train_one</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Cp</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Cn</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1705" column="26" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1705" bodyend="1760"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a548bdb96c1a89e1ac46ae27d6cf93667" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void cones::recolouring::sigmoid_train</definition>
+        <argsstring>(int l, const double *dec_values, const double *labels, double &amp;A, double &amp;B)</argsstring>
+        <name>sigmoid_train</name>
+        <param>
+          <type>int</type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type>const double *</type>
+          <declname>dec_values</declname>
+        </param>
+        <param>
+          <type>const double *</type>
+          <declname>labels</declname>
+        </param>
+        <param>
+          <type>double &amp;</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type>double &amp;</type>
+          <declname>B</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1763" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1763" bodyend="1882"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a9d84720e03ca13433a1e2a5b73656a47" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>static double cones::recolouring::sigmoid_predict</definition>
+        <argsstring>(double decision_value, double A, double B)</argsstring>
+        <name>sigmoid_predict</name>
+        <param>
+          <type>double</type>
+          <declname>decision_value</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>A</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>B</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1884" column="15" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1884" bodyend="1892"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a0908d952eca30e820dcb9eec5d645696" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void cones::recolouring::multiclass_probability</definition>
+        <argsstring>(int k, double **r, double *p)</argsstring>
+        <name>multiclass_probability</name>
+        <param>
+          <type>int</type>
+          <declname>k</declname>
+        </param>
+        <param>
+          <type>double **</type>
+          <declname>r</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1895" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1895" bodyend="1958"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a425f8b3a773a0b9d0a7ddd0e29d59c20" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void cones::recolouring::svm_binary_svc_probability</definition>
+        <argsstring>(const svm_problem *prob, const svm_parameter *param, double Cp, double Cn, double &amp;probA, double &amp;probB)</argsstring>
+        <name>svm_binary_svc_probability</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Cp</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Cn</declname>
+        </param>
+        <param>
+          <type>double &amp;</type>
+          <declname>probA</declname>
+        </param>
+        <param>
+          <type>double &amp;</type>
+          <declname>probB</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1961" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1961" bodyend="2046"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1ae6e392fc47e4188e2432eee229a869c1" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>static double cones::recolouring::predict_one_class_probability</definition>
+        <argsstring>(const svm_model *model, double dec_value)</argsstring>
+        <name>predict_one_class_probability</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dec_value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2049" column="15" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2049" bodyend="2068"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a3c4ffa45a9ca9d5ba646ddf454fb54a8" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>static int cones::recolouring::compare_double</definition>
+        <argsstring>(const void *a, const void *b)</argsstring>
+        <name>compare_double</name>
+        <param>
+          <type>const void *</type>
+          <declname>a</declname>
+        </param>
+        <param>
+          <type>const void *</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2070" column="12" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2070" bodyend="2077"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1ab0d0407d7b22e2ffb0ca3a967d8efaf0" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>static int cones::recolouring::svm_one_class_probability</definition>
+        <argsstring>(const svm_problem *prob, const svm_model *model, double *prob_density_marks)</argsstring>
+        <name>svm_one_class_probability</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>prob_density_marks</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2080" column="12" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2080" bodyend="2123"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a28374fdb69f65fcd99dceaa9f701cf42" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>static double cones::recolouring::svm_svr_probability</definition>
+        <argsstring>(const svm_problem *prob, const svm_parameter *param)</argsstring>
+        <name>svm_svr_probability</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2126" column="15" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2126" bodyend="2155"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1ae4b03eb0af87d58c79edeb3d4b78b169" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void cones::recolouring::svm_group_classes</definition>
+        <argsstring>(const svm_problem *prob, int *nr_class_ret, int **label_ret, int **start_ret, int **count_ret, int *perm)</argsstring>
+        <name>svm_group_classes</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>int *</type>
+          <declname>nr_class_ret</declname>
+        </param>
+        <param>
+          <type>int **</type>
+          <declname>label_ret</declname>
+        </param>
+        <param>
+          <type>int **</type>
+          <declname>start_ret</declname>
+        </param>
+        <param>
+          <type>int **</type>
+          <declname>count_ret</declname>
+        </param>
+        <param>
+          <type>int *</type>
+          <declname>perm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2159" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2159" bodyend="2232"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a4d212fc1dcd7f95585ee5fed99d3ab20" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+        <definition>svm_model* cones::recolouring::svm_train</definition>
+        <argsstring>(const svm_problem *prob, const svm_parameter *param)</argsstring>
+        <name>svm_train</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2237" column="11" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2237" bodyend="2495"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a89c5660d399418f9468c89b1361e55b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::svm_cross_validation</definition>
+        <argsstring>(const svm_problem *prob, const svm_parameter *param, int nr_fold, double *target)</argsstring>
+        <name>svm_cross_validation</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>nr_fold</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>target</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2498" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2498" bodyend="2618"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a93db17fc5f15cf1af0bb84b0f867d32d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int cones::recolouring::svm_get_svm_type</definition>
+        <argsstring>(const svm_model *model)</argsstring>
+        <name>svm_get_svm_type</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2620" column="5" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2620" bodyend="2623"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a7864b12b4f93dcef2a56e3fe8b2632fd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int cones::recolouring::svm_get_nr_class</definition>
+        <argsstring>(const svm_model *model)</argsstring>
+        <name>svm_get_nr_class</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2625" column="5" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2625" bodyend="2628"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a3fff31828c6845fc788ed5f13cb4d091" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::svm_get_labels</definition>
+        <argsstring>(const svm_model *model, int *label)</argsstring>
+        <name>svm_get_labels</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>int *</type>
+          <declname>label</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2630" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2630" bodyend="2635"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1adc34893bb32bb6804a52221fa88d31c4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::svm_get_sv_indices</definition>
+        <argsstring>(const svm_model *model, int *indices)</argsstring>
+        <name>svm_get_sv_indices</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>int *</type>
+          <declname>indices</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2637" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2637" bodyend="2642"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a96c67433fefa62a5ee08732481f5e9e8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int cones::recolouring::svm_get_nr_sv</definition>
+        <argsstring>(const svm_model *model)</argsstring>
+        <name>svm_get_nr_sv</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2644" column="5" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2644" bodyend="2647"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1acf0aabad6f622f090995278a07a30add" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double cones::recolouring::svm_get_svr_probability</definition>
+        <argsstring>(const svm_model *model)</argsstring>
+        <name>svm_get_svr_probability</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2649" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2649" bodyend="2659"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1ab86bb00e49daaef4701a59972e0b55b1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double cones::recolouring::svm_predict_values</definition>
+        <argsstring>(const svm_model *model, const svm_node *x, double *dec_values)</argsstring>
+        <name>svm_predict_values</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__node" kindref="compound">svm_node</ref> *</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>dec_values</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2661" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2661" bodyend="2741"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a428b74149009d99007132baf80829777" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double cones::recolouring::svm_predict</definition>
+        <argsstring>(const svm_model *model, const svm_node *x)</argsstring>
+        <name>svm_predict</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__node" kindref="compound">svm_node</ref> *</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2743" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2743" bodyend="2756"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a84246a5398908e220bd287a71c96cecc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double cones::recolouring::svm_predict_probability</definition>
+        <argsstring>(const svm_model *model, const svm_node *x, double *prob_estimates)</argsstring>
+        <name>svm_predict_probability</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__node" kindref="compound">svm_node</ref> *</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>prob_estimates</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2758" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2758" bodyend="2809"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1aa2852f4026e90789c029689e9cf41d28" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int cones::recolouring::svm_save_model</definition>
+        <argsstring>(const char *model_file_name, const svm_model *model)</argsstring>
+        <name>svm_save_model</name>
+        <param>
+          <type>const char *</type>
+          <declname>model_file_name</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2819" column="5" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2819" bodyend="2926"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a25f2c7414cb86f293adebc0441fe17b5" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>static char* cones::recolouring::readline</definition>
+        <argsstring>(FILE *input)</argsstring>
+        <name>readline</name>
+        <param>
+          <type>FILE *</type>
+          <declname>input</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2931" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2931" bodyend="2947"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a24dcd8bbaf3b6c8d8475237c936218db" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cones::recolouring::read_model_header</definition>
+        <argsstring>(FILE *fp, svm_model *model)</argsstring>
+        <name>read_model_header</name>
+        <param>
+          <type>FILE *</type>
+          <declname>fp</declname>
+        </param>
+        <param>
+          <type><ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="2962" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="2962" bodyend="3081"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a675946cb5772b8f081ad61b55b46f288" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+        <definition>struct svm_model * cones::recolouring::svm_load_model</definition>
+        <argsstring>(const char *model_file_name)</argsstring>
+        <name>svm_load_model</name>
+        <param>
+          <type>const char *</type>
+          <declname>model_file_name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="3083" column="11" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="3083" bodyend="3193" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="96" declcolumn="16"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1afc44cbe2e60f7a48f5e5686cde6d075c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::svm_free_model_content</definition>
+        <argsstring>(svm_model *model_ptr)</argsstring>
+        <name>svm_free_model_content</name>
+        <param>
+          <type><ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model_ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="3195" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="3195" bodyend="3231" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="109" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1ac6a9d3cbfc1ec7509d2408a8eb0cfa8d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::svm_free_and_destroy_model</definition>
+        <argsstring>(svm_model **model_ptr_ptr)</argsstring>
+        <name>svm_free_and_destroy_model</name>
+        <param>
+          <type><ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> **</type>
+          <declname>model_ptr_ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="3233" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="3233" bodyend="3241" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="110" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1afd0add65b5516adda1e9cb9aeb0234de" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::svm_destroy_param</definition>
+        <argsstring>(svm_parameter *param)</argsstring>
+        <name>svm_destroy_param</name>
+        <param>
+          <type><ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="3243" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="3243" bodyend="3247" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="111" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1ac1314952771bbc4a24f99e94029b600a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>const char *</type>
+        <definition>const char* cones::recolouring::svm_check_parameter</definition>
+        <argsstring>(const svm_problem *prob, const svm_parameter *param)</argsstring>
+        <name>svm_check_parameter</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="3249" column="12" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="3249" bodyend="3364"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1aadc19e2911682863c5cdd2086c29f3f9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int cones::recolouring::svm_check_probability_model</definition>
+        <argsstring>(const svm_model *model)</argsstring>
+        <name>svm_check_probability_model</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="3366" column="5" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="3366" bodyend="3373"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a7cf578b5e72f447dc9686c615495eb9b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::svm_set_print_string_function</definition>
+        <argsstring>(void(*print_func)(const char *))</argsstring>
+        <name>svm_set_print_string_function</name>
+        <param>
+          <type>void(*)(const char *)</type>
+          <declname>print_func</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="3375" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="3375" bodyend="3381" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="116" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a48267b24c98990bdb66a1afcdcf5163e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+        <definition>struct svm_model* cones::recolouring::svm_train</definition>
+        <argsstring>(const struct svm_problem *prob, const struct svm_parameter *param)</argsstring>
+        <name>svm_train</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="92" column="16" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="92" declcolumn="16"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1aa776a9521732d76af8b2fcff17239026" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::svm_cross_validation</definition>
+        <argsstring>(const struct svm_problem *prob, const struct svm_parameter *param, int nr_fold, double *target)</argsstring>
+        <name>svm_cross_validation</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>nr_fold</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>target</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="93" column="6" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="93" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a312f2b8765ebdec7c3408a7456c32486" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int cones::recolouring::svm_save_model</definition>
+        <argsstring>(const char *model_file_name, const struct svm_model *model)</argsstring>
+        <name>svm_save_model</name>
+        <param>
+          <type>const char *</type>
+          <declname>model_file_name</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="95" column="5" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="95" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a3d2846bab7d0afb1a8783811eaaec8ad" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int cones::recolouring::svm_get_svm_type</definition>
+        <argsstring>(const struct svm_model *model)</argsstring>
+        <name>svm_get_svm_type</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="98" column="5" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="98" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a8aa9f6c46f7d4ddeb899b3a99ac78e6b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int cones::recolouring::svm_get_nr_class</definition>
+        <argsstring>(const struct svm_model *model)</argsstring>
+        <name>svm_get_nr_class</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="99" column="5" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="99" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a51dd5f64094440868e8a01e0366b60fb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::svm_get_labels</definition>
+        <argsstring>(const struct svm_model *model, int *label)</argsstring>
+        <name>svm_get_labels</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>int *</type>
+          <declname>label</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="100" column="6" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="100" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a783fcf75b944eff8cc65d84c52bb71dd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::svm_get_sv_indices</definition>
+        <argsstring>(const struct svm_model *model, int *sv_indices)</argsstring>
+        <name>svm_get_sv_indices</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>int *</type>
+          <declname>sv_indices</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="101" column="6" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="101" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a182d97b1e40357e5f85f83b1b002c6d5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int cones::recolouring::svm_get_nr_sv</definition>
+        <argsstring>(const struct svm_model *model)</argsstring>
+        <name>svm_get_nr_sv</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="102" column="5" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="102" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1ab0443e9c5868ffbc9f85854a72a84202" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double cones::recolouring::svm_get_svr_probability</definition>
+        <argsstring>(const struct svm_model *model)</argsstring>
+        <name>svm_get_svr_probability</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="103" column="8" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="103" declcolumn="8"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1aa1f25a2ba785f744400a6b9d6aae1be2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double cones::recolouring::svm_predict_values</definition>
+        <argsstring>(const struct svm_model *model, const struct svm_node *x, double *dec_values)</argsstring>
+        <name>svm_predict_values</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__node" kindref="compound">svm_node</ref> *</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>dec_values</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="105" column="8" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="105" declcolumn="8"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a41f5ba547c869744ab772b3508fdff7a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double cones::recolouring::svm_predict</definition>
+        <argsstring>(const struct svm_model *model, const struct svm_node *x)</argsstring>
+        <name>svm_predict</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__node" kindref="compound">svm_node</ref> *</type>
+          <declname>x</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="106" column="8" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="106" declcolumn="8"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a51fc0fb6fb6b1bfbe04185c366fcddee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double cones::recolouring::svm_predict_probability</definition>
+        <argsstring>(const struct svm_model *model, const struct svm_node *x, double *prob_estimates)</argsstring>
+        <name>svm_predict_probability</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__node" kindref="compound">svm_node</ref> *</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>double *</type>
+          <declname>prob_estimates</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="107" column="8" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="107" declcolumn="8"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a77aea5ada624f622c511a9e55aa8a4ed" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>const char *</type>
+        <definition>const char* cones::recolouring::svm_check_parameter</definition>
+        <argsstring>(const struct svm_problem *prob, const struct svm_parameter *param)</argsstring>
+        <name>svm_check_parameter</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> *</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> *</type>
+          <declname>param</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="113" column="12" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="113" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1ac2c1db1e4e6d904cc6ffad02fd4f2773" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int cones::recolouring::svm_check_probability_model</definition>
+        <argsstring>(const struct svm_model *model)</argsstring>
+        <name>svm_check_probability_model</name>
+        <param>
+          <type>const struct <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" line="114" column="5" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.hpp" declline="114" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1ae87cbdb3128decc330d422a85bd6e7ba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double cones::recolouring::node_predictor</definition>
+        <argsstring>(const std::vector&lt; double &gt; &amp;cone, const svm_model *model)</argsstring>
+        <name>node_predictor</name>
+        <param>
+          <type>const std::vector&lt; double &gt; &amp;</type>
+          <declname>cone</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__model" kindref="compound">svm_model</ref> *</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm_recolour.cpp" line="20" column="12" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm_recolour.cpp" bodystart="20" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecones_1_1recolouring_1a522930c1f532fff936dc2387ed519661" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="structcones_1_1TrackBounds" kindref="compound">cones::TrackBounds</ref></type>
+        <definition>cones::TrackBounds cones::recolouring::recolour_cones</definition>
+        <argsstring>(cones::TrackBounds track_bounds, double C)</argsstring>
+        <name>recolour_cones</name>
+        <param>
+          <type><ref refid="structcones_1_1TrackBounds" kindref="compound">cones::TrackBounds</ref></type>
+          <declname>track_bounds</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>C</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm_recolour.cpp" line="32" column="24" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm_recolour.cpp" bodystart="32" bodyend="212" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm_recolour.hpp" declline="6" declcolumn="24"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="16" column="1"/>
+  </compounddef>
+</doxygen>

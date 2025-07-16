@@ -1,0 +1,437 @@
+\hypertarget{namespacecones_1_1recolouring}{}\doxysection{cones\+::recolouring Namespace Reference}
+\label{namespacecones_1_1recolouring}\index{cones::recolouring@{cones::recolouring}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classcones_1_1recolouring_1_1Cache}{Cache}}
+\item 
+class \mbox{\hyperlink{classcones_1_1recolouring_1_1QMatrix}{QMatrix}}
+\item 
+class \mbox{\hyperlink{classcones_1_1recolouring_1_1Kernel}{Kernel}}
+\item 
+class \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver}{Solver}}
+\item 
+class \mbox{\hyperlink{classcones_1_1recolouring_1_1Solver__NU}{Solver\+\_\+\+NU}}
+\item 
+class \mbox{\hyperlink{classcones_1_1recolouring_1_1SVC__Q}{SVC\+\_\+Q}}
+\item 
+class \mbox{\hyperlink{classcones_1_1recolouring_1_1ONE__CLASS__Q}{ONE\+\_\+\+CLASS\+\_\+Q}}
+\item 
+class \mbox{\hyperlink{classcones_1_1recolouring_1_1SVR__Q}{SVR\+\_\+Q}}
+\item 
+struct \mbox{\hyperlink{structcones_1_1recolouring_1_1decision__function}{decision\+\_\+function}}
+\item 
+struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}}
+\item 
+struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}}
+\item 
+struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}}
+\item 
+struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef float \mbox{\hyperlink{namespacecones_1_1recolouring_a7a8713c4c7111a8c1b718866c091934a}{Qfloat}}
+\item 
+typedef signed char \mbox{\hyperlink{namespacecones_1_1recolouring_aafa74a09b422a58660501c97d2b7d47f}{schar}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \newline
+\mbox{\hyperlink{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a64c588a43091fe2015ad801c84bb9caa}{C\+\_\+\+SVC}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7aedcc70e59f8a857a3ab5d8178ec0b797}{NU\+\_\+\+SVC}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a3a4f47f0821d1b3a6ab974f399473fd0}{ONE\+\_\+\+CLASS}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a8991006d20c603c1b0f7a6bb09be4c6c}{EPSILON\+\_\+\+SVR}}
+, \newline
+\mbox{\hyperlink{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a55188bb71a07da1bbd243450cc263e16}{NU\+\_\+\+SVR}}
+ \}
+\item 
+enum \{ \newline
+\mbox{\hyperlink{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaa8d9111940ff9ab8071533adb6410c32}{LINEAR}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaad65f81ce09b6517dc0ed32a0218a32f}{POLY}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaed0441dfddbe201f48367cf37eda866c}{RBF}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbac541b2f737800c38c47674e33422e212}{SIGMOID}}
+, \newline
+\mbox{\hyperlink{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cba1fe35071d1d6564bf2bae4bbeb1b1437}{PRECOMPUTED}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$ \mbox{\hyperlink{namespacecones_1_1recolouring_a4d212fc1dcd7f95585ee5fed99d3ab20}{svm\+\_\+train}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$prob, const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$param)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_a89c5660d399418f9468c89b1361e55b6}{svm\+\_\+cross\+\_\+validation}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$prob, const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$param, int nr\+\_\+fold, double $\ast$target)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_a93db17fc5f15cf1af0bb84b0f867d32d}{svm\+\_\+get\+\_\+svm\+\_\+type}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_a7864b12b4f93dcef2a56e3fe8b2632fd}{svm\+\_\+get\+\_\+nr\+\_\+class}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_a3fff31828c6845fc788ed5f13cb4d091}{svm\+\_\+get\+\_\+labels}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model, int $\ast$label)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_adc34893bb32bb6804a52221fa88d31c4}{svm\+\_\+get\+\_\+sv\+\_\+indices}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model, int $\ast$indices)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_a96c67433fefa62a5ee08732481f5e9e8}{svm\+\_\+get\+\_\+nr\+\_\+sv}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_acf0aabad6f622f090995278a07a30add}{svm\+\_\+get\+\_\+svr\+\_\+probability}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_ab86bb00e49daaef4701a59972e0b55b1}{svm\+\_\+predict\+\_\+values}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model, const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$x, double $\ast$dec\+\_\+values)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_a428b74149009d99007132baf80829777}{svm\+\_\+predict}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model, const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$x)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_a84246a5398908e220bd287a71c96cecc}{svm\+\_\+predict\+\_\+probability}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model, const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$x, double $\ast$prob\+\_\+estimates)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_aa2852f4026e90789c029689e9cf41d28}{svm\+\_\+save\+\_\+model}} (const char $\ast$model\+\_\+file\+\_\+name, const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+bool \mbox{\hyperlink{namespacecones_1_1recolouring_a24dcd8bbaf3b6c8d8475237c936218db}{read\+\_\+model\+\_\+header}} (FILE $\ast$fp, \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+\mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$ \mbox{\hyperlink{namespacecones_1_1recolouring_a675946cb5772b8f081ad61b55b46f288}{svm\+\_\+load\+\_\+model}} (const char $\ast$model\+\_\+file\+\_\+name)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_afc44cbe2e60f7a48f5e5686cde6d075c}{svm\+\_\+free\+\_\+model\+\_\+content}} (\mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model\+\_\+ptr)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_ac6a9d3cbfc1ec7509d2408a8eb0cfa8d}{svm\+\_\+free\+\_\+and\+\_\+destroy\+\_\+model}} (\mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$$\ast$model\+\_\+ptr\+\_\+ptr)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_afd0add65b5516adda1e9cb9aeb0234de}{svm\+\_\+destroy\+\_\+param}} (\mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$param)
+\item 
+const char $\ast$ \mbox{\hyperlink{namespacecones_1_1recolouring_ac1314952771bbc4a24f99e94029b600a}{svm\+\_\+check\+\_\+parameter}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$prob, const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$param)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_aadc19e2911682863c5cdd2086c29f3f9}{svm\+\_\+check\+\_\+probability\+\_\+model}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_a7cf578b5e72f447dc9686c615495eb9b}{svm\+\_\+set\+\_\+print\+\_\+string\+\_\+function}} (void($\ast$print\+\_\+func)(const char $\ast$))
+\item 
+struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$ \mbox{\hyperlink{namespacecones_1_1recolouring_a48267b24c98990bdb66a1afcdcf5163e}{svm\+\_\+train}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$prob, const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$param)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_aa776a9521732d76af8b2fcff17239026}{svm\+\_\+cross\+\_\+validation}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$prob, const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$param, int nr\+\_\+fold, double $\ast$target)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_a312f2b8765ebdec7c3408a7456c32486}{svm\+\_\+save\+\_\+model}} (const char $\ast$model\+\_\+file\+\_\+name, const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_a3d2846bab7d0afb1a8783811eaaec8ad}{svm\+\_\+get\+\_\+svm\+\_\+type}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_a8aa9f6c46f7d4ddeb899b3a99ac78e6b}{svm\+\_\+get\+\_\+nr\+\_\+class}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_a51dd5f64094440868e8a01e0366b60fb}{svm\+\_\+get\+\_\+labels}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model, int $\ast$label)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_a783fcf75b944eff8cc65d84c52bb71dd}{svm\+\_\+get\+\_\+sv\+\_\+indices}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model, int $\ast$sv\+\_\+indices)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_a182d97b1e40357e5f85f83b1b002c6d5}{svm\+\_\+get\+\_\+nr\+\_\+sv}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_ab0443e9c5868ffbc9f85854a72a84202}{svm\+\_\+get\+\_\+svr\+\_\+probability}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_aa1f25a2ba785f744400a6b9d6aae1be2}{svm\+\_\+predict\+\_\+values}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model, const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$x, double $\ast$dec\+\_\+values)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_a41f5ba547c869744ab772b3508fdff7a}{svm\+\_\+predict}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model, const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$x)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_a51fc0fb6fb6b1bfbe04185c366fcddee}{svm\+\_\+predict\+\_\+probability}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model, const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$x, double $\ast$prob\+\_\+estimates)
+\item 
+const char $\ast$ \mbox{\hyperlink{namespacecones_1_1recolouring_a77aea5ada624f622c511a9e55aa8a4ed}{svm\+\_\+check\+\_\+parameter}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$prob, const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$param)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_ac2c1db1e4e6d904cc6ffad02fd4f2773}{svm\+\_\+check\+\_\+probability\+\_\+model}} (const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_ae87cbdb3128decc330d422a85bd6e7ba}{node\+\_\+predictor}} (const std\+::vector$<$ double $>$ \&cone, const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$model)
+\item 
+\mbox{\hyperlink{structcones_1_1TrackBounds}{cones\+::\+Track\+Bounds}} \mbox{\hyperlink{namespacecones_1_1recolouring_a522930c1f532fff936dc2387ed519661}{recolour\+\_\+cones}} (\mbox{\hyperlink{structcones_1_1TrackBounds}{cones\+::\+Track\+Bounds}} track\+\_\+bounds, double C)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_ae319ba977a8b0f704cfe3a3e104f95aa}{libsvm\+\_\+version}} = \mbox{\hyperlink{svm_8hpp_ac7f5361b69ddd196a885f142b3c1d261}{LIBSVM\+\_\+\+VERSION}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a7a8713c4c7111a8c1b718866c091934a}\label{namespacecones_1_1recolouring_a7a8713c4c7111a8c1b718866c091934a}} 
+\index{cones::recolouring@{cones::recolouring}!Qfloat@{Qfloat}}
+\index{Qfloat@{Qfloat}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{Qfloat}{Qfloat}}
+{\footnotesize\ttfamily typedef float \mbox{\hyperlink{namespacecones_1_1recolouring_a7a8713c4c7111a8c1b718866c091934a}{cones\+::recolouring\+::\+Qfloat}}}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_aafa74a09b422a58660501c97d2b7d47f}\label{namespacecones_1_1recolouring_aafa74a09b422a58660501c97d2b7d47f}} 
+\index{cones::recolouring@{cones::recolouring}!schar@{schar}}
+\index{schar@{schar}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{schar}{schar}}
+{\footnotesize\ttfamily typedef signed char \mbox{\hyperlink{namespacecones_1_1recolouring_aafa74a09b422a58660501c97d2b7d47f}{cones\+::recolouring\+::schar}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7}\label{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7}} 
+\doxysubsubsection{\texorpdfstring{anonymous enum}{anonymous enum}}
+{\footnotesize\ttfamily anonymous enum}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\_SVC@{C\_SVC}!cones::recolouring@{cones::recolouring}}\index{cones::recolouring@{cones::recolouring}!C\_SVC@{C\_SVC}}}\mbox{\Hypertarget{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a64c588a43091fe2015ad801c84bb9caa}\label{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a64c588a43091fe2015ad801c84bb9caa}} 
+C\+\_\+\+SVC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NU\_SVC@{NU\_SVC}!cones::recolouring@{cones::recolouring}}\index{cones::recolouring@{cones::recolouring}!NU\_SVC@{NU\_SVC}}}\mbox{\Hypertarget{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7aedcc70e59f8a857a3ab5d8178ec0b797}\label{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7aedcc70e59f8a857a3ab5d8178ec0b797}} 
+NU\+\_\+\+SVC&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ONE\_CLASS@{ONE\_CLASS}!cones::recolouring@{cones::recolouring}}\index{cones::recolouring@{cones::recolouring}!ONE\_CLASS@{ONE\_CLASS}}}\mbox{\Hypertarget{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a3a4f47f0821d1b3a6ab974f399473fd0}\label{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a3a4f47f0821d1b3a6ab974f399473fd0}} 
+ONE\+\_\+\+CLASS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EPSILON\_SVR@{EPSILON\_SVR}!cones::recolouring@{cones::recolouring}}\index{cones::recolouring@{cones::recolouring}!EPSILON\_SVR@{EPSILON\_SVR}}}\mbox{\Hypertarget{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a8991006d20c603c1b0f7a6bb09be4c6c}\label{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a8991006d20c603c1b0f7a6bb09be4c6c}} 
+EPSILON\+\_\+\+SVR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NU\_SVR@{NU\_SVR}!cones::recolouring@{cones::recolouring}}\index{cones::recolouring@{cones::recolouring}!NU\_SVR@{NU\_SVR}}}\mbox{\Hypertarget{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a55188bb71a07da1bbd243450cc263e16}\label{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a55188bb71a07da1bbd243450cc263e16}} 
+NU\+\_\+\+SVR&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cb}\label{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cb}} 
+\doxysubsubsection{\texorpdfstring{anonymous enum}{anonymous enum}}
+{\footnotesize\ttfamily anonymous enum}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LINEAR@{LINEAR}!cones::recolouring@{cones::recolouring}}\index{cones::recolouring@{cones::recolouring}!LINEAR@{LINEAR}}}\mbox{\Hypertarget{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaa8d9111940ff9ab8071533adb6410c32}\label{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaa8d9111940ff9ab8071533adb6410c32}} 
+LINEAR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{POLY@{POLY}!cones::recolouring@{cones::recolouring}}\index{cones::recolouring@{cones::recolouring}!POLY@{POLY}}}\mbox{\Hypertarget{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaad65f81ce09b6517dc0ed32a0218a32f}\label{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaad65f81ce09b6517dc0ed32a0218a32f}} 
+POLY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RBF@{RBF}!cones::recolouring@{cones::recolouring}}\index{cones::recolouring@{cones::recolouring}!RBF@{RBF}}}\mbox{\Hypertarget{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaed0441dfddbe201f48367cf37eda866c}\label{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaed0441dfddbe201f48367cf37eda866c}} 
+RBF&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SIGMOID@{SIGMOID}!cones::recolouring@{cones::recolouring}}\index{cones::recolouring@{cones::recolouring}!SIGMOID@{SIGMOID}}}\mbox{\Hypertarget{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbac541b2f737800c38c47674e33422e212}\label{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbac541b2f737800c38c47674e33422e212}} 
+SIGMOID&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PRECOMPUTED@{PRECOMPUTED}!cones::recolouring@{cones::recolouring}}\index{cones::recolouring@{cones::recolouring}!PRECOMPUTED@{PRECOMPUTED}}}\mbox{\Hypertarget{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cba1fe35071d1d6564bf2bae4bbeb1b1437}\label{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cba1fe35071d1d6564bf2bae4bbeb1b1437}} 
+PRECOMPUTED&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacecones_1_1recolouring_ae87cbdb3128decc330d422a85bd6e7ba}\label{namespacecones_1_1recolouring_ae87cbdb3128decc330d422a85bd6e7ba}} 
+\index{cones::recolouring@{cones::recolouring}!node\_predictor@{node\_predictor}}
+\index{node\_predictor@{node\_predictor}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{node\_predictor()}{node\_predictor()}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::node\+\_\+predictor (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ double $>$ \&}]{cone,  }\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a24dcd8bbaf3b6c8d8475237c936218db}\label{namespacecones_1_1recolouring_a24dcd8bbaf3b6c8d8475237c936218db}} 
+\index{cones::recolouring@{cones::recolouring}!read\_model\_header@{read\_model\_header}}
+\index{read\_model\_header@{read\_model\_header}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{read\_model\_header()}{read\_model\_header()}}
+{\footnotesize\ttfamily bool cones\+::recolouring\+::read\+\_\+model\+\_\+header (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{fp,  }\item[{\mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a522930c1f532fff936dc2387ed519661}\label{namespacecones_1_1recolouring_a522930c1f532fff936dc2387ed519661}} 
+\index{cones::recolouring@{cones::recolouring}!recolour\_cones@{recolour\_cones}}
+\index{recolour\_cones@{recolour\_cones}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{recolour\_cones()}{recolour\_cones()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structcones_1_1TrackBounds}{cones\+::\+Track\+Bounds}} cones\+::recolouring\+::recolour\+\_\+cones (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcones_1_1TrackBounds}{cones\+::\+Track\+Bounds}}}]{track\+\_\+bounds,  }\item[{double}]{C }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a77aea5ada624f622c511a9e55aa8a4ed}\label{namespacecones_1_1recolouring_a77aea5ada624f622c511a9e55aa8a4ed}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_check\_parameter@{svm\_check\_parameter}}
+\index{svm\_check\_parameter@{svm\_check\_parameter}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_check\_parameter()}{svm\_check\_parameter()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily const char$\ast$ cones\+::recolouring\+::svm\+\_\+check\+\_\+parameter (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$}]{prob,  }\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$}]{param }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_ac1314952771bbc4a24f99e94029b600a}\label{namespacecones_1_1recolouring_ac1314952771bbc4a24f99e94029b600a}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_check\_parameter@{svm\_check\_parameter}}
+\index{svm\_check\_parameter@{svm\_check\_parameter}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_check\_parameter()}{svm\_check\_parameter()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily const char$\ast$ cones\+::recolouring\+::svm\+\_\+check\+\_\+parameter (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$}]{prob,  }\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$}]{param }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_ac2c1db1e4e6d904cc6ffad02fd4f2773}\label{namespacecones_1_1recolouring_ac2c1db1e4e6d904cc6ffad02fd4f2773}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_check\_probability\_model@{svm\_check\_probability\_model}}
+\index{svm\_check\_probability\_model@{svm\_check\_probability\_model}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_check\_probability\_model()}{svm\_check\_probability\_model()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::svm\+\_\+check\+\_\+probability\+\_\+model (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_aadc19e2911682863c5cdd2086c29f3f9}\label{namespacecones_1_1recolouring_aadc19e2911682863c5cdd2086c29f3f9}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_check\_probability\_model@{svm\_check\_probability\_model}}
+\index{svm\_check\_probability\_model@{svm\_check\_probability\_model}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_check\_probability\_model()}{svm\_check\_probability\_model()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::svm\+\_\+check\+\_\+probability\+\_\+model (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_aa776a9521732d76af8b2fcff17239026}\label{namespacecones_1_1recolouring_aa776a9521732d76af8b2fcff17239026}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_cross\_validation@{svm\_cross\_validation}}
+\index{svm\_cross\_validation@{svm\_cross\_validation}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_cross\_validation()}{svm\_cross\_validation()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::svm\+\_\+cross\+\_\+validation (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$}]{prob,  }\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$}]{param,  }\item[{int}]{nr\+\_\+fold,  }\item[{double $\ast$}]{target }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a89c5660d399418f9468c89b1361e55b6}\label{namespacecones_1_1recolouring_a89c5660d399418f9468c89b1361e55b6}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_cross\_validation@{svm\_cross\_validation}}
+\index{svm\_cross\_validation@{svm\_cross\_validation}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_cross\_validation()}{svm\_cross\_validation()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::svm\+\_\+cross\+\_\+validation (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$}]{prob,  }\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$}]{param,  }\item[{int}]{nr\+\_\+fold,  }\item[{double $\ast$}]{target }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_afd0add65b5516adda1e9cb9aeb0234de}\label{namespacecones_1_1recolouring_afd0add65b5516adda1e9cb9aeb0234de}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_destroy\_param@{svm\_destroy\_param}}
+\index{svm\_destroy\_param@{svm\_destroy\_param}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_destroy\_param()}{svm\_destroy\_param()}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::svm\+\_\+destroy\+\_\+param (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$}]{param }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_ac6a9d3cbfc1ec7509d2408a8eb0cfa8d}\label{namespacecones_1_1recolouring_ac6a9d3cbfc1ec7509d2408a8eb0cfa8d}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_free\_and\_destroy\_model@{svm\_free\_and\_destroy\_model}}
+\index{svm\_free\_and\_destroy\_model@{svm\_free\_and\_destroy\_model}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_free\_and\_destroy\_model()}{svm\_free\_and\_destroy\_model()}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::svm\+\_\+free\+\_\+and\+\_\+destroy\+\_\+model (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$$\ast$}]{model\+\_\+ptr\+\_\+ptr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_afc44cbe2e60f7a48f5e5686cde6d075c}\label{namespacecones_1_1recolouring_afc44cbe2e60f7a48f5e5686cde6d075c}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_free\_model\_content@{svm\_free\_model\_content}}
+\index{svm\_free\_model\_content@{svm\_free\_model\_content}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_free\_model\_content()}{svm\_free\_model\_content()}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::svm\+\_\+free\+\_\+model\+\_\+content (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model\+\_\+ptr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a51dd5f64094440868e8a01e0366b60fb}\label{namespacecones_1_1recolouring_a51dd5f64094440868e8a01e0366b60fb}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_labels@{svm\_get\_labels}}
+\index{svm\_get\_labels@{svm\_get\_labels}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_labels()}{svm\_get\_labels()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::svm\+\_\+get\+\_\+labels (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model,  }\item[{int $\ast$}]{label }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a3fff31828c6845fc788ed5f13cb4d091}\label{namespacecones_1_1recolouring_a3fff31828c6845fc788ed5f13cb4d091}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_labels@{svm\_get\_labels}}
+\index{svm\_get\_labels@{svm\_get\_labels}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_labels()}{svm\_get\_labels()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::svm\+\_\+get\+\_\+labels (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model,  }\item[{int $\ast$}]{label }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a8aa9f6c46f7d4ddeb899b3a99ac78e6b}\label{namespacecones_1_1recolouring_a8aa9f6c46f7d4ddeb899b3a99ac78e6b}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_nr\_class@{svm\_get\_nr\_class}}
+\index{svm\_get\_nr\_class@{svm\_get\_nr\_class}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_nr\_class()}{svm\_get\_nr\_class()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::svm\+\_\+get\+\_\+nr\+\_\+class (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a7864b12b4f93dcef2a56e3fe8b2632fd}\label{namespacecones_1_1recolouring_a7864b12b4f93dcef2a56e3fe8b2632fd}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_nr\_class@{svm\_get\_nr\_class}}
+\index{svm\_get\_nr\_class@{svm\_get\_nr\_class}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_nr\_class()}{svm\_get\_nr\_class()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::svm\+\_\+get\+\_\+nr\+\_\+class (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a182d97b1e40357e5f85f83b1b002c6d5}\label{namespacecones_1_1recolouring_a182d97b1e40357e5f85f83b1b002c6d5}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_nr\_sv@{svm\_get\_nr\_sv}}
+\index{svm\_get\_nr\_sv@{svm\_get\_nr\_sv}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_nr\_sv()}{svm\_get\_nr\_sv()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::svm\+\_\+get\+\_\+nr\+\_\+sv (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a96c67433fefa62a5ee08732481f5e9e8}\label{namespacecones_1_1recolouring_a96c67433fefa62a5ee08732481f5e9e8}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_nr\_sv@{svm\_get\_nr\_sv}}
+\index{svm\_get\_nr\_sv@{svm\_get\_nr\_sv}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_nr\_sv()}{svm\_get\_nr\_sv()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::svm\+\_\+get\+\_\+nr\+\_\+sv (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a783fcf75b944eff8cc65d84c52bb71dd}\label{namespacecones_1_1recolouring_a783fcf75b944eff8cc65d84c52bb71dd}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_sv\_indices@{svm\_get\_sv\_indices}}
+\index{svm\_get\_sv\_indices@{svm\_get\_sv\_indices}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_sv\_indices()}{svm\_get\_sv\_indices()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::svm\+\_\+get\+\_\+sv\+\_\+indices (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model,  }\item[{int $\ast$}]{sv\+\_\+indices }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_adc34893bb32bb6804a52221fa88d31c4}\label{namespacecones_1_1recolouring_adc34893bb32bb6804a52221fa88d31c4}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_sv\_indices@{svm\_get\_sv\_indices}}
+\index{svm\_get\_sv\_indices@{svm\_get\_sv\_indices}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_sv\_indices()}{svm\_get\_sv\_indices()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::svm\+\_\+get\+\_\+sv\+\_\+indices (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model,  }\item[{int $\ast$}]{indices }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a3d2846bab7d0afb1a8783811eaaec8ad}\label{namespacecones_1_1recolouring_a3d2846bab7d0afb1a8783811eaaec8ad}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_svm\_type@{svm\_get\_svm\_type}}
+\index{svm\_get\_svm\_type@{svm\_get\_svm\_type}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_svm\_type()}{svm\_get\_svm\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::svm\+\_\+get\+\_\+svm\+\_\+type (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a93db17fc5f15cf1af0bb84b0f867d32d}\label{namespacecones_1_1recolouring_a93db17fc5f15cf1af0bb84b0f867d32d}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_svm\_type@{svm\_get\_svm\_type}}
+\index{svm\_get\_svm\_type@{svm\_get\_svm\_type}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_svm\_type()}{svm\_get\_svm\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::svm\+\_\+get\+\_\+svm\+\_\+type (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_ab0443e9c5868ffbc9f85854a72a84202}\label{namespacecones_1_1recolouring_ab0443e9c5868ffbc9f85854a72a84202}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_svr\_probability@{svm\_get\_svr\_probability}}
+\index{svm\_get\_svr\_probability@{svm\_get\_svr\_probability}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_svr\_probability()}{svm\_get\_svr\_probability()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::svm\+\_\+get\+\_\+svr\+\_\+probability (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_acf0aabad6f622f090995278a07a30add}\label{namespacecones_1_1recolouring_acf0aabad6f622f090995278a07a30add}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_get\_svr\_probability@{svm\_get\_svr\_probability}}
+\index{svm\_get\_svr\_probability@{svm\_get\_svr\_probability}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_get\_svr\_probability()}{svm\_get\_svr\_probability()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::svm\+\_\+get\+\_\+svr\+\_\+probability (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a675946cb5772b8f081ad61b55b46f288}\label{namespacecones_1_1recolouring_a675946cb5772b8f081ad61b55b46f288}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_load\_model@{svm\_load\_model}}
+\index{svm\_load\_model@{svm\_load\_model}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_load\_model()}{svm\_load\_model()}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$ cones\+::recolouring\+::svm\+\_\+load\+\_\+model (\begin{DoxyParamCaption}\item[{const char $\ast$}]{model\+\_\+file\+\_\+name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a41f5ba547c869744ab772b3508fdff7a}\label{namespacecones_1_1recolouring_a41f5ba547c869744ab772b3508fdff7a}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_predict@{svm\_predict}}
+\index{svm\_predict@{svm\_predict}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_predict()}{svm\_predict()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::svm\+\_\+predict (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model,  }\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a428b74149009d99007132baf80829777}\label{namespacecones_1_1recolouring_a428b74149009d99007132baf80829777}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_predict@{svm\_predict}}
+\index{svm\_predict@{svm\_predict}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_predict()}{svm\_predict()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::svm\+\_\+predict (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model,  }\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a51fc0fb6fb6b1bfbe04185c366fcddee}\label{namespacecones_1_1recolouring_a51fc0fb6fb6b1bfbe04185c366fcddee}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_predict\_probability@{svm\_predict\_probability}}
+\index{svm\_predict\_probability@{svm\_predict\_probability}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_predict\_probability()}{svm\_predict\_probability()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::svm\+\_\+predict\+\_\+probability (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model,  }\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$}]{x,  }\item[{double $\ast$}]{prob\+\_\+estimates }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a84246a5398908e220bd287a71c96cecc}\label{namespacecones_1_1recolouring_a84246a5398908e220bd287a71c96cecc}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_predict\_probability@{svm\_predict\_probability}}
+\index{svm\_predict\_probability@{svm\_predict\_probability}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_predict\_probability()}{svm\_predict\_probability()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::svm\+\_\+predict\+\_\+probability (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model,  }\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$}]{x,  }\item[{double $\ast$}]{prob\+\_\+estimates }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_aa1f25a2ba785f744400a6b9d6aae1be2}\label{namespacecones_1_1recolouring_aa1f25a2ba785f744400a6b9d6aae1be2}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_predict\_values@{svm\_predict\_values}}
+\index{svm\_predict\_values@{svm\_predict\_values}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_predict\_values()}{svm\_predict\_values()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::svm\+\_\+predict\+\_\+values (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model,  }\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$}]{x,  }\item[{double $\ast$}]{dec\+\_\+values }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_ab86bb00e49daaef4701a59972e0b55b1}\label{namespacecones_1_1recolouring_ab86bb00e49daaef4701a59972e0b55b1}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_predict\_values@{svm\_predict\_values}}
+\index{svm\_predict\_values@{svm\_predict\_values}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_predict\_values()}{svm\_predict\_values()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::svm\+\_\+predict\+\_\+values (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model,  }\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$}]{x,  }\item[{double $\ast$}]{dec\+\_\+values }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a312f2b8765ebdec7c3408a7456c32486}\label{namespacecones_1_1recolouring_a312f2b8765ebdec7c3408a7456c32486}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_save\_model@{svm\_save\_model}}
+\index{svm\_save\_model@{svm\_save\_model}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_save\_model()}{svm\_save\_model()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::svm\+\_\+save\+\_\+model (\begin{DoxyParamCaption}\item[{const char $\ast$}]{model\+\_\+file\+\_\+name,  }\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_aa2852f4026e90789c029689e9cf41d28}\label{namespacecones_1_1recolouring_aa2852f4026e90789c029689e9cf41d28}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_save\_model@{svm\_save\_model}}
+\index{svm\_save\_model@{svm\_save\_model}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_save\_model()}{svm\_save\_model()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::svm\+\_\+save\+\_\+model (\begin{DoxyParamCaption}\item[{const char $\ast$}]{model\+\_\+file\+\_\+name,  }\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}} $\ast$}]{model }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a7cf578b5e72f447dc9686c615495eb9b}\label{namespacecones_1_1recolouring_a7cf578b5e72f447dc9686c615495eb9b}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_set\_print\_string\_function@{svm\_set\_print\_string\_function}}
+\index{svm\_set\_print\_string\_function@{svm\_set\_print\_string\_function}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_set\_print\_string\_function()}{svm\_set\_print\_string\_function()}}
+{\footnotesize\ttfamily void cones\+::recolouring\+::svm\+\_\+set\+\_\+print\+\_\+string\+\_\+function (\begin{DoxyParamCaption}\item[{void($\ast$)(const char $\ast$)}]{print\+\_\+func }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a48267b24c98990bdb66a1afcdcf5163e}\label{namespacecones_1_1recolouring_a48267b24c98990bdb66a1afcdcf5163e}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_train@{svm\_train}}
+\index{svm\_train@{svm\_train}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_train()}{svm\_train()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}}$\ast$ cones\+::recolouring\+::svm\+\_\+train (\begin{DoxyParamCaption}\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$}]{prob,  }\item[{const struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$}]{param }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1recolouring_a4d212fc1dcd7f95585ee5fed99d3ab20}\label{namespacecones_1_1recolouring_a4d212fc1dcd7f95585ee5fed99d3ab20}} 
+\index{cones::recolouring@{cones::recolouring}!svm\_train@{svm\_train}}
+\index{svm\_train@{svm\_train}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{svm\_train()}{svm\_train()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{svm\+\_\+model}}$\ast$ cones\+::recolouring\+::svm\+\_\+train (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{svm\+\_\+problem}} $\ast$}]{prob,  }\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} $\ast$}]{param }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacecones_1_1recolouring_ae319ba977a8b0f704cfe3a3e104f95aa}\label{namespacecones_1_1recolouring_ae319ba977a8b0f704cfe3a3e104f95aa}} 
+\index{cones::recolouring@{cones::recolouring}!libsvm\_version@{libsvm\_version}}
+\index{libsvm\_version@{libsvm\_version}!cones::recolouring@{cones::recolouring}}
+\doxysubsubsection{\texorpdfstring{libsvm\_version}{libsvm\_version}}
+{\footnotesize\ttfamily int cones\+::recolouring\+::libsvm\+\_\+version = \mbox{\hyperlink{svm_8hpp_ac7f5361b69ddd196a885f142b3c1d261}{LIBSVM\+\_\+\+VERSION}}}
+

@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="structcones_1_1recolouring_1_1decision__function" kind="struct" language="C++" prot="public">
+    <compoundname>cones::recolouring::decision_function</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcones_1_1recolouring_1_1decision__function_1a060ea215341932c70150455f37d23b52" prot="public" static="no" mutable="no">
+        <type>double *</type>
+        <definition>double* cones::recolouring::decision_function::alpha</definition>
+        <argsstring></argsstring>
+        <name>alpha</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1701" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1701" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcones_1_1recolouring_1_1decision__function_1a101cdbf71bb61e84acbf766ff5a3f234" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double cones::recolouring::decision_function::rho</definition>
+        <argsstring></argsstring>
+        <name>rho</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1702" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1702" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1699" column="1" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1700" bodyend="1703"/>
+    <listofallmembers>
+      <member refid="structcones_1_1recolouring_1_1decision__function_1a060ea215341932c70150455f37d23b52" prot="public" virt="non-virtual"><scope>cones::recolouring::decision_function</scope><name>alpha</name></member>
+      <member refid="structcones_1_1recolouring_1_1decision__function_1a101cdbf71bb61e84acbf766ff5a3f234" prot="public" virt="non-virtual"><scope>cones::recolouring::decision_function</scope><name>rho</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

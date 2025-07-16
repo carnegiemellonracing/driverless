@@ -1,0 +1,277 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="namespacetransform" kind="namespace" language="C++">
+    <compoundname>transform</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespacetransform_1afa5c991af9dc841586c0d9e87b44b6d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::pair&lt; double, double &gt;</type>
+        <definition>std::pair&lt; double, double &gt; transform::global_frame_to_local_frame</definition>
+        <argsstring>(std::pair&lt; double, double &gt; global_frame_change, double yaw)</argsstring>
+        <name>global_frame_to_local_frame</name>
+        <param>
+          <type>std::pair&lt; double, double &gt;</type>
+          <declname>global_frame_change</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>yaw</declname>
+        </param>
+        <briefdescription>
+<para>Takes a change in x and y in global frame and returns a change in x and y in local CMR frame. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>global_frame_change</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The change in x and y in global frame </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yaw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>yaw in radians </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::pair&lt;double, double&gt; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp" line="4" column="15" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp" bodystart="4" bodyend="15" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.hpp" declline="33" declcolumn="15"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacetransform_1af75c2e4795a51ea960ccfab6c9bcd6cf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::pair&lt; double, double &gt;</type>
+        <definition>std::pair&lt;double, double&gt; transform::local_frame_to_local_frame</definition>
+        <argsstring>(std::pair&lt; double, double &gt; local_frame_change, double dyaw)</argsstring>
+        <name>local_frame_to_local_frame</name>
+        <param>
+          <type>std::pair&lt; double, double &gt;</type>
+          <declname>local_frame_change</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dyaw</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>local_frame_change</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dyaw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The change in yaw in radians </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::pair&lt;double, double&gt; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp" line="24" column="15" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp" bodystart="24" bodyend="35"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacetransform_1aefd0b6a98ff9ddfddf0de0a7ee2104e1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::pair&lt; double, double &gt;</type>
+        <definition>std::pair&lt;double, double&gt; transform::motion_model_on_point</definition>
+        <argsstring>(std::pair&lt; double, double &gt; dv_frame_change, double point_x, double point_y, double dyaw)</argsstring>
+        <name>motion_model_on_point</name>
+        <param>
+          <type>std::pair&lt; double, double &gt;</type>
+          <declname>dv_frame_change</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>point_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>point_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dyaw</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp" line="37" column="15" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp" bodystart="37" bodyend="53"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacetransform_1a4c5c36deb201904f39e140e2f84ad89d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::pair&lt; Eigen::Vector3d, Eigen::Vector3d &gt;</type>
+        <definition>std::pair&lt; Eigen::Vector3d, Eigen::Vector3d &gt; transform::transform_point</definition>
+        <argsstring>(const rclcpp::Logger &amp;logger, geometry_msgs::msg::Vector3 &amp;point, std::pair&lt; std::pair&lt; double, double &gt;, std::pair&lt; double, double &gt;&gt; ds_pair, std::pair&lt; double, double &gt; left_right_dyaw, const std::pair&lt; Eigen::Matrix&lt; double, 3, 4 &gt;, Eigen::Matrix&lt; double, 3, 4 &gt;&gt; &amp;projection_matrix_pair)</argsstring>
+        <name>transform_point</name>
+        <param>
+          <type>const rclcpp::Logger &amp;</type>
+          <declname>logger</declname>
+        </param>
+        <param>
+          <type>geometry_msgs::msg::Vector3 &amp;</type>
+          <declname>point</declname>
+        </param>
+        <param>
+          <type>std::pair&lt; std::pair&lt; double, double &gt;, std::pair&lt; double, double &gt;&gt;</type>
+          <declname>ds_pair</declname>
+        </param>
+        <param>
+          <type>std::pair&lt; double, double &gt;</type>
+          <declname>left_right_dyaw</declname>
+        </param>
+        <param>
+          <type>const std::pair&lt; Eigen::Matrix&lt; double, 3, 4 &gt;, Eigen::Matrix&lt; double, 3, 4 &gt;&gt; &amp;</type>
+          <declname>projection_matrix_pair</declname>
+        </param>
+        <briefdescription>
+<para>Transforms a 3D point in LiDAR space to 2D pixel coordinates in camera space. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>point</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The 3D point from LiDAR </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>projection_matrix_l</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Projection matrix for left camera </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>projection_matrix_r</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Projection matrix for right camera </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::pair&lt;Eigen::Vector2d, Eigen::Vector2d&gt; Pixel coordinates in both cameras </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp" line="55" column="15" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp" bodystart="55" bodyend="90" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.hpp" declline="19" declcolumn="15"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacetransform_1a42b827f762f589ee4d66c777b897920e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::pair&lt; geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr &gt;</type>
+        <definition>std::pair&lt; geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr &gt; transform::get_vel_yaw</definition>
+        <argsstring>(const rclcpp::Logger &amp;logger, std::mutex &amp;yaw_mutex, std::mutex &amp;vel_mutex, const std::deque&lt; geometry_msgs::msg::TwistStamped::SharedPtr &gt; &amp;vel_deque, const std::deque&lt; geometry_msgs::msg::Vector3Stamped::SharedPtr &gt; &amp;yaw_deque, uint64_t frameTime)</argsstring>
+        <name>get_vel_yaw</name>
+        <param>
+          <type>const rclcpp::Logger &amp;</type>
+          <declname>logger</declname>
+        </param>
+        <param>
+          <type>std::mutex &amp;</type>
+          <declname>yaw_mutex</declname>
+        </param>
+        <param>
+          <type>std::mutex &amp;</type>
+          <declname>vel_mutex</declname>
+        </param>
+        <param>
+          <type>const std::deque&lt; geometry_msgs::msg::TwistStamped::SharedPtr &gt; &amp;</type>
+          <declname>vel_deque</declname>
+        </param>
+        <param>
+          <type>const std::deque&lt; geometry_msgs::msg::Vector3Stamped::SharedPtr &gt; &amp;</type>
+          <declname>yaw_deque</declname>
+        </param>
+        <param>
+          <type>uint64_t</type>
+          <declname>frameTime</declname>
+        </param>
+        <briefdescription>
+<para>Get the velocity and yaw at the time of the frame. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Logger for logging messages </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yaw_mutex</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Mutex for yaw deque </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>vel_mutex</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Mutex for velocity deque </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>vel_deque</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Deque of velocity messages </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yaw_deque</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Deque of yaw messages </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>frameTime</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Time of the frame in nanoseconds </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::pair&lt;geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr&gt; </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp" line="92" column="15" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp" bodystart="92" bodyend="156" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.hpp" declline="48" declcolumn="15"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp" line="3" column="1"/>
+  </compounddef>
+</doxygen>
