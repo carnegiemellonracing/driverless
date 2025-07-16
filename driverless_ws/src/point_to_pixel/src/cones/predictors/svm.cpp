@@ -12,11 +12,10 @@
 #include <thread>
 #include <cstring>
 
-#include "svm_recolour.hpp"
 #include "svm.hpp"
 
-namespace cones {
-namespace recolouring {
+namespace point_to_pixel {
+namespace recoloring {
     double node_predictor(const std::vector<double> &cone, const svm_model *model) {
         svm_node *node = new svm_node[cone.size() + 1];
         for (size_t i = 0; i < cone.size(); ++i) {
@@ -29,12 +28,7 @@ namespace recolouring {
         return value;
     }
     
-    cones::TrackBounds recolour_cones(cones::TrackBounds track_bounds, double C) {
-        
-        // Constants
-        const int augment_angle_degrees = 30;
-        const double radius = 0.5;
-
+    TrackBounds recolor_cones(TrackBounds track_bounds, double C) {
         auto total_start = std::chrono::high_resolution_clock::now();
     
         // check if there are no blue or yellow cones
@@ -42,19 +36,18 @@ namespace recolouring {
         int original_yellow_cone_count = track_bounds.yellow.size();
     
         if (track_bounds.blue.empty() && track_bounds.yellow.empty()) {
-            return cones::TrackBounds();
+            return TrackBounds();
         }
     
         auto prep_start = std::chrono::high_resolution_clock::now();
         
         
         // augment dataset to make it better for SVM training
-        cones::TrackBounds augmented_cones = track_bounds;
-        cones::supplement_cones(augmented_cones);
-        // cones::augment_cones_circle(augmented_cones, augment_angle_degrees, radius);
+        TrackBounds augmented_cones = track_bounds;
+        supplement_cones(augmented_cones);
     
         // acquire the feature matrix and label vector
-        std::pair<std::vector<std::vector<double>>, std::vector<double>> xy = cones::cones_to_xy(augmented_cones);
+        std::pair<std::vector<std::vector<double>>, std::vector<double>> xy = cones_to_xy(augmented_cones);
         std::vector<std::vector<double>> X = xy.first;
         std::vector<double> y = xy.second;
     
@@ -89,7 +82,7 @@ namespace recolouring {
         int N = static_cast<int>(X.size());
         if (N == 0 || X[0].empty()) {
             std::cerr << "No training data available for SVM.\n";
-            return cones::TrackBounds();
+            return TrackBounds();
         }
         int d = static_cast<int>(X[0].size());
     
@@ -133,7 +126,7 @@ namespace recolouring {
         const char *error_msg = svm_check_parameter(&prob, &param);
         if (error_msg) {
             std::cerr << "Error in SVM parameters: " << error_msg << std::endl;
-            return cones::TrackBounds();
+            return TrackBounds();
         }
     
         auto setup_end = std::chrono::high_resolution_clock::now();
@@ -150,7 +143,7 @@ namespace recolouring {
     
         // Recoloring timing
         auto recolor_start = std::chrono::high_resolution_clock::now();
-        cones::TrackBounds recolored_track_bounds;   
+        TrackBounds recolored_track_bounds;   
 
         // Process original blue cones
         for (const auto& cone : track_bounds.blue) {
@@ -210,5 +203,5 @@ namespace recolouring {
     
         return recolored_track_bounds;
     }
-} // namespace recolouring
-} // namespace cones
+} // namespace recoloring
+} // namespace point_to_pixel
