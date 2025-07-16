@@ -30,22 +30,22 @@ include_directories(~/Documents/driverless-packages/zed-open-capture/examples/in
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(CONE_HISTORY_NODE_SRC  
-  src/state.cpp
-  src/cone_history_node.cpp
-  src/cones.cpp
+  src/managers/state_manager.cpp
+  src/nodes/cone_history_node.cpp
+  src/cones/cones.cpp
 )
 
 ###############################
 
 set(POINT_TO_PIXEL_SRC  
-  src/state.cpp
-  src/camera.cpp
+  src/managers/state_manager.cpp
+  src/managers/camera_manager.cpp
   lib/svm_lib.cpp
-  src/svm.cpp
-  src/cones.cpp
-  src/hsv.cpp
-  src/yolo.cpp
-  src/point_to_pixel_node.cpp
+  src/cones/predictors/svm.cpp
+  src/cones/cones.cpp
+  src/cones/predictors/hsv_predictor.cpp
+  src/cones/predictors/yolo_predictor.cpp
+  src/nodes/point_to_pixel_node.cpp
 )
 
 # Cone History Test Executable
