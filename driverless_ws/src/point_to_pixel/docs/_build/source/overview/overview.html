@@ -1,0 +1,197 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview &mdash; CMR Driverless Perceptions 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Explainers" href="../explainers/explainers.html" />
+    <link rel="prev" title="CMR Driverless Perceptions Stack for 24a" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            CMR Driverless Perceptions
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-perceptions-problem">The Perceptions Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sensors">Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-data-do-we-work-with-and-where-does-it-go">What data do we work with and where does it go?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lidar-module">LiDAR Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coloring-module">Coloring Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../explainers/explainers.html">Explainers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../implementation/api_reference.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">CMR Driverless Perceptions</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source/overview/overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
+<section id="the-perceptions-problem">
+<h2>The Perceptions Problem<a class="headerlink" href="#the-perceptions-problem" title="Link to this heading"></a></h2>
+<p>Given a track delimited by yellow and blue cones, we must reliably and efficiently determine the track and cones and pass down the driverless pipeline.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../_images/trackdrive_diagram.png"><img alt="../../_images/trackdrive_diagram.png" src="../../_images/trackdrive_diagram.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure taken from 2025 Formula Student Germany Competition Handbook.</em></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="sensors">
+<h2>Sensors<a class="headerlink" href="#sensors" title="Link to this heading"></a></h2>
+<p>We employ a variety of sensors to accomplish this task:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.hesaitech.com/product/at128/">HESAI AT128 Solid State LiDAR</a></p></li>
+<li><p><a class="reference external" href="https://www.stereolabs.com/products/zed-2">Dual ZED2 Stereo Cameras (only used for RGB frames)</a></p></li>
+<li><p><a class="reference external" href="https://www.movella.com/products/sensor-modules/xsens-mti-680g-rtk-gnss-ins">MTi-680G RTK GNSS/INS GPS</a></p></li>
+</ul>
+<p>Using these three sensors we efficiently generate a local view of the track and cones.</p>
+</section>
+<section id="what-data-do-we-work-with-and-where-does-it-go">
+<h2>What data do we work with and where does it go?<a class="headerlink" href="#what-data-do-we-work-with-and-where-does-it-go" title="Link to this heading"></a></h2>
+<section id="lidar-module">
+<h3>LiDAR Module<a class="headerlink" href="#lidar-module" title="Link to this heading"></a></h3>
+<p>Our LiDAR, a HESAI AT128 hybrid solid-state sensor is our primary source of depth information. Through the LiDAR we ingest a
+<a class="reference external" href="https://en.wikipedia.org/wiki/Point_cloud">point cloud</a>. We employ several processing algorithms (see <span class="xref std std-doc">explainers</span>)
+eventually resulting in a set of points that represent the centroid of cones on the track in front of us.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<div class="line-block">
+<div class="line">PLACEHOLDER FOR IMAGE OF LiDAR?</div>
+<div class="line">DOUBLE CHECK THE OUTPUT TYPES / TOPIC NAMES</div>
+</div>
+</div>
+<p>To avoid overhead from publishing the entire LiDAR point cloud to a ROS topic, we integrated our lidar_module code into the ROS driver available with our LiDAR.</p>
+<blockquote>
+<div><p>Output: a set of cone centroids. It is a message type from our custom ROS2 <code class="docutils literal notranslate"><span class="pre">interfaces</span></code> package</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/perc_cones</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">interfaces::msg::ConeList</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="coloring-module">
+<h3>Coloring Module<a class="headerlink" href="#coloring-module" title="Link to this heading"></a></h3>
+<p>From our RGB cameras we get our primary source color information. Though we used two stereolabs ZED cameras which have stereoscopic capability,
+we opted to avoid any depth processing due to latency concerns. Instead we just use the cameras for rgb images.</p>
+<p>Through a <a class="reference external" href="https://en.wikipedia.org/wiki/Direct_linear_transformation">direct linear transform</a>
+we color our cone centroids from the previous step and pass them down the pipeline to <a class="reference external" href="https://cmr.red/planning-docs">Path Planning</a> and <a class="reference external" href="https://cmr.red/controls-doc">Controls</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<div class="line-block">
+<div class="line">PLACEHOLDER FOR IMAGE OF CAMERAS?</div>
+<div class="line">DOUBLE CHECK THE OUTPUT TYPES / TOPIC NAMES</div>
+</div>
+</div>
+<p>Our coloring module is housed in our custom ROS2 package, <a class="reference internal" href="../implementation/coloring_module.html"><span class="doc">point_to_pixel</span></a>.</p>
+<blockquote>
+<div><p>Output: a set of colored cone centroids</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/colored_cones</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">interfaces::msg::PPMConeArray</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../index.html" class="btn btn-neutral float-left" title="CMR Driverless Perceptions Stack for 24a" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../explainers/explainers.html" class="btn btn-neutral float-right" title="Explainers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Arya Lohia.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
