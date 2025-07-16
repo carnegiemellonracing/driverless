@@ -27,3 +27,6 @@
 - See [breathe docs for interfacing with all things doxy + website linking and structure](https://breathe.readthedocs.io/en/latest/class.html#members-example)
 =======
 >>>>>>> c0d67c9b (added readme with commands to build doxygen docs and sphinx docs)
+
+- See [reStructuredText Markup Spec](https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#quick-syntax-overview)
+- See [reStructuredText Primer](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#lists-and-quote-like-blocks)
