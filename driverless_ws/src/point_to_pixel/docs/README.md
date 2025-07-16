@@ -10,3 +10,7 @@
 - run `doxygen Doxyfile`
 - run `sphinx-build -b html . _build/`
 
+## For Editing
+
+- See [reStructuredText Markup Spec](https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#quick-syntax-overview)
+- See [reStructuredText Primer](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#lists-and-quote-like-blocks)
