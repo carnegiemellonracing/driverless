@@ -55,6 +55,3 @@ we color our cone centroids from the previous step and pass them down the pipeli
 
    source/api_reference
 
-
-
-
