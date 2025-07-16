@@ -1,0 +1,123 @@
+\hypertarget{classcones_1_1recolouring_1_1Kernel}{}\doxysection{cones\+::recolouring\+::Kernel Class Reference}
+\label{classcones_1_1recolouring_1_1Kernel}\index{cones::recolouring::Kernel@{cones::recolouring::Kernel}}
+
+
+Inheritance diagram for cones\+::recolouring\+::Kernel\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classcones_1_1recolouring_1_1Kernel__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for cones\+::recolouring\+::Kernel\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=186pt]{classcones_1_1recolouring_1_1Kernel__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcones_1_1recolouring_1_1Kernel_a770f21678b59f525293bacf3e4913347}{Kernel}} (int l, \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$const $\ast$x, const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} \&param)
+\item 
+virtual \mbox{\hyperlink{classcones_1_1recolouring_1_1Kernel_ae948f47d0ebe94eabcadefa0a73e3d83}{$\sim$\+Kernel}} ()
+\item 
+virtual \mbox{\hyperlink{namespacecones_1_1recolouring_a7a8713c4c7111a8c1b718866c091934a}{Qfloat}} $\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Kernel_a6fb919d29a9dfccd2ffd145821e1ebb4}{get\+\_\+Q}} (int column, int len) const =0
+\item 
+virtual double $\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Kernel_a2ddb6961f7aef836816d3b55c5c013a6}{get\+\_\+\+QD}} () const =0
+\item 
+virtual void \mbox{\hyperlink{classcones_1_1recolouring_1_1Kernel_a276a83223c0e854c14652a55c760c234}{swap\+\_\+index}} (int i, int j) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static double \mbox{\hyperlink{classcones_1_1recolouring_1_1Kernel_ae423ed2d0893a88c06e3632fcadc7174}{k\+\_\+function}} (const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$x, const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$y, const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} \&param)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double(Kernel\+::$\ast$ \mbox{\hyperlink{classcones_1_1recolouring_1_1Kernel_a375ce54a67a5696c6131da99a1ff20b1}{kernel\+\_\+function}} )(int i, int j) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Kernel_a770f21678b59f525293bacf3e4913347}\label{classcones_1_1recolouring_1_1Kernel_a770f21678b59f525293bacf3e4913347}} 
+\index{cones::recolouring::Kernel@{cones::recolouring::Kernel}!Kernel@{Kernel}}
+\index{Kernel@{Kernel}!cones::recolouring::Kernel@{cones::recolouring::Kernel}}
+\doxysubsubsection{\texorpdfstring{Kernel()}{Kernel()}}
+{\footnotesize\ttfamily cones\+::recolouring\+::\+Kernel\+::\+Kernel (\begin{DoxyParamCaption}\item[{int}]{l,  }\item[{\mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$const $\ast$}]{x,  }\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} \&}]{param }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Kernel_ae948f47d0ebe94eabcadefa0a73e3d83}\label{classcones_1_1recolouring_1_1Kernel_ae948f47d0ebe94eabcadefa0a73e3d83}} 
+\index{cones::recolouring::Kernel@{cones::recolouring::Kernel}!````~Kernel@{$\sim$Kernel}}
+\index{````~Kernel@{$\sim$Kernel}!cones::recolouring::Kernel@{cones::recolouring::Kernel}}
+\doxysubsubsection{\texorpdfstring{$\sim$Kernel()}{~Kernel()}}
+{\footnotesize\ttfamily cones\+::recolouring\+::\+Kernel\+::$\sim$\+Kernel (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Kernel_a6fb919d29a9dfccd2ffd145821e1ebb4}\label{classcones_1_1recolouring_1_1Kernel_a6fb919d29a9dfccd2ffd145821e1ebb4}} 
+\index{cones::recolouring::Kernel@{cones::recolouring::Kernel}!get\_Q@{get\_Q}}
+\index{get\_Q@{get\_Q}!cones::recolouring::Kernel@{cones::recolouring::Kernel}}
+\doxysubsubsection{\texorpdfstring{get\_Q()}{get\_Q()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{namespacecones_1_1recolouring_a7a8713c4c7111a8c1b718866c091934a}{Qfloat}}$\ast$ cones\+::recolouring\+::\+Kernel\+::get\+\_\+Q (\begin{DoxyParamCaption}\item[{int}]{column,  }\item[{int}]{len }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classcones_1_1recolouring_1_1QMatrix_ad979298625f56bb9c4c1a68e11e48c8f}{cones\+::recolouring\+::\+QMatrix}}.
+
+
+
+Implemented in \mbox{\hyperlink{classcones_1_1recolouring_1_1SVR__Q_a45736ac779833411b7b8b6f0aae723df}{cones\+::recolouring\+::\+SVR\+\_\+Q}}, \mbox{\hyperlink{classcones_1_1recolouring_1_1ONE__CLASS__Q_a709e868eb3f9df1f6d1fdff1c7557801}{cones\+::recolouring\+::\+ONE\+\_\+\+CLASS\+\_\+Q}}, and \mbox{\hyperlink{classcones_1_1recolouring_1_1SVC__Q_a3ae0af44340707ca086463ca3da81527}{cones\+::recolouring\+::\+SVC\+\_\+Q}}.
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Kernel_a2ddb6961f7aef836816d3b55c5c013a6}\label{classcones_1_1recolouring_1_1Kernel_a2ddb6961f7aef836816d3b55c5c013a6}} 
+\index{cones::recolouring::Kernel@{cones::recolouring::Kernel}!get\_QD@{get\_QD}}
+\index{get\_QD@{get\_QD}!cones::recolouring::Kernel@{cones::recolouring::Kernel}}
+\doxysubsubsection{\texorpdfstring{get\_QD()}{get\_QD()}}
+{\footnotesize\ttfamily virtual double$\ast$ cones\+::recolouring\+::\+Kernel\+::get\+\_\+\+QD (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classcones_1_1recolouring_1_1QMatrix_a2261c4c4cea5aea10d45d919a64ee5c8}{cones\+::recolouring\+::\+QMatrix}}.
+
+
+
+Implemented in \mbox{\hyperlink{classcones_1_1recolouring_1_1SVR__Q_af2f6709ee8afeb4f2bc0b15d994b82f5}{cones\+::recolouring\+::\+SVR\+\_\+Q}}, \mbox{\hyperlink{classcones_1_1recolouring_1_1ONE__CLASS__Q_a2acc81d0d1e76eb54f220873c7a816da}{cones\+::recolouring\+::\+ONE\+\_\+\+CLASS\+\_\+Q}}, and \mbox{\hyperlink{classcones_1_1recolouring_1_1SVC__Q_a4b035c314d8dab557600221d508ac91a}{cones\+::recolouring\+::\+SVC\+\_\+Q}}.
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Kernel_ae423ed2d0893a88c06e3632fcadc7174}\label{classcones_1_1recolouring_1_1Kernel_ae423ed2d0893a88c06e3632fcadc7174}} 
+\index{cones::recolouring::Kernel@{cones::recolouring::Kernel}!k\_function@{k\_function}}
+\index{k\_function@{k\_function}!cones::recolouring::Kernel@{cones::recolouring::Kernel}}
+\doxysubsubsection{\texorpdfstring{k\_function()}{k\_function()}}
+{\footnotesize\ttfamily double cones\+::recolouring\+::\+Kernel\+::k\+\_\+function (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$}]{x,  }\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{svm\+\_\+node}} $\ast$}]{y,  }\item[{const \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{svm\+\_\+parameter}} \&}]{param }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Kernel_a276a83223c0e854c14652a55c760c234}\label{classcones_1_1recolouring_1_1Kernel_a276a83223c0e854c14652a55c760c234}} 
+\index{cones::recolouring::Kernel@{cones::recolouring::Kernel}!swap\_index@{swap\_index}}
+\index{swap\_index@{swap\_index}!cones::recolouring::Kernel@{cones::recolouring::Kernel}}
+\doxysubsubsection{\texorpdfstring{swap\_index()}{swap\_index()}}
+{\footnotesize\ttfamily virtual void cones\+::recolouring\+::\+Kernel\+::swap\+\_\+index (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{int}]{j }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classcones_1_1recolouring_1_1QMatrix_a2b9e66799941d76b613cbf1585f7a7d0}{cones\+::recolouring\+::\+QMatrix}}.
+
+
+
+Reimplemented in \mbox{\hyperlink{classcones_1_1recolouring_1_1SVR__Q_aaece7bc41ba902795b8e69c5917ed07b}{cones\+::recolouring\+::\+SVR\+\_\+Q}}, \mbox{\hyperlink{classcones_1_1recolouring_1_1ONE__CLASS__Q_a59df44cd6ace3b20d6f09ca352efa62b}{cones\+::recolouring\+::\+ONE\+\_\+\+CLASS\+\_\+Q}}, and \mbox{\hyperlink{classcones_1_1recolouring_1_1SVC__Q_a03162c22ea8cd9481c5434b49b8b5bc4}{cones\+::recolouring\+::\+SVC\+\_\+Q}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classcones_1_1recolouring_1_1Kernel_a375ce54a67a5696c6131da99a1ff20b1}\label{classcones_1_1recolouring_1_1Kernel_a375ce54a67a5696c6131da99a1ff20b1}} 
+\index{cones::recolouring::Kernel@{cones::recolouring::Kernel}!kernel\_function@{kernel\_function}}
+\index{kernel\_function@{kernel\_function}!cones::recolouring::Kernel@{cones::recolouring::Kernel}}
+\doxysubsubsection{\texorpdfstring{kernel\_function}{kernel\_function}}
+{\footnotesize\ttfamily double(Kernel\+::$\ast$ cones\+::recolouring\+::\+Kernel\+::kernel\+\_\+function) (int i, int j) const\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/aryalohia/\+CMR/24a/driverless/driverless\+\_\+ws/src/point\+\_\+to\+\_\+pixel/src/cones/svm/\mbox{\hyperlink{svm_8cpp}{svm.\+cpp}}\end{DoxyCompactItemize}

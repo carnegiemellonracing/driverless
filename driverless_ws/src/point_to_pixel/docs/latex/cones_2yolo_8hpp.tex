@@ -1,0 +1,55 @@
+\hypertarget{cones_2yolo_8hpp}{}\doxysection{/home/aryalohia/\+CMR/24a/driverless/driverless\+\_\+ws/src/point\+\_\+to\+\_\+pixel/src/cones/yolo.hpp File Reference}
+\label{cones_2yolo_8hpp}\index{/home/aryalohia/CMR/24a/driverless/driverless\_ws/src/point\_to\_pixel/src/cones/yolo.hpp@{/home/aryalohia/CMR/24a/driverless/driverless\_ws/src/point\_to\_pixel/src/cones/yolo.hpp}}
+{\ttfamily \#include $<$opencv2/opencv.\+hpp$>$}\newline
+{\ttfamily \#include $<$opencv2/dnn.\+hpp$>$}\newline
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+Include dependency graph for yolo.\+hpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{cones_2yolo_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{cones_2yolo_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacecones}{cones}}
+\item 
+ \mbox{\hyperlink{namespacecones_1_1coloring}{cones\+::coloring}}
+\item 
+ \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo}{cones\+::coloring\+::yolo}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{cones_2yolo_8hpp_a215c3005434d0908279c4e22d4b76c35}{box\+\_\+heuristic}}~2
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo_ad47b331375599bd4e1853d20186c05ea}{cones\+::coloring\+::yolo\+::get\+\_\+cone\+\_\+class}} (std\+::pair$<$ Eigen\+::\+Vector3d, Eigen\+::\+Vector3d $>$ pixel\+\_\+pair, std\+::pair$<$ cv\+::\+Mat, cv\+::\+Mat $>$ frame\+\_\+pair, std\+::pair$<$ std\+::vector$<$ cv\+::\+Mat $>$, std\+::vector$<$ cv\+::\+Mat $>$$>$ detection\+\_\+pair, const cv\+::\+Scalar \&yellow\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&yellow\+\_\+filter\+\_\+high, const cv\+::\+Scalar \&blue\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&blue\+\_\+filter\+\_\+high, const cv\+::\+Scalar \&orange\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&orange\+\_\+filter\+\_\+high, double confidence\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Determines cone class from pixel pairs across cameras. \end{DoxyCompactList}\item 
+std\+::pair$<$ int, double $>$ \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo_accc12ea78aeb15a47591822d923f072e}{cones\+::coloring\+::yolo\+::get\+\_\+color}} (Eigen\+::\+Vector3d \&pixel, std\+::vector$<$ cv\+::\+Mat $>$ detection, int cols, int rows, double confidence\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Uses YOLO to determine cone color. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo_ac828e5485662b02989345d91a85715d2}{cones\+::coloring\+::yolo\+::draw\+\_\+bounding\+\_\+boxes}} (cv\+::\+Mat \&frame, cv\+::\+Mat \&canvas, std\+::vector$<$ cv\+::\+Mat $>$ detections, int cols, int rows, double confidence\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Labels image frames with bounding boxes. Works with references. \end{DoxyCompactList}\item 
+cv\+::dnn\+::\+Net \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo_a8357f4597130bfb12780db2c428483ba}{cones\+::coloring\+::yolo\+::init\+\_\+model}} (const std\+::string \&model\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Initialize the YOLO model. \end{DoxyCompactList}\item 
+std\+::vector$<$ cv\+::\+Mat $>$ \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo_a56653580e4a2bf7998921a0a4b638466}{cones\+::coloring\+::yolo\+::process\+\_\+frame}} (const cv\+::\+Mat \&frame, cv\+::dnn\+::\+Net \&net, int yolo\+\_\+width=640, int yolo\+\_\+height=640)
+\begin{DoxyCompactList}\small\item\em Process frame with YOLO. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{cones_2yolo_8hpp_a215c3005434d0908279c4e22d4b76c35}\label{cones_2yolo_8hpp_a215c3005434d0908279c4e22d4b76c35}} 
+\index{yolo.hpp@{yolo.hpp}!box\_heuristic@{box\_heuristic}}
+\index{box\_heuristic@{box\_heuristic}!yolo.hpp@{yolo.hpp}}
+\doxysubsubsection{\texorpdfstring{box\_heuristic}{box\_heuristic}}
+{\footnotesize\ttfamily \#define box\+\_\+heuristic~2}
+

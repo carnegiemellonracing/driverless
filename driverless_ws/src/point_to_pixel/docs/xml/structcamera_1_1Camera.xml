@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="structcamera_1_1Camera" kind="struct" language="C++" prot="public">
+    <compoundname>camera::Camera</compoundname>
+    <includes refid="camera_8hpp" local="no">camera.hpp</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcamera_1_1Camera_1a93e15781fb9fe5ebc2e636edbda218b5" prot="public" static="no" mutable="no">
+        <type>sl_oc::video::VideoCapture &amp;</type>
+        <definition>sl_oc::video::VideoCapture&amp; camera::Camera::cap</definition>
+        <argsstring></argsstring>
+        <name>cap</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" line="23" column="36" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcamera_1_1Camera_1a14fe2d2f6c382b27dca1b1eda2917c69" prot="public" static="no" mutable="no">
+        <type>cv::Mat</type>
+        <definition>cv::Mat camera::Camera::map_left_x</definition>
+        <argsstring></argsstring>
+        <name>map_left_x</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" line="24" column="17" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcamera_1_1Camera_1a3673eb2c9d5807eafa30231292ea4806" prot="public" static="no" mutable="no">
+        <type>cv::Mat</type>
+        <definition>cv::Mat camera::Camera::map_left_y</definition>
+        <argsstring></argsstring>
+        <name>map_left_y</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" line="25" column="17" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcamera_1_1Camera_1a76be58223a28d5b30964541cf8886ebe" prot="public" static="no" mutable="no">
+        <type>cv::Mat</type>
+        <definition>cv::Mat camera::Camera::map_right_x</definition>
+        <argsstring></argsstring>
+        <name>map_right_x</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" line="26" column="17" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcamera_1_1Camera_1aa14e4c5c06275b4600597b73c46882d0" prot="public" static="no" mutable="no">
+        <type>cv::Mat</type>
+        <definition>cv::Mat camera::Camera::map_right_y</definition>
+        <argsstring></argsstring>
+        <name>map_right_y</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" line="27" column="17" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcamera_1_1Camera_1a8ed2e955b92e9b1fa48c76eea77b8bdb" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int camera::Camera::device_id</definition>
+        <argsstring></argsstring>
+        <name>device_id</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" line="28" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="structcamera_1_1Camera_1a779232e5451ba010764249dcc85451c8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>camera::Camera::Camera</definition>
+        <argsstring>(sl_oc::video::VideoCapture &amp;cap_in, const cv::Mat &amp;map_left_x_in, const cv::Mat &amp;map_left_y_in, const cv::Mat &amp;map_right_x_in, const cv::Mat &amp;map_right_y_in, int device_id_in)</argsstring>
+        <name>Camera</name>
+        <param>
+          <type>sl_oc::video::VideoCapture &amp;</type>
+          <declname>cap_in</declname>
+        </param>
+        <param>
+          <type>const cv::Mat &amp;</type>
+          <declname>map_left_x_in</declname>
+        </param>
+        <param>
+          <type>const cv::Mat &amp;</type>
+          <declname>map_left_y_in</declname>
+        </param>
+        <param>
+          <type>const cv::Mat &amp;</type>
+          <declname>map_right_x_in</declname>
+        </param>
+        <param>
+          <type>const cv::Mat &amp;</type>
+          <declname>map_right_y_in</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>device_id_in</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" line="30" column="9" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" bodystart="30" bodyend="43"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" line="22" column="5" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/camera/camera.hpp" bodystart="22" bodyend="44"/>
+    <listofallmembers>
+      <member refid="structcamera_1_1Camera_1a779232e5451ba010764249dcc85451c8" prot="public" virt="non-virtual"><scope>camera::Camera</scope><name>Camera</name></member>
+      <member refid="structcamera_1_1Camera_1a93e15781fb9fe5ebc2e636edbda218b5" prot="public" virt="non-virtual"><scope>camera::Camera</scope><name>cap</name></member>
+      <member refid="structcamera_1_1Camera_1a8ed2e955b92e9b1fa48c76eea77b8bdb" prot="public" virt="non-virtual"><scope>camera::Camera</scope><name>device_id</name></member>
+      <member refid="structcamera_1_1Camera_1a14fe2d2f6c382b27dca1b1eda2917c69" prot="public" virt="non-virtual"><scope>camera::Camera</scope><name>map_left_x</name></member>
+      <member refid="structcamera_1_1Camera_1a3673eb2c9d5807eafa30231292ea4806" prot="public" virt="non-virtual"><scope>camera::Camera</scope><name>map_left_y</name></member>
+      <member refid="structcamera_1_1Camera_1a76be58223a28d5b30964541cf8886ebe" prot="public" virt="non-virtual"><scope>camera::Camera</scope><name>map_right_x</name></member>
+      <member refid="structcamera_1_1Camera_1aa14e4c5c06275b4600597b73c46882d0" prot="public" virt="non-virtual"><scope>camera::Camera</scope><name>map_right_y</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

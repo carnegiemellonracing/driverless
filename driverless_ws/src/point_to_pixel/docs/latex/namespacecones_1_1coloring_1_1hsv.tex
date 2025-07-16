@@ -1,0 +1,84 @@
+\hypertarget{namespacecones_1_1coloring_1_1hsv}{}\doxysection{cones\+::coloring\+::hsv Namespace Reference}
+\label{namespacecones_1_1coloring_1_1hsv}\index{cones::coloring::hsv@{cones::coloring::hsv}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::pair$<$ int, double $>$ \mbox{\hyperlink{namespacecones_1_1coloring_1_1hsv_a7ed3b69f9ccbecea90188aeebfab01da}{get\+\_\+color}} (Eigen\+::\+Vector3d \&pixel, cv\+::\+Mat image, const cv\+::\+Scalar \&yellow\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&yellow\+\_\+filter\+\_\+high, const cv\+::\+Scalar \&blue\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&blue\+\_\+filter\+\_\+high, const cv\+::\+Scalar \&orange\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&orange\+\_\+filter\+\_\+high, double confidence\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Uses HSV color filtering to determine cone color. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{namespacecones_1_1coloring_1_1hsv_a4f58efdef806d78d27e2ade8d6b665d6}{get\+\_\+cone\+\_\+class}} (std\+::pair$<$ Eigen\+::\+Vector3d, Eigen\+::\+Vector3d $>$ pixel\+\_\+pair, std\+::pair$<$ cv\+::\+Mat, cv\+::\+Mat $>$ frame\+\_\+pair, std\+::pair$<$ std\+::vector$<$ cv\+::\+Mat $>$, std\+::vector$<$ cv\+::\+Mat $>$$>$ detection\+\_\+pair, const cv\+::\+Scalar \&yellow\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&yellow\+\_\+filter\+\_\+high, const cv\+::\+Scalar \&blue\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&blue\+\_\+filter\+\_\+high, const cv\+::\+Scalar \&orange\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&orange\+\_\+filter\+\_\+high, double confidence\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Determines cone class from pixel pairs across cameras. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacecones_1_1coloring_1_1hsv_a7ed3b69f9ccbecea90188aeebfab01da}\label{namespacecones_1_1coloring_1_1hsv_a7ed3b69f9ccbecea90188aeebfab01da}} 
+\index{cones::coloring::hsv@{cones::coloring::hsv}!get\_color@{get\_color}}
+\index{get\_color@{get\_color}!cones::coloring::hsv@{cones::coloring::hsv}}
+\doxysubsubsection{\texorpdfstring{get\_color()}{get\_color()}}
+{\footnotesize\ttfamily std\+::pair$<$ int, double $>$ cones\+::coloring\+::hsv\+::get\+\_\+color (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector3d \&}]{pixel,  }\item[{cv\+::\+Mat}]{image,  }\item[{const cv\+::\+Scalar \&}]{yellow\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{yellow\+\_\+filter\+\_\+high,  }\item[{const cv\+::\+Scalar \&}]{blue\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{blue\+\_\+filter\+\_\+high,  }\item[{const cv\+::\+Scalar \&}]{orange\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{orange\+\_\+filter\+\_\+high,  }\item[{double}]{confidence\+\_\+threshold }\end{DoxyParamCaption})}
+
+
+
+Uses HSV color filtering to determine cone color. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pixel} & The pixel location to check \\
+\hline
+{\em image} & The image to analyze \\
+\hline
+{\em yellow\+\_\+filter\+\_\+low} & Lower HSV bound for yellow detection \\
+\hline
+{\em yellow\+\_\+filter\+\_\+high} & Upper HSV bound for yellow detection \\
+\hline
+{\em blue\+\_\+filter\+\_\+low} & Lower HSV bound for blue detection \\
+\hline
+{\em blue\+\_\+filter\+\_\+high} & Upper HSV bound for blue detection \\
+\hline
+{\em orange\+\_\+filter\+\_\+low} & Lower HSV bound for orange detection \\
+\hline
+{\em orange\+\_\+filter\+\_\+high} & Upper HSV bound for orange detection \\
+\hline
+{\em confidence\+\_\+threshold} & Minimum confidence to report a color \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::pair$<$int, double$>$ Color ID (-\/1, 0=orange, 1=yellow, 2=blue) and confidence 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecones_1_1coloring_1_1hsv_a4f58efdef806d78d27e2ade8d6b665d6}\label{namespacecones_1_1coloring_1_1hsv_a4f58efdef806d78d27e2ade8d6b665d6}} 
+\index{cones::coloring::hsv@{cones::coloring::hsv}!get\_cone\_class@{get\_cone\_class}}
+\index{get\_cone\_class@{get\_cone\_class}!cones::coloring::hsv@{cones::coloring::hsv}}
+\doxysubsubsection{\texorpdfstring{get\_cone\_class()}{get\_cone\_class()}}
+{\footnotesize\ttfamily int cones\+::coloring\+::hsv\+::get\+\_\+cone\+\_\+class (\begin{DoxyParamCaption}\item[{std\+::pair$<$ Eigen\+::\+Vector3d, Eigen\+::\+Vector3d $>$}]{pixel\+\_\+pair,  }\item[{std\+::pair$<$ cv\+::\+Mat, cv\+::\+Mat $>$}]{frame\+\_\+pair,  }\item[{std\+::pair$<$ std\+::vector$<$ cv\+::\+Mat $>$, std\+::vector$<$ cv\+::\+Mat $>$$>$}]{detection\+\_\+pair,  }\item[{const cv\+::\+Scalar \&}]{yellow\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{yellow\+\_\+filter\+\_\+high,  }\item[{const cv\+::\+Scalar \&}]{blue\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{blue\+\_\+filter\+\_\+high,  }\item[{const cv\+::\+Scalar \&}]{orange\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{orange\+\_\+filter\+\_\+high,  }\item[{double}]{confidence\+\_\+threshold }\end{DoxyParamCaption})}
+
+
+
+Determines cone class from pixel pairs across cameras. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pixel\+\_\+pair} & Pixel coordinates in both cameras \\
+\hline
+{\em frame\+\_\+pair} & Frames from both cameras \\
+\hline
+{\em detection\+\_\+pair} & YOLO detection results (if using YOLO) \\
+\hline
+{\em yellow\+\_\+filter\+\_\+low} & Lower HSV bound for yellow detection \\
+\hline
+{\em yellow\+\_\+filter\+\_\+high} & Upper HSV bound for yellow detection ~\newline
+ \\
+\hline
+{\em blue\+\_\+filter\+\_\+low} & Lower HSV bound for blue detection \\
+\hline
+{\em blue\+\_\+filter\+\_\+high} & Upper HSV bound for blue detection \\
+\hline
+{\em orange\+\_\+filter\+\_\+low} & Lower HSV bound for orange detection ~\newline
+ \\
+\hline
+{\em orange\+\_\+filter\+\_\+high} & Upper HSV bound for orange detection \\
+\hline
+{\em confidence\+\_\+threshold} & Minimum confidence to report a color \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int \mbox{\hyperlink{structcones_1_1Cone}{Cone}} class (-\/1=unknown, 0=orange, 1=yellow, 2=blue) 
+\end{DoxyReturn}

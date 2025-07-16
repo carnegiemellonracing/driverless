@@ -1,0 +1,383 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="point__to__pixel__node_8hpp" kind="file" language="C++">
+    <compoundname>point_to_pixel_node.hpp</compoundname>
+    <includes local="yes">rclcpp/rclcpp.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/point.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/vector3_stamped.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/twist_stamped.hpp</includes>
+    <includes local="yes">interfaces/msg/ppm_cone_array.hpp</includes>
+    <includes local="yes">interfaces/msg/cone_list.hpp</includes>
+    <includes local="yes">interfaces/msg/cone_array.hpp</includes>
+    <includes refid="transform_8hpp" local="yes">../transform/transform.hpp</includes>
+    <includes refid="camera_8hpp" local="yes">../camera/camera.hpp</includes>
+    <includes refid="coloring_8hpp" local="yes">../coloring/coloring.hpp</includes>
+    <includedby refid="point__to__pixel__node_8cpp" local="yes">/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.cpp</includedby>
+    <incdepgraph>
+      <node id="20">
+        <label>filesystem</label>
+      </node>
+      <node id="15">
+        <label>ocv_display.hpp</label>
+      </node>
+      <node id="16">
+        <label>calibration.hpp</label>
+      </node>
+      <node id="1">
+        <label>/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp</label>
+        <link refid="point__to__pixel__node_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>../camera/camera.hpp</label>
+        <link refid="camera_8hpp"/>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>cmath</label>
+      </node>
+      <node id="22">
+        <label>hsv.hpp</label>
+        <link refid="coloring_2hsv_8hpp"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>opencv2/opencv.hpp</label>
+      </node>
+      <node id="14">
+        <label>videocapture.hpp</label>
+      </node>
+      <node id="6">
+        <label>interfaces/msg/ppm_cone_array.hpp</label>
+      </node>
+      <node id="2">
+        <label>rclcpp/rclcpp.hpp</label>
+      </node>
+      <node id="12">
+        <label>opencv2/core/eigen.hpp</label>
+      </node>
+      <node id="24">
+        <label>opencv2/dnn.hpp</label>
+      </node>
+      <node id="5">
+        <label>geometry_msgs/msg/twist_stamped.hpp</label>
+      </node>
+      <node id="9">
+        <label>../transform/transform.hpp</label>
+        <link refid="transform_8hpp"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>Eigen/Dense</label>
+      </node>
+      <node id="3">
+        <label>geometry_msgs/msg/point.hpp</label>
+      </node>
+      <node id="4">
+        <label>geometry_msgs/msg/vector3_stamped.hpp</label>
+      </node>
+      <node id="23">
+        <label>yolo.hpp</label>
+        <link refid="coloring_2yolo_8hpp"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>deque</label>
+      </node>
+      <node id="8">
+        <label>interfaces/msg/cone_array.hpp</label>
+      </node>
+      <node id="19">
+        <label>mutex</label>
+      </node>
+      <node id="21">
+        <label>../coloring/coloring.hpp</label>
+        <link refid="coloring_8hpp"/>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>interfaces/msg/cone_list.hpp</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp</label>
+        <link refid="point__to__pixel__node_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.cpp</label>
+        <link refid="point__to__pixel__node_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structCone" prot="public">Cone</innerclass>
+    <innerclass refid="classPointToPixelNode" prot="public">PointToPixelNode</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="point__to__pixel__node_8hpp_1afe0534ca994b08a0ec5edf614aa48e9c" prot="public" static="no">
+        <name>verbose</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" line="25" column="9" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="point__to__pixel__node_8hpp_1a1a5132beb782505741acf50b3446f259" prot="public" static="no">
+        <name>use_yolo</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" line="26" column="9" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="point__to__pixel__node_8hpp_1a28c3014207a50acb9a6204d01e4773a0" prot="public" static="no">
+        <name>timing</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" line="27" column="9" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="point__to__pixel__node_8hpp_1ae9b20fb61db7d7c9646e3ce4dbfc188f" prot="public" static="no">
+        <name>inner</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" line="28" column="9" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="point__to__pixel__node_8hpp_1a2f5280368edf2e8a8dad9240aae0d2fd" prot="public" static="no">
+        <name>save_frames</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" line="29" column="9" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/>ROS2<sp/>imports</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rclcpp/rclcpp.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/point.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/vector3_stamped.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/twist_stamped.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;interfaces/msg/ppm_cone_array.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;interfaces/msg/cone_list.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;interfaces/msg/cone_array.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Project<sp/>Headers</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;../transform/transform.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;../camera/camera.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;../coloring/coloring.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>std::chrono::duration;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>std::chrono::duration_cast;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>std::chrono::high_resolution_clock;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>std::chrono::milliseconds;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="keyword">using</highlight><highlight class="normal"><sp/>std::placeholders::_1;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="comment">//<sp/>BUILD<sp/>FLAGS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="point__to__pixel__node_8hpp_1afe0534ca994b08a0ec5edf614aa48e9c" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>verbose<sp/>0<sp/><sp/></highlight><highlight class="comment">//<sp/>Prints<sp/>transform<sp/>matrix<sp/>and<sp/>transformed<sp/>pixel<sp/>of<sp/>every<sp/>point</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="point__to__pixel__node_8hpp_1a1a5132beb782505741acf50b3446f259" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>use_yolo<sp/>1<sp/></highlight><highlight class="comment">//<sp/>0:<sp/>HSV<sp/>Coloring<sp/>|<sp/>1:<sp/>YOLO<sp/>Coloring</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="point__to__pixel__node_8hpp_1a28c3014207a50acb9a6204d01e4773a0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>timing<sp/>1<sp/><sp/></highlight><highlight class="comment">//<sp/>Prints<sp/>timing<sp/>suite<sp/>at<sp/>end<sp/>of<sp/>every<sp/>callback</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="point__to__pixel__node_8hpp_1ae9b20fb61db7d7c9646e3ce4dbfc188f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>inner<sp/>1<sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Uses<sp/>inner<sp/>lens<sp/>of<sp/>ZEDS<sp/>(if<sp/>0<sp/>uses<sp/>the<sp/>outer<sp/>lens)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="point__to__pixel__node_8hpp_1a2f5280368edf2e8a8dad9240aae0d2fd" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>save_frames<sp/>0<sp/></highlight><highlight class="comment">//<sp/>Writes<sp/>every<sp/>5th<sp/>frame<sp/>to<sp/>img_log<sp/>folder</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31" refid="structCone" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structCone" kindref="compound">Cone</ref><sp/>{</highlight></codeline>
+<codeline lineno="32" refid="structCone_1acfae2aa34365e904f4115c4539b43bad" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>geometry_msgs::msg::Point<sp/><ref refid="structCone_1acfae2aa34365e904f4115c4539b43bad" kindref="member">point</ref>;</highlight></codeline>
+<codeline lineno="33" refid="structCone_1aa1faccdc21361e772bbcd6acf8cbcf94" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structCone_1aa1faccdc21361e772bbcd6acf8cbcf94" kindref="member">distance</ref>;</highlight></codeline>
+<codeline lineno="34" refid="structCone_1a552061dc9113dfe21cbe019ab30d8cf7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structCone_1a552061dc9113dfe21cbe019ab30d8cf7" kindref="member">Cone</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>geometry_msgs::msg::Point&amp;<sp/>p)<sp/>:<sp/><ref refid="structCone_1acfae2aa34365e904f4115c4539b43bad" kindref="member">point</ref>(p)<sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structCone_1aa1faccdc21361e772bbcd6acf8cbcf94" kindref="member">distance</ref><sp/>=<sp/>std::sqrt(p.x<sp/>*<sp/>p.x<sp/>+<sp/>p.y<sp/>*<sp/>p.y);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="classPointToPixelNode" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classPointToPixelNode" kindref="compound">PointToPixelNode</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>rclcpp::Node</highlight></codeline>
+<codeline lineno="40"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Constructor<sp/>declaration</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classPointToPixelNode_1afe0604ab4ca90e77fff5865a5cc831c1" kindref="member">PointToPixelNode</ref>();</highlight></codeline>
+<codeline lineno="44" refid="classPointToPixelNode_1a666fe63a0f32b9b7811f2d7af767f054" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>constexpr<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="classPointToPixelNode_1a666fe63a0f32b9b7811f2d7af767f054" kindref="member">max_deque_size</ref><sp/>=<sp/>100;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#if<sp/>use_yolo</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="classPointToPixelNode_1aa9f23a502385bf286215a222154d3836" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>constexpr<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="classPointToPixelNode_1aa9f23a502385bf286215a222154d3836" kindref="member">yolo_model_path</ref>[]<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;src/point_to_pixel/config/yolov5_model_params.onnx&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>static<sp/>constexpr<sp/>char<sp/>yolo_model_path[]<sp/>=<sp/>&quot;src/point_to_pixel/config/best164.onnx&quot;;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#if<sp/>save_frames</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>constexpr<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>frame_interval<sp/>=<sp/>5;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>constexpr<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>save_path[]<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;src/point_to_pixel/img_log/&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>static<sp/>constexpr<sp/>int<sp/>zed_one_sn;<sp/>//<sp/>Left<sp/>side<sp/>zed</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>static<sp/>constexpr<sp/>int<sp/>zed_two_sn;<sp/>//<sp/>Right<sp/>side<sp/>zed</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Image<sp/>Deque</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>std::deque&lt;std::pair&lt;uint64_t,<sp/>cv::Mat&gt;&gt;<sp/>img_deque_l;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>std::deque&lt;std::pair&lt;uint64_t,<sp/>cv::Mat&gt;&gt;<sp/>img_deque_r;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>std::deque&lt;geometry_msgs::msg::TwistStamped::SharedPtr&gt;<sp/>velocity_deque;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>std::deque&lt;geometry_msgs::msg::Vector3Stamped::SharedPtr&gt;<sp/>yaw_deque;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>Eigen::Matrix&lt;double,<sp/>3,<sp/>4&gt;<sp/>projection_matrix_l;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>Eigen::Matrix&lt;double,<sp/>3,<sp/>4&gt;<sp/>projection_matrix_r;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>confidence_threshold;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>cv::Scalar<sp/>yellow_filter_high;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>cv::Scalar<sp/>yellow_filter_low;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>cv::Scalar<sp/>blue_filter_high;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>cv::Scalar<sp/>blue_filter_low;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>cv::Scalar<sp/>orange_filter_high;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>cv::Scalar<sp/>orange_filter_low;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Topic<sp/>Callback<sp/>Functions</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>cone_callback(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>interfaces::msg::PPMConeArray::SharedPtr<sp/>msg);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>velocity_callback(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>geometry_msgs::msg::TwistStamped::SharedPtr<sp/>msg);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>yaw_callback(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>geometry_msgs::msg::Vector3Stamped::SharedPtr<sp/>msg);</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Camera<sp/>Callback<sp/>Functions</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>camera_callback();</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>rclcpp::TimerBase::SharedPtr<sp/>camera_timer_;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Camera<sp/>Objects<sp/>and<sp/>Parameters</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>sl_oc::video::VideoParams<sp/>params;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>sl_oc::video::VideoCapture<sp/>cap_l;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>sl_oc::video::VideoCapture<sp/>cap_r;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/>sl_oc::video::Frame<sp/>canvas;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>sl_oc::video::Frame<sp/>frame_l;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>sl_oc::video::Frame<sp/>frame_r;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Rectification<sp/>maps</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/>cv::Mat<sp/>map_left_x_ll,<sp/>map_left_y_ll;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>cv::Mat<sp/>map_right_x_lr,<sp/>map_right_y_lr;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>cv::Mat<sp/>map_left_x_rl,<sp/>map_left_y_rl;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>cv::Mat<sp/>map_right_x_rr,<sp/>map_right_y_rr;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/>std::mutex<sp/>l_img_mutex;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/>std::mutex<sp/>r_img_mutex;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/>std::mutex<sp/>velocity_mutex;</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>std::mutex<sp/>yaw_mutex;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/>std::mutex<sp/>net_mutex;</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>ROS2<sp/>Publisher<sp/>and<sp/>Subscribers</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>rclcpp::Publisher&lt;interfaces::msg::ConeArray&gt;::SharedPtr<sp/>cone_pub_;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/>rclcpp::Subscription&lt;interfaces::msg::PPMConeArray&gt;::SharedPtr<sp/>cone_sub_;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/>rclcpp::Subscription&lt;geometry_msgs::msg::TwistStamped&gt;::SharedPtr<sp/>velocity_sub_;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/>rclcpp::Subscription&lt;geometry_msgs::msg::Vector3Stamped&gt;::SharedPtr<sp/>yaw_sub_;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Helper<sp/>functions<sp/>with<sp/>implementations<sp/>in<sp/>separate<sp/>files</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/>std::tuple&lt;uint64_t,<sp/>cv::Mat,<sp/>uint64_t,<sp/>cv::Mat&gt;<sp/>get_camera_frame(rclcpp::Time<sp/>callbackTime);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>get_cone_class(std::pair&lt;Eigen::Vector3d,<sp/>Eigen::Vector3d&gt;<sp/>pixel_pair,</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::pair&lt;cv::Mat,<sp/>cv::Mat&gt;<sp/>frame_pair,</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::pair&lt;std::vector&lt;cv::Mat&gt;,<sp/>std::vector&lt;cv::Mat&gt;&gt;<sp/>detection_pair);</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Ordering<sp/>function<sp/>and<sp/>helpers</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structCone" kindref="compound">Cone</ref><sp/>findClosestCone(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;Cone&gt;&amp;<sp/><ref refid="namespacecones" kindref="compound">cones</ref>);</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>calculateAngle(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structCone" kindref="compound">Cone</ref>&amp;<sp/>from,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structCone" kindref="compound">Cone</ref>&amp;<sp/>to);</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;Cone&gt;<sp/>orderConesByPathDirection(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;Cone&gt;&amp;<sp/>unordered_cones);</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Cone<sp/>state<sp/>propogation</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/>std::pair&lt;double,<sp/>double&gt;<sp/>getMotionEstimate(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>velocity,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>angle,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dt);</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/>std::pair&lt;geometry_msgs::msg::TwistStamped::SharedPtr,<sp/>geometry_msgs::msg::Vector3Stamped::SharedPtr&gt;<sp/>get_velocity_yaw(uint64_t<sp/>callbackTime);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/>std::thread<sp/>launch_camera_communication();</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#if<sp/>use_yolo</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/>cv::dnn::Net<sp/>net;<sp/></highlight><highlight class="comment">//<sp/>YOLO<sp/>Model</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#if<sp/>save_frames</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>uint64_t<sp/>camera_callback_count;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>save_frame(std::pair&lt;uint64_t,<sp/>cv::Mat&gt;<sp/>frame_l,<sp/>std::pair&lt;uint64_t,<sp/>cv::Mat&gt;<sp/>frame_r);</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#endif</highlight></codeline>
+<codeline lineno="140"><highlight class="preprocessor">};</highlight></codeline>
+    </programlisting>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp"/>
+  </compounddef>
+</doxygen>

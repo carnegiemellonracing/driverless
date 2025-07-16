@@ -1,0 +1,160 @@
+\hypertarget{namespacecones_1_1coloring_1_1yolo}{}\doxysection{cones\+::coloring\+::yolo Namespace Reference}
+\label{namespacecones_1_1coloring_1_1yolo}\index{cones::coloring::yolo@{cones::coloring::yolo}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo_ad47b331375599bd4e1853d20186c05ea}{get\+\_\+cone\+\_\+class}} (std\+::pair$<$ Eigen\+::\+Vector3d, Eigen\+::\+Vector3d $>$ pixel\+\_\+pair, std\+::pair$<$ cv\+::\+Mat, cv\+::\+Mat $>$ frame\+\_\+pair, std\+::pair$<$ std\+::vector$<$ cv\+::\+Mat $>$, std\+::vector$<$ cv\+::\+Mat $>$$>$ detection\+\_\+pair, const cv\+::\+Scalar \&yellow\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&yellow\+\_\+filter\+\_\+high, const cv\+::\+Scalar \&blue\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&blue\+\_\+filter\+\_\+high, const cv\+::\+Scalar \&orange\+\_\+filter\+\_\+low, const cv\+::\+Scalar \&orange\+\_\+filter\+\_\+high, double confidence\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Determines cone class from pixel pairs across cameras. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo_ac52038a6bf7a85b10f2178c11310b9cf}{depth\+\_\+to\+\_\+box\+\_\+height}} (float depth)
+\item 
+std\+::pair$<$ int, double $>$ \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo_accc12ea78aeb15a47591822d923f072e}{get\+\_\+color}} (Eigen\+::\+Vector3d \&pixel, std\+::vector$<$ cv\+::\+Mat $>$ detection, int cols, int rows, double confidence\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Uses YOLO to determine cone color. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo_ac828e5485662b02989345d91a85715d2}{draw\+\_\+bounding\+\_\+boxes}} (cv\+::\+Mat \&frame, cv\+::\+Mat \&canvas, std\+::vector$<$ cv\+::\+Mat $>$ detections, int cols, int rows, double confidence\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Labels image frames with bounding boxes. Works with references. \end{DoxyCompactList}\item 
+cv\+::dnn\+::\+Net \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo_a8357f4597130bfb12780db2c428483ba}{init\+\_\+model}} (const std\+::string \&model\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Initialize the YOLO model. \end{DoxyCompactList}\item 
+std\+::vector$<$ cv\+::\+Mat $>$ \mbox{\hyperlink{namespacecones_1_1coloring_1_1yolo_a56653580e4a2bf7998921a0a4b638466}{process\+\_\+frame}} (const cv\+::\+Mat \&frame, cv\+::dnn\+::\+Net \&net, int yolo\+\_\+width=640, int yolo\+\_\+height=640)
+\begin{DoxyCompactList}\small\item\em Process frame with YOLO. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacecones_1_1coloring_1_1yolo_ac52038a6bf7a85b10f2178c11310b9cf}\label{namespacecones_1_1coloring_1_1yolo_ac52038a6bf7a85b10f2178c11310b9cf}} 
+\index{cones::coloring::yolo@{cones::coloring::yolo}!depth\_to\_box\_height@{depth\_to\_box\_height}}
+\index{depth\_to\_box\_height@{depth\_to\_box\_height}!cones::coloring::yolo@{cones::coloring::yolo}}
+\doxysubsubsection{\texorpdfstring{depth\_to\_box\_height()}{depth\_to\_box\_height()}}
+{\footnotesize\ttfamily float cones\+::coloring\+::yolo\+::depth\+\_\+to\+\_\+box\+\_\+height (\begin{DoxyParamCaption}\item[{float}]{depth }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecones_1_1coloring_1_1yolo_ac828e5485662b02989345d91a85715d2}\label{namespacecones_1_1coloring_1_1yolo_ac828e5485662b02989345d91a85715d2}} 
+\index{cones::coloring::yolo@{cones::coloring::yolo}!draw\_bounding\_boxes@{draw\_bounding\_boxes}}
+\index{draw\_bounding\_boxes@{draw\_bounding\_boxes}!cones::coloring::yolo@{cones::coloring::yolo}}
+\doxysubsubsection{\texorpdfstring{draw\_bounding\_boxes()}{draw\_bounding\_boxes()}}
+{\footnotesize\ttfamily void cones\+::coloring\+::yolo\+::draw\+\_\+bounding\+\_\+boxes (\begin{DoxyParamCaption}\item[{cv\+::\+Mat \&}]{frame,  }\item[{cv\+::\+Mat \&}]{canvas,  }\item[{std\+::vector$<$ cv\+::\+Mat $>$}]{detections,  }\item[{int}]{cols,  }\item[{int}]{rows,  }\item[{double}]{confidence\+\_\+threshold }\end{DoxyParamCaption})}
+
+
+
+Labels image frames with bounding boxes. Works with references. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em frame} & image frame \\
+\hline
+{\em canvas} & clone of image frame. Gets merged to image frame to have a see-\/through box \\
+\hline
+{\em detections} & output of YOLO model \\
+\hline
+{\em cols} & Image columns \\
+\hline
+{\em rows} & Image rows \\
+\hline
+{\em confidence\+\_\+threshold} & Use bounding box if YOLO conf is higher than threshold\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Nothing, directly applies bounding boxes to the input images. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecones_1_1coloring_1_1yolo_accc12ea78aeb15a47591822d923f072e}\label{namespacecones_1_1coloring_1_1yolo_accc12ea78aeb15a47591822d923f072e}} 
+\index{cones::coloring::yolo@{cones::coloring::yolo}!get\_color@{get\_color}}
+\index{get\_color@{get\_color}!cones::coloring::yolo@{cones::coloring::yolo}}
+\doxysubsubsection{\texorpdfstring{get\_color()}{get\_color()}}
+{\footnotesize\ttfamily std\+::pair$<$ int, double $>$ cones\+::coloring\+::yolo\+::get\+\_\+color (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector3d \&}]{pixel,  }\item[{std\+::vector$<$ cv\+::\+Mat $>$}]{detection,  }\item[{int}]{cols,  }\item[{int}]{rows,  }\item[{double}]{confidence\+\_\+threshold }\end{DoxyParamCaption})}
+
+
+
+Uses YOLO to determine cone color. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pixel} & The pixel location to check \\
+\hline
+{\em detection} & YOLO detection output \\
+\hline
+{\em cols} & Image columns \\
+\hline
+{\em rows} & Image rows \\
+\hline
+{\em confidence\+\_\+threshold} & Minimum confidence to report a detection \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::pair$<$int, double$>$ Color ID and confidence 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecones_1_1coloring_1_1yolo_ad47b331375599bd4e1853d20186c05ea}\label{namespacecones_1_1coloring_1_1yolo_ad47b331375599bd4e1853d20186c05ea}} 
+\index{cones::coloring::yolo@{cones::coloring::yolo}!get\_cone\_class@{get\_cone\_class}}
+\index{get\_cone\_class@{get\_cone\_class}!cones::coloring::yolo@{cones::coloring::yolo}}
+\doxysubsubsection{\texorpdfstring{get\_cone\_class()}{get\_cone\_class()}}
+{\footnotesize\ttfamily int cones\+::coloring\+::yolo\+::get\+\_\+cone\+\_\+class (\begin{DoxyParamCaption}\item[{std\+::pair$<$ Eigen\+::\+Vector3d, Eigen\+::\+Vector3d $>$}]{pixel\+\_\+pair,  }\item[{std\+::pair$<$ cv\+::\+Mat, cv\+::\+Mat $>$}]{frame\+\_\+pair,  }\item[{std\+::pair$<$ std\+::vector$<$ cv\+::\+Mat $>$, std\+::vector$<$ cv\+::\+Mat $>$$>$}]{detection\+\_\+pair,  }\item[{const cv\+::\+Scalar \&}]{yellow\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{yellow\+\_\+filter\+\_\+high,  }\item[{const cv\+::\+Scalar \&}]{blue\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{blue\+\_\+filter\+\_\+high,  }\item[{const cv\+::\+Scalar \&}]{orange\+\_\+filter\+\_\+low,  }\item[{const cv\+::\+Scalar \&}]{orange\+\_\+filter\+\_\+high,  }\item[{double}]{confidence\+\_\+threshold }\end{DoxyParamCaption})}
+
+
+
+Determines cone class from pixel pairs across cameras. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pixel\+\_\+pair} & Pixel coordinates in both cameras \\
+\hline
+{\em frame\+\_\+pair} & Frames from both cameras \\
+\hline
+{\em detection\+\_\+pair} & YOLO detection results (if using YOLO) \\
+\hline
+{\em yellow\+\_\+filter\+\_\+low} & Lower HSV bound for yellow detection \\
+\hline
+{\em yellow\+\_\+filter\+\_\+high} & Upper HSV bound for yellow detection ~\newline
+ \\
+\hline
+{\em blue\+\_\+filter\+\_\+low} & Lower HSV bound for blue detection \\
+\hline
+{\em blue\+\_\+filter\+\_\+high} & Upper HSV bound for blue detection \\
+\hline
+{\em orange\+\_\+filter\+\_\+low} & Lower HSV bound for orange detection ~\newline
+ \\
+\hline
+{\em orange\+\_\+filter\+\_\+high} & Upper HSV bound for orange detection \\
+\hline
+{\em confidence\+\_\+threshold} & Minimum confidence to report a color \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int \mbox{\hyperlink{structcones_1_1Cone}{Cone}} class (-\/1=unknown, 0=orange, 1=yellow, 2=blue) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecones_1_1coloring_1_1yolo_a8357f4597130bfb12780db2c428483ba}\label{namespacecones_1_1coloring_1_1yolo_a8357f4597130bfb12780db2c428483ba}} 
+\index{cones::coloring::yolo@{cones::coloring::yolo}!init\_model@{init\_model}}
+\index{init\_model@{init\_model}!cones::coloring::yolo@{cones::coloring::yolo}}
+\doxysubsubsection{\texorpdfstring{init\_model()}{init\_model()}}
+{\footnotesize\ttfamily cv\+::dnn\+::\+Net cones\+::coloring\+::yolo\+::init\+\_\+model (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{model\+\_\+path }\end{DoxyParamCaption})}
+
+
+
+Initialize the YOLO model. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+path} & Path to the ONNX model file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::dnn\+::\+Net Initialized neural network 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecones_1_1coloring_1_1yolo_a56653580e4a2bf7998921a0a4b638466}\label{namespacecones_1_1coloring_1_1yolo_a56653580e4a2bf7998921a0a4b638466}} 
+\index{cones::coloring::yolo@{cones::coloring::yolo}!process\_frame@{process\_frame}}
+\index{process\_frame@{process\_frame}!cones::coloring::yolo@{cones::coloring::yolo}}
+\doxysubsubsection{\texorpdfstring{process\_frame()}{process\_frame()}}
+{\footnotesize\ttfamily std\+::vector$<$ cv\+::\+Mat $>$ cones\+::coloring\+::yolo\+::process\+\_\+frame (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{frame,  }\item[{cv\+::dnn\+::\+Net \&}]{net,  }\item[{int}]{yolo\+\_\+width = {\ttfamily 640},  }\item[{int}]{yolo\+\_\+height = {\ttfamily 640} }\end{DoxyParamCaption})}
+
+
+
+Process frame with YOLO. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em frame} & Input frame \\
+\hline
+{\em net} & Neural network \\
+\hline
+{\em yolo\+\_\+width} & Width for YOLO input \\
+\hline
+{\em yolo\+\_\+height} & Height for YOLO input \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+float $\ast$detection results 
+\end{DoxyReturn}

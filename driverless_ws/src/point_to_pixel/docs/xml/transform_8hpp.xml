@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="transform_8hpp" kind="file" language="C++">
+    <compoundname>transform.hpp</compoundname>
+    <includes local="no">Eigen/Dense</includes>
+    <includes local="no">opencv2/opencv.hpp</includes>
+    <includes local="no">opencv2/core/eigen.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/vector3_stamped.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/twist_stamped.hpp</includes>
+    <includes local="yes">rclcpp/rclcpp.hpp</includes>
+    <includedby refid="point__to__pixel__node_8hpp" local="yes">/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp</includedby>
+    <includedby refid="transform_8cpp" local="yes">/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp</includedby>
+    <incdepgraph>
+      <node id="3">
+        <label>opencv2/opencv.hpp</label>
+      </node>
+      <node id="7">
+        <label>rclcpp/rclcpp.hpp</label>
+      </node>
+      <node id="4">
+        <label>opencv2/core/eigen.hpp</label>
+      </node>
+      <node id="6">
+        <label>geometry_msgs/msg/twist_stamped.hpp</label>
+      </node>
+      <node id="1">
+        <label>/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.hpp</label>
+        <link refid="transform_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Eigen/Dense</label>
+      </node>
+      <node id="5">
+        <label>geometry_msgs/msg/vector3_stamped.hpp</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="4">
+        <label>/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.cpp</label>
+        <link refid="transform_8cpp"/>
+      </node>
+      <node id="2">
+        <label>/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.hpp</label>
+        <link refid="point__to__pixel__node_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.hpp</label>
+        <link refid="transform_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/ros_node/point_to_pixel_node.cpp</label>
+        <link refid="point__to__pixel__node_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespacetransform">transform</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;Eigen/Dense&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;opencv2/opencv.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;opencv2/core/eigen.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/vector3_stamped.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/twist_stamped.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rclcpp/rclcpp.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacetransform" kindref="compound">transform</ref><sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>std::pair&lt;Eigen::Vector3d,<sp/>Eigen::Vector3d&gt;<sp/><ref refid="namespacetransform_1a4c5c36deb201904f39e140e2f84ad89d" kindref="member">transform_point</ref>(</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp::Logger<sp/>&amp;logger,</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::Vector3<sp/>&amp;point,</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::pair&lt;std::pair&lt;double,<sp/>double&gt;,<sp/>std::pair&lt;double,<sp/>double&gt;&gt;<sp/>ds_pair,</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::pair&lt;double,<sp/>double&gt;<sp/>left_right_dyaw,</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::pair&lt;Eigen::Matrix&lt;double,<sp/>3,<sp/>4&gt;,<sp/>Eigen::Matrix&lt;double,<sp/>3,<sp/>4&gt;&gt;<sp/>&amp;projection_matrix_pair);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>std::pair&lt;double,<sp/>double&gt;<sp/><ref refid="namespacetransform_1afa5c991af9dc841586c0d9e87b44b6d4" kindref="member">global_frame_to_local_frame</ref>(</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::pair&lt;double,<sp/>double&gt;<sp/>global_frame_change,</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>yaw);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>std::pair&lt;geometry_msgs::msg::TwistStamped::SharedPtr,<sp/>geometry_msgs::msg::Vector3Stamped::SharedPtr&gt;<sp/><ref refid="namespacetransform_1a42b827f762f589ee4d66c777b897920e" kindref="member">get_vel_yaw</ref>(</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp::Logger<sp/>&amp;logger,</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::mutex<sp/>&amp;yaw_mutex,</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::mutex<sp/>&amp;vel_mutex,</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::deque&lt;geometry_msgs::msg::TwistStamped::SharedPtr&gt;<sp/>&amp;vel_deque,</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::deque&lt;geometry_msgs::msg::Vector3Stamped::SharedPtr&gt;<sp/>&amp;yaw_deque,</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint64_t<sp/>frameTime</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/transform/transform.hpp"/>
+  </compounddef>
+</doxygen>
