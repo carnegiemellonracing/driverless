@@ -1,25 +1,25 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Reference &mdash; CMR Driverless Perceptions 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+  <title>Perceptions Coloring Module &mdash; CMR Driverless Perceptions 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
-      <script src="../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="CMR Driverless Perceptions Stack for 24a" href="../index.html" /> 
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Perceptions LiDAR Module" href="lidar_module.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -30,11 +30,11 @@
 
           
           
-          <a href="../index.html" class="icon icon-home">
+          <a href="../../index.html" class="icon icon-home">
             CMR Driverless Perceptions
           </a>
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -43,99 +43,87 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#_CPPv416PointToPixelNode"><code class="docutils literal notranslate"><span class="pre">PointToPixelNode</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N16PointToPixelNode16PointToPixelNodeEv"><code class="docutils literal notranslate"><span class="pre">PointToPixelNode()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N16PointToPixelNode14max_deque_sizeE"><code class="docutils literal notranslate"><span class="pre">max_deque_size</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N16PointToPixelNode15yolo_model_pathE"><code class="docutils literal notranslate"><span class="pre">yolo_model_path</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../explainers/explainers.html">Explainers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lidar_module.html">Perceptions LiDAR Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Perceptions Coloring Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv416PointToPixelNode"><code class="docutils literal notranslate"><span class="pre">PointToPixelNode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N16PointToPixelNode16PointToPixelNodeEv"><code class="docutils literal notranslate"><span class="pre">PointToPixelNode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N16PointToPixelNode14max_deque_sizeE"><code class="docutils literal notranslate"><span class="pre">max_deque_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N16PointToPixelNode15yolo_model_pathE"><code class="docutils literal notranslate"><span class="pre">yolo_model_path</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#_CPPv4N5cones11recolouringE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring6QfloatE"><code class="docutils literal notranslate"><span class="pre">Qfloat</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring5scharE"><code class="docutils literal notranslate"><span class="pre">schar</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_1E"><code class="docutils literal notranslate"><span class="pre">&#64;1</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_15C_SVCE"><code class="docutils literal notranslate"><span class="pre">C_SVC</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_16NU_SVCE"><code class="docutils literal notranslate"><span class="pre">NU_SVC</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_19ONE_CLASSE"><code class="docutils literal notranslate"><span class="pre">ONE_CLASS</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_111EPSILON_SVRE"><code class="docutils literal notranslate"><span class="pre">EPSILON_SVR</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_16NU_SVRE"><code class="docutils literal notranslate"><span class="pre">NU_SVR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouringE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring6QfloatE"><code class="docutils literal notranslate"><span class="pre">Qfloat</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring5scharE"><code class="docutils literal notranslate"><span class="pre">schar</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_1E"><code class="docutils literal notranslate"><span class="pre">&#64;1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_2E"><code class="docutils literal notranslate"><span class="pre">&#64;2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN5cones11recolouring3minE1T1T1T"><code class="docutils literal notranslate"><span class="pre">min()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN5cones11recolouring3maxE1T1T1T"><code class="docutils literal notranslate"><span class="pre">max()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN5cones11recolouring4swapEvR1TR1T"><code class="docutils literal notranslate"><span class="pre">swap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I00EN5cones11recolouring5cloneEvRP1TP1Si"><code class="docutils literal notranslate"><span class="pre">clone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring4powiEdi"><code class="docutils literal notranslate"><span class="pre">powi()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring19print_string_stdoutEPKc"><code class="docutils literal notranslate"><span class="pre">print_string_stdout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring4infoEPKcz"><code class="docutils literal notranslate"><span class="pre">info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring11solve_c_svcEPK11svm_problemPK13svm_parameterPdPN6Solver12SolutionInfoEdd"><code class="docutils literal notranslate"><span class="pre">solve_c_svc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring12solve_nu_svcEPK11svm_problemPK13svm_parameterPdPN6Solver12SolutionInfoE"><code class="docutils literal notranslate"><span class="pre">solve_nu_svc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring15solve_one_classEPK11svm_problemPK13svm_parameterPdPN6Solver12SolutionInfoE"><code class="docutils literal notranslate"><span class="pre">solve_one_class()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring17solve_epsilon_svrEPK11svm_problemPK13svm_parameterPdPN6Solver12SolutionInfoE"><code class="docutils literal notranslate"><span class="pre">solve_epsilon_svr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring12solve_nu_svrEPK11svm_problemPK13svm_parameterPdPN6Solver12SolutionInfoE"><code class="docutils literal notranslate"><span class="pre">solve_nu_svr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring13svm_train_oneEPK11svm_problemPK13svm_parameterdd"><code class="docutils literal notranslate"><span class="pre">svm_train_one()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring13sigmoid_trainEiPKdPKdRdRd"><code class="docutils literal notranslate"><span class="pre">sigmoid_train()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring15sigmoid_predictEddd"><code class="docutils literal notranslate"><span class="pre">sigmoid_predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring22multiclass_probabilityEiPPdPd"><code class="docutils literal notranslate"><span class="pre">multiclass_probability()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring26svm_binary_svc_probabilityEPK11svm_problemPK13svm_parameterddRdRd"><code class="docutils literal notranslate"><span class="pre">svm_binary_svc_probability()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring29predict_one_class_probabilityEPK9svm_modeld"><code class="docutils literal notranslate"><span class="pre">predict_one_class_probability()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring14compare_doubleEPKvPKv"><code class="docutils literal notranslate"><span class="pre">compare_double()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring25svm_one_class_probabilityEPK11svm_problemPK9svm_modelPd"><code class="docutils literal notranslate"><span class="pre">svm_one_class_probability()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring19svm_svr_probabilityEPK11svm_problemPK13svm_parameter"><code class="docutils literal notranslate"><span class="pre">svm_svr_probability()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring17svm_group_classesEPK11svm_problemPiPPiPPiPPiPi"><code class="docutils literal notranslate"><span class="pre">svm_group_classes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring9svm_trainEPK11svm_problemPK13svm_parameter"><code class="docutils literal notranslate"><span class="pre">svm_train()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring20svm_cross_validationEPK11svm_problemPK13svm_parameteriPd"><code class="docutils literal notranslate"><span class="pre">svm_cross_validation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring16svm_get_svm_typeEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_get_svm_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring16svm_get_nr_classEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_get_nr_class()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring14svm_get_labelsEPK9svm_modelPi"><code class="docutils literal notranslate"><span class="pre">svm_get_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring18svm_get_sv_indicesEPK9svm_modelPi"><code class="docutils literal notranslate"><span class="pre">svm_get_sv_indices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring13svm_get_nr_svEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_get_nr_sv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring23svm_get_svr_probabilityEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_get_svr_probability()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring18svm_predict_valuesEPK9svm_modelPK8svm_nodePd"><code class="docutils literal notranslate"><span class="pre">svm_predict_values()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring11svm_predictEPK9svm_modelPK8svm_node"><code class="docutils literal notranslate"><span class="pre">svm_predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring23svm_predict_probabilityEPK9svm_modelPK8svm_nodePd"><code class="docutils literal notranslate"><span class="pre">svm_predict_probability()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring14svm_save_modelEPKcPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_save_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring8readlineEP4FILE"><code class="docutils literal notranslate"><span class="pre">readline()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring17read_model_headerEP4FILEP9svm_model"><code class="docutils literal notranslate"><span class="pre">read_model_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring14svm_load_modelEPKc"><code class="docutils literal notranslate"><span class="pre">svm_load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring22svm_free_model_contentEP9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_free_model_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring26svm_free_and_destroy_modelEPP9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_free_and_destroy_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring17svm_destroy_paramEP13svm_parameter"><code class="docutils literal notranslate"><span class="pre">svm_destroy_param()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring19svm_check_parameterEPK11svm_problemPK13svm_parameter"><code class="docutils literal notranslate"><span class="pre">svm_check_parameter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring27svm_check_probability_modelEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_check_probability_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring29svm_set_print_string_functionEPFvPKcE"><code class="docutils literal notranslate"><span class="pre">svm_set_print_string_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring14node_predictorERKNSt6vectorIdEEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">node_predictor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring14recolour_conesEN5cones11TrackBoundsEd"><code class="docutils literal notranslate"><span class="pre">recolour_cones()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring14libsvm_versionE"><code class="docutils literal notranslate"><span class="pre">libsvm_version</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring16svm_print_stringE"><code class="docutils literal notranslate"><span class="pre">svm_print_string</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring14svm_type_tableE"><code class="docutils literal notranslate"><span class="pre">svm_type_table</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring17kernel_type_tableE"><code class="docutils literal notranslate"><span class="pre">kernel_type_table</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring4lineE"><code class="docutils literal notranslate"><span class="pre">line</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring12max_line_lenE"><code class="docutils literal notranslate"><span class="pre">max_line_len</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring5CacheE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::Cache</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring7QMatrixE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::QMatrix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring6KernelE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::Kernel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring6SolverE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::Solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring9Solver_NUE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::Solver_NU</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring5SVC_QE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::SVC_Q</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring11ONE_CLASS_QE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::ONE_CLASS_Q</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring5SVR_QE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::SVR_Q</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring17decision_functionE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::decision_function</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring8svm_nodeE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::svm_node</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring11svm_problemE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::svm_problem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring13svm_parameterE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::svm_parameter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring9svm_modelE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::svm_model</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_2E"><code class="docutils literal notranslate"><span class="pre">&#64;2</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_26LINEARE"><code class="docutils literal notranslate"><span class="pre">LINEAR</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_24POLYE"><code class="docutils literal notranslate"><span class="pre">POLY</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_23RBFE"><code class="docutils literal notranslate"><span class="pre">RBF</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_27SIGMOIDE"><code class="docutils literal notranslate"><span class="pre">SIGMOID</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouringUt1_211PRECOMPUTEDE"><code class="docutils literal notranslate"><span class="pre">PRECOMPUTED</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I0EN5cones11recolouring3minE1T1T1T"><code class="docutils literal notranslate"><span class="pre">min()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I0EN5cones11recolouring3maxE1T1T1T"><code class="docutils literal notranslate"><span class="pre">max()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I0EN5cones11recolouring4swapEvR1TR1T"><code class="docutils literal notranslate"><span class="pre">swap()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4I00EN5cones11recolouring5cloneEvRP1TP1Si"><code class="docutils literal notranslate"><span class="pre">clone()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring4powiEdi"><code class="docutils literal notranslate"><span class="pre">powi()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring19print_string_stdoutEPKc"><code class="docutils literal notranslate"><span class="pre">print_string_stdout()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring4infoEPKcz"><code class="docutils literal notranslate"><span class="pre">info()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring11solve_c_svcEPK11svm_problemPK13svm_parameterPdPN6Solver12SolutionInfoEdd"><code class="docutils literal notranslate"><span class="pre">solve_c_svc()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring12solve_nu_svcEPK11svm_problemPK13svm_parameterPdPN6Solver12SolutionInfoE"><code class="docutils literal notranslate"><span class="pre">solve_nu_svc()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring15solve_one_classEPK11svm_problemPK13svm_parameterPdPN6Solver12SolutionInfoE"><code class="docutils literal notranslate"><span class="pre">solve_one_class()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring17solve_epsilon_svrEPK11svm_problemPK13svm_parameterPdPN6Solver12SolutionInfoE"><code class="docutils literal notranslate"><span class="pre">solve_epsilon_svr()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring12solve_nu_svrEPK11svm_problemPK13svm_parameterPdPN6Solver12SolutionInfoE"><code class="docutils literal notranslate"><span class="pre">solve_nu_svr()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring13svm_train_oneEPK11svm_problemPK13svm_parameterdd"><code class="docutils literal notranslate"><span class="pre">svm_train_one()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring13sigmoid_trainEiPKdPKdRdRd"><code class="docutils literal notranslate"><span class="pre">sigmoid_train()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring15sigmoid_predictEddd"><code class="docutils literal notranslate"><span class="pre">sigmoid_predict()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring22multiclass_probabilityEiPPdPd"><code class="docutils literal notranslate"><span class="pre">multiclass_probability()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring26svm_binary_svc_probabilityEPK11svm_problemPK13svm_parameterddRdRd"><code class="docutils literal notranslate"><span class="pre">svm_binary_svc_probability()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring29predict_one_class_probabilityEPK9svm_modeld"><code class="docutils literal notranslate"><span class="pre">predict_one_class_probability()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring14compare_doubleEPKvPKv"><code class="docutils literal notranslate"><span class="pre">compare_double()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring25svm_one_class_probabilityEPK11svm_problemPK9svm_modelPd"><code class="docutils literal notranslate"><span class="pre">svm_one_class_probability()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring19svm_svr_probabilityEPK11svm_problemPK13svm_parameter"><code class="docutils literal notranslate"><span class="pre">svm_svr_probability()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring17svm_group_classesEPK11svm_problemPiPPiPPiPPiPi"><code class="docutils literal notranslate"><span class="pre">svm_group_classes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring9svm_trainEPK11svm_problemPK13svm_parameter"><code class="docutils literal notranslate"><span class="pre">svm_train()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring20svm_cross_validationEPK11svm_problemPK13svm_parameteriPd"><code class="docutils literal notranslate"><span class="pre">svm_cross_validation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring16svm_get_svm_typeEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_get_svm_type()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring16svm_get_nr_classEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_get_nr_class()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring14svm_get_labelsEPK9svm_modelPi"><code class="docutils literal notranslate"><span class="pre">svm_get_labels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring18svm_get_sv_indicesEPK9svm_modelPi"><code class="docutils literal notranslate"><span class="pre">svm_get_sv_indices()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring13svm_get_nr_svEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_get_nr_sv()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring23svm_get_svr_probabilityEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_get_svr_probability()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring18svm_predict_valuesEPK9svm_modelPK8svm_nodePd"><code class="docutils literal notranslate"><span class="pre">svm_predict_values()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring11svm_predictEPK9svm_modelPK8svm_node"><code class="docutils literal notranslate"><span class="pre">svm_predict()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring23svm_predict_probabilityEPK9svm_modelPK8svm_nodePd"><code class="docutils literal notranslate"><span class="pre">svm_predict_probability()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring14svm_save_modelEPKcPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_save_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring8readlineEP4FILE"><code class="docutils literal notranslate"><span class="pre">readline()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring17read_model_headerEP4FILEP9svm_model"><code class="docutils literal notranslate"><span class="pre">read_model_header()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring14svm_load_modelEPKc"><code class="docutils literal notranslate"><span class="pre">svm_load_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring22svm_free_model_contentEP9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_free_model_content()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring26svm_free_and_destroy_modelEPP9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_free_and_destroy_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring17svm_destroy_paramEP13svm_parameter"><code class="docutils literal notranslate"><span class="pre">svm_destroy_param()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring19svm_check_parameterEPK11svm_problemPK13svm_parameter"><code class="docutils literal notranslate"><span class="pre">svm_check_parameter()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring27svm_check_probability_modelEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">svm_check_probability_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring29svm_set_print_string_functionEPFvPKcE"><code class="docutils literal notranslate"><span class="pre">svm_set_print_string_function()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring14node_predictorERKNSt6vectorIdEEPK9svm_model"><code class="docutils literal notranslate"><span class="pre">node_predictor()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring14recolour_conesEN5cones11TrackBoundsEd"><code class="docutils literal notranslate"><span class="pre">recolour_cones()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring14libsvm_versionE"><code class="docutils literal notranslate"><span class="pre">libsvm_version</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring16svm_print_stringE"><code class="docutils literal notranslate"><span class="pre">svm_print_string</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring14svm_type_tableE"><code class="docutils literal notranslate"><span class="pre">svm_type_table</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring17kernel_type_tableE"><code class="docutils literal notranslate"><span class="pre">kernel_type_table</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring4lineE"><code class="docutils literal notranslate"><span class="pre">line</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring12max_line_lenE"><code class="docutils literal notranslate"><span class="pre">max_line_len</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring5CacheE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::Cache</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring7QMatrixE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::QMatrix</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring6KernelE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::Kernel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring6SolverE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::Solver</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5cones11recolouring6Solver12SolutionInfoE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::Solver::SolutionInfo</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring9Solver_NUE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::Solver_NU</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring5SVC_QE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::SVC_Q</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring11ONE_CLASS_QE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::ONE_CLASS_Q</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring5SVR_QE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::SVR_Q</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring17decision_functionE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::decision_function</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring8svm_nodeE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::svm_node</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring11svm_problemE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::svm_problem</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring13svm_parameterE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::svm_parameter</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#_CPPv4N5cones11recolouring9svm_modelE"><code class="docutils literal notranslate"><span class="pre">cones::recolouring::svm_model</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -148,17 +136,18 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">CMR Driverless Perceptions</a>
+          <a href="../../index.html">CMR Driverless Perceptions</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">API Reference</li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api_reference.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Perceptions Coloring Module</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/source/api_reference.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/source/implementation/coloring_module.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -166,8 +155,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
+  <section id="perceptions-coloring-module">
+<h1>Perceptions Coloring Module<a class="headerlink" href="#perceptions-coloring-module" title="Link to this heading"></a></h1>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv416PointToPixelNode">
 <span id="_CPPv316PointToPixelNode"></span><span id="_CPPv216PointToPixelNode"></span><span id="PointToPixelNode"></span><span class="target" id="classPointToPixelNode"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PointToPixelNode</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Node</span></span><a class="headerlink" href="#_CPPv416PointToPixelNode" title="Link to this definition"></a><br /></dt>
@@ -695,7 +684,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../index.html" class="btn btn-neutral float-left" title="CMR Driverless Perceptions Stack for 24a" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lidar_module.html" class="btn btn-neutral float-left" title="Perceptions LiDAR Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
