@@ -1,6 +1,5 @@
-=============
-API Reference
-=============
+Class PointToPixelNode
+=====================================
 
 .. doxygenclass:: PointToPixelNode
     :members:
