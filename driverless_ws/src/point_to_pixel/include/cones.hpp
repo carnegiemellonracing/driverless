@@ -3,11 +3,9 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Dense>
 #include <geometry_msgs/msg/point.hpp>
-#include "predictors/hsv.hpp"
-#include "predictors/yolo.hpp"
 
 // Forward declarations
-namespace cones
+namespace point_to_pixel
 {
     // Cone types
     struct Cone
@@ -68,4 +66,4 @@ namespace cones
      * @param track_bounds TrackBounds struct
      */
     void supplement_cones(TrackBounds &track_bounds);
-}
+} // namespace point_to_pixel

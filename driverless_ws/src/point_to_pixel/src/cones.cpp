@@ -1,6 +1,6 @@
-#include "cones.hpp"
+#include "../include/cones.hpp"
 
-namespace cones {
+namespace point_to_pixel {
     Cone find_closest_cone(const Cones& cones) {
         if (cones.empty()) {
             throw std::runtime_error("Empty cone list");
@@ -115,4 +115,4 @@ namespace cones {
         
         track_bounds.blue.push_back(blue_cone);
     }
-}
+} // namespace point_to_pixel

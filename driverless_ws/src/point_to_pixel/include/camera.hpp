@@ -12,33 +12,35 @@
 #include <mutex>
 #include <filesystem>
 
-namespace camera {
+namespace point_to_pixel {
     typedef std::pair<uint64_t, cv::Mat> stamped_frame;
 
-    class Camera {
+    class camera_manager {
         public:
             // Public constructor
-            Camera(sl_oc::video::VideoCapture &cap_in,
+            camera_manager(sl_oc::video::VideoCapture &cap_in,
                    cv::Mat map_left_x_in,
                    cv::Mat map_left_y_in,
                    cv::Mat map_right_x_in,
                    cv::Mat map_right_y_in,
                    int device_id_in,
-                   std::string save_path_in)
+                   std::string save_path_in,
+                   const int &max_deque_size_in)
                 : cap(cap_in),
                   map_left_x(map_left_x_in),
                   map_left_y(map_left_y_in),
                   map_right_x(map_right_x_in),
                   map_right_y(map_right_y_in),
                   device_id(device_id_in), 
-                  save_path(save_path_in) {}
+                  save_path(save_path_in),
+                  max_deque_size(max_deque_size_in) {}
 
             /**
              * @brief Finds the closest frame to a callback time from the image deque
              *
              * @param callbackTime The time to find a matching frame for
              * @param logger ROS logger for error reporting
-             * @return camera::stamped_frame The closest frame with timestamp
+             * @return camera_manager::stamped_frame The closest frame with timestamp
              */
             stamped_frame find_closest_frame(
                 const rclcpp::Time &callbackTime,
@@ -60,7 +62,7 @@ namespace camera {
              * @param logger ROS logger for status messages
              * @param is_left_camera If using left sided zed set to true
              * @param use_inner_lens If using inner lenses set to true
-             * @return camera::stamped_frame The timestamp and rectified frame
+             * @return camera_manager::stamped_frame The timestamp and rectified frame
              */
             stamped_frame capture_and_rectify_frame(
                 const rclcpp::Logger &logger,
@@ -77,11 +79,9 @@ namespace camera {
              * @brief Updates the deque with a new frame
              *
              * @param new_frame The new frame to add to the deque
-             * @param max_deque_size The maximum size of the deque
              */
             void update_deque(
-                stamped_frame new_frame,
-                int max_deque_size
+                stamped_frame new_frame
             );
 
         private:
@@ -100,5 +100,6 @@ namespace camera {
 
             std::deque<stamped_frame> img_deque;
             std::mutex img_mutex;
+            int max_deque_size;
     };  
-}
+} // namespace point_to_pixel

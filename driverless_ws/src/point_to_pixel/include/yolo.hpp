@@ -6,9 +6,9 @@
 
 #define box_heuristic 2 // 0: none, 1: distance from center, 2: depth
 
-namespace cones {
-    namespace coloring {
-        namespace yolo {
+namespace point_to_pixel {
+namespace coloring {
+namespace yolo {
             /**
              * @brief Determines cone class from pixel pairs across cameras
              * 
@@ -100,6 +100,6 @@ namespace cones {
                 int yolo_width = 640,
                 int yolo_height = 640
             );
-        }
-    }
-}
+} // namespace yolo
+} // namespace coloring
+} // namespace point_to_pixel

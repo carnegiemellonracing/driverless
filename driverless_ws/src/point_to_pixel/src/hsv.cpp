@@ -1,6 +1,6 @@
-#include "hsv.hpp"
+#include "../include/hsv.hpp"
 
-namespace cones {
+namespace point_to_pixel {
     namespace coloring {
         int get_cone_class(
         std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,

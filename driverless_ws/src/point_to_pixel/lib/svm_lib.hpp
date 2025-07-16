@@ -1,4 +1,4 @@
-namespace cones {
+namespace point_to_pixel {
 namespace recoloring {
 #ifndef _LIBSVM_H
 #define _LIBSVM_H
@@ -121,4 +121,4 @@ namespace recoloring {
 
 #endif /* _LIBSVM_H */
 } // namespace recoloring
-} // namespace cones
+} // namespace point_to_pixel

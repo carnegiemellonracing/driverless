@@ -1,8 +1,8 @@
-#include "camera.hpp"
+#include "../include/camera.hpp"
 #include <iostream>
 
-namespace camera {
-    stamped_frame Camera::find_closest_frame(
+namespace point_to_pixel {
+    stamped_frame camera_manager::find_closest_frame(
         const rclcpp::Time &callbackTime,
         const rclcpp::Logger &logger
     ) {
@@ -27,7 +27,7 @@ namespace camera {
         return last_frame;
     }
 
-    bool Camera::initialize_camera(
+    bool camera_manager::initialize_camera(
         const rclcpp::Logger &logger
     ) {
         // Camera reasignment 
@@ -174,7 +174,7 @@ namespace camera {
         return true;
     }
 
-    stamped_frame Camera::capture_and_rectify_frame(
+    stamped_frame camera_manager::capture_and_rectify_frame(
         const rclcpp::Logger &logger,
         bool is_left_camera,
         bool use_inner_lens)
@@ -247,7 +247,7 @@ namespace camera {
         }
     }
 
-    void Camera::capture_freezes(
+    void camera_manager::capture_freezes(
         const rclcpp::Logger &logger,
         bool is_left_camera,
         bool use_inner_lens
@@ -289,7 +289,7 @@ namespace camera {
     }
 
 
-    void Camera::update_deque(stamped_frame new_frame, int max_deque_size) {
+    void camera_manager::update_deque(stamped_frame new_frame) {
         img_mutex.lock();
         while (img_deque.size() >= max_deque_size) {
             img_deque.pop_front();
@@ -297,4 +297,4 @@ namespace camera {
         img_deque.push_back(new_frame);
         img_mutex.unlock();
     }
-}
+} // namespace point_to_pixel

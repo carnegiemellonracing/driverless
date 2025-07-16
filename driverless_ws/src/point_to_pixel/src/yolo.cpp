@@ -1,7 +1,7 @@
-#include "yolo.hpp"
+#include "../include/yolo.hpp"
 #include <vector>
 
-namespace cones {
+namespace point_to_pixel {
 namespace coloring {
 namespace yolo {
     int get_cone_class(
@@ -256,4 +256,4 @@ namespace yolo {
     }
 } // namespace yolo
 } // namespace coloring
-} // namespace cones
+} // namespace point_to_pixel

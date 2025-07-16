@@ -12,7 +12,7 @@
 #include <omp.h>
 #endif
 
-namespace cones {
+namespace point_to_pixel {
 namespace recoloring {
 
 
@@ -3380,4 +3380,4 @@ namespace recoloring {
 				svm_print_string = print_func;
 		}
 } // namespace recoloring
-} // namespace cones
+} // namespace point_to_pixel

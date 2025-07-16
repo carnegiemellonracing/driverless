@@ -3,7 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Dense>
 
-namespace cones {
+namespace point_to_pixel {
     namespace coloring {
         namespace hsv {
             /**
@@ -60,6 +60,6 @@ namespace cones {
                 const cv::Scalar& orange_filter_high,
                 double confidence_threshold
             );
-        }
-    }
-}
+} // namespace hsv
+} // namespace coloring
+} // namespace point_to_pixel
