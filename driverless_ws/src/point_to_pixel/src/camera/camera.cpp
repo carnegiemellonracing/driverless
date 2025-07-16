@@ -2,11 +2,11 @@
 #include <iostream>
 
 namespace camera {
-    stamped_img Camera::find_closest_frame(
-        const std::deque<stamped_img> &img_deque,
+    stamped_frame Camera::find_closest_frame(
         const rclcpp::Time &callbackTime,
         const rclcpp::Logger &logger
     ) {
+        img_mutex.lock();
         // Check if deque empty
         if (img_deque.empty()) {
             RCLCPP_ERROR(logger, "Image deque is empty! Cannot find matching frame.");
@@ -21,16 +21,18 @@ namespace camera {
         }
 
         // If we didn't find a frame with timestamp >= callbackTime, return the most recent frame
-        return img_deque.back();
+        stamped_frame last_frame = img_deque.back();
+        img_mutex.unlock();
+
+        return last_frame;
     }
 
     bool Camera::initialize_camera(
         const rclcpp::Logger &logger
     ) {
-        // Get list of video devices
+        // Camera reasignment 
         std::map<int, std::pair<uint16_t, uint16_t>> device_info;
         
-        // Check first 5 video devices
         for (int device_id = 0; device_id < 10; device_id++) {
             try {
                 std::string sysfs_path = "/sys/class/video4linux/video" + std::to_string(device_id);
@@ -172,10 +174,9 @@ namespace camera {
         return true;
     }
 
-    stamped_img Camera::capture_and_rectify_frame(
+    stamped_frame Camera::capture_and_rectify_frame(
         const rclcpp::Logger &logger,
-        const Camera &cam,
-        bool left_camera,
+        bool is_left_camera,
         bool use_inner_lens)
     {
         // Capture the frame
@@ -187,7 +188,7 @@ namespace camera {
         cv::Mat map_y;
 
         // Set the side of the frame to capture
-        if (left_camera) {
+        if (is_left_camera) {
             if (use_inner_lens) {
                 index = cv::Rect(frame.width / 2, 0, frame.width / 2, frame.height); // Right side of the frame
                 map_x = this->map_right_x;
@@ -248,81 +249,52 @@ namespace camera {
 
     void Camera::capture_freezes(
         const rclcpp::Logger &logger,
-        const Camera &left_cam,
-        const Camera &right_cam,
-        std::mutex &l_img_mutex,
-        std::mutex &r_img_mutex,
-        std::deque<stamped_img> &img_deque_l,
-        std::deque<stamped_img> &img_deque_r,
+        bool is_left_camera,
         bool use_inner_lens
     ) {
         // Capture and rectify frames for calibration from left camera
-        stamped_img frame_ll = capture_and_rectify_frame(
+        stamped_frame frame_l = capture_and_rectify_frame(
             logger,
-            left_cam,
-            true,  // left_camera==true
+            is_left_camera, 
             false  // outer lens
         );
 
-        if (frame_ll.second.empty()) {
-            RCLCPP_ERROR(logger, "Failed to capture frame from left camera left frame.");
-        }
-
-        stamped_img frame_lr = capture_and_rectify_frame(
+        stamped_frame frame_r = capture_and_rectify_frame(
             logger,
-            left_cam,
-            true,  // left_camera==true
+            is_left_camera,
             true   // inner lens
         );
 
-        if (frame_lr.second.empty()) {
-            RCLCPP_ERROR(logger, "Failed to capture frame from left camera right frame.");
+        if (frame_l.second.empty()) {
+            RCLCPP_ERROR(logger, "Failed to capture frame from %s camera left frame." , is_left_camera ? "left" : "right");
+        } else if (frame_r.second.empty()) {
+            RCLCPP_ERROR(logger, "Failed to capture frame from %s camera right frame.", is_left_camera ? "left" : "right");
+        } else {
+            std::string camera_char = is_left_camera ? "l" : "r";
+            std::string freeze_l_path = save_path + camera_char + "l" + ".bmp";
+            std::string freeze_r_path = save_path + camera_char + "r" + ".bmp";
+
+            cv::imwrite(freeze_l_path, frame_l.second);
+            cv::imwrite(freeze_r_path, frame_r.second);
         }
-
-        // Capture and rectify frames for calibration from right camera
-        stamped_img frame_rr = capture_and_rectify_frame(
-            logger,
-            right_cam,
-            false,  // right_camera==false
-            false   // outer lens
-        );
-
-        if (frame_rr.second.empty()) {
-            RCLCPP_ERROR(logger, "Failed to capture frame from right camera right frame.");
-        }
-
-        stamped_img frame_rl = capture_and_rectify_frame(
-            logger,
-            right_cam,
-            false,  // right_camera==false
-            true    // inner lens
-        );
-
-        if (frame_rl.second.empty()) {
-            RCLCPP_ERROR(logger, "Failed to capture frame from right camera left frame.");
-        }
-
-        // Save freeze images
-        cv::imwrite("src/point_to_pixel/config/freeze_ll.png", frame_ll.second);
-        cv::imwrite("src/point_to_pixel/config/freeze_lr.png", frame_lr.second);
-        cv::imwrite("src/point_to_pixel/config/freeze_rr.png", frame_rr.second);
-        cv::imwrite("src/point_to_pixel/config/freeze_rl.png", frame_rl.second);
 
         // Update image deque 
-        l_img_mutex.lock();
-        if (use_inner_lens) {
-            img_deque_l.push_back(std::make_pair(frame_lr.first, frame_lr.second));
+        img_mutex.lock();
+        if(use_inner_lens) {
+            img_deque.push_back(std::make_pair(frame_l.first, frame_l.second));
         } else {
-            img_deque_l.push_back(std::make_pair(frame_ll.first, frame_ll.second));
+            img_deque.push_back(std::make_pair(frame_r.first, frame_r.second));
         }
-        l_img_mutex.unlock();
+        img_mutex.unlock();
+    }
 
-        r_img_mutex.lock();
-        if (use_inner_lens) {
-            img_deque_r.push_back(std::make_pair(frame_rl.first, frame_rl.second));
-        } else {
-            img_deque_r.push_back(std::make_pair(frame_rr.first, frame_rr.second));
+
+    void Camera::update_deque(stamped_frame new_frame, int max_deque_size) {
+        img_mutex.lock();
+        while (img_deque.size() >= max_deque_size) {
+            img_deque.pop_front();
         }
-        r_img_mutex.unlock();
+        img_deque.push_back(new_frame);
+        img_mutex.unlock();
     }
 }

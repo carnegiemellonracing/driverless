@@ -13,7 +13,7 @@
 #include <filesystem>
 
 namespace camera {
-    typedef std::pair<uint64_t, cv::Mat> stamped_img;
+    typedef std::pair<uint64_t, cv::Mat> stamped_frame;
 
     class Camera {
         public:
@@ -24,17 +24,65 @@ namespace camera {
                    cv::Mat map_right_x_in,
                    cv::Mat map_right_y_in,
                    int device_id_in,
-                   rclcpp::Logger &logger)
+                   std::string save_path_in)
                 : cap(cap_in),
                   map_left_x(map_left_x_in),
                   map_left_y(map_left_y_in),
                   map_right_x(map_right_x_in),
                   map_right_y(map_right_y_in),
-                  device_id(device_id_in)
-            {
-                img_deque.clear();
-                img_mutex = std::mutex();
-            }
+                  device_id(device_id_in), 
+                  save_path(save_path_in) {}
+
+            /**
+             * @brief Finds the closest frame to a callback time from the image deque
+             *
+             * @param callbackTime The time to find a matching frame for
+             * @param logger ROS logger for error reporting
+             * @return camera::stamped_frame The closest frame with timestamp
+             */
+            stamped_frame find_closest_frame(
+                const rclcpp::Time &callbackTime,
+                const rclcpp::Logger &logger);
+
+            /**
+             * @brief Dynamically assigns camera ids and corrects initial id assigmment. Also initializes
+             * ZED camera with intrinsic rectification matrices.
+             *
+             * @param logger ROS logger for status messages
+             * @return bool Success status
+             */
+            bool initialize_camera(
+                const rclcpp::Logger &logger);
+
+            /**
+             * @brief Captures and rectifies a frame from a ZED camera
+             *
+             * @param logger ROS logger for status messages
+             * @param is_left_camera If using left sided zed set to true
+             * @param use_inner_lens If using inner lenses set to true
+             * @return camera::stamped_frame The timestamp and rectified frame
+             */
+            stamped_frame capture_and_rectify_frame(
+                const rclcpp::Logger &logger,
+                bool is_left_camera,
+                bool use_inner_lens);
+
+            
+            void capture_freezes(
+                const rclcpp::Logger &logger,
+                bool is_left_camera,
+                bool use_inner_lens);
+
+            /**
+             * @brief Updates the deque with a new frame
+             *
+             * @param new_frame The new frame to add to the deque
+             * @param max_deque_size The maximum size of the deque
+             */
+            void update_deque(
+                stamped_frame new_frame,
+                int max_deque_size
+            );
 
         private:
             // USB Vendor & Product IDs for ZED cameras
@@ -48,74 +96,9 @@ namespace camera {
             cv::Mat map_right_x;
             cv::Mat map_right_y;
             int device_id;
+            std::string save_path;
 
-            camera::img_deque img_deque;
+            std::deque<stamped_frame> img_deque;
             std::mutex img_mutex;
-
-            /**
-             * @brief Finds the closest frame to a callback time from the image deque
-             *
-             * @param img_deque Image deque with timestamps
-             * @param callbackTime The time to find a matching frame for
-             * @param logger ROS logger for error reporting
-             * @return camera::stamped_img The closest frame with timestamp
-             */
-            stamped_img find_closest_frame(
-                const std::deque<stamped_img> &img_deque,
-                const rclcpp::Time &callbackTime,
-                const rclcpp::Logger &logger
-            );
-
-            /**
-             * @brief Dynamically assigns camera ids and corrects initial id assigmment. Also initializes 
-             * ZED camera with intrinsic rectification matrices.
-             * 
-             * @param logger ROS logger for status messages
-             * @return bool Success status
-             */
-            bool initialize_camera(
-                const rclcpp::Logger &logger
-            );
-
-            /**
-             * @brief Captures and rectifies a frame from a ZED camera
-             *
-             * @param logger ROS logger for status messages
-             * @param cam Camera struct containing capture and rectification maps
-             * @param left_camera If using left sided zed set to true
-             * @param use_inner_lens If using inner lenses set to true
-             * @return camera::stamped_img The timestamp and rectified frame
-             */
-            stamped_img capture_and_rectify_frame(
-                const rclcpp::Logger &logger,
-                const Camera &cam,
-                bool left_camera,
-                bool use_inner_lens
-            );
-
-            /**
-             * @brief Capture and saves freeze frames for calibration
-             *
-             * @param logger ROS logger for status messages
-             * @param left_cam Left camera struct
-             * @param right_cam Right camera struct
-             * @param l_img_mutex Mutex for left image deque
-             * @param r_img_mutex Mutex for right image deque
-             * @param img_deque_l Deque for left image frames
-             * @param img_deque_r Deque for right image frames
-             * @param use_inner_lens If using inner lenses set to true
-             */
-            void capture_freezes(
-                const rclcpp::Logger &logger,
-                const Camera &left_cam,
-                const Camera &right_cam,
-                std::mutex &l_img_mutex,
-                std::mutex &r_img_mutex,
-                std::deque<stamped_img> &img_deque_l,
-                std::deque<stamped_img> &img_deque_r,
-                bool use_inner_lens
-            );
-    }
-
-
+    };  
 }

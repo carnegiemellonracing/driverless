@@ -3,7 +3,8 @@
 // Headers
 #include "../transform/transform.hpp"
 #include "../camera/camera.hpp"
-#include "../cones/cones.hpp"
+#include "../cones/cones.hpp"   
+#include "../cones/predictors/svm.hpp"
 
 // ROS2 imports
 #include "rclcpp/rclcpp.hpp"
@@ -47,9 +48,9 @@ private:
     static constexpr char yolo_model_path[] = "src/point_to_pixel/config/yolov5_model_params.onnx";
     #endif // use_yolo
 
+    static constexpr char save_path[] = "src/point_to_pixel/freezes/";
     #if save_frames
     static constexpr int frame_interval = 10;
-    static constexpr char save_path[] = "src/point_to_pixel/freezes/";
     #endif // save_frames
 
     // ROS2 Publisher and Subscribers
@@ -59,8 +60,6 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr yaw_sub_;
 
     // Data Structure Declarations
-    std::deque<std::pair<uint64_t, cv::Mat>> img_deque_l;
-    std::deque<std::pair<uint64_t, cv::Mat>> img_deque_r;
     std::deque<geometry_msgs::msg::TwistStamped::SharedPtr> vel_deque;
     std::deque<geometry_msgs::msg::Vector3Stamped::SharedPtr> yaw_deque;
     #if save_frames
@@ -68,8 +67,6 @@ private:
     #endif // save_frames
 
     // Mutexes Declarations for thread safety
-    std::mutex l_img_mutex;
-    std::mutex r_img_mutex;
     std::mutex vel_mutex;
     std::mutex yaw_mutex;
     #if save_frames
@@ -143,14 +140,6 @@ private:
      * from both cameras, then updates the image deques with the captured frame and corresponding timestamp.
      */
     void camera_callback();
-
-    /**
-     * @brief Wrapper function responsible for retrieving camera frames closest to the lidar timestamp.
-     * 
-     * @param callbackTime Time of the lidar frame
-     * @return std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> Tuple containing the timestamps and frames from both cameras
-     */
-    std::tuple<uint64_t, cv::Mat, uint64_t, cv::Mat> get_camera_frame(rclcpp::Time callbackTime);
 
     /**
      * @brief Wrapper function for retrieving the color of cone by combining output from both cameras

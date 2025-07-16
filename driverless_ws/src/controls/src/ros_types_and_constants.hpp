@@ -23,7 +23,7 @@ namespace controls {
     using ActionMsg = interfaces::msg::ControlAction; ///< 4 wheel torques, steering angle, timestamp
     using StateMsg = interfaces::msg::ControlsState; ///< p=4 dimensional state: x, y, yaw, speed. Derived from twist and pose.
     using InfoMsg = interfaces::msg::ControllerInfo; ///< State, control action, latency info
-    using ConeMsg = interfaces::msg::ConeArray; /// Array of coloured cone positions
+    using ConeMsg = interfaces::msg::ConeArray; /// Array of colored cone positions
     using PIDMsg = geometry_msgs::msg::Point;
     using PositionLLAMsg = geometry_msgs::msg::Vector3Stamped;
     using IMUAccelerationMsg = geometry_msgs::msg::Vector3Stamped;

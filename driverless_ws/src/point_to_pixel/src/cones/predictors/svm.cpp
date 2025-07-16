@@ -15,7 +15,7 @@
 #include "svm.hpp"
 
 namespace cones {
-namespace recolouring {
+namespace recoloring {
     double node_predictor(const std::vector<double> &cone, const svm_model *model) {
         svm_node *node = new svm_node[cone.size() + 1];
         for (size_t i = 0; i < cone.size(); ++i) {
@@ -28,7 +28,7 @@ namespace recolouring {
         return value;
     }
     
-    cones::TrackBounds recolour_cones(cones::TrackBounds track_bounds, double C) {
+    cones::TrackBounds recolor_cones(cones::TrackBounds track_bounds, double C) {
         auto total_start = std::chrono::high_resolution_clock::now();
     
         // check if there are no blue or yellow cones
@@ -203,5 +203,5 @@ namespace recolouring {
     
         return recolored_track_bounds;
     }
-} // namespace recolouring
+} // namespace recoloring
 } // namespace cones

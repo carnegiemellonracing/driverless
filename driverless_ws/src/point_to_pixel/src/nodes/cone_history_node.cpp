@@ -388,7 +388,7 @@ void ConeHistoryTestNode::cone_callback(interfaces::msg::ConeArray::SharedPtr ms
     associated_cones_msg_.header.stamp = msg->header.stamp;
     associated_cones_msg_.header.frame_id = msg->header.frame_id;
 
-    // cones::TrackBounds recoloured_cones_to_publish = cones::recolouring::recolour_cones(cones_to_publish, 10.0);
+    // cones::TrackBounds recolored_cones_to_publish = cones::recoloring::recolor_cones(cones_to_publish, 10.0);
 
     cones::Cones yellow_cones;
     cones::Cones blue_cones;

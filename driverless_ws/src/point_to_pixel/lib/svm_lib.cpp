@@ -7,13 +7,13 @@
 #include <cstdarg>
 #include <climits>
 #include <clocale>
-#include "svm.hpp"
+#include "svm_lib.hpp"
 #ifdef _OPENMP
 #include <omp.h>
 #endif
 
 namespace cones {
-	namespace recolouring {
+namespace recoloring {
 
 
 		int libsvm_version = LIBSVM_VERSION;
@@ -3379,5 +3379,5 @@ namespace cones {
 			else
 				svm_print_string = print_func;
 		}
-	}
-}
+} // namespace recoloring
+} // namespace cones

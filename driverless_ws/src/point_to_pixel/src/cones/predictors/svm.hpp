@@ -1,9 +1,9 @@
+#pragma once
 #include "../cones.hpp"
-#include "../../lib/svm_lib.hpp"
+#include "../../../lib/svm_lib.hpp" // this is really shite way to do this
 
 namespace cones {
-namespace recolouring {
-    cones::TrackBounds recolour_cones(cones::TrackBounds track_bounds, double C);
-    // double node_predictor(const std::vector<double> &cone, const svm_model *model);
-} // namespace recolouring
+namespace recoloring {
+    cones::TrackBounds recolor_cones(cones::TrackBounds track_bounds, double C);
+} // namespace recoloring
 } // namespace cones

@@ -1,12 +1,11 @@
+#pragma once
 #include "rclcpp/rclcpp.hpp"
 
 #include "geometry_msgs/msg/point.hpp"
 #include "geometry_msgs/msg/vector3_stamped.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
-
 #include "interfaces/msg/cone_array.hpp"
-
-#include "../cones/svm/svm_recolour.hpp"
+#include "../cones/cones.hpp"
 
 
 // Standard Imports
