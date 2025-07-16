@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="classcones_1_1recolouring_1_1SVR__Q" kind="class" language="C++" prot="public">
+    <compoundname>cones::recolouring::SVR_Q</compoundname>
+    <basecompoundref refid="classcones_1_1recolouring_1_1Kernel" prot="public" virt="non-virtual">cones::recolouring::Kernel</basecompoundref>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classcones_1_1recolouring_1_1SVR__Q_1ad3fbab16be0f26f228e5e5fdb60c3fba" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int cones::recolouring::SVR_Q::l</definition>
+        <argsstring></argsstring>
+        <name>l</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1483" column="5" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1483" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcones_1_1recolouring_1_1SVR__Q_1a56802ebf9f025d93cb96e0afd053debd" prot="private" static="no" mutable="no">
+        <type><ref refid="classcones_1_1recolouring_1_1Cache" kindref="compound">Cache</ref> *</type>
+        <definition>Cache* cones::recolouring::SVR_Q::cache</definition>
+        <argsstring></argsstring>
+        <name>cache</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1484" column="7" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1484" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcones_1_1recolouring_1_1SVR__Q_1ab366fc04793ab6c00e65c7a260880139" prot="private" static="no" mutable="no">
+        <type><ref refid="namespacecones_1_1recolouring_1aafa74a09b422a58660501c97d2b7d47f" kindref="member">schar</ref> *</type>
+        <definition>schar* cones::recolouring::SVR_Q::sign</definition>
+        <argsstring></argsstring>
+        <name>sign</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1485" column="7" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1485" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcones_1_1recolouring_1_1SVR__Q_1ab31f20cb8bd9c8878bfbd5d47413e809" prot="private" static="no" mutable="no">
+        <type>int *</type>
+        <definition>int* cones::recolouring::SVR_Q::index</definition>
+        <argsstring></argsstring>
+        <name>index</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1486" column="5" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1486" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcones_1_1recolouring_1_1SVR__Q_1a894d29f869bfb60491330783e3389ab8" prot="private" static="no" mutable="yes">
+        <type>int</type>
+        <definition>int cones::recolouring::SVR_Q::next_buffer</definition>
+        <argsstring></argsstring>
+        <name>next_buffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1487" column="13" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1487" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcones_1_1recolouring_1_1SVR__Q_1acaabe6a40b4c32f9423c1cecc375c9a3" prot="private" static="no" mutable="no">
+        <type><ref refid="namespacecones_1_1recolouring_1a7a8713c4c7111a8c1b718866c091934a" kindref="member">Qfloat</ref> *</type>
+        <definition>Qfloat* cones::recolouring::SVR_Q::buffer[2]</definition>
+        <argsstring>[2]</argsstring>
+        <name>buffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1488" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1488" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcones_1_1recolouring_1_1SVR__Q_1aa279284b0b113754dd26e536729cbdec" prot="private" static="no" mutable="no">
+        <type>double *</type>
+        <definition>double* cones::recolouring::SVR_Q::QD</definition>
+        <argsstring></argsstring>
+        <name>QD</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1489" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1489" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcones_1_1recolouring_1_1SVR__Q_1af87b057f479aac2f1d35080486c636d4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>cones::recolouring::SVR_Q::SVR_Q</definition>
+        <argsstring>(const svm_problem &amp;prob, const svm_parameter &amp;param)</argsstring>
+        <name>SVR_Q</name>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__problem" kindref="compound">svm_problem</ref> &amp;</type>
+          <declname>prob</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcones_1_1recolouring_1_1svm__parameter" kindref="compound">svm_parameter</ref> &amp;</type>
+          <declname>param</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1416" column="1" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1416" bodyend="1436"/>
+      </memberdef>
+      <memberdef kind="function" id="classcones_1_1recolouring_1_1SVR__Q_1aaece7bc41ba902795b8e69c5917ed07b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void cones::recolouring::SVR_Q::swap_index</definition>
+        <argsstring>(int i, int j) const</argsstring>
+        <name>swap_index</name>
+        <reimplements refid="classcones_1_1recolouring_1_1Kernel_1a276a83223c0e854c14652a55c760c234">swap_index</reimplements>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>j</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1438" column="6" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1438" bodyend="1443"/>
+      </memberdef>
+      <memberdef kind="function" id="classcones_1_1recolouring_1_1SVR__Q_1a45736ac779833411b7b8b6f0aae723df" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type><ref refid="namespacecones_1_1recolouring_1a7a8713c4c7111a8c1b718866c091934a" kindref="member">Qfloat</ref> *</type>
+        <definition>Qfloat* cones::recolouring::SVR_Q::get_Q</definition>
+        <argsstring>(int i, int len) const</argsstring>
+        <name>get_Q</name>
+        <reimplements refid="classcones_1_1recolouring_1_1Kernel_1a6fb919d29a9dfccd2ffd145821e1ebb4">get_Q</reimplements>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1445" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1445" bodyend="1465"/>
+      </memberdef>
+      <memberdef kind="function" id="classcones_1_1recolouring_1_1SVR__Q_1af2f6709ee8afeb4f2bc0b15d994b82f5" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>double *</type>
+        <definition>double* cones::recolouring::SVR_Q::get_QD</definition>
+        <argsstring>() const</argsstring>
+        <name>get_QD</name>
+        <reimplements refid="classcones_1_1recolouring_1_1Kernel_1a2ddb6961f7aef836816d3b55c5c013a6">get_QD</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1467" column="8" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1467" bodyend="1470"/>
+      </memberdef>
+      <memberdef kind="function" id="classcones_1_1recolouring_1_1SVR__Q_1a883f6250ae834650e4855e0876ae6a10" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>cones::recolouring::SVR_Q::~SVR_Q</definition>
+        <argsstring>()</argsstring>
+        <name>~SVR_Q</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1472" column="1" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1472" bodyend="1480"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>cones::recolouring::SVR_Q</label>
+        <link refid="classcones_1_1recolouring_1_1SVR__Q"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cones::recolouring::Kernel</label>
+        <link refid="classcones_1_1recolouring_1_1Kernel"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>cones::recolouring::QMatrix</label>
+        <link refid="classcones_1_1recolouring_1_1QMatrix"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>cones::recolouring::SVR_Q</label>
+        <link refid="classcones_1_1recolouring_1_1SVR__Q"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cones::recolouring::Kernel</label>
+        <link refid="classcones_1_1recolouring_1_1Kernel"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>cones::recolouring::QMatrix</label>
+        <link refid="classcones_1_1recolouring_1_1QMatrix"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" line="1413" column="1" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/cones/svm/svm.cpp" bodystart="1414" bodyend="1490"/>
+    <listofallmembers>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1acaabe6a40b4c32f9423c1cecc375c9a3" prot="private" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>buffer</name></member>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1a56802ebf9f025d93cb96e0afd053debd" prot="private" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>cache</name></member>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1a45736ac779833411b7b8b6f0aae723df" prot="public" virt="virtual"><scope>cones::recolouring::SVR_Q</scope><name>get_Q</name></member>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1af2f6709ee8afeb4f2bc0b15d994b82f5" prot="public" virt="virtual"><scope>cones::recolouring::SVR_Q</scope><name>get_QD</name></member>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1ab31f20cb8bd9c8878bfbd5d47413e809" prot="private" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>index</name></member>
+      <member refid="classcones_1_1recolouring_1_1Kernel_1ae423ed2d0893a88c06e3632fcadc7174" prot="public" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>k_function</name></member>
+      <member refid="classcones_1_1recolouring_1_1Kernel_1a770f21678b59f525293bacf3e4913347" prot="public" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>Kernel</name></member>
+      <member refid="classcones_1_1recolouring_1_1Kernel_1a375ce54a67a5696c6131da99a1ff20b1" prot="protected" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>kernel_function</name></member>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1ad3fbab16be0f26f228e5e5fdb60c3fba" prot="private" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>l</name></member>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1a894d29f869bfb60491330783e3389ab8" prot="private" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>next_buffer</name></member>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1aa279284b0b113754dd26e536729cbdec" prot="private" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>QD</name></member>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1ab366fc04793ab6c00e65c7a260880139" prot="private" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>sign</name></member>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1af87b057f479aac2f1d35080486c636d4" prot="public" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>SVR_Q</name></member>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1aaece7bc41ba902795b8e69c5917ed07b" prot="public" virt="virtual"><scope>cones::recolouring::SVR_Q</scope><name>swap_index</name></member>
+      <member refid="classcones_1_1recolouring_1_1Kernel_1ae948f47d0ebe94eabcadefa0a73e3d83" prot="public" virt="virtual"><scope>cones::recolouring::SVR_Q</scope><name>~Kernel</name></member>
+      <member refid="classcones_1_1recolouring_1_1QMatrix_1aee714f557eb456686b0b3f96f965efe3" prot="public" virt="virtual"><scope>cones::recolouring::SVR_Q</scope><name>~QMatrix</name></member>
+      <member refid="classcones_1_1recolouring_1_1SVR__Q_1a883f6250ae834650e4855e0876ae6a10" prot="public" virt="non-virtual"><scope>cones::recolouring::SVR_Q</scope><name>~SVR_Q</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="namespacecoloring" kind="namespace" language="C++">
+    <compoundname>coloring</compoundname>
+    <innernamespace refid="namespacecoloring_1_1hsv">coloring::hsv</innernamespace>
+    <innernamespace refid="namespacecoloring_1_1yolo">coloring::yolo</innernamespace>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespacecoloring_1ac6418d675bc0709befd7fd7debab7400" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int coloring::get_cone_class</definition>
+        <argsstring>(std::pair&lt; Eigen::Vector3d, Eigen::Vector3d &gt; pixel_pair, std::pair&lt; cv::Mat, cv::Mat &gt; frame_pair, std::pair&lt; std::vector&lt; cv::Mat &gt;, std::vector&lt; cv::Mat &gt;&gt; detection_pair, const cv::Scalar &amp;yellow_filter_low, const cv::Scalar &amp;yellow_filter_high, const cv::Scalar &amp;blue_filter_low, const cv::Scalar &amp;blue_filter_high, const cv::Scalar &amp;orange_filter_low, const cv::Scalar &amp;orange_filter_high, double confidence_threshold, bool use_yolo)</argsstring>
+        <name>get_cone_class</name>
+        <param>
+          <type>std::pair&lt; Eigen::Vector3d, Eigen::Vector3d &gt;</type>
+          <declname>pixel_pair</declname>
+        </param>
+        <param>
+          <type>std::pair&lt; cv::Mat, cv::Mat &gt;</type>
+          <declname>frame_pair</declname>
+        </param>
+        <param>
+          <type>std::pair&lt; std::vector&lt; cv::Mat &gt;, std::vector&lt; cv::Mat &gt;&gt;</type>
+          <declname>detection_pair</declname>
+        </param>
+        <param>
+          <type>const cv::Scalar &amp;</type>
+          <declname>yellow_filter_low</declname>
+        </param>
+        <param>
+          <type>const cv::Scalar &amp;</type>
+          <declname>yellow_filter_high</declname>
+        </param>
+        <param>
+          <type>const cv::Scalar &amp;</type>
+          <declname>blue_filter_low</declname>
+        </param>
+        <param>
+          <type>const cv::Scalar &amp;</type>
+          <declname>blue_filter_high</declname>
+        </param>
+        <param>
+          <type>const cv::Scalar &amp;</type>
+          <declname>orange_filter_low</declname>
+        </param>
+        <param>
+          <type>const cv::Scalar &amp;</type>
+          <declname>orange_filter_high</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>confidence_threshold</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>use_yolo</declname>
+        </param>
+        <briefdescription>
+<para>Determines cone class from pixel pairs across cameras. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pixel_pair</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pixel coordinates in both cameras </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>frame_pair</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Frames from both cameras </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>detection_pair</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>YOLO detection results (if using YOLO) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yellow_filter_low</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Lower HSV bound for yellow detection </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yellow_filter_high</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Upper HSV bound for yellow detection <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>blue_filter_low</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Lower HSV bound for blue detection </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>blue_filter_high</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Upper HSV bound for blue detection </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>orange_filter_low</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Lower HSV bound for orange detection <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>orange_filter_high</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Upper HSV bound for orange detection </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>confidence_threshold</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Minimum confidence to report a color </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>use_yolo</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Whether to use YOLO for detection </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>int <ref refid="structCone" kindref="compound">Cone</ref> class (-1=unknown, 0=orange, 1=yellow, 2=blue) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/coloring/coloring.cpp" line="4" column="9" bodyfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/coloring/coloring.cpp" bodystart="4" bodyend="76" declfile="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/coloring/coloring.hpp" declline="51" declcolumn="9"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/src/coloring/coloring.cpp" line="3" column="1"/>
+  </compounddef>
+</doxygen>

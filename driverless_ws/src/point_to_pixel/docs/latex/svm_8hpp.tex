@@ -1,0 +1,111 @@
+\hypertarget{svm_8hpp}{}\doxysection{/home/aryalohia/\+CMR/24a/driverless/driverless\+\_\+ws/src/point\+\_\+to\+\_\+pixel/src/cones/svm/svm.hpp File Reference}
+\label{svm_8hpp}\index{/home/aryalohia/CMR/24a/driverless/driverless\_ws/src/point\_to\_pixel/src/cones/svm/svm.hpp@{/home/aryalohia/CMR/24a/driverless/driverless\_ws/src/point\_to\_pixel/src/cones/svm/svm.hpp}}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{svm_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__node}{cones\+::recolouring\+::svm\+\_\+node}}
+\item 
+struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__problem}{cones\+::recolouring\+::svm\+\_\+problem}}
+\item 
+struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__parameter}{cones\+::recolouring\+::svm\+\_\+parameter}}
+\item 
+struct \mbox{\hyperlink{structcones_1_1recolouring_1_1svm__model}{cones\+::recolouring\+::svm\+\_\+model}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacecones}{cones}}
+\item 
+ \mbox{\hyperlink{namespacecones_1_1recolouring}{cones\+::recolouring}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{svm_8hpp_a995abd39935c967c440e8761b0cf8b83}{\+\_\+\+LIBSVM\+\_\+H}}
+\item 
+\#define \mbox{\hyperlink{svm_8hpp_ac7f5361b69ddd196a885f142b3c1d261}{LIBSVM\+\_\+\+VERSION}}~335
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \newline
+\mbox{\hyperlink{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a64c588a43091fe2015ad801c84bb9caa}{cones\+::recolouring\+::\+C\+\_\+\+SVC}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7aedcc70e59f8a857a3ab5d8178ec0b797}{cones\+::recolouring\+::\+NU\+\_\+\+SVC}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a3a4f47f0821d1b3a6ab974f399473fd0}{cones\+::recolouring\+::\+ONE\+\_\+\+CLASS}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a8991006d20c603c1b0f7a6bb09be4c6c}{cones\+::recolouring\+::\+EPSILON\+\_\+\+SVR}}
+, \newline
+\mbox{\hyperlink{namespacecones_1_1recolouring_adec4febaf29e18f36ba49366cbff89d7a55188bb71a07da1bbd243450cc263e16}{cones\+::recolouring\+::\+NU\+\_\+\+SVR}}
+ \}
+\item 
+enum \{ \newline
+\mbox{\hyperlink{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaa8d9111940ff9ab8071533adb6410c32}{cones\+::recolouring\+::\+LINEAR}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaad65f81ce09b6517dc0ed32a0218a32f}{cones\+::recolouring\+::\+POLY}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbaed0441dfddbe201f48367cf37eda866c}{cones\+::recolouring\+::\+RBF}}
+, \mbox{\hyperlink{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cbac541b2f737800c38c47674e33422e212}{cones\+::recolouring\+::\+SIGMOID}}
+, \newline
+\mbox{\hyperlink{namespacecones_1_1recolouring_a48dc3a39f4419f02e45c74a9bc5721cba1fe35071d1d6564bf2bae4bbeb1b1437}{cones\+::recolouring\+::\+PRECOMPUTED}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+struct svm\+\_\+model $\ast$ \mbox{\hyperlink{namespacecones_1_1recolouring_a48267b24c98990bdb66a1afcdcf5163e}{cones\+::recolouring\+::svm\+\_\+train}} (const struct svm\+\_\+problem $\ast$prob, const struct svm\+\_\+parameter $\ast$param)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_aa776a9521732d76af8b2fcff17239026}{cones\+::recolouring\+::svm\+\_\+cross\+\_\+validation}} (const struct svm\+\_\+problem $\ast$prob, const struct svm\+\_\+parameter $\ast$param, int nr\+\_\+fold, double $\ast$target)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_a312f2b8765ebdec7c3408a7456c32486}{cones\+::recolouring\+::svm\+\_\+save\+\_\+model}} (const char $\ast$model\+\_\+file\+\_\+name, const struct svm\+\_\+model $\ast$model)
+\item 
+svm\+\_\+model $\ast$ \mbox{\hyperlink{namespacecones_1_1recolouring_a675946cb5772b8f081ad61b55b46f288}{cones\+::recolouring\+::svm\+\_\+load\+\_\+model}} (const char $\ast$model\+\_\+file\+\_\+name)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_a3d2846bab7d0afb1a8783811eaaec8ad}{cones\+::recolouring\+::svm\+\_\+get\+\_\+svm\+\_\+type}} (const struct svm\+\_\+model $\ast$model)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_a8aa9f6c46f7d4ddeb899b3a99ac78e6b}{cones\+::recolouring\+::svm\+\_\+get\+\_\+nr\+\_\+class}} (const struct svm\+\_\+model $\ast$model)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_a51dd5f64094440868e8a01e0366b60fb}{cones\+::recolouring\+::svm\+\_\+get\+\_\+labels}} (const struct svm\+\_\+model $\ast$model, int $\ast$label)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_a783fcf75b944eff8cc65d84c52bb71dd}{cones\+::recolouring\+::svm\+\_\+get\+\_\+sv\+\_\+indices}} (const struct svm\+\_\+model $\ast$model, int $\ast$sv\+\_\+indices)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_a182d97b1e40357e5f85f83b1b002c6d5}{cones\+::recolouring\+::svm\+\_\+get\+\_\+nr\+\_\+sv}} (const struct svm\+\_\+model $\ast$model)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_ab0443e9c5868ffbc9f85854a72a84202}{cones\+::recolouring\+::svm\+\_\+get\+\_\+svr\+\_\+probability}} (const struct svm\+\_\+model $\ast$model)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_aa1f25a2ba785f744400a6b9d6aae1be2}{cones\+::recolouring\+::svm\+\_\+predict\+\_\+values}} (const struct svm\+\_\+model $\ast$model, const struct svm\+\_\+node $\ast$x, double $\ast$dec\+\_\+values)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_a41f5ba547c869744ab772b3508fdff7a}{cones\+::recolouring\+::svm\+\_\+predict}} (const struct svm\+\_\+model $\ast$model, const struct svm\+\_\+node $\ast$x)
+\item 
+double \mbox{\hyperlink{namespacecones_1_1recolouring_a51fc0fb6fb6b1bfbe04185c366fcddee}{cones\+::recolouring\+::svm\+\_\+predict\+\_\+probability}} (const struct svm\+\_\+model $\ast$model, const struct svm\+\_\+node $\ast$x, double $\ast$prob\+\_\+estimates)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_afc44cbe2e60f7a48f5e5686cde6d075c}{cones\+::recolouring\+::svm\+\_\+free\+\_\+model\+\_\+content}} (svm\+\_\+model $\ast$model\+\_\+ptr)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_ac6a9d3cbfc1ec7509d2408a8eb0cfa8d}{cones\+::recolouring\+::svm\+\_\+free\+\_\+and\+\_\+destroy\+\_\+model}} (svm\+\_\+model $\ast$$\ast$model\+\_\+ptr\+\_\+ptr)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_afd0add65b5516adda1e9cb9aeb0234de}{cones\+::recolouring\+::svm\+\_\+destroy\+\_\+param}} (svm\+\_\+parameter $\ast$param)
+\item 
+const char $\ast$ \mbox{\hyperlink{namespacecones_1_1recolouring_a77aea5ada624f622c511a9e55aa8a4ed}{cones\+::recolouring\+::svm\+\_\+check\+\_\+parameter}} (const struct svm\+\_\+problem $\ast$prob, const struct svm\+\_\+parameter $\ast$param)
+\item 
+int \mbox{\hyperlink{namespacecones_1_1recolouring_ac2c1db1e4e6d904cc6ffad02fd4f2773}{cones\+::recolouring\+::svm\+\_\+check\+\_\+probability\+\_\+model}} (const struct svm\+\_\+model $\ast$model)
+\item 
+void \mbox{\hyperlink{namespacecones_1_1recolouring_a7cf578b5e72f447dc9686c615495eb9b}{cones\+::recolouring\+::svm\+\_\+set\+\_\+print\+\_\+string\+\_\+function}} (void($\ast$print\+\_\+func)(const char $\ast$))
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{svm_8hpp_a995abd39935c967c440e8761b0cf8b83}\label{svm_8hpp_a995abd39935c967c440e8761b0cf8b83}} 
+\index{svm.hpp@{svm.hpp}!\_LIBSVM\_H@{\_LIBSVM\_H}}
+\index{\_LIBSVM\_H@{\_LIBSVM\_H}!svm.hpp@{svm.hpp}}
+\doxysubsubsection{\texorpdfstring{\_LIBSVM\_H}{\_LIBSVM\_H}}
+{\footnotesize\ttfamily \#define \+\_\+\+LIBSVM\+\_\+H}
+
+\mbox{\Hypertarget{svm_8hpp_ac7f5361b69ddd196a885f142b3c1d261}\label{svm_8hpp_ac7f5361b69ddd196a885f142b3c1d261}} 
+\index{svm.hpp@{svm.hpp}!LIBSVM\_VERSION@{LIBSVM\_VERSION}}
+\index{LIBSVM\_VERSION@{LIBSVM\_VERSION}!svm.hpp@{svm.hpp}}
+\doxysubsubsection{\texorpdfstring{LIBSVM\_VERSION}{LIBSVM\_VERSION}}
+{\footnotesize\ttfamily \#define LIBSVM\+\_\+\+VERSION~335}
+

@@ -1,0 +1,27 @@
+\hypertarget{camera_8cpp}{}\doxysection{/home/aryalohia/\+CMR/24a/driverless/driverless\+\_\+ws/src/point\+\_\+to\+\_\+pixel/src/camera/camera.cpp File Reference}
+\label{camera_8cpp}\index{/home/aryalohia/CMR/24a/driverless/driverless\_ws/src/point\_to\_pixel/src/camera/camera.cpp@{/home/aryalohia/CMR/24a/driverless/driverless\_ws/src/point\_to\_pixel/src/camera/camera.cpp}}
+{\ttfamily \#include \char`\"{}camera.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+Include dependency graph for camera.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{camera_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacecamera}{camera}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::pair$<$ uint64\+\_\+t, cv\+::\+Mat $>$ \mbox{\hyperlink{namespacecamera_a4dbdf6cc4a7110c2fc46de0ff154c48c}{camera\+::find\+\_\+closest\+\_\+frame}} (const std\+::deque$<$ std\+::pair$<$ uint64\+\_\+t, cv\+::\+Mat $>$$>$ \&img\+\_\+deque, const rclcpp\+::\+Time \&callback\+Time, const rclcpp\+::\+Logger \&logger)
+\begin{DoxyCompactList}\small\item\em Finds the closest frame to a callback time from the image deque. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespacecamera_ab94649a470f5eed4c302156fd703abac}{camera\+::initialize\+\_\+camera}} (Camera \&cam, const rclcpp\+::\+Logger \&logger)
+\begin{DoxyCompactList}\small\item\em Dynamically assigns camera ids and corrects initial id assigmment. Also initializes ZED camera with intrinsic rectification matrices. \end{DoxyCompactList}\item 
+std\+::pair$<$ uint64\+\_\+t, cv\+::\+Mat $>$ \mbox{\hyperlink{namespacecamera_a5bf6cb782fa49778e8baa15eac31c6d9}{camera\+::capture\+\_\+and\+\_\+rectify\+\_\+frame}} (const rclcpp\+::\+Logger \&logger, const Camera \&cam, bool left\+\_\+camera, bool use\+\_\+inner\+\_\+lens)
+\begin{DoxyCompactList}\small\item\em Captures and rectifies a frame from a ZED camera. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacecamera_a983d35005900d6c8bec39e63c2ce5698}{camera\+::capture\+\_\+freezes}} (const rclcpp\+::\+Logger \&logger, const Camera \&left\+\_\+cam, const Camera \&right\+\_\+cam, std\+::mutex \&l\+\_\+img\+\_\+mutex, std\+::mutex \&r\+\_\+img\+\_\+mutex, std\+::deque$<$ std\+::pair$<$ uint64\+\_\+t, cv\+::\+Mat $>$$>$ \&img\+\_\+deque\+\_\+l, std\+::deque$<$ std\+::pair$<$ uint64\+\_\+t, cv\+::\+Mat $>$$>$ \&img\+\_\+deque\+\_\+r, bool use\+\_\+inner\+\_\+lens)
+\begin{DoxyCompactList}\small\item\em Capture and saves freeze frames for calibration. \end{DoxyCompactList}\end{DoxyCompactItemize}

@@ -1,0 +1,98 @@
+\hypertarget{namespacecoloring_1_1yolo}{}\doxysection{coloring\+::yolo Namespace Reference}
+\label{namespacecoloring_1_1yolo}\index{coloring::yolo@{coloring::yolo}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::pair$<$ int, double $>$ \mbox{\hyperlink{namespacecoloring_1_1yolo_ab04c5029a9445ef409e23b4550bc8988}{get\+\_\+color}} (Eigen\+::\+Vector3d \&pixel, float $\ast$detection, int cols, int rows, double confidence\+\_\+threshold)
+\item 
+std\+::pair$<$ int, double $>$ \mbox{\hyperlink{namespacecoloring_1_1yolo_a78c62d6c1f3f9ad73d9a90ede9232f6f}{get\+\_\+color}} (Eigen\+::\+Vector3d \&pixel, std\+::vector$<$ cv\+::\+Mat $>$ detection, int cols, int rows, double confidence\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Uses YOLO to determine cone color. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacecoloring_1_1yolo_a0703686c1f9a725622d4f7b1c2988e17}{draw\+\_\+bounding\+\_\+boxes}} (cv\+::\+Mat \&frame, cv\+::\+Mat \&canvas, std\+::vector$<$ cv\+::\+Mat $>$ detections, int rows, int cols, double confidence\+\_\+threshold)
+\item 
+cv\+::dnn\+::\+Net \mbox{\hyperlink{namespacecoloring_1_1yolo_a3e6b0a38af071c34bb0ddd68c150a4a2}{init\+\_\+model}} (const std\+::string \&model\+\_\+path)
+\begin{DoxyCompactList}\small\item\em Initialize the YOLO model. \end{DoxyCompactList}\item 
+std\+::vector$<$ cv\+::\+Mat $>$ \mbox{\hyperlink{namespacecoloring_1_1yolo_ab0eb4b720e1c0b772d815ae7c752d702}{process\+\_\+frame}} (const cv\+::\+Mat \&frame, cv\+::dnn\+::\+Net \&net, int yolo\+\_\+width=640, int yolo\+\_\+height=640)
+\begin{DoxyCompactList}\small\item\em Process frame with YOLO. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacecoloring_1_1yolo_a0703686c1f9a725622d4f7b1c2988e17}\label{namespacecoloring_1_1yolo_a0703686c1f9a725622d4f7b1c2988e17}} 
+\index{coloring::yolo@{coloring::yolo}!draw\_bounding\_boxes@{draw\_bounding\_boxes}}
+\index{draw\_bounding\_boxes@{draw\_bounding\_boxes}!coloring::yolo@{coloring::yolo}}
+\doxysubsubsection{\texorpdfstring{draw\_bounding\_boxes()}{draw\_bounding\_boxes()}}
+{\footnotesize\ttfamily void coloring\+::yolo\+::draw\+\_\+bounding\+\_\+boxes (\begin{DoxyParamCaption}\item[{cv\+::\+Mat \&}]{frame,  }\item[{cv\+::\+Mat \&}]{canvas,  }\item[{std\+::vector$<$ cv\+::\+Mat $>$}]{detections,  }\item[{int}]{rows,  }\item[{int}]{cols,  }\item[{double}]{confidence\+\_\+threshold }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecoloring_1_1yolo_ab04c5029a9445ef409e23b4550bc8988}\label{namespacecoloring_1_1yolo_ab04c5029a9445ef409e23b4550bc8988}} 
+\index{coloring::yolo@{coloring::yolo}!get\_color@{get\_color}}
+\index{get\_color@{get\_color}!coloring::yolo@{coloring::yolo}}
+\doxysubsubsection{\texorpdfstring{get\_color()}{get\_color()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily std\+::pair$<$int, double$>$ coloring\+::yolo\+::get\+\_\+color (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector3d \&}]{pixel,  }\item[{float $\ast$}]{detection,  }\item[{int}]{cols,  }\item[{int}]{rows,  }\item[{double}]{confidence\+\_\+threshold }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecoloring_1_1yolo_a78c62d6c1f3f9ad73d9a90ede9232f6f}\label{namespacecoloring_1_1yolo_a78c62d6c1f3f9ad73d9a90ede9232f6f}} 
+\index{coloring::yolo@{coloring::yolo}!get\_color@{get\_color}}
+\index{get\_color@{get\_color}!coloring::yolo@{coloring::yolo}}
+\doxysubsubsection{\texorpdfstring{get\_color()}{get\_color()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily std\+::pair$<$ int, double $>$ coloring\+::yolo\+::get\+\_\+color (\begin{DoxyParamCaption}\item[{Eigen\+::\+Vector3d \&}]{pixel,  }\item[{std\+::vector$<$ cv\+::\+Mat $>$}]{detection,  }\item[{int}]{cols,  }\item[{int}]{rows,  }\item[{double}]{confidence\+\_\+threshold }\end{DoxyParamCaption})}
+
+
+
+Uses YOLO to determine cone color. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pixel} & The pixel location to check \\
+\hline
+{\em detection} & YOLO detection output \\
+\hline
+{\em cols} & Image columns \\
+\hline
+{\em rows} & Image rows \\
+\hline
+{\em confidence\+\_\+threshold} & Minimum confidence to report a detection \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::pair$<$int, double$>$ Color ID and confidence 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecoloring_1_1yolo_a3e6b0a38af071c34bb0ddd68c150a4a2}\label{namespacecoloring_1_1yolo_a3e6b0a38af071c34bb0ddd68c150a4a2}} 
+\index{coloring::yolo@{coloring::yolo}!init\_model@{init\_model}}
+\index{init\_model@{init\_model}!coloring::yolo@{coloring::yolo}}
+\doxysubsubsection{\texorpdfstring{init\_model()}{init\_model()}}
+{\footnotesize\ttfamily cv\+::dnn\+::\+Net coloring\+::yolo\+::init\+\_\+model (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{model\+\_\+path }\end{DoxyParamCaption})}
+
+
+
+Initialize the YOLO model. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+path} & Path to the ONNX model file \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::dnn\+::\+Net Initialized neural network 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecoloring_1_1yolo_ab0eb4b720e1c0b772d815ae7c752d702}\label{namespacecoloring_1_1yolo_ab0eb4b720e1c0b772d815ae7c752d702}} 
+\index{coloring::yolo@{coloring::yolo}!process\_frame@{process\_frame}}
+\index{process\_frame@{process\_frame}!coloring::yolo@{coloring::yolo}}
+\doxysubsubsection{\texorpdfstring{process\_frame()}{process\_frame()}}
+{\footnotesize\ttfamily std\+::vector$<$ cv\+::\+Mat $>$ coloring\+::yolo\+::process\+\_\+frame (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{frame,  }\item[{cv\+::dnn\+::\+Net \&}]{net,  }\item[{int}]{yolo\+\_\+width = {\ttfamily 640},  }\item[{int}]{yolo\+\_\+height = {\ttfamily 640} }\end{DoxyParamCaption})}
+
+
+
+Process frame with YOLO. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em frame} & Input frame \\
+\hline
+{\em net} & Neural network \\
+\hline
+{\em yolo\+\_\+width} & Width for YOLO input \\
+\hline
+{\em yolo\+\_\+height} & Height for YOLO input \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+float $\ast$detection results 
+\end{DoxyReturn}

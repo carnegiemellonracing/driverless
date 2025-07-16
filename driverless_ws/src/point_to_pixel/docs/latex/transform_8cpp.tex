@@ -1,0 +1,28 @@
+\hypertarget{transform_8cpp}{}\doxysection{/home/aryalohia/\+CMR/24a/driverless/driverless\+\_\+ws/src/point\+\_\+to\+\_\+pixel/src/transform/transform.cpp File Reference}
+\label{transform_8cpp}\index{/home/aryalohia/CMR/24a/driverless/driverless\_ws/src/point\_to\_pixel/src/transform/transform.cpp@{/home/aryalohia/CMR/24a/driverless/driverless\_ws/src/point\_to\_pixel/src/transform/transform.cpp}}
+{\ttfamily \#include \char`\"{}transform.\+hpp\char`\"{}}\newline
+Include dependency graph for transform.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{transform_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacetransform}{transform}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::pair$<$ double, double $>$ \mbox{\hyperlink{namespacetransform_afa5c991af9dc841586c0d9e87b44b6d4}{transform\+::global\+\_\+frame\+\_\+to\+\_\+local\+\_\+frame}} (std\+::pair$<$ double, double $>$ global\+\_\+frame\+\_\+change, double yaw)
+\begin{DoxyCompactList}\small\item\em Takes a change in x and y in global frame and returns a change in x and y in local CMR frame. \end{DoxyCompactList}\item 
+std\+::pair$<$ double, double $>$ \mbox{\hyperlink{namespacetransform_af75c2e4795a51ea960ccfab6c9bcd6cf}{transform\+::local\+\_\+frame\+\_\+to\+\_\+local\+\_\+frame}} (std\+::pair$<$ double, double $>$ local\+\_\+frame\+\_\+change, double dyaw)
+\item 
+std\+::pair$<$ double, double $>$ \mbox{\hyperlink{namespacetransform_aefd0b6a98ff9ddfddf0de0a7ee2104e1}{transform\+::motion\+\_\+model\+\_\+on\+\_\+point}} (std\+::pair$<$ double, double $>$ dv\+\_\+frame\+\_\+change, double point\+\_\+x, double point\+\_\+y, double dyaw)
+\item 
+std\+::pair$<$ Eigen\+::\+Vector3d, Eigen\+::\+Vector3d $>$ \mbox{\hyperlink{namespacetransform_a4c5c36deb201904f39e140e2f84ad89d}{transform\+::transform\+\_\+point}} (const rclcpp\+::\+Logger \&logger, geometry\+\_\+msgs\+::msg\+::\+Vector3 \&point, std\+::pair$<$ std\+::pair$<$ double, double $>$, std\+::pair$<$ double, double $>$$>$ ds\+\_\+pair, std\+::pair$<$ double, double $>$ left\+\_\+right\+\_\+dyaw, const std\+::pair$<$ Eigen\+::\+Matrix$<$ double, 3, 4 $>$, Eigen\+::\+Matrix$<$ double, 3, 4 $>$$>$ \&projection\+\_\+matrix\+\_\+pair)
+\begin{DoxyCompactList}\small\item\em Transforms a 3D point in Li\+DAR space to 2D pixel coordinates in camera space. \end{DoxyCompactList}\item 
+std\+::pair$<$ geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped\+::\+Shared\+Ptr, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped\+::\+Shared\+Ptr $>$ \mbox{\hyperlink{namespacetransform_a42b827f762f589ee4d66c777b897920e}{transform\+::get\+\_\+vel\+\_\+yaw}} (const rclcpp\+::\+Logger \&logger, std\+::mutex \&yaw\+\_\+mutex, std\+::mutex \&vel\+\_\+mutex, const std\+::deque$<$ geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped\+::\+Shared\+Ptr $>$ \&vel\+\_\+deque, const std\+::deque$<$ geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped\+::\+Shared\+Ptr $>$ \&yaw\+\_\+deque, uint64\+\_\+t frame\+Time)
+\begin{DoxyCompactList}\small\item\em Get the velocity and yaw at the time of the frame. \end{DoxyCompactList}\end{DoxyCompactItemize}

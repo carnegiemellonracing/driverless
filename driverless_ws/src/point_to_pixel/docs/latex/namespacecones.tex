@@ -1,0 +1,158 @@
+\hypertarget{namespacecones}{}\doxysection{cones Namespace Reference}
+\label{namespacecones}\index{cones@{cones}}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacecones_1_1coloring}{coloring}}
+\item 
+ \mbox{\hyperlink{namespacecones_1_1recolouring}{recolouring}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcones_1_1Cone}{Cone}}
+\item 
+struct \mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::vector$<$ \mbox{\hyperlink{structcones_1_1Cone}{Cone}} $>$ \mbox{\hyperlink{namespacecones_a53b174264100c4e5d7e1987a75b8d45e}{Cones}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structcones_1_1Cone}{Cone}} \mbox{\hyperlink{namespacecones_a4d09f4eafe3416402b72671ce98e602c}{find\+\_\+closest\+\_\+cone}} (const \mbox{\hyperlink{namespacecones_a53b174264100c4e5d7e1987a75b8d45e}{Cones}} \&cones)
+\begin{DoxyCompactList}\small\item\em Finds the next closest cone to the first cone in the vector. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespacecones_a4bf727d43989354e371233ab9e573b4d}{calculate\+\_\+angle}} (const \mbox{\hyperlink{structcones_1_1Cone}{Cone}} \&from, const \mbox{\hyperlink{structcones_1_1Cone}{Cone}} \&to)
+\begin{DoxyCompactList}\small\item\em Calculates the angle between two cones. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{namespacecones_a53b174264100c4e5d7e1987a75b8d45e}{Cones}} \mbox{\hyperlink{namespacecones_a8caa263d78e3d9ea66e97d7fd948888d}{order\+\_\+cones}} (const \mbox{\hyperlink{namespacecones_a53b174264100c4e5d7e1987a75b8d45e}{Cones}} \&unordered\+\_\+cones, double max\+\_\+distance\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Orders cones by their path direction. \end{DoxyCompactList}\item 
+std\+::pair$<$ std\+::vector$<$ std\+::vector$<$ double $>$ $>$, std\+::vector$<$ double $>$ $>$ \mbox{\hyperlink{namespacecones_a2c7f50996f7884e4d06831a303b94d19}{cones\+\_\+to\+\_\+xy}} (const \mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}} \&track\+\_\+bounds)
+\begin{DoxyCompactList}\small\item\em Converts \mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}}, a struct containing yellow cone vector and blue cone vector, to XY training data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacecones_a73a99b40a47c1ec8ba778727a18d85ff}{supplement\+\_\+cones}} (\mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}} \&track\+\_\+bounds)
+\begin{DoxyCompactList}\small\item\em Adds dummy cones to the side of the car, blue on left and yellow on right. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacecones_a51292d6ae81f739ec9c80104a759ade8}{augment\+\_\+cones\+\_\+circle}} (\mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}} \&track\+\_\+bounds, int degrees, double radius)
+\begin{DoxyCompactList}\small\item\em Augments data by adding cones in a circular pattern around the original cone, currently unused. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{namespacecones_a53b174264100c4e5d7e1987a75b8d45e}\label{namespacecones_a53b174264100c4e5d7e1987a75b8d45e}} 
+\index{cones@{cones}!Cones@{Cones}}
+\index{Cones@{Cones}!cones@{cones}}
+\doxysubsubsection{\texorpdfstring{Cones}{Cones}}
+{\footnotesize\ttfamily typedef std\+::vector$<$\mbox{\hyperlink{structcones_1_1Cone}{Cone}}$>$ \mbox{\hyperlink{namespacecones_a53b174264100c4e5d7e1987a75b8d45e}{cones\+::\+Cones}}}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacecones_a51292d6ae81f739ec9c80104a759ade8}\label{namespacecones_a51292d6ae81f739ec9c80104a759ade8}} 
+\index{cones@{cones}!augment\_cones\_circle@{augment\_cones\_circle}}
+\index{augment\_cones\_circle@{augment\_cones\_circle}!cones@{cones}}
+\doxysubsubsection{\texorpdfstring{augment\_cones\_circle()}{augment\_cones\_circle()}}
+{\footnotesize\ttfamily void cones\+::augment\+\_\+cones\+\_\+circle (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}} \&}]{track\+\_\+bounds,  }\item[{int}]{degrees,  }\item[{double}]{radius }\end{DoxyParamCaption})}
+
+
+
+Augments data by adding cones in a circular pattern around the original cone, currently unused. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em track\+\_\+bounds} & \mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}} struct \\
+\hline
+{\em degrees} & Degrees to augment \\
+\hline
+{\em radius} & Radius of the circle \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespacecones_a4bf727d43989354e371233ab9e573b4d}\label{namespacecones_a4bf727d43989354e371233ab9e573b4d}} 
+\index{cones@{cones}!calculate\_angle@{calculate\_angle}}
+\index{calculate\_angle@{calculate\_angle}!cones@{cones}}
+\doxysubsubsection{\texorpdfstring{calculate\_angle()}{calculate\_angle()}}
+{\footnotesize\ttfamily double cones\+::calculate\+\_\+angle (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1Cone}{Cone}} \&}]{from,  }\item[{const \mbox{\hyperlink{structcones_1_1Cone}{Cone}} \&}]{to }\end{DoxyParamCaption})}
+
+
+
+Calculates the angle between two cones. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em from} & First cone \\
+\hline
+{\em to} & Second cone \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double Angle in radians 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecones_a2c7f50996f7884e4d06831a303b94d19}\label{namespacecones_a2c7f50996f7884e4d06831a303b94d19}} 
+\index{cones@{cones}!cones\_to\_xy@{cones\_to\_xy}}
+\index{cones\_to\_xy@{cones\_to\_xy}!cones@{cones}}
+\doxysubsubsection{\texorpdfstring{cones\_to\_xy()}{cones\_to\_xy()}}
+{\footnotesize\ttfamily std\+::pair$<$ std\+::vector$<$ std\+::vector$<$ double $>$ $>$, std\+::vector$<$ double $>$ $>$ cones\+::cones\+\_\+to\+\_\+xy (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}} \&}]{track\+\_\+bounds }\end{DoxyParamCaption})}
+
+
+
+Converts \mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}}, a struct containing yellow cone vector and blue cone vector, to XY training data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em track\+\_\+bounds} & \mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}} stuct \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::pair$<$std\+::vector$<$std\+::vector$<$double$>$$>$, std\+::vector$<$double$>$$>$ Feature matrix and label vector 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecones_a4d09f4eafe3416402b72671ce98e602c}\label{namespacecones_a4d09f4eafe3416402b72671ce98e602c}} 
+\index{cones@{cones}!find\_closest\_cone@{find\_closest\_cone}}
+\index{find\_closest\_cone@{find\_closest\_cone}!cones@{cones}}
+\doxysubsubsection{\texorpdfstring{find\_closest\_cone()}{find\_closest\_cone()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structcones_1_1Cone}{Cone}} cones\+::find\+\_\+closest\+\_\+cone (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespacecones_a53b174264100c4e5d7e1987a75b8d45e}{Cones}} \&}]{cones }\end{DoxyParamCaption})}
+
+
+
+Finds the next closest cone to the first cone in the vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em cones} & Vector of cones \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structcones_1_1Cone}{Cone}} Closest cone 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecones_a8caa263d78e3d9ea66e97d7fd948888d}\label{namespacecones_a8caa263d78e3d9ea66e97d7fd948888d}} 
+\index{cones@{cones}!order\_cones@{order\_cones}}
+\index{order\_cones@{order\_cones}!cones@{cones}}
+\doxysubsubsection{\texorpdfstring{order\_cones()}{order\_cones()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespacecones_a53b174264100c4e5d7e1987a75b8d45e}{Cones}} cones\+::order\+\_\+cones (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespacecones_a53b174264100c4e5d7e1987a75b8d45e}{Cones}} \&}]{unordered\+\_\+cones,  }\item[{double}]{max\+\_\+distance\+\_\+threshold }\end{DoxyParamCaption})}
+
+
+
+Orders cones by their path direction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em unordered\+\_\+cones} & Vector of unordered cones \\
+\hline
+{\em max\+\_\+distance\+\_\+threshold} & Maximum distance between two cones before ordering clips detected cones \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Cones Vector of ordered cones 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecones_a73a99b40a47c1ec8ba778727a18d85ff}\label{namespacecones_a73a99b40a47c1ec8ba778727a18d85ff}} 
+\index{cones@{cones}!supplement\_cones@{supplement\_cones}}
+\index{supplement\_cones@{supplement\_cones}!cones@{cones}}
+\doxysubsubsection{\texorpdfstring{supplement\_cones()}{supplement\_cones()}}
+{\footnotesize\ttfamily void cones\+::supplement\+\_\+cones (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}} \&}]{track\+\_\+bounds }\end{DoxyParamCaption})}
+
+
+
+Adds dummy cones to the side of the car, blue on left and yellow on right. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em track\+\_\+bounds} & \mbox{\hyperlink{structcones_1_1TrackBounds}{Track\+Bounds}} struct \\
+\hline
+\end{DoxyParams}

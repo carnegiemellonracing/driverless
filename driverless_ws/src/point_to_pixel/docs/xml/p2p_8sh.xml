@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="p2p_8sh" kind="file" language="C++">
+    <compoundname>p2p.sh</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#!/bin/bash</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Path<sp/>to<sp/>the<sp/>parameters<sp/>file</highlight></codeline>
+<codeline><highlight class="normal">PARAMS_FILE=&quot;$DRIVERLESS/driverless_ws/src/point_to_pixel/config/params.yaml&quot;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Check<sp/>if<sp/>params<sp/>file<sp/>exists</highlight></codeline>
+<codeline><highlight class="normal">if<sp/>[<sp/>!<sp/>-f<sp/>&quot;$PARAMS_FILE&quot;<sp/>];<sp/>then</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>echo<sp/>&quot;Error:<sp/>Params<sp/>file<sp/>not<sp/>found<sp/>at<sp/>$PARAMS_FILE&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>exit<sp/>1</highlight></codeline>
+<codeline><highlight class="normal">fi</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">#<sp/>Run<sp/>the<sp/>point_to_pixel<sp/>node<sp/>with<sp/>parameters</highlight></codeline>
+<codeline><highlight class="normal">ros2<sp/>run<sp/>point_to_pixel<sp/>point_to_pixel<sp/>--ros-args<sp/>--params-file<sp/>&quot;$PARAMS_FILE&quot;<sp/>&quot;$@&quot;</highlight></codeline>
+    </programlisting>
+    <location file="/home/aryalohia/CMR/24a/driverless/driverless_ws/src/point_to_pixel/scripts/p2p.sh"/>
+  </compounddef>
+</doxygen>
