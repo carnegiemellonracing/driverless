@@ -12,13 +12,12 @@ namespace point_to_pixel
     {
         // ---------------------------------------------------------------------------
         //                              STATE MANAGER INITIALIZATION
-        // -------------------------------------------------------------
-        // Initialize state manager
+        // ---------------------------------------------------------------------------
         state_manager_ = new StateManager(max_deque_size);
 
         // ---------------------------------------------------------------------------
         //                              CAMERA INITIALIZATION
-        // -------------------------------------------------------------    --------------
+        // ---------------------------------------------------------------------------
         left_cam_ = new CameraManager(cap_l, cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 0, std::string(save_path), max_deque_size);
         right_cam_ = new CameraManager(cap_r, cv::Mat(), cv::Mat(), cv::Mat(), cv::Mat(), 1, std::string(save_path), max_deque_size);
 
@@ -535,7 +534,7 @@ namespace point_to_pixel
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         RCLCPP_INFO(logger, "Saved frame in %ld ms.", duration.count());
-#endif
+#endif // timing
     }
 
     std::thread PointToPixelNode::launch_frame_saving()
@@ -556,7 +555,7 @@ namespace point_to_pixel
                 }
             }};
     }
-#endif
+#endif // save_frames
 } // namespace point_to_pixel
 
 int main(int argc, char **argv)

@@ -81,7 +81,14 @@ namespace point_to_pixel {
 
         uint64_t prev_time_stamp;
 
-        // Motion Modeling Callbacks
+        // Motion Modeling Callback
+        /**
+         * @brief Store cones that are classified blue and yellow into our cone histories
+         * For unknown cones, these will be what we are classifying 
+         * This node will also publish the classified cones
+         * 
+         * @param msg 
+         */
         void cone_callback(const interfaces::msg::ConeArray::SharedPtr cone_msg);
 
         // Define subscribers and publishers

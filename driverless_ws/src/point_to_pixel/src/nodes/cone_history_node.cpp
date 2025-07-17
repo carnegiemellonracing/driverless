@@ -1,19 +1,6 @@
 #include "cone_history_node.hpp"
 
 namespace point_to_pixel {
-    std::pair<double, double> global_frame_to_local_frame(
-        std::pair<double, double> global_frame_change,
-        double yaw)
-    {
-        double global_frame_dx = global_frame_change.first;
-        double global_frame_dy = global_frame_change.second;
-
-        double cmr_y = global_frame_dx * std::cos(yaw * M_PI / 180.0) + global_frame_dy * std::sin(yaw * M_PI / 180.0);
-        double cmr_x = global_frame_dx * std::sin(yaw * M_PI / 180.0) - global_frame_dy * std::cos(yaw * M_PI / 180.0);
-
-        return std::make_pair(cmr_x, cmr_y);
-    }
-
     /** 
      * @brief Used for determining the position of a cone in global frame given local frame information
      */
@@ -125,9 +112,7 @@ namespace point_to_pixel {
         }
         // cone_history_mutex.unlock();
 
-        return std::make_pair(min_id, min_dist);
-
-        
+        return std::make_pair(min_id, min_dist); 
     }
 
 
@@ -177,13 +162,7 @@ namespace point_to_pixel {
         return cone_color;
     }
 
-    /**
-     * @brief Store cones that are classified blue and yellow into our cone histories
-     * For unknown cones, these will be what we are classifying 
-     * This node will also publish the classified cones
-     * 
-     * @param msg 
-     */
+    
     void ConeHistoryNode::cone_callback(interfaces::msg::ConeArray::SharedPtr msg) 
     {
         uint64_t cur_time_stamp = msg->header.stamp.sec * 1e9 + msg->header.stamp.nanosec;

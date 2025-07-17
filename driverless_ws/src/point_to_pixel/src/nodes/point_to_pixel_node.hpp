@@ -65,7 +65,7 @@ namespace point_to_pixel
         rclcpp::Subscription<geometry_msgs::msg::Vector3Stamped>::SharedPtr yaw_sub_;
 
         // Predictor
-        std::unique_ptr<general_predictor> predictor_;
+        std::unique_ptr<GeneralPredictor> predictor_;
 
 // Data Structure Declarations
 #if save_frames
