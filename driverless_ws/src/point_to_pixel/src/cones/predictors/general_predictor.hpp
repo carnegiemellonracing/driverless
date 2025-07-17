@@ -14,11 +14,20 @@ namespace point_to_pixel
         UNKNOWN // -1
     };
 
-    class general_predictor
+    class GeneralPredictor
     {
     public:
-        virtual ~general_predictor() = default;
 
+        /**
+         * @brief default destructor
+         */
+        virtual ~GeneralPredictor() = default;
+
+        /**
+         * @param pixel_pair 
+         * @param frame_pair
+         * @param confidence_threshold
+         */
         virtual ConeClass predict_color(
             std::pair<Eigen::Vector3d, Eigen::Vector3d> pixel_pair,
             std::pair<cv::Mat, cv::Mat> frame_pair,

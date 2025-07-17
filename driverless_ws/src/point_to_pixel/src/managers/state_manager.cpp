@@ -9,8 +9,8 @@ namespace point_to_pixel {
         double global_frame_dx = global_frame_change.first;
         double global_frame_dy = global_frame_change.second;
 
-        double cmr_y = global_frame_dx * std::cos(yaw * M_PI / 180.0) + global_frame_dy * std::sin(yaw * M_PI / 180.0);
-        double cmr_x = global_frame_dx * std::sin(yaw * M_PI / 180.0) - global_frame_dy * std::cos(yaw * M_PI / 180.0);
+        double cmr_y = global_frame_dx * std::cos(yaw) + global_frame_dy * std::sin(yaw);
+        double cmr_x = global_frame_dx * std::sin(yaw) - global_frame_dy * std::cos(yaw);
 
         return std::make_pair(cmr_x, cmr_y);
     }

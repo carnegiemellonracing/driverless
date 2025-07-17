@@ -19,15 +19,15 @@ namespace point_to_pixel
         pixel_l = get_color(
             pixel_pair.first,
             detections_l,
-            frame_pair.first.cols,
             frame_pair.first.rows,
+            frame_pair.first.cols,
             confidence_threshold);
 
         pixel_r = get_color(
             pixel_pair.second,
             detections_r,
-            frame_pair.second.cols,
             frame_pair.second.rows,
+            frame_pair.second.cols,
             confidence_threshold);
 
         // Logic for handling detection results
@@ -55,8 +55,8 @@ namespace point_to_pixel
     std::pair<ConeClass, double> YoloPredictor::get_color(
         Eigen::Vector3d &pixel,
         std::vector<cv::Mat> detections,
-        int cols,
         int rows,
+        int cols,
         double confidence_threshold)
     {
         if (detections.empty())
