@@ -64,15 +64,6 @@ current inertial state and the inertial-to-curvilinear lookup table as calculate
 manipulates device vectors such as ``m_action_trajectories`` on the GPU,
 then copies over a single control action to the CPU to pass in a message.
 
-Thrust relies on small unary or binary functions to do :ref:`maps or reductions <hofs>`. Since we need to capture pointers to
-our device vectors, we wrap our functions in C++ functors. These functors, along with helper functions to be run on the
-GPU, such as the dynamics model, are defined in ``controls/src/mppi/functors.cuh``. The main loop of
-MPPI is implemented in ``generate_action()`` of ``controls/src/mppi/mppi.cu``, as shown here:
-
-.. image:: /images/mppi.*
-    :width: 100%
-    :align: center
-
 .. _importance_sampling:
 
 Importance Sampling
@@ -105,13 +96,3 @@ Assuming the mapping function is O(1), the map operation has work O(n) but span 
 
 Given a collection of elements, a reduce applies a binary reduction function to combine all the elements into a single
 accumulated value. Assuming the reduction function is O(1), the reduce operation has work O(n) but span O(log n).
-
-Alterations
------------
-Consider the following alterations to our implementation:
-
-* State can capture more information about the vehicle
-* Control action can be more expressive to allow the algorithm to learn behaviors such as torque vectoring. Granted, this requires a more complex dynamics model.
-* The dynamics model can be learned from data.
-* The cost can be made to be a function of both state and control action.
-
