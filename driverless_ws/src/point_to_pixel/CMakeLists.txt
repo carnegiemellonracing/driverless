@@ -23,48 +23,38 @@ find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 link_directories(/home/chip/Downloads/opencv/lib)
 
-# DEBUG OpenCV Version
-# message(WARNING "OpenCV version: ${OpenCV_VERSION}")
-# message(WARNING  "OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
-# message(WARNING "OpenCV libs: ${OpenCV_LIBS}")
-
-# Add zed-open-capture cpp library path/to/zed_open_capture
-# link_directories(~/CMR/zed-open-capture/build/zed_open_capture)
-
 set(LIBRARY_PATH ~/Documents/driverless-packages/zed-open-capture/build)
 
 include_directories(~/Documents/driverless-packages/zed-open-capture/include)
 include_directories(~/Documents/driverless-packages/zed-open-capture/examples/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-set(CONE_HISTORY_TEST_NODE_SRC  
-  src/transform/transform.cpp
-  src/nodes/cone_history_test_node.cpp
-  src/cones/svm/svm_recolour.cpp
-  src/cones/svm/svm.cpp
+set(CONE_HISTORY_NODE_SRC  
+  src/managers/state_manager.cpp
+  src/nodes/cone_history_node.cpp
   src/cones/cones.cpp
 )
 
 ###############################
 
 set(POINT_TO_PIXEL_SRC  
-  src/transform/transform.cpp
-  src/camera/camera.cpp
-  src/cones/svm/svm.cpp
-  src/cones/svm/svm_recolour.cpp
+  src/managers/state_manager.cpp
+  src/managers/camera_manager.cpp
+  lib/svm_lib.cpp
+  src/cones/predictors/svm.cpp
   src/cones/cones.cpp
-  src/cones/hsv.cpp
-  src/cones/yolo.cpp
+  src/cones/predictors/hsv_predictor.cpp
+  src/cones/predictors/yolo_predictor.cpp
   src/nodes/point_to_pixel_node.cpp
 )
 
 # Cone History Test Executable
-add_executable(cone_history_test_node ${CONE_HISTORY_TEST_NODE_SRC} )
-ament_target_dependencies(cone_history_test_node rclcpp interfaces geometry_msgs Eigen3 OpenCV)
-target_include_directories(cone_history_test_node PUBLIC
+add_executable(cone_history_node ${CONE_HISTORY_NODE_SRC} )
+ament_target_dependencies(cone_history_node rclcpp interfaces geometry_msgs Eigen3 OpenCV)
+target_include_directories(cone_history_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_compile_features(cone_history_test_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(cone_history_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
 # Point to Pixel Executable
 add_executable(point_to_pixel ${POINT_TO_PIXEL_SRC})
@@ -75,29 +65,20 @@ target_include_directories(point_to_pixel PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_compile_features(point_to_pixel PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 
-# Point to Pixel Debug Executable
-# add_executable(point_to_pixel_debug ${POINT_TO_PIXEL_SRC})
-# ament_target_dependencies(point_to_pixel_debug rclcpp interfaces geometry_msgs Eigen3 OpenCV)
-
-# target_include_directories(point_to_pixel_debug PUBLIC
-#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#   $<INSTALL_INTERFACE:include>)
-# target_compile_features(point_to_pixel_debug PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-
 target_link_libraries(point_to_pixel
   ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so  # Link ZED SDK library
   ${OpenCV_LIBS})  # Link OpenCV
 target_compile_definitions(point_to_pixel PUBLIC VIDEO_MOD_AVAILABLE)
 
-target_link_libraries(cone_history_test_node
+target_link_libraries(cone_history_node
   ~/Documents/driverless-packages/zed-open-capture/build/libzed_open_capture.so  # Link ZED SDK library
   ${OpenCV_LIBS})  # Link OpenCV
-target_compile_definitions(cone_history_test_node PUBLIC VIDEO_MOD_AVAILABLE)
+target_compile_definitions(cone_history_node PUBLIC VIDEO_MOD_AVAILABLE)
 
 install(TARGETS point_to_pixel
   DESTINATION lib/${PROJECT_NAME})
 
-install(TARGETS cone_history_test_node
+install(TARGETS cone_history_node
   DESTINATION lib/${PROJECT_NAME})
 
 
