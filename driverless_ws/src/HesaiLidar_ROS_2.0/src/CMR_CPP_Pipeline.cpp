@@ -24,6 +24,9 @@ using std::chrono::duration;
 using std::chrono::milliseconds;
 using namespace pcl;
 
+/**
+ * @brief Radial struct for points
+ */
 typedef struct radial {
   double angle;
   double radius;
@@ -31,7 +34,7 @@ typedef struct radial {
 } radial_t;
 
 /**
- * Converts (x,y,z) to (radius,ang,z), where ang is in radians
+ * @brief Converts (x,y,z) to (radius,ang,z), where ang is in radians
  * @param pt: The (x,y,z) point to convert
  * @return the converted point
  */
@@ -44,7 +47,7 @@ inline radial_t point2radial(PointXYZ pt) {
 }
 
 /**
- * Converts (radius,ang,z) to (x,y,z), where ang is in radians
+ * @brief Converts (radius,ang,z) to (x,y,z), where ang is in radians
  * @param rd: The (radius,ang,z) point to convert
  * @return the converted point
  */
@@ -57,7 +60,7 @@ inline PointXYZ radial2point(radial_t rd) {
 }
 
 /**
- * Gets the minimum point in a bin
+ * @brief Gets the minimum point in a bin
  * @param bin: The bin to search
  * @return the point with the lowest z
  */
@@ -78,7 +81,7 @@ inline radial_t min_height(vector<radial_t> bin) {
 }
 
 /**
- * Function implementing the GraceAndConrad algorithm
+ * @brief Function implementing the GraceAndConrad algorithm
  * @param cloud: The input vector of rectangular points to parse
  * @param alpha: The size of each segment (radians)
  * @param num_bins: The number of bins per segment
@@ -169,7 +172,9 @@ inline PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double al
   return output;
 }
 
-// Calculates Euclidean distance between two PointXYZ.
+/**
+ * @brief Calculates Euclidean distance between two PointXYZ.
+ */
 inline double euclideanDistance(const PointXYZ &a, const PointXYZ &b) {
   double dx = a.x - b.x;
   double dy = a.y - b.y;
@@ -177,7 +182,9 @@ inline double euclideanDistance(const PointXYZ &a, const PointXYZ &b) {
   return std::sqrt(dx * dx + dy * dy + dz * dz);
 }
 
-// Returns indices of points in cloud that are within epsilon of point.
+/**
+ * @brief Returns indices of points in cloud that are within epsilon of point.
+ */
 inline vector<int> regionQuery(
   PointCloud<PointXYZ> &cloud,
   const PointXYZ &point,
@@ -192,7 +199,9 @@ inline vector<int> regionQuery(
   return neighbors;
 }
 
-// Expands the cluster by checking neighbors and assigning them as needed.
+/**
+ * @brief Expands the cluster by checking neighbors and assigning them as needed.
+ */
 inline void expandCluster(
   PointCloud<PointXYZ> &cloud,
   vector<bool> &visited,
@@ -221,7 +230,9 @@ inline void expandCluster(
   }
 }
 
-// Computes centroids for the clusters.
+/**
+ * @brief Computes centroids for the clusters
+ */
 inline PointCloud<PointXYZ> computeCentroids(
   PointCloud<PointXYZ> &cloud,
   const unordered_map<int, vector<int>> &clusters) {
@@ -247,6 +258,15 @@ inline PointCloud<PointXYZ> computeCentroids(
 }
 
 // DBSCAN that works on a PointCloud<PointXYZ>
+/**
+ * @brief Implementation of Density-Based Spatial Clustering of Applications with Noise (DBSCAN) to 
+ * calculate cone centroids. 
+ * 
+ * @param cloud pointcloud
+ * @param epsilon neighborhood radius to search for each point
+ * @param min_points minimum number of points in a neighborhood to continute a dense cluster
+ * @return Clustered pointcloud.
+ */
 inline PointCloud<PointXYZ> DBSCAN(PointCloud<PointXYZ> &cloud, double epsilon, int min_points) {
 
   vector<bool> visited(cloud.points.size(), false);
@@ -280,7 +300,17 @@ inline PointCloud<PointXYZ> DBSCAN(PointCloud<PointXYZ> &cloud, double epsilon, 
   return computeCentroids(cloud, clusters);
 }
 
-//Use for secondary filtering to get rid of extraneous clusters outside of cones
+
+// DBSCAN that works on a PointCloud<PointXYZ>
+/**
+ * @brief Implementation of Density-Based Spatial Clustering of Applications with Noise (DBSCAN) 
+ * used for secondary filtering to get rid of extraneous clusters outside of cones
+ * 
+ * @param cloud pointcloud
+ * @param epsilon neighborhood radius to search for each point
+ * @param min_points minimum number of points in a neighborhood to continute a dense cluster
+ * @return Clustered pointcloud.
+ */
 inline PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon, int min_points) {
   // visited[i] indicates whether the point has been visited.
   // cluster[i] = -1 for unclassified, 0 for noise, >0 for cluster ID.
@@ -307,6 +337,10 @@ inline PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon,
   return cloud;
 }
 
+
+/**
+ * @brief Cone coloring implementation that uses a geometric approach to classifying cone colors. Point to pixel is not used.
+ */
 inline interfaces::msg::ConeArray color_cones_without_camera(const PointCloud<PointXYZ>& cloud) {
     interfaces::msg::ConeArray message = interfaces::msg::ConeArray();
     message.blue_cones = std::vector<geometry_msgs::msg::Point> {};
@@ -416,7 +450,9 @@ inline interfaces::msg::ConeArray color_cones_without_camera(const PointCloud<Po
     return message;
 }
 
-
+/**
+ * @brief Perceptions pipeline implementation without cameras (geometric coloring).
+ */
 inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZ> &cloud, double alpha, 
                                           int num_bins, double height_threshold, 
                                           double epsilon, int min_points, 
@@ -471,6 +507,18 @@ inline interfaces::msg::ConeArray run_pipeline_dark(PointCloud<PointXYZ> &cloud,
 
   }
 
+  /**
+   * @brief Main Perceptions pipline function. 
+   * 
+   * @param cloud pointcloud
+   * @param alpha GraceAndConrad parameter
+   * @param height_threshold GraceAndConrad parameter
+   * @param epsilon DBSCAN parameter
+   * @param min_points DBSCAN parameter
+   * @param epsilon2 DBSCAN2 parameter
+   * @param min_points2 DBSCAN2 parameter
+   * @param logger ROS2 logger object for consistant logging
+   */
   inline PointCloud<PointXYZ> run_pipeline(PointCloud<PointXYZ> &cloud, double alpha,
                                            int num_bins, double height_threshold,
                                            double epsilon, int min_points,
