@@ -1,5 +1,6 @@
 .. _Path Planning: https://cmr.red/planning-docs
-.. _Controls: https://cmr.red/controls-doc
+.. _Controls: https://cmr.red/controls-docs
+.. _Software Architecture: https://cmr.red/software-arch-docs
 
 =============
 Overview
@@ -19,6 +20,12 @@ Given a track delimited by yellow and blue cones, we must reliably and efficient
 Sensors
 =======
 
+.. figure:: sensors.png
+    :width: 600
+    :align: center
+
+    *24a at track testing.*
+
 We employ a variety of sensors to accomplish this task:
 
 - `HESAI AT128 Solid State LiDAR <https://www.hesaitech.com/product/at128/>`_
@@ -30,25 +37,23 @@ Using these three sensors we efficiently generate a local view of the track and 
 What data do we work with and where does it go?
 ===============================================
 
+.. Note::
+    We use ROS2 to implement our pipeline. See `Software Architecture`_ for more.
+
 LiDAR Module
 ------------
 
 Our LiDAR, a HESAI AT128 hybrid solid-state sensor is our primary source of depth information. Through the LiDAR we ingest a 
-`point cloud <https://en.wikipedia.org/wiki/Point_cloud>`_. We employ several processing algorithms (see :doc:`explainers <source/explainers/lidar_module>`)
+`point cloud <https://en.wikipedia.org/wiki/Point_cloud>`_. We employ several processing algorithms (see :doc:`explainers <../explainers/lidar_module>`)
 eventually resulting in a set of points that represent the centroid of cones on the track in front of us.
-
-.. NOTE::
-   | PLACEHOLDER FOR IMAGE OF LiDAR?
-   | DOUBLE CHECK THE OUTPUT TYPES / TOPIC NAMES
-
 
 To avoid overhead from publishing the entire LiDAR point cloud to a ROS topic, we integrated our lidar_module code into the ROS driver available with our LiDAR.
 
     Output: a set of cone centroids. It is a message type from our custom ROS2 ``interfaces`` package
 
-    * ``/perc_cones``
+    * ``/cpp_cones``
 
-        * ``interfaces::msg::ConeList``   
+        * ``interfaces::msg::PPMConeArray``   
 
     
 Coloring Module
@@ -60,14 +65,11 @@ we opted to avoid any depth processing due to latency concerns. Instead we just 
 Through a `direct linear transform <https://en.wikipedia.org/wiki/Direct_linear_transformation>`_
 we color our cone centroids from the previous step and pass them down the pipeline to `Path Planning`_ and `Controls`_.
 
-.. NOTE::
-   | PLACEHOLDER FOR IMAGE OF CAMERAS?
-   | DOUBLE CHECK THE OUTPUT TYPES / TOPIC NAMES
 
 Our coloring module is housed in our custom ROS2 package, :doc:`point_to_pixel <../implementation/coloring_module>`. 
 
     Output: a set of colored cone centroids
 
-    * ``/colored_cones``
+    * ``/perc_cones``
 
-        * ``interfaces::msg::PPMConeArray``
+        * ``interfaces::msg::ConeArray``
