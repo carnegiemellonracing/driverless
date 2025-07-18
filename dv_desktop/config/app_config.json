@@ -1,0 +1,43 @@
+{
+  "window": {
+    "WIDTH": 1250,
+    "HEIGHT": 800,
+    "MIN_WIDTH": 800,
+    "MIN_HEIGHT": 600,
+    "TITLE": "DV Desktop"
+  },
+  "ui": {
+    "SIDEBAR_WIDTH": 300,
+    "TILE_PADDING": 8,
+    "GRID_COLUMNS": 4,
+    "ANIMATION_SPEED": 200,
+    "ROW_MINSIZE": 225,
+    "COLUMN_MINSIZE": 185,
+    "ROW_WEIGHT": 0,
+    "COLUMN_WEIGHT": 1,
+    "TILE_PADDING_DIVISOR": 2
+  },
+  "tile": {
+    "SIZE": 200,
+    "MARGIN": 6,
+    "RADIUS": 20,
+    "OUTLINE_WIDTH": 2,
+    "OUTLINE_COLOR": "white"
+  },
+  "icon": {
+    "SIZE": 150,
+    "DEFAULT_SIZE": 80,
+    "CACHE_WHITE_SUFFIX": "_white"
+  },
+  "layout": {
+    "ICON_VERTICAL_OFFSET": 15,
+    "TEXT_BOTTOM_MARGIN": 25,
+    "TEXT_WRAP_MARGIN": 30,
+    "FONT_SIZE": 11,
+    "FONT_FAMILY": "Arial",
+    "FONT_WEIGHT": "bold"
+  },
+  "default_directory": "calibration",
+  "auto_save_settings": true,
+  "theme": "dark"
+}
