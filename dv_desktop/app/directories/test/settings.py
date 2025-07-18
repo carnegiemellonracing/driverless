@@ -30,5 +30,5 @@ SettingsModule = Module(
     title="Settings",
     description="Open settings window",
     command=_settings_command,
-    icon='settings.svg'
+    icon='settings.png'
 )

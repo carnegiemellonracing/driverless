@@ -5,7 +5,7 @@ empty
 """
 from utils.types import Directory
 
-__directory__ = Directory(
+description = Directory(
     name="ROS",
     description="Empty directory",
     modules=[]

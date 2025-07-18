@@ -20,5 +20,5 @@ TerminalModule = Module(
     title="Terminal",
     description="Open system terminal",
     command=_terminal_command,
-    icon='terminal.svg'
+    icon='terminal.png'
 )

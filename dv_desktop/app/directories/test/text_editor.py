@@ -29,5 +29,5 @@ TextEditorModule = Module(
     title="Text Editor",
     description="Simple text editing tool",
     command=_text_editor_command,
-    icon='text_editor.svg'
+    icon='text_editor.png'
 )

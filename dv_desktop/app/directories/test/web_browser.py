@@ -9,5 +9,5 @@ WebBrowserModule = Module(
     title="Web Browser",
     description="Open web browser",
     command=_browser_command,
-    icon='browser.svg'
+    icon='browser.png'
 )

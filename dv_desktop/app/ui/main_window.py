@@ -6,7 +6,7 @@ import tkinter as tk
 from tkinter import messagebox
 import logging
 
-from config.settings import AppSettings
+from config.app_config import AppSettings
 from utils.directory_utils import DirectoryManager
 from app.ui.sidebar import Sidebar
 from app.ui.content_area import ContentArea
@@ -41,9 +41,9 @@ class DVDesktop:
     
     def _setup_window(self):
         """Configure the main window"""
-        self.root.title(self.settings.window.title)
-        self.root.geometry(f"{self.settings.window.width}x{self.settings.window.height}")
-        self.root.minsize(self.settings.window.min_width, self.settings.window.min_height)
+        self.root.title(self.settings.window.TITLE)
+        self.root.geometry(f"{self.settings.window.WIDTH}x{self.settings.window.HEIGHT}")
+        self.root.minsize(self.settings.window.MIN_WIDTH, self.settings.window.MIN_HEIGHT)
         self.root.configure(bg=self.colors['bg_primary'])
         
         # Configure root grid weights
@@ -176,7 +176,7 @@ class DVDesktop:
     def show_help(self):
         """Show help dialog"""
         help_text = f"""
-        {self.settings.window.title} Help
+        {self.settings.window.TITLE} Help
         
         Navigation:
         • Click directory tabs to switch between app categories
@@ -200,8 +200,8 @@ class DVDesktop:
         """Handle window resize events"""
         if event.widget == self.root:
             # Update settings with new window size
-            self.settings.window.width = self.root.winfo_width()
-            self.settings.window.height = self.root.winfo_height()
+            self.settings.window.WIDTH = self.root.winfo_width()
+            self.settings.window.HEIGHT = self.root.winfo_height()
             
             # Auto-save if enabled
             if self.settings.auto_save_settings:

@@ -18,5 +18,5 @@ CalculatorModule = Module(
     title="Calculator",
     description="Built-in calculator application",
     command=_calculator_command,
-    icon='calculator.svg'
+    icon='calculator.png'
 )

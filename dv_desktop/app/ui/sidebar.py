@@ -31,7 +31,7 @@ class Sidebar:
         self.sidebar = tk.Frame(
             self.parent, 
             bg=self.colors['bg_secondary'], 
-            width=self.settings.ui.sidebar_width,
+            width=self.settings.ui.SIDEBAR_WIDTH,
             relief=tk.FLAT,
             borderwidth=0
         )

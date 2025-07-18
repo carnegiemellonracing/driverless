@@ -10,7 +10,7 @@ from app.directories.test.settings import SettingsModule
 from app.directories.test.text_editor import TextEditorModule
 from utils.types import Directory
 
-__directory__ = Directory(
+description = Directory(
     name="Test",
     description="Test directory",
     modules=[
@@ -21,3 +21,5 @@ __directory__ = Directory(
         TextEditorModule
     ]
 )
+
+__all__ = ['description']

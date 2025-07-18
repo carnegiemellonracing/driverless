@@ -61,7 +61,7 @@ class FoxgloveNode(Node):
         )
 
         self.cone_subscriber = self.create_subscription(
-            ConeArray, '/associated_perc_cones', 
+            ConeArray, '/perc_cones', 
             self.associated_cone_array_callback, 
             qos_profile=BEST_EFFORT_QOS_PROFILE
         )
