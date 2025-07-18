@@ -39,7 +39,7 @@ Have fun and enjoy the ride!
    :caption: Contents:
 
    source/explainers/overview
+   source/reference/implementation
    source/explainerslist.rst
-   source/reference/api_reference
-   source/explainers/terminology
+   source/explainers/extraneous
 
