@@ -1,0 +1,10 @@
+# DV Desktop - Python Dependencies
+
+# Core GUI (usually included with Python)
+# tkinter - included with Python standard library
+
+# Image processing
+Pillow>=10.0.0
+
+# Configuration and data handling
+dataclasses-json>=0.6.0
