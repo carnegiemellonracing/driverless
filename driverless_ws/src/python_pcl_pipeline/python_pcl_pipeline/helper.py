@@ -506,3 +506,73 @@ def dbscan2(cloud: np.ndarray, epsilon: float, min_points: int) -> np.ndarray:
     # The key difference: this function returns the original cloud.
     # The clustering happens internally, but its results are not used in the return value.
     return cloud
+
+
+def dbscan3_get_each_cone_cluster(cloud: np.ndarray, intensities: np.ndarray, epsilon: float, min_points: int) -> list[tuple[np.ndarray, np.ndarray]]:
+    """
+    Add a comment eventually - for Lidar cone coloring
+    """
+    num_points = cloud.shape[0]
+
+    tree = KDTree(cloud)
+    visited = [False] * num_points
+    cluster = [-1] * num_points
+    cluster_id = 0
+
+    for i in range(num_points):
+        if visited[i]:
+            continue
+        visited[i] = True
+        neighbors = tree.query_ball_point(cloud[i], r=epsilon)
+        if len(neighbors) < min_points:
+            cluster[i] = 0  # Mark as noise
+        else:
+            cluster_id += 1
+            expand_cluster_optimized(tree, cloud, visited, cluster, i, neighbors, cluster_id, epsilon, min_points)
+            
+    # --- Main Data Collection Logic ---
+    clusters_map = {}
+    for (i, cluster_id) in enumerate(cluster):
+        if cluster_id > 0:
+            if cluster_id not in clusters_map:
+                clusters_map[cluster_id] = {'points': [], 'intensities': []}
+            
+            clusters_map[cluster_id]['points'].append(cloud[i])
+            clusters_map[cluster_id]['intensities'].append(intensities[i])
+
+    list_clusters = []
+    for i in sorted(clusters_map.keys()):
+        list_clusters.append((np.array(clusters_map[i]['points']), np.array(clusters_map[i]['intensities'])))
+        
+    return list_clusters
+            
+
+def cone_cluster_to_intensity_grid(cloud: np.ndarray, intensities: np.ndarray, grid_size=(32, 32)) -> np.ndarray:
+    """
+    Converts single 3d cluster into 2d intensity grid for Lidar Cone Coloring
+    """
+    if cloud.shape[0] == 0:
+        return np.zeros(grid_size, dtype=np.float32)
+    
+    centroid = np.mean(cloud, axis=0)
+    centered_cloud = cloud - centroid
+    
+    max_size = np.max(np.abs(centered_cloud))
+    if max_size == 0:
+        return np.zeros(grid_size, dtype=np.float32)
+    
+    y = ((centered_cloud[:, 2] / max_size) * (grid_size[0] / 2) + (grid_size[0] / 2)).astype(int)
+    x = ((centered_cloud[:, 1] / max_size) * (grid_size[1] / 2) + (grid_size[1] / 2)).astype(int)
+    
+    y = np.clip(y, 0, grid_size[0] - 1)
+    x = np.clip(x, 0, grid_size[1] - 1)
+    
+    grid = np.zeros(grid_size, dtype=np.float32)
+    np.maximum.at(grid, (y, x), intensities)
+    
+    # Normalization
+    min_val, max_val = np.min(grid), np.max(grid)
+    if max_val > min_val:
+        grid = (grid - min_val) / (max_val - min_val)
+
+    return grid
