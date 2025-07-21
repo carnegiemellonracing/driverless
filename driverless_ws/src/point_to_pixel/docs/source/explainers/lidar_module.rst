@@ -30,7 +30,7 @@ efficiently filter out the ground and sky, and finally identify clusters of poin
 
 We use a ground filtering algorithm called Grace and Conrad (developed by grace and conrad from our team a few years back).
 Essentially, we split our point cloud into bins, find the point with the minimum radius and z in and fit a plane to a 
-RANSAC-based sample of those points. We conclude by filterting out points above and below that plane by a tuneable height parameter.
+RANSAC-based sample of those points. We conclude by filtering out points above and below that plane by a tuneable height parameter.
 
 
 :doc:`Density-Based Spatial Clustering of Applications with Noise (DBSCAN) <../implementation/lidar_module>`
