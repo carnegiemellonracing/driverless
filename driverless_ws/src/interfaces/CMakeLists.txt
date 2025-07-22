@@ -56,6 +56,10 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ControllerInfo.msg"
   "msg/ActuatorsInfo.msg"
   "msg/EndToEndDebug.msg"
+  "msg/SLAMChunk.msg" # SLAM Additions
+  "msg/SLAMData.msg"
+  "msg/SLAMPose.msg"
+  "msg/ConeArrayWithOdom.msg" # End SLAM Additions
   DEPENDENCIES geometry_msgs sensor_msgs std_msgs # Add packages that above messages depend on, in this case geometry_msgs for Sphere.msg
 )
 

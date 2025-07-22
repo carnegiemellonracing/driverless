@@ -1,0 +1,71 @@
+Estimate:
+Values with 13 values:
+Value l0: (Eigen::Matrix<double, 2, 1, 0, 2, 1>)
+[
+	2.42909;
+	-2.80032
+]
+
+Value l1: (Eigen::Matrix<double, 2, 1, 0, 2, 1>)
+[
+	7.12119;
+	-6.6604
+]
+
+Value l2: (Eigen::Matrix<double, 2, 1, 0, 2, 1>)
+[
+	5.60133;
+	-4.67746
+]
+
+Value l3: (Eigen::Matrix<double, 2, 1, 0, 2, 1>)
+[
+	2.09329;
+	-8.88224
+]
+
+Value l4: (Eigen::Matrix<double, 2, 1, 0, 2, 1>)
+[
+	-0.273822;
+	-7.65437
+]
+
+Value l5: (Eigen::Matrix<double, 2, 1, 0, 2, 1>)
+[
+	2.48405;
+	-0.4944
+]
+
+Value l6: (Eigen::Matrix<double, 2, 1, 0, 2, 1>)
+[
+	3.12467;
+	-5.89705
+]
+
+Value l7: (Eigen::Matrix<double, 2, 1, 0, 2, 1>)
+[
+	3.69886;
+	-8.13516
+]
+
+Value l8: (Eigen::Matrix<double, 2, 1, 0, 2, 1>)
+[
+	-1.76999;
+	-6.3877
+]
+
+Value l9: (Eigen::Matrix<double, 2, 1, 0, 2, 1>)
+[
+	0.0993051;
+	-9.48134
+]
+
+Value x0: (gtsam::Pose2)
+(-0.0200937, 0.00762056, -0.504744)
+
+Value x1: (gtsam::Pose2)
+(0.571423, -0.88082, -1.25536)
+
+Value x2: (gtsam::Pose2)
+(0.420332, -0.873926, -1.03672)
+
