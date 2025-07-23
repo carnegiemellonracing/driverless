@@ -1,53 +1,128 @@
+.. _Software Architecture: https://cmr.red/software-arch-docs
+
 LiDAR Module Concepts
 =====================
 
+
 Overview
---------
+------------
 
-A LiDAR sensor, while providing fast accurate depth information, presents some 
-unique challenges for our perceptions stack. We must first filter out a good amount of extraneous information
-in order to get to the main perceptions goal: locations of cones in 3d space.
+What is a LiDAR?
+^^^^^^^^^^^^^^^^
 
-The LiDAR Module employs two main algorithms to take in unstructured point clouds from the environment,
-efficiently filter out the ground and sky, and finally identify clusters of points representing the centroids of cones.
+A LiDAR--Light Detection And Ranging--sensor is a type of time of flight (ToF) sensor that can measure the depth of objects in space. 
+Essentially, it fires a laser to a target and analyzes the reflected light in order to create high-resolution maps. This capability
+makes LiDARs some of the best sensors for object detection, widely used throughout the field of autonomous vehicles. 
+
+The main output of a LiDAR sensor is a 2d/3d point cloud representation of the environment. A point cloud is a discrete set of points in space.
+Each point represents the distance from the sensor to an object in the environment.
+
+.. figure:: AT128-1.png
+    :width: 200
+    :align: center
+
+    *HESAI AT128 Hybrid Solid State LiDAR used on 25a*
+
+Goal of the LiDAR Module
+^^^^^^^^^^^^^^^^^^^^^^^^
+The LiDAR Module aims to apply spatial information from LiDAR point clouds and process it into a set of points that represent the 
+center of cones on the track in front of us.
+
+.. admonition:: Info
+    
+    - We use ROS2 to implement our pipeline. See `Software Architecture`_ for more.
+    - To avoid overhead from publishing the entire LiDAR point cloud to a ROS topic, lidar_module code is integrated directly into the ROS driver available with our LiDAR.
+
+
+    **Input:** Pointcloud from the LiDAR. Not usually available to the ROS system unless specifically turned on.
+
+    * ``All internal to the Hesai ROS Driver 2.0 Node``
+
+    **Output:** a set of cone centroids. It is a message type from our custom ROS2 ``interfaces`` package
+
+    * ``/cpp_cones``
+
+        * ``interfaces::msg::PPMConeArray``   
+
+Algorithm
+^^^^^^^^^
+
+To get to the output goal of a set of cone centroids several pieces of extraneous data must be removed. 
+
+1. Remove ground--most of the points in the cloud come from the ground and are useless to the goal
+2. Identify clusters (cones look like clusters of points)
+3. Removes extraneous clusters (could represent buildings, rails, etc...) to have a final set of cone centroids 
+
+The LiDAR Module employs two main algorithms to carry out these steps.
 
 .. Note::
     Add Module Diagram with pictures from each stage. (Use my python package for pipeline sim)
 
 
-:doc:`Grace and Conrad <../implementation/lidar_module>`
---------------------------------------------------------
+Ground Filtering
+----------------
 
 .. Note::
     Add the following diagrams:
 
-    - Image of points before and after GNC
-    - depiction of binned radius azimuth coordinates
-    - car frame
     - GNC algorithm diagram
 
     Figure out where GNC name actually came from...
 
-We use a ground filtering algorithm called Grace and Conrad (developed by grace and conrad from our team a few years back).
-Essentially, we split our point cloud into bins, find the point with the minimum radius and z in and fit a plane to a 
-RANSAC-based sample of those points. We conclude by filtering out points above and below that plane by a tuneable height parameter.
+We use a ground filtering algorithm called :doc:`Grace and Conrad <../implementation/lidar_module>` (developed by CMR alums Grace and Conrad a few years back).
+
+.. figure:: radius_azimuth.svg
+    :width: 600
+    :align: center
+
+    *Radius Azimuth cylindrical coordinate system*
+
+.. code-block:: text
+
+    convert point cloud to radius azimuth coordinates
+    
+    for each bin do:
+        find the point with the minimum height
+
+    fit a plane to those points (linear regression in r-z plane)
+
+    filter out all points within a height threshold of the regression
+
+Notes
+''''''
+
+- Grace And Conrad makes the assumption that the ground is relatively planar
 
 
-:doc:`Density-Based Spatial Clustering of Applications with Noise (DBSCAN) <../implementation/lidar_module>`
-------------------------------------------------------------------------------------------------------------
+Clustering
+----------------
 
 .. Note::
     Add the following diagrams:
 
-    - Imaages of points before and after DBSCAN
-    - DBSCAN clusters
     - DBSCAN algorithm diagram
 
-After filtering out the ground, we make the assumption that all clusters of sufficient density left represent cones. This may be 
-a bold assumption to make, but we find when combined with another run of DBSCAN (we call it DBSCAN2 in our codebase) most extraneous 
-objects are removed. DBSCAN is implemented by iterating through each point in the cloud and identifying its neighborhood within a specified radius (ε). 
-If a point has at least a minimum number of neighbors (MinPts), it becomes a core point and forms a cluster by recursively including its density-reachable neighbors. 
-Points that do not meet this criterion and are not reachable from any core point are filtered out.
+:doc:`Density-Based Spatial Clustering of Applications with Noise (DBSCAN) <../implementation/lidar_module>` is used to identify clusters of points.
+The basic algorithm is below although note a more detailed pseudocode can be found in the `DBSCAN Wikipedia article <https://en.wikipedia.org/wiki/DBSCAN>`_.
 
+.. code-block:: text
+
+    for each point P in the filtered cloud do:
+
+        if P already processed by loop, continue
+
+        find all neighbors of P within an epsilon (ε)
+
+        if number of points in neighborhood greater than min points do:
+            label P as a cluster point
+            
+            recursively test if neighbors meet the same cluster criterion (see wiki linked below for full pseudocode)
+        else:
+            filter out
+
+Notes
+''''''
+
+- DBSCAN makes the assumption that all clusters of sufficient density left represent cones. Extraneous clusters are filtered in DBSCAN2 (see `codebase <../implementation/lidar_module>`_)
 - `DBSCAN Wikipedia reference <https://en.wikipedia.org/wiki/DBSCAN>`_
 - `DBSCAN original paper <https://dl.acm.org/doi/10.5555/3001460.3001507>`_

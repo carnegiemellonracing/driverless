@@ -1,46 +1,47 @@
+.. _Path Planning: https://cmr.red/planning-docs
+.. _Controls: https://cmr.red/controls-docs
+.. _Software Architecture: https://cmr.red/software-arch-docs
+
 Coloring Module Concepts
 ========================
 
-Once we have finished the processing in the :doc:`LiDAR module <../explainers/lidar_module>`, 
-we are left with a set of 3d coordinates representing cones in space. However, our path planning 
-and controls modules expect these points to be colored as well. For that, we use our cameras to provide the 
-color information needed to classify cones.
+Overview
+--------
 
-Our method of sensor fusion is relatively simple. We make the assumption that cameras remain rigid
-compared to the LiDARs at all time and can simply use the static transformation matrix from camera to LiDAR. 
-We use a technique known as the `direct linear transform  <https://en.wikipedia.org/wiki/Direct_linear_transformation>`_
-to calculate such a matrix. Finally, we use our point to pixel mapping library, which leverages that transform
-and a custom YOLO v5 model to classify cone colors.
+RGB cameras provide a source color information. Though the two stereolabs ZED cameras used have stereoscopic capability (depth estimation)
+we opted to avoid any depth processing due to latency concerns. Instead cameras are used purely for color information.
 
-
-:doc:`Direct Linear Transform <>`
--------------------------------------------------------------------
-
-Why?
-^^^^
-We cannot rely on CAD to calculte the transform matrix as there are always slight differences in parts from CAD to manufacturing.
-This transform matrix has to be extremely accurate in order to properly classify images.
-
-What?
-^^^^^
-Instead, we solve for the transform matrix via a calibration secquence that uses a series of (at least 6) points identified by 
-hand in both the lidar and camera frames. With those points we can solve for the matrix 
-
-.. figure:: ppm_calibration.JPG
-    :width: 600
+.. figure:: zed2.png
+    :width: 200
     :align: center
 
-    *Figure: calibration setup consisting of many cones spread throughout at different heights and depths*
+    *Stereolabs ZED2 Camera used on 25a*
 
-.. Warning::
-    This method is heavily dependant on a good calibration. If the sensors move relative to each other 
-    or if the calibration points weren't picked at various depths / heights, the accuracy drops off steeply.
+Goal of the Coloring Module
+^^^^^^^^^^^^^^^^^^^^^^^^^
+The Coloring Module aims to apply RGB color information from cameras to classify cones coming in from the :doc:`LiDAR Module <lidar_module>` by color.
+Color classification delineates the sides of the track and allows `Path Planning`_ and `Controls`_ to create midlines and more.
 
-.. Note::
-    - Add diagram + equations for DLT
+.. admonition:: Info
+
+    - We use ROS2 to implement our pipeline. See `Software Architecture`_ for more.
+    - Our coloring module is housed in our custom ROS2 package, :doc:`point_to_pixel <../implementation/coloring_module>`. 
 
 
-:doc:`Point to Pixel Mapping <../implementation/coloring_module>`
+    **Input:** a set of uncolored cone centroids
+
+    * ``/cpp_cones``
+
+        * ``interfaces::msg::PPMConeArray``
+
+    **Output:** a set of colored cone centroids passed down the pipeline to `Path Planning`_ and `Controls`_.
+
+    * ``/perc_cones``
+
+        * ``interfaces::msg::ConeArray``
+
+
+Algorithm
 -------------------------------------------------------------------
 
 .. Note::
@@ -51,18 +52,16 @@ hand in both the lidar and camera frames. With those points we can solve for the
     :align: center
 
 
-With transform calculated, we can run our point to pixel sensor fusion algorithm.
-
-
 Simplified Algorithm
 ^^^^^^^^^^^^^^^^^^^^
+
 .. code-block:: text
 
     for each cone centroids / camera image do:
         YOLO v5 cone detection inference: bounding boxes of different color/size classes
 
-        For each cone centroid do:
-            transform to image space
+        for each cone centroid do:
+            transform to image space via transform matrix (see Direct Linear Transform below)
             
             if point is within a single bounding box classify as that color
 
@@ -72,6 +71,8 @@ Simplified Algorithm
 
 Notes
 """""
+
+- Point to Pixel Mapping makes the assumption that the cameras remain rigid with respect to the LiDAR at all times. 
 - Our YOLO v5 is trained on data from `Formula Student Objects in Context Dataset (FSOCO) <https://fsoco.github.io/fsoco-dataset/>`_
 - Depth heuristic uses the idea that the area of the bounding box roughly corresponds to depth 
 
@@ -95,7 +96,7 @@ This adds some complexity to the algorithm:
         For each cone centroid do:
             motion model point based on velocity and yaw deltas between LiDAR centroid timestamp and image timestamp
 
-            transform to image space
+            transform to image space via transform matrix (see Direct Linear Transform below)
                 
             if point is within a single bounding box classify as that color
 
@@ -113,3 +114,30 @@ Notes
 
 - Our Movella IMU is used to get velocity and yaw deltas.
 - Cone histories and SVM make the algorithm far more robust to synchronization issues--especially at faster speeds.
+
+Direct Linear Transform (DLT)
+-----------------------------
+
+Why use DLT?
+^^^^
+It is insufficient to use geometric approaches, e.g, measuring or CAD to estimate the static transformation matrix from camera to LiDAR.
+This is due to a multitude of reasons, but primarily results from the difference between design and fabrication. DLT allows for an accurate 
+transform to be calculated via calibration instead.
+
+What is DLT?
+^^^^^
+Instead, we solve for the transform matrix via a calibration sequence that uses a series of (at least 6) points identified by 
+hand in both the lidar and camera frames. With those points we can solve for the matrix 
+
+.. figure:: ppm_calibration.JPG
+    :width: 400
+    :align: center
+
+    *Figure: calibration setup consisting of many cones spread throughout at different heights and depths*
+
+.. Warning::
+    This method is heavily dependant on a good calibration. If the sensors move relative to each other 
+    or if the calibration points weren't picked at various depths / heights, the accuracy drops off steeply.
+
+.. Note::
+    - Add diagram + equations for DLT
