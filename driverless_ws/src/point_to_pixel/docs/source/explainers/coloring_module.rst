@@ -113,7 +113,7 @@ Notes
 """""
 
 - Our Movella IMU is used to get velocity and yaw deltas.
-- Cone histories and SVM make the algorithm far more robust to synchronization issues--especially at faster speeds.
+- Cone histories and support vector machines make the algorithm far more robust to synchronization issues--especially at faster speeds.
 
 Direct Linear Transform (DLT)
 -----------------------------

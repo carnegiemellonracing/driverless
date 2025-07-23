@@ -82,6 +82,6 @@ Checkout the links below to learn more about our sensor stack and our main algor
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
- 
+   
    source/explainers/explainers
    source/implementation/api_reference
