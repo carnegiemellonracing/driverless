@@ -1,0 +1,82 @@
+setupHeaders(
+    HEADERS
+        bufferIO.hpp
+        ByteOrder.hpp
+        CommandId.hpp
+        CompressedPoint2d.hpp
+        Convert.hpp
+        DataTypeId.hpp
+        EcefPoint.hpp
+        ecu.hpp
+        EventMonitor.hpp
+        MicroVisionSdk.hpp
+        ImporterProvider.hpp
+        io.hpp
+        io_prototypes.hpp
+        IpHelper.hpp
+        LaneHandler.hpp
+        LaneType.hpp
+        Line2d.hpp
+        lux.hpp
+        luxhr.hpp
+        Math.hpp
+        Matrix.hpp
+        Matrix2x2.hpp
+        Matrix3x3.hpp
+        Matrix6x6.hpp
+        MatrixNxN.hpp
+        minilux.hpp
+        MsgBuffer.hpp
+        MsgBufferBase.hpp
+        NtpTime.hpp
+        ObjectBasic.hpp
+        PassiveMsgBuffer.hpp
+        Point3dWithVariance.hpp
+        PositionUtm.hpp
+        Ptp64Time.hpp
+        Ptp96Time.hpp
+        Quaternion.hpp
+        Rectangle.hpp
+        RotationMatrix2d.hpp
+        RotationMatrix3d.hpp
+        RotationOrder.hpp
+        scala.hpp
+        ScannerProperties.hpp
+        ScannerType.hpp
+        syncbox.hpp
+        ThreadRunner.hpp
+        NtpTime.hpp
+        TimeInterval.hpp
+        trackingbox.hpp
+        Transform.hpp
+        TransformationMatrix2d.hpp
+        TransformationMatrix3d.hpp
+        Transform.hpp
+        Vector2.hpp
+        Vector3.hpp
+        VectorN.hpp
+
+    TARGET
+        sdk-core
+)
+
+setupHeaders(
+        HEADERS
+        mavin.hpp
+        lde.hpp
+        ecuudp.hpp
+
+        TARGET
+        sdk-devices
+)
+
+include(${CMAKE_CURRENT_LIST_DIR}/config/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/datablocks/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/devices/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/extension/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/jpegsupport/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/listener/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/misc/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/extension/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/io/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/commands/CMakeLists.txt)

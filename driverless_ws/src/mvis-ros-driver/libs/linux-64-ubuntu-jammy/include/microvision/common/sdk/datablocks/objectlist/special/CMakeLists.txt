@@ -1,0 +1,42 @@
+setupHeaders(
+    HEADERS
+        ContourPointIn2271.hpp
+        FilteredObjectDataIn2271.hpp
+        ObjectIn2221.hpp
+        ObjectIn2225.hpp
+        ObjectIn2270.hpp
+        ObjectIn2271.hpp
+        ObjectIn2280.hpp
+        ObjectIn2281.hpp
+        MeasurementSeriesIn2281.hpp
+        MeasurementIn2281.hpp
+        MeasurementKeyIn2281.hpp
+        ObjectList2221.hpp
+        ObjectList2221Exporter2221.hpp
+        ObjectList2221Importer2221.hpp
+        ObjectList2225.hpp
+        ObjectList2225Exporter2225.hpp
+        ObjectList2225Importer2225.hpp
+        ObjectList2270.hpp
+        ObjectList2270Exporter2270.hpp
+        ObjectList2270Importer2270.hpp
+        ObjectList2271.hpp
+        ObjectList2271Exporter2271.hpp
+        ObjectList2271Importer2271.hpp
+        ObjectList2280.hpp
+        ObjectList2280Exporter2280.hpp
+        ObjectList2280Importer2280.hpp
+        ObjectList2281.hpp
+        ObjectList2281Exporter2281.hpp
+        ObjectList2281Importer2281.hpp
+        ObjectList2290.hpp
+        ObjectList2290Exporter2290.hpp
+        ObjectList2290Importer2290.hpp
+        ObjectList2291.hpp
+        ObjectList2291Exporter2291.hpp
+        ObjectList2291Importer2291.hpp
+        UnfilteredObjectDataIn2271.hpp
+
+    GROUP datablocks\\objectlist\\special
+    TARGET sdk-core
+)

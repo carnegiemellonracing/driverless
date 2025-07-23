@@ -1,0 +1,28 @@
+movia:
+  ros__parameters:
+    # Define hardware id of sensor (printed on casing or "L" for MOVIA L).
+    hwid: "12"
+    # hwid: "L"
+
+    # Define multicast ip address of sensor with interface id of vlan sensor is connected to (get this number by calling "ip addr") - no VLAN for MOVIA L!
+    multicast_ip: "ff02::1be0:1%10"
+    # multicast_ip: "224.100.100.20"
+
+    # MOVIA sensor pointcloud port (default: 12345)
+    # port: 30000
+    port: 12345
+
+    # Define remote ip address of sensor depending on vlan setup - not required for MOVIA L!
+    remote_ip: "172.16.101.56"
+
+    # Optional: Set to false to use localtime of host otherwise sensor time is used
+    sensor_timesynced: false
+
+    # Optional: Set a pcap file path to read instead of connection to live sensor
+    pcap_file: ""
+
+    # SDK debug log level
+    log_level: "Warning"
+
+    # receive ldmi raw pointcloud data
+    ldmi_raw: false

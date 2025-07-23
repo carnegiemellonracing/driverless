@@ -1,0 +1,76 @@
+setupHeaders(
+    HEADERS
+        ClockType.hpp
+        DataContainerBase.hpp
+        ExporterBase.hpp
+        geoFrameTypes.hpp
+        GpsPoint.hpp
+        IdcDataHeader.hpp
+        PerceptionDataInfo.hpp
+        PerceptionPerformanceInfo.hpp
+        ImporterBase.hpp
+        LogPolygonMessage.hpp
+        Measurement.hpp
+        MeasurementKey.hpp
+        MeasurementSeries.hpp
+        MountingPosition.hpp
+        MountingPositionWithDeviation.hpp
+        PositionWgs84.hpp
+        RegisteredImporter.hpp
+        SpecialExporterBase.hpp
+        SpecialImporterBase.hpp
+        SpecialRegisteredImporter.hpp
+        Timestamp.hpp
+        TimestampInterface.hpp
+        TimestampRecvOnly.hpp
+
+    GROUP datablocks
+    TARGET sdk-core
+)
+
+include(${CMAKE_CURRENT_LIST_DIR}/canmessage/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/carriageway/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/commands/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/contentseparator/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/customdatacontainer/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/destination/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/devicestatus/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/eventtag/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/frameendseparator/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/frameindex/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/geoframeindex/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/geoframeindex/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/gpsimu/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/eventmarker/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/idctrailer/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/idsequence/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/image/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/lanemarking/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/ldmiAggregated/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/ldmiRaw/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/logmessages/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/logpolygonlist2d/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/marker/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/mavinRaw/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/measurementlist/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/metainformationlist/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/missionhandling/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/missionresponse/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/notification/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/objectassociationlist/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/objectlabellist/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/objectlist/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/odometry/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/ogpsimumessage/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/pointcloud/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/roadboundary/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/scan/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/systemmonitoring/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/timerecord/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/timerelation/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/trafficlight/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/vehiclecontrol/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/vehiclerequest/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/vehiclestate/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/wgs84/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/zoneoccupationlist/CMakeLists.txt)

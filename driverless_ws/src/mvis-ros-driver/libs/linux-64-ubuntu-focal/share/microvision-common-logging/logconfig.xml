@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Configuration>
+    <Backends>
+        <Backend id="microvision::common::logging::ConsoleLoggerBackend"
+                 format="[%level] %date{%Y-%m-%d %H-%M-%S,%s} - %file(%line) - %func: %msg%n" />
+        <Backend id="microvision::common::logging::FileLoggerBackend"
+                 format="[%level] %date{%Y-%m-%d %H-%M-%S,%s} - %file(%line) - %func: %msg%n">
+            <Path>microvision.log</Path>
+        </Backend>
+    </Backends>
+    <Loggers>
+        <Root level="debug">
+            <BackendRef id="microvision::common::logging::ConsoleLoggerBackend" />
+            <BackendRef id="microvision::common::logging::FileLoggerBackend" />
+        </Root>
+        <Logger id="microvision::common::logging::TestLogger" level="critical">
+            <BackendRef id="microvision::common::logging::ConsoleLoggerBackend" />
+        </Logger>
+    </Loggers>
+</Configuration>

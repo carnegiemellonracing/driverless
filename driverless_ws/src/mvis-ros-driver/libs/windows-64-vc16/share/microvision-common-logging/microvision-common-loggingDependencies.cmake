@@ -1,0 +1,10 @@
+if (DEFINED MICROVISION_microvision-common-logging_INCLUDE_GUARD)
+	return()
+endif()
+set(MICROVISION_microvision-common-logging_INCLUDE_GUARD 1)
+
+include(CMakeFindDependencyMacro)
+find_dependency(common REQUIRED)
+find_dependency(Boost REQUIRED COMPONENTS thread)
+find_dependency(tinyxml2 REQUIRED)
+find_dependency(Threads REQUIRED)
