@@ -18,7 +18,7 @@ we opted to avoid any depth processing due to latency concerns. Instead cameras 
     *Stereolabs ZED2 Camera used on 25a*
 
 Goal of the Coloring Module
-^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The Coloring Module aims to apply RGB color information from cameras to classify cones coming in from the :doc:`LiDAR Module <lidar_module>` by color.
 Color classification delineates the sides of the track and allows `Path Planning`_ and `Controls`_ to create midlines and more.
 
@@ -119,13 +119,13 @@ Direct Linear Transform (DLT)
 -----------------------------
 
 Why use DLT?
-^^^^
+^^^^^^^^^^^^
 It is insufficient to use geometric approaches, e.g, measuring or CAD to estimate the static transformation matrix from camera to LiDAR.
 This is due to a multitude of reasons, but primarily results from the difference between design and fabrication. DLT allows for an accurate 
 transform to be calculated via calibration instead.
 
 What is DLT?
-^^^^^
+^^^^^^^^^^^^
 Instead, we solve for the transform matrix via a calibration sequence that uses a series of (at least 6) points identified by 
 hand in both the lidar and camera frames. With those points we can solve for the matrix 
 
