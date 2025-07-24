@@ -22,10 +22,6 @@ decisions to control the car.
 This documentation is meant to provide an introduction and high level conceptual overview to our perceptions pipeline for our 2024-25 racecar, 24a. 
 For more detail, including source code, please visit our `GitHub repository <https://github.com/carnegiemellonracing/driverless>`_ 
 
-.. NOTE::
-   PLACEHOLDER FOR IMAGE / GIF of car w/ sensors
-
-
 The FSAE Driverless Perceptions Problem
 =======================
 Given a track delimited by yellow and blue cones, we must reliably and efficiently determine the track and cones and pass down the driverless pipeline.
@@ -50,20 +46,23 @@ We employ a variety of sensors to accomplish this task:
 
 - `HESAI AT128 Hybrid Solid State LiDAR <https://www.hesaitech.com/product/at128/>`_
 - `Dual ZED2 Stereo Cameras (only used for RGB frames) <https://www.stereolabs.com/products/zed-2>`_
-- `MTi-680G RTK GNSS/INS GPS <https://www.movella.com/products/sensor-modules/xsens-mti-680g-rtk-gnss-ins>`_
+- `Movella MTi-680G RTK GNSS/INS GPS <https://www.movella.com/products/sensor-modules/xsens-mti-680g-rtk-gnss-ins>`_
 
 Using these three sensors we efficiently generate a local view of the track and cones. 
+
+.. figure:: source/index/perc_algo_diagram.svg
+   :width: 600
+   :align: center
+
+   *Overall Pipeline Diagram*
 
 What data do we work with and where does it go?
 ===============================================
 
-.. Note::
-   - Add system diagram that shows data and merging flow
-
 LiDAR Module
 ------------
 
-LiDAR provides a primary source of depth information via `point clouds <https://en.wikipedia.org/wiki/Point_cloud>`_, 
+Our single LiDAR provides a primary source of depth information via `point clouds <https://en.wikipedia.org/wiki/Point_cloud>`_, 
 which are discrete sets of points in space. Several processing algorithms (see :doc:`lidar explainers <source/explainers/lidar_module>`) 
 are then applied, eventually resulting in a set of points that represent the centroid of cones on the track in front of us.
 
@@ -71,8 +70,7 @@ are then applied, eventually resulting in a set of points that represent the cen
 Coloring Module
 ---------------
 
-RGB cameras provide a primary source of color information. Though the two stereolabs ZED cameras have stereoscopic capability,
-the pipeline avoids any depth processing due to latency concerns. Instead cameras are just used for rgb image processing (see :doc:`coloring explainers <source/explainers/coloring_module>`).
+Our dual RGB cameras provide a primary source of color information. Cameras are used for rgb image processing (see :doc:`coloring explainers <source/explainers/coloring_module>`) to classify cones by color.
 Classified cones are then passed down the pipeline to `Path Planning`_ and `Controls`_.
 
 Directory

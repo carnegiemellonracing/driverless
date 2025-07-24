@@ -38,7 +38,7 @@ center of cones on the track in front of us.
 
     * ``All internal to the Hesai ROS Driver 2.0 Node``
 
-    **Output:** a set of cone centroids. It is a message type from our custom ROS2 ``interfaces`` package
+    **Output:** a set of cone centroids. It is a message type from our custom ROS2 ``interfaces`` package.
 
     * ``/cpp_cones``
 
@@ -55,8 +55,11 @@ To get to the output goal of a set of cone centroids several pieces of extraneou
 
 The LiDAR Module employs two main algorithms to carry out these steps.
 
-.. Note::
-    Add Module Diagram with pictures from each stage. (Use my python package for pipeline sim)
+.. figure:: lidar_algo_diagram.svg
+    :width: 1000
+    :align: center
+
+    *Algorithm diagram*
 
 
 Ground Filtering
