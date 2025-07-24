@@ -6,22 +6,22 @@ LiDAR Module Concepts
 
 Overview
 ------------
+.. admonition:: Sidebar
 
-What is a LiDAR?
-^^^^^^^^^^^^^^^^
+    **What is a LiDAR?**
 
-A LiDAR--Light Detection And Ranging--sensor is a type of time of flight (ToF) sensor that can measure the depth of objects in space. 
-Essentially, it fires a laser to a target and analyzes the reflected light in order to create high-resolution maps. This capability
-makes LiDARs some of the best sensors for object detection, widely used throughout the field of autonomous vehicles. 
+    A LiDAR--Light Detection And Ranging--sensor is a type of time of flight (ToF) sensor that can measure the depth of objects in space. 
+    Essentially, it fires a laser to a target and analyzes the reflected light in order to create high-resolution maps. This capability
+    makes LiDARs some of the best sensors for object detection, widely used throughout the field of autonomous vehicles. 
 
-The main output of a LiDAR sensor is a 2d/3d point cloud representation of the environment. A point cloud is a discrete set of points in space.
-Each point represents the distance from the sensor to an object in the environment.
+    The main output of a LiDAR sensor is a 2d/3d point cloud representation of the environment. A point cloud is a discrete set of points in space.
+    Each point represents the distance from the sensor to an object in the environment.
 
-.. figure:: AT128-1.png
-    :width: 200
-    :align: center
+    .. figure:: AT128-1.png
+        :width: 200
+        :align: center
 
-    *HESAI AT128 Hybrid Solid State LiDAR used on 25a*
+        *HESAI AT128 Hybrid Solid State LiDAR used on 25a*
 
 Goal of the LiDAR Module
 ^^^^^^^^^^^^^^^^^^^^^^^^
