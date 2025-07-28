@@ -37,7 +37,7 @@
     "FONT_FAMILY": "Arial",
     "FONT_WEIGHT": "bold"
   },
-  "default_directory": "calibration",
+  "default_directory": "Test",
   "auto_save_settings": true,
   "theme": "dark"
 }

@@ -5,6 +5,7 @@ Handles differences between Windows, macOS, and Linux
 
 import sys
 import platform
+import tkinter as tk
 from typing import List, Dict
 
 def get_platform() -> str:
@@ -106,3 +107,14 @@ def set_environment_variable(var_name: str, value: str):
     """Set environment variable"""
     import os
     os.environ[var_name] = value
+
+def center_window(parent: tk.Tk ):
+    parent.update_idletasks()
+
+    screen_width = parent.winfo_screenwidth()
+    screen_height = parent.winfo_screenheight()
+    size = tuple(int(_) for _ in parent.geometry().split('+')[0].split('x'))
+    x = screen_width/2 - size[0]/2
+    y = screen_height/2 - size[1]/2
+
+    parent.geometry("+%d+%d" % (x, y))
