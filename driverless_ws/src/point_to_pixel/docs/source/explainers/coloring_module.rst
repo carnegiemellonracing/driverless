@@ -138,6 +138,3 @@ transform to be calculated via calibration instead.
 .. Warning::
     This method is heavily dependant on a good calibration. If the sensors move relative to each other 
     or if the calibration points weren't picked at various depths / heights, the accuracy drops off steeply.
-
-.. Note::
-    - Add diagram + equations for DLT

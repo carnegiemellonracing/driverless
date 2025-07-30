@@ -65,20 +65,13 @@ The LiDAR Module employs two main algorithms to carry out these steps.
 Ground Filtering
 ----------------
 
-.. Note::
-    Add the following diagrams:
-
-    - GNC algorithm diagram
-
-    Figure out where GNC name actually came from...
-
-We use a ground filtering algorithm called :doc:`Grace and Conrad <../implementation/lidar_module>` (developed by CMR alums Grace and Conrad a few years back).
-
-.. figure:: radius_azimuth.svg
-    :width: 600
+.. figure:: gnc.jpg
+    :width: 1000
     :align: center
 
-    *Radius Azimuth cylindrical coordinate system*
+    *Diagram description of Grace and Conrad*
+
+We use a ground filtering algorithm called :doc:`Grace and Conrad <../implementation/lidar_module>` (named in our codebase after CMR alums Grace and Conrad, who wrote the intial version).
 
 .. code-block:: text
 
@@ -100,13 +93,14 @@ Notes
 Clustering
 ----------------
 
-.. Note::
-    Add the following diagrams:
-
-    - DBSCAN algorithm diagram
-
 :doc:`Density-Based Spatial Clustering of Applications with Noise (DBSCAN) <../implementation/lidar_module>` is used to identify clusters of points.
-The basic algorithm is below although note a more detailed pseudocode can be found in the `DBSCAN Wikipedia article <https://en.wikipedia.org/wiki/DBSCAN>`_.
+The basic algorithm is below and a more detailed pseudocode can be found in the `DBSCAN Wikipedia article <https://en.wikipedia.org/wiki/DBSCAN>`_.
+
+.. figure:: dbscan.jpg
+    :width: 1000
+    :align: center
+
+    *Diagram description of DBSCAN*
 
 .. code-block:: text
 
@@ -126,6 +120,6 @@ The basic algorithm is below although note a more detailed pseudocode can be fou
 Notes
 ''''''
 
-- DBSCAN makes the assumption that all clusters of sufficient density left represent cones. Extraneous clusters are filtered in DBSCAN2 (see `codebase <../implementation/lidar_module>`_)
+- DBSCAN makes the assumption that all clusters of sufficient density left represent cones. Extraneous clusters are filtered in DBSCAN2 (see `API Reference <../implementation/lidar_module>`_)
 - `DBSCAN Wikipedia reference <https://en.wikipedia.org/wiki/DBSCAN>`_
 - `DBSCAN original paper <https://dl.acm.org/doi/10.5555/3001460.3001507>`_
