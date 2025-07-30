@@ -9,7 +9,7 @@ Overview
 --------
 
 
-RGB cameras provide a source color information. Though the stereolabs ZED cameras also have `stereoscopic <https://en.wikipedia.org/wiki/Stereo_camera>`_ capability,
+RGB cameras provide a source color information. Though the Stereolabs ZED cameras also have `stereoscopic <https://en.wikipedia.org/wiki/Stereo_camera>`_ capability,
 the pipeline avoids any depth processing due to latency concerns. Instead cameras are used purely for color information.
 
 .. figure:: zed2.png
@@ -66,7 +66,7 @@ Simplified Point to Pixel Mapping Algorithm
 
             if point is in multiple boxes use a rough depth heuristic to pick one box
 
-            else label the point as unkown
+            else label the point as unknown
 
 Notes
 """""
@@ -80,7 +80,7 @@ Complexities related to sensor frame timestamps
 
 The main complexity in our implementation is to solve two problems that crop up as a result of unsynchronized data.
 
-    1. Our sensors have no synchronous trigger, and thus we need to find a way to syncronize data as best as possible.
+    1. Our sensors have no synchronous trigger, and thus we need to find a way to synchronize data as best as possible.
     2. Our system needs to be robust to a a few errors in coloring due to this LiDAR - camera temporal synchronization issue.
 
 This adds some complexity to the algorithm:
@@ -101,7 +101,7 @@ This adds some complexity to the algorithm:
 
             if point is in multiple boxes use a rough depth heuristic to pick one box
 
-            else label the point as unkown
+            else label the point as unknown
 
         feed centroids into cone history algorithm to minimize the effect of misclassifications
 

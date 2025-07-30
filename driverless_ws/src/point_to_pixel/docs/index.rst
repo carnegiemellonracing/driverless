@@ -1,8 +1,3 @@
-.. cmr_perceptions_24a_point_to_pixel documentation master file, created by
-   sphinx-quickstart on Tue Jul 15 22:05:22 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 .. _Path Planning: https://cmr.red/planning-docs
 .. _Controls: https://cmr.red/controls-docs
 .. _Software Architecture: https://cmr.red/software-arch-docs

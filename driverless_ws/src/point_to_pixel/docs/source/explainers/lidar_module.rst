@@ -21,7 +21,7 @@ Overview
         :width: 200
         :align: center
 
-        *HESAI AT128 Hybrid Solid State LiDAR used on 25a*
+        *HESAI AT128 Hybrid Solid State LiDAR used on 24a*
 
 Goal of the LiDAR Module
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -36,7 +36,7 @@ center of cones on the track in front of us.
 
     **Input:** Pointcloud from the LiDAR. Not usually available to the ROS system unless specifically turned on.
 
-    * ``All internal to the Hesai ROS Driver 2.0 Node``
+    * ``All internal to the HESAI ROS Driver 2.0 Node``
 
     **Output:** a set of cone centroids. It is a message type from our custom ROS2 ``interfaces`` package.
 
@@ -71,7 +71,7 @@ Ground Filtering
 
     *Diagram description of Grace and Conrad*
 
-We use a ground filtering algorithm called :doc:`Grace and Conrad <../implementation/lidar_module>` (named in our codebase after CMR alums Grace and Conrad, who wrote the intial version).
+We use a ground filtering algorithm called :doc:`Grace and Conrad <../implementation/lidar_module>` (named in our codebase after CMR alums Grace and Conrad, who wrote the initial version).
 
 .. code-block:: text
 
