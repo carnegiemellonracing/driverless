@@ -1,8 +1,8 @@
 Terminology
 ===========
 
-General
--------
+Relevant Terminology
+--------------------
 **State**: The state of the vehicle. We define this to be x, y, yaw and speed.
 
 **Control Action**: The control action to be executed by the vehicle. We define this to be steering wheel angle and wheel throttle.
