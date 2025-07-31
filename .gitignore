@@ -16,7 +16,7 @@ log.log
 **/*.gz
 **/*.npz
 **/*.npy
-/driverless_ws/src/**/*/.png
+/driverless_ws/src/**/*.png
 
 **/__pycache__/
 driverless_ws/src/Model/output
