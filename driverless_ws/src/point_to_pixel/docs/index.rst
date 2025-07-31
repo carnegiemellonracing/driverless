@@ -37,13 +37,13 @@ Sensors
 
     *24a at track testing.*
 
-We employ a variety of sensors to accomplish this task:
+A variety of sensors are employed to accomplish this task:
 
 - `HESAI AT128 Hybrid Solid State LiDAR <https://www.hesaitech.com/product/at128/>`_
 - `Dual ZED2 Stereo Cameras (only used for RGB frames) <https://www.stereolabs.com/products/zed-2>`_
 - `Movella MTi-680G RTK GNSS/INS GPS <https://www.movella.com/products/sensor-modules/xsens-mti-680g-rtk-gnss-ins>`_
 
-Using these three sensors we efficiently generate a local view of the track and cones. 
+These three sensors efficiently generate a local view of the track and cones. 
 
 .. figure:: source/index/perc_algo_diagram.svg
    :width: 600

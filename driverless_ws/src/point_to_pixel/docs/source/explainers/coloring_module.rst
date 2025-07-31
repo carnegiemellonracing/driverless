@@ -78,12 +78,12 @@ Notes
 Complexities related to sensor frame timestamps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The main complexity in our implementation is to solve two problems that crop up as a result of unsynchronized data.
+The implementation is forced to solve two problems that crop up as a result of unsynchronized data.
 
     1. Our sensors have no synchronous trigger, and thus we need to find a way to synchronize data as best as possible.
     2. Our system needs to be robust to a a few errors in coloring due to this LiDAR - camera temporal synchronization issue.
 
-This adds some complexity to the algorithm:
+This adds some additional steps to the algorithm:
 
 .. code-block:: text
 
