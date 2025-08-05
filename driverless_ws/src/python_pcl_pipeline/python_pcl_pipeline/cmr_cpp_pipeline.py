@@ -2,6 +2,7 @@ import rclpy
 from rclpy.node import Node
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 from .helper import *
 
@@ -73,8 +74,15 @@ class CMRCPPPipelineNode(Node):
         self.epsilon2 = 3
         self.min_points2 = 3
         
-        self.epsilon3 = 3
+        self.epsilon3 = .2
         self.min_points3 = 3
+        
+        # for grid visualization
+        plt.ion()
+        self.fig, self.axes = plt.subplots(4, 5, figsize=(10, 8))
+        self.axes = self.axes.flatten()
+        self.fig.suptitle('Live Cone Detections')
+        
 
     def gnc(self, cloud, intensities):
         return grace_and_conrad(cloud, intensities, self.alpha, self.num_bins, self.height_threshold)
@@ -98,38 +106,48 @@ class CMRCPPPipelineNode(Node):
         dist = np.linalg.norm(points, axis=1)
         points = points[dist > .01]
         intensities = intensities[dist > .01]
-
+        
+        # TEMPORARILY Filter out points more than 3 meters to the right or left (based on the y-coordinate)
+        side_mask = np.abs(points[:, 1]) <= 2.25
+        points = points[side_mask]
+        intensities = intensities[side_mask]
+        
         points, intensities = self.gnc(points, intensities)
         print(points.shape, intensities.shape)
         # points = self.dbs(points)
         # points = self.dbs2(points)
         cone_clusters = self.dbs3(points, intensities)
+        cone_clusters = sorted(cone_clusters, key=lambda x: np.mean(x[0][:,0]))
+        # TODO: Run dbs3 again
         print(f'    --> Found {len(cone_clusters)} potential cones')
         
         cone_points_pub = []
-        last_grid = None
+        cone_intensities_pub = []
+        all_grids = []
         
         for i, (points, intensities) in enumerate(cone_clusters):
             grid = self.to_grid(points, intensities)
+            all_grids.append(grid)
             # TODO
             # color = self.AMZ_model.predict(grid)
-            color = "HA --- GOTEM"
+            color = "Not implemented Yet"
             print(f'    --> Cone #{i}: Processed {points.shape[0]} points into a {grid.shape} grid, with color: {color}')
             
             cone_points_pub.append(points)
-            last_grid = grid
+            cone_intensities_pub.append(intensities)
         
-        # if last_grid is not None:
-        #     # Offload this to rviz or foxglove
-        #     plt.figure(i + 1)
-        #     plt.clf()
-        #     plt.imshow(grid, cmap='gray', vmin=0, vmax=1)
-        #     plt.title(f"Intensity Grid for Cone #{i+1}")
-        #     plt.show(block=False)
-        #     plt.pause(0.1)
-            
         points = np.vstack(cone_points_pub)
-        intensities = np.ones(points.shape[0])
+        intensities = np.concatenate(cone_intensities_pub)
+        
+        # PLOTTING CODE
+        for i, ax in enumerate(self.axes):
+            ax.clear()
+            if i < len(all_grids):
+                ax.imshow(all_grids[i], cmap='viridis', interpolation='nearest', origin='lower')
+                ax.set_title(f"Cone #{i}", fontsize=8)
+            ax.axis('off')
+            
+        plt.pause(0.01)
 
         # print(intensities.min(), intensities.max())
 

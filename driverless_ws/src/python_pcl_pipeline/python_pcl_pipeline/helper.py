@@ -48,7 +48,7 @@ def point_cloud2_to_dict(msg: PointCloud2) -> dict:
 
         # Interpret the bytes as the correct dtype. The .squeeze() removes
         # the trailing dimension of size 1.
-        parsed_fields[field.name] = field_data.view(dtype).squeeze()
+        parsed_fields[field.name] = field_data.copy().view(dtype).squeeze()
 
     # --- Reformat the data into the desired output dictionary format ---
     output_dict = {}
@@ -557,22 +557,32 @@ def cone_cluster_to_intensity_grid(cloud: np.ndarray, intensities: np.ndarray, g
     centroid = np.mean(cloud, axis=0)
     centered_cloud = cloud - centroid
     
+    # flattening algorithm:
+        # take vector from lidar origin to centroid -> plane
+        # project points onto plane
+        
+    centered_cloud = centered_cloud[:, 1:3]
     max_size = np.max(np.abs(centered_cloud))
     if max_size == 0:
         return np.zeros(grid_size, dtype=np.float32)
     
-    y = ((centered_cloud[:, 2] / max_size) * (grid_size[0] / 2) + (grid_size[0] / 2)).astype(int)
-    x = ((centered_cloud[:, 1] / max_size) * (grid_size[1] / 2) + (grid_size[1] / 2)).astype(int)
+    y = ((centered_cloud[:, 0] / max_size) * (grid_size[0] / 2) + (grid_size[0] / 2)).astype(int)
+    z = ((centered_cloud[:, 1] / max_size) * (grid_size[1] / 2) + (grid_size[1] / 2)).astype(int)
     
+    y_shape = y.shape[0]
+    z_shape = z.shape[0]
     y = np.clip(y, 0, grid_size[0] - 1)
-    x = np.clip(x, 0, grid_size[1] - 1)
+    z = np.clip(z, 0, grid_size[1] - 1)
+    print(y_shape - y.shape[0])
+    print(z_shape - z.shape[0])
     
     grid = np.zeros(grid_size, dtype=np.float32)
-    np.maximum.at(grid, (y, x), intensities)
+    # grid[y,z] = intensities
+    np.maximum.at(grid, (z, y), intensities)
     
     # Normalization
-    min_val, max_val = np.min(grid), np.max(grid)
-    if max_val > min_val:
-        grid = (grid - min_val) / (max_val - min_val)
+    # min_val, max_val = np.min(grid), np.max(grid)
+    # if max_val > min_val:
+    #     grid = (grid - min_val) / (max_val - min_val)
 
     return grid
