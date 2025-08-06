@@ -139,6 +139,7 @@ class ConeNode(Node):
 
         data_time = self.flush_and_get_data_times()
         msg.orig_data_stamp = data_time.to_msg()
+        msg.header.stamp = data_time.to_msg()
 
         self.cone_publisher.publish(msg)
 
