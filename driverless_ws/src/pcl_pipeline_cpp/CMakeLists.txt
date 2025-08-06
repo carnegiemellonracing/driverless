@@ -16,7 +16,9 @@ target_include_directories(cmr_cpp_pipeline PUBLIC
 target_compile_features(cmr_cpp_pipeline PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(
   cmr_cpp_pipeline
+  "rclcpp"
   "sensor_msgs"
+  "interfaces"
 )
 
 install(TARGETS cmr_cpp_pipeline
