@@ -1,7 +1,6 @@
 import rclpy
 from rclpy.node import Node
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 
 from .helper import *
@@ -77,12 +76,14 @@ class CMRCPPPipelineNode(Node):
         self.epsilon3 = .2
         self.min_points3 = 3
         
-        # for grid visualization
-        plt.ion()
-        self.fig, self.axes = plt.subplots(4, 5, figsize=(10, 8))
-        self.axes = self.axes.flatten()
-        self.fig.suptitle('Live Cone Detections')
+        # for grid saving
+        self.grid_save_dir = "/root/cone_dataset/"
+        self.class_names = {0: 'blue', 1: 'yellow'}
         
+        for name in self.class_names.values():
+            os.makedirs(os.path.join(self.grid_save_dir, name), exist_ok=True)
+        
+        self.frame_counter = 0
 
     def gnc(self, cloud, intensities):
         return grace_and_conrad(cloud, intensities, self.alpha, self.num_bins, self.height_threshold)
@@ -123,11 +124,34 @@ class CMRCPPPipelineNode(Node):
         
         cone_points_pub = []
         cone_intensities_pub = []
-        all_grids = []
+        saved_count = 0
         
         for i, (points, intensities) in enumerate(cone_clusters):
+            
+            centroid = np.mean(points, axis=0)
+            y = centroid[1]
+            
+            label = -1
+            if y < 0:
+                label = 0
+            elif y > 0:
+                label = 1
+            
+            if label == -1:
+                continue
+            
+            class_name = self.class_names[label]
+            
             grid = self.to_grid(points, intensities)
-            all_grids.append(grid)
+            
+            filename = f'frame_{self.frame_counter:04d}_cone_{i}.npy'
+            filepath = os.path.join(self.grid_save_dir, class_name, filename)
+            np.save(filepath, grid)
+            saved_count += 1
+            
+            print(f'    --> Cone #{i}: Processed, labeled as "{class_name}", and saved.')
+            
+            # decide if yellow or blue based off of points.mean < or > 0 and append
             # TODO
             # color = self.AMZ_model.predict(grid)
             color = "Not implemented Yet"
@@ -136,18 +160,12 @@ class CMRCPPPipelineNode(Node):
             cone_points_pub.append(points)
             cone_intensities_pub.append(intensities)
         
+        self.get_logger().info(f'Saved {saved_count} labeled grids for frame {self.frame_counter}.')
+        self.frame_counter += 1
+        
+        
         points = np.vstack(cone_points_pub)
         intensities = np.concatenate(cone_intensities_pub)
-        
-        # PLOTTING CODE
-        for i, ax in enumerate(self.axes):
-            ax.clear()
-            if i < len(all_grids):
-                ax.imshow(all_grids[i], cmap='viridis', interpolation='nearest', origin='lower')
-                ax.set_title(f"Cone #{i}", fontsize=8)
-            ax.axis('off')
-            
-        plt.pause(0.01)
 
         # print(intensities.min(), intensities.max())
 
