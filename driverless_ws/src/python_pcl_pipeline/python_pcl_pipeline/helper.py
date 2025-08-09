@@ -554,31 +554,38 @@ def cone_cluster_to_intensity_grid(cloud: np.ndarray, intensities: np.ndarray, g
     if cloud.shape[0] == 0:
         return np.zeros(grid_size, dtype=np.float32)
     
-    centroid = np.mean(cloud, axis=0)
-    centered_cloud = cloud - centroid
+    # flattening algorithm: change of basis from (X,Y,Z) to (U,V,W) where W is LiDAR origin to centroid axis
     
-    # flattening algorithm:
-        # take vector from lidar origin to centroid -> plane
-        # project points onto plane
-        
-    centered_cloud = centered_cloud[:, 1:3]
-    max_size = np.max(np.abs(centered_cloud))
+    # Find normal vector (W-axis)
+    centroid = np.mean(cloud, axis=0)
+    norm = np.linalg.norm(centroid)
+    W = centroid/norm
+    
+    # Find orthonormal basis
+    not_W = np.array([0., 0., 1.])
+    U = np.cross(not_W, W)
+    U /= np.linalg.norm(U)
+    V = np.cross(W, U)
+    
+    # Transform points to new (U,V) axis
+    centered_cloud = cloud - centroid
+    u = np.dot(centered_cloud, U)
+    v = np.dot(centered_cloud, V)
+  
+    # centered_cloud = centered_cloud[:, 1:3]
+    # max_size = np.max(np.abs(centered_cloud))
+    max_size = np.max(np.abs(np.stack([u,v])))
     if max_size == 0:
         return np.zeros(grid_size, dtype=np.float32)
     
-    y = ((centered_cloud[:, 0] / max_size) * (grid_size[0] / 2) + (grid_size[0] / 2)).astype(int)
-    z = ((centered_cloud[:, 1] / max_size) * (grid_size[1] / 2) + (grid_size[1] / 2)).astype(int)
+    u = ((u / max_size) * (grid_size[0] / 2) + (grid_size[0] / 2)).astype(int)
+    v = ((v / max_size) * (grid_size[1] / 2) + (grid_size[1] / 2)).astype(int)
     
-    y_shape = y.shape[0]
-    z_shape = z.shape[0]
-    y = np.clip(y, 0, grid_size[0] - 1)
-    z = np.clip(z, 0, grid_size[1] - 1)
-    print(y_shape - y.shape[0])
-    print(z_shape - z.shape[0])
+    u = np.clip(u, 0, grid_size[0] - 1)
+    v = np.clip(v, 0, grid_size[1] - 1)
     
     grid = np.zeros(grid_size, dtype=np.float32)
-    # grid[y,z] = intensities
-    np.maximum.at(grid, (z, y), intensities)
+    np.maximum.at(grid, (v, u), intensities)
     
     # Normalization
     # min_val, max_val = np.min(grid), np.max(grid)
