@@ -588,8 +588,8 @@ def cone_cluster_to_intensity_grid(cloud: np.ndarray, intensities: np.ndarray, g
     np.maximum.at(grid, (v, u), intensities)
     
     # Normalization
-    # min_val, max_val = np.min(grid), np.max(grid)
-    # if max_val > min_val:
-    #     grid = (grid - min_val) / (max_val - min_val)
+    min_val, max_val = np.min(grid), np.max(grid)
+    if max_val > min_val:
+        grid = (grid - min_val) / (max_val - min_val)
 
     return grid
