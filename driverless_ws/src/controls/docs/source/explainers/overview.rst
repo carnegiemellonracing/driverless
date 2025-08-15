@@ -24,21 +24,4 @@ It publishes to the following topics:
 * ``control_action``: The calculated optimal control action to be sent to the |Actuators| node.
 * ``controller_info``: Information about the controller, for debugging purposes.
 
-Setup
------------------
-To build the controls package, run the following command from inside the ``driverless/driverless_ws`` directory:
-
-.. code-block:: bash
-
-    ./build-controls.py
-
-To run the controller node, run:
-
-.. code-block:: bash
-
-    ros2 run controls controller
-
-Next Up
--------
-
 To learn more about the controller, visit :doc:`here </source/explainers/controller>` for a detailed overview.

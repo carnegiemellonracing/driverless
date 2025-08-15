@@ -15,8 +15,6 @@
 Introduction
 ============
 
-Welcome to the documentation for Carnegie Mellon Racing (CMR)'s driverless controls software!
-Carnegie Mellon Racing is a premier student organization at Carnegie Mellon University that designs and builds autonomous vehicles to compete in the annual Formula Student Driverless competition.
 As part of our efforts to support other FSAE teams as they embark on their driverless journeys,
 we have open-sourced our workspace at our `GitHub <https://github.com/carnegiemellonracing/driverless>`_ and documented them here.
 
@@ -39,7 +37,7 @@ Have fun and enjoy the ride!
    :caption: Contents:
 
    source/explainers/overview
+   source/reference/implementation
    source/explainerslist.rst
-   source/reference/api_reference
    source/explainers/terminology
 

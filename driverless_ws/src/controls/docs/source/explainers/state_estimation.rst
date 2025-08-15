@@ -118,6 +118,23 @@ Finally, we create a CUDA texture object to point to the rendered lookup table s
 texture object is then synced to CUDA global memory, which is used by the controller to look up curvilinear state during
 cost calculation.
 
+Other Miscellaneous Sources of Latency
+--------------------------------------
+The car also experiences nontrivial amounts of latency when moving between steering wheel angles. 
+That is, to move the car's wheel pointing from one angle to another, the controls pipeline has to account
+for this delay.
+
+Previously, we naively assumed that the car's steering wheel angle would "teleport" between control actions,
+however, we found that this was likely one source of noise/inaccuracy. To address this, we measured the time
+it took for the steering wheel to traverse (angular velocity) and used it "project" the steering wheel angle
+futures.
+
+The car also experiences nontrivial amounts of latency between sending torque actions and when the car's
+actual torques achieve the requested torques. This was accounted in a similar way.
+
+An open question (and a difficult one to answer), however, is whether these made any significant improvements to the model. 
+
+
 Implementation
 --------------
 

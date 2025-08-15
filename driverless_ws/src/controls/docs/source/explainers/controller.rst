@@ -4,8 +4,6 @@ Controller Overview
 
 .. image /images/controller_implementation.*
 
-If you're unfamiliar with ROS2, check out https://docs.ros.org/en/humble/Tutorials.html.
-
 The controller hinges on 3 things:
 
 * A novel :doc:`state estimation <state_estimation>` pipeline.
@@ -54,3 +52,13 @@ Code for the node can be found in ``controls/src/nodes/controller.cpp``.
     guaranteed, it won't be delayed by MPPI or state updates.
     add link to double buffering, inquire about consistency of publishing
 
+Runtime Variables
+-----------------
+
+We found that the compilation times to be a nontrivial slow down to our very limited track tests.
+A single compilation after a controller parameter change takes approximately 1 minute. To address this,
+we implemented runtime parameters, where some of the parameters which don't live on the GPU/interface with
+CUDA were changed into runtime parameters that were defined in configuration files.
+
+This reduced build times and test times, as we could change the relevant parameters in the configuration file
+and then run the controller without having to rebuild.
