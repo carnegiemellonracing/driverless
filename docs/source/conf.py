@@ -7,7 +7,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'CMR DV Elec Docs'
+project = 'CMR DV Mech Docs'
 copyright = '2025, Richard Zhang'
 author = 'Richard Zhang'
 release = '1.0'

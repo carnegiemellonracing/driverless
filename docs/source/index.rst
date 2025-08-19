@@ -1,13 +1,19 @@
 Overview
 ===========
 
-This documentation details the electrical systems on Carnegie Mellon Racing’s 2025 driverless Formula SAE vehicle, 24a. Our implementation of 24a was specifically designed to retrofit on an existing FSAE platform and its underlying electrical systems, not a ground-up integration. 
+.. image:: ./img/car.png
+    :align: center
 
-Note on Terminology: Throughout this document, we primarily use "Driverless System" (DS) and related acronyms (e.g., DSMS, DSB, DSSI) as per the latest FSAE Driverless Supplement. Teams should be aware that Formula Student Germany (FSG) rules and earlier versions of FSAE rules may use "Autonomous System" (AS) and corresponding acronyms (e.g., ASMS, ASB, ASSI) to refer to the same concepts.
+Mechanically retrofitting a FSAE vehicle for driverless operation involves the integration of systems that enable dual mode actuation for traditionally driver controlled systems. The two systems used to simulate driver motion are the Autonomous Steering System (ASS) and Autonomous System Brake (ASB). These electro-mechanical systems perform steering and braking commands given by the vehicle controller.
+
+Mechanical retrofitting the vehicle also involves integration of driverless sensors and electrical hardware. This includes LiDAR, cameras, IMUs, the onboard computer, and custom printed circuit boards. These systems are implemented to obtain data and execute developed software on the vehicle. 
+
+The actuation and integration of driverless mechanical systems allow for the control of the vehicle with and without a human driver. This documentation will look more in depth at the mechanical systems needed to design a driverless FSAE vehicle system, highlighting a general approach to the problem and executed solution. 
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   systems
-   hardware
+   steeringsystem
+   systembrake
+   electricalintegration
