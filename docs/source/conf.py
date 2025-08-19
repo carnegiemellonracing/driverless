@@ -7,9 +7,9 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'CMR Driverless Software'
-copyright = '2025, Matthew Rao'
-author = 'Matthew Rao'
+project = 'CMR DV Elec Docs'
+copyright = '2025, Richard Zhang'
+author = 'Richard Zhang'
 release = '1.0'
 
 # -- General configuration ---------------------------------------------------
