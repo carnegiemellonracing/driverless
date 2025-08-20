@@ -1,0 +1,77 @@
+\doxysection{slam\+\_\+est\+\_\+and\+\_\+mcov.\+hpp}
+\hypertarget{slam__est__and__mcov_8hpp_source}{}\label{slam__est__and__mcov_8hpp_source}\index{include/slam\_est\_and\_mcov.hpp@{include/slam\_est\_and\_mcov.hpp}}
+\mbox{\hyperlink{slam__est__and__mcov_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <gtsam/inference/Symbol.h>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <gtsam/nonlinear/ISAM2.h>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <gtsam/geometry/Point2.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <gtsam/geometry/Pose2.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <eigen3/Eigen/Dense>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ros__utils_8hpp}{ros\_utils.hpp}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceslam}{slam}}\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_a84beb5098e3d71eb9fbe802a16cbad23}{SLAMEstAndMCov}}\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ SLAM\ history\ of\ estimates\ and\ marginal\ covariance\ matrices\ */}}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<gtsam::Point2>\ slam\_est;}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<Eigen::MatrixXd>\ slam\_mcov;}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ n\_landmarks;}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ The\ function\ for\ getting\ the\ symbol\ of\ the\ variable\ that\ we\ want\ to\ retrieve\ */}}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<gtsam::ISAM2>\ isam2;}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Symbol\ (*cone\_key\_fn)(int);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Tunable\ and\ adjustable\ parameters\ */}}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ look\_radius;}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ update\_iterations\_n;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ check\_mdist\_correctness(gtsam::Point2\ global\_obs\_cone,\ std::vector<double>\ mdist\_to\_check);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Constructor\ */}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_a26b44510e1e84abf576a5129eab2cf5b}{SLAMEstAndMCov}}(}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<gtsam::ISAM2>\ isam2,\ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Symbol(*cone\_key\_fn)(\textcolor{keywordtype}{int}),\ }
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ look\_radius,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ update\_iterations\_n}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_a26b44510e1e84abf576a5129eab2cf5b}{SLAMEstAndMCov}}();}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Define\ functions\ for\ updating\ the\ estimates\ */}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_ad23727c5f88a5096c84cd62c2248dd92}{update\_and\_recalculate\_all}}();}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_a709a83c6627b62538b82211615c8bc92}{update\_and\_recalculate\_by\_ID}}(\textcolor{keyword}{const}\ std::vector<std::size\_t>\&\ old\_cone\_ids);}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_a9bc194216650da2a29195fa39433e574}{update\_and\_recalculate\_beginning}}(std::size\_t\ num\_start\_cones);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_a70a19ef2eb1f9aa30b112d7993881fa1}{update\_and\_recalculate\_cone\_proximity}}(std::size\_t\ pivot);}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_a594aabd0f7b9b06d7420fa937ac6113f}{update\_with\_old\_cones}}(\textcolor{keyword}{const}\ std::vector<std::size\_t>\&\ old\_cone\_ids);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_a8263c13c84f96267df4d636293391745}{update\_with\_new\_cones}}(std::size\_t\ num\_new\_cones);}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Interface\ for\ data\ association\ */}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<double>\ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_abf9bea4abd413e68825dbedc81590593}{calculate\_mdist}}\ (gtsam::Point2\ global\_obs\_cone);\ \textcolor{comment}{//Vectorize\ this\ }}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_aff06a557d9b8544328e5baa2137f46a1}{get\_n\_landmarks}}();}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<gtsam::Point2>\ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_ad95f4185c4dd8c28640a8bade5f77436}{get\_all\_est}}();}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_a88f032ececf587581276cb1e7022a689}{check\_lengths}}();}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Symbol\ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov_a493e5cde8f32c6a4c38f4aadfd023a85}{get\_landmark\_symbol}}\ (\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \};}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="classUnaryFactor" kind="class" language="C++" prot="public">
+    <compoundname>UnaryFactor</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">gtsam::NoiseModelFactor1&lt; gtsam::Pose2 &gt;</basecompoundref>
+    <includes refid="unary__factor_8hpp" local="no">unary_factor.hpp</includes>
+    <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="classUnaryFactor_1a94e14dba4c8062fa38a155683e1c64f0" prot="public" static="no">
+        <type>std::shared_ptr&lt; <ref refid="classUnaryFactor" kindref="compound">UnaryFactor</ref> &gt;</type>
+        <definition>typedef std::shared_ptr&lt;UnaryFactor&gt; UnaryFactor::shared_ptr</definition>
+        <argsstring></argsstring>
+        <name>shared_ptr</name>
+        <qualifiedname>UnaryFactor::shared_ptr</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/unary_factor.hpp" line="18" column="29" bodyfile="include/unary_factor.hpp" bodystart="18" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classUnaryFactor_1ad25dc2d62fc9a35e3a6c1112b006209e" prot="private" static="no" mutable="no">
+        <type>gtsam::Pose2</type>
+        <definition>gtsam::Pose2 UnaryFactor::z</definition>
+        <argsstring></argsstring>
+        <name>z</name>
+        <qualifiedname>UnaryFactor::z</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/unary_factor.hpp" line="14" column="18" bodyfile="include/unary_factor.hpp" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classUnaryFactor_1a8ab0dfbda37ea94c22b5463c6113fd8c" prot="private" static="no" mutable="no">
+        <type>gtsam::Key</type>
+        <definition>gtsam::Key UnaryFactor::key</definition>
+        <argsstring></argsstring>
+        <name>key</name>
+        <qualifiedname>UnaryFactor::key</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/unary_factor.hpp" line="15" column="16" bodyfile="include/unary_factor.hpp" bodystart="15" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classUnaryFactor_1a5b075904be9c89a653bb6905b3bfb965" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>UnaryFactor::UnaryFactor</definition>
+        <argsstring>(gtsam::Key k, const gtsam::Pose2 &amp;input_GPS, const gtsam::SharedNoiseModel &amp;model)</argsstring>
+        <name>UnaryFactor</name>
+        <qualifiedname>UnaryFactor::UnaryFactor</qualifiedname>
+        <param>
+          <type>gtsam::Key</type>
+          <declname>k</declname>
+        </param>
+        <param>
+          <type>const gtsam::Pose2 &amp;</type>
+          <declname>input_GPS</declname>
+        </param>
+        <param>
+          <type>const gtsam::SharedNoiseModel &amp;</type>
+          <declname>model</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/unary_factor.hpp" line="42" column="5" bodyfile="include/unary_factor.hpp" bodystart="42" bodyend="43"/>
+      </memberdef>
+      <memberdef kind="function" id="classUnaryFactor_1a080d71cece2117cb2995aa2b5eb068dc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual UnaryFactor::~UnaryFactor</definition>
+        <argsstring>()</argsstring>
+        <name>~UnaryFactor</name>
+        <qualifiedname>UnaryFactor::~UnaryFactor</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/unary_factor.hpp" line="46" column="13" bodyfile="include/unary_factor.hpp" bodystart="46" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="classUnaryFactor_1a6636ce47bc1c8825844a2c8f81d3c8a8" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Vector</type>
+        <definition>gtsam::Vector UnaryFactor::evaluateError</definition>
+        <argsstring>(const gtsam::Pose2 &amp;q, gtsam::OptionalMatrixType H) const override</argsstring>
+        <name>evaluateError</name>
+        <qualifiedname>UnaryFactor::evaluateError</qualifiedname>
+        <param>
+          <type>const gtsam::Pose2 &amp;</type>
+          <declname>q</declname>
+        </param>
+        <param>
+          <type>gtsam::OptionalMatrixType</type>
+          <declname>H</declname>
+        </param>
+        <briefdescription>
+<para>Computes the error vector between the current pose estimate and the GPS measurement. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Optionally computes the Jacobian of the error with respect to the pose.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>q</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The pose variable (gtsam::Pose2) for which the error is evaluated. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>H</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional output Jacobian matrix pointer; if provided, it is set to the derivative of the error w.r.t. ( q ). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>gtsam::Vector The 2D error vector between pose position and GPS measurement. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/unary_factor.hpp" line="51" column="19" bodyfile="src/isam2/unary_factor.cpp" bodystart="40" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="classUnaryFactor_1a05b9ea54c3d7dc57dc0af05656468a09" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>gtsam::NonlinearFactor::shared_ptr</type>
+        <definition>gtsam::NonlinearFactor::shared_ptr UnaryFactor::clone</definition>
+        <argsstring>() const override</argsstring>
+        <name>clone</name>
+        <qualifiedname>UnaryFactor::clone</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/unary_factor.hpp" line="55" column="40" bodyfile="include/unary_factor.hpp" bodystart="55" bodyend="57"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>UnaryFactor</label>
+        <link refid="classUnaryFactor"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>gtsam::NoiseModelFactor1&lt; gtsam::Pose2 &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>UnaryFactor</label>
+        <link refid="classUnaryFactor"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>gtsam::NoiseModelFactor1&lt; gtsam::Pose2 &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="include/unary_factor.hpp" line="12" column="1" bodyfile="include/unary_factor.hpp" bodystart="12" bodyend="58"/>
+    <listofallmembers>
+      <member refid="classUnaryFactor_1a05b9ea54c3d7dc57dc0af05656468a09" prot="public" virt="non-virtual"><scope>UnaryFactor</scope><name>clone</name></member>
+      <member refid="classUnaryFactor_1a6636ce47bc1c8825844a2c8f81d3c8a8" prot="public" virt="non-virtual"><scope>UnaryFactor</scope><name>evaluateError</name></member>
+      <member refid="classUnaryFactor_1a8ab0dfbda37ea94c22b5463c6113fd8c" prot="private" virt="non-virtual"><scope>UnaryFactor</scope><name>key</name></member>
+      <member refid="classUnaryFactor_1a94e14dba4c8062fa38a155683e1c64f0" prot="public" virt="non-virtual"><scope>UnaryFactor</scope><name>shared_ptr</name></member>
+      <member refid="classUnaryFactor_1a5b075904be9c89a653bb6905b3bfb965" prot="public" virt="non-virtual"><scope>UnaryFactor</scope><name>UnaryFactor</name></member>
+      <member refid="classUnaryFactor_1ad25dc2d62fc9a35e3a6c1112b006209e" prot="private" virt="non-virtual"><scope>UnaryFactor</scope><name>z</name></member>
+      <member refid="classUnaryFactor_1a080d71cece2117cb2995aa2b5eb068dc" prot="public" virt="virtual"><scope>UnaryFactor</scope><name>~UnaryFactor</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

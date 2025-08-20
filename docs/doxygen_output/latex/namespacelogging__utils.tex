@@ -1,0 +1,155 @@
+\doxysection{logging\+\_\+utils Namespace Reference}
+\hypertarget{namespacelogging__utils}{}\label{namespacelogging__utils}\index{logging\_utils@{logging\_utils}}
+
+
+Utilities for logging cone observations, vehicle poses, and step inputs with optional ROS logging.  
+
+
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespacelogging__utils_a6118bde88f643b186486f7e64ec50358}{print\+\_\+cone\+\_\+obs}} (const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs, const std\+::string \&cone\+\_\+color, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Logs positions of cones with color label using the provided logger. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacelogging__utils_ab68f447540108cd461613297979c4047}{print\+\_\+step\+\_\+input}} (std\+::optional$<$ rclcpp\+::\+Logger $>$ logger, std\+::optional$<$ gtsam\+::\+Point2 $>$ gps\+\_\+opt, double yaw, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+blue, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+yellow, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&orange\+\_\+ref\+\_\+cones, gtsam\+::\+Pose2 velocity, double dt)
+\item 
+void \mbox{\hyperlink{namespacelogging__utils_ad3a35de905ea643eb9c20f766d1812c3}{print\+\_\+update\+\_\+poses}} (gtsam\+::\+Pose2 \&prev\+\_\+pose, gtsam\+::\+Pose2 \&new\+\_\+pose, gtsam\+::\+Pose2 \&odometry, gtsam\+::\+Pose2 \&imu\+\_\+offset\+\_\+global\+\_\+odom, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Logs previous and new poses, odometry, and IMU offset pose. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacelogging__utils_a05b5b0c375d5b11c2b503560a2e7ba2d}{record\+\_\+step\+\_\+inputs}} (std\+::optional$<$ rclcpp\+::\+Logger $>$ logger, std\+::optional$<$ gtsam\+::\+Point2 $>$ gps\+\_\+opt, double yaw, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+blue, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+yellow, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&orange\+\_\+ref\+\_\+cones, gtsam\+::\+Pose2 velocity, double dt)
+\begin{DoxyCompactList}\small\item\em Records step inputs to a file, including GPS, yaw, cones, velocity, and time delta. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacelogging__utils_a0e0bddea577907b98ab583c2de51cca6}{log\+\_\+string}} (std\+::optional$<$ rclcpp\+::\+Logger $>$ logger, std\+::string input\+\_\+string, bool flag)
+\begin{DoxyCompactList}\small\item\em This function cases on whether the logger exists and uses it to print out the following string. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacelogging__utils_aa24ee8d875fd8174dfd4f086803d6a90}{log\+\_\+step\+\_\+input}} (std\+::optional$<$ rclcpp\+::\+Logger $>$ logger, std\+::optional$<$ gtsam\+::\+Point2 $>$ gps\+\_\+opt, double yaw, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+blue, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+yellow, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&orange\+\_\+ref\+\_\+cones, gtsam\+::\+Pose2 velocity, double dt)
+\begin{DoxyCompactList}\small\item\em Logs various step inputs including GPS, yaw, cone observations, velocity, and time delta. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Utilities for logging cone observations, vehicle poses, and step inputs with optional ROS logging. 
+
+\label{doc-func-members}
+\Hypertarget{namespacelogging__utils_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacelogging__utils_aa24ee8d875fd8174dfd4f086803d6a90}\index{logging\_utils@{logging\_utils}!log\_step\_input@{log\_step\_input}}
+\index{log\_step\_input@{log\_step\_input}!logging\_utils@{logging\_utils}}
+\doxysubsubsection{\texorpdfstring{log\_step\_input()}{log\_step\_input()}}
+{\footnotesize\ttfamily \label{namespacelogging__utils_aa24ee8d875fd8174dfd4f086803d6a90} 
+void logging\+\_\+utils\+::log\+\_\+step\+\_\+input (\begin{DoxyParamCaption}\item[{std\+::optional$<$ rclcpp\+::\+Logger $>$}]{logger}{, }\item[{std\+::optional$<$ gtsam\+::\+Point2 $>$}]{gps\+\_\+opt}{, }\item[{double}]{yaw}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs\+\_\+blue}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs\+\_\+yellow}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{orange\+\_\+ref\+\_\+cones}{, }\item[{gtsam\+::\+Pose2}]{velocity}{, }\item[{double}]{dt}{}\end{DoxyParamCaption})}
+
+
+
+Logs various step inputs including GPS, yaw, cone observations, velocity, and time delta. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em logger} & Optional ROS logger. \\
+\hline
+{\em gps\+\_\+opt} & Optional GPS position. \\
+\hline
+{\em yaw} & Current yaw angle. \\
+\hline
+{\em cone\+\_\+obs\+\_\+blue} & Vector of blue cones observed. \\
+\hline
+{\em cone\+\_\+obs\+\_\+yellow} & Vector of yellow cones observed. \\
+\hline
+{\em orange\+\_\+ref\+\_\+cones} & Vector of orange reference cones. \\
+\hline
+{\em velocity} & Vehicle velocity pose. \\
+\hline
+{\em dt} & Time delta. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{namespacelogging__utils_a0e0bddea577907b98ab583c2de51cca6}\index{logging\_utils@{logging\_utils}!log\_string@{log\_string}}
+\index{log\_string@{log\_string}!logging\_utils@{logging\_utils}}
+\doxysubsubsection{\texorpdfstring{log\_string()}{log\_string()}}
+{\footnotesize\ttfamily \label{namespacelogging__utils_a0e0bddea577907b98ab583c2de51cca6} 
+void logging\+\_\+utils\+::log\+\_\+string (\begin{DoxyParamCaption}\item[{std\+::optional$<$ rclcpp\+::\+Logger $>$}]{logger}{, }\item[{std\+::string}]{input\+\_\+string}{, }\item[{bool}]{flag}{}\end{DoxyParamCaption})}
+
+
+
+This function cases on whether the logger exists and uses it to print out the following string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em logger} & An optional logger \\
+\hline
+{\em input\+\_\+string} & The input string to log \\
+\hline
+{\em flag} & A flag to determine whether to actually print the outputs \\
+\hline
+\end{DoxyParams}
+\Hypertarget{namespacelogging__utils_a6118bde88f643b186486f7e64ec50358}\index{logging\_utils@{logging\_utils}!print\_cone\_obs@{print\_cone\_obs}}
+\index{print\_cone\_obs@{print\_cone\_obs}!logging\_utils@{logging\_utils}}
+\doxysubsubsection{\texorpdfstring{print\_cone\_obs()}{print\_cone\_obs()}}
+{\footnotesize\ttfamily \label{namespacelogging__utils_a6118bde88f643b186486f7e64ec50358} 
+void logging\+\_\+utils\+::print\+\_\+cone\+\_\+obs (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs}{, }\item[{const std\+::string \&}]{cone\+\_\+color}{, }\item[{std\+::optional$<$ rclcpp\+::\+Logger $>$}]{logger}{}\end{DoxyParamCaption})}
+
+
+
+Logs positions of cones with color label using the provided logger. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em cone\+\_\+obs} & Vector of cone positions. \\
+\hline
+{\em cone\+\_\+color} & Color label for cones. \\
+\hline
+{\em logger} & Optional ROS logger. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{namespacelogging__utils_ab68f447540108cd461613297979c4047}\index{logging\_utils@{logging\_utils}!print\_step\_input@{print\_step\_input}}
+\index{print\_step\_input@{print\_step\_input}!logging\_utils@{logging\_utils}}
+\doxysubsubsection{\texorpdfstring{print\_step\_input()}{print\_step\_input()}}
+{\footnotesize\ttfamily \label{namespacelogging__utils_ab68f447540108cd461613297979c4047} 
+void logging\+\_\+utils\+::print\+\_\+step\+\_\+input (\begin{DoxyParamCaption}\item[{std\+::optional$<$ rclcpp\+::\+Logger $>$}]{logger}{, }\item[{std\+::optional$<$ gtsam\+::\+Point2 $>$}]{gps\+\_\+opt}{, }\item[{double}]{yaw}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs\+\_\+blue}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs\+\_\+yellow}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{orange\+\_\+ref\+\_\+cones}{, }\item[{gtsam\+::\+Pose2}]{velocity}{, }\item[{double}]{dt}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespacelogging__utils_ad3a35de905ea643eb9c20f766d1812c3}\index{logging\_utils@{logging\_utils}!print\_update\_poses@{print\_update\_poses}}
+\index{print\_update\_poses@{print\_update\_poses}!logging\_utils@{logging\_utils}}
+\doxysubsubsection{\texorpdfstring{print\_update\_poses()}{print\_update\_poses()}}
+{\footnotesize\ttfamily \label{namespacelogging__utils_ad3a35de905ea643eb9c20f766d1812c3} 
+void logging\+\_\+utils\+::print\+\_\+update\+\_\+poses (\begin{DoxyParamCaption}\item[{gtsam\+::\+Pose2 \&}]{prev\+\_\+pose}{, }\item[{gtsam\+::\+Pose2 \&}]{new\+\_\+pose}{, }\item[{gtsam\+::\+Pose2 \&}]{odometry}{, }\item[{gtsam\+::\+Pose2 \&}]{imu\+\_\+offset\+\_\+global\+\_\+odom}{, }\item[{std\+::optional$<$ rclcpp\+::\+Logger $>$}]{logger}{}\end{DoxyParamCaption})}
+
+
+
+Logs previous and new poses, odometry, and IMU offset pose. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em prev\+\_\+pose} & Previous vehicle pose. \\
+\hline
+{\em new\+\_\+pose} & New vehicle pose. \\
+\hline
+{\em odometry} & Odometry pose delta. \\
+\hline
+{\em imu\+\_\+offset\+\_\+global\+\_\+odom} & IMU offset in global odometry. \\
+\hline
+{\em logger} & Optional ROS logger. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{namespacelogging__utils_a05b5b0c375d5b11c2b503560a2e7ba2d}\index{logging\_utils@{logging\_utils}!record\_step\_inputs@{record\_step\_inputs}}
+\index{record\_step\_inputs@{record\_step\_inputs}!logging\_utils@{logging\_utils}}
+\doxysubsubsection{\texorpdfstring{record\_step\_inputs()}{record\_step\_inputs()}}
+{\footnotesize\ttfamily \label{namespacelogging__utils_a05b5b0c375d5b11c2b503560a2e7ba2d} 
+void logging\+\_\+utils\+::record\+\_\+step\+\_\+inputs (\begin{DoxyParamCaption}\item[{std\+::optional$<$ rclcpp\+::\+Logger $>$}]{logger}{, }\item[{std\+::optional$<$ gtsam\+::\+Point2 $>$}]{gps\+\_\+opt}{, }\item[{double}]{yaw}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs\+\_\+blue}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs\+\_\+yellow}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{orange\+\_\+ref\+\_\+cones}{, }\item[{gtsam\+::\+Pose2}]{velocity}{, }\item[{double}]{dt}{}\end{DoxyParamCaption})}
+
+
+
+Records step inputs to a file, including GPS, yaw, cones, velocity, and time delta. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em logger} & Optional ROS logger. \\
+\hline
+{\em gps\+\_\+opt} & Optional GPS position. \\
+\hline
+{\em yaw} & Current yaw angle. \\
+\hline
+{\em cone\+\_\+obs\+\_\+blue} & Vector of blue cones observed. \\
+\hline
+{\em cone\+\_\+obs\+\_\+yellow} & Vector of yellow cones observed. \\
+\hline
+{\em orange\+\_\+ref\+\_\+cones} & Vector of orange reference cones. \\
+\hline
+{\em velocity} & Vehicle velocity pose. \\
+\hline
+{\em dt} & Time delta. \\
+\hline
+\end{DoxyParams}

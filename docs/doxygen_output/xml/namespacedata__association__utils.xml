@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="namespacedata__association__utils" kind="namespace" language="C++">
+    <compoundname>data_association_utils</compoundname>
+    <innerclass refid="structdata__association__utils_1_1NewConeInfo" prot="public">data_association_utils::NewConeInfo</innerclass>
+    <innerclass refid="structdata__association__utils_1_1OldConeInfo" prot="public">data_association_utils::OldConeInfo</innerclass>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacedata__association__utils_1a8618a0ce5124334358fd054e92483fd9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::pair&lt; std::vector&lt; <ref refid="structdata__association__utils_1_1OldConeInfo" kindref="compound">OldConeInfo</ref> &gt;, std::vector&lt; <ref refid="structdata__association__utils_1_1NewConeInfo" kindref="compound">NewConeInfo</ref> &gt; &gt;</type>
+        <definition>std::pair&lt; std::vector&lt; OldConeInfo &gt;, std::vector&lt; NewConeInfo &gt; &gt; data_association_utils::get_old_new_cones</definition>
+        <argsstring>(std::vector&lt; gtsam::Point2 &gt; global_cone_obs, std::vector&lt; gtsam::Point2 &gt; cone_obs, std::vector&lt; std::vector&lt; double &gt; &gt; distances, double m_dist_th, std::optional&lt; rclcpp::Logger &gt; logger)</argsstring>
+        <name>get_old_new_cones</name>
+        <qualifiedname>data_association_utils::get_old_new_cones</qualifiedname>
+        <param>
+          <type>std::vector&lt; gtsam::Point2 &gt;</type>
+          <declname>global_cone_obs</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; gtsam::Point2 &gt;</type>
+          <declname>cone_obs</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; std::vector&lt; double &gt; &gt;</type>
+          <declname>distances</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>m_dist_th</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>logger</declname>
+        </param>
+        <briefdescription>
+<para>Distinguishes obsered cones into old and new cones. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Distinguishes obsered cones into old and new cones by Mahalanobis distance.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>global_cone_obs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The observed cones in the global frame </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_obs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The observed cones in the local frame </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>distances</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A vector where the ith vector represents mahalanobis distances wrt the ith observed cone </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>m_dist_th</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The mahalanobis distance threshold </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::pair&lt;std::vector&lt;OldConeInfo&gt;, std::vector&lt;NewConeInfo&gt;&gt;</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>global_cone_obs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The observed cones in the global frame </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_obs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The observed cones in the local frame </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>distances</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A vector where the ith vector represents mahalanobis distances with respect to the ith observed cone </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional logger for debug output</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A pair of vectors: vector of <ref refid="structdata__association__utils_1_1OldConeInfo" kindref="compound">OldConeInfo</ref> for cones matched to known landmarks, vector of <ref refid="structdata__association__utils_1_1NewConeInfo" kindref="compound">NewConeInfo</ref> for cones considered new landmarks </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/data_association.cpp" line="23" column="15" bodyfile="src/utils/data_association.cpp" bodystart="23" bodyend="73" declfile="include/data_association.hpp" declline="53" declcolumn="15"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacedata__association__utils_1a6f7228a0a6bea9eb932a06b409ec2d3e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::pair&lt; std::vector&lt; <ref refid="structdata__association__utils_1_1OldConeInfo" kindref="compound">OldConeInfo</ref> &gt;, std::vector&lt; <ref refid="structdata__association__utils_1_1NewConeInfo" kindref="compound">NewConeInfo</ref> &gt; &gt;</type>
+        <definition>std::pair&lt; std::vector&lt; OldConeInfo &gt;, std::vector&lt; NewConeInfo &gt; &gt; data_association_utils::perform_data_association</definition>
+        <argsstring>(gtsam::Pose2 cur_pose, const std::vector&lt; gtsam::Point2 &gt; &amp;cone_obs, std::optional&lt; rclcpp::Logger &gt; logger, slam::SLAMEstAndMCov &amp;slam_est_and_mcov, double m_dist_th, double cone_dist_th)</argsstring>
+        <name>perform_data_association</name>
+        <qualifiedname>data_association_utils::perform_data_association</qualifiedname>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>cur_pose</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>cone_obs</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>logger</declname>
+        </param>
+        <param>
+          <type><ref refid="classslam_1_1SLAMEstAndMCov" kindref="compound">slam::SLAMEstAndMCov</ref> &amp;</type>
+          <declname>slam_est_and_mcov</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>m_dist_th</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>cone_dist_th</declname>
+        </param>
+        <briefdescription>
+<para>Performs data association between the observed cones and the SLAM estimates. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Performs full data association for the current frame of cone observations.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cur_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current pose of the car </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_obs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A vector of observed cones </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>slam_est_and_mcov</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>m_dist_th</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The Mahalanobis distance threshold</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_dist_th</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The range threshold to decide which cones to data associate and which to ignore</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+This function filters observed cones by distance threshold, transforms them into the global frame, calculates Mahalanobis distances to existing SLAM landmarks, and then classifies cones as old or new</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cur_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current estimated pose of the car </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_obs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The observed cones in the local frame </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional logger for debug output </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>slam_est_and_mcov</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the SLAMEstAndMCov object for accessing current SLAM state </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>m_dist_th</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Threshold for Mahalanobis distance to differentiate old and new cones </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_dist_th</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum distance threshold to filter out cones too far from the vehicle</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A pair of vectors classifying cones as old or new, same as get_old_new_cones return </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/data_association.cpp" line="89" column="15" bodyfile="src/utils/data_association.cpp" bodystart="89" bodyend="111" declfile="include/data_association.hpp" declline="75" declcolumn="15"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Utility functions for data association. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/data_association.hpp" line="15" column="1"/>
+  </compounddef>
+</doxygen>

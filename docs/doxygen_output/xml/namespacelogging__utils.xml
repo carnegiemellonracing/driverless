@@ -1,0 +1,469 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="namespacelogging__utils" kind="namespace" language="C++">
+    <compoundname>logging_utils</compoundname>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacelogging__utils_1a6118bde88f643b186486f7e64ec50358" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void logging_utils::print_cone_obs</definition>
+        <argsstring>(const std::vector&lt; gtsam::Point2 &gt; &amp;cone_obs, const std::string &amp;cone_color, std::optional&lt; rclcpp::Logger &gt; logger)</argsstring>
+        <name>print_cone_obs</name>
+        <qualifiedname>logging_utils::print_cone_obs</qualifiedname>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>cone_obs</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>cone_color</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>logger</declname>
+        </param>
+        <briefdescription>
+<para>Logs positions of cones with color label using the provided logger. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cone_obs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector of cone positions. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_color</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Color label for cones. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional ROS logger. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="545" column="10" bodyfile="src/utils/ros_utils.cpp" bodystart="545" bodyend="553" declfile="include/ros_utils.hpp" declline="153" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacelogging__utils_1ab68f447540108cd461613297979c4047" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void logging_utils::print_step_input</definition>
+        <argsstring>(std::optional&lt; rclcpp::Logger &gt; logger, std::optional&lt; gtsam::Point2 &gt; gps_opt, double yaw, const std::vector&lt; gtsam::Point2 &gt; &amp;cone_obs_blue, const std::vector&lt; gtsam::Point2 &gt; &amp;cone_obs_yellow, const std::vector&lt; gtsam::Point2 &gt; &amp;orange_ref_cones, gtsam::Pose2 velocity, double dt)</argsstring>
+        <name>print_step_input</name>
+        <qualifiedname>logging_utils::print_step_input</qualifiedname>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>logger</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; gtsam::Point2 &gt;</type>
+          <declname>gps_opt</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>yaw</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>cone_obs_blue</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>cone_obs_yellow</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>orange_ref_cones</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>velocity</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="155" column="10" declfile="include/ros_utils.hpp" declline="155" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacelogging__utils_1ad3a35de905ea643eb9c20f766d1812c3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void logging_utils::print_update_poses</definition>
+        <argsstring>(gtsam::Pose2 &amp;prev_pose, gtsam::Pose2 &amp;new_pose, gtsam::Pose2 &amp;odometry, gtsam::Pose2 &amp;imu_offset_global_odom, std::optional&lt; rclcpp::Logger &gt; logger)</argsstring>
+        <name>print_update_poses</name>
+        <qualifiedname>logging_utils::print_update_poses</qualifiedname>
+        <param>
+          <type>gtsam::Pose2 &amp;</type>
+          <declname>prev_pose</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2 &amp;</type>
+          <declname>new_pose</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2 &amp;</type>
+          <declname>odometry</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2 &amp;</type>
+          <declname>imu_offset_global_odom</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>logger</declname>
+        </param>
+        <briefdescription>
+<para>Logs previous and new poses, odometry, and IMU offset pose. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>prev_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Previous vehicle pose. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>new_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>New vehicle pose. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>odometry</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Odometry pose delta. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>imu_offset_global_odom</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>IMU offset in global odometry. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional ROS logger. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="605" column="10" bodyfile="src/utils/ros_utils.cpp" bodystart="605" bodyend="616" declfile="include/ros_utils.hpp" declline="164" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacelogging__utils_1a05b5b0c375d5b11c2b503560a2e7ba2d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void logging_utils::record_step_inputs</definition>
+        <argsstring>(std::optional&lt; rclcpp::Logger &gt; logger, std::optional&lt; gtsam::Point2 &gt; gps_opt, double yaw, const std::vector&lt; gtsam::Point2 &gt; &amp;cone_obs_blue, const std::vector&lt; gtsam::Point2 &gt; &amp;cone_obs_yellow, const std::vector&lt; gtsam::Point2 &gt; &amp;orange_ref_cones, gtsam::Pose2 velocity, double dt)</argsstring>
+        <name>record_step_inputs</name>
+        <qualifiedname>logging_utils::record_step_inputs</qualifiedname>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>logger</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; gtsam::Point2 &gt;</type>
+          <declname>gps_opt</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>yaw</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>cone_obs_blue</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>cone_obs_yellow</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>orange_ref_cones</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>velocity</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dt</declname>
+        </param>
+        <briefdescription>
+<para>Records step inputs to a file, including GPS, yaw, cones, velocity, and time delta. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional ROS logger. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>gps_opt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional GPS position. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yaw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current yaw angle. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_obs_blue</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector of blue cones observed. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_obs_yellow</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector of yellow cones observed. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>orange_ref_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector of orange reference cones. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>velocity</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vehicle velocity pose. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Time delta. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="630" column="10" bodyfile="src/utils/ros_utils.cpp" bodystart="630" bodyend="664" declfile="include/ros_utils.hpp" declline="167" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacelogging__utils_1a0e0bddea577907b98ab583c2de51cca6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void logging_utils::log_string</definition>
+        <argsstring>(std::optional&lt; rclcpp::Logger &gt; logger, std::string input_string, bool flag)</argsstring>
+        <name>log_string</name>
+        <qualifiedname>logging_utils::log_string</qualifiedname>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>logger</declname>
+        </param>
+        <param>
+          <type>std::string</type>
+          <declname>input_string</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>flag</declname>
+        </param>
+        <briefdescription>
+<para>This function cases on whether the logger exists and uses it to print out the following string. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>An optional logger </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>input_string</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The input string to log </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>flag</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A flag to determine whether to actually print the outputs </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="532" column="10" bodyfile="src/utils/ros_utils.cpp" bodystart="532" bodyend="536" declfile="include/ros_utils.hpp" declline="176" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacelogging__utils_1aa24ee8d875fd8174dfd4f086803d6a90" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void logging_utils::log_step_input</definition>
+        <argsstring>(std::optional&lt; rclcpp::Logger &gt; logger, std::optional&lt; gtsam::Point2 &gt; gps_opt, double yaw, const std::vector&lt; gtsam::Point2 &gt; &amp;cone_obs_blue, const std::vector&lt; gtsam::Point2 &gt; &amp;cone_obs_yellow, const std::vector&lt; gtsam::Point2 &gt; &amp;orange_ref_cones, gtsam::Pose2 velocity, double dt)</argsstring>
+        <name>log_step_input</name>
+        <qualifiedname>logging_utils::log_step_input</qualifiedname>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>logger</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; gtsam::Point2 &gt;</type>
+          <declname>gps_opt</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>yaw</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>cone_obs_blue</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>cone_obs_yellow</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>orange_ref_cones</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>velocity</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dt</declname>
+        </param>
+        <briefdescription>
+<para>Logs various step inputs including GPS, yaw, cone observations, velocity, and time delta. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional ROS logger. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>gps_opt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional GPS position. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yaw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current yaw angle. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_obs_blue</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector of blue cones observed. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_obs_yellow</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector of yellow cones observed. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>orange_ref_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector of orange reference cones. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>velocity</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vehicle velocity pose. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Time delta. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="567" column="10" bodyfile="src/utils/ros_utils.cpp" bodystart="567" bodyend="594"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Utilities for logging cone observations, vehicle poses, and step inputs with optional ROS logging. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/ros_utils.hpp" line="152" column="1"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,254 @@
+\doxysection{motion\+\_\+modeling Namespace Reference}
+\hypertarget{namespacemotion__modeling}{}\label{namespacemotion__modeling}\index{motion\_modeling@{motion\_modeling}}
+
+
+Contains functions related to vehicle motion modeling including IMU and GPS motion models, coordinate conversions, and velocity processing.  
+
+
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespacemotion__modeling_a39ba4eb9731177cb314756a64210fc8f}{imu\+\_\+axes\+\_\+to\+\_\+\+DV\+\_\+axes}} (double \&x, double \&y)
+\begin{DoxyCompactList}\small\item\em Converts IMU axes to DV axes by swapping and negating coordinates. \end{DoxyCompactList}\item 
+gtsam\+::\+Point2 \mbox{\hyperlink{namespacemotion__modeling_a2e2d9615e5a4c50fe1c2702f18e250df}{calc\+\_\+lateral\+\_\+velocity\+\_\+error}} (double ang\+\_\+velocity, double yaw)
+\begin{DoxyCompactList}\small\item\em Calculates the lateral velocity error as a result of turning. \end{DoxyCompactList}\item 
+std\+::pair$<$ gtsam\+::\+Pose2, gtsam\+::\+Pose2 $>$ \mbox{\hyperlink{namespacemotion__modeling_a66146b526c37cb7eff7a748a928730c2}{velocity\+\_\+motion\+\_\+model}} (gtsam\+::\+Pose2 velocity, double dt, gtsam\+::\+Pose2 prev\+\_\+pose, double yaw)
+\begin{DoxyCompactList}\small\item\em Applies velocity motion model to predict new pose and odometry over a time step. \end{DoxyCompactList}\item 
+gtsam\+::\+Point2 \mbox{\hyperlink{namespacemotion__modeling_a957433c974fcf73b2a3807728ed19cd3}{calc\+\_\+offset\+\_\+imu\+\_\+to\+\_\+car\+\_\+center}} (double yaw)
+\begin{DoxyCompactList}\small\item\em Calculates the offset vector from IMU sensor to car center in global frame. \end{DoxyCompactList}\item 
+gtsam\+::\+Point2 \mbox{\hyperlink{namespacemotion__modeling_add9aa4093755c7775b713624c1817aca}{calc\+\_\+offset\+\_\+lidar\+\_\+to\+\_\+car\+\_\+center}} (double yaw)
+\begin{DoxyCompactList}\small\item\em Calculates the offset vector from LIDAR sensor to car center in global frame. \end{DoxyCompactList}\item 
+std\+::pair$<$ gtsam\+::\+Pose2, gtsam\+::\+Pose2 $>$ \mbox{\hyperlink{namespacemotion__modeling_a955d143c19d97c8fd0f36074e5b5ed43}{gps\+\_\+motion\+\_\+model}} (gtsam\+::\+Pose2 prev\+\_\+pose, gtsam\+::\+Pose2 global\+\_\+odom)
+\begin{DoxyCompactList}\small\item\em Applies GPS motion model to compute new pose and odometry with IMU offset correction. \end{DoxyCompactList}\item 
+std\+::pair$<$ bool, bool $>$ \mbox{\hyperlink{namespacemotion__modeling_ab6ec7b19eb78645dec9adf9e6aaa5966}{determine\+\_\+movement}} (gtsam\+::\+Pose2 velocity)
+\begin{DoxyCompactList}\small\item\em Returns a pair of bools where the first element is true if the car is moving, and the second element is true if the car is turning. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespacemotion__modeling_a7bab04641800da6e420949c71512a1d7}{header\+\_\+to\+\_\+nanosec}} (const std\+\_\+msgs\+::msg\+::\+Header \&header)
+\begin{DoxyCompactList}\small\item\em Converts a ROS message header timestamp to nanoseconds. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespacemotion__modeling_a8e8e40aa9a9185045cf3a72cae60ecdc}{header\+\_\+to\+\_\+dt}} (std\+::optional$<$ std\+\_\+msgs\+::msg\+::\+Header $>$ prev, std\+::optional$<$ std\+\_\+msgs\+::msg\+::\+Header $>$ cur)
+\begin{DoxyCompactList}\small\item\em Calculates time difference (dt) between two ROS message headers. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespacemotion__modeling_a96aa2b77878997dcdfe58fd7ad47f969}{degrees\+\_\+to\+\_\+radians}} (double degrees)
+\begin{DoxyCompactList}\small\item\em Converts degrees to radians. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains functions related to vehicle motion modeling including IMU and GPS motion models, coordinate conversions, and velocity processing. 
+
+\label{doc-func-members}
+\Hypertarget{namespacemotion__modeling_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacemotion__modeling_a2e2d9615e5a4c50fe1c2702f18e250df}\index{motion\_modeling@{motion\_modeling}!calc\_lateral\_velocity\_error@{calc\_lateral\_velocity\_error}}
+\index{calc\_lateral\_velocity\_error@{calc\_lateral\_velocity\_error}!motion\_modeling@{motion\_modeling}}
+\doxysubsubsection{\texorpdfstring{calc\_lateral\_velocity\_error()}{calc\_lateral\_velocity\_error()}}
+{\footnotesize\ttfamily \label{namespacemotion__modeling_a2e2d9615e5a4c50fe1c2702f18e250df} 
+gtsam\+::\+Point2 motion\+\_\+modeling\+::calc\+\_\+lateral\+\_\+velocity\+\_\+error (\begin{DoxyParamCaption}\item[{double}]{ang\+\_\+velocity}{, }\item[{double}]{yaw}{}\end{DoxyParamCaption})}
+
+
+
+Calculates the lateral velocity error as a result of turning. 
+
+The IMU is offset from the center of the car. There\textquotesingle{}s extra lateral velocity error due to the offset. \begin{DoxyReturn}{Returns}
+Returns a pair where the first element is the new\+\_\+pose and the second element is the odometry. 
+\end{DoxyReturn}
+Intuition\+: In the local frame, create a triangle T from the global bearing of the car
+
+ang\+\_\+velocity represents the magnitude of the angular velocity vector
+\begin{DoxyItemize}
+\item To get the x component (global frame x), let the vertical side of the triangle be the radius
+\item To get the y component (global frame y), let the horizontal side of the triangle be the radius
+\end{DoxyItemize}\Hypertarget{namespacemotion__modeling_a957433c974fcf73b2a3807728ed19cd3}\index{motion\_modeling@{motion\_modeling}!calc\_offset\_imu\_to\_car\_center@{calc\_offset\_imu\_to\_car\_center}}
+\index{calc\_offset\_imu\_to\_car\_center@{calc\_offset\_imu\_to\_car\_center}!motion\_modeling@{motion\_modeling}}
+\doxysubsubsection{\texorpdfstring{calc\_offset\_imu\_to\_car\_center()}{calc\_offset\_imu\_to\_car\_center()}}
+{\footnotesize\ttfamily \label{namespacemotion__modeling_a957433c974fcf73b2a3807728ed19cd3} 
+gtsam\+::\+Point2 motion\+\_\+modeling\+::calc\+\_\+offset\+\_\+imu\+\_\+to\+\_\+car\+\_\+center (\begin{DoxyParamCaption}\item[{double}]{yaw}{}\end{DoxyParamCaption})}
+
+
+
+Calculates the offset vector from IMU sensor to car center in global frame. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em yaw} & Current yaw angle. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+gtsam\+::\+Point2 Offset vector from IMU to car center. 
+\end{DoxyReturn}
+\Hypertarget{namespacemotion__modeling_add9aa4093755c7775b713624c1817aca}\index{motion\_modeling@{motion\_modeling}!calc\_offset\_lidar\_to\_car\_center@{calc\_offset\_lidar\_to\_car\_center}}
+\index{calc\_offset\_lidar\_to\_car\_center@{calc\_offset\_lidar\_to\_car\_center}!motion\_modeling@{motion\_modeling}}
+\doxysubsubsection{\texorpdfstring{calc\_offset\_lidar\_to\_car\_center()}{calc\_offset\_lidar\_to\_car\_center()}}
+{\footnotesize\ttfamily \label{namespacemotion__modeling_add9aa4093755c7775b713624c1817aca} 
+gtsam\+::\+Point2 motion\+\_\+modeling\+::calc\+\_\+offset\+\_\+lidar\+\_\+to\+\_\+car\+\_\+center (\begin{DoxyParamCaption}\item[{double}]{yaw}{}\end{DoxyParamCaption})}
+
+
+
+Calculates the offset vector from LIDAR sensor to car center in global frame. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em yaw} & Current yaw angle. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+gtsam\+::\+Point2 Offset vector from LIDAR to car center. 
+\end{DoxyReturn}
+\Hypertarget{namespacemotion__modeling_a96aa2b77878997dcdfe58fd7ad47f969}\index{motion\_modeling@{motion\_modeling}!degrees\_to\_radians@{degrees\_to\_radians}}
+\index{degrees\_to\_radians@{degrees\_to\_radians}!motion\_modeling@{motion\_modeling}}
+\doxysubsubsection{\texorpdfstring{degrees\_to\_radians()}{degrees\_to\_radians()}}
+{\footnotesize\ttfamily \label{namespacemotion__modeling_a96aa2b77878997dcdfe58fd7ad47f969} 
+double motion\+\_\+modeling\+::degrees\+\_\+to\+\_\+radians (\begin{DoxyParamCaption}\item[{double}]{degrees}{}\end{DoxyParamCaption})}
+
+
+
+Converts degrees to radians. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em degrees} & Angle in degrees. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double Angle in radians. 
+\end{DoxyReturn}
+\Hypertarget{namespacemotion__modeling_ab6ec7b19eb78645dec9adf9e6aaa5966}\index{motion\_modeling@{motion\_modeling}!determine\_movement@{determine\_movement}}
+\index{determine\_movement@{determine\_movement}!motion\_modeling@{motion\_modeling}}
+\doxysubsubsection{\texorpdfstring{determine\_movement()}{determine\_movement()}}
+{\footnotesize\ttfamily \label{namespacemotion__modeling_ab6ec7b19eb78645dec9adf9e6aaa5966} 
+std\+::pair$<$ bool, bool $>$ motion\+\_\+modeling\+::determine\+\_\+movement (\begin{DoxyParamCaption}\item[{gtsam\+::\+Pose2}]{velocity}{}\end{DoxyParamCaption})}
+
+
+
+Returns a pair of bools where the first element is true if the car is moving, and the second element is true if the car is turning. 
+
+Determines whether the vehicle is moving and/or turning based on velocity thresholds.
+
+
+\begin{DoxyParams}{Parameters}
+{\em velocity} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::pair$<$bool, bool$>$
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em velocity} & Current velocity pose. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::pair$<$bool, bool$>$ First element\+: is moving, second element\+: is turning. 
+\end{DoxyReturn}
+\Hypertarget{namespacemotion__modeling_a955d143c19d97c8fd0f36074e5b5ed43}\index{motion\_modeling@{motion\_modeling}!gps\_motion\_model@{gps\_motion\_model}}
+\index{gps\_motion\_model@{gps\_motion\_model}!motion\_modeling@{motion\_modeling}}
+\doxysubsubsection{\texorpdfstring{gps\_motion\_model()}{gps\_motion\_model()}}
+{\footnotesize\ttfamily \label{namespacemotion__modeling_a955d143c19d97c8fd0f36074e5b5ed43} 
+std\+::pair$<$ gtsam\+::\+Pose2, gtsam\+::\+Pose2 $>$ motion\+\_\+modeling\+::gps\+\_\+motion\+\_\+model (\begin{DoxyParamCaption}\item[{gtsam\+::\+Pose2}]{prev\+\_\+pose}{, }\item[{gtsam\+::\+Pose2}]{global\+\_\+odom}{}\end{DoxyParamCaption})}
+
+
+
+Applies GPS motion model to compute new pose and odometry with IMU offset correction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em odometry} & \\
+\hline
+{\em velocity} & \\
+\hline
+{\em dt} & \\
+\hline
+{\em prev\+\_\+pose} & \\
+\hline
+{\em global\+\_\+odom} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::pair$<$gtsam\+::\+Pose2, gtsam\+::\+Pose2$>$ Returns a pair where the first element is the new\+\_\+pose and the second element is the odometry.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em prev\+\_\+pose} & Previous pose of the vehicle. \\
+\hline
+{\em global\+\_\+odom} & GPS odometry pose. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::pair$<$gtsam\+::\+Pose2, gtsam\+::\+Pose2$>$ Pair of corrected new pose and odometry delta. 
+\end{DoxyReturn}
+\Hypertarget{namespacemotion__modeling_a8e8e40aa9a9185045cf3a72cae60ecdc}\index{motion\_modeling@{motion\_modeling}!header\_to\_dt@{header\_to\_dt}}
+\index{header\_to\_dt@{header\_to\_dt}!motion\_modeling@{motion\_modeling}}
+\doxysubsubsection{\texorpdfstring{header\_to\_dt()}{header\_to\_dt()}}
+{\footnotesize\ttfamily \label{namespacemotion__modeling_a8e8e40aa9a9185045cf3a72cae60ecdc} 
+double motion\+\_\+modeling\+::header\+\_\+to\+\_\+dt (\begin{DoxyParamCaption}\item[{std\+::optional$<$ std\+\_\+msgs\+::msg\+::\+Header $>$}]{prev}{, }\item[{std\+::optional$<$ std\+\_\+msgs\+::msg\+::\+Header $>$}]{cur}{}\end{DoxyParamCaption})}
+
+
+
+Calculates time difference (dt) between two ROS message headers. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em prev} & Optional previous header. \\
+\hline
+{\em cur} & Optional current header. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double Time difference in seconds. 
+\end{DoxyReturn}
+\Hypertarget{namespacemotion__modeling_a7bab04641800da6e420949c71512a1d7}\index{motion\_modeling@{motion\_modeling}!header\_to\_nanosec@{header\_to\_nanosec}}
+\index{header\_to\_nanosec@{header\_to\_nanosec}!motion\_modeling@{motion\_modeling}}
+\doxysubsubsection{\texorpdfstring{header\_to\_nanosec()}{header\_to\_nanosec()}}
+{\footnotesize\ttfamily \label{namespacemotion__modeling_a7bab04641800da6e420949c71512a1d7} 
+double motion\+\_\+modeling\+::header\+\_\+to\+\_\+nanosec (\begin{DoxyParamCaption}\item[{const std\+\_\+msgs\+::msg\+::\+Header \&}]{header}{}\end{DoxyParamCaption})}
+
+
+
+Converts a ROS message header timestamp to nanoseconds. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em header} & ROS std\+\_\+msgs Header. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double Timestamp in nanoseconds. 
+\end{DoxyReturn}
+\Hypertarget{namespacemotion__modeling_a39ba4eb9731177cb314756a64210fc8f}\index{motion\_modeling@{motion\_modeling}!imu\_axes\_to\_DV\_axes@{imu\_axes\_to\_DV\_axes}}
+\index{imu\_axes\_to\_DV\_axes@{imu\_axes\_to\_DV\_axes}!motion\_modeling@{motion\_modeling}}
+\doxysubsubsection{\texorpdfstring{imu\_axes\_to\_DV\_axes()}{imu\_axes\_to\_DV\_axes()}}
+{\footnotesize\ttfamily \label{namespacemotion__modeling_a39ba4eb9731177cb314756a64210fc8f} 
+void motion\+\_\+modeling\+::imu\+\_\+axes\+\_\+to\+\_\+\+DV\+\_\+axes (\begin{DoxyParamCaption}\item[{double \&}]{x}{, }\item[{double \&}]{y}{}\end{DoxyParamCaption})}
+
+
+
+Converts IMU axes to DV axes by swapping and negating coordinates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Reference to x coordinate (will be modified). \\
+\hline
+{\em y} & Reference to y coordinate (will be modified). \\
+\hline
+\end{DoxyParams}
+\Hypertarget{namespacemotion__modeling_a66146b526c37cb7eff7a748a928730c2}\index{motion\_modeling@{motion\_modeling}!velocity\_motion\_model@{velocity\_motion\_model}}
+\index{velocity\_motion\_model@{velocity\_motion\_model}!motion\_modeling@{motion\_modeling}}
+\doxysubsubsection{\texorpdfstring{velocity\_motion\_model()}{velocity\_motion\_model()}}
+{\footnotesize\ttfamily \label{namespacemotion__modeling_a66146b526c37cb7eff7a748a928730c2} 
+std\+::pair$<$ gtsam\+::\+Pose2, gtsam\+::\+Pose2 $>$ motion\+\_\+modeling\+::velocity\+\_\+motion\+\_\+model (\begin{DoxyParamCaption}\item[{gtsam\+::\+Pose2}]{velocity}{, }\item[{double}]{dt}{, }\item[{gtsam\+::\+Pose2}]{prev\+\_\+pose}{, }\item[{double}]{yaw}{}\end{DoxyParamCaption})}
+
+
+
+Applies velocity motion model to predict new pose and odometry over a time step. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em velocity} & Velocity pose (linear x,y and angular theta). \\
+\hline
+{\em dt} & Time step duration. \\
+\hline
+{\em prev\+\_\+pose} & Previous pose of the vehicle. \\
+\hline
+{\em yaw} & Current yaw angle. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::pair$<$gtsam\+::\+Pose2, gtsam\+::\+Pose2$>$ Pair of new pose and odometry delta. 
+\end{DoxyReturn}

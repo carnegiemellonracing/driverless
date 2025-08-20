@@ -1,0 +1,167 @@
+\doxysection{isam2.\+hpp}
+\hypertarget{isam2_8hpp_source}{}\label{isam2_8hpp_source}\index{include/isam2.hpp@{include/isam2.hpp}}
+\mbox{\hyperlink{isam2_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once\ }}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <bits/stdc++.h>}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Camera\ observations\ of\ landmarks\ will\ be\ stored\ as\ Point2\ (x,\ y).}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <gtsam/geometry/Point2.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <gtsam/geometry/Pose2.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <eigen3/Eigen/Dense>}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Each\ variable\ in\ the\ system\ (sposes\ and\ landmarks)\ must\ be\ identified\ with\ a}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ unique\ key.\ We\ can\ either\ use\ simple\ integer\ keys\ (1,\ 2,\ 3,\ ...)\ or\ symbols}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ (X1,\ X2,\ L1).\ Here\ we\ will\ use\ Symbols}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <gtsam/inference/Symbol.h>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ We\ want\ to\ use\ iSAM2\ to\ solve\ the\ structure-\/from-\/motion\ problem}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ incrementally,\ so\ include\ iSAM2\ here}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <gtsam/nonlinear/ISAM2.h>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ iSAM2\ requires\ as\ input\ a\ set\ of\ new\ factors\ to\ be\ added\ stored\ in\ a\ factor}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ graph,\ and\ initial\ guesses\ for\ any\ new\ variables\ used\ in\ the\ added\ factors}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <gtsam/nonlinear/NonlinearFactorGraph.h>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <gtsam/nonlinear/Values.h>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <gtsam/nonlinear/LevenbergMarquardtOptimizer.h>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <gtsam/nonlinear/DoglegOptimizer.h>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <gtsam/nonlinear/GaussNewtonOptimizer.h>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <gtsam/nonlinear/NonlinearConjugateGradientOptimizer.h>}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ In\ GTSAM,\ measurement\ functions\ are\ represented\ as\ 'factors'.\ Several\ common}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ factors\ have\ been\ provided\ with\ the\ library\ for\ solving\ robotics/SLAM/Bundle}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Adjustment\ problems.\ Here\ we\ will\ use\ Projection\ factors\ to\ model\ the}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ camera's\ landmark\ observations.\ Also,\ we\ will\ initialize\ the\ robot\ at\ some}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ location\ using\ a\ Prior\ factor.}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <gtsam/slam/ProjectionFactor.h>}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <gtsam/slam/BetweenFactor.h>}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <gtsam/sam/BearingRangeFactor.h>}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ros__utils_8hpp}{ros\_utils.hpp}}"{}}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{data__association_8hpp}{data\_association.hpp}}"{}}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{unary__factor_8hpp}{unary\_factor.hpp}}"{}}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{slam__est__and__mcov_8hpp}{slam\_est\_and\_mcov.hpp}}"{}}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{loop__closure_8hpp}{loop\_closure.hpp}}"{}}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceslam}{slam}}\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\_output\_t}}\ =\ std::tuple<std::vector<geometry\_msgs::msg::Point>,\ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<geometry\_msgs::msg::Point>,\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ geometry\_msgs::msg::Point>;}
+\DoxyCodeLine{00043\ \ \ \ \ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449}{RunSettings}}\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449a7f80fcc452c2f1ed2bb51b39d0864df1}{Real}},}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449a69d734ae5c73fbb6a4d4221bb5ba20c6}{EUFSSim}},}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449ae4438a611ac230ecdb056c4f171bc547}{ControlsSim}}}
+\DoxyCodeLine{00048\ \ \ \ \ \};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classslam_1_1slamISAM_a0f15f59ec41b33eeca84b0399a6429dc}{slamISAM}}\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}:\ \ \ \ }
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Variables\ related\ to\ ISAM2\ factor\ graph*/}}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::ISAM2Params\ parameters;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<gtsam::ISAM2>\ isam2;}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::NonlinearFactorGraph\ graph;}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Values\ values;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Functions\ for\ adding\ symbols\ to\ the\ ISAM2\ factor\ graph\ */}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ gtsam::Symbol\ X(\textcolor{keywordtype}{int}\ robot\_pose\_id);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ gtsam::Symbol\ BLUE\_L(\textcolor{keywordtype}{int}\ cone\_pose\_id);}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ gtsam::Symbol\ YELLOW\_L(\textcolor{keywordtype}{int}\ cone\_pose\_id);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Pose\ and\ odometry\ information\ */}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Pose2\ first\_pose;}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ pose\_num;}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ first\_pose\_added\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Current\ vector\ of\ mahalanobis\ distance\ calculations\ */}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<double>\ m\_dist;}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Lap\ and\ loop\ closure\ related\ variables\ */}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ loop\_closure;}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ new\_lap;}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ lap\_count;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ SLAM\ history\ of\ estimates\ and\ marginal\ covariance\ matrices\ */}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov}{SLAMEstAndMCov}}\ blue\_slam\_est\_and\_mcov;}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov}{SLAMEstAndMCov}}\ yellow\_slam\_est\_and\_mcov;}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ checkpoint\_to\_update\_beginning;}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ blue\_checkpoint\_id;}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ yellow\_checkpoint\_id;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ std::chrono::high\_resolution\_clock::time\_point\ start;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ std::chrono::high\_resolution\_clock::time\_point\ end;}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Noise\ models\ */}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Vector\ LandmarkNoiseModel;}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::noiseModel::Diagonal::shared\_ptr\ landmark\_model;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Vector\ PriorNoiseModel;}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::noiseModel::Diagonal::shared\_ptr\ prior\_model;}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Vector\ OdomNoiseModel;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::noiseModel::Diagonal::shared\_ptr\ odom\_model;}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Vector\ UnaryNoiseModel;}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::noiseModel::Diagonal::shared\_ptr\ unary\_model;}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ std::optional<rclcpp::Logger>\ logger;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Tunable\ and\ adjustable\ parameters\ */}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ look\_radius;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ min\_cones\_update\_all;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ window\_update;}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ update\_start\_n;}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ update\_recent\_n;}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ imu\_offset;\ \textcolor{comment}{//\ meters;\ offset\ from\ the\ center\ of\ the\ car}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ lidar\_offset;\ \textcolor{comment}{//\ meters;\ offset\ from\ the\ center\ of\ the\ car}}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ max\_cone\_range;\ \textcolor{comment}{//\ meters;\ how\ far\ from\ the\ car\ will\ we\ accept\ a\ cone\ to\ process}}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ turning\_max\_cone\_range;\ \textcolor{comment}{//meters;\ how\ far\ from\ the\ car\ will\ we\ accept\ a\ cone\ to\ process}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dist\_from\_start\_loop\_closure\_th;}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ m\_dist\_th;}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ turning\_m\_dist\_th;}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ update\_iterations\_n;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ return\_n\_cones;}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ init\_noise\_models(\textcolor{keyword}{const}\ std::optional<yaml\_params::NoiseInputs>\ \&yaml\_noise\_inputs);}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ init\_tunable\_constants(\textcolor{keyword}{const}\ std::optional<yaml\_params::NoiseInputs>\ \&yaml\_noise\_inputs);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ init\_params(std::optional<rclcpp::Logger>\ input\_logger);}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ print\_estimates();}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ log\_params\_in\_use(\textcolor{keywordtype}{bool}\ has\_value);}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\_output\_t}}\ get\_recent\_SLAM\_estimates(gtsam::Pose2\ cur\_pose);}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Pose2\ update\_poses(}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::optional<gtsam::Point2>\ gps\_position,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ yaw,}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Pose2\ velocity,\ }
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dt,\ }
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::optional<rclcpp::Logger>\ logger}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ update\_landmarks(}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<data\_association\_utils::OldConeInfo>\ \&old\_cones,}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<data\_association\_utils::NewConeInfo>\ \&new\_cones,}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Pose2\ cur\_pose,}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov}{SLAMEstAndMCov}}\ \&slam\_est\_and\_mcov);}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:\ }
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classslam_1_1slamISAM_a339835603720c6ba0db771b8fd9a8828}{slamISAM}}(std::optional<rclcpp::Logger>\ input\_logger,\ std::optional<yaml\_params::NoiseInputs>\ \&yaml\_noise\_inputs);}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classslam_1_1slamISAM_a339835603720c6ba0db771b8fd9a8828}{slamISAM}}()\{\};\ \textcolor{comment}{/*\ Empty\ constructor\ */}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\_output\_t}}\ \mbox{\hyperlink{classslam_1_1slamISAM_a59469d87c99142bec093ab4a13c9cff5}{step}}(}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::optional<gtsam::Point2>\ gps\_opt,\ }
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ yaw,}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<gtsam::Point2>\ \&cone\_obs\_blue,\ }
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<gtsam::Point2>\ \&cone\_obs\_yellow,}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<gtsam::Point2>\ \&orange\_ref\_cones,\ }
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gtsam::Pose2\ velocity,}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dt}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00203\ \ \ \ \ \};}
+\DoxyCodeLine{00204\ \}}
+
+\end{DoxyCode}

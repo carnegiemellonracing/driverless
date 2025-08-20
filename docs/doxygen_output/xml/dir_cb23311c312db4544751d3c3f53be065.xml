@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="dir_cb23311c312db4544751d3c3f53be065" kind="dir">
+    <compoundname>src/isam2</compoundname>
+    <innerfile refid="isam2_8cpp">isam2.cpp</innerfile>
+    <innerfile refid="slam__est__and__mcov_8cpp">slam_est_and_mcov.cpp</innerfile>
+    <innerfile refid="unary__factor_8cpp">unary_factor.cpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/isam2/"/>
+  </compounddef>
+</doxygen>

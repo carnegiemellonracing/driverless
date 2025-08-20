@@ -1,0 +1,252 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="loop__closure_8hpp" kind="file" language="C++">
+    <compoundname>loop_closure.hpp</compoundname>
+    <includes refid="ros__utils_8hpp" local="yes">ros_utils.hpp</includes>
+    <includedby refid="isam2_8hpp" local="yes">include/isam2.hpp</includedby>
+    <includedby refid="loop__closure_8cpp" local="yes">src/utils/loop_closure.cpp</includedby>
+    <incdepgraph>
+      <node id="32">
+        <label>constants.hpp</label>
+        <link refid="constants_8hpp"/>
+        <childnode refid="33" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>include/loop_closure.hpp</label>
+        <link refid="loop__closure_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>ros_utils.hpp</label>
+        <link refid="ros__utils_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>boost/shared_ptr.hpp</label>
+      </node>
+      <node id="27">
+        <label>chrono</label>
+      </node>
+      <node id="28">
+        <label>climits</label>
+      </node>
+      <node id="26">
+        <label>cmath</label>
+      </node>
+      <node id="25">
+        <label>deque</label>
+      </node>
+      <node id="29">
+        <label>fmt/format.h</label>
+      </node>
+      <node id="24">
+        <label>fstream</label>
+      </node>
+      <node id="19">
+        <label>geometry_msgs/msg/point.hpp</label>
+      </node>
+      <node id="13">
+        <label>geometry_msgs/msg/pose_stamped.hpp</label>
+      </node>
+      <node id="15">
+        <label>geometry_msgs/msg/quaternion_stamped.hpp</label>
+      </node>
+      <node id="18">
+        <label>geometry_msgs/msg/twist.hpp</label>
+      </node>
+      <node id="16">
+        <label>geometry_msgs/msg/twist_stamped.hpp</label>
+      </node>
+      <node id="17">
+        <label>geometry_msgs/msg/twist_with_covariance.hpp</label>
+      </node>
+      <node id="14">
+        <label>geometry_msgs/msg/vector3_stamped.hpp</label>
+      </node>
+      <node id="30">
+        <label>gtsam/geometry/Point2.h</label>
+      </node>
+      <node id="31">
+        <label>gtsam/geometry/Pose2.h</label>
+      </node>
+      <node id="9">
+        <label>interfaces/msg/cone_array.hpp</label>
+      </node>
+      <node id="10">
+        <label>interfaces/msg/cone_array_with_odom.hpp</label>
+      </node>
+      <node id="12">
+        <label>interfaces/msg/slam_chunk.hpp</label>
+      </node>
+      <node id="11">
+        <label>interfaces/msg/slam_pose.hpp</label>
+      </node>
+      <node id="3">
+        <label>memory</label>
+      </node>
+      <node id="6">
+        <label>message_filters/subscriber.h</label>
+      </node>
+      <node id="8">
+        <label>message_filters/sync_policies/approximate_time.h</label>
+      </node>
+      <node id="7">
+        <label>message_filters/synchronizer.h</label>
+      </node>
+      <node id="4">
+        <label>optional</label>
+      </node>
+      <node id="5">
+        <label>rclcpp/rclcpp.hpp</label>
+      </node>
+      <node id="20">
+        <label>sensor_msgs/msg/nav_sat_fix.hpp</label>
+      </node>
+      <node id="21">
+        <label>std_msgs/msg/string.hpp</label>
+      </node>
+      <node id="33">
+        <label>string</label>
+      </node>
+      <node id="23">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>include/isam2.hpp</label>
+        <link refid="isam2_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>include/isam2_nodes.hpp</label>
+        <link refid="isam2__nodes_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>include/loop_closure.hpp</label>
+        <link refid="loop__closure_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>src/isam2/isam2.cpp</label>
+        <link refid="isam2_8cpp"/>
+      </node>
+      <node id="4">
+        <label>src/nodes/controls_sim_slam_node.cpp</label>
+        <link refid="controls__sim__slam__node_8cpp"/>
+      </node>
+      <node id="5">
+        <label>src/nodes/generic_slam_node.cpp</label>
+        <link refid="generic__slam__node_8cpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>src/nodes/generic_slam_node_impl.cpp</label>
+        <link refid="generic__slam__node__impl_8cpp"/>
+      </node>
+      <node id="7">
+        <label>src/nodes/real_data_slam_node_gps.cpp</label>
+        <link refid="real__data__slam__node__gps_8cpp"/>
+      </node>
+      <node id="8">
+        <label>src/nodes/real_data_slam_node_no_gps.cpp</label>
+        <link refid="real__data__slam__node__no__gps_8cpp"/>
+      </node>
+      <node id="10">
+        <label>src/utils/loop_closure.cpp</label>
+        <link refid="loop__closure_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespaceloop__closure__utils">loop_closure_utils</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="ros__utils_8hpp" kindref="compound">ros_utils.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3" refid="namespaceloop__closure__utils" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceloop__closure__utils" kindref="compound">loop_closure_utils</ref><sp/>{</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespaceloop__closure__utils_1ae21fdb252c15e783c9be0dae81ba9457" kindref="member">start_pose_in_front</ref>(gtsam::Pose2<sp/>&amp;cur_pose,<sp/>gtsam::Pose2<sp/>&amp;first_pose,<sp/>std::optional&lt;rclcpp::Logger&gt;<sp/>logger);</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespaceloop__closure__utils_1acf73e33a4333dddf3b0e1f89a25c3148" kindref="member">detect_loop_closure</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dist_from_start_loop_closure_th,<sp/>gtsam::Pose2<sp/>&amp;cur_pose,<sp/>gtsam::Pose2<sp/>&amp;first_pose,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pose_num,<sp/>std::optional&lt;rclcpp::Logger&gt;<sp/>logger);</highlight></codeline>
+<codeline lineno="7"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="include/loop_closure.hpp"/>
+  </compounddef>
+</doxygen>

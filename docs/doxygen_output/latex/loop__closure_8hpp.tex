@@ -1,0 +1,31 @@
+\doxysection{include/loop\+\_\+closure.hpp File Reference}
+\hypertarget{loop__closure_8hpp}{}\label{loop__closure_8hpp}\index{include/loop\_closure.hpp@{include/loop\_closure.hpp}}
+{\ttfamily \#include "{}ros\+\_\+utils.\+hpp"{}}\newline
+Include dependency graph for loop\+\_\+closure.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{loop__closure_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{loop__closure_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceloop__closure__utils}{loop\+\_\+closure\+\_\+utils}}
+\begin{DoxyCompactList}\small\item\em Contains helper functions to support loop closure detection in SLAM. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespaceloop__closure__utils_ae21fdb252c15e783c9be0dae81ba9457}{loop\+\_\+closure\+\_\+utils\+::start\+\_\+pose\+\_\+in\+\_\+front}} (gtsam\+::\+Pose2 \&cur\+\_\+pose, gtsam\+::\+Pose2 \&first\+\_\+pose, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Determiens whether the robot is facing the start pose. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespaceloop__closure__utils_acf73e33a4333dddf3b0e1f89a25c3148}{loop\+\_\+closure\+\_\+utils\+::detect\+\_\+loop\+\_\+closure}} (double dist\+\_\+from\+\_\+start\+\_\+loop\+\_\+closure\+\_\+th, gtsam\+::\+Pose2 \&cur\+\_\+pose, gtsam\+::\+Pose2 \&first\+\_\+pose, int pose\+\_\+num, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Detects if a loop closure should be triggered. \end{DoxyCompactList}\end{DoxyCompactItemize}

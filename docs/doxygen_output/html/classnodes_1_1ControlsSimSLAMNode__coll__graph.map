@@ -1,0 +1,9 @@
+<map id="nodes::ControlsSimSLAMNode" name="nodes::ControlsSimSLAMNode">
+<area shape="rect" id="Node000001" title="In controls sim, the orientation information is incorporated into the PoseStamped message." alt="" coords="591,35,795,61"/>
+<area shape="rect" id="Node000002" href="$classnodes_1_1GenericSLAMNode.html" title=" " alt="" coords="264,5,542,91"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="557,46,591,46,591,51,557,51"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="17,10,112,36"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="128,25,263,35,263,40,127,30"/>
+<area shape="rect" id="Node000004" href="$classslam_1_1slamISAM.html" title=" " alt="" coords="5,59,124,85"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="139,67,239,62,263,60,264,65,240,67,140,73"/>
+</map>

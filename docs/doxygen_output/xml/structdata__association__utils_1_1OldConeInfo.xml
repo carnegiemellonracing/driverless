@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="structdata__association__utils_1_1OldConeInfo" kind="struct" language="C++" prot="public">
+    <compoundname>data_association_utils::OldConeInfo</compoundname>
+    <includes refid="data__association_8hpp" local="no">data_association.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structdata__association__utils_1_1OldConeInfo_1a6494d0639b9439faebd2f15b41ad8eeb" prot="public" static="no" mutable="no">
+        <type>gtsam::Point2</type>
+        <definition>gtsam::Point2 data_association_utils::OldConeInfo::local_cone_pos</definition>
+        <argsstring></argsstring>
+        <name>local_cone_pos</name>
+        <qualifiedname>data_association_utils::OldConeInfo::local_cone_pos</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/data_association.hpp" line="30" column="23" bodyfile="include/data_association.hpp" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structdata__association__utils_1_1OldConeInfo_1ae61260e27dc64e5d89b6aee0d2bf7b74" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double data_association_utils::OldConeInfo::bearing</definition>
+        <argsstring></argsstring>
+        <name>bearing</name>
+        <qualifiedname>data_association_utils::OldConeInfo::bearing</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/data_association.hpp" line="31" column="16" bodyfile="include/data_association.hpp" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structdata__association__utils_1_1OldConeInfo_1aadbe53fb2f3ab16f385776da145423a8" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int data_association_utils::OldConeInfo::min_id</definition>
+        <argsstring></argsstring>
+        <name>min_id</name>
+        <qualifiedname>data_association_utils::OldConeInfo::min_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/data_association.hpp" line="32" column="13" bodyfile="include/data_association.hpp" bodystart="32" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="structdata__association__utils_1_1OldConeInfo_1a22445efe162acafd65e09c13497ff731" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>data_association_utils::OldConeInfo::OldConeInfo</definition>
+        <argsstring>(gtsam::Point2 local_cone_pos, double bearing, int min_id)</argsstring>
+        <name>OldConeInfo</name>
+        <qualifiedname>data_association_utils::OldConeInfo::OldConeInfo</qualifiedname>
+        <param>
+          <type>gtsam::Point2</type>
+          <declname>local_cone_pos</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>bearing</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>min_id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/data_association.hpp" line="34" column="9" bodyfile="include/data_association.hpp" bodystart="34" bodyend="38"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/data_association.hpp" line="29" column="5" bodyfile="include/data_association.hpp" bodystart="29" bodyend="39"/>
+    <listofallmembers>
+      <member refid="structdata__association__utils_1_1OldConeInfo_1ae61260e27dc64e5d89b6aee0d2bf7b74" prot="public" virt="non-virtual"><scope>data_association_utils::OldConeInfo</scope><name>bearing</name></member>
+      <member refid="structdata__association__utils_1_1OldConeInfo_1a6494d0639b9439faebd2f15b41ad8eeb" prot="public" virt="non-virtual"><scope>data_association_utils::OldConeInfo</scope><name>local_cone_pos</name></member>
+      <member refid="structdata__association__utils_1_1OldConeInfo_1aadbe53fb2f3ab16f385776da145423a8" prot="public" virt="non-virtual"><scope>data_association_utils::OldConeInfo</scope><name>min_id</name></member>
+      <member refid="structdata__association__utils_1_1OldConeInfo_1a22445efe162acafd65e09c13497ff731" prot="public" virt="non-virtual"><scope>data_association_utils::OldConeInfo</scope><name>OldConeInfo</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,341 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="namespaceros__msg__conversions" kind="namespace" language="C++">
+    <compoundname>ros_msg_conversions</compoundname>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceros__msg__conversions_1a43258d8e39d67e439f47c2bf9f781771" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void ros_msg_conversions::cone_msg_to_vectors</definition>
+        <argsstring>(const interfaces::msg::ConeArray::ConstSharedPtr &amp;cone_data, std::vector&lt; gtsam::Point2 &gt; &amp;cones, std::vector&lt; gtsam::Point2 &gt; &amp;blue_cones, std::vector&lt; gtsam::Point2 &gt; &amp;yellow_cones, std::vector&lt; gtsam::Point2 &gt; &amp;orange_cones)</argsstring>
+        <name>cone_msg_to_vectors</name>
+        <qualifiedname>ros_msg_conversions::cone_msg_to_vectors</qualifiedname>
+        <param>
+          <type>const interfaces::msg::ConeArray::ConstSharedPtr &amp;</type>
+          <declname>cone_data</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>cones</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>blue_cones</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>yellow_cones</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>orange_cones</declname>
+        </param>
+        <briefdescription>
+<para>Parses a ConeArray message and organizes cones by color. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cone_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Input ROS message containing cone arrays </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Output vector to store all cones regardless of color </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>blue_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector to store detected blue cones </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yellow_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector to store detected yellow cones </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>orange_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector to store detected orange cones </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="24" column="10" bodyfile="src/utils/ros_utils.cpp" bodystart="24" bodyend="52" declfile="include/ros_utils.hpp" declline="46" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceros__msg__conversions_1a3b767f68f61f319945b205b57c8732d9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Pose2</type>
+        <definition>gtsam::Pose2 ros_msg_conversions::velocity_msg_to_pose2</definition>
+        <argsstring>(const geometry_msgs::msg::TwistStamped::ConstSharedPtr &amp;vehicle_vel_data)</argsstring>
+        <name>velocity_msg_to_pose2</name>
+        <qualifiedname>ros_msg_conversions::velocity_msg_to_pose2</qualifiedname>
+        <param>
+          <type>const geometry_msgs::msg::TwistStamped::ConstSharedPtr &amp;</type>
+          <declname>vehicle_vel_data</declname>
+        </param>
+        <briefdescription>
+<para>Converts a TwistStamped message to a gtsam::Pose2 representing velocity. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>vehicle_vel_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Input velocity message </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>gtsam::Pose2 Pose 2 with linear velocities in x, y and angular velocity as theta </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="60" column="18" bodyfile="src/utils/ros_utils.cpp" bodystart="60" bodyend="66" declfile="include/ros_utils.hpp" declline="52" declcolumn="18"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceros__msg__conversions_1a461002f6b790bdb2e6c050b06e5f3025" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Pose2</type>
+        <definition>gtsam::Pose2 ros_msg_conversions::posestamped_msg_to_pose2</definition>
+        <argsstring>(const geometry_msgs::msg::PoseStamped::ConstSharedPtr &amp;vehicle_pos_data, gtsam::Point2 init_x_y, rclcpp::Logger logger)</argsstring>
+        <name>posestamped_msg_to_pose2</name>
+        <qualifiedname>ros_msg_conversions::posestamped_msg_to_pose2</qualifiedname>
+        <param>
+          <type>const geometry_msgs::msg::PoseStamped::ConstSharedPtr &amp;</type>
+          <declname>vehicle_pos_data</declname>
+        </param>
+        <param>
+          <type>gtsam::Point2</type>
+          <declname>init_x_y</declname>
+        </param>
+        <param>
+          <type>rclcpp::Logger</type>
+          <declname>logger</declname>
+        </param>
+        <briefdescription>
+<para>Converts a PoseStamped message to a gtsam::Pose2, applying an initial offset. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>vehicle_pos_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Input pose message. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>init_x_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Initial offset point to subtract from position. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>ROS logger for debugging. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>gtsam::Pose2 Converted Pose2 with position offset and yaw. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>PoseStamped message has: 1.) Header header 2.) Pose pose</para>
+<para>geometry_msgs Pose type has: 1.) Point position 2.) Quaternion orientation</para>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="76" column="18" bodyfile="src/utils/ros_utils.cpp" bodystart="76" bodyend="99" declfile="include/ros_utils.hpp" declline="54" declcolumn="18"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceros__msg__conversions_1a41262306052e228495aa0b7d79395a92" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double ros_msg_conversions::quat_msg_to_yaw</definition>
+        <argsstring>(const geometry_msgs::msg::QuaternionStamped::ConstSharedPtr &amp;vehicle_angle_data)</argsstring>
+        <name>quat_msg_to_yaw</name>
+        <qualifiedname>ros_msg_conversions::quat_msg_to_yaw</qualifiedname>
+        <param>
+          <type>const geometry_msgs::msg::QuaternionStamped::ConstSharedPtr &amp;</type>
+          <declname>vehicle_angle_data</declname>
+        </param>
+        <briefdescription>
+<para>Converts a QuaternionStamped message to yaw angle in radians. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>vehicle_angle_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Input quaternion message. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>double Yaw angle extracted from quaternion. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="107" column="12" bodyfile="src/utils/ros_utils.cpp" bodystart="107" bodyend="114" declfile="include/ros_utils.hpp" declline="56" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceros__msg__conversions_1a2881affaecfd34774e8d067fe8bdbd1e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Point2</type>
+        <definition>gtsam::Point2 ros_msg_conversions::vector3_msg_to_gps</definition>
+        <argsstring>(const geometry_msgs::msg::Vector3Stamped::ConstSharedPtr &amp;vehicle_pos_data, gtsam::Point2 init_lon_lat, rclcpp::Logger logger)</argsstring>
+        <name>vector3_msg_to_gps</name>
+        <qualifiedname>ros_msg_conversions::vector3_msg_to_gps</qualifiedname>
+        <param>
+          <type>const geometry_msgs::msg::Vector3Stamped::ConstSharedPtr &amp;</type>
+          <declname>vehicle_pos_data</declname>
+        </param>
+        <param>
+          <type>gtsam::Point2</type>
+          <declname>init_lon_lat</declname>
+        </param>
+        <param>
+          <type>rclcpp::Logger</type>
+          <declname>logger</declname>
+        </param>
+        <briefdescription>
+<para>Converts a Vector3Stamped GPS message to a local gtsam::Point2 using an initial GPS offset. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>vehicle_pos_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Input GPS vector message. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>init_lon_lat</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Initial GPS offset to subtract. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>ROS logger for debugging. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>gtsam::Point2 Local coordinates converted from GPS latitude/longitude. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Move this over to <ref refid="constants_8hpp" kindref="compound">constants.hpp</ref></para>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="124" column="19" bodyfile="src/utils/ros_utils.cpp" bodystart="124" bodyend="159" declfile="include/ros_utils.hpp" declline="58" declcolumn="19"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceros__msg__conversions_1a414bcfa2d2236d8e30775d340e4b0c6b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>geometry_msgs::msg::Point</type>
+        <definition>geometry_msgs::msg::Point ros_msg_conversions::point2_to_geometry_msg</definition>
+        <argsstring>(gtsam::Point2 gtsam_point)</argsstring>
+        <name>point2_to_geometry_msg</name>
+        <qualifiedname>ros_msg_conversions::point2_to_geometry_msg</qualifiedname>
+        <param>
+          <type>gtsam::Point2</type>
+          <declname>gtsam_point</declname>
+        </param>
+        <briefdescription>
+<para>Converts a gtsam::Point2 to a ROS geometry_msgs::Point message. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gtsam_point</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Input point. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>geometry_msgs::msg::Point Converted ROS point message. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="167" column="31" bodyfile="src/utils/ros_utils.cpp" bodystart="167" bodyend="173" declfile="include/ros_utils.hpp" declline="60" declcolumn="31"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceros__msg__conversions_1ae2942353ab0b099167eb67145f231e16" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; geometry_msgs::msg::Point &gt;</type>
+        <definition>std::vector&lt; geometry_msgs::msg::Point &gt; ros_msg_conversions::slam_est_to_points</definition>
+        <argsstring>(std::vector&lt; gtsam::Point2 &gt; gtsam_points, gtsam::Pose2 pose)</argsstring>
+        <name>slam_est_to_points</name>
+        <qualifiedname>ros_msg_conversions::slam_est_to_points</qualifiedname>
+        <param>
+          <type>std::vector&lt; gtsam::Point2 &gt;</type>
+          <declname>gtsam_points</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>pose</declname>
+        </param>
+        <briefdescription>
+<para>Converts a vector of gtsam::Point2 into ROS geometry_msgs::Point messages, transforming points into local frame. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gtsam_points</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Input global points. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current pose to transform points into local frame. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::vector&lt;geometry_msgs::msg::Point&gt; Vector of points in ROS message format. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="182" column="17" bodyfile="src/utils/ros_utils.cpp" bodystart="182" bodyend="195" declfile="include/ros_utils.hpp" declline="61" declcolumn="17"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Defines conversion functions for converting between types when subscribing to or publishing messages. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Contains utility functions for ROS message conversions and calculations. </para>
+    </detaileddescription>
+    <location file="include/ros_utils.hpp" line="45" column="1"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,46 @@
+\doxysection{include/data\+\_\+association.hpp File Reference}
+\hypertarget{data__association_8hpp}{}\label{data__association_8hpp}\index{include/data\_association.hpp@{include/data\_association.hpp}}
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$tuple$>$}\newline
+{\ttfamily \#include $<$eigen3/\+Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$gtsam/inference/\+Symbol.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/nonlinear/\+ISAM2.\+h$>$}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include $<$float.\+h$>$}\newline
+{\ttfamily \#include "{}ros\+\_\+utils.\+hpp"{}}\newline
+{\ttfamily \#include "{}slam\+\_\+est\+\_\+and\+\_\+mcov.\+hpp"{}}\newline
+Include dependency graph for data\+\_\+association.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{data__association_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{data__association_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo}{data\+\_\+association\+\_\+utils\+::\+New\+Cone\+Info}}
+\item 
+struct \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo}{data\+\_\+association\+\_\+utils\+::\+Old\+Cone\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacedata__association__utils}{data\+\_\+association\+\_\+utils}}
+\begin{DoxyCompactList}\small\item\em Utility functions for data association. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::pair$<$ std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo}{Old\+Cone\+Info}} $>$, std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo}{New\+Cone\+Info}} $>$ $>$ \mbox{\hyperlink{namespacedata__association__utils_a8618a0ce5124334358fd054e92483fd9}{data\+\_\+association\+\_\+utils\+::get\+\_\+old\+\_\+new\+\_\+cones}} (std\+::vector$<$ gtsam\+::\+Point2 $>$ global\+\_\+cone\+\_\+obs, std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+obs, std\+::vector$<$ std\+::vector$<$ double $>$ $>$ distances, double m\+\_\+dist\+\_\+th, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Distinguishes obsered cones into old and new cones. \end{DoxyCompactList}\item 
+std\+::pair$<$ std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo}{Old\+Cone\+Info}} $>$, std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo}{New\+Cone\+Info}} $>$ $>$ \mbox{\hyperlink{namespacedata__association__utils_a6f7228a0a6bea9eb932a06b409ec2d3e}{data\+\_\+association\+\_\+utils\+::perform\+\_\+data\+\_\+association}} (gtsam\+::\+Pose2 cur\+\_\+pose, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger, \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov}{slam\+::\+SLAMEst\+And\+MCov}} \&slam\+\_\+est\+\_\+and\+\_\+mcov, double m\+\_\+dist\+\_\+th, double cone\+\_\+dist\+\_\+th)
+\begin{DoxyCompactList}\small\item\em Performs data association between the observed cones and the SLAM estimates. \end{DoxyCompactList}\end{DoxyCompactItemize}

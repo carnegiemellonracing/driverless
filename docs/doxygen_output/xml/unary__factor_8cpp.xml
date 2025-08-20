@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="unary__factor_8cpp" kind="file" language="C++">
+    <compoundname>unary_factor.cpp</compoundname>
+    <includes refid="unary__factor_8hpp" local="yes">unary_factor.hpp</includes>
+    <incdepgraph>
+      <node id="2">
+        <label>unary_factor.hpp</label>
+        <link refid="unary__factor_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>src/isam2/unary_factor.cpp</label>
+        <link refid="unary__factor_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>bits/stdc++.h</label>
+      </node>
+      <node id="5">
+        <label>gtsam/geometry/Pose2.h</label>
+      </node>
+      <node id="4">
+        <label>gtsam/nonlinear/NonlinearFactor.h</label>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+<para>This is a factor used for localizing car poses. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Unary factors are added to car poses. Car poses are calculated by the velocity motion model, unary factors are contain the GPS measurments </para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="unary__factor_8hpp" kindref="compound">unary_factor.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/>In<sp/>the<sp/>iSAM2<sp/>paper,<sp/>each<sp/>factor<sp/>f(q)<sp/>is<sp/>proportional<sp/>to</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>exp(-||h(q)<sp/>-<sp/>z_{t}||^2)</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/>q<sp/>is<sp/>the<sp/>unknown<sp/>variable</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/>z_{t}<sp/>is<sp/>our<sp/>measurement<sp/>(GPS<sp/>in<sp/>this<sp/>case)<sp/>at<sp/>time<sp/>t</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/>-<sp/>Here<sp/>we<sp/>represented<sp/>this<sp/>as<sp/>x<sp/>and<sp/>y.</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/><sp/><sp/>(gtsam<sp/>Factor<sp/>Graph<sp/>tutorial)</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/>This<sp/>function<sp/>represents<sp/>our<sp/>likelihood<sp/>of<sp/>q<sp/>given<sp/>measurement<sp/>z</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/>-<sp/>We<sp/>want<sp/>to<sp/>maximize<sp/>this<sp/>likelihood<sp/>by<sp/>minimizing<sp/>the<sp/>squared<sp/>error</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*<sp/><sp/><sp/>In<sp/>a<sp/>sense,<sp/>this<sp/>function<sp/>represents<sp/>the<sp/>error<sp/>between<sp/>an<sp/>unknown</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*<sp/><sp/><sp/>variable<sp/>and<sp/>the<sp/>measurement<sp/>we<sp/>receive</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/>h(q)<sp/>is<sp/>a<sp/>nonlinear<sp/>measurement<sp/>function<sp/>(gtsam<sp/>Factor<sp/>Graph<sp/>tutorial)</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/>-<sp/>in<sp/>our<sp/>case<sp/>we<sp/>just<sp/>return<sp/>the<sp/>variable<sp/>itself<sp/>(identity)</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/>*<sp/>What<sp/>is<sp/>q<sp/>in<sp/>the<sp/>context<sp/>of<sp/>our<sp/>problem:<sp/>q<sp/>is<sp/>either<sp/>a<sp/>pose<sp/>or<sp/>a<sp/>landmark</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/>*<sp/>-<sp/>(a<sp/>variable<sp/>node)</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/>*<sp/></highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal">gtsam::Vector<sp/><ref refid="classUnaryFactor_1a6636ce47bc1c8825844a2c8f81d3c8a8" kindref="member">UnaryFactor::evaluateError</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>gtsam::Pose2&amp;<sp/>q,<sp/>gtsam::OptionalMatrixType<sp/>H)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>gtsam::Rot2&amp;<sp/>R<sp/>=<sp/>q.rotation();<sp/></highlight><highlight class="comment">//<sp/>TODO:<sp/>Probably<sp/>do<sp/>not<sp/>need<sp/>&amp;<sp/>in<sp/>the<sp/>type<sp/>annotation?</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>If<sp/>H<sp/>is<sp/>not<sp/>none</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(H)<sp/>{</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(*H)<sp/>=<sp/>(gtsam::Matrix(2,<sp/>3)<sp/>&lt;&lt;<sp/>R.c(),<sp/>-R.s(),<sp/>0.0,</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>R.s(),<sp/>R.c(),<sp/>0.0).finished();</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(gtsam::Vector(2)<sp/>&lt;&lt;<sp/>q.x()<sp/>-<sp/>z.x(),</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>q.y()<sp/>-<sp/>z.y()).finished();</highlight></codeline>
+<codeline lineno="51"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="src/isam2/unary_factor.cpp"/>
+  </compounddef>
+</doxygen>

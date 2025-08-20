@@ -1,0 +1,191 @@
+\doxysection{isam2\+\_\+nodes.\+hpp}
+\hypertarget{isam2__nodes_8hpp_source}{}\label{isam2__nodes_8hpp_source}\index{include/isam2\_nodes.hpp@{include/isam2\_nodes.hpp}}
+\mbox{\hyperlink{isam2__nodes_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ros__utils_8hpp}{ros\_utils.hpp}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{isam2_8hpp}{isam2.hpp}}"{}}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacenodes}{nodes}}\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ cone\_msg\_t,\ \textcolor{keyword}{typename}\ velocity\_msg\_t,\ \textcolor{keyword}{typename}\ orientation\_msg\_t,\ \textcolor{keyword}{typename}\ position\_msg\_t>\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a58d83801be4bff20d25cf082f82b044b}{GenericSLAMNode}}\ :\ \textcolor{keyword}{public}\ rclcpp::Node\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{public}:\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a58d83801be4bff20d25cf082f82b044b}{GenericSLAMNode}}();}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classslam_1_1slamISAM}{slam::slamISAM}}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a1c8e5e7be01a1f6a8c12035bb4045117}{slam\_instance}};\ \textcolor{comment}{/*\ We\ need\ to\ initialize\ this\ because\ it\ is\ used\ in\ the\ constructor\ */}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ std::chrono::high\_resolution\_clock::time\_point\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ad321582bae34358afb0d0f4d6791acce}{cur\_sync\_callback\_time}};}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ std::optional<std::chrono::high\_resolution\_clock::time\_point>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b28b46b60a0cc8f629dc2f9bf2b0aed}{prev\_sync\_callback\_time}};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rclcpp::Publisher<interfaces::msg::SLAMData>::SharedPtr\ slam\_publisher\_;\ }}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ rclcpp::Publisher<interfaces::msg::SLAMPose>::SharedPtr\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a163b73f677228ba27e11fc392e47b324}{slam\_pose\_publisher}};\ }
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ rclcpp::Publisher<interfaces::msg::SLAMChunk>::SharedPtr\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a102a8ba600108b8374f5afeb288d59bb}{slam\_chunk\_publisher}};\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ gtsam::Pose2\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_aef0fb75590c57ef972d0723a2648fe93}{velocity}};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ std::optional<gtsam::Point2>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ab271b8cbc773ca67eead78dfd93a66cc}{init\_lon\_lat}};\ \textcolor{comment}{//\ local\ variable\ to\ load\ odom\ into\ SLAM\ instance\ when\ msg\ in\ lon\ lat}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ std::optional<gtsam::Point2>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a65cc2fec07dea2e13e5f813c7e40a6ed}{init\_x\_y}};\ \textcolor{comment}{//\ local\ variable\ to\ load\ odom\ into\ SLAM\ instance\ when\ msg\ in\ x\ and\ y\ meters}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ gtsam::Point2\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a11b35a330285720008d97405ead9ea32}{gps\_position}};\ \textcolor{comment}{//\ local\ variable\ to\ load\ odom\ into\ SLAM\ instance}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_aa06d32c5d2f2e7a112b5925c43718d64}{yaw}};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ std::vector<gtsam::Point2>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a0361459b479a7710fb411660ecd74939}{cones}};\ \textcolor{comment}{//\ local\ variable\ to\ load\ cone\ observations\ into\ SLAM\ instance}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ std::vector<gtsam::Point2>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_aed83b931419f4d668f2cc6faf289f450}{orange\_cones}};\ \textcolor{comment}{//\ local\ variable\ to\ load\ cone\ observations\ into\ SLAM\ instance}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ std::vector<gtsam::Point2>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5c9a89d1981198da97332bc70c36b461}{blue\_cones}};\ \textcolor{comment}{//local\ variable\ to\ store\ the\ blue\ observed\ cones}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ std::vector<gtsam::Point2>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_abd8bc9fe10c5e3620a0db348b2a84af9}{yellow\_cones}};\ \textcolor{comment}{//local\ variable\ to\ store\ the\ yellow\ observed\ cones}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ac3e7b0efbfdf99de62dd12249a6b7b4c}{file\_opened}};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ rclcpp::TimerBase::SharedPtr\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a263ca5f766c32bfbb7eaf6b460fbd7fc}{timer}};}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ac9913e82bb32e56d48e660f2b5b49240}{dt}};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ std::optional<std\_msgs::msg::Header>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a94064913429f785ae60b65126bd4c525}{prev\_filter\_time}};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{comment}{//print\ files}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ std::ofstream\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a80846119c099ff6d03614bc8c955b96d}{outfile}};}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ std::ofstream\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a7aa44f46ec28c8f0dc6e81c3a57fcf0b}{pose\_cones}};\ \ \ }
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ QOS\ */}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ rmw\_qos\_profile\_t\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a8b83c878922eb0a915c38d3e0a9e7894}{reliable\_profile}}\ =\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_HISTORY\_KEEP\_LAST,}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ 30,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_RELIABILITY\_RELIABLE,}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_DURABILITY\_VOLATILE,}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_DEADLINE\_DEFAULT,}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_LIFESPAN\_DEFAULT,}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_LIVELINESS\_SYSTEM\_DEFAULT,}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_LIVELINESS\_LEASE\_DURATION\_DEFAULT,}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{false}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ rmw\_qos\_profile\_t\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562}{best\_effort\_profile}}\ =\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_HISTORY\_KEEP\_LAST,}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ 30,}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_RELIABILITY\_BEST\_EFFORT,}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_DURABILITY\_VOLATILE,}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_DEADLINE\_DEFAULT,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_LIFESPAN\_DEFAULT,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_LIVELINESS\_SYSTEM\_DEFAULT,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_LIVELINESS\_LEASE\_DURATION\_DEFAULT,}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{false}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ rclcpp::QoS\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a81430a36c8c264ffd491d275ff44dce2}{best\_effort\_qos}}\ =\ rclcpp::QoS(}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ rclcpp::QoSInitialization(}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562}{best\_effort\_profile}}.history,}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562}{best\_effort\_profile}}.depth),}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562}{best\_effort\_profile}});}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ message\_filters::Subscriber<cone\_msg\_t>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a9e2dc515faed67f46f8833853ec043e1}{cone\_sub}};}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ message\_filters::Subscriber<velocity\_msg\_t>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a3952b006efaa689c3359802004991f3d}{vehicle\_vel\_sub}};}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ message\_filters::Subscriber<orientation\_msg\_t>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a83aa8579d505cc8a98a5743af38afbf3}{vehicle\_angle\_sub}};\ \ \ }
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ message\_filters::Subscriber<position\_msg\_t>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_af909eea548ea81bc6b7e9e4646e9a1f2}{vehicle\_pos\_sub}};}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a2f490a869053d4f426550f5ce5512933}{declare\_yaml\_params}}();}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ std::optional<yaml\_params::NoiseInputs>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_add60599f53e6fcc111caae5fde661dff}{get\_noise\_inputs}}();}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_afbf813fbfc9c31773de427271ed6239e}{publish\_slam\_data}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam::slam\_output\_t}}\&\ slam\_data,\ std\_msgs::msg::Header\ header);}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a58ea6cb4af16c570cdedb00f07186e57}{perform\_subscribes}}()\ =\ 0;}
+\DoxyCodeLine{00101\ \ \ \ \ \};}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ }
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeGPS_a6813696f2a37934a3e14454007ea3fe3}{RealDataSLAMNodeGPS}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a58d83801be4bff20d25cf082f82b044b}{GenericSLAMNode}}<interfaces::msg::ConeArray,}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ geometry\_msgs::msg::TwistStamped,}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ geometry\_msgs::msg::QuaternionStamped,}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ geometry\_msgs::msg::Vector3Stamped>}
+\DoxyCodeLine{00113\ \ \ \ \ \{}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }cone\_msg\_t\ =\ interfaces::msg::ConeArray;}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }velocity\_msg\_t\ =\ geometry\_msgs::msg::TwistStamped;\ }
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }orientation\_msg\_t\ =\ geometry\_msgs::msg::QuaternionStamped;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }position\_msg\_t\ =\ geometry\_msgs::msg::Vector3Stamped;}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }sync\_policy\ =\ message\_filters::sync\_policies::ApproximateTime<cone\_msg\_t,\ velocity\_msg\_t,\ orientation\_msg\_t,\ position\_msg\_t>;}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Subscribers*/}}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeGPS_a834904dd3712978e1000ebb2997137cf}{perform\_subscribes}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Callbacks\ */}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeGPS_a6e368336bad667376bea18a760fbf838}{cone\_callback}}(\textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ cone\_msg\_t::ConstSharedPtr\ \&cone\_data);}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeGPS_a19b825a0197f6c3c67a619647b76d821}{vehicle\_vel\_callback}}(\textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ velocity\_msg\_t::ConstSharedPtr\ \&vehicle\_vel\_data);}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeGPS_a1f4797f6b59e46d4a059b4452742ac55}{vehicle\_angle\_callback}}(\textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ orientation\_msg\_t::ConstSharedPtr\ \&vehicle\_angle\_data);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeGPS_a37d465a4a06fda5dca6dfab124e5d856}{vehicle\_pos\_callback}}(\textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ position\_msg\_t::ConstSharedPtr\ \&vehicle\_pos\_data);}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeGPS_aa9e35fda92238cdb157b92f0de049881}{sync\_callback}}\ (\textcolor{keyword}{const}\ cone\_msg\_t::ConstSharedPtr\ \&cone\_data,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ velocity\_msg\_t::ConstSharedPtr\ \&vehicle\_vel\_data,}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ orientation\_msg\_t::ConstSharedPtr\ \&vehicle\_angle\_data,\ }
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ position\_msg\_t::ConstSharedPtr\ \&vehicle\_pos\_data);}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ std::shared\_ptr<message\_filters::Synchronizer<sync\_policy>>\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeGPS_a93be06b5dccdbcac326a3c7ec605285b}{sync}};}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:\ }
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeGPS_a6813696f2a37934a3e14454007ea3fe3}{RealDataSLAMNodeGPS}}();}
+\DoxyCodeLine{00141\ \ \ \ \ \};}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_acaf1f59b9214a157067f58b3b5cd1fc1}{RealDataSLAMNodeNoGPS}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a58d83801be4bff20d25cf082f82b044b}{GenericSLAMNode}}<interfaces::msg::ConeArray,}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ geometry\_msgs::msg::TwistStamped,}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ geometry\_msgs::msg::QuaternionStamped,}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ geometry\_msgs::msg::Vector3Stamped>}
+\DoxyCodeLine{00151\ \ \ \ \ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }cone\_msg\_t\ =\ interfaces::msg::ConeArray;}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }velocity\_msg\_t\ =\ geometry\_msgs::msg::TwistStamped;\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }orientation\_msg\_t\ =\ geometry\_msgs::msg::QuaternionStamped;}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }dummy\_position\_msg\_t\ =\ geometry\_msgs::msg::Vector3Stamped;}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }sync\_policy\ =\ message\_filters::sync\_policies::ApproximateTime<cone\_msg\_t,\ velocity\_msg\_t,\ orientation\_msg\_t>;}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Subscribers*/}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_ae1b8e1097d65bdbfca78748e0446c4a8}{perform\_subscribes}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Callbacks\ */}}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_adcf935f870a695b186697286a891033d}{cone\_callback}}(\textcolor{keyword}{const}\ cone\_msg\_t::ConstSharedPtr\ \&cone\_data);}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_a7e167afa3f01b7ddce006036c4b78fd5}{vehicle\_vel\_callback}}(\textcolor{keyword}{const}\ velocity\_msg\_t::ConstSharedPtr\ \&vehicle\_vel\_data);}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_ae53470d602951437d3d1068366a0f5a0}{vehicle\_angle\_callback}}(\textcolor{keyword}{const}\ orientation\_msg\_t::ConstSharedPtr\ \&vehicle\_angle\_data);}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_abe7346b23388bc96725aa9d75f964d97}{sync\_callback}}\ (\textcolor{keyword}{const}\ cone\_msg\_t::ConstSharedPtr\ \&cone\_data,}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ velocity\_msg\_t::ConstSharedPtr\ \&vehicle\_vel\_data,}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ orientation\_msg\_t::ConstSharedPtr\ \&vehicle\_angle\_data);}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ std::shared\_ptr<message\_filters::Synchronizer<sync\_policy>>\ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_a43d44a87d76cb9fbeb4eb04af647fb25}{sync}};}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_acaf1f59b9214a157067f58b3b5cd1fc1}{RealDataSLAMNodeNoGPS}}();}
+\DoxyCodeLine{00176\ \ \ \ \ \};}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classnodes_1_1ControlsSimSLAMNode_a5f5155279b79253ebffa60b34ce32667}{ControlsSimSLAMNode}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a58d83801be4bff20d25cf082f82b044b}{GenericSLAMNode}}\ <interfaces::msg::ConeArray,}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ geometry\_msgs::msg::TwistStamped,\ }
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ geometry\_msgs::msg::QuaternionStamped,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ geometry\_msgs::msg::PoseStamped>}
+\DoxyCodeLine{00187\ \ \ \ \ \{}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }cone\_msg\_t\ =\ interfaces::msg::ConeArray;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }velocity\_msg\_t\ =\ geometry\_msgs::msg::TwistStamped;\ }
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }dummy\_orientation\_msg\_t\ =\ geometry\_msgs::msg::QuaternionStamped;}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }pose\_msg\_t\ =\ geometry\_msgs::msg::PoseStamped;}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }sync\_policy\ =\ message\_filters::sync\_policies::ApproximateTime<cone\_msg\_t,\ velocity\_msg\_t,\ pose\_msg\_t>;}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Subscribers\ */}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1ControlsSimSLAMNode_a70a01cbc401365ad59febe7fb8bb9e3b}{perform\_subscribes}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Callbacks\ */}}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1ControlsSimSLAMNode_a1f318187ca815ffc561acc5a1ba20f0f}{cone\_callback}}(\textcolor{keyword}{const}\ cone\_msg\_t::ConstSharedPtr\ \&cone\_data);}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1ControlsSimSLAMNode_a2fd7db48e293897ab28285e8a403cd46}{vehicle\_vel\_callback}}(\textcolor{keyword}{const}\ velocity\_msg\_t::ConstSharedPtr\ \&vehicle\_vel\_data);}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1ControlsSimSLAMNode_a0b069a62e41b8f2d28e41fb1af00c95d}{vehicle\_pos\_callback}}(\textcolor{keyword}{const}\ pose\_msg\_t::ConstSharedPtr\ \&vehicle\_pos\_data);}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1ControlsSimSLAMNode_ac2e8cc8480c0eccafb4d33a783339d6d}{sync\_callback}}\ (\textcolor{keyword}{const}\ cone\_msg\_t::ConstSharedPtr\ \&cone\_data,}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ velocity\_msg\_t::ConstSharedPtr\ \&vehicle\_vel\_data,}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ pose\_msg\_t::ConstSharedPtr\ \&vehicle\_pos\_data);}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ std::shared\_ptr<message\_filters::Synchronizer<sync\_policy>>\ \mbox{\hyperlink{classnodes_1_1ControlsSimSLAMNode_a46fd52977bb69a6f862fa4c8ccc41e9e}{sync}};}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1ControlsSimSLAMNode_a5f5155279b79253ebffa60b34ce32667}{ControlsSimSLAMNode}}();}
+\DoxyCodeLine{00212\ \ \ \ \ \};}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \}}
+
+\end{DoxyCode}

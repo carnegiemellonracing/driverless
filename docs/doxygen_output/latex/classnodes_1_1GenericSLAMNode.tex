@@ -1,0 +1,387 @@
+\doxysection{nodes\+::Generic\+SLAMNode\texorpdfstring{$<$}{<} cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classnodes_1_1GenericSLAMNode}{}\label{classnodes_1_1GenericSLAMNode}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+
+
+{\ttfamily \#include $<$isam2\+\_\+nodes.\+hpp$>$}
+
+
+
+Inheritance diagram for nodes\+::Generic\+SLAMNode\texorpdfstring{$<$}{<} cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t \texorpdfstring{$>$}{>}\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=212pt]{classnodes_1_1GenericSLAMNode__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for nodes\+::Generic\+SLAMNode\texorpdfstring{$<$}{<} cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t \texorpdfstring{$>$}{>}\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=267pt]{classnodes_1_1GenericSLAMNode__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a58d83801be4bff20d25cf082f82b044b}{Generic\+SLAMNode}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a2f490a869053d4f426550f5ce5512933}{declare\+\_\+yaml\+\_\+params}} ()
+\item 
+std\+::optional$<$ \mbox{\hyperlink{structyaml__params_1_1NoiseInputs}{yaml\+\_\+params\+::\+Noise\+Inputs}} $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_add60599f53e6fcc111caae5fde661dff}{get\+\_\+noise\+\_\+inputs}} ()
+\item 
+void \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_afbf813fbfc9c31773de427271ed6239e}{publish\+\_\+slam\+\_\+data}} (const \mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\+::slam\+\_\+output\+\_\+t}} \&slam\+\_\+data, std\+\_\+msgs\+::msg\+::\+Header header)
+\item 
+virtual void \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a58ea6cb4af16c570cdedb00f07186e57}{perform\+\_\+subscribes}} ()=0
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classslam_1_1slamISAM}{slam\+::slam\+ISAM}} \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a1c8e5e7be01a1f6a8c12035bb4045117}{slam\+\_\+instance}}
+\item 
+std\+::chrono\+::high\+\_\+resolution\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ad321582bae34358afb0d0f4d6791acce}{cur\+\_\+sync\+\_\+callback\+\_\+time}}
+\item 
+std\+::optional$<$ std\+::chrono\+::high\+\_\+resolution\+\_\+clock\+::time\+\_\+point $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b28b46b60a0cc8f629dc2f9bf2b0aed}{prev\+\_\+sync\+\_\+callback\+\_\+time}}
+\item 
+rclcpp\+::\+Publisher$<$ interfaces\+::msg\+::\+SLAMPose $>$\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a163b73f677228ba27e11fc392e47b324}{slam\+\_\+pose\+\_\+publisher}}
+\item 
+rclcpp\+::\+Publisher$<$ interfaces\+::msg\+::\+SLAMChunk $>$\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a102a8ba600108b8374f5afeb288d59bb}{slam\+\_\+chunk\+\_\+publisher}}
+\item 
+gtsam\+::\+Pose2 \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_aef0fb75590c57ef972d0723a2648fe93}{velocity}}
+\item 
+std\+::optional$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ab271b8cbc773ca67eead78dfd93a66cc}{init\+\_\+lon\+\_\+lat}}
+\item 
+std\+::optional$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a65cc2fec07dea2e13e5f813c7e40a6ed}{init\+\_\+x\+\_\+y}}
+\item 
+gtsam\+::\+Point2 \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a11b35a330285720008d97405ead9ea32}{gps\+\_\+position}}
+\item 
+double \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_aa06d32c5d2f2e7a112b5925c43718d64}{yaw}}
+\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a0361459b479a7710fb411660ecd74939}{cones}}
+\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_aed83b931419f4d668f2cc6faf289f450}{orange\+\_\+cones}}
+\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5c9a89d1981198da97332bc70c36b461}{blue\+\_\+cones}}
+\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_abd8bc9fe10c5e3620a0db348b2a84af9}{yellow\+\_\+cones}}
+\item 
+bool \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ac3e7b0efbfdf99de62dd12249a6b7b4c}{file\+\_\+opened}}
+\item 
+rclcpp\+::\+Timer\+Base\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a263ca5f766c32bfbb7eaf6b460fbd7fc}{timer}}
+\item 
+double \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ac9913e82bb32e56d48e660f2b5b49240}{dt}}
+\item 
+std\+::optional$<$ std\+\_\+msgs\+::msg\+::\+Header $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a94064913429f785ae60b65126bd4c525}{prev\+\_\+filter\+\_\+time}}
+\item 
+std\+::ofstream \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a80846119c099ff6d03614bc8c955b96d}{outfile}}
+\item 
+std\+::ofstream \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a7aa44f46ec28c8f0dc6e81c3a57fcf0b}{pose\+\_\+cones}}
+\item 
+const rmw\+\_\+qos\+\_\+profile\+\_\+t \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a8b83c878922eb0a915c38d3e0a9e7894}{reliable\+\_\+profile}}
+\item 
+const rmw\+\_\+qos\+\_\+profile\+\_\+t \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562}{best\+\_\+effort\+\_\+profile}}
+\item 
+const rclcpp\+::\+QoS \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a81430a36c8c264ffd491d275ff44dce2}{best\+\_\+effort\+\_\+qos}}
+\item 
+message\+\_\+filters\+::\+Subscriber$<$ cone\+\_\+msg\+\_\+t $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a9e2dc515faed67f46f8833853ec043e1}{cone\+\_\+sub}}
+\item 
+message\+\_\+filters\+::\+Subscriber$<$ velocity\+\_\+msg\+\_\+t $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a3952b006efaa689c3359802004991f3d}{vehicle\+\_\+vel\+\_\+sub}}
+\item 
+message\+\_\+filters\+::\+Subscriber$<$ orientation\+\_\+msg\+\_\+t $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a83aa8579d505cc8a98a5743af38afbf3}{vehicle\+\_\+angle\+\_\+sub}}
+\item 
+message\+\_\+filters\+::\+Subscriber$<$ position\+\_\+msg\+\_\+t $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_af909eea548ea81bc6b7e9e4646e9a1f2}{vehicle\+\_\+pos\+\_\+sub}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{classnodes_1_1GenericSLAMNode_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classnodes_1_1GenericSLAMNode_a58d83801be4bff20d25cf082f82b044b}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!GenericSLAMNode@{GenericSLAMNode}}
+\index{GenericSLAMNode@{GenericSLAMNode}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{GenericSLAMNode()}{GenericSLAMNode()}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a58d83801be4bff20d25cf082f82b044b} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+\mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::\+Generic\+SLAMNode (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+\label{doc-func-members}
+\Hypertarget{classnodes_1_1GenericSLAMNode_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classnodes_1_1GenericSLAMNode_a2f490a869053d4f426550f5ce5512933}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!declare\_yaml\_params@{declare\_yaml\_params}}
+\index{declare\_yaml\_params@{declare\_yaml\_params}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{declare\_yaml\_params()}{declare\_yaml\_params()}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a2f490a869053d4f426550f5ce5512933} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+void \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::declare\+\_\+yaml\+\_\+params (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_add60599f53e6fcc111caae5fde661dff}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!get\_noise\_inputs@{get\_noise\_inputs}}
+\index{get\_noise\_inputs@{get\_noise\_inputs}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{get\_noise\_inputs()}{get\_noise\_inputs()}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_add60599f53e6fcc111caae5fde661dff} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::optional$<$ \mbox{\hyperlink{structyaml__params_1_1NoiseInputs}{yaml\+\_\+params\+::\+Noise\+Inputs}} $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::get\+\_\+noise\+\_\+inputs (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a58ea6cb4af16c570cdedb00f07186e57}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!perform\_subscribes@{perform\_subscribes}}
+\index{perform\_subscribes@{perform\_subscribes}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{perform\_subscribes()}{perform\_subscribes()}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a58ea6cb4af16c570cdedb00f07186e57} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+virtual void \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::perform\+\_\+subscribes (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{classnodes_1_1ControlsSimSLAMNode_a70a01cbc401365ad59febe7fb8bb9e3b}{nodes\+::\+Controls\+Sim\+SLAMNode}}, \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeGPS_a834904dd3712978e1000ebb2997137cf}{nodes\+::\+Real\+Data\+SLAMNode\+GPS}}, and \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_ae1b8e1097d65bdbfca78748e0446c4a8}{nodes\+::\+Real\+Data\+SLAMNode\+No\+GPS}}.
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_afbf813fbfc9c31773de427271ed6239e}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!publish\_slam\_data@{publish\_slam\_data}}
+\index{publish\_slam\_data@{publish\_slam\_data}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{publish\_slam\_data()}{publish\_slam\_data()}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_afbf813fbfc9c31773de427271ed6239e} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+void \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::publish\+\_\+slam\+\_\+data (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\+::slam\+\_\+output\+\_\+t}} \&}]{slam\+\_\+data}{, }\item[{std\+\_\+msgs\+::msg\+::\+Header}]{header}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+\label{doc-variable-members}
+\Hypertarget{classnodes_1_1GenericSLAMNode_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!best\_effort\_profile@{best\_effort\_profile}}
+\index{best\_effort\_profile@{best\_effort\_profile}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{best\_effort\_profile}{best\_effort\_profile}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+const rmw\+\_\+qos\+\_\+profile\+\_\+t \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::best\+\_\+effort\+\_\+profile\hspace{0.3cm}{\ttfamily [protected]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_HISTORY\_KEEP\_LAST,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ 30,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_RELIABILITY\_BEST\_EFFORT,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_DURABILITY\_VOLATILE,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_DEADLINE\_DEFAULT,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_LIFESPAN\_DEFAULT,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_LIVELINESS\_SYSTEM\_DEFAULT,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_LIVELINESS\_LEASE\_DURATION\_DEFAULT,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{false}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+
+\end{DoxyCode}
+\Hypertarget{classnodes_1_1GenericSLAMNode_a81430a36c8c264ffd491d275ff44dce2}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!best\_effort\_qos@{best\_effort\_qos}}
+\index{best\_effort\_qos@{best\_effort\_qos}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{best\_effort\_qos}{best\_effort\_qos}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a81430a36c8c264ffd491d275ff44dce2} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+const rclcpp\+::\+QoS \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::best\+\_\+effort\+\_\+qos\hspace{0.3cm}{\ttfamily [protected]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ rclcpp::QoS(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ rclcpp::QoSInitialization(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562}{best\_effort\_profile}}.history,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562}{best\_effort\_profile}}.depth),}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562}{best\_effort\_profile}})}
+
+\end{DoxyCode}
+\Hypertarget{classnodes_1_1GenericSLAMNode_a5c9a89d1981198da97332bc70c36b461}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!blue\_cones@{blue\_cones}}
+\index{blue\_cones@{blue\_cones}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{blue\_cones}{blue\_cones}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a5c9a89d1981198da97332bc70c36b461} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::vector$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::blue\+\_\+cones\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a9e2dc515faed67f46f8833853ec043e1}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!cone\_sub@{cone\_sub}}
+\index{cone\_sub@{cone\_sub}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{cone\_sub}{cone\_sub}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a9e2dc515faed67f46f8833853ec043e1} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+message\+\_\+filters\+::\+Subscriber$<$cone\+\_\+msg\+\_\+t$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::cone\+\_\+sub\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a0361459b479a7710fb411660ecd74939}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!cones@{cones}}
+\index{cones@{cones}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{cones}{cones}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a0361459b479a7710fb411660ecd74939} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::vector$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::cones\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_ad321582bae34358afb0d0f4d6791acce}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!cur\_sync\_callback\_time@{cur\_sync\_callback\_time}}
+\index{cur\_sync\_callback\_time@{cur\_sync\_callback\_time}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{cur\_sync\_callback\_time}{cur\_sync\_callback\_time}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_ad321582bae34358afb0d0f4d6791acce} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::chrono\+::high\+\_\+resolution\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::cur\+\_\+sync\+\_\+callback\+\_\+time\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_ac9913e82bb32e56d48e660f2b5b49240}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!dt@{dt}}
+\index{dt@{dt}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{dt}{dt}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_ac9913e82bb32e56d48e660f2b5b49240} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+double \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::dt\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_ac3e7b0efbfdf99de62dd12249a6b7b4c}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!file\_opened@{file\_opened}}
+\index{file\_opened@{file\_opened}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{file\_opened}{file\_opened}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_ac3e7b0efbfdf99de62dd12249a6b7b4c} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+bool \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::file\+\_\+opened\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a11b35a330285720008d97405ead9ea32}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!gps\_position@{gps\_position}}
+\index{gps\_position@{gps\_position}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{gps\_position}{gps\_position}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a11b35a330285720008d97405ead9ea32} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+gtsam\+::\+Point2 \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::gps\+\_\+position\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_ab271b8cbc773ca67eead78dfd93a66cc}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!init\_lon\_lat@{init\_lon\_lat}}
+\index{init\_lon\_lat@{init\_lon\_lat}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{init\_lon\_lat}{init\_lon\_lat}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_ab271b8cbc773ca67eead78dfd93a66cc} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::optional$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::init\+\_\+lon\+\_\+lat\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a65cc2fec07dea2e13e5f813c7e40a6ed}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!init\_x\_y@{init\_x\_y}}
+\index{init\_x\_y@{init\_x\_y}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{init\_x\_y}{init\_x\_y}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a65cc2fec07dea2e13e5f813c7e40a6ed} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::optional$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::init\+\_\+x\+\_\+y\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_aed83b931419f4d668f2cc6faf289f450}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!orange\_cones@{orange\_cones}}
+\index{orange\_cones@{orange\_cones}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{orange\_cones}{orange\_cones}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_aed83b931419f4d668f2cc6faf289f450} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::vector$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::orange\+\_\+cones\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a80846119c099ff6d03614bc8c955b96d}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!outfile@{outfile}}
+\index{outfile@{outfile}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{outfile}{outfile}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a80846119c099ff6d03614bc8c955b96d} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::ofstream \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::outfile\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a7aa44f46ec28c8f0dc6e81c3a57fcf0b}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!pose\_cones@{pose\_cones}}
+\index{pose\_cones@{pose\_cones}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{pose\_cones}{pose\_cones}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a7aa44f46ec28c8f0dc6e81c3a57fcf0b} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::ofstream \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::pose\+\_\+cones\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a94064913429f785ae60b65126bd4c525}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!prev\_filter\_time@{prev\_filter\_time}}
+\index{prev\_filter\_time@{prev\_filter\_time}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{prev\_filter\_time}{prev\_filter\_time}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a94064913429f785ae60b65126bd4c525} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::optional$<$std\+\_\+msgs\+::msg\+::\+Header$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::prev\+\_\+filter\+\_\+time\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a5b28b46b60a0cc8f629dc2f9bf2b0aed}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!prev\_sync\_callback\_time@{prev\_sync\_callback\_time}}
+\index{prev\_sync\_callback\_time@{prev\_sync\_callback\_time}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{prev\_sync\_callback\_time}{prev\_sync\_callback\_time}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a5b28b46b60a0cc8f629dc2f9bf2b0aed} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::optional$<$std\+::chrono\+::high\+\_\+resolution\+\_\+clock\+::time\+\_\+point$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::prev\+\_\+sync\+\_\+callback\+\_\+time\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a8b83c878922eb0a915c38d3e0a9e7894}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!reliable\_profile@{reliable\_profile}}
+\index{reliable\_profile@{reliable\_profile}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{reliable\_profile}{reliable\_profile}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a8b83c878922eb0a915c38d3e0a9e7894} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+const rmw\+\_\+qos\+\_\+profile\+\_\+t \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::reliable\+\_\+profile\hspace{0.3cm}{\ttfamily [protected]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_HISTORY\_KEEP\_LAST,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ 30,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_RELIABILITY\_RELIABLE,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_DURABILITY\_VOLATILE,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_DEADLINE\_DEFAULT,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_LIFESPAN\_DEFAULT,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_POLICY\_LIVELINESS\_SYSTEM\_DEFAULT,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ RMW\_QOS\_LIVELINESS\_LEASE\_DURATION\_DEFAULT,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{false}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+
+\end{DoxyCode}
+\Hypertarget{classnodes_1_1GenericSLAMNode_a102a8ba600108b8374f5afeb288d59bb}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!slam\_chunk\_publisher@{slam\_chunk\_publisher}}
+\index{slam\_chunk\_publisher@{slam\_chunk\_publisher}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{slam\_chunk\_publisher}{slam\_chunk\_publisher}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a102a8ba600108b8374f5afeb288d59bb} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+rclcpp\+::\+Publisher$<$interfaces\+::msg\+::\+SLAMChunk$>$\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::slam\+\_\+chunk\+\_\+publisher\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a1c8e5e7be01a1f6a8c12035bb4045117}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!slam\_instance@{slam\_instance}}
+\index{slam\_instance@{slam\_instance}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{slam\_instance}{slam\_instance}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a1c8e5e7be01a1f6a8c12035bb4045117} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+\mbox{\hyperlink{classslam_1_1slamISAM}{slam\+::slam\+ISAM}} \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::slam\+\_\+instance\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a163b73f677228ba27e11fc392e47b324}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!slam\_pose\_publisher@{slam\_pose\_publisher}}
+\index{slam\_pose\_publisher@{slam\_pose\_publisher}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{slam\_pose\_publisher}{slam\_pose\_publisher}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a163b73f677228ba27e11fc392e47b324} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+rclcpp\+::\+Publisher$<$interfaces\+::msg\+::\+SLAMPose$>$\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::slam\+\_\+pose\+\_\+publisher\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a263ca5f766c32bfbb7eaf6b460fbd7fc}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!timer@{timer}}
+\index{timer@{timer}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{timer}{timer}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a263ca5f766c32bfbb7eaf6b460fbd7fc} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+rclcpp\+::\+Timer\+Base\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::timer\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a83aa8579d505cc8a98a5743af38afbf3}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!vehicle\_angle\_sub@{vehicle\_angle\_sub}}
+\index{vehicle\_angle\_sub@{vehicle\_angle\_sub}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{vehicle\_angle\_sub}{vehicle\_angle\_sub}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a83aa8579d505cc8a98a5743af38afbf3} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+message\+\_\+filters\+::\+Subscriber$<$orientation\+\_\+msg\+\_\+t$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::vehicle\+\_\+angle\+\_\+sub\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_af909eea548ea81bc6b7e9e4646e9a1f2}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!vehicle\_pos\_sub@{vehicle\_pos\_sub}}
+\index{vehicle\_pos\_sub@{vehicle\_pos\_sub}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{vehicle\_pos\_sub}{vehicle\_pos\_sub}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_af909eea548ea81bc6b7e9e4646e9a1f2} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+message\+\_\+filters\+::\+Subscriber$<$position\+\_\+msg\+\_\+t$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::vehicle\+\_\+pos\+\_\+sub\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a3952b006efaa689c3359802004991f3d}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!vehicle\_vel\_sub@{vehicle\_vel\_sub}}
+\index{vehicle\_vel\_sub@{vehicle\_vel\_sub}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{vehicle\_vel\_sub}{vehicle\_vel\_sub}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a3952b006efaa689c3359802004991f3d} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+message\+\_\+filters\+::\+Subscriber$<$velocity\+\_\+msg\+\_\+t$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::vehicle\+\_\+vel\+\_\+sub\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_aef0fb75590c57ef972d0723a2648fe93}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!velocity@{velocity}}
+\index{velocity@{velocity}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{velocity}{velocity}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_aef0fb75590c57ef972d0723a2648fe93} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+gtsam\+::\+Pose2 \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::velocity\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_aa06d32c5d2f2e7a112b5925c43718d64}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!yaw@{yaw}}
+\index{yaw@{yaw}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{yaw}{yaw}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_aa06d32c5d2f2e7a112b5925c43718d64} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+double \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::yaw\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_abd8bc9fe10c5e3620a0db348b2a84af9}\index{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}!yellow\_cones@{yellow\_cones}}
+\index{yellow\_cones@{yellow\_cones}!nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$@{nodes::GenericSLAMNode$<$ cone\_msg\_t, velocity\_msg\_t, orientation\_msg\_t, position\_msg\_t $>$}}
+\doxysubsubsection{\texorpdfstring{yellow\_cones}{yellow\_cones}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_abd8bc9fe10c5e3620a0db348b2a84af9} 
+template$<$typename cone\+\_\+msg\+\_\+t, typename velocity\+\_\+msg\+\_\+t, typename orientation\+\_\+msg\+\_\+t, typename position\+\_\+msg\+\_\+t$>$ \\
+std\+::vector$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ cone\+\_\+msg\+\_\+t, velocity\+\_\+msg\+\_\+t, orientation\+\_\+msg\+\_\+t, position\+\_\+msg\+\_\+t $>$\+::yellow\+\_\+cones\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{isam2__nodes_8hpp}{isam2\+\_\+nodes.\+hpp}}\item 
+src/nodes/\mbox{\hyperlink{generic__slam__node_8cpp}{generic\+\_\+slam\+\_\+node.\+cpp}}\end{DoxyCompactItemize}

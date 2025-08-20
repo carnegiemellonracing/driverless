@@ -1,0 +1,61 @@
+\doxysection{include/isam2.hpp File Reference}
+\hypertarget{isam2_8hpp}{}\label{isam2_8hpp}\index{include/isam2.hpp@{include/isam2.hpp}}
+{\ttfamily \#include $<$bits/stdc++.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/geometry/\+Point2.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/geometry/\+Pose2.\+h$>$}\newline
+{\ttfamily \#include $<$eigen3/\+Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$gtsam/inference/\+Symbol.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/nonlinear/\+ISAM2.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/nonlinear/\+Nonlinear\+Factor\+Graph.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/nonlinear/\+Values.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/nonlinear/\+Levenberg\+Marquardt\+Optimizer.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/nonlinear/\+Dogleg\+Optimizer.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/nonlinear/\+Gauss\+Newton\+Optimizer.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/nonlinear/\+Nonlinear\+Conjugate\+Gradient\+Optimizer.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/slam/\+Projection\+Factor.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/slam/\+Between\+Factor.\+h$>$}\newline
+{\ttfamily \#include $<$gtsam/sam/\+Bearing\+Range\+Factor.\+h$>$}\newline
+{\ttfamily \#include "{}ros\+\_\+utils.\+hpp"{}}\newline
+{\ttfamily \#include "{}data\+\_\+association.\+hpp"{}}\newline
+{\ttfamily \#include "{}unary\+\_\+factor.\+hpp"{}}\newline
+{\ttfamily \#include "{}slam\+\_\+est\+\_\+and\+\_\+mcov.\+hpp"{}}\newline
+{\ttfamily \#include "{}loop\+\_\+closure.\+hpp"{}}\newline
+Include dependency graph for isam2.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{isam2_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{isam2_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classslam_1_1slamISAM}{slam\+::slam\+ISAM}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceslam}{slam}}
+\begin{DoxyCompactList}\small\item\em Namespace encapsulating SLAM logic for cone-\/based track mapping and localization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\+::slam\+\_\+output\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449}{slam\+::\+Run\+Settings}} \{ \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449a7f80fcc452c2f1ed2bb51b39d0864df1}{slam\+::\+Real}}
+, \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449a69d734ae5c73fbb6a4d4221bb5ba20c6}{slam\+::\+EUFSSim}}
+, \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449ae4438a611ac230ecdb056c4f171bc547}{slam\+::\+Controls\+Sim}}
+ \}
+\end{DoxyCompactItemize}

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="namespaceyaml__params" kind="namespace" language="C++">
+    <compoundname>yaml_params</compoundname>
+    <innerclass refid="structyaml__params_1_1NoiseInputs" prot="public">yaml_params::NoiseInputs</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/ros_utils.hpp" line="99" column="1"/>
+  </compounddef>
+</doxygen>

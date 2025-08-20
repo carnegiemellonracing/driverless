@@ -1,0 +1,109 @@
+\doxysection{Unary\+Factor Class Reference}
+\hypertarget{classUnaryFactor}{}\label{classUnaryFactor}\index{UnaryFactor@{UnaryFactor}}
+
+
+{\ttfamily \#include $<$unary\+\_\+factor.\+hpp$>$}
+
+
+
+Inheritance diagram for Unary\+Factor\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=214pt]{classUnaryFactor__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Unary\+Factor\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=214pt]{classUnaryFactor__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classUnaryFactor}{Unary\+Factor}} $>$ \mbox{\hyperlink{classUnaryFactor_a94e14dba4c8062fa38a155683e1c64f0}{shared\+\_\+ptr}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classUnaryFactor_a5b075904be9c89a653bb6905b3bfb965}{Unary\+Factor}} (gtsam\+::\+Key k, const gtsam\+::\+Pose2 \&input\+\_\+\+GPS, const gtsam\+::\+Shared\+Noise\+Model \&model)
+\item 
+virtual \mbox{\hyperlink{classUnaryFactor_a080d71cece2117cb2995aa2b5eb068dc}{\texorpdfstring{$\sim$}{\string~}\+Unary\+Factor}} ()
+\item 
+gtsam\+::\+Vector \mbox{\hyperlink{classUnaryFactor_a6636ce47bc1c8825844a2c8f81d3c8a8}{evaluate\+Error}} (const gtsam\+::\+Pose2 \&q, gtsam\+::\+Optional\+Matrix\+Type H) const override
+\begin{DoxyCompactList}\small\item\em Computes the error vector between the current pose estimate and the GPS measurement. \end{DoxyCompactList}\item 
+gtsam\+::\+Nonlinear\+Factor\+::shared\+\_\+ptr \mbox{\hyperlink{classUnaryFactor_a05b9ea54c3d7dc57dc0af05656468a09}{clone}} () const override
+\end{DoxyCompactItemize}
+
+
+\label{doc-typedef-members}
+\Hypertarget{classUnaryFactor_doc-typedef-members}
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classUnaryFactor_a94e14dba4c8062fa38a155683e1c64f0}\index{UnaryFactor@{UnaryFactor}!shared\_ptr@{shared\_ptr}}
+\index{shared\_ptr@{shared\_ptr}!UnaryFactor@{UnaryFactor}}
+\doxysubsubsection{\texorpdfstring{shared\_ptr}{shared\_ptr}}
+{\footnotesize\ttfamily \label{classUnaryFactor_a94e14dba4c8062fa38a155683e1c64f0} 
+typedef std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{classUnaryFactor}{Unary\+Factor}}$>$ \mbox{\hyperlink{classUnaryFactor_a94e14dba4c8062fa38a155683e1c64f0}{Unary\+Factor\+::shared\+\_\+ptr}}}
+
+
+
+\label{doc-constructors}
+\Hypertarget{classUnaryFactor_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classUnaryFactor_a5b075904be9c89a653bb6905b3bfb965}\index{UnaryFactor@{UnaryFactor}!UnaryFactor@{UnaryFactor}}
+\index{UnaryFactor@{UnaryFactor}!UnaryFactor@{UnaryFactor}}
+\doxysubsubsection{\texorpdfstring{UnaryFactor()}{UnaryFactor()}}
+{\footnotesize\ttfamily \label{classUnaryFactor_a5b075904be9c89a653bb6905b3bfb965} 
+Unary\+Factor\+::\+Unary\+Factor (\begin{DoxyParamCaption}\item[{gtsam\+::\+Key}]{k}{, }\item[{const gtsam\+::\+Pose2 \&}]{input\+\_\+\+GPS}{, }\item[{const gtsam\+::\+Shared\+Noise\+Model \&}]{model}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classUnaryFactor_a080d71cece2117cb2995aa2b5eb068dc}\index{UnaryFactor@{UnaryFactor}!````~UnaryFactor@{\texorpdfstring{$\sim$}{\string~}UnaryFactor}}
+\index{````~UnaryFactor@{\texorpdfstring{$\sim$}{\string~}UnaryFactor}!UnaryFactor@{UnaryFactor}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}UnaryFactor()}{\string~UnaryFactor()}}
+{\footnotesize\ttfamily \label{classUnaryFactor_a080d71cece2117cb2995aa2b5eb068dc} 
+virtual Unary\+Factor\+::\texorpdfstring{$\sim$}{\string~}\+Unary\+Factor (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{classUnaryFactor_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classUnaryFactor_a05b9ea54c3d7dc57dc0af05656468a09}\index{UnaryFactor@{UnaryFactor}!clone@{clone}}
+\index{clone@{clone}!UnaryFactor@{UnaryFactor}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{classUnaryFactor_a05b9ea54c3d7dc57dc0af05656468a09} 
+gtsam\+::\+Nonlinear\+Factor\+::shared\+\_\+ptr Unary\+Factor\+::clone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}}
+
+\Hypertarget{classUnaryFactor_a6636ce47bc1c8825844a2c8f81d3c8a8}\index{UnaryFactor@{UnaryFactor}!evaluateError@{evaluateError}}
+\index{evaluateError@{evaluateError}!UnaryFactor@{UnaryFactor}}
+\doxysubsubsection{\texorpdfstring{evaluateError()}{evaluateError()}}
+{\footnotesize\ttfamily \label{classUnaryFactor_a6636ce47bc1c8825844a2c8f81d3c8a8} 
+gtsam\+::\+Vector Unary\+Factor\+::evaluate\+Error (\begin{DoxyParamCaption}\item[{const gtsam\+::\+Pose2 \&}]{q}{, }\item[{gtsam\+::\+Optional\+Matrix\+Type}]{H}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}}
+
+
+
+Computes the error vector between the current pose estimate and the GPS measurement. 
+
+Optionally computes the Jacobian of the error with respect to the pose.
+
+
+\begin{DoxyParams}{Parameters}
+{\em q} & The pose variable (gtsam\+::\+Pose2) for which the error is evaluated. \\
+\hline
+{\em H} & Optional output Jacobian matrix pointer; if provided, it is set to the derivative of the error w.\+r.\+t. ( q ). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+gtsam\+::\+Vector The 2D error vector between pose position and GPS measurement. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{unary__factor_8hpp}{unary\+\_\+factor.\+hpp}}\item 
+src/isam2/\mbox{\hyperlink{unary__factor_8cpp}{unary\+\_\+factor.\+cpp}}\end{DoxyCompactItemize}

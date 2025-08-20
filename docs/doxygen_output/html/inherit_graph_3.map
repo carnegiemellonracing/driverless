@@ -1,0 +1,15 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,145,101,170"/>
+<area shape="rect" id="Node000001" href="$classnodes_1_1GenericSLAMNode.html" title=" " alt="" coords="149,5,427,91"/>
+<area shape="poly" id="edge2_Node000000_Node000001" title=" " alt="" coords="87,134,147,100,172,89,174,94,150,105,90,139"/>
+<area shape="rect" id="Node000003" href="$classnodes_1_1GenericSLAMNode.html" title=" " alt="" coords="149,115,427,200"/>
+<area shape="poly" id="edge4_Node000000_Node000003" title=" " alt="" coords="116,155,148,155,148,160,116,160"/>
+<area shape="rect" id="Node000006" href="$classnodes_1_1GenericSLAMNode.html" title=" " alt="" coords="200,225,376,296"/>
+<area shape="poly" id="edge7_Node000000_Node000006" title=" " alt="" coords="89,176,150,210,200,230,198,235,148,215,86,181"/>
+<area shape="rect" id="Node000002" href="$classnodes_1_1ControlsSimSLAMNode.html" title="In controls sim, the orientation information is incorporated into the PoseStamped message." alt="" coords="489,35,692,61"/>
+<area shape="poly" id="edge3_Node000001_Node000002" title=" " alt="" coords="442,46,489,46,489,51,442,51"/>
+<area shape="rect" id="Node000004" href="$classnodes_1_1RealDataSLAMNodeGPS.html" title="Sometimes we run on rosbag data and have GPS." alt="" coords="484,121,698,146"/>
+<area shape="poly" id="edge5_Node000003_Node000004" title=" " alt="" coords="442,143,483,139,483,145,443,148"/>
+<area shape="rect" id="Node000005" href="$classnodes_1_1RealDataSLAMNodeNoGPS.html" title="Sometimes we run on rosbag data and GPS." alt="" coords="475,170,706,196"/>
+<area shape="poly" id="edge6_Node000003_Node000005" title=" " alt="" coords="443,168,475,171,475,176,442,173"/>
+</map>

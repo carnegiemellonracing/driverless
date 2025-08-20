@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="namespaceslam" kind="namespace" language="C++">
+    <compoundname>slam</compoundname>
+    <innerclass refid="classslam_1_1SLAMEstAndMCov" prot="public">slam::SLAMEstAndMCov</innerclass>
+    <innerclass refid="classslam_1_1slamISAM" prot="public">slam::slamISAM</innerclass>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>RunSettings</name>
+        <qualifiedname>slam::RunSettings</qualifiedname>
+        <enumvalue id="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449a7f80fcc452c2f1ed2bb51b39d0864df1" prot="public">
+          <name>Real</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449a69d734ae5c73fbb6a4d4221bb5ba20c6" prot="public">
+          <name>EUFSSim</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449ae4438a611ac230ecdb056c4f171bc547" prot="public">
+          <name>ControlsSim</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="44" column="5" bodyfile="include/isam2.hpp" bodystart="44" bodyend="48"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespaceslam_1a74c5ff6a5f23be28ef1b570f909b8449" prot="public" static="no">
+        <type>std::tuple&lt; std::vector&lt; geometry_msgs::msg::Point &gt;, std::vector&lt; geometry_msgs::msg::Point &gt;, geometry_msgs::msg::Point &gt;</type>
+        <definition>using slam::slam_output_t =  std::tuple&lt;std::vector&lt;geometry_msgs::msg::Point&gt;, 
+                                std::vector&lt;geometry_msgs::msg::Point&gt;, 
+                                geometry_msgs::msg::Point&gt;</definition>
+        <argsstring></argsstring>
+        <name>slam_output_t</name>
+        <qualifiedname>slam::slam_output_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="40" column="5" bodyfile="include/isam2.hpp" bodystart="40" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Namespace encapsulating SLAM logic for cone-based track mapping and localization. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/isam2.hpp" line="39" column="1"/>
+  </compounddef>
+</doxygen>

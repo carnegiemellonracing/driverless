@@ -1,0 +1,126 @@
+\doxysection{constants.\+hpp}
+\hypertarget{constants_8hpp_source}{}\label{constants_8hpp_source}\index{include/constants.hpp@{include/constants.hpp}}
+\mbox{\hyperlink{constants_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/**************\ DEBUG\ CONSTANTS\ **************/}}
+\DoxyCodeLine{00005\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{constants_8hpp_a0cfbdb0241e2d233010097154e8e186a}{DEBUG\_POSES}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00006\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{constants_8hpp_af7ce9f70fb089c8e2d25a37f15d2d18b}{DEBUG\_STEP}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00007\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{constants_8hpp_acab5aa8052556bc42799b17c45d58bf5}{DEBUG\_VIZ}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00008\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{constants_8hpp_a3ec98e2c4e8966f70c9f3d2d6468740e}{DEBUG\_PARAMS\_IN\_USE}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00009\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{constants_8hpp_a43af69ac180e75980494a40dde4b0766}{DEBUG\_UPDATE}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{const}\ std::string\ \mbox{\hyperlink{constants_8hpp_a408b6e210da50b4a34d8ae5bcef9e082}{ESTIMATES\_FILE}}\ =\ \textcolor{stringliteral}{"{}src/isam2/data/current\_estimates.txt"{}};}
+\DoxyCodeLine{00012\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{constants_8hpp_a50749e5a77a2d34569cdd21831365243}{EUFS\_SIM\_SETTINGS}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00013\ \textcolor{comment}{/*\ Bearing\ and\ range\ error}}
+\DoxyCodeLine{00014\ \textcolor{comment}{*\ Corresponds\ to\ the\ usage\ of\ the\ BearingRangeFactor\ we\ are\ using}}
+\DoxyCodeLine{00015\ \textcolor{comment}{*}}
+\DoxyCodeLine{00016\ \textcolor{comment}{*\ Source:\ https://chem.libretexts.org/Bookshelves/Analytical\_Chemistry/}}
+\DoxyCodeLine{00017\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ Supplemental\_Modules\_(Analytical\_Chemistry)/Quantifying\_Nature/}}
+\DoxyCodeLine{00018\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ Significant\_Digits/Propagation\_of\_Error}}
+\DoxyCodeLine{00019\ \textcolor{comment}{*\ Source:\ User\ manual\ for\ the\ AT128\ Hesai\ LiDAR}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*\ }}
+\DoxyCodeLine{00021\ \textcolor{comment}{*\ bearing\ error\ in\ radians}}
+\DoxyCodeLine{00022\ \textcolor{comment}{*\ Calculation\ for\ error\ per\ radian:\ }}
+\DoxyCodeLine{00023\ \textcolor{comment}{*\ We\ use\ atan2(y,\ x)\ and\ we\ know\ that\ z\ =\ atan(u)\ has\ derivative\ 1/(1+u\string^2)\ }}
+\DoxyCodeLine{00024\ \textcolor{comment}{*\ std.dev\_\{u\}\ =\ sqrt(0.03\string^2\ +\ 0.03\string^2)\ =\ 0.0424}}
+\DoxyCodeLine{00025\ \textcolor{comment}{*\ std.dev\_\{z\}\ =\ (1/(1+1\string^2))\string^2\ *\ std.dev\_\{u\}\string^2\ =\ 1/4\ *\ 0.0424\string^2\ =\ 0.00045}}
+\DoxyCodeLine{00026\ \textcolor{comment}{*\ }}
+\DoxyCodeLine{00027\ \textcolor{comment}{*\ Source:\ User\ manual\ for\ the\ AT128\ Hesai\ LiDAR}}
+\DoxyCodeLine{00028\ \textcolor{comment}{*\ range\ error\ in\ meters}}
+\DoxyCodeLine{00029\ \textcolor{comment}{*\ std.dev\_\{u\}\ =\ 0.0424\ -\/>\ changed\ to\ 0.03}}
+\DoxyCodeLine{00030\ \textcolor{comment}{*\ }}
+\DoxyCodeLine{00031\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a2924395ddfcb0a0ee772330a11645707}{BEARING\_STD\_DEV}}\ =\ 0.00045;}
+\DoxyCodeLine{00033\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_ac8b3500acbbbbe79157d399cf5470083}{RANGE\_STD\_DEV}}\ =\ 0.03;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{/*\ Go\ from\ 1\ pose\ to\ another\ pose}}
+\DoxyCodeLine{00037\ \textcolor{comment}{*\ Source:\ https://www.movella.com/products/sensor-\/modules/xsens-\/mti-\/680g-\/rtk-\/gnss-\/ins}}
+\DoxyCodeLine{00038\ \textcolor{comment}{*}}
+\DoxyCodeLine{00039\ \textcolor{comment}{*\ x\ error\ in\ meters\ (must\ be\ based\ on\ velocity\ error)}}
+\DoxyCodeLine{00040\ \textcolor{comment}{*\ y\ error\ in\ meters\ (must\ be\ based\ on\ velocity\ error)}}
+\DoxyCodeLine{00041\ \textcolor{comment}{*\ velocity\ error\ =\ 0.05\ m/s\ RMS}}
+\DoxyCodeLine{00042\ \textcolor{comment}{*\ Calculation\ for\ the\ error\ per\ meter:\ 1m\ =\ (1\ +-\/\ 0.05\ m/s)\ *\ (1\ +-\/\ 1e-\/9\ s)}}
+\DoxyCodeLine{00043\ \textcolor{comment}{*\ std.\ dev\ =\ 1\ *\ sqrt((0.05/1)\string^2\ +\ (1e-\/9/1)\string^2)\ =\ 0.05\ }}
+\DoxyCodeLine{00044\ \textcolor{comment}{*}}
+\DoxyCodeLine{00045\ \textcolor{comment}{*\ yaw\ error\ was\ 0.5\ degrees\ RMS\ =\ std\ dev\ (Must\ convert\ to\ radians)}}
+\DoxyCodeLine{00046\ \textcolor{comment}{*\ changed\ to\ 0.009\ degrees\ (Must\ convert\ to\ radians)}}
+\DoxyCodeLine{00047\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a679a0a7bca83d5a467b7375c350099b6}{IMU\_X\_STD\_DEV}}\ =\ 0.22;}
+\DoxyCodeLine{00050\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_ad70c10b51b08f27558f07b7c271d71cc}{IMU\_Y\_STD\_DEV}}\ =\ 0.22;}
+\DoxyCodeLine{00051\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a1852f50e788c3ea01e25a3d3794f074a}{IMU\_HEADING\_STD\_DEV}}\ =\ 0.00015707963;}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{/*\ GPS\ noise\ model\ }}
+\DoxyCodeLine{00056\ \textcolor{comment}{*\ Use\ the\ covariances\ from\ positionlla}}
+\DoxyCodeLine{00057\ \textcolor{comment}{*}}
+\DoxyCodeLine{00058\ \textcolor{comment}{*\ Covariance\ matrix\ diagonal\ elements\ represent\ variances}}
+\DoxyCodeLine{00059\ \textcolor{comment}{*\ Variance\ =\ (std.dev)\string^2\ meaning:}}
+\DoxyCodeLine{00060\ \textcolor{comment}{*\ Variance\ =\ 0.2\ =>\ std.dev\ =\ sqrt(0.2)\ =\ 0.45}}
+\DoxyCodeLine{00061\ \textcolor{comment}{*\ }}
+\DoxyCodeLine{00062\ \textcolor{comment}{*\ However\ positionlla\ already\ accounts\ for\ the\ covariance}}
+\DoxyCodeLine{00063\ \textcolor{comment}{*\ so\ we\ are\ using\ std.dev\ =\ 0.01}}
+\DoxyCodeLine{00064\ \textcolor{comment}{*\ }}
+\DoxyCodeLine{00065\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00066\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a6bbb347325e8ba0244109a63faeaa935}{GPS\_X\_STD\_DEV}}\ =\ 0.01;}
+\DoxyCodeLine{00067\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a47940d04a5651b198450d2e69ba7af8d}{GPS\_Y\_STD\_DEV}}\ =\ 0.01;}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{/*****\ EUFS\_SIM\ ******/}}
+\DoxyCodeLine{00071\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_aa83e05f48d5afbff7ba7953ff53fcda0}{EUFS\_SIM\_RANGE\_STD\_DEV}}\ =\ 0.0;}
+\DoxyCodeLine{00072\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a271deb105c69c414e6cd3c2fdcb0e2ed}{EUFS\_SIM\_BEARING\_STD\_DEV}}\ =\ 0.0;}
+\DoxyCodeLine{00073\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_ad66c11e75ed8a6e2974a091683386385}{EUFS\_SIM\_IMU\_X\_STD\_DEV}}\ =\ 0.0;}
+\DoxyCodeLine{00074\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a08837ca2af62fea012e8a96f2f0c7e2c}{EUFS\_SIM\_IMU\_Y\_STD\_DEV}}\ =\ 0.0;}
+\DoxyCodeLine{00075\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a856fd37f34cee0cc4239095eae920928}{EUFS\_SIM\_IMU\_HEADING\_STD\_DEV}}\ =\ 0.0;}
+\DoxyCodeLine{00076\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a631bf87e31487c5be02ca6ad6136989f}{EUFS\_SIM\_GPS\_X\_STD\_DEV}}\ =\ 0.0;}
+\DoxyCodeLine{00077\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_aa74d482d09776edaba3cb6dcc3483517}{EUFS\_SIM\_GPS\_Y\_STD\_DEV}}\ =\ 0.0;}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{comment}{/*****\ CONTROLS\ SIM\ ******/}}
+\DoxyCodeLine{00080\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a48fe76edf3d4052e13fb5eb7f78d6041}{CONTROLS\_BEARING\_STD\_DEV}}\ =\ 0.00045;}
+\DoxyCodeLine{00081\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a0d749f36aa999ff4b92f6846382d28bf}{CONTROLS\_RANGE\_STD\_DEV}}\ =\ 0.03;}
+\DoxyCodeLine{00082\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_aeb569da46685a0ac3d50a5b2df0e942f}{CONTROLS\_IMU\_X\_STD\_DEV}}\ =\ 0.22;}
+\DoxyCodeLine{00083\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a2683260f82b8cac447caf0ba005f8867}{CONTROLS\_IMU\_Y\_STD\_DEV}}\ =\ 0.22;}
+\DoxyCodeLine{00084\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a9a9e84e70043eb7c6fa339aa6fbf9312}{CONTROLS\_IMU\_HEADING\_STD\_DEV}}\ =\ 0.00872665;}
+\DoxyCodeLine{00085\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_ab1b6ba4c39c3abd3449ad16f206d4b4b}{CONTROLS\_GPS\_X\_STD\_DEV}}\ =\ 0.01;}
+\DoxyCodeLine{00086\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a740f6ff9eb90da92717472c307e8d073}{CONTROLS\_GPS\_Y\_STD\_DEV}}\ =\ 0.01;}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{constants_8hpp_a616da97fd5f650be10b35180eaf60480}{SEC\_TO\_NANOSEC}}\ =\ 1e9;}
+\DoxyCodeLine{00089\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_ac9d2880719f12dcb9d8981a27b13cb4d}{IMU\_OFFSET}}\ =\ 0.3;\ \textcolor{comment}{//meters;\ offset\ from\ the\ center\ of\ the\ car}}
+\DoxyCodeLine{00090\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_aadcb9d89b1ef0bbe27f2784462178ff9}{LIDAR\_OFFSET}}\ =\ 0.3;\ \textcolor{comment}{//meters;\ offset\ from\ the\ center\ of\ the\ car}}
+\DoxyCodeLine{00091\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_ada42544decc969afd04148fb0b684114}{MAX\_CONE\_RANGE}}\ =\ 15;}
+\DoxyCodeLine{00092\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a89c80a289dc717aaa5f6a6c4dd171e42}{TURNING\_MAX\_CONE\_RANGE}}\ =\ 15;}
+\DoxyCodeLine{00093\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a8bd64902944688aa663c233b75f276a6}{VELOCITY\_MOVING\_TH}}\ =\ 0.1;\ \textcolor{comment}{//meters\ per\ second}}
+\DoxyCodeLine{00094\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_ac0cd59596527ab43cadc4d81fcfa5668}{TURNING\_TH}}\ =\ 0.2;}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a8434f7b2f400eb70a451eb2f8b2a74ce}{DIST\_FROM\_START\_LOOP\_CLOSURE\_TH}}\ =\ 5;\ \textcolor{comment}{//meters;\ distance\ from\ the\ start\ for\ loop\ closure\ detection}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a65c24ee9176f2806a19bd1d1f2ab041e}{M\_DIST\_TH}}\ =\ 0.0009;}
+\DoxyCodeLine{00099\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{constants_8hpp_a352e28edf7c9a17454772a568c05b7ba}{TURNING\_M\_DIST\_TH}}\ =\ 0.0009;}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{const}\ std::string\ \mbox{\hyperlink{constants_8hpp_ad241bdd58f78d43bb01d1b62a2659cf9}{STEP\_INPUT\_FILE}}\ =\ \textcolor{stringliteral}{"{}src/isam2/data/step\_input.txt"{}};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keyword}{const}\ std::string\ \mbox{\hyperlink{constants_8hpp_adb1c953d94839e423c4d24fb79a2e779}{CONE\_DATA\_TOPIC}}\ =\ \textcolor{stringliteral}{"{}/perc\_cones"{}};}
+\DoxyCodeLine{00105\ \textcolor{keyword}{const}\ std::string\ \mbox{\hyperlink{constants_8hpp_a8bd26ac04d1d1e0dc4656870d5a7708e}{VEHICLE\_POS\_TOPIC}}\ =\ \textcolor{stringliteral}{"{}/filter/pose"{}};}
+\DoxyCodeLine{00106\ \textcolor{keyword}{const}\ std::string\ \mbox{\hyperlink{constants_8hpp_ac120e14b05ae7bb7b7b153f419f3dfc0}{VEHICLE\_ANGLE\_TOPIC}}\ =\ \textcolor{stringliteral}{"{}/filter/quaternion"{}};}
+\DoxyCodeLine{00107\ \textcolor{keyword}{const}\ std::string\ \mbox{\hyperlink{constants_8hpp_a5b024d0930b5473fef649ea4a9241574}{VEHICLE\_VEL\_TOPIC}}\ =\ \textcolor{stringliteral}{"{}/filter/twist"{}};}
+\DoxyCodeLine{00108\ \textcolor{keyword}{const}\ std::string\ \mbox{\hyperlink{constants_8hpp_aaa68cace55541b4c6fe52abee4fe55e1}{SLAM\_POSE\_TOPIC}}\ =\ \textcolor{stringliteral}{"{}/slam\_pose"{}};}
+\DoxyCodeLine{00109\ \textcolor{keyword}{const}\ std::string\ \mbox{\hyperlink{constants_8hpp_a1923a063156dc2b7360ed897b9f1264a}{SLAM\_CHUNK\_TOPIC}}\ =\ \textcolor{stringliteral}{"{}/slam\_chunk"{}};}
+\DoxyCodeLine{00110\ \textcolor{comment}{//\ const\ std::string\ SLAM\_TOPIC\ =\ "{}/slam\_data"{};}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{keyword}{constexpr}\ std::size\_t\ \mbox{\hyperlink{constants_8hpp_ad2621efbf689d237023ac588d4adac1d}{LOOK\_RADIUS}}\ =\ 20;}
+\DoxyCodeLine{00113\ \textcolor{keyword}{constexpr}\ std::size\_t\ \mbox{\hyperlink{constants_8hpp_acd9de2a135b49ab524844ec7ea918525}{MIN\_CONES\_UPDATE\_ALL}}\ =\ 50;}
+\DoxyCodeLine{00114\ \textcolor{keyword}{constexpr}\ std::size\_t\ \mbox{\hyperlink{constants_8hpp_a83758e03ec63c9cb44ec7bbba6a2b68d}{UPDATE\_START\_AFTER\_N}}\ =\ 50;}
+\DoxyCodeLine{00115\ \textcolor{keyword}{constexpr}\ std::size\_t\ \mbox{\hyperlink{constants_8hpp_a71a806ef167dbaf2ce22355d7a2c0d9f}{UPDATE\_START\_N}}\ =\ 30;}
+\DoxyCodeLine{00116\ \textcolor{keyword}{constexpr}\ std::size\_t\ \mbox{\hyperlink{constants_8hpp_aadf34d16837e6f05ddfd90d6ad578fd2}{UPDATE\_RECENT\_N}}\ =\ 20;}
+\DoxyCodeLine{00117\ \textcolor{keyword}{constexpr}\ std::size\_t\ \mbox{\hyperlink{constants_8hpp_a7b7e67ce964f45fdb26f2d776bfbb1d6}{WINDOW\_UPDATE}}\ =\ 0;}
+\DoxyCodeLine{00118\ \textcolor{keyword}{constexpr}\ std::size\_t\ \mbox{\hyperlink{constants_8hpp_ac4763eb36d3d9b8e98581a24967ecac3}{UPDATE\_ITERATIONS\_N}}\ =\ 10;}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{keyword}{constexpr}\ std::size\_t\ \mbox{\hyperlink{constants_8hpp_a5e3ba1fdbe5063e8131fd6a3a9cf5b8b}{RETURN\_N\_CONES}}\ =\ 22;}
+
+\end{DoxyCode}

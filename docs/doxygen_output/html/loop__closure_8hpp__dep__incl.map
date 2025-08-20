@@ -1,0 +1,21 @@
+<map id="include/loop_closure.hpp" name="include/loop_closure.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="434,5,598,31"/>
+<area shape="rect" id="Node000002" href="$isam2_8hpp.html" title=" " alt="" coords="368,79,494,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="492,43,447,81,443,77,488,39"/>
+<area shape="rect" id="Node000010" href="$loop__closure_8cpp.html" title="Utility functions used in loop closure detection for SLAM." alt="" coords="518,79,688,105"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="544,39,590,77,587,81,541,43"/>
+<area shape="rect" id="Node000003" href="$isam2__nodes_8hpp.html" title=" " alt="" coords="257,153,426,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="406,116,358,154,355,150,402,112"/>
+<area shape="rect" id="Node000009" href="$isam2_8cpp.html" title="Contains implementation of the slamISAM class, which handles iSAM2&#45;based SLAM updates for autonomous ..." alt="" coords="450,153,593,178"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="460,112,508,150,505,154,456,117"/>
+<area shape="rect" id="Node000004" href="$controls__sim__slam__node_8cpp.html" title=" " alt="" coords="5,226,150,267"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="287,186,144,228,143,223,285,181"/>
+<area shape="rect" id="Node000005" href="$generic__slam__node_8cpp.html" title=" " alt="" coords="174,226,333,267"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="318,191,277,228,273,224,315,187"/>
+<area shape="rect" id="Node000007" href="$real__data__slam__node__gps_8cpp.html" title=" " alt="" coords="357,226,502,267"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="368,187,410,224,406,228,365,191"/>
+<area shape="rect" id="Node000008" href="$real__data__slam__node__no__gps_8cpp.html" title=" " alt="" coords="526,226,691,267"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="398,181,542,223,541,228,397,186"/>
+<area shape="rect" id="Node000006" href="$generic__slam__node__impl_8cpp.html" title=" " alt="" coords="174,315,333,356"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="256,283,256,315,251,315,251,283"/>
+</map>

@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="unary__factor_8hpp" kind="file" language="C++">
+    <compoundname>unary_factor.hpp</compoundname>
+    <includes local="no">bits/stdc++.h</includes>
+    <includes local="no">gtsam/nonlinear/NonlinearFactor.h</includes>
+    <includes local="no">gtsam/geometry/Pose2.h</includes>
+    <includedby refid="isam2_8hpp" local="yes">include/isam2.hpp</includedby>
+    <includedby refid="unary__factor_8cpp" local="yes">src/isam2/unary_factor.cpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>include/unary_factor.hpp</label>
+        <link refid="unary__factor_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>bits/stdc++.h</label>
+      </node>
+      <node id="4">
+        <label>gtsam/geometry/Pose2.h</label>
+      </node>
+      <node id="3">
+        <label>gtsam/nonlinear/NonlinearFactor.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>include/isam2.hpp</label>
+        <link refid="isam2_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>include/isam2_nodes.hpp</label>
+        <link refid="isam2__nodes_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>include/unary_factor.hpp</label>
+        <link refid="unary__factor_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>src/isam2/isam2.cpp</label>
+        <link refid="isam2_8cpp"/>
+      </node>
+      <node id="10">
+        <label>src/isam2/unary_factor.cpp</label>
+        <link refid="unary__factor_8cpp"/>
+      </node>
+      <node id="4">
+        <label>src/nodes/controls_sim_slam_node.cpp</label>
+        <link refid="controls__sim__slam__node_8cpp"/>
+      </node>
+      <node id="5">
+        <label>src/nodes/generic_slam_node.cpp</label>
+        <link refid="generic__slam__node_8cpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>src/nodes/generic_slam_node_impl.cpp</label>
+        <link refid="generic__slam__node__impl_8cpp"/>
+      </node>
+      <node id="7">
+        <label>src/nodes/real_data_slam_node_gps.cpp</label>
+        <link refid="real__data__slam__node__gps_8cpp"/>
+      </node>
+      <node id="8">
+        <label>src/nodes/real_data_slam_node_no_gps.cpp</label>
+        <link refid="real__data__slam__node__no__gps_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classUnaryFactor" prot="public">UnaryFactor</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;bits/stdc++.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/nonlinear/NonlinearFactor.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/geometry/Pose2.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="7"><highlight class="comment"><sp/>*<sp/>@brief<sp/>This<sp/>is<sp/>a<sp/>factor<sp/>used<sp/>for<sp/>localizing<sp/>car<sp/>poses.</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/>Unary<sp/>factors<sp/>are<sp/>added<sp/>to<sp/>car<sp/>poses.<sp/>Car<sp/>poses</highlight></codeline>
+<codeline lineno="9"><highlight class="comment"><sp/>*<sp/>are<sp/>calculated<sp/>by<sp/>the<sp/>velocity<sp/>motion<sp/>model,<sp/>unary</highlight></codeline>
+<codeline lineno="10"><highlight class="comment"><sp/>*<sp/>factors<sp/>are<sp/>contain<sp/>the<sp/>GPS<sp/>measurments</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="classUnaryFactor" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classUnaryFactor_1a5b075904be9c89a653bb6905b3bfb965" kindref="member">UnaryFactor</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>gtsam::NoiseModelFactor1&lt;gtsam::Pose2&gt;<sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>x<sp/>y<sp/>measurements<sp/>from<sp/>GPS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/>gtsam::Pose2<sp/>z;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>gtsam::Key<sp/>key;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="18" refid="classUnaryFactor_1a94e14dba4c8062fa38a155683e1c64f0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;UnaryFactor&gt;<sp/><ref refid="classUnaryFactor_1a94e14dba4c8062fa38a155683e1c64f0" kindref="member">shared_ptr</ref>;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>In<sp/>the<sp/>iSAM2<sp/>paper,<sp/>each<sp/>factor<sp/>f(q)<sp/>is<sp/>proportional<sp/>to</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>exp(-||h(q)<sp/>-<sp/>z_{t}||^2)</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="24"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>q<sp/>is<sp/>the<sp/>unknown<sp/>variable</highlight></codeline>
+<codeline lineno="25"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>z_{t}<sp/>is<sp/>our<sp/>measurement<sp/>(GPS<sp/>in<sp/>this<sp/>case)<sp/>at<sp/>time<sp/>t</highlight></codeline>
+<codeline lineno="26"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>-<sp/>Here<sp/>we<sp/>represented<sp/>this<sp/>as<sp/>x<sp/>and<sp/>y.</highlight></codeline>
+<codeline lineno="27"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/><sp/><sp/>(gtsam<sp/>Factor<sp/>Graph<sp/>tutorial)</highlight></codeline>
+<codeline lineno="28"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="29"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>This<sp/>function<sp/>represents<sp/>our<sp/>likelihood<sp/>of<sp/>q<sp/>given<sp/>measurement<sp/>z</highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>-<sp/>We<sp/>want<sp/>to<sp/>maximize<sp/>this<sp/>likelihood<sp/>by<sp/>minimizing<sp/>the<sp/>squared<sp/>error</highlight></codeline>
+<codeline lineno="31"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/><sp/><sp/>In<sp/>a<sp/>sense,<sp/>this<sp/>function<sp/>represents<sp/>the<sp/>error<sp/>between<sp/>an<sp/>unknown</highlight></codeline>
+<codeline lineno="32"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/><sp/><sp/>variable<sp/>and<sp/>the<sp/>measurement<sp/>we<sp/>receive</highlight></codeline>
+<codeline lineno="33"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="34"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>h(q)<sp/>is<sp/>a<sp/>nonlinear<sp/>measurement<sp/>function<sp/>(gtsam<sp/>Factor<sp/>Graph<sp/>tutorial)</highlight></codeline>
+<codeline lineno="35"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>-<sp/>in<sp/>our<sp/>case<sp/>we<sp/>just<sp/>return<sp/>the<sp/>variable<sp/>itself<sp/>(identity)</highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>What<sp/>is<sp/>q<sp/>in<sp/>the<sp/>context<sp/>of<sp/>our<sp/>problem:<sp/>q<sp/>is<sp/>either<sp/>a<sp/>pose<sp/>or<sp/>a<sp/>landmark</highlight></codeline>
+<codeline lineno="38"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>-<sp/>(a<sp/>variable<sp/>node)</highlight></codeline>
+<codeline lineno="39"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*</highlight></codeline>
+<codeline lineno="40"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>Below<sp/>is<sp/>the<sp/>constructor</highlight></codeline>
+<codeline lineno="41"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42" refid="classUnaryFactor_1a5b075904be9c89a653bb6905b3bfb965" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classUnaryFactor_1a5b075904be9c89a653bb6905b3bfb965" kindref="member">UnaryFactor</ref>(gtsam::Key<sp/>k,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>gtsam::Pose2&amp;<sp/>input_GPS,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>gtsam::SharedNoiseModel&amp;<sp/>model):</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>NoiseModelFactor1&lt;gtsam::Pose2&gt;(model,<sp/>k),<sp/>z(input_GPS.x(),<sp/>input_GPS.y(),<sp/>input_GPS.theta()),<sp/>key(k)<sp/>{}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46" refid="classUnaryFactor_1a080d71cece2117cb2995aa2b5eb068dc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/><ref refid="classUnaryFactor_1a080d71cece2117cb2995aa2b5eb068dc" kindref="member">~UnaryFactor</ref>()<sp/>{}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>@brief<sp/>Evaluates<sp/>the<sp/>error<sp/>between<sp/>an<sp/>unknown<sp/>variable<sp/>and<sp/>the</highlight></codeline>
+<codeline lineno="49"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>GPS<sp/>measurement<sp/>we<sp/>receive</highlight></codeline>
+<codeline lineno="50"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>gtsam::Vector<sp/><ref refid="classUnaryFactor_1a6636ce47bc1c8825844a2c8f81d3c8a8" kindref="member">evaluateError</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>gtsam::Pose2&amp;<sp/>q,<sp/>gtsam::OptionalMatrixType<sp/>H)<sp/></highlight><highlight class="keyword">const<sp/>override</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="53"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*<sp/>@brief<sp/>Clones<sp/>this<sp/>factor</highlight></codeline>
+<codeline lineno="54"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55" refid="classUnaryFactor_1a05b9ea54c3d7dc57dc0af05656468a09" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>gtsam::NonlinearFactor::shared_ptr<sp/><ref refid="classUnaryFactor_1a05b9ea54c3d7dc57dc0af05656468a09" kindref="member">clone</ref>()</highlight><highlight class="keyword"><sp/>const<sp/>override<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::make_shared&lt;UnaryFactor&gt;(this-&gt;key,<sp/>z,<sp/>this-&gt;noiseModel_);</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="58"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="include/unary_factor.hpp"/>
+  </compounddef>
+</doxygen>
