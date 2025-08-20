@@ -10,23 +10,16 @@ Below are rules from the 2025 FSAE Driverless Supplement that constrained vehicl
 
 **DT.3.1 Driverless System Brake**
 
-The vehicle must have a Driverless System Brake. The Tractive System is not a Brake System 
+| The vehicle must have a Driverless System Brake. The Tractive System is not a Brake System 
+| DT.3.1.1 Technical Requirements 
+| a. All parts and their mountings must be located inside the Rollover Protection Envelope 
+| b. Manual braking must always be possible and not prevented at any time 
+| c. The DSB may be part of the hydraulic brake system 
+| DT.3.1.1 defines key limits for ASB including the mounting area and requirement that manual braking must to always be possible.
+| DT.3.1.2 DT.3.1.1 defines key requirements for ASB 
+| a. The Driverless System Brake must be designed to be deactivated by a maximum of two Deactivation Points 
+| b. The Deactivation Points must be:
 
-DT.3.1.1 Technical Requirements 
-
-a. All parts and their mountings must be located inside the Rollover Protection Envelope 
-
-b. Manual braking must always be possible and not prevented at any time 
-
-c. The DSB may be part of the hydraulic brake system 
-
-DT.3.1.1 defines key limits for ASB including the mounting area and requirement that manual braking must to always be possible.
-
-DT.3.1.2 DT.3.1.1 defines key requirements for ASB 
-
-a. The Driverless System Brake must be designed to be deactivated by a maximum of two Deactivation Points 
-
-b. The Deactivation Points must be:
     - Mounted inside the volume defined in DT.2.3.a 
     - Mounted in one of the two: near the DSMS or on the top side of the vehicle between the Front Bulkhead and Front Hoop close to the vehicle center line 
     - Near each other 
@@ -40,51 +33,33 @@ DT.3.1.2 defines key requirements for the deactivation points for the ASB releas
 
 **DT.3.2 Emergency Brake System (EBS)**
 
-The Driverless System Brake must include an Emergency Brake System (EBS)
+| The Driverless System Brake must include an Emergency Brake System (EBS)
 
-DT.3.2.1 Technical Requirements 
+| DT.3.2.1 Technical Requirements 
+| a. The EBS must only use passive systems with mechanical energy storage 
+| b. The EBS must be directly supplied by GLVMS, DSMS, Remote Stop Relay and the Emergency Brake System Relay with no delay 
 
-a. The EBS must only use passive systems with mechanical energy storage 
+| DT.3.2 defines key requirements for the Emergency Brake System (EBS) including that it must use stored mechanical energy and trigger in an emergency state. 
+| DT.3.2.2 Function 
+| a. Startup Check - must be performed to ensure that DSB is able to build up brake pressure  as expected, before Driverless System Status Ready is possible 
+| b. After the Startup Check the DSB and its signals must be continuously monitored for failures 
+| c. Electrical power loss at EBS must start an Emergency Brake Maneuver
 
-b. The EBS must be directly supplied by GLVMS, DSMS, Remote Stop Relay and the Emergency Brake System Relay with no delay 
+| DT.3.2.3 The vehicle must go to the Safe State, if:
+| a. Functionality of the Emergency Brake System cannot be ensured 
+| b. An (additional) single point of failure would lead to total loss of brake capability DT.3.2.4 The Safe State is when the three:  
+| a. Vehicle at a standstill
+| b. Brakes engaged to prevent the vehicle from rolling 
+| c. An open Shutdown Circuit  
 
-DT.3.2 defines key requirements for the Emergency Brake System (EBS) including that it must use stored mechanical energy and trigger in an emergency state. 
-
-DT.3.2.2 Function 
-
-a. Startup Check - must be performed to ensure that DSB is able to build up brake pressure  as expected, before Driverless System Status Ready is possible 
-
-b. After the Startup Check the DSB and its signals must be continuously monitored for failures 
-
-c. Electrical power loss at EBS must start an Emergency Brake Maneuver
-
-DT.3.2.3 The vehicle must go to the Safe State, if:
-
-a. Functionality of the Emergency Brake System cannot be ensured 
-
-b. An (additional) single point of failure would lead to total loss of brake capability DT.3.2.4 The Safe State is when the three:  
-
-a. Vehicle at a standstill
-
-b. Brakes engaged to prevent the vehicle from rolling 
-
-c. An open Shutdown Circuit  
-
-DT.3.2.2-4 defines the function and state behavior required by EBS.
-
-DT.3.2.5 Emergency Brake Maneuver 
-
-The Emergency Brake System must decelerate the vehicle and stop vehicle motion 
-
-a. The system reaction time, the time between opening of the Shutdown Circuit and the  start of the deceleration, must be 200 ms or less 
-
-b. The average deceleration must be more than 10 m/s2 under dry track conditions 
-
-c. In case of a single failure the DSB should achieve at least half of the performance 
-
-d. While decelerating, the vehicle must remain in a stable driving condition 
-
-DT.3.2.5 defines the base system requirements for EBS. 
+| DT.3.2.2-4 defines the function and state behavior required by EBS.
+| DT.3.2.5 Emergency Brake Maneuver 
+| The Emergency Brake System must decelerate the vehicle and stop vehicle motion 
+| a. The system reaction time, the time between opening of the Shutdown Circuit and the  start of the deceleration, must be 200 ms or less 
+| b. The average deceleration must be more than 10 m/s2 under dry track conditions 
+| c. In case of a single failure the DSB should achieve at least half of the performance 
+| d. While decelerating, the vehicle must remain in a stable driving condition 
+| DT.3.2.5 defines the base system requirements for EBS. 
 
 System Design:
 ----------------
@@ -93,8 +68,6 @@ System Design:
     :align: center
 
     FSAE Steering Diagram `(reference) <https://medium.com/@luisdamed/brake-system-load-distribution-study-matlab-approach-2f35b426ee0d>`_
-
-FSAE Brakes Diagram (reference)
 
 FSAE brakes begin with two master cylinders. These master cylinders are mounted on the manual brake pedal. When the driver pushes the pedal down, the master cylinders compress. Additionally, each wheel on the vehicle has brake calipers mounted on its hub, these connect hydraulically to the master cylinders. When the master cylinders are compressed, brake fluid pushes to the calipers, compressing the brake pads to lock the wheels. 
 
@@ -117,9 +90,8 @@ Implementation:
 
 Regular braking throughout a driverless run fulfilled by regenerative braking.
 
-*EBS*
-
-This implementation of the emergency braking system involves a fully redundant pneumatic and hydraulic system. Two additional master cylinders were added to the existing braking system and were autonomously actuated. These fluid lines interface with the manual master cylinder fluid lines at 3-way valves which allow dual manual and autonomous braking. As it is redundant, if one part of this system fails, 50% of the braking functionality will still apply. 
+| *EBS*
+| This implementation of the emergency braking system involves a fully redundant pneumatic and hydraulic system. Two additional master cylinders were added to the existing braking system and were autonomously actuated. These fluid lines interface with the manual master cylinder fluid lines at 2-way valves which allow dual manual and autonomous braking. As it is redundant, if one part of this system fails, 50% of the braking functionality will still apply. 
 
 .. figure:: ./img/brakesschematic.png
     :align: center

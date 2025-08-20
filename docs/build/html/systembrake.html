@@ -85,19 +85,19 @@
 <h2>Rules Overview:<a class="headerlink" href="#rules-overview" title="Link to this heading"></a></h2>
 <p>Below are rules from the 2025 FSAE Driverless Supplement that constrained vehicle retrofitting solutions for ASB.</p>
 <p><strong>DT.3.1 Driverless System Brake</strong></p>
-<p>The vehicle must have a Driverless System Brake. The Tractive System is not a Brake System</p>
-<p>DT.3.1.1 Technical Requirements</p>
-<ol class="loweralpha simple">
-<li><p>All parts and their mountings must be located inside the Rollover Protection Envelope</p></li>
-<li><p>Manual braking must always be possible and not prevented at any time</p></li>
-<li><p>The DSB may be part of the hydraulic brake system</p></li>
-</ol>
-<p>DT.3.1.1 defines key limits for ASB including the mounting area and requirement that manual braking must to always be possible.</p>
-<p>DT.3.1.2 DT.3.1.1 defines key requirements for ASB</p>
-<ol class="loweralpha simple">
-<li><p>The Driverless System Brake must be designed to be deactivated by a maximum of two Deactivation Points</p></li>
-<li><dl class="simple">
-<dt>The Deactivation Points must be:</dt><dd><ul class="simple">
+<div class="line-block">
+<div class="line">The vehicle must have a Driverless System Brake. The Tractive System is not a Brake System</div>
+<div class="line">DT.3.1.1 Technical Requirements</div>
+<div class="line">a. All parts and their mountings must be located inside the Rollover Protection Envelope</div>
+<div class="line">b. Manual braking must always be possible and not prevented at any time</div>
+<div class="line">c. The DSB may be part of the hydraulic brake system</div>
+<div class="line">DT.3.1.1 defines key limits for ASB including the mounting area and requirement that manual braking must to always be possible.</div>
+<div class="line">DT.3.1.2 DT.3.1.1 defines key requirements for ASB</div>
+<div class="line">a. The Driverless System Brake must be designed to be deactivated by a maximum of two Deactivation Points</div>
+<div class="line">b. The Deactivation Points must be:</div>
+</div>
+<blockquote>
+<div><ul class="simple">
 <li><p>Mounted inside the volume defined in DT.2.3.a</p></li>
 <li><p>Mounted in one of the two: near the DSMS or on the top side of the vehicle between the Front Bulkhead and Front Hoop close to the vehicle center line</p></li>
 <li><p>Near each other</p></li>
@@ -107,45 +107,42 @@
 <li><p>Able to work without electrical power</p></li>
 <li><p>Operated by maximum two simple push/pull and/or turning actions, the order and direction of these actions must be shown next to the Deactivation Points</p></li>
 </ul>
-</dd>
-</dl>
-</li>
-</ol>
+</div></blockquote>
 <p>DT.3.1.2 defines key requirements for the deactivation points for the ASB release including mounting location and basic requirements.</p>
 <p><strong>DT.3.2 Emergency Brake System (EBS)</strong></p>
-<p>The Driverless System Brake must include an Emergency Brake System (EBS)</p>
-<p>DT.3.2.1 Technical Requirements</p>
-<ol class="loweralpha simple">
-<li><p>The EBS must only use passive systems with mechanical energy storage</p></li>
-<li><p>The EBS must be directly supplied by GLVMS, DSMS, Remote Stop Relay and the Emergency Brake System Relay with no delay</p></li>
-</ol>
-<p>DT.3.2 defines key requirements for the Emergency Brake System (EBS) including that it must use stored mechanical energy and trigger in an emergency state.</p>
-<p>DT.3.2.2 Function</p>
-<ol class="loweralpha simple">
-<li><p>Startup Check - must be performed to ensure that DSB is able to build up brake pressure  as expected, before Driverless System Status Ready is possible</p></li>
-<li><p>After the Startup Check the DSB and its signals must be continuously monitored for failures</p></li>
-<li><p>Electrical power loss at EBS must start an Emergency Brake Maneuver</p></li>
-</ol>
-<p>DT.3.2.3 The vehicle must go to the Safe State, if:</p>
-<ol class="loweralpha simple">
-<li><p>Functionality of the Emergency Brake System cannot be ensured</p></li>
-<li><p>An (additional) single point of failure would lead to total loss of brake capability DT.3.2.4 The Safe State is when the three:</p></li>
-</ol>
-<ol class="loweralpha simple">
-<li><p>Vehicle at a standstill</p></li>
-<li><p>Brakes engaged to prevent the vehicle from rolling</p></li>
-<li><p>An open Shutdown Circuit</p></li>
-</ol>
-<p>DT.3.2.2-4 defines the function and state behavior required by EBS.</p>
-<p>DT.3.2.5 Emergency Brake Maneuver</p>
-<p>The Emergency Brake System must decelerate the vehicle and stop vehicle motion</p>
-<ol class="loweralpha simple">
-<li><p>The system reaction time, the time between opening of the Shutdown Circuit and the  start of the deceleration, must be 200 ms or less</p></li>
-<li><p>The average deceleration must be more than 10 m/s2 under dry track conditions</p></li>
-<li><p>In case of a single failure the DSB should achieve at least half of the performance</p></li>
-<li><p>While decelerating, the vehicle must remain in a stable driving condition</p></li>
-</ol>
-<p>DT.3.2.5 defines the base system requirements for EBS.</p>
+<div class="line-block">
+<div class="line">The Driverless System Brake must include an Emergency Brake System (EBS)</div>
+</div>
+<div class="line-block">
+<div class="line">DT.3.2.1 Technical Requirements</div>
+<div class="line">a. The EBS must only use passive systems with mechanical energy storage</div>
+<div class="line">b. The EBS must be directly supplied by GLVMS, DSMS, Remote Stop Relay and the Emergency Brake System Relay with no delay</div>
+</div>
+<div class="line-block">
+<div class="line">DT.3.2 defines key requirements for the Emergency Brake System (EBS) including that it must use stored mechanical energy and trigger in an emergency state.</div>
+<div class="line">DT.3.2.2 Function</div>
+<div class="line">a. Startup Check - must be performed to ensure that DSB is able to build up brake pressure  as expected, before Driverless System Status Ready is possible</div>
+<div class="line">b. After the Startup Check the DSB and its signals must be continuously monitored for failures</div>
+<div class="line">c. Electrical power loss at EBS must start an Emergency Brake Maneuver</div>
+</div>
+<div class="line-block">
+<div class="line">DT.3.2.3 The vehicle must go to the Safe State, if:</div>
+<div class="line">a. Functionality of the Emergency Brake System cannot be ensured</div>
+<div class="line">b. An (additional) single point of failure would lead to total loss of brake capability DT.3.2.4 The Safe State is when the three:</div>
+<div class="line">a. Vehicle at a standstill</div>
+<div class="line">b. Brakes engaged to prevent the vehicle from rolling</div>
+<div class="line">c. An open Shutdown Circuit</div>
+</div>
+<div class="line-block">
+<div class="line">DT.3.2.2-4 defines the function and state behavior required by EBS.</div>
+<div class="line">DT.3.2.5 Emergency Brake Maneuver</div>
+<div class="line">The Emergency Brake System must decelerate the vehicle and stop vehicle motion</div>
+<div class="line">a. The system reaction time, the time between opening of the Shutdown Circuit and the  start of the deceleration, must be 200 ms or less</div>
+<div class="line">b. The average deceleration must be more than 10 m/s2 under dry track conditions</div>
+<div class="line">c. In case of a single failure the DSB should achieve at least half of the performance</div>
+<div class="line">d. While decelerating, the vehicle must remain in a stable driving condition</div>
+<div class="line">DT.3.2.5 defines the base system requirements for EBS.</div>
+</div>
 </section>
 <section id="system-design">
 <h2>System Design:<a class="headerlink" href="#system-design" title="Link to this heading"></a></h2>
@@ -155,7 +152,6 @@
 <p><span class="caption-text">FSAE Steering Diagram <a class="reference external" href="https://medium.com/&#64;luisdamed/brake-system-load-distribution-study-matlab-approach-2f35b426ee0d">(reference)</a></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
-<p>FSAE Brakes Diagram (reference)</p>
 <p>FSAE brakes begin with two master cylinders. These master cylinders are mounted on the manual brake pedal. When the driver pushes the pedal down, the master cylinders compress. Additionally, each wheel on the vehicle has brake calipers mounted on its hub, these connect hydraulically to the master cylinders. When the master cylinders are compressed, brake fluid pushes to the calipers, compressing the brake pads to lock the wheels.</p>
 <p>The main requirement of Autonomous System Brake (ASB) can be fulfilled by regeneration braking. The motors are sent negative torque commands which are used to decelerate the car, serving as a driverless form of braking.</p>
 <p>The addition of the EBS required by the rules must utilize mechanical energy and not inhibit the compression of the brake pedal manually. There are two main design approaches to EBS:</p>
@@ -180,8 +176,10 @@
 <section id="implementation">
 <h2>Implementation:<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
 <p>Regular braking throughout a driverless run fulfilled by regenerative braking.</p>
-<p><em>EBS</em></p>
-<p>This implementation of the emergency braking system involves a fully redundant pneumatic and hydraulic system. Two additional master cylinders were added to the existing braking system and were autonomously actuated. These fluid lines interface with the manual master cylinder fluid lines at 3-way valves which allow dual manual and autonomous braking. As it is redundant, if one part of this system fails, 50% of the braking functionality will still apply.</p>
+<div class="line-block">
+<div class="line"><em>EBS</em></div>
+<div class="line">This implementation of the emergency braking system involves a fully redundant pneumatic and hydraulic system. Two additional master cylinders were added to the existing braking system and were autonomously actuated. These fluid lines interface with the manual master cylinder fluid lines at 2-way valves which allow dual manual and autonomous braking. As it is redundant, if one part of this system fails, 50% of the braking functionality will still apply.</div>
+</div>
 <figure class="align-center" id="id2">
 <img alt="_images/brakesschematic.png" src="_images/brakesschematic.png" />
 <figcaption>
