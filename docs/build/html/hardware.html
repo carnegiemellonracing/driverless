@@ -45,15 +45,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="systems.html">Driverless Electrical Systems</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Driverless Electrical Hardware</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#autonomous-interface-module-aim">Autonomous Interface Module (AIM)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#autonomous-mission-indicator-ami">Autonomous Mission Indicator (AMI)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#driverless-system-status-indicator-dssi">Driverless System Status Indicator (DSSI)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#driverless-system-master-switch-dsms">Driverless System Master Switch (DSMS)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#steering-motor-and-driver">Steering Motor and Driver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#driverless-system-brake-dsb">Driverless System Brake (DSB)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#remote-emergency-stop-res-and-relay">Remote Emergency Stop (RES) and Relay</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#emergency-brake-actuator-and-pressure-sensors">Emergency Brake Actuator and Pressure Sensors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#onboard-computer-and-perception-sensors">Onboard Computer and Perception Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-printed-circuit-boards">Custom Printed Circuit Boards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#safety-protocol-systems">Safety Protocol Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#actuation-control">Actuation Control</a></li>
 </ul>
 </li>
 </ul>
@@ -84,8 +78,9 @@
              
   <section id="driverless-electrical-hardware">
 <h1>Driverless Electrical Hardware<a class="headerlink" href="#driverless-electrical-hardware" title="Link to this heading"></a></h1>
-<section id="autonomous-interface-module-aim">
-<h2>Autonomous Interface Module (AIM)<a class="headerlink" href="#autonomous-interface-module-aim" title="Link to this heading"></a></h2>
+<section id="custom-printed-circuit-boards">
+<h2>Custom Printed Circuit Boards<a class="headerlink" href="#custom-printed-circuit-boards" title="Link to this heading"></a></h2>
+<p><strong>Autonomous Interface Module (AIM)</strong></p>
 <p>The Autonomous Interface Module is designed and retrofitted to facilitate the communication between the driverless software pipeline and the 24a’s existing electrical architecture. The custom STM32 based module is responsible for the following roles:
 Relaying control actions sent from the onboard compute to the vehicle through CAN
 Driving and controlling the LED logic of the DSSI
@@ -93,13 +88,12 @@ Analog conditioning for the pneumatic brake pressure sensors
 Performing driverless system safety checks prior to state change
 Houses the Driverless System Relay noted in FSAE DT.4.1
 Houses the Emergency Brake System Relay noted in FSAE DT.4.3</p>
-</section>
-<section id="autonomous-mission-indicator-ami">
-<h2>Autonomous Mission Indicator (AMI)<a class="headerlink" href="#autonomous-mission-indicator-ami" title="Link to this heading"></a></h2>
+<p><strong>Autonomous Mission Indicator (AMI)</strong></p>
 <p>The Autonomous Mission Indicator is to satisfy the requirements of FSAE DO.1.4. 24a AMI was designed as a custom STM32 board equipped with a rotary selector and LEDs to display the currently selected driverless mission, and the selected mission ID broadcasted onto CAN.</p>
 </section>
-<section id="driverless-system-status-indicator-dssi">
-<h2>Driverless System Status Indicator (DSSI)<a class="headerlink" href="#driverless-system-status-indicator-dssi" title="Link to this heading"></a></h2>
+<section id="safety-protocol-systems">
+<h2>Safety Protocol Systems<a class="headerlink" href="#safety-protocol-systems" title="Link to this heading"></a></h2>
+<p><strong>Driverless System Status Indicator (DSSI)</strong></p>
 <p>Driverless System Status Indicator consists of blue and yellow indicators required by FSAE DT.1.2,  visually indicating the vehicle’s current driverless state. 24a is equipped with three pairs of commercially available 12VDC LED strips to satisfy this requirement, with two pairs on each side of one pair on the rear element of the rear wing. The DSSI logic are as follows:</p>
 <p>DS Off: Off
 DS Ready: Yellow continuous (Vehicle in HV Enable, Ready-to-Drive; all safety checks met, ready to initiate selected driverless mission.)
@@ -107,35 +101,26 @@ DS Driving: Yellow flashing (Vehicle currently initiating the selected driverles
 DS Finished: Blue continuous (Vehicle has completed the selected driverless mission and is at a standstill.)
 DS Emergency: Blue flashing (Vehicle has encountered an emergency, either through the RES or upon entering its own error states. EBS actuates as the shutdown circuit opens.)</p>
 <p>FSAE DT.1.3 requires the Driverless Alert Sound to be triggered when the vehicle is in the state of DS Emergency. 24a utilizes the existing Ready-to-Drive buzzer to fulfill this requirement. During the driverless electrical technical inspection, teams are required to showcase an “inspection” mission to verify the correct functionality of the DSSI, the Driverless Alert Sound, as well as the correct behavior of the EBS at various vehicle states.</p>
-</section>
-<section id="driverless-system-master-switch-dsms">
-<h2>Driverless System Master Switch (DSMS)<a class="headerlink" href="#driverless-system-master-switch-dsms" title="Link to this heading"></a></h2>
+<p><strong>Driverless System Master Switch (DSMS)</strong></p>
 <p>Driverless System Master Switch is an additional master switch by the existing GLVMS and TSMS, required for driverless vehicles. The DSMS is in series with post-GLVMS, serves as an input to Driverless System relay and Emergency Brake System relay logic, and directly supplies power to the Remote Stop relay, allowing the switching between manual and driverless modes.</p>
-</section>
-<section id="steering-motor-and-driver">
-<h2>Steering Motor and Driver<a class="headerlink" href="#steering-motor-and-driver" title="Link to this heading"></a></h2>
+<p><strong>Steering Motor and Driver</strong></p>
 <p>24a utilizes an additional steering motor in part of the Autonomous Steering System. The selected motor, Maxon EC Flat, is paired with the EPOS series motor controller to enable the control of the system. Steering control actions are sent via CAN from the onboard computer to AIM. PID control loop processes these commands against feedback from the steering angle sensor, translating the output into appropriate ADC values for the motor controller to achieve the target steering angle position. The steering angle sensor, installed on 24a’s steering rack, is calibrated by attaching an IMU device onto the front wheels to record angular deviation from the center position, alongside corresponding steering angle sensor ADC values, creating a mapping for accurate feedback.</p>
-</section>
-<section id="driverless-system-brake-dsb">
-<h2>Driverless System Brake (DSB)<a class="headerlink" href="#driverless-system-brake-dsb" title="Link to this heading"></a></h2>
+<p><strong>Driverless System Brake (DSB)</strong></p>
 <p>FSAE DT.3.1 requires driverless vehicles to be equipped with a driverless system brake for use during the driverless missions. 24a utilizes the AMK hub motor’s regenerative braking capabilities to meet deceleration targets and is not equipped with an additional actuator.</p>
-</section>
-<section id="remote-emergency-stop-res-and-relay">
-<h2>Remote Emergency Stop (RES) and Relay<a class="headerlink" href="#remote-emergency-stop-res-and-relay" title="Link to this heading"></a></h2>
+<p><strong>Remote Emergency Stop (RES) and Relay</strong></p>
 <p>To ensure FSAE DT3.3, 24a implemented a FSG-certified RES system, Gross Funk T53 transmitter and GF2000i R98 receiver. The remote stop relay of the RES is directly hard-wired in series with 24a’s safety circuit. The RES has two roles:</p>
 <p>Go Button: Transmit “go” signals to initiate the selected driverless mission
 Stop Button: Bring 24a to a safe condition remotely by opening the safety circuit, disabling the tractive system, and triggering the EBS relay for the emergency stop.</p>
 <p>An additional normally-closed relay powered off the DSMS ensures the bypass of the remote stop relay of the RES, allowing the manual operation of the vehicle when DSMS is in off state.</p>
 <img alt="_images/res.png" class="align-center" src="_images/res.png" />
 </section>
-<section id="emergency-brake-actuator-and-pressure-sensors">
-<h2>Emergency Brake Actuator and Pressure Sensors<a class="headerlink" href="#emergency-brake-actuator-and-pressure-sensors" title="Link to this heading"></a></h2>
-<p>24a is equipped with two pneumatic brake pressure sensors that provide an accurate reading of the EBS pneumatic line pressures. The output of the sensors are in the analog range of 0.5 ~ 4.5V, which are read through AIM along with the pre-existing hydraulic brake pressure sensors  to be used for safety checks in various states.</p>
+<section id="actuation-control">
+<h2>Actuation Control<a class="headerlink" href="#actuation-control" title="Link to this heading"></a></h2>
+<p><strong>Emergency Brake Actuator and Pressure Sensors</strong></p>
+<p>24a is equipped with two pneumatic brake pressure sensors that provide an accurate reading of the EBS pneumatic line pressures. The output of the sensors are in the analog range of 0.5 ^ 4.5V, which are read through AIM along with the pre-existing hydraulic brake pressure sensors  to be used for safety checks in various states.</p>
 <p>Driverless State-up Safety Check (EBS Pulse): Upon entering into a driverless Ready-to-Drive state, AIM briefly enters an error state in order to open the safety circuit, triggering the EBS. At this instance, AIM reads the pressurized EBS brake line pressure and the hydraulic brake line pressure through these sensors and checks if it passes a certain threshold required to fully lock the brakes, ensuring that the car is able to fully stop safely when necessary.</p>
 <p>Continuous EBS Tank Pressure Monitoring: During the DS Driving state, AIM continuously checks for any pressure loss below the threshold value in the EBS pneumatic tank, to ensure a safe EBS functionality. In the case of the pressure drop, the EBS relay on AIM is triggered to open the safety circuit and activate the EBS. The threshold is determined to ensure at least a single safe activation before it reaches depletion.</p>
-</section>
-<section id="onboard-computer-and-perception-sensors">
-<h2>Onboard Computer and Perception Sensors<a class="headerlink" href="#onboard-computer-and-perception-sensors" title="Link to this heading"></a></h2>
+<p><strong>Onboard Computer and Perception Sensors</strong></p>
 <p>The onboard computer is the “brain” of the driverless system, processing sensor data, running perception, path planning, and control algorithms. The Cincoze GM-1000 was used as our onboard computer . Our key requirements included:</p>
 <p>Power: Ability to take in 24VDC, with sufficient power delivery for all connected peripherals.
 Cooling: Adequate cooling solutions were essential given the high processing demands and potential for elevated temperatures in a race car environment.

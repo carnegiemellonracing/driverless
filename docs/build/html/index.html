@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview &mdash; CMR DV Mech Docs 1.0 documentation</title>
+  <title>Overview &mdash; CMR DV Elec Docs 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Autonomous Steering System (ASS)" href="steeringsystem.html" /> 
+    <link rel="next" title="Driverless Electrical Systems" href="systems.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -31,7 +31,7 @@
           
           
           <a href="#" class="icon icon-home">
-            CMR DV Mech Docs
+            CMR DV Elec Docs
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -43,9 +43,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="steeringsystem.html">Autonomous Steering System (ASS)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="systembrake.html">Autonomous System Brake (ASB)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="electricalintegration.html">Electrical Integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="systems.html">Driverless Electrical Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Driverless Electrical Hardware</a></li>
 </ul>
 
         </div>
@@ -54,7 +53,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">CMR DV Mech Docs</a>
+          <a href="#">CMR DV Elec Docs</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -74,29 +73,20 @@
              
   <section id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
-<img alt="_images/car.png" class="align-center" src="_images/car.png" />
-<p>Mechanically retrofitting a FSAE vehicle for driverless operation involves the integration of systems that enable dual mode actuation for traditionally driver controlled systems. The two systems used to simulate driver motion are the Autonomous Steering System (ASS) and Autonomous System Brake (ASB). These electro-mechanical systems perform steering and braking commands given by the vehicle controller.</p>
-<p>Mechanical retrofitting the vehicle also involves integration of driverless sensors and electrical hardware. This includes LiDAR, cameras, IMUs, the onboard computer, and custom printed circuit boards. These systems are implemented to obtain data and execute developed software on the vehicle.</p>
-<p>The actuation and integration of driverless mechanical systems allow for the control of the vehicle with and without a human driver. This documentation will look more in depth at the mechanical systems needed to design a driverless FSAE vehicle system, highlighting a general approach to the problem and executed solution.</p>
+<p>This documentation details the electrical systems on Carnegie Mellon Racing’s 2025 driverless Formula SAE vehicle, 24a. Our implementation of 24a was specifically designed to retrofit on an existing FSAE platform and its underlying electrical systems, not a ground-up integration.</p>
+<p>Note on Terminology: Throughout this document, we primarily use “Driverless System” (DS) and related acronyms (e.g., DSMS, DSB, DSSI) as per the latest FSAE Driverless Supplement. Teams should be aware that Formula Student Germany (FSG) rules and earlier versions of FSAE rules may use “Autonomous System” (AS) and corresponding acronyms (e.g., ASMS, ASB, ASSI) to refer to the same concepts.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="steeringsystem.html">Autonomous Steering System (ASS)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="steeringsystem.html#rules-overview">Rules Overview:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="steeringsystem.html#system-background-design-approach">System Background &amp; Design Approach:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="steeringsystem.html#our-implementation">Our Implementation:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="systems.html">Driverless Electrical Systems</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="systems.html#a-system-block-design-diagram">24a System Block Design Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="systems.html#driverless-state-machine">Driverless State Machine</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="systembrake.html">Autonomous System Brake (ASB)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="systembrake.html#rules-overview">Rules Overview:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="systembrake.html#system-design">System Design:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="systembrake.html#implementation">Implementation:</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="electricalintegration.html">Electrical Integration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="electricalintegration.html#rules-overview">Rules Overview:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="electricalintegration.html#system-design">System Design:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="electricalintegration.html#our-implementation">Our Implementation:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Driverless Electrical Hardware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hardware.html#custom-printed-circuit-boards">Custom Printed Circuit Boards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.html#safety-protocol-systems">Safety Protocol Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.html#actuation-control">Actuation Control</a></li>
 </ul>
 </li>
 </ul>
@@ -107,7 +97,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="steeringsystem.html" class="btn btn-neutral float-right" title="Autonomous Steering System (ASS)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="systems.html" class="btn btn-neutral float-right" title="Driverless Electrical Systems" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
