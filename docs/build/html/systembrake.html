@@ -1,0 +1,268 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autonomous System Brake (ASB) &mdash; CMR DV Mech Docs 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Electrical Integration" href="electricalintegration.html" />
+    <link rel="prev" title="Autonomous Steering System (ASS)" href="steeringsystem.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            CMR DV Mech Docs
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="steeringsystem.html">Autonomous Steering System (ASS)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Autonomous System Brake (ASB)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rules-overview">Rules Overview:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#system-design">System Design:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementation">Implementation:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="electricalintegration.html">Electrical Integration</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CMR DV Mech Docs</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Autonomous System Brake (ASB)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/systembrake.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="autonomous-system-brake-asb">
+<h1>Autonomous System Brake (ASB)<a class="headerlink" href="#autonomous-system-brake-asb" title="Link to this heading"></a></h1>
+<p>The ASB is responsible for slowing the vehicle to a stop. It includes an Emergency Braking System (EBS) to stop the vehicle in the case of a safety/power failure or if the emergency stop RES is hit.</p>
+<section id="rules-overview">
+<h2>Rules Overview:<a class="headerlink" href="#rules-overview" title="Link to this heading"></a></h2>
+<p>Below are rules from the 2025 FSAE Driverless Supplement that constrained vehicle retrofitting solutions for ASB.</p>
+<p><strong>DT.3.1 Driverless System Brake</strong></p>
+<p>The vehicle must have a Driverless System Brake. The Tractive System is not a Brake System</p>
+<p>DT.3.1.1 Technical Requirements</p>
+<ol class="loweralpha simple">
+<li><p>All parts and their mountings must be located inside the Rollover Protection Envelope</p></li>
+<li><p>Manual braking must always be possible and not prevented at any time</p></li>
+<li><p>The DSB may be part of the hydraulic brake system</p></li>
+</ol>
+<p>DT.3.1.1 defines key limits for ASB including the mounting area and requirement that manual braking must to always be possible.</p>
+<p>DT.3.1.2 DT.3.1.1 defines key requirements for ASB</p>
+<ol class="loweralpha simple">
+<li><p>The Driverless System Brake must be designed to be deactivated by a maximum of two Deactivation Points</p></li>
+<li><dl class="simple">
+<dt>The Deactivation Points must be:</dt><dd><ul class="simple">
+<li><p>Mounted inside the volume defined in DT.2.3.a</p></li>
+<li><p>Mounted in one of the two: near the DSMS or on the top side of the vehicle between the Front Bulkhead and Front Hoop close to the vehicle center line</p></li>
+<li><p>Near each other</p></li>
+<li><p>Protected against unintended actuation (being hit by a cone) while driving</p></li>
+<li><p>Marked with “Brake Release”</p></li>
+<li><p>Fitted with a red handle</p></li>
+<li><p>Able to work without electrical power</p></li>
+<li><p>Operated by maximum two simple push/pull and/or turning actions, the order and direction of these actions must be shown next to the Deactivation Points</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>DT.3.1.2 defines key requirements for the deactivation points for the ASB release including mounting location and basic requirements.</p>
+<p><strong>DT.3.2 Emergency Brake System (EBS)</strong></p>
+<p>The Driverless System Brake must include an Emergency Brake System (EBS)</p>
+<p>DT.3.2.1 Technical Requirements</p>
+<ol class="loweralpha simple">
+<li><p>The EBS must only use passive systems with mechanical energy storage</p></li>
+<li><p>The EBS must be directly supplied by GLVMS, DSMS, Remote Stop Relay and the Emergency Brake System Relay with no delay</p></li>
+</ol>
+<p>DT.3.2 defines key requirements for the Emergency Brake System (EBS) including that it must use stored mechanical energy and trigger in an emergency state.</p>
+<p>DT.3.2.2 Function</p>
+<ol class="loweralpha simple">
+<li><p>Startup Check - must be performed to ensure that DSB is able to build up brake pressure  as expected, before Driverless System Status Ready is possible</p></li>
+<li><p>After the Startup Check the DSB and its signals must be continuously monitored for failures</p></li>
+<li><p>Electrical power loss at EBS must start an Emergency Brake Maneuver</p></li>
+</ol>
+<p>DT.3.2.3 The vehicle must go to the Safe State, if:</p>
+<ol class="loweralpha simple">
+<li><p>Functionality of the Emergency Brake System cannot be ensured</p></li>
+<li><p>An (additional) single point of failure would lead to total loss of brake capability DT.3.2.4 The Safe State is when the three:</p></li>
+</ol>
+<ol class="loweralpha simple">
+<li><p>Vehicle at a standstill</p></li>
+<li><p>Brakes engaged to prevent the vehicle from rolling</p></li>
+<li><p>An open Shutdown Circuit</p></li>
+</ol>
+<p>DT.3.2.2-4 defines the function and state behavior required by EBS.</p>
+<p>DT.3.2.5 Emergency Brake Maneuver</p>
+<p>The Emergency Brake System must decelerate the vehicle and stop vehicle motion</p>
+<ol class="loweralpha simple">
+<li><p>The system reaction time, the time between opening of the Shutdown Circuit and the  start of the deceleration, must be 200 ms or less</p></li>
+<li><p>The average deceleration must be more than 10 m/s2 under dry track conditions</p></li>
+<li><p>In case of a single failure the DSB should achieve at least half of the performance</p></li>
+<li><p>While decelerating, the vehicle must remain in a stable driving condition</p></li>
+</ol>
+<p>DT.3.2.5 defines the base system requirements for EBS.</p>
+</section>
+<section id="system-design">
+<h2>System Design:<a class="headerlink" href="#system-design" title="Link to this heading"></a></h2>
+<figure class="align-center" id="id1">
+<img alt="_images/asbdesign.png" src="_images/asbdesign.png" />
+<figcaption>
+<p><span class="caption-text">FSAE Steering Diagram <a class="reference external" href="https://medium.com/&#64;luisdamed/brake-system-load-distribution-study-matlab-approach-2f35b426ee0d">(reference)</a></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>FSAE Brakes Diagram (reference)</p>
+<p>FSAE brakes begin with two master cylinders. These master cylinders are mounted on the manual brake pedal. When the driver pushes the pedal down, the master cylinders compress. Additionally, each wheel on the vehicle has brake calipers mounted on its hub, these connect hydraulically to the master cylinders. When the master cylinders are compressed, brake fluid pushes to the calipers, compressing the brake pads to lock the wheels.</p>
+<p>The main requirement of Autonomous System Brake (ASB) can be fulfilled by regeneration braking. The motors are sent negative torque commands which are used to decelerate the car, serving as a driverless form of braking.</p>
+<p>The addition of the EBS required by the rules must utilize mechanical energy and not inhibit the compression of the brake pedal manually. There are two main design approaches to EBS:</p>
+<ol class="arabic">
+<li><p>Hydraulic integration with the existing brake lines</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Addition of two driverless-specific master cylinders that hydraulically interface with the pedal master cylinder through 3-way valves allowing the side with the higher pressure to flow to the outlet. The line with the lower pressure is sealed off, allowing for pressure to build up and lock the calipers based on which master cylinder is currently compressed.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Physical actuation of the pedal</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Actuation of the pedal involving pneumatics or other mechanically stored force to physically move the brake pedal and compress the existing pedal master cylinders.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<p>After EBS is triggered, the braking must be released via manual release valves. Per the rules these must be mounted on the top face of the vehicle near the center line such that anyone can release brakes.</p>
+</section>
+<section id="implementation">
+<h2>Implementation:<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>Regular braking throughout a driverless run fulfilled by regenerative braking.</p>
+<p><em>EBS</em></p>
+<p>This implementation of the emergency braking system involves a fully redundant pneumatic and hydraulic system. Two additional master cylinders were added to the existing braking system and were autonomously actuated. These fluid lines interface with the manual master cylinder fluid lines at 3-way valves which allow dual manual and autonomous braking. As it is redundant, if one part of this system fails, 50% of the braking functionality will still apply.</p>
+<figure class="align-center" id="id2">
+<img alt="_images/brakesschematic.png" src="_images/brakesschematic.png" />
+<figcaption>
+<p><span class="caption-text">Carnegie Mellon Racing Driverless and Manual Brakes Integration Schematic</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic">
+<li><p>Shared Pneumatic Supply</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p>Power Supply - Large Air Tank</p></li>
+<li><p>Pressure Regulator - 800 PSI Output</p></li>
+<li><p>Pressure Regulator - 150 PSI Output</p></li>
+<li><p>Over Protection - 140 PSI Output</p></li>
+<li><p>Tee Fitting - Splits into separate front and rear braking lines for redundance</p></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>Separate Pneumatic Systems</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p>Check Valves - Ensures no back flow from holding chambers to power supply</p></li>
+<li><p>Holding Chambers  - Holds air to ensure redundancy if pressure supply fails</p></li>
+<li><p>Manual Release Valves - Remove air from one side of the line</p></li>
+<li><p>Pneumatic Pressure Sensors - Allows for continuous monitoring of pressure within the lines</p></li>
+<li><p>Normally Open Solenoids - Allows air travel when the vehicle has no power.</p></li>
+<li><p>Pneumatic Pistons - When pressurized, these actuate directly on the EBS master cylinders</p></li>
+<li><p>EBS Master Cylinder - Pushes brake fluid down to 3-way valve</p></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>Separate Hydraulic Lines</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p>3-way valve - Fluid from both the EBS and Manual Master Cylinders meet. The highest pressure flows through</p></li>
+<li><p>Brake Caliper - Outlet of 3-way valve directs brake fluid to the calipers which lock the wheels to stop the vehicle</p></li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+<figure class="align-center" id="id3">
+<img alt="_images/ebspneumatic.png" src="_images/ebspneumatic.png" />
+<figcaption>
+<p><span class="caption-text">EBS Pneumatic and Master Cylinder Interface Model</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The EBS master cylinders are compressed by the pneumatic cylinders which are triggered by normally open solenoids.</p>
+<p>The brake lines from the EBS master cylinders meet with the brake lines from the manual master cylinders mounted on pedals at a 3-way valve. The 3-way valve allows the input with the highest pressure flow through to the output. This enables the switch between EBS and manual braking based on which side has a higher pressure.</p>
+<p>The air is exhausted from the system through a pair of 3-way manual release valves mounted on the dashboard near the center line of the car in alignment with rule specifications.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="steeringsystem.html" class="btn btn-neutral float-left" title="Autonomous Steering System (ASS)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="electricalintegration.html" class="btn btn-neutral float-right" title="Electrical Integration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Richard Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
