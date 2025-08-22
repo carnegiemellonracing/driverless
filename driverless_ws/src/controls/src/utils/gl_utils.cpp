@@ -8,52 +8,114 @@
 
 namespace controls {
     namespace utils {
-        SDL_Window* create_sdl2_gl_window(const char *title, int width, int height, Uint32 additional_flags, SDL_GLContext* gl_context_out) {
+        SDL_Window* create_sdl2_gl_window(const char *title,
+                                        int width, int height,
+                                        Uint32 additional_flags,
+                                        SDL_GLContext* gl_context_out)
+        {
             if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
                 throw std::runtime_error("Failed to initialize SDL2 library");
             }
 
+            // 1) Set these *before* SDL_CreateWindow:
+            SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,        1);
+            SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL,  1);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+            // SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+
             SDL_Window* window = SDL_CreateWindow(
                 title,
-                SDL_WINDOWPOS_CENTERED,
-                SDL_WINDOWPOS_CENTERED,
+                SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                 width, height,
                 SDL_WINDOW_OPENGL | additional_flags
             );
-
             if (!window) {
-                throw std::runtime_error("Failed to create window");
+                throw std::runtime_error(std::string("Failed to create window: ")
+                                        + SDL_GetError());
             }
 
-            SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
-            SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 3 );
-            SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
-
-            // get verbose gl warnings
-            // SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
-
+            // 2) Then create the GL context:
             SDL_GLContext gl_context = SDL_GL_CreateContext(window);
             if (!gl_context) {
-                std::cerr << SDL_GetError() << std::endl;
-                throw std::runtime_error("Failed to create GL context");
+                throw std::runtime_error(std::string("SDL_GL_CreateContext failed: ")
+                                        + SDL_GetError());
             }
 
+            // 3) Initialize GLAD (or your loader of choice):
             if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
                 throw std::runtime_error("Failed to initialize GLAD");
             }
 
-            if( SDL_GL_SetSwapInterval(1) < 0 ) {
-                throw std::runtime_error("Failed to set vsync");
+            // 4) Now attempt to enable VSync:
+            if (SDL_GL_SetSwapInterval(1) < 0) {
+                std::cerr << "Warning: Unable to set VSync! SDL Error: "
+                        << SDL_GetError() << "\n";
+                // you still have a valid context; you can fall back to a manual cap
             }
 
-            // glDebugMessageCallbackARB(gl_debug_callback, nullptr);
+            std::cout << "GL Vendor   : " << glGetString(GL_VENDOR) << std::endl;
+            std::cout << "GL Renderer : " << glGetString(GL_RENDERER) << std::endl;
+            std::cout << "GL Version  : " << glGetString(GL_VERSION) << std::endl;
 
-            if (gl_context_out != nullptr) {
+            if (gl_context_out) {
                 *gl_context_out = gl_context;
             }
-
             return window;
         }
+
+        // SDL_Window* create_sdl2_gl_window(const char *title, int width, int height, Uint32 additional_flags, SDL_GLContext* gl_context_out) {
+        //     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
+        //         throw std::runtime_error("Failed to initialize SDL2 library");
+        //     }
+
+        //     SDL_Window* window = SDL_CreateWindow(
+        //         title,
+        //         SDL_WINDOWPOS_CENTERED,
+        //         SDL_WINDOWPOS_CENTERED,
+        //         width, height,
+        //         SDL_WINDOW_OPENGL | additional_flags
+        //     );
+
+        //     if (!window) {
+        //         throw std::runtime_error("Failed to create window");
+        //     }
+
+        //     SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
+        //     SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 3 );
+        //     SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
+
+        //     // get verbose gl warnings
+        //     // SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+
+        //     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
+        //     if (!gl_context) {
+        //         std::cerr << SDL_GetError() << std::endl;
+        //         throw std::runtime_error("Failed to create GL context");
+        //     }
+
+        //     if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
+        //         throw std::runtime_error("Failed to initialize GLAD");
+        //     }
+        //     if (SDL_GL_SetSwapInterval(1) < 0) {
+        //         std::cerr << "Warning: Unable to set VSync! SDL Error: "
+        //             << SDL_GetError() << "\n";
+        //         // fallback or handle error…
+        //     }
+        //     // if( SDL_GL_SetSwapInterval(1) < 0 ) {
+        //     //    std::cerr << "Warning: Failed to set vsync" << std::endl;
+        //     //    SDL_GL_SetSwapInterval(0);
+        //     // }
+
+        //     // glDebugMessageCallbackARB(gl_debug_callback, nullptr);
+
+        //     if (gl_context_out != nullptr) {
+        //         *gl_context_out = gl_context;
+        //     }
+
+        //     return window;
+        // }
 
         void print_program_log(GLuint program)
         {
