@@ -15,17 +15,17 @@ xhost +local:root
 # The -it flag is used to run the container in interactive mode with a pseudo-TTY.
 
 # REQUIRES: canUsbKvaserTesting can be found in the home directory of the host machine.
-docker run --rm -it \
+sudo docker run --rm -it \
   --gpus all \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
-  -v $HOME/canUsbKvaserTesting/linuxcan:/root/canUsbKvaserTesting/linuxcan \
+  -v $DRIVERLESS/docker/controls-sim/canUsbKvaserTesting/linuxcan:/root/canUsbKvaserTesting/linuxcan \
   -v $HOME/.Xauthority:/root/.Xauthority:ro \
   -e DISPLAY=$DISPLAY \
   -e XAUTHORITY=/root/.Xauthority \
   -e NVIDIA_DRIVER_CAPABILITIES=all \
   --device /dev/dri \
   --cap-add=SYS_ADMIN \
-  ros2-humble-gpu
+  controls-sim
 
 # If GPU is not found on Docker when trying OpenGL, try running the following on host: (you probably don't have the proper drivers installed)
 #

@@ -1,3 +1,6 @@
+ARG DRIVERLESS
+ARG HOME
+
 # Base image with CUDA support
 FROM nvidia/cuda:12.3.0-devel-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive
@@ -56,7 +59,7 @@ RUN apt update && apt install -y \
 
 # ==== SET UP WORKING DIRECTORY ====
 WORKDIR /root/driverless/
-COPY ./driverless_ws/ /root/driverless/driverless_ws/
+COPY ./tmp_driverless_ws/ /root/driverless/driverless_ws/
 
 # ==== SET UP LIBRARIES ====
 
@@ -69,12 +72,13 @@ RUN mkdir /root/canUsbKvaserTesting/
 RUN mkdir /root/canUsbKvaserTesting/linuxcan/
 COPY ./canUsbKvaserTesting/linuxcan/ /root/canUsbKvaserTesting/linuxcan/
 
+
 # ==== SET UP ENV VARIABLES ====
 
 ENV CMAKE_PREFIX_PATH="/root/driverless/driverless_ws/install/controls:/root/driverless/driverless_ws/install/interfaces"
 ENV AMENT_PREFIX_PATH="/root/driverless/driverless_ws/install/controls:/root/driverless/driverless_ws/install/interfaces:/opt/ros/humble"
 
-ENV LINUXCAN_PATH="/root/canUsbKvaserTesting/linuxcan/"
+ENV LINUXCAN_PATH="/root/canUsbKvaserTesting/linuxcan"
 ENV DRIVERLESS="/root/driverless/"
 RUN echo "export LD_LIBRARY_PATH=$LINUXCAN_PATH/canlib:$LD_LIBRARY_PATH" >> /root/.bashrc
 ENV ROS_LOG_DIR=/root/driverless/logs/

@@ -19,7 +19,9 @@ log.log
 **/*.png
 
 
-canUsbKvaserTesting/**
+# Docker temp files
+**/canUsbKvaserTesting/
+**/tmp_driverless_ws
 
 
 **/__pycache__/
