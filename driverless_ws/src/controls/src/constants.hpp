@@ -35,6 +35,7 @@ namespace controls {
     extern bool publish_spline;
     extern bool log_state_projection_history;
     extern bool no_midline_controller;
+    extern float host_maximum_speed_ms;
 
 
     // Testing stuff
@@ -49,12 +50,11 @@ namespace controls {
     // Timing flags
     constexpr bool log_render_and_sync_timing = false;
 
-    constexpr float maximum_speed_ms = 8.0f;
     constexpr float whl_radius = 0.215f;
     constexpr float gear_ratio = 14.0f;
 
     // This is for reference only
-    constexpr uint16_t can_max_velocity_rpm = static_cast<uint16_t>((maximum_speed_ms * 60.0f * gear_ratio) / (2 * M_PI * whl_radius));
+    // constexpr uint16_t can_max_velocity_rpm = static_cast<uint16_t>((maximum_speed_ms * 60.0f * gear_ratio) / (2 * M_PI * whl_radius));
     
     
     // Printing flags

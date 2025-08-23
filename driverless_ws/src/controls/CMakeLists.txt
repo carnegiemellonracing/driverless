@@ -85,6 +85,7 @@ set(LIB_SOURCES
         src/state/state_estimator.cu
         src/state/state_projector.cu
         src/cuda_globals/cuda_globals.cu
+        src/cuda_constants.cu
         extern/src/glad.c
         src/utils/gl_utils.cpp
         ${TWO_TRACK_SRCS}
