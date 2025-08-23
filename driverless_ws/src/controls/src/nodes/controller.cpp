@@ -23,6 +23,8 @@
 #include <utils/ros_utils.hpp>
 #include <state/naive_state_tracker.hpp>
 
+#include "../cuda_constants.cuh"
+
 
 // This is to fit into the ROS API
 void send_finished_ignore_error() {
@@ -43,6 +45,7 @@ namespace controls {
     bool log_state_projection_history;
     bool no_midline_controller;
     float torque_delay_seconds;
+    float host_maximum_speed_ms;
 
 
 
@@ -592,7 +595,7 @@ namespace controls {
                         break;
                     }
                 }
-                action_signal.velocity_rpm = can_max_velocity_rpm;
+                action_signal.velocity_rpm = static_cast<uint16_t>((host_maximum_speed_ms * 60.0f * gear_ratio) / (2 * M_PI * whl_radius));
                 
 
                 action_signal.rack_displacement_adc = swangle_to_adc(action[action_swangle_idx]);
@@ -806,6 +809,10 @@ static int process_config_file(std::string config_file_path) {
     publish_spline = config_dict["publish_spline"] == "true" ? true : false;
     log_state_projection_history = config_dict["log_state_projection_history"] == "true" ? true : false;
     torque_delay_seconds = std::stof(config_dict["torque_delay_seconds"]);
+
+    // CUDA CONSTANTS
+    set_maximum_speed(std::stof(config_dict["maximum_speed_ms"]));
+    host_maximum_speed_ms = std::stof(config_dict["maximum_speed_ms"]);
     return 0;
 }
 
