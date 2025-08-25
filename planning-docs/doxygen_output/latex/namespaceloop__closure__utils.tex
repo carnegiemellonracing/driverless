@@ -1,0 +1,97 @@
+\doxysection{loop\+\_\+closure\+\_\+utils Namespace Reference}
+\hypertarget{namespaceloop__closure__utils}{}\label{namespaceloop__closure__utils}\index{loop\_closure\_utils@{loop\_closure\_utils}}
+
+
+Contains helper functions to support loop closure detection in SLAM.  
+
+
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespaceloop__closure__utils_ae21fdb252c15e783c9be0dae81ba9457}{start\+\_\+pose\+\_\+in\+\_\+front}} (gtsam\+::\+Pose2 \&cur\+\_\+pose, gtsam\+::\+Pose2 \&first\+\_\+pose, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Determiens whether the robot is facing the start pose. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespaceloop__closure__utils_acf73e33a4333dddf3b0e1f89a25c3148}{detect\+\_\+loop\+\_\+closure}} (double dist\+\_\+from\+\_\+start\+\_\+loop\+\_\+closure\+\_\+th, gtsam\+::\+Pose2 \&cur\+\_\+pose, gtsam\+::\+Pose2 \&first\+\_\+pose, int pose\+\_\+num, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Detects if a loop closure should be triggered. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespaceloop__closure__utils_a4460c330fb085c199facc6d4dd8bb7d7}{xy\+\_\+sign\+\_\+from\+\_\+global\+\_\+bearing}} (double \&x\+\_\+sign, double \&y\+\_\+sign, gtsam\+::\+Pose2 \&cur\+\_\+pose)
+\begin{DoxyCompactList}\small\item\em Determines the x and y sign directions from the global yaw angle. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains helper functions to support loop closure detection in SLAM. 
+
+\label{doc-func-members}
+\Hypertarget{namespaceloop__closure__utils_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespaceloop__closure__utils_acf73e33a4333dddf3b0e1f89a25c3148}\index{loop\_closure\_utils@{loop\_closure\_utils}!detect\_loop\_closure@{detect\_loop\_closure}}
+\index{detect\_loop\_closure@{detect\_loop\_closure}!loop\_closure\_utils@{loop\_closure\_utils}}
+\doxysubsubsection{\texorpdfstring{detect\_loop\_closure()}{detect\_loop\_closure()}}
+{\footnotesize\ttfamily \label{namespaceloop__closure__utils_acf73e33a4333dddf3b0e1f89a25c3148} 
+bool loop\+\_\+closure\+\_\+utils\+::detect\+\_\+loop\+\_\+closure (\begin{DoxyParamCaption}\item[{double}]{dist\+\_\+from\+\_\+start\+\_\+loop\+\_\+closure\+\_\+th}{, }\item[{gtsam\+::\+Pose2 \&}]{cur\+\_\+pose}{, }\item[{gtsam\+::\+Pose2 \&}]{first\+\_\+pose}{, }\item[{int}]{pose\+\_\+num}{, }\item[{std\+::optional$<$ rclcpp\+::\+Logger $>$}]{logger}{}\end{DoxyParamCaption})}
+
+
+
+Detects if a loop closure should be triggered. 
+
+Uses a heuristic based on the distance to the start pose, heading similarity, and whether the robot has moved far enough from the start pose.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dist\+\_\+from\+\_\+start\+\_\+loop\+\_\+closure\+\_\+th} & Distance threshold to consider loop closure \\
+\hline
+{\em cur\+\_\+pose} & The current pose of the robot \\
+\hline
+{\em first\+\_\+pose} & The initial pose \\
+\hline
+{\em pose\+\_\+num} & Current pose index (number of poses so far) \\
+\hline
+{\em logger} & Optional logger for debugging\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if a loop closure condition is satisfied 
+\end{DoxyReturn}
+TODO\+: add this as a constant\Hypertarget{namespaceloop__closure__utils_ae21fdb252c15e783c9be0dae81ba9457}\index{loop\_closure\_utils@{loop\_closure\_utils}!start\_pose\_in\_front@{start\_pose\_in\_front}}
+\index{start\_pose\_in\_front@{start\_pose\_in\_front}!loop\_closure\_utils@{loop\_closure\_utils}}
+\doxysubsubsection{\texorpdfstring{start\_pose\_in\_front()}{start\_pose\_in\_front()}}
+{\footnotesize\ttfamily \label{namespaceloop__closure__utils_ae21fdb252c15e783c9be0dae81ba9457} 
+bool loop\+\_\+closure\+\_\+utils\+::start\+\_\+pose\+\_\+in\+\_\+front (\begin{DoxyParamCaption}\item[{gtsam\+::\+Pose2 \&}]{cur\+\_\+pose}{, }\item[{gtsam\+::\+Pose2 \&}]{first\+\_\+pose}{, }\item[{std\+::optional$<$ rclcpp\+::\+Logger $>$}]{logger}{}\end{DoxyParamCaption})}
+
+
+
+Determiens whether the robot is facing the start pose. 
+
+This function compares the heading of the robot and its displacement from the start pose to determine whether it is approaching the start
+
+
+\begin{DoxyParams}{Parameters}
+{\em cur\+\_\+pose} & The current pose of the robot \\
+\hline
+{\em first\+\_\+pose} & The initial pose (start position) \\
+\hline
+{\em logger} & Optional logger for debugging \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the first pose is in front of the robot, false otherwise 
+\end{DoxyReturn}
+\Hypertarget{namespaceloop__closure__utils_a4460c330fb085c199facc6d4dd8bb7d7}\index{loop\_closure\_utils@{loop\_closure\_utils}!xy\_sign\_from\_global\_bearing@{xy\_sign\_from\_global\_bearing}}
+\index{xy\_sign\_from\_global\_bearing@{xy\_sign\_from\_global\_bearing}!loop\_closure\_utils@{loop\_closure\_utils}}
+\doxysubsubsection{\texorpdfstring{xy\_sign\_from\_global\_bearing()}{xy\_sign\_from\_global\_bearing()}}
+{\footnotesize\ttfamily \label{namespaceloop__closure__utils_a4460c330fb085c199facc6d4dd8bb7d7} 
+void loop\+\_\+closure\+\_\+utils\+::xy\+\_\+sign\+\_\+from\+\_\+global\+\_\+bearing (\begin{DoxyParamCaption}\item[{double \&}]{x\+\_\+sign}{, }\item[{double \&}]{y\+\_\+sign}{, }\item[{gtsam\+::\+Pose2 \&}]{cur\+\_\+pose}{}\end{DoxyParamCaption})}
+
+
+
+Determines the x and y sign directions from the global yaw angle. 
+
+Divides the plane into 4 quadrants based on the robot\textquotesingle{}s heading (yaw) and set x\+\_\+sign and y\+\_\+sign accordingly
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+sign} & Output sign of the x direction (+1 or -\/1) \\
+\hline
+{\em y\+\_\+sign} & Output sign of the y direction (+1 or -\/1) \\
+\hline
+{\em cur\+\_\+pose} & The current pose of the robot \\
+\hline
+\end{DoxyParams}

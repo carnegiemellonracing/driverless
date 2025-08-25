@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="loop__closure_8cpp" kind="file" language="C++">
+    <compoundname>loop_closure.cpp</compoundname>
+    <includes refid="loop__closure_8hpp" local="yes">loop_closure.hpp</includes>
+    <incdepgraph>
+      <node id="33">
+        <label>constants.hpp</label>
+        <link refid="constants_8hpp"/>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>loop_closure.hpp</label>
+        <link refid="loop__closure_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>ros_utils.hpp</label>
+        <link refid="ros__utils_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>src/utils/loop_closure.cpp</label>
+        <link refid="loop__closure_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>boost/shared_ptr.hpp</label>
+      </node>
+      <node id="28">
+        <label>chrono</label>
+      </node>
+      <node id="29">
+        <label>climits</label>
+      </node>
+      <node id="27">
+        <label>cmath</label>
+      </node>
+      <node id="26">
+        <label>deque</label>
+      </node>
+      <node id="30">
+        <label>fmt/format.h</label>
+      </node>
+      <node id="25">
+        <label>fstream</label>
+      </node>
+      <node id="20">
+        <label>geometry_msgs/msg/point.hpp</label>
+      </node>
+      <node id="14">
+        <label>geometry_msgs/msg/pose_stamped.hpp</label>
+      </node>
+      <node id="16">
+        <label>geometry_msgs/msg/quaternion_stamped.hpp</label>
+      </node>
+      <node id="19">
+        <label>geometry_msgs/msg/twist.hpp</label>
+      </node>
+      <node id="17">
+        <label>geometry_msgs/msg/twist_stamped.hpp</label>
+      </node>
+      <node id="18">
+        <label>geometry_msgs/msg/twist_with_covariance.hpp</label>
+      </node>
+      <node id="15">
+        <label>geometry_msgs/msg/vector3_stamped.hpp</label>
+      </node>
+      <node id="31">
+        <label>gtsam/geometry/Point2.h</label>
+      </node>
+      <node id="32">
+        <label>gtsam/geometry/Pose2.h</label>
+      </node>
+      <node id="10">
+        <label>interfaces/msg/cone_array.hpp</label>
+      </node>
+      <node id="11">
+        <label>interfaces/msg/cone_array_with_odom.hpp</label>
+      </node>
+      <node id="13">
+        <label>interfaces/msg/slam_chunk.hpp</label>
+      </node>
+      <node id="12">
+        <label>interfaces/msg/slam_pose.hpp</label>
+      </node>
+      <node id="4">
+        <label>memory</label>
+      </node>
+      <node id="7">
+        <label>message_filters/subscriber.h</label>
+      </node>
+      <node id="9">
+        <label>message_filters/sync_policies/approximate_time.h</label>
+      </node>
+      <node id="8">
+        <label>message_filters/synchronizer.h</label>
+      </node>
+      <node id="5">
+        <label>optional</label>
+      </node>
+      <node id="6">
+        <label>rclcpp/rclcpp.hpp</label>
+      </node>
+      <node id="21">
+        <label>sensor_msgs/msg/nav_sat_fix.hpp</label>
+      </node>
+      <node id="22">
+        <label>std_msgs/msg/string.hpp</label>
+      </node>
+      <node id="34">
+        <label>string</label>
+      </node>
+      <node id="24">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespaceloop__closure__utils">loop_closure_utils</innernamespace>
+    <briefdescription>
+<para>Utility functions used in loop closure detection for SLAM. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="loop__closure_8hpp" kindref="compound">loop_closure.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceloop__closure__utils" kindref="compound">loop_closure_utils</ref><sp/>{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespaceloop__closure__utils_1a4460c330fb085c199facc6d4dd8bb7d7" kindref="member">xy_sign_from_global_bearing</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;x_sign,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;y_sign,<sp/>gtsam::Pose2<sp/>&amp;cur_pose)<sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>yaw<sp/>=<sp/>cur_pose.theta();</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(yaw<sp/>&gt;=<sp/><ref refid="namespacemotion__modeling_1a96aa2b77878997dcdfe58fd7ad47f969" kindref="member">motion_modeling::degrees_to_radians</ref>(0)<sp/>&amp;&amp;<sp/>yaw<sp/>&lt;=<sp/><ref refid="namespacemotion__modeling_1a96aa2b77878997dcdfe58fd7ad47f969" kindref="member">motion_modeling::degrees_to_radians</ref>(90))<sp/>{<sp/></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Quadrant<sp/>1<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x_sign<sp/>=<sp/>1.0;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>y_sign<sp/>=<sp/>1.0;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(yaw<sp/>&gt;<sp/><ref refid="namespacemotion__modeling_1a96aa2b77878997dcdfe58fd7ad47f969" kindref="member">motion_modeling::degrees_to_radians</ref>(90)<sp/>&amp;&amp;<sp/>yaw<sp/>&lt;=<sp/><ref refid="namespacemotion__modeling_1a96aa2b77878997dcdfe58fd7ad47f969" kindref="member">motion_modeling::degrees_to_radians</ref>(180))<sp/>{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Quadrant<sp/>2<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x_sign<sp/>=<sp/>-1.0;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>y_sign<sp/>=<sp/>1.0;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(yaw<sp/>&gt;<sp/><ref refid="namespacemotion__modeling_1a96aa2b77878997dcdfe58fd7ad47f969" kindref="member">motion_modeling::degrees_to_radians</ref>(180)<sp/>&amp;&amp;<sp/>yaw<sp/>&lt;=<sp/><ref refid="namespacemotion__modeling_1a96aa2b77878997dcdfe58fd7ad47f969" kindref="member">motion_modeling::degrees_to_radians</ref>(270))<sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Quadrant<sp/>3<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x_sign<sp/>=<sp/>-1.0;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>y_sign<sp/>=<sp/>-1.0;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Quadrant<sp/>4<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x_sign<sp/>=<sp/>1.0;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>y_sign<sp/>=<sp/>-1.0;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespaceloop__closure__utils_1ae21fdb252c15e783c9be0dae81ba9457" kindref="member">start_pose_in_front</ref>(gtsam::Pose2<sp/>&amp;cur_pose,<sp/>gtsam::Pose2<sp/>&amp;first_pose,<sp/>std::optional&lt;rclcpp::Logger&gt;<sp/>logger)<sp/>{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Create<sp/>a<sp/>vector<sp/>representing:</highlight></codeline>
+<codeline lineno="55"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>a.)<sp/>the<sp/>heading<sp/>of<sp/>the<sp/>car<sp/></highlight></codeline>
+<codeline lineno="56"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>b.)<sp/>the<sp/>displacement<sp/>from<sp/>cur_pose<sp/>to<sp/>first_pose<sp/></highlight></codeline>
+<codeline lineno="57"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>x_sign<sp/>=<sp/>0.0;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>y_sign<sp/>=<sp/>0.0;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespaceloop__closure__utils_1a4460c330fb085c199facc6d4dd8bb7d7" kindref="member">xy_sign_from_global_bearing</ref>(x_sign,<sp/>y_sign,<sp/>cur_pose);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Eigen::Vector2d<sp/>heading(x_sign<sp/>*<sp/>1,<sp/>y_sign<sp/>*<sp/>abs(tan(cur_pose.theta())));</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Eigen::Vector2d<sp/>first_cur_diff(first_pose.x()<sp/>-<sp/>cur_pose.x(),<sp/></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>first_pose.y()<sp/>-<sp/>cur_pose.y());</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Calculate<sp/>dy<sp/>and<sp/>dx<sp/>in<sp/>the<sp/>right<sp/>triangle<sp/>formed<sp/>by<sp/>the<sp/></highlight></codeline>
+<codeline lineno="66"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*<sp/>first_pose<sp/>and<sp/>the<sp/>line<sp/>parallel<sp/>to<sp/>heading</highlight></codeline>
+<codeline lineno="67"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>heading_mag<sp/>=<sp/>heading.norm();</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>proj_scaling_factor<sp/>=<sp/>(double)(heading.dot(first_cur_diff))<sp/>/<sp/>std::pow(heading_mag,<sp/>2);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Eigen::Vector2d<sp/>proj_diff_on_heading<sp/>=<sp/>proj_scaling_factor<sp/>*<sp/>heading;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dx<sp/>=<sp/>proj_scaling_factor<sp/>*<sp/>heading.norm();</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Eigen::Vector2d<sp/>error<sp/>=<sp/>first_cur_diff<sp/>-<sp/>proj_diff_on_heading;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dy<sp/>=<sp/><sp/>error.norm();</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::abs(std::atan2(dy,<sp/>dx))<sp/>&lt;<sp/><ref refid="namespacemotion__modeling_1a96aa2b77878997dcdfe58fd7ad47f969" kindref="member">motion_modeling::degrees_to_radians</ref>(160);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="namespaceloop__closure__utils_1acf73e33a4333dddf3b0e1f89a25c3148" kindref="member">detect_loop_closure</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dist_from_start_loop_closure_th,<sp/>gtsam::Pose2<sp/>&amp;cur_pose,<sp/>gtsam::Pose2<sp/>&amp;first_pose,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pose_num,<sp/>std::optional&lt;rclcpp::Logger&gt;<sp/>logger)<sp/>{</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>moved_away_from_start<sp/>=<sp/>pose_num<sp/>&gt;<sp/>10;<sp/><sp/></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>approaching_first_pose<sp/>=<sp/><ref refid="namespaceloop__closure__utils_1ae21fdb252c15e783c9be0dae81ba9457" kindref="member">start_pose_in_front</ref>(cur_pose,<sp/>first_pose,<sp/>logger);</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>close_to_start<sp/>=<sp/>gtsam::norm2(gtsam::Point2(cur_pose.x(),<sp/>cur_pose.y()))<sp/>&lt;<sp/>dist_from_start_loop_closure_th;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>heading_like_start<sp/>=<sp/>std::abs(first_pose.theta()<sp/>-<sp/>cur_pose.theta())<sp/>&lt;<sp/>(<ref refid="namespacemotion__modeling_1a96aa2b77878997dcdfe58fd7ad47f969" kindref="member">motion_modeling::degrees_to_radians</ref>(90));</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>!<sp/>TODO:<sp/>Use<sp/>the<sp/>log_string<sp/>function<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*if<sp/>(logger.has_value())<sp/>{</highlight></codeline>
+<codeline lineno="103"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_INFO(logger.value(),<sp/>&quot;\nLoop<sp/>closure<sp/>detection<sp/>results:<sp/>&quot;);</highlight></codeline>
+<codeline lineno="104"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="105"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(close_to_start)<sp/>{</highlight></codeline>
+<codeline lineno="106"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_INFO(logger.value(),<sp/>&quot;close_to_start:<sp/>true&quot;);</highlight></codeline>
+<codeline lineno="107"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline lineno="108"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_INFO(logger.value(),<sp/>&quot;close_to_start:<sp/>false&quot;);</highlight></codeline>
+<codeline lineno="109"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="110"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="111"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if<sp/>(heading_like_start)<sp/>{</highlight></codeline>
+<codeline lineno="112"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_INFO(logger.value(),<sp/>&quot;heading_like_start:<sp/>true<sp/>|<sp/>cur_heading:<sp/>%f,<sp/>start_heading<sp/>%f&quot;,</highlight></codeline>
+<codeline lineno="113"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cur_pose.theta(),<sp/>first_pose.theta());</highlight></codeline>
+<codeline lineno="114"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/>else<sp/>{</highlight></codeline>
+<codeline lineno="115"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_INFO(logger.value(),<sp/>&quot;heading_like_start:<sp/>false<sp/>|<sp/>cur_heading:<sp/>%f,<sp/>start_heading<sp/>%f&quot;,</highlight></codeline>
+<codeline lineno="116"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cur_pose.theta(),<sp/>first_pose.theta());</highlight></codeline>
+<codeline lineno="117"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="118"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(moved_away_from_start<sp/>&amp;&amp;<sp/>approaching_first_pose<sp/>&amp;&amp;<sp/>close_to_start<sp/>&amp;&amp;<sp/>heading_like_start);</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="122"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/utils/loop_closure.cpp"/>
+  </compounddef>
+</doxygen>

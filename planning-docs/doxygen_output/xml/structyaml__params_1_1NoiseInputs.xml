@@ -1,0 +1,376 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="structyaml__params_1_1NoiseInputs" kind="struct" language="C++" prot="public">
+    <compoundname>yaml_params::NoiseInputs</compoundname>
+    <includes refid="ros__utils_8hpp" local="no">ros_utils.hpp</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a7d085a72f636ad802c6b771442db314b" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_prior_imu_x_std_dev</definition>
+        <argsstring></argsstring>
+        <name>yaml_prior_imu_x_std_dev</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_prior_imu_x_std_dev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="101" column="16" bodyfile="include/ros_utils.hpp" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1af3f5b87c5859df83b9b83feb10f9a888" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_prior_imu_y_std_dev</definition>
+        <argsstring></argsstring>
+        <name>yaml_prior_imu_y_std_dev</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_prior_imu_y_std_dev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="102" column="16" bodyfile="include/ros_utils.hpp" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a273e03eb7a4a343501f936e280f95aa1" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_prior_imu_heading_std_dev</definition>
+        <argsstring></argsstring>
+        <name>yaml_prior_imu_heading_std_dev</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_prior_imu_heading_std_dev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="103" column="16" bodyfile="include/ros_utils.hpp" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a6bf6b6cc6ee4454adad727522df04dcc" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_bearing_std_dev</definition>
+        <argsstring></argsstring>
+        <name>yaml_bearing_std_dev</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_bearing_std_dev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="105" column="16" bodyfile="include/ros_utils.hpp" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a2a55e15ca783885e160bd69c18585aa1" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_range_std_dev</definition>
+        <argsstring></argsstring>
+        <name>yaml_range_std_dev</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_range_std_dev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="106" column="16" bodyfile="include/ros_utils.hpp" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1afc782fe902c0cc8cd1e31cd61bf14285" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_imu_x_std_dev</definition>
+        <argsstring></argsstring>
+        <name>yaml_imu_x_std_dev</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_imu_x_std_dev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="108" column="16" bodyfile="include/ros_utils.hpp" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a9866d0198e1cde6d56bb55544d1795cf" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_imu_y_std_dev</definition>
+        <argsstring></argsstring>
+        <name>yaml_imu_y_std_dev</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_imu_y_std_dev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="109" column="16" bodyfile="include/ros_utils.hpp" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1aee2bde62bb358e8620fd6794c5025c09" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_imu_heading_std_dev</definition>
+        <argsstring></argsstring>
+        <name>yaml_imu_heading_std_dev</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_imu_heading_std_dev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="110" column="16" bodyfile="include/ros_utils.hpp" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a086767c7f360269ed5669a01c83a8372" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_gps_x_std_dev</definition>
+        <argsstring></argsstring>
+        <name>yaml_gps_x_std_dev</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_gps_x_std_dev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="111" column="16" bodyfile="include/ros_utils.hpp" bodystart="111" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a2794333e9b89f9587b979823d920b3aa" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_gps_y_std_dev</definition>
+        <argsstring></argsstring>
+        <name>yaml_gps_y_std_dev</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_gps_y_std_dev</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="112" column="16" bodyfile="include/ros_utils.hpp" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a989236ec38677aeae7fe608ebf6031fa" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int yaml_params::NoiseInputs::yaml_look_radius</definition>
+        <argsstring></argsstring>
+        <name>yaml_look_radius</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_look_radius</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="114" column="13" bodyfile="include/ros_utils.hpp" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a3cf7dd22d2ef9f235cfaf0ed599c7741" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int yaml_params::NoiseInputs::yaml_min_cones_update_all</definition>
+        <argsstring></argsstring>
+        <name>yaml_min_cones_update_all</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_min_cones_update_all</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="115" column="13" bodyfile="include/ros_utils.hpp" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a242231efb0a57c097faaa12ec57f281f" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int yaml_params::NoiseInputs::yaml_window_update</definition>
+        <argsstring></argsstring>
+        <name>yaml_window_update</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_window_update</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="116" column="13" bodyfile="include/ros_utils.hpp" bodystart="116" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a32405e2b3595b8112b02c3572a81d2f0" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int yaml_params::NoiseInputs::yaml_update_start_n</definition>
+        <argsstring></argsstring>
+        <name>yaml_update_start_n</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_update_start_n</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="117" column="13" bodyfile="include/ros_utils.hpp" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a0d038c540b0f56356322af75d59f5476" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int yaml_params::NoiseInputs::yaml_update_recent_n</definition>
+        <argsstring></argsstring>
+        <name>yaml_update_recent_n</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_update_recent_n</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="118" column="13" bodyfile="include/ros_utils.hpp" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a65087fb09f16571930c388ed3a21041e" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_imu_offset</definition>
+        <argsstring></argsstring>
+        <name>yaml_imu_offset</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_imu_offset</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="120" column="16" bodyfile="include/ros_utils.hpp" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1af6c56a5678051b6c65d2cf07b5aaa8d6" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_lidar_offset</definition>
+        <argsstring></argsstring>
+        <name>yaml_lidar_offset</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_lidar_offset</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="121" column="16" bodyfile="include/ros_utils.hpp" bodystart="121" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a88212f21f77634c6ec91a2b65d357e6c" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_max_cone_range</definition>
+        <argsstring></argsstring>
+        <name>yaml_max_cone_range</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_max_cone_range</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="122" column="16" bodyfile="include/ros_utils.hpp" bodystart="122" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a1a3bdc929fba1e0dd6411a32da291f73" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_turning_max_cone_range</definition>
+        <argsstring></argsstring>
+        <name>yaml_turning_max_cone_range</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_turning_max_cone_range</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="123" column="16" bodyfile="include/ros_utils.hpp" bodystart="123" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a3c9f96daac36dcbf9c3fef4f682acb0c" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_dist_from_start_loop_closure_th</definition>
+        <argsstring></argsstring>
+        <name>yaml_dist_from_start_loop_closure_th</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_dist_from_start_loop_closure_th</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="125" column="16" bodyfile="include/ros_utils.hpp" bodystart="125" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1afad760107fa08e72e17c13fc7a6550ef" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_m_dist_th</definition>
+        <argsstring></argsstring>
+        <name>yaml_m_dist_th</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_m_dist_th</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="126" column="16" bodyfile="include/ros_utils.hpp" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1adfcd4f028a676aed5cc583395c108ffb" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double yaml_params::NoiseInputs::yaml_turning_m_dist_th</definition>
+        <argsstring></argsstring>
+        <name>yaml_turning_m_dist_th</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_turning_m_dist_th</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="127" column="16" bodyfile="include/ros_utils.hpp" bodystart="127" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a21de25c3ce35e12da4bfc38d78f320c0" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int yaml_params::NoiseInputs::yaml_update_iterations_n</definition>
+        <argsstring></argsstring>
+        <name>yaml_update_iterations_n</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_update_iterations_n</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="128" column="13" bodyfile="include/ros_utils.hpp" bodystart="128" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structyaml__params_1_1NoiseInputs_1a3aae726d8ef2b9fc8dc63b39eb1f5fa2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int yaml_params::NoiseInputs::yaml_return_n_cones</definition>
+        <argsstring></argsstring>
+        <name>yaml_return_n_cones</name>
+        <qualifiedname>yaml_params::NoiseInputs::yaml_return_n_cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ros_utils.hpp" line="130" column="13" bodyfile="include/ros_utils.hpp" bodystart="130" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/ros_utils.hpp" line="100" column="5" bodyfile="include/ros_utils.hpp" bodystart="100" bodyend="131"/>
+    <listofallmembers>
+      <member refid="structyaml__params_1_1NoiseInputs_1a6bf6b6cc6ee4454adad727522df04dcc" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_bearing_std_dev</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a3c9f96daac36dcbf9c3fef4f682acb0c" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_dist_from_start_loop_closure_th</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a086767c7f360269ed5669a01c83a8372" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_gps_x_std_dev</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a2794333e9b89f9587b979823d920b3aa" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_gps_y_std_dev</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1aee2bde62bb358e8620fd6794c5025c09" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_imu_heading_std_dev</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a65087fb09f16571930c388ed3a21041e" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_imu_offset</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1afc782fe902c0cc8cd1e31cd61bf14285" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_imu_x_std_dev</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a9866d0198e1cde6d56bb55544d1795cf" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_imu_y_std_dev</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1af6c56a5678051b6c65d2cf07b5aaa8d6" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_lidar_offset</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a989236ec38677aeae7fe608ebf6031fa" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_look_radius</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1afad760107fa08e72e17c13fc7a6550ef" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_m_dist_th</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a88212f21f77634c6ec91a2b65d357e6c" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_max_cone_range</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a3cf7dd22d2ef9f235cfaf0ed599c7741" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_min_cones_update_all</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a273e03eb7a4a343501f936e280f95aa1" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_prior_imu_heading_std_dev</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a7d085a72f636ad802c6b771442db314b" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_prior_imu_x_std_dev</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1af3f5b87c5859df83b9b83feb10f9a888" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_prior_imu_y_std_dev</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a2a55e15ca783885e160bd69c18585aa1" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_range_std_dev</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a3aae726d8ef2b9fc8dc63b39eb1f5fa2" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_return_n_cones</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1adfcd4f028a676aed5cc583395c108ffb" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_turning_m_dist_th</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a1a3bdc929fba1e0dd6411a32da291f73" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_turning_max_cone_range</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a21de25c3ce35e12da4bfc38d78f320c0" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_update_iterations_n</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a0d038c540b0f56356322af75d59f5476" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_update_recent_n</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a32405e2b3595b8112b02c3572a81d2f0" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_update_start_n</name></member>
+      <member refid="structyaml__params_1_1NoiseInputs_1a242231efb0a57c097faaa12ec57f281f" prot="public" virt="non-virtual"><scope>yaml_params::NoiseInputs</scope><name>yaml_window_update</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

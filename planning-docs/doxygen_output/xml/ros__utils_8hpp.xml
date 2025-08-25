@@ -1,0 +1,472 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="ros__utils_8hpp" kind="file" language="C++">
+    <compoundname>ros_utils.hpp</compoundname>
+    <includes local="no">memory</includes>
+    <includes local="no">optional</includes>
+    <includes local="yes">rclcpp/rclcpp.hpp</includes>
+    <includes local="no">message_filters/subscriber.h</includes>
+    <includes local="no">message_filters/synchronizer.h</includes>
+    <includes local="no">message_filters/sync_policies/approximate_time.h</includes>
+    <includes local="yes">interfaces/msg/cone_array.hpp</includes>
+    <includes local="yes">interfaces/msg/cone_array_with_odom.hpp</includes>
+    <includes local="yes">interfaces/msg/slam_pose.hpp</includes>
+    <includes local="yes">interfaces/msg/slam_chunk.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/pose_stamped.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/vector3_stamped.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/quaternion_stamped.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/twist_stamped.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/twist_with_covariance.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/twist.hpp</includes>
+    <includes local="yes">geometry_msgs/msg/point.hpp</includes>
+    <includes local="yes">sensor_msgs/msg/nav_sat_fix.hpp</includes>
+    <includes local="yes">std_msgs/msg/string.hpp</includes>
+    <includes local="no">boost/shared_ptr.hpp</includes>
+    <includes local="no">vector</includes>
+    <includes local="no">fstream</includes>
+    <includes local="no">deque</includes>
+    <includes local="no">cmath</includes>
+    <includes local="no">chrono</includes>
+    <includes local="no">climits</includes>
+    <includes local="no">fmt/format.h</includes>
+    <includes local="no">gtsam/geometry/Point2.h</includes>
+    <includes local="no">gtsam/geometry/Pose2.h</includes>
+    <includes refid="constants_8hpp" local="yes">constants.hpp</includes>
+    <includedby refid="data__association_8hpp" local="yes">include/data_association.hpp</includedby>
+    <includedby refid="isam2_8hpp" local="yes">include/isam2.hpp</includedby>
+    <includedby refid="isam2__nodes_8hpp" local="yes">include/isam2_nodes.hpp</includedby>
+    <includedby refid="loop__closure_8hpp" local="yes">include/loop_closure.hpp</includedby>
+    <includedby refid="slam__est__and__mcov_8hpp" local="yes">include/slam_est_and_mcov.hpp</includedby>
+    <includedby refid="ros__utils_8cpp" local="yes">src/utils/ros_utils.cpp</includedby>
+    <incdepgraph>
+      <node id="31">
+        <label>constants.hpp</label>
+        <link refid="constants_8hpp"/>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>include/ros_utils.hpp</label>
+        <link refid="ros__utils_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+      </node>
+      <node id="21">
+        <label>boost/shared_ptr.hpp</label>
+      </node>
+      <node id="26">
+        <label>chrono</label>
+      </node>
+      <node id="27">
+        <label>climits</label>
+      </node>
+      <node id="25">
+        <label>cmath</label>
+      </node>
+      <node id="24">
+        <label>deque</label>
+      </node>
+      <node id="28">
+        <label>fmt/format.h</label>
+      </node>
+      <node id="23">
+        <label>fstream</label>
+      </node>
+      <node id="18">
+        <label>geometry_msgs/msg/point.hpp</label>
+      </node>
+      <node id="12">
+        <label>geometry_msgs/msg/pose_stamped.hpp</label>
+      </node>
+      <node id="14">
+        <label>geometry_msgs/msg/quaternion_stamped.hpp</label>
+      </node>
+      <node id="17">
+        <label>geometry_msgs/msg/twist.hpp</label>
+      </node>
+      <node id="15">
+        <label>geometry_msgs/msg/twist_stamped.hpp</label>
+      </node>
+      <node id="16">
+        <label>geometry_msgs/msg/twist_with_covariance.hpp</label>
+      </node>
+      <node id="13">
+        <label>geometry_msgs/msg/vector3_stamped.hpp</label>
+      </node>
+      <node id="29">
+        <label>gtsam/geometry/Point2.h</label>
+      </node>
+      <node id="30">
+        <label>gtsam/geometry/Pose2.h</label>
+      </node>
+      <node id="8">
+        <label>interfaces/msg/cone_array.hpp</label>
+      </node>
+      <node id="9">
+        <label>interfaces/msg/cone_array_with_odom.hpp</label>
+      </node>
+      <node id="11">
+        <label>interfaces/msg/slam_chunk.hpp</label>
+      </node>
+      <node id="10">
+        <label>interfaces/msg/slam_pose.hpp</label>
+      </node>
+      <node id="2">
+        <label>memory</label>
+      </node>
+      <node id="5">
+        <label>message_filters/subscriber.h</label>
+      </node>
+      <node id="7">
+        <label>message_filters/sync_policies/approximate_time.h</label>
+      </node>
+      <node id="6">
+        <label>message_filters/synchronizer.h</label>
+      </node>
+      <node id="3">
+        <label>optional</label>
+      </node>
+      <node id="4">
+        <label>rclcpp/rclcpp.hpp</label>
+      </node>
+      <node id="19">
+        <label>sensor_msgs/msg/nav_sat_fix.hpp</label>
+      </node>
+      <node id="20">
+        <label>std_msgs/msg/string.hpp</label>
+      </node>
+      <node id="32">
+        <label>string</label>
+      </node>
+      <node id="22">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>include/data_association.hpp</label>
+        <link refid="data__association_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>include/isam2.hpp</label>
+        <link refid="isam2_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>include/isam2_nodes.hpp</label>
+        <link refid="isam2__nodes_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>include/loop_closure.hpp</label>
+        <link refid="loop__closure_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>include/ros_utils.hpp</label>
+        <link refid="ros__utils_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>include/slam_est_and_mcov.hpp</label>
+        <link refid="slam__est__and__mcov_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>src/isam2/isam2.cpp</label>
+        <link refid="isam2_8cpp"/>
+      </node>
+      <node id="15">
+        <label>src/isam2/slam_est_and_mcov.cpp</label>
+        <link refid="slam__est__and__mcov_8cpp"/>
+      </node>
+      <node id="5">
+        <label>src/nodes/controls_sim_slam_node.cpp</label>
+        <link refid="controls__sim__slam__node_8cpp"/>
+      </node>
+      <node id="6">
+        <label>src/nodes/generic_slam_node.cpp</label>
+        <link refid="generic__slam__node_8cpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>src/nodes/generic_slam_node_impl.cpp</label>
+        <link refid="generic__slam__node__impl_8cpp"/>
+      </node>
+      <node id="8">
+        <label>src/nodes/real_data_slam_node_gps.cpp</label>
+        <link refid="real__data__slam__node__gps_8cpp"/>
+      </node>
+      <node id="9">
+        <label>src/nodes/real_data_slam_node_no_gps.cpp</label>
+        <link refid="real__data__slam__node__no__gps_8cpp"/>
+      </node>
+      <node id="11">
+        <label>src/utils/data_association.cpp</label>
+        <link refid="data__association_8cpp"/>
+      </node>
+      <node id="13">
+        <label>src/utils/loop_closure.cpp</label>
+        <link refid="loop__closure_8cpp"/>
+      </node>
+      <node id="16">
+        <label>src/utils/ros_utils.cpp</label>
+        <link refid="ros__utils_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structyaml__params_1_1NoiseInputs" prot="public">yaml_params::NoiseInputs</innerclass>
+    <innernamespace refid="namespaceros__msg__conversions">ros_msg_conversions</innernamespace>
+    <innernamespace refid="namespacemotion__modeling">motion_modeling</innernamespace>
+    <innernamespace refid="namespaceyaml__params">yaml_params</innernamespace>
+    <innernamespace refid="namespacecone__utils">cone_utils</innernamespace>
+    <innernamespace refid="namespacelogging__utils">logging_utils</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;memory&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;optional&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rclcpp/rclcpp.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;message_filters/subscriber.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;message_filters/synchronizer.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;message_filters/sync_policies/approximate_time.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;interfaces/msg/cone_array.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;interfaces/msg/cone_array_with_odom.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//<sp/>#include<sp/>&quot;interfaces/msg/slam_data.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;interfaces/msg/slam_pose.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;interfaces/msg/slam_chunk.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/pose_stamped.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/vector3_stamped.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/quaternion_stamped.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/twist_stamped.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/twist_with_covariance.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/twist.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;geometry_msgs/msg/point.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;sensor_msgs/msg/nav_sat_fix.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;std_msgs/msg/string.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;boost/shared_ptr.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fstream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;deque&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cmath&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;chrono&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;climits&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fmt/format.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/geometry/Point2.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/geometry/Pose2.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="constants_8hpp" kindref="compound">constants.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="namespaceros__msg__conversions" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceros__msg__conversions" kindref="compound">ros_msg_conversions</ref><sp/>{</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespaceros__msg__conversions_1a43258d8e39d67e439f47c2bf9f781771" kindref="member">cone_msg_to_vectors</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>interfaces::msg::ConeArray::ConstSharedPtr<sp/>&amp;cone_data,</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;cones,</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;blue_cones,</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;yellow_cones,</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;orange_cones);</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>gtsam::Pose2<sp/><ref refid="namespaceros__msg__conversions_1a3b767f68f61f319945b205b57c8732d9" kindref="member">velocity_msg_to_pose2</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>geometry_msgs::msg::TwistStamped::ConstSharedPtr<sp/>&amp;vehicle_vel_data);</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>gtsam::Pose2<sp/><ref refid="namespaceros__msg__conversions_1a461002f6b790bdb2e6c050b06e5f3025" kindref="member">posestamped_msg_to_pose2</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>geometry_msgs::msg::PoseStamped::ConstSharedPtr<sp/>&amp;vehicle_pos_data,<sp/>gtsam::Point2<sp/>init_x_y,<sp/>rclcpp::Logger<sp/>logger);</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="namespaceros__msg__conversions_1a41262306052e228495aa0b7d79395a92" kindref="member">quat_msg_to_yaw</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>geometry_msgs::msg::QuaternionStamped::ConstSharedPtr<sp/>&amp;vehicle_angle_data);</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>gtsam::Point2<sp/><ref refid="namespaceros__msg__conversions_1a2881affaecfd34774e8d067fe8bdbd1e" kindref="member">vector3_msg_to_gps</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>geometry_msgs::msg::Vector3Stamped::ConstSharedPtr<sp/>&amp;vehicle_pos_data,<sp/>gtsam::Point2<sp/>init_lon_lat,<sp/>rclcpp::Logger<sp/>logger);</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>geometry_msgs::msg::Point<sp/><ref refid="namespaceros__msg__conversions_1a414bcfa2d2236d8e30775d340e4b0c6b" kindref="member">point2_to_geometry_msg</ref><sp/>(gtsam::Point2<sp/>gtsam_point);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;geometry_msgs::msg::Point&gt;<sp/><ref refid="namespaceros__msg__conversions_1ae2942353ab0b099167eb67145f231e16" kindref="member">slam_est_to_points</ref><sp/>(std::vector&lt;gtsam::Point2&gt;<sp/>gtsam_points,<sp/>gtsam::Pose2<sp/>pose);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64" refid="namespacemotion__modeling" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacemotion__modeling" kindref="compound">motion_modeling</ref><sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacemotion__modeling_1a39ba4eb9731177cb314756a64210fc8f" kindref="member">imu_axes_to_DV_axes</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;y);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>gtsam::Point2<sp/><ref refid="namespacemotion__modeling_1a2e2d9615e5a4c50fe1c2702f18e250df" kindref="member">calc_lateral_velocity_error</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>ang_velocity,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>yaw);</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>std::pair&lt;gtsam::Pose2,<sp/>gtsam::Pose2&gt;<sp/><ref refid="namespacemotion__modeling_1a66146b526c37cb7eff7a748a928730c2" kindref="member">velocity_motion_model</ref>(gtsam::Pose2<sp/>velocity,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dt,gtsam::Pose2<sp/>prev_pose,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>yaw);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/>gtsam::Point2<sp/><ref refid="namespacemotion__modeling_1a957433c974fcf73b2a3807728ed19cd3" kindref="member">calc_offset_imu_to_car_center</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>yaw);</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>gtsam::Point2<sp/><ref refid="namespacemotion__modeling_1add9aa4093755c7775b713624c1817aca" kindref="member">calc_offset_lidar_to_car_center</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>yaw);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>std::pair&lt;gtsam::Pose2,<sp/>gtsam::Pose2&gt;<sp/><ref refid="namespacemotion__modeling_1a955d143c19d97c8fd0f36074e5b5ed43" kindref="member">gps_motion_model</ref>(gtsam::Pose2<sp/>prev_pose,<sp/>gtsam::Pose2<sp/>global_odom);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>std::pair&lt;bool,<sp/>bool&gt;<sp/><ref refid="namespacemotion__modeling_1ab6ec7b19eb78645dec9adf9e6aaa5966" kindref="member">determine_movement</ref>(gtsam::Pose2<sp/>velocity);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="namespacemotion__modeling_1a7bab04641800da6e420949c71512a1d7" kindref="member">header_to_nanosec</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std_msgs::msg::Header<sp/>&amp;header);</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="namespacemotion__modeling_1a8e8e40aa9a9185045cf3a72cae60ecdc" kindref="member">header_to_dt</ref>(std::optional&lt;std_msgs::msg::Header&gt;<sp/>prev,<sp/>std::optional&lt;std_msgs::msg::Header&gt;<sp/>cur);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="namespacemotion__modeling_1a96aa2b77878997dcdfe58fd7ad47f969" kindref="member">degrees_to_radians</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>degrees);</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99" refid="namespaceyaml__params" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceyaml__params" kindref="compound">yaml_params</ref><sp/>{</highlight></codeline>
+<codeline lineno="100" refid="structyaml__params_1_1NoiseInputs" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structyaml__params_1_1NoiseInputs" kindref="compound">NoiseInputs</ref><sp/>{</highlight></codeline>
+<codeline lineno="101" refid="structyaml__params_1_1NoiseInputs_1a7d085a72f636ad802c6b771442db314b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a7d085a72f636ad802c6b771442db314b" kindref="member">yaml_prior_imu_x_std_dev</ref>;</highlight></codeline>
+<codeline lineno="102" refid="structyaml__params_1_1NoiseInputs_1af3f5b87c5859df83b9b83feb10f9a888" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1af3f5b87c5859df83b9b83feb10f9a888" kindref="member">yaml_prior_imu_y_std_dev</ref>;</highlight></codeline>
+<codeline lineno="103" refid="structyaml__params_1_1NoiseInputs_1a273e03eb7a4a343501f936e280f95aa1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a273e03eb7a4a343501f936e280f95aa1" kindref="member">yaml_prior_imu_heading_std_dev</ref>;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105" refid="structyaml__params_1_1NoiseInputs_1a6bf6b6cc6ee4454adad727522df04dcc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a6bf6b6cc6ee4454adad727522df04dcc" kindref="member">yaml_bearing_std_dev</ref>;</highlight></codeline>
+<codeline lineno="106" refid="structyaml__params_1_1NoiseInputs_1a2a55e15ca783885e160bd69c18585aa1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a2a55e15ca783885e160bd69c18585aa1" kindref="member">yaml_range_std_dev</ref>;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108" refid="structyaml__params_1_1NoiseInputs_1afc782fe902c0cc8cd1e31cd61bf14285" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1afc782fe902c0cc8cd1e31cd61bf14285" kindref="member">yaml_imu_x_std_dev</ref>;</highlight></codeline>
+<codeline lineno="109" refid="structyaml__params_1_1NoiseInputs_1a9866d0198e1cde6d56bb55544d1795cf" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a9866d0198e1cde6d56bb55544d1795cf" kindref="member">yaml_imu_y_std_dev</ref>;</highlight></codeline>
+<codeline lineno="110" refid="structyaml__params_1_1NoiseInputs_1aee2bde62bb358e8620fd6794c5025c09" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1aee2bde62bb358e8620fd6794c5025c09" kindref="member">yaml_imu_heading_std_dev</ref>;</highlight></codeline>
+<codeline lineno="111" refid="structyaml__params_1_1NoiseInputs_1a086767c7f360269ed5669a01c83a8372" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a086767c7f360269ed5669a01c83a8372" kindref="member">yaml_gps_x_std_dev</ref>;</highlight></codeline>
+<codeline lineno="112" refid="structyaml__params_1_1NoiseInputs_1a2794333e9b89f9587b979823d920b3aa" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a2794333e9b89f9587b979823d920b3aa" kindref="member">yaml_gps_y_std_dev</ref>;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114" refid="structyaml__params_1_1NoiseInputs_1a989236ec38677aeae7fe608ebf6031fa" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a989236ec38677aeae7fe608ebf6031fa" kindref="member">yaml_look_radius</ref>;</highlight></codeline>
+<codeline lineno="115" refid="structyaml__params_1_1NoiseInputs_1a3cf7dd22d2ef9f235cfaf0ed599c7741" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a3cf7dd22d2ef9f235cfaf0ed599c7741" kindref="member">yaml_min_cones_update_all</ref>;</highlight></codeline>
+<codeline lineno="116" refid="structyaml__params_1_1NoiseInputs_1a242231efb0a57c097faaa12ec57f281f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a242231efb0a57c097faaa12ec57f281f" kindref="member">yaml_window_update</ref>;</highlight></codeline>
+<codeline lineno="117" refid="structyaml__params_1_1NoiseInputs_1a32405e2b3595b8112b02c3572a81d2f0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a32405e2b3595b8112b02c3572a81d2f0" kindref="member">yaml_update_start_n</ref>;</highlight></codeline>
+<codeline lineno="118" refid="structyaml__params_1_1NoiseInputs_1a0d038c540b0f56356322af75d59f5476" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a0d038c540b0f56356322af75d59f5476" kindref="member">yaml_update_recent_n</ref>;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120" refid="structyaml__params_1_1NoiseInputs_1a65087fb09f16571930c388ed3a21041e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a65087fb09f16571930c388ed3a21041e" kindref="member">yaml_imu_offset</ref>;</highlight></codeline>
+<codeline lineno="121" refid="structyaml__params_1_1NoiseInputs_1af6c56a5678051b6c65d2cf07b5aaa8d6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1af6c56a5678051b6c65d2cf07b5aaa8d6" kindref="member">yaml_lidar_offset</ref>;</highlight></codeline>
+<codeline lineno="122" refid="structyaml__params_1_1NoiseInputs_1a88212f21f77634c6ec91a2b65d357e6c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a88212f21f77634c6ec91a2b65d357e6c" kindref="member">yaml_max_cone_range</ref>;</highlight></codeline>
+<codeline lineno="123" refid="structyaml__params_1_1NoiseInputs_1a1a3bdc929fba1e0dd6411a32da291f73" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a1a3bdc929fba1e0dd6411a32da291f73" kindref="member">yaml_turning_max_cone_range</ref>;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125" refid="structyaml__params_1_1NoiseInputs_1a3c9f96daac36dcbf9c3fef4f682acb0c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a3c9f96daac36dcbf9c3fef4f682acb0c" kindref="member">yaml_dist_from_start_loop_closure_th</ref>;</highlight></codeline>
+<codeline lineno="126" refid="structyaml__params_1_1NoiseInputs_1afad760107fa08e72e17c13fc7a6550ef" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1afad760107fa08e72e17c13fc7a6550ef" kindref="member">yaml_m_dist_th</ref>;</highlight></codeline>
+<codeline lineno="127" refid="structyaml__params_1_1NoiseInputs_1adfcd4f028a676aed5cc583395c108ffb" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1adfcd4f028a676aed5cc583395c108ffb" kindref="member">yaml_turning_m_dist_th</ref>;</highlight></codeline>
+<codeline lineno="128" refid="structyaml__params_1_1NoiseInputs_1a21de25c3ce35e12da4bfc38d78f320c0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a21de25c3ce35e12da4bfc38d78f320c0" kindref="member">yaml_update_iterations_n</ref>;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130" refid="structyaml__params_1_1NoiseInputs_1a3aae726d8ef2b9fc8dc63b39eb1f5fa2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structyaml__params_1_1NoiseInputs_1a3aae726d8ef2b9fc8dc63b39eb1f5fa2" kindref="member">yaml_return_n_cones</ref>;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="132"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
+<codeline lineno="135" refid="namespacecone__utils" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecone__utils" kindref="compound">cone_utils</ref><sp/>{</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/>Eigen::MatrixXd<sp/><ref refid="namespacecone__utils_1a9bc76bdcb0522d5218d1d5a03d7127af" kindref="member">calc_cone_range_from_car</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;cone_obs);</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>Eigen::MatrixXd<sp/><ref refid="namespacecone__utils_1a02dc4c44ca6f8140811d5de556f19cf0" kindref="member">calc_cone_bearing_from_car</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;cone_obs);</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;gtsam::Point2&gt;<sp/><ref refid="namespacecone__utils_1a2ce07ff1b21a72732a23f0bc6ac20be5" kindref="member">remove_far_cones</ref>(std::vector&lt;gtsam::Point2&gt;<sp/>cone_obs,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>threshold);</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;gtsam::Point2&gt;<sp/><ref refid="namespacecone__utils_1a07cae07d0c1ed2294ea8e0ff72b69028" kindref="member">local_to_global_frame</ref>(<sp/>std::vector&lt;gtsam::Point2&gt;<sp/>cone_obs,<sp/>gtsam::Pose2<sp/>cur_pose);</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;gtsam::Point2&gt;<sp/><ref refid="namespacecone__utils_1a4a852a4280f355e50814747476ddf3ca" kindref="member">global_to_local_frame</ref>(std::vector&lt;gtsam::Point2&gt;<sp/>cone_obs,<sp/>gtsam::Pose2<sp/>cur_pose);</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="152" refid="namespacelogging__utils" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacelogging__utils" kindref="compound">logging_utils</ref><sp/>{</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacelogging__utils_1a6118bde88f643b186486f7e64ec50358" kindref="member">print_cone_obs</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;cone_obs,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>cone_color,<sp/>std::optional&lt;rclcpp::Logger&gt;<sp/>logger);</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight></codeline>
+<codeline lineno="155" refid="namespacelogging__utils_1ab68f447540108cd461613297979c4047" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacelogging__utils_1ab68f447540108cd461613297979c4047" kindref="member">print_step_input</ref>(std::optional&lt;rclcpp::Logger&gt;<sp/>logger,<sp/></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;gtsam::Point2&gt;<sp/>gps_opt,<sp/></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>yaw,</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;cone_obs_blue,<sp/></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;cone_obs_yellow,</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;orange_ref_cones,<sp/></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Pose2<sp/>velocity,<sp/></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dt);</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"></highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacelogging__utils_1ad3a35de905ea643eb9c20f766d1812c3" kindref="member">print_update_poses</ref>(gtsam::Pose2<sp/>&amp;prev_pose,<sp/>gtsam::Pose2<sp/>&amp;new_pose,<sp/>gtsam::Pose2<sp/>&amp;odometry,<sp/>gtsam::Pose2<sp/>&amp;imu_offset_global_odom,<sp/>std::optional&lt;rclcpp::Logger&gt;<sp/>logger);</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacelogging__utils_1a05b5b0c375d5b11c2b503560a2e7ba2d" kindref="member">record_step_inputs</ref>(std::optional&lt;rclcpp::Logger&gt;<sp/>logger,<sp/></highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;gtsam::Point2&gt;<sp/>gps_opt,</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>yaw,</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;cone_obs_blue,<sp/></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;cone_obs_yellow,</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;orange_ref_cones,<sp/></highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Pose2<sp/>velocity,<sp/></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dt);</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="namespacelogging__utils_1a0e0bddea577907b98ab583c2de51cca6" kindref="member">log_string</ref><sp/>(std::optional&lt;rclcpp::Logger&gt;<sp/>logger,<sp/>std::string<sp/>input_string,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>flag);</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"></highlight></codeline>
+<codeline lineno="178"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="include/ros_utils.hpp"/>
+  </compounddef>
+</doxygen>

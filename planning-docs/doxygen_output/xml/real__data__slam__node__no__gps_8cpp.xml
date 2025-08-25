@@ -1,0 +1,489 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="real__data__slam__node__no__gps_8cpp" kind="file" language="C++">
+    <compoundname>real_data_slam_node_no_gps.cpp</compoundname>
+    <includes refid="isam2__nodes_8hpp" local="yes">isam2_nodes.hpp</includes>
+    <incdepgraph>
+      <node id="33">
+        <label>constants.hpp</label>
+        <link refid="constants_8hpp"/>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="49">
+        <label>data_association.hpp</label>
+        <link refid="data__association_8hpp"/>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="50" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="53" relation="include">
+        </childnode>
+      </node>
+      <node id="35">
+        <label>isam2.hpp</label>
+        <link refid="isam2_8hpp"/>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="49" relation="include">
+        </childnode>
+        <childnode refid="54" relation="include">
+        </childnode>
+        <childnode refid="53" relation="include">
+        </childnode>
+        <childnode refid="56" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>isam2_nodes.hpp</label>
+        <link refid="isam2__nodes_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+      </node>
+      <node id="56">
+        <label>loop_closure.hpp</label>
+        <link refid="loop__closure_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>ros_utils.hpp</label>
+        <link refid="ros__utils_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+      </node>
+      <node id="53">
+        <label>slam_est_and_mcov.hpp</label>
+        <link refid="slam__est__and__mcov_8hpp"/>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="54">
+        <label>unary_factor.hpp</label>
+        <link refid="unary__factor_8hpp"/>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="55" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>src/nodes/real_data_slam_node_no_gps.cpp</label>
+        <link refid="real__data__slam__node__no__gps_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="51">
+        <label>algorithm</label>
+      </node>
+      <node id="36">
+        <label>bits/stdc++.h</label>
+      </node>
+      <node id="23">
+        <label>boost/shared_ptr.hpp</label>
+      </node>
+      <node id="28">
+        <label>chrono</label>
+      </node>
+      <node id="29">
+        <label>climits</label>
+      </node>
+      <node id="27">
+        <label>cmath</label>
+      </node>
+      <node id="26">
+        <label>deque</label>
+      </node>
+      <node id="37">
+        <label>eigen3/Eigen/Dense</label>
+      </node>
+      <node id="52">
+        <label>float.h</label>
+      </node>
+      <node id="30">
+        <label>fmt/format.h</label>
+      </node>
+      <node id="25">
+        <label>fstream</label>
+      </node>
+      <node id="20">
+        <label>geometry_msgs/msg/point.hpp</label>
+      </node>
+      <node id="14">
+        <label>geometry_msgs/msg/pose_stamped.hpp</label>
+      </node>
+      <node id="16">
+        <label>geometry_msgs/msg/quaternion_stamped.hpp</label>
+      </node>
+      <node id="19">
+        <label>geometry_msgs/msg/twist.hpp</label>
+      </node>
+      <node id="17">
+        <label>geometry_msgs/msg/twist_stamped.hpp</label>
+      </node>
+      <node id="18">
+        <label>geometry_msgs/msg/twist_with_covariance.hpp</label>
+      </node>
+      <node id="15">
+        <label>geometry_msgs/msg/vector3_stamped.hpp</label>
+      </node>
+      <node id="31">
+        <label>gtsam/geometry/Point2.h</label>
+      </node>
+      <node id="32">
+        <label>gtsam/geometry/Pose2.h</label>
+      </node>
+      <node id="38">
+        <label>gtsam/inference/Symbol.h</label>
+      </node>
+      <node id="43">
+        <label>gtsam/nonlinear/DoglegOptimizer.h</label>
+      </node>
+      <node id="44">
+        <label>gtsam/nonlinear/GaussNewtonOptimizer.h</label>
+      </node>
+      <node id="39">
+        <label>gtsam/nonlinear/ISAM2.h</label>
+      </node>
+      <node id="42">
+        <label>gtsam/nonlinear/LevenbergMarquardtOptimizer.h</label>
+      </node>
+      <node id="45">
+        <label>gtsam/nonlinear/NonlinearConjugateGradientOptimizer.h</label>
+      </node>
+      <node id="55">
+        <label>gtsam/nonlinear/NonlinearFactor.h</label>
+      </node>
+      <node id="40">
+        <label>gtsam/nonlinear/NonlinearFactorGraph.h</label>
+      </node>
+      <node id="41">
+        <label>gtsam/nonlinear/Values.h</label>
+      </node>
+      <node id="48">
+        <label>gtsam/sam/BearingRangeFactor.h</label>
+      </node>
+      <node id="47">
+        <label>gtsam/slam/BetweenFactor.h</label>
+      </node>
+      <node id="46">
+        <label>gtsam/slam/ProjectionFactor.h</label>
+      </node>
+      <node id="10">
+        <label>interfaces/msg/cone_array.hpp</label>
+      </node>
+      <node id="11">
+        <label>interfaces/msg/cone_array_with_odom.hpp</label>
+      </node>
+      <node id="13">
+        <label>interfaces/msg/slam_chunk.hpp</label>
+      </node>
+      <node id="12">
+        <label>interfaces/msg/slam_pose.hpp</label>
+      </node>
+      <node id="4">
+        <label>memory</label>
+      </node>
+      <node id="7">
+        <label>message_filters/subscriber.h</label>
+      </node>
+      <node id="9">
+        <label>message_filters/sync_policies/approximate_time.h</label>
+      </node>
+      <node id="8">
+        <label>message_filters/synchronizer.h</label>
+      </node>
+      <node id="5">
+        <label>optional</label>
+      </node>
+      <node id="6">
+        <label>rclcpp/rclcpp.hpp</label>
+      </node>
+      <node id="21">
+        <label>sensor_msgs/msg/nav_sat_fix.hpp</label>
+      </node>
+      <node id="22">
+        <label>std_msgs/msg/string.hpp</label>
+      </node>
+      <node id="34">
+        <label>string</label>
+      </node>
+      <node id="50">
+        <label>tuple</label>
+      </node>
+      <node id="24">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacenodes">nodes</innernamespace>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="real__data__slam__node__no__gps_8cpp_1a0ddf1224851353fc92bfbff6f499fa97" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int main</definition>
+        <argsstring>(int argc, char *argv[])</argsstring>
+        <name>main</name>
+        <param>
+          <type>int</type>
+          <declname>argc</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>argv</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/nodes/real_data_slam_node_no_gps.cpp" line="118" column="5" bodyfile="src/nodes/real_data_slam_node_no_gps.cpp" bodystart="118" bodyend="125"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="isam2__nodes_8hpp" kindref="compound">isam2_nodes.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacenodes" kindref="compound">nodes</ref><sp/>{</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*=======================================================================</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/><sp/><sp/><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RealDataSLAMNodeNoGPS</highlight></codeline>
+<codeline lineno="6"><highlight class="comment"><sp/><sp/><sp/><sp/>*=======================================================================*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS_1acaf1f59b9214a157067f58b3b5cd1fc1" kindref="member">RealDataSLAMNodeNoGPS::RealDataSLAMNodeNoGPS</ref>()<sp/>:<sp/><ref refid="classnodes_1_1GenericSLAMNode" kindref="compound">GenericSLAMNode</ref>&lt;<ref refid="classnodes_1_1RealDataSLAMNodeNoGPS" kindref="compound">RealDataSLAMNodeNoGPS</ref>::cone_msg_t,</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS" kindref="compound">RealDataSLAMNodeNoGPS</ref>::velocity_msg_t,</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS" kindref="compound">RealDataSLAMNodeNoGPS</ref>::orientation_msg_t,</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS" kindref="compound">RealDataSLAMNodeNoGPS</ref>::dummy_position_msg_t&gt;()</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>perform_subscribes();</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sync<sp/>=<sp/>std::make_shared&lt;message_filters::Synchronizer&lt;RealDataSLAMNodeNoGPS::sync_policy&gt;&gt;(</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RealDataSLAMNodeNoGPS::sync_policy(100),</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cone_sub,<sp/></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vehicle_vel_sub,<sp/></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vehicle_angle_sub);</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sync-&gt;setAgePenalty(0.1);</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sync-&gt;registerCallback(std::bind(&amp;RealDataSLAMNodeNoGPS::sync_callback,<sp/></highlight><highlight class="keyword">this</highlight><highlight class="normal">,<sp/>std::placeholders::_1,<sp/>std::placeholders::_2,<sp/>std::placeholders::_3));</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>RealDataSLAMNodeNoGPS::cone_callback(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>RealDataSLAMNodeNoGPS::cone_msg_t::ConstSharedPtr<sp/>&amp;cone_data)<sp/><sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>cone_callback_start<sp/>=<sp/>std::chrono::high_resolution_clock::now();</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cones<sp/>=<sp/>{};</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>blue_cones<sp/>=<sp/>{};</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>yellow_cones<sp/>=<sp/>{};</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>orange_cones<sp/>=<sp/>{};</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Process<sp/>cones<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespaceros__msg__conversions_1a43258d8e39d67e439f47c2bf9f781771" kindref="member">ros_msg_conversions::cone_msg_to_vectors</ref>(cone_data,<sp/>cones,<sp/>blue_cones,<sp/>yellow_cones,<sp/>orange_cones);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Timers<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>cone_callback_end<sp/>=<sp/>std::chrono::high_resolution_clock::now();</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>cone_callback_duration<sp/>=<sp/>std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(cone_callback_end<sp/>-<sp/>cone_callback_start);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_INFO(this-&gt;get_logger(),<sp/></highlight><highlight class="stringliteral">&quot;\tCone<sp/>callback<sp/>time:<sp/>%ld&quot;</highlight><highlight class="normal">,<sp/>cone_callback_duration.count());</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>RealDataSLAMNodeNoGPS::vehicle_vel_callback(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>RealDataSLAMNodeNoGPS::velocity_msg_t::ConstSharedPtr<sp/>&amp;vehicle_vel_data)<sp/><sp/>{</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>vehicle_vel_callback_start<sp/>=<sp/>std::chrono::high_resolution_clock::now();</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>velocity<sp/>=<sp/><ref refid="namespaceros__msg__conversions_1a3b767f68f61f319945b205b57c8732d9" kindref="member">ros_msg_conversions::velocity_msg_to_pose2</ref>(vehicle_vel_data);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Timers*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>vehicle_vel_callback_end<sp/>=<sp/>std::chrono::high_resolution_clock::now();</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>vehicle_vel_callback_duration<sp/>=<sp/>std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(vehicle_vel_callback_end<sp/>-<sp/>vehicle_vel_callback_start);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_INFO(this-&gt;get_logger(),<sp/></highlight><highlight class="stringliteral">&quot;\tVelocity<sp/>callback<sp/>time:<sp/>%ld&quot;</highlight><highlight class="normal">,<sp/>vehicle_vel_callback_duration.count());</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>RealDataSLAMNodeNoGPS::vehicle_angle_callback(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>RealDataSLAMNodeNoGPS::orientation_msg_t::ConstSharedPtr<sp/>&amp;vehicle_angle_data)<sp/><sp/>{</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>vehicle_angle_callback_start<sp/>=<sp/>std::chrono::high_resolution_clock::now();</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>yaw<sp/>=<sp/><ref refid="namespaceros__msg__conversions_1a41262306052e228495aa0b7d79395a92" kindref="member">ros_msg_conversions::quat_msg_to_yaw</ref>(vehicle_angle_data);</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Timers*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>vehicle_angle_callback_end<sp/>=<sp/>std::chrono::high_resolution_clock::now();</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>vehicle_angle_callback_duration<sp/>=<sp/>std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(vehicle_angle_callback_end<sp/>-<sp/>vehicle_angle_callback_start);</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_INFO(this-&gt;get_logger(),<sp/></highlight><highlight class="stringliteral">&quot;\tAngle<sp/>callback<sp/>time:<sp/>%ld&quot;</highlight><highlight class="normal">,<sp/>vehicle_angle_callback_duration.count());</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>RealDataSLAMNodeNoGPS::sync_callback(</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>RealDataSLAMNodeNoGPS::cone_msg_t::ConstSharedPtr<sp/>&amp;cone_data,</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>RealDataSLAMNodeNoGPS::velocity_msg_t::ConstSharedPtr<sp/>&amp;vehicle_vel_data,</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>RealDataSLAMNodeNoGPS::orientation_msg_t::ConstSharedPtr<sp/>&amp;vehicle_angle_data</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>)<sp/><sp/>{</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>RCLCPP_INFO(this-&gt;get_logger(),<sp/>&quot;--------Start<sp/>of<sp/>Sync<sp/>Callback--------&quot;);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Getting<sp/>the<sp/>time<sp/>between<sp/>sync<sp/>callbacks<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cur_sync_callback_time<sp/>=<sp/>std::chrono::high_resolution_clock::now();</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(prev_sync_callback_time.has_value())<sp/>{</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>time_betw_sync_callbacks<sp/>=<sp/>std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(cur_sync_callback_time<sp/>-<sp/>prev_sync_callback_time.value());</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_INFO(this-&gt;get_logger(),<sp/></highlight><highlight class="stringliteral">&quot;\tTime<sp/>between<sp/>sync_callbacks:<sp/>%ld&quot;</highlight><highlight class="normal">,<sp/>time_betw_sync_callbacks.count());</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>sync_data_start<sp/>=<sp/>std::chrono::high_resolution_clock::now();</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;std_msgs::msg::Header&gt;<sp/>cur_filter_time(vehicle_vel_data-&gt;header);</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!prev_filter_time.has_value())<sp/>{</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>prev_filter_time.swap(cur_filter_time);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>dt<sp/>=<sp/><ref refid="namespacemotion__modeling_1a8e8e40aa9a9185045cf3a72cae60ecdc" kindref="member">motion_modeling::header_to_dt</ref>(prev_filter_time,<sp/>cur_filter_time);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>prev_filter_time.swap(cur_filter_time);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Cone<sp/>callback<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RealDataSLAMNodeNoGPS::cone_callback(cone_data);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Vehicle<sp/>velocity<sp/>callback<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RealDataSLAMNodeNoGPS::vehicle_vel_callback(vehicle_vel_data);</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Vehicle<sp/>angle<sp/>callback<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RealDataSLAMNodeNoGPS::vehicle_angle_callback(vehicle_angle_data);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(init_lon_lat.has_value())<sp/>{</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_INFO(this-&gt;get_logger(),<sp/></highlight><highlight class="stringliteral">&quot;init_lon_lat:<sp/>x:%f<sp/>|<sp/>y:%f\n&quot;</highlight><highlight class="normal">,<sp/>init_lon_lat.value().x(),<sp/>init_lon_lat.value().y());</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>sync_data_end<sp/>=<sp/>std::chrono::high_resolution_clock::now();</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>sync_data_duration<sp/>=<sp/>std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(sync_data_end<sp/>-<sp/>sync_data_start);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_INFO(this-&gt;get_logger(),<sp/></highlight><highlight class="stringliteral">&quot;\tSync<sp/>callback<sp/>time:<sp/>%ld<sp/>\n&quot;</highlight><highlight class="normal">,<sp/>sync_data_duration.count());</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespaceslam_1a74c5ff6a5f23be28ef1b570f909b8449" kindref="member">slam::slam_output_t</ref><sp/>slam_data<sp/>=<sp/>slam_instance.step(std::nullopt,<sp/>yaw,<sp/>blue_cones,<sp/>yellow_cones,<sp/>orange_cones,<sp/>velocity,<sp/>dt);</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>publish_slam_data(slam_data,<sp/>cone_data-&gt;header);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>RCLCPP_INFO(this-&gt;get_logger(),<sp/>&quot;--------End<sp/>of<sp/>Sync<sp/>Callback--------\n\n&quot;);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>prev_sync_callback_time.emplace(std::chrono::high_resolution_clock::now());</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>RealDataSLAMNodeNoGPS::perform_subscribes()<sp/><sp/>{</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cone_sub.subscribe(</highlight><highlight class="keyword">this</highlight><highlight class="normal">,<sp/><ref refid="constants_8hpp_1adb1c953d94839e423c4d24fb79a2e779" kindref="member">CONE_DATA_TOPIC</ref>,<sp/>best_effort_profile);</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vehicle_angle_sub.subscribe(</highlight><highlight class="keyword">this</highlight><highlight class="normal">,<sp/><ref refid="constants_8hpp_1ac120e14b05ae7bb7b7b153f419f3dfc0" kindref="member">VEHICLE_ANGLE_TOPIC</ref>,<sp/>best_effort_profile);</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vehicle_vel_sub.subscribe(</highlight><highlight class="keyword">this</highlight><highlight class="normal">,<sp/><ref refid="constants_8hpp_1a5b024d0930b5473fef649ea4a9241574" kindref="member">VEHICLE_VEL_TOPIC</ref>,<sp/>best_effort_profile);</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="116"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="real__data__slam__node__no__gps_8cpp_1a0ddf1224851353fc92bfbff6f499fa97" kindref="member">main</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>argv[]){</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/>rclcpp::init(argc,<sp/>argv);</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/>rclcpp::spin(std::static_pointer_cast&lt;rclcpp::Node&gt;(std::make_shared&lt;nodes::RealDataSLAMNodeNoGPS&gt;()));</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/>rclcpp::shutdown();</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/nodes/real_data_slam_node_no_gps.cpp"/>
+  </compounddef>
+</doxygen>

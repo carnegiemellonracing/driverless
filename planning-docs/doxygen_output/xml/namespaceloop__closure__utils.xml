@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="namespaceloop__closure__utils" kind="namespace" language="C++">
+    <compoundname>loop_closure_utils</compoundname>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceloop__closure__utils_1ae21fdb252c15e783c9be0dae81ba9457" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool loop_closure_utils::start_pose_in_front</definition>
+        <argsstring>(gtsam::Pose2 &amp;cur_pose, gtsam::Pose2 &amp;first_pose, std::optional&lt; rclcpp::Logger &gt; logger)</argsstring>
+        <name>start_pose_in_front</name>
+        <qualifiedname>loop_closure_utils::start_pose_in_front</qualifiedname>
+        <param>
+          <type>gtsam::Pose2 &amp;</type>
+          <declname>cur_pose</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2 &amp;</type>
+          <declname>first_pose</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>logger</declname>
+        </param>
+        <briefdescription>
+<para>Determiens whether the robot is facing the start pose. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function compares the heading of the robot and its displacement from the start pose to determine whether it is approaching the start</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cur_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current pose of the robot </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>first_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The initial pose (start position) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional logger for debugging </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if the first pose is in front of the robot, false otherwise </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/loop_closure.cpp" line="53" column="10" bodyfile="src/utils/loop_closure.cpp" bodystart="53" bodyend="79" declfile="include/loop_closure.hpp" declline="4" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceloop__closure__utils_1acf73e33a4333dddf3b0e1f89a25c3148" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool loop_closure_utils::detect_loop_closure</definition>
+        <argsstring>(double dist_from_start_loop_closure_th, gtsam::Pose2 &amp;cur_pose, gtsam::Pose2 &amp;first_pose, int pose_num, std::optional&lt; rclcpp::Logger &gt; logger)</argsstring>
+        <name>detect_loop_closure</name>
+        <qualifiedname>loop_closure_utils::detect_loop_closure</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>dist_from_start_loop_closure_th</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2 &amp;</type>
+          <declname>cur_pose</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2 &amp;</type>
+          <declname>first_pose</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>pose_num</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>logger</declname>
+        </param>
+        <briefdescription>
+<para>Detects if a loop closure should be triggered. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Uses a heuristic based on the distance to the start pose, heading similarity, and whether the robot has moved far enough from the start pose.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dist_from_start_loop_closure_th</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Distance threshold to consider loop closure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cur_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current pose of the robot </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>first_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The initial pose </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>pose_num</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current pose index (number of poses so far) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional logger for debugging</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if a loop closure condition is satisfied </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>TODO: add this as a constant</para>
+        </inbodydescription>
+        <location file="src/utils/loop_closure.cpp" line="94" column="10" bodyfile="src/utils/loop_closure.cpp" bodystart="94" bodyend="121" declfile="include/loop_closure.hpp" declline="6" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceloop__closure__utils_1a4460c330fb085c199facc6d4dd8bb7d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void loop_closure_utils::xy_sign_from_global_bearing</definition>
+        <argsstring>(double &amp;x_sign, double &amp;y_sign, gtsam::Pose2 &amp;cur_pose)</argsstring>
+        <name>xy_sign_from_global_bearing</name>
+        <qualifiedname>loop_closure_utils::xy_sign_from_global_bearing</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>x_sign</declname>
+        </param>
+        <param>
+          <type>double &amp;</type>
+          <declname>y_sign</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2 &amp;</type>
+          <declname>cur_pose</declname>
+        </param>
+        <briefdescription>
+<para>Determines the x and y sign directions from the global yaw angle. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Divides the plane into 4 quadrants based on the robot&apos;s heading (yaw) and set x_sign and y_sign accordingly</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>x_sign</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Output sign of the x direction (+1 or -1) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>y_sign</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Output sign of the y direction (+1 or -1) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cur_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current pose of the robot </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/loop_closure.cpp" line="22" column="10" bodyfile="src/utils/loop_closure.cpp" bodystart="22" bodyend="41"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Contains helper functions to support loop closure detection in SLAM. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/loop_closure.hpp" line="3" column="1"/>
+  </compounddef>
+</doxygen>

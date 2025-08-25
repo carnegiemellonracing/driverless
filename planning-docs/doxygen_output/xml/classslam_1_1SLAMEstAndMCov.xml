@@ -1,0 +1,614 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="classslam_1_1SLAMEstAndMCov" kind="class" language="C++" prot="public">
+    <compoundname>slam::SLAMEstAndMCov</compoundname>
+    <includes refid="slam__est__and__mcov_8hpp" local="no">slam_est_and_mcov.hpp</includes>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classslam_1_1SLAMEstAndMCov_1a0e01ed0e4d6ca4f9481e65e554cc3ff5" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; gtsam::Point2 &gt;</type>
+        <definition>std::vector&lt;gtsam::Point2&gt; slam::SLAMEstAndMCov::slam_est</definition>
+        <argsstring></argsstring>
+        <name>slam_est</name>
+        <qualifiedname>slam::SLAMEstAndMCov::slam_est</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="14" column="25" bodyfile="include/slam_est_and_mcov.hpp" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1SLAMEstAndMCov_1ae6a59c76b5912d840715885fdb5575e6" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; Eigen::MatrixXd &gt;</type>
+        <definition>std::vector&lt;Eigen::MatrixXd&gt; slam::SLAMEstAndMCov::slam_mcov</definition>
+        <argsstring></argsstring>
+        <name>slam_mcov</name>
+        <qualifiedname>slam::SLAMEstAndMCov::slam_mcov</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="15" column="25" bodyfile="include/slam_est_and_mcov.hpp" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1SLAMEstAndMCov_1ad2f3e2ef12b460ddf3d54697902c38c8" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::SLAMEstAndMCov::n_landmarks</definition>
+        <argsstring></argsstring>
+        <name>n_landmarks</name>
+        <qualifiedname>slam::SLAMEstAndMCov::n_landmarks</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="16" column="25" bodyfile="include/slam_est_and_mcov.hpp" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1SLAMEstAndMCov_1a57b3d6f8557b9f4a1d6f0a5c90c33652" prot="private" static="no" mutable="no">
+        <type>std::shared_ptr&lt; gtsam::ISAM2 &gt;</type>
+        <definition>std::shared_ptr&lt;gtsam::ISAM2&gt; slam::SLAMEstAndMCov::isam2</definition>
+        <argsstring></argsstring>
+        <name>isam2</name>
+        <qualifiedname>slam::SLAMEstAndMCov::isam2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="19" column="29" bodyfile="include/slam_est_and_mcov.hpp" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1SLAMEstAndMCov_1af33bf8638ecbb32d912cfda2ba624e2f" prot="private" static="no" mutable="no">
+        <type>gtsam::Symbol(*</type>
+        <definition>gtsam::Symbol(* slam::SLAMEstAndMCov::cone_key_fn) (int)</definition>
+        <argsstring>)(int)</argsstring>
+        <name>cone_key_fn</name>
+        <qualifiedname>slam::SLAMEstAndMCov::cone_key_fn</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="20" column="13" bodyfile="include/slam_est_and_mcov.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1SLAMEstAndMCov_1a75b65212331176810bac0fc7950e8ee4" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::SLAMEstAndMCov::look_radius</definition>
+        <argsstring></argsstring>
+        <name>look_radius</name>
+        <qualifiedname>slam::SLAMEstAndMCov::look_radius</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="23" column="25" bodyfile="include/slam_est_and_mcov.hpp" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1SLAMEstAndMCov_1acf94a691d81e55e99f4d9ca8f2c63bc0" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::SLAMEstAndMCov::update_iterations_n</definition>
+        <argsstring></argsstring>
+        <name>update_iterations_n</name>
+        <qualifiedname>slam::SLAMEstAndMCov::update_iterations_n</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="24" column="25" bodyfile="include/slam_est_and_mcov.hpp" bodystart="24" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-func">
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1ad6498a23e81fc37d7993656a934260bc" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool slam::SLAMEstAndMCov::check_mdist_correctness</definition>
+        <argsstring>(gtsam::Point2 global_obs_cone, std::vector&lt; double &gt; mdist_to_check)</argsstring>
+        <name>check_mdist_correctness</name>
+        <qualifiedname>slam::SLAMEstAndMCov::check_mdist_correctness</qualifiedname>
+        <param>
+          <type>gtsam::Point2</type>
+          <declname>global_obs_cone</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; double &gt;</type>
+          <declname>mdist_to_check</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the Mahalanobis distance between the observed cone and the old cone estimates. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the slower version, used for correctness verification.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>global_obs_cone</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>bool</para>
+</simplesect>
+This is the slower version, used for correctness verification.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>global_obs_cone</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Observed cone in the global frame </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>mdist_to_check</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Expected Mahalanobis distances for each landmark </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if computed distances match expected ones, false otherwise </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="33" column="18" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="235" bodyend="259"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1a84beb5098e3d71eb9fbe802a16cbad23" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>slam::SLAMEstAndMCov::SLAMEstAndMCov</definition>
+        <argsstring>(std::shared_ptr&lt; gtsam::ISAM2 &gt; isam2, gtsam::Symbol(*cone_key_fn)(int), std::size_t look_radius, std::size_t update_iterations_n)</argsstring>
+        <name>SLAMEstAndMCov</name>
+        <qualifiedname>slam::SLAMEstAndMCov::SLAMEstAndMCov</qualifiedname>
+        <param>
+          <type>std::shared_ptr&lt; gtsam::ISAM2 &gt;</type>
+          <declname>isam2</declname>
+        </param>
+        <param>
+          <type>gtsam::Symbol(*)(int)</type>
+          <declname>cone_key_fn</declname>
+        </param>
+        <param>
+          <type>std::size_t</type>
+          <declname>look_radius</declname>
+        </param>
+        <param>
+          <type>std::size_t</type>
+          <declname>update_iterations_n</declname>
+        </param>
+        <briefdescription>
+<para>Construct a new <ref refid="classslam_1_1SLAMEstAndMCov_1a84beb5098e3d71eb9fbe802a16cbad23" kindref="member">SLAMEstAndMCov::SLAMEstAndMCov</ref> object. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Construct a new <ref refid="classslam_1_1SLAMEstAndMCov" kindref="compound">SLAMEstAndMCov</ref> object with configuration parameters.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>isam2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A shared pointer to the iSAM2 model that will be used for obtaining cone estimates and marginal covariance matrices.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_key_fn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A function pointer used for getting the symbol of a cone/landmark of interest. This symbol is used for retrieving cone estimates and the marginal covariance matrix of any cone or landmark given its ID.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>look_radius</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The number of cones to recalculate estimates and marginal covariances for, surrounding some pivot cone ID.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>update_iterations_n</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The number of iterations to run the iSAM2 update for. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="52" column="13" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="29" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1a26b44510e1e84abf576a5129eab2cf5b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>slam::SLAMEstAndMCov::SLAMEstAndMCov</definition>
+        <argsstring>()</argsstring>
+        <name>SLAMEstAndMCov</name>
+        <qualifiedname>slam::SLAMEstAndMCov::SLAMEstAndMCov</qualifiedname>
+        <briefdescription>
+<para>Default constructor for <ref refid="classslam_1_1SLAMEstAndMCov" kindref="compound">SLAMEstAndMCov</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Initializes internal members to deault values </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="59" column="13" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="48" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1ad23727c5f88a5096c84cd62c2248dd92" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::SLAMEstAndMCov::update_and_recalculate_all</definition>
+        <argsstring>()</argsstring>
+        <name>update_and_recalculate_all</name>
+        <qualifiedname>slam::SLAMEstAndMCov::update_and_recalculate_all</qualifiedname>
+        <briefdescription>
+<para>Recalculates all of the slam estimates and the marginal covariance matrices. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="68" column="18" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="76" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1a709a83c6627b62538b82211615c8bc92" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::SLAMEstAndMCov::update_and_recalculate_by_ID</definition>
+        <argsstring>(const std::vector&lt; std::size_t &gt; &amp;old_cone_ids)</argsstring>
+        <name>update_and_recalculate_by_ID</name>
+        <qualifiedname>slam::SLAMEstAndMCov::update_and_recalculate_by_ID</qualifiedname>
+        <param>
+          <type>const std::vector&lt; std::size_t &gt; &amp;</type>
+          <declname>old_cone_ids</declname>
+        </param>
+        <briefdescription>
+<para>Recalulates the estiamtes and the marginal covariance matrices for the IDs provided in the vector. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>old_cone_ids</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The IDs of the cones to recalculate estimates and marginal covariances for </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="77" column="18" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="100" bodyend="116"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1a9bc194216650da2a29195fa39433e574" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::SLAMEstAndMCov::update_and_recalculate_beginning</definition>
+        <argsstring>(std::size_t num_start_cones)</argsstring>
+        <name>update_and_recalculate_beginning</name>
+        <qualifiedname>slam::SLAMEstAndMCov::update_and_recalculate_beginning</qualifiedname>
+        <param>
+          <type>std::size_t</type>
+          <declname>num_start_cones</declname>
+        </param>
+        <briefdescription>
+<para>Recalculates the cone estimates and the marginal covariance matrices for the first num_start_cones IDs. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>num_start_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The number of cones at the beginning to recalculate estimates and marginal covariances for. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="86" column="18" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="123" bodyend="139"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1a70a19ef2eb1f9aa30b112d7993881fa1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::SLAMEstAndMCov::update_and_recalculate_cone_proximity</definition>
+        <argsstring>(std::size_t pivot)</argsstring>
+        <name>update_and_recalculate_cone_proximity</name>
+        <qualifiedname>slam::SLAMEstAndMCov::update_and_recalculate_cone_proximity</qualifiedname>
+        <param>
+          <type>std::size_t</type>
+          <declname>pivot</declname>
+        </param>
+        <briefdescription>
+<para>Recalculates the cone estimates and the marginal covariance matrices for the cones in the look radius of the pivot cone. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>For some look_radius, calculate estimates and marginal covariances for the cones with IDs in [pivot - look_radius, pivot + look_radius] and [pivot, pivot + look_radius].</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pivot</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The ID of the pivot cone</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+For some look_radius, calculate estimates and marginal covariances for the cones with IDs in [pivot - look_radius, pivot + look_radius] and [pivot, pivot + look_radius]. Still checks if you are in bounds of the IDs.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pivot</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The ID of the pivot cone </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="96" column="18" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="149" bodyend="166"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1a594aabd0f7b9b06d7420fa937ac6113f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::SLAMEstAndMCov::update_with_old_cones</definition>
+        <argsstring>(const std::vector&lt; std::size_t &gt; &amp;old_cone_ids)</argsstring>
+        <name>update_with_old_cones</name>
+        <qualifiedname>slam::SLAMEstAndMCov::update_with_old_cones</qualifiedname>
+        <param>
+          <type>const std::vector&lt; std::size_t &gt; &amp;</type>
+          <declname>old_cone_ids</declname>
+        </param>
+        <briefdescription>
+<para>Recalulates the estiamtes and the marginal covariance matrices for the IDs provided in the vector. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Updates SLAM state with the set of previously seen cones.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>old_cone_ids</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The IDs of the cones to recalculate estimates and marginal covariances for</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+Performs an update using their IDs and cones nearby the earliest, latest, and out-of-bounds IDs for local consistency</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>old_cone_ids</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Vector of landmark IDs that were matched to current observations </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="105" column="18" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="175" bodyend="200"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1a8263c13c84f96267df4d636293391745" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::SLAMEstAndMCov::update_with_new_cones</definition>
+        <argsstring>(std::size_t num_new_cones)</argsstring>
+        <name>update_with_new_cones</name>
+        <qualifiedname>slam::SLAMEstAndMCov::update_with_new_cones</qualifiedname>
+        <param>
+          <type>std::size_t</type>
+          <declname>num_new_cones</declname>
+        </param>
+        <briefdescription>
+<para>Adds information about the new cones to slam_est and slam_mcov. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Appends new cone estimates and their marginal covariances.</para>
+<para>Also updates n_landmarks appropriately</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>num_new_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The number of new cones/estimates/marginal covariances to add</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>num_new_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The number of new cones/estimates/marginal covariances to add </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="113" column="18" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="207" bodyend="224"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1abf9bea4abd413e68825dbedc81590593" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; double &gt;</type>
+        <definition>std::vector&lt; double &gt; slam::SLAMEstAndMCov::calculate_mdist</definition>
+        <argsstring>(gtsam::Point2 global_obs_cone)</argsstring>
+        <name>calculate_mdist</name>
+        <qualifiedname>slam::SLAMEstAndMCov::calculate_mdist</qualifiedname>
+        <param>
+          <type>gtsam::Point2</type>
+          <declname>global_obs_cone</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the Mahalanobis distance between the observed cone and the old cone estimates. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The distances are calculated using a SIMD method through the Eigen library.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>global_obs_cone</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The observed cone that we are data associating in global frame </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::vector&lt;double&gt; A vector where the ith element represents the mahalanobis distances</para>
+</simplesect>
+The distances are calculated using a SIMD method through the Eigen library.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>global_obs_cone</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The observed cone that we are data associating in global frame </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A vector of Mahalanobis distances to each tracked landmark </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>4.) Reorganize the matrix so that the ith column represents the product between the ith diff vector with the ith covariance matrix</para>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="125" column="25" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="267" bodyend="322"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1aff06a557d9b8544328e5baa2137f46a1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::SLAMEstAndMCov::get_n_landmarks</definition>
+        <argsstring>()</argsstring>
+        <name>get_n_landmarks</name>
+        <qualifiedname>slam::SLAMEstAndMCov::get_n_landmarks</qualifiedname>
+        <briefdescription>
+<para>Gets the number of landmarks in the SLAM estimates. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>Number of landmarks </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="127" column="25" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="329" bodyend="331"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1ad95f4185c4dd8c28640a8bade5f77436" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; gtsam::Point2 &gt;</type>
+        <definition>std::vector&lt; gtsam::Point2 &gt; slam::SLAMEstAndMCov::get_all_est</definition>
+        <argsstring>()</argsstring>
+        <name>get_all_est</name>
+        <qualifiedname>slam::SLAMEstAndMCov::get_all_est</qualifiedname>
+        <briefdescription>
+<para>Gets the SLAM cone estimates. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>A vector of 2D points representing the estimated landmark positions </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="129" column="25" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="338" bodyend="340"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1a88f032ececf587581276cb1e7022a689" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool slam::SLAMEstAndMCov::check_lengths</definition>
+        <argsstring>()</argsstring>
+        <name>check_lengths</name>
+        <qualifiedname>slam::SLAMEstAndMCov::check_lengths</qualifiedname>
+        <briefdescription>
+<para>An invariant function to check that the lengths between the slam estimates and the marginal covariance matrices are the same. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>true if the lengths are the same </para>
+</simplesect>
+<simplesect kind="return"><para>false if the lengths are not the same </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="138" column="18" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="65" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1SLAMEstAndMCov_1a493e5cde8f32c6a4c38f4aadfd023a85" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Symbol</type>
+        <definition>gtsam::Symbol slam::SLAMEstAndMCov::get_landmark_symbol</definition>
+        <argsstring>(int id)</argsstring>
+        <name>get_landmark_symbol</name>
+        <qualifiedname>slam::SLAMEstAndMCov::get_landmark_symbol</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>id</declname>
+        </param>
+        <briefdescription>
+<para>Get the landmark symbol object. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>gtsam::Symbol</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Landmark ID </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Corresponding GTSAM symbol </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/slam_est_and_mcov.hpp" line="146" column="27" bodyfile="src/isam2/slam_est_and_mcov.cpp" bodystart="348" bodyend="351"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Maintains and updates landmark estimates and marginal covariance matrices using iSAM2. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>This class provides a lgihtweight interface around GTSAM&apos;s iSAM2 for managing SLAM estimates and covariance matrices for landmarks (cones), which are continuously updated during the first lap. It supports partial and full recalculation, cone-based proximity updates, and Mahalanobis distance computation. </para>
+    </detaileddescription>
+    <location file="include/slam_est_and_mcov.hpp" line="11" column="5" bodyfile="include/slam_est_and_mcov.hpp" bodystart="11" bodyend="151"/>
+    <listofallmembers>
+      <member refid="classslam_1_1SLAMEstAndMCov_1abf9bea4abd413e68825dbedc81590593" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>calculate_mdist</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a88f032ececf587581276cb1e7022a689" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>check_lengths</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1ad6498a23e81fc37d7993656a934260bc" prot="private" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>check_mdist_correctness</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1af33bf8638ecbb32d912cfda2ba624e2f" prot="private" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>cone_key_fn</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1ad95f4185c4dd8c28640a8bade5f77436" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>get_all_est</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a493e5cde8f32c6a4c38f4aadfd023a85" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>get_landmark_symbol</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1aff06a557d9b8544328e5baa2137f46a1" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>get_n_landmarks</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a57b3d6f8557b9f4a1d6f0a5c90c33652" prot="private" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>isam2</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a75b65212331176810bac0fc7950e8ee4" prot="private" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>look_radius</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1ad2f3e2ef12b460ddf3d54697902c38c8" prot="private" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>n_landmarks</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a0e01ed0e4d6ca4f9481e65e554cc3ff5" prot="private" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>slam_est</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1ae6a59c76b5912d840715885fdb5575e6" prot="private" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>slam_mcov</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a84beb5098e3d71eb9fbe802a16cbad23" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>SLAMEstAndMCov</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a26b44510e1e84abf576a5129eab2cf5b" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>SLAMEstAndMCov</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1ad23727c5f88a5096c84cd62c2248dd92" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>update_and_recalculate_all</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a9bc194216650da2a29195fa39433e574" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>update_and_recalculate_beginning</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a709a83c6627b62538b82211615c8bc92" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>update_and_recalculate_by_ID</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a70a19ef2eb1f9aa30b112d7993881fa1" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>update_and_recalculate_cone_proximity</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1acf94a691d81e55e99f4d9ca8f2c63bc0" prot="private" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>update_iterations_n</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a8263c13c84f96267df4d636293391745" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>update_with_new_cones</name></member>
+      <member refid="classslam_1_1SLAMEstAndMCov_1a594aabd0f7b9b06d7420fa937ac6113f" prot="public" virt="non-virtual"><scope>slam::SLAMEstAndMCov</scope><name>update_with_old_cones</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,729 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="classnodes_1_1ControlsSimSLAMNode" kind="class" language="C++" prot="public">
+    <compoundname>nodes::ControlsSimSLAMNode</compoundname>
+    <basecompoundref refid="classnodes_1_1GenericSLAMNode" prot="public" virt="non-virtual">nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;</basecompoundref>
+    <includes refid="isam2__nodes_8hpp" local="no">isam2_nodes.hpp</includes>
+    <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classnodes_1_1ControlsSimSLAMNode_1a70b5875fc03b01134851f4bf19e97d92" prot="private" static="no">
+        <type>interfaces::msg::ConeArray</type>
+        <definition>using nodes::ControlsSimSLAMNode::cone_msg_t =  interfaces::msg::ConeArray</definition>
+        <argsstring></argsstring>
+        <name>cone_msg_t</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::cone_msg_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="188" column="9" bodyfile="include/isam2_nodes.hpp" bodystart="188" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classnodes_1_1ControlsSimSLAMNode_1a00160b1f927bd97b34a4828a2888df12" prot="private" static="no">
+        <type>geometry_msgs::msg::TwistStamped</type>
+        <definition>using nodes::ControlsSimSLAMNode::velocity_msg_t =  geometry_msgs::msg::TwistStamped</definition>
+        <argsstring></argsstring>
+        <name>velocity_msg_t</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::velocity_msg_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="189" column="9" bodyfile="include/isam2_nodes.hpp" bodystart="189" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classnodes_1_1ControlsSimSLAMNode_1a2233fdb5bffa86adf2f3746f49a57406" prot="private" static="no">
+        <type>geometry_msgs::msg::QuaternionStamped</type>
+        <definition>using nodes::ControlsSimSLAMNode::dummy_orientation_msg_t =  geometry_msgs::msg::QuaternionStamped</definition>
+        <argsstring></argsstring>
+        <name>dummy_orientation_msg_t</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::dummy_orientation_msg_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="190" column="9" bodyfile="include/isam2_nodes.hpp" bodystart="190" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classnodes_1_1ControlsSimSLAMNode_1a52945132033a7367bea6cdcf33e28cd1" prot="private" static="no">
+        <type>geometry_msgs::msg::PoseStamped</type>
+        <definition>using nodes::ControlsSimSLAMNode::pose_msg_t =  geometry_msgs::msg::PoseStamped</definition>
+        <argsstring></argsstring>
+        <name>pose_msg_t</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::pose_msg_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="191" column="9" bodyfile="include/isam2_nodes.hpp" bodystart="191" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classnodes_1_1ControlsSimSLAMNode_1af98a1752d0c1b59c034fee069bc9412e" prot="private" static="no">
+        <type>message_filters::sync_policies::ApproximateTime&lt; cone_msg_t, velocity_msg_t, pose_msg_t &gt;</type>
+        <definition>using nodes::ControlsSimSLAMNode::sync_policy =  message_filters::sync_policies::ApproximateTime&lt;cone_msg_t, velocity_msg_t, pose_msg_t&gt;</definition>
+        <argsstring></argsstring>
+        <name>sync_policy</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::sync_policy</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="193" column="9" bodyfile="include/isam2_nodes.hpp" bodystart="193" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classnodes_1_1ControlsSimSLAMNode_1a46fd52977bb69a6f862fa4c8ccc41e9e" prot="protected" static="no" mutable="no">
+        <type>std::shared_ptr&lt; message_filters::Synchronizer&lt; sync_policy &gt; &gt;</type>
+        <definition>std::shared_ptr&lt;message_filters::Synchronizer&lt;sync_policy&gt; &gt; nodes::ControlsSimSLAMNode::sync</definition>
+        <argsstring></argsstring>
+        <name>sync</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::sync</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="207" column="25" bodyfile="include/isam2_nodes.hpp" bodystart="207" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a1c8e5e7be01a1f6a8c12035bb4045117" prot="protected" static="no" mutable="no">
+        <type><ref refid="classslam_1_1slamISAM" kindref="compound">slam::slamISAM</ref></type>
+        <definition>slam::slamISAM nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::slam_instance</definition>
+        <argsstring></argsstring>
+        <name>slam_instance</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::slam_instance</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="29" column="24" bodyfile="include/isam2_nodes.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1ad321582bae34358afb0d0f4d6791acce" prot="protected" static="no" mutable="no">
+        <type>std::chrono::high_resolution_clock::time_point</type>
+        <definition>std::chrono::high_resolution_clock::time_point nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::cur_sync_callback_time</definition>
+        <argsstring></argsstring>
+        <name>cur_sync_callback_time</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::cur_sync_callback_time</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="30" column="56" bodyfile="include/isam2_nodes.hpp" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a5b28b46b60a0cc8f629dc2f9bf2b0aed" prot="protected" static="no" mutable="no">
+        <type>std::optional&lt; std::chrono::high_resolution_clock::time_point &gt;</type>
+        <definition>std::optional&lt;std::chrono::high_resolution_clock::time_point&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::prev_sync_callback_time</definition>
+        <argsstring></argsstring>
+        <name>prev_sync_callback_time</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::prev_sync_callback_time</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="31" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a163b73f677228ba27e11fc392e47b324" prot="protected" static="no" mutable="no">
+        <type>rclcpp::Publisher&lt; interfaces::msg::SLAMPose &gt;::SharedPtr</type>
+        <definition>rclcpp::Publisher&lt;interfaces::msg::SLAMPose&gt;::SharedPtr nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::slam_pose_publisher</definition>
+        <argsstring></argsstring>
+        <name>slam_pose_publisher</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::slam_pose_publisher</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="34" column="39" bodyfile="include/isam2_nodes.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a102a8ba600108b8374f5afeb288d59bb" prot="protected" static="no" mutable="no">
+        <type>rclcpp::Publisher&lt; interfaces::msg::SLAMChunk &gt;::SharedPtr</type>
+        <definition>rclcpp::Publisher&lt;interfaces::msg::SLAMChunk&gt;::SharedPtr nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::slam_chunk_publisher</definition>
+        <argsstring></argsstring>
+        <name>slam_chunk_publisher</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::slam_chunk_publisher</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="35" column="39" bodyfile="include/isam2_nodes.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1aef0fb75590c57ef972d0723a2648fe93" prot="protected" static="no" mutable="no">
+        <type>gtsam::Pose2</type>
+        <definition>gtsam::Pose2 nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::velocity</definition>
+        <argsstring></argsstring>
+        <name>velocity</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::velocity</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="36" column="22" bodyfile="include/isam2_nodes.hpp" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1ab271b8cbc773ca67eead78dfd93a66cc" prot="protected" static="no" mutable="no">
+        <type>std::optional&lt; gtsam::Point2 &gt;</type>
+        <definition>std::optional&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::init_lon_lat</definition>
+        <argsstring></argsstring>
+        <name>init_lon_lat</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::init_lon_lat</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="38" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a65cc2fec07dea2e13e5f813c7e40a6ed" prot="protected" static="no" mutable="no">
+        <type>std::optional&lt; gtsam::Point2 &gt;</type>
+        <definition>std::optional&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::init_x_y</definition>
+        <argsstring></argsstring>
+        <name>init_x_y</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::init_x_y</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="39" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a11b35a330285720008d97405ead9ea32" prot="protected" static="no" mutable="no">
+        <type>gtsam::Point2</type>
+        <definition>gtsam::Point2 nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::gps_position</definition>
+        <argsstring></argsstring>
+        <name>gps_position</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::gps_position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="41" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1aa06d32c5d2f2e7a112b5925c43718d64" prot="protected" static="no" mutable="no">
+        <type>double</type>
+        <definition>double nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::yaw</definition>
+        <argsstring></argsstring>
+        <name>yaw</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::yaw</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="42" column="16" bodyfile="include/isam2_nodes.hpp" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a0361459b479a7710fb411660ecd74939" prot="protected" static="no" mutable="no">
+        <type>std::vector&lt; gtsam::Point2 &gt;</type>
+        <definition>std::vector&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::cones</definition>
+        <argsstring></argsstring>
+        <name>cones</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="44" column="21" bodyfile="include/isam2_nodes.hpp" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1aed83b931419f4d668f2cc6faf289f450" prot="protected" static="no" mutable="no">
+        <type>std::vector&lt; gtsam::Point2 &gt;</type>
+        <definition>std::vector&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::orange_cones</definition>
+        <argsstring></argsstring>
+        <name>orange_cones</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::orange_cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="45" column="21" bodyfile="include/isam2_nodes.hpp" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a5c9a89d1981198da97332bc70c36b461" prot="protected" static="no" mutable="no">
+        <type>std::vector&lt; gtsam::Point2 &gt;</type>
+        <definition>std::vector&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::blue_cones</definition>
+        <argsstring></argsstring>
+        <name>blue_cones</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::blue_cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="46" column="21" bodyfile="include/isam2_nodes.hpp" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1abd8bc9fe10c5e3620a0db348b2a84af9" prot="protected" static="no" mutable="no">
+        <type>std::vector&lt; gtsam::Point2 &gt;</type>
+        <definition>std::vector&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::yellow_cones</definition>
+        <argsstring></argsstring>
+        <name>yellow_cones</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::yellow_cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="47" column="21" bodyfile="include/isam2_nodes.hpp" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1ac3e7b0efbfdf99de62dd12249a6b7b4c" prot="protected" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::file_opened</definition>
+        <argsstring></argsstring>
+        <name>file_opened</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::file_opened</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="50" column="14" bodyfile="include/isam2_nodes.hpp" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a263ca5f766c32bfbb7eaf6b460fbd7fc" prot="protected" static="no" mutable="no">
+        <type>rclcpp::TimerBase::SharedPtr</type>
+        <definition>rclcpp::TimerBase::SharedPtr nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::timer</definition>
+        <argsstring></argsstring>
+        <name>timer</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::timer</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="52" column="38" bodyfile="include/isam2_nodes.hpp" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1ac9913e82bb32e56d48e660f2b5b49240" prot="protected" static="no" mutable="no">
+        <type>double</type>
+        <definition>double nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::dt</definition>
+        <argsstring></argsstring>
+        <name>dt</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::dt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="53" column="16" bodyfile="include/isam2_nodes.hpp" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a94064913429f785ae60b65126bd4c525" prot="protected" static="no" mutable="no">
+        <type>std::optional&lt; std_msgs::msg::Header &gt;</type>
+        <definition>std::optional&lt;std_msgs::msg::Header&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::prev_filter_time</definition>
+        <argsstring></argsstring>
+        <name>prev_filter_time</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::prev_filter_time</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="55" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a80846119c099ff6d03614bc8c955b96d" prot="protected" static="no" mutable="no">
+        <type>std::ofstream</type>
+        <definition>std::ofstream nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::outfile</definition>
+        <argsstring></argsstring>
+        <name>outfile</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::outfile</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="58" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a7aa44f46ec28c8f0dc6e81c3a57fcf0b" prot="protected" static="no" mutable="no">
+        <type>std::ofstream</type>
+        <definition>std::ofstream nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::pose_cones</definition>
+        <argsstring></argsstring>
+        <name>pose_cones</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::pose_cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="59" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a8b83c878922eb0a915c38d3e0a9e7894" prot="protected" static="no" mutable="no">
+        <type>const rmw_qos_profile_t</type>
+        <definition>const rmw_qos_profile_t nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::reliable_profile</definition>
+        <argsstring></argsstring>
+        <name>reliable_profile</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::reliable_profile</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="62" column="33" bodyfile="include/isam2_nodes.hpp" bodystart="62" bodyend="72"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a5b79ee9230014777e3e746ac2600e562" prot="protected" static="no" mutable="no">
+        <type>const rmw_qos_profile_t</type>
+        <definition>const rmw_qos_profile_t nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::best_effort_profile</definition>
+        <argsstring></argsstring>
+        <name>best_effort_profile</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::best_effort_profile</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="73" column="33" bodyfile="include/isam2_nodes.hpp" bodystart="73" bodyend="83"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a81430a36c8c264ffd491d275ff44dce2" prot="protected" static="no" mutable="no">
+        <type>const rclcpp::QoS</type>
+        <definition>const rclcpp::QoS nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::best_effort_qos</definition>
+        <argsstring></argsstring>
+        <name>best_effort_qos</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::best_effort_qos</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="85" column="27" bodyfile="include/isam2_nodes.hpp" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a9e2dc515faed67f46f8833853ec043e1" prot="protected" static="no" mutable="no">
+        <type>message_filters::Subscriber&lt; interfaces::msg::ConeArray &gt;</type>
+        <definition>message_filters::Subscriber&lt;interfaces::msg::ConeArray&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::cone_sub</definition>
+        <argsstring></argsstring>
+        <name>cone_sub</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::cone_sub</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="91" column="37" bodyfile="include/isam2_nodes.hpp" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a3952b006efaa689c3359802004991f3d" prot="protected" static="no" mutable="no">
+        <type>message_filters::Subscriber&lt; geometry_msgs::msg::TwistStamped &gt;</type>
+        <definition>message_filters::Subscriber&lt;geometry_msgs::msg::TwistStamped&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::vehicle_vel_sub</definition>
+        <argsstring></argsstring>
+        <name>vehicle_vel_sub</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::vehicle_vel_sub</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="92" column="37" bodyfile="include/isam2_nodes.hpp" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a83aa8579d505cc8a98a5743af38afbf3" prot="protected" static="no" mutable="no">
+        <type>message_filters::Subscriber&lt; geometry_msgs::msg::QuaternionStamped &gt;</type>
+        <definition>message_filters::Subscriber&lt;geometry_msgs::msg::QuaternionStamped&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::vehicle_angle_sub</definition>
+        <argsstring></argsstring>
+        <name>vehicle_angle_sub</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::vehicle_angle_sub</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="93" column="37" bodyfile="include/isam2_nodes.hpp" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1af909eea548ea81bc6b7e9e4646e9a1f2" prot="protected" static="no" mutable="no">
+        <type>message_filters::Subscriber&lt; geometry_msgs::msg::PoseStamped &gt;</type>
+        <definition>message_filters::Subscriber&lt;geometry_msgs::msg::PoseStamped&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::vehicle_pos_sub</definition>
+        <argsstring></argsstring>
+        <name>vehicle_pos_sub</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::vehicle_pos_sub</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="94" column="37" bodyfile="include/isam2_nodes.hpp" bodystart="94" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classnodes_1_1ControlsSimSLAMNode_1a70a01cbc401365ad59febe7fb8bb9e3b" prot="protected" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void nodes::ControlsSimSLAMNode::perform_subscribes</definition>
+        <argsstring>() override</argsstring>
+        <name>perform_subscribes</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::perform_subscribes</qualifiedname>
+        <reimplements refid="classnodes_1_1GenericSLAMNode_1a58ea6cb4af16c570cdedb00f07186e57">perform_subscribes</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="198" column="14" bodyfile="src/nodes/controls_sim_slam_node.cpp" bodystart="115" bodyend="121"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1ControlsSimSLAMNode_1a1f318187ca815ffc561acc5a1ba20f0f" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::ControlsSimSLAMNode::cone_callback</definition>
+        <argsstring>(const cone_msg_t::ConstSharedPtr &amp;cone_data)</argsstring>
+        <name>cone_callback</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::cone_callback</qualifiedname>
+        <param>
+          <type>const cone_msg_t::ConstSharedPtr &amp;</type>
+          <declname>cone_data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="201" column="14" bodyfile="src/nodes/controls_sim_slam_node.cpp" bodystart="23" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1ControlsSimSLAMNode_1a2fd7db48e293897ab28285e8a403cd46" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::ControlsSimSLAMNode::vehicle_vel_callback</definition>
+        <argsstring>(const velocity_msg_t::ConstSharedPtr &amp;vehicle_vel_data)</argsstring>
+        <name>vehicle_vel_callback</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::vehicle_vel_callback</qualifiedname>
+        <param>
+          <type>const velocity_msg_t::ConstSharedPtr &amp;</type>
+          <declname>vehicle_vel_data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="202" column="14" bodyfile="src/nodes/controls_sim_slam_node.cpp" bodystart="39" bodyend="47"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1ControlsSimSLAMNode_1a0b069a62e41b8f2d28e41fb1af00c95d" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::ControlsSimSLAMNode::vehicle_pos_callback</definition>
+        <argsstring>(const pose_msg_t::ConstSharedPtr &amp;vehicle_pos_data)</argsstring>
+        <name>vehicle_pos_callback</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::vehicle_pos_callback</qualifiedname>
+        <param>
+          <type>const pose_msg_t::ConstSharedPtr &amp;</type>
+          <declname>vehicle_pos_data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="203" column="14" bodyfile="src/nodes/controls_sim_slam_node.cpp" bodystart="49" bodyend="65"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1ControlsSimSLAMNode_1ac2e8cc8480c0eccafb4d33a783339d6d" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::ControlsSimSLAMNode::sync_callback</definition>
+        <argsstring>(const cone_msg_t::ConstSharedPtr &amp;cone_data, const velocity_msg_t::ConstSharedPtr &amp;vehicle_vel_data, const pose_msg_t::ConstSharedPtr &amp;vehicle_pos_data)</argsstring>
+        <name>sync_callback</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::sync_callback</qualifiedname>
+        <param>
+          <type>const cone_msg_t::ConstSharedPtr &amp;</type>
+          <declname>cone_data</declname>
+        </param>
+        <param>
+          <type>const velocity_msg_t::ConstSharedPtr &amp;</type>
+          <declname>vehicle_vel_data</declname>
+        </param>
+        <param>
+          <type>const pose_msg_t::ConstSharedPtr &amp;</type>
+          <declname>vehicle_pos_data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="204" column="14" bodyfile="src/nodes/controls_sim_slam_node.cpp" bodystart="68" bodyend="113"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1GenericSLAMNode_1a2f490a869053d4f426550f5ce5512933" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::declare_yaml_params</definition>
+        <argsstring>()</argsstring>
+        <name>declare_yaml_params</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::declare_yaml_params</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="96" column="14" bodyfile="src/nodes/generic_slam_node.cpp" bodystart="48" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1GenericSLAMNode_1add60599f53e6fcc111caae5fde661dff" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="structyaml__params_1_1NoiseInputs" kindref="compound">yaml_params::NoiseInputs</ref> &gt;</type>
+        <definition>std::optional&lt; yaml_params::NoiseInputs &gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::get_noise_inputs</definition>
+        <argsstring>()</argsstring>
+        <name>get_noise_inputs</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::get_noise_inputs</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="97" column="23" bodyfile="src/nodes/generic_slam_node.cpp" bodystart="81" bodyend="131"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1GenericSLAMNode_1afbf813fbfc9c31773de427271ed6239e" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::publish_slam_data</definition>
+        <argsstring>(const slam::slam_output_t &amp;slam_data, std_msgs::msg::Header header)</argsstring>
+        <name>publish_slam_data</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;::publish_slam_data</qualifiedname>
+        <param>
+          <type>const <ref refid="namespaceslam_1a74c5ff6a5f23be28ef1b570f909b8449" kindref="member">slam::slam_output_t</ref> &amp;</type>
+          <declname>slam_data</declname>
+        </param>
+        <param>
+          <type>std_msgs::msg::Header</type>
+          <declname>header</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="98" column="14" bodyfile="src/nodes/generic_slam_node.cpp" bodystart="30" bodyend="44"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classnodes_1_1ControlsSimSLAMNode_1a5f5155279b79253ebffa60b34ce32667" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>nodes::ControlsSimSLAMNode::ControlsSimSLAMNode</definition>
+        <argsstring>()</argsstring>
+        <name>ControlsSimSLAMNode</name>
+        <qualifiedname>nodes::ControlsSimSLAMNode::ControlsSimSLAMNode</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="211" column="9" bodyfile="src/nodes/controls_sim_slam_node.cpp" bodystart="7" bodyend="21"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>In controls sim, the orientation information is incorporated into the PoseStamped message. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>nodes::ControlsSimSLAMNode</label>
+        <link refid="classnodes_1_1ControlsSimSLAMNode"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;</label>
+        <link refid="classnodes_1_1GenericSLAMNode"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>rclcpp::Node</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>nodes::ControlsSimSLAMNode</label>
+        <link refid="classnodes_1_1ControlsSimSLAMNode"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::PoseStamped &gt;</label>
+        <link refid="classnodes_1_1GenericSLAMNode"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+        <childnode refid="4" relation="usage">
+          <edgelabel>slam_instance</edgelabel>
+        </childnode>
+      </node>
+      <node id="3">
+        <label>rclcpp::Node</label>
+      </node>
+      <node id="4">
+        <label>slam::slamISAM</label>
+        <link refid="classslam_1_1slamISAM"/>
+      </node>
+    </collaborationgraph>
+    <location file="include/isam2_nodes.hpp" line="183" column="5" bodyfile="include/isam2_nodes.hpp" bodystart="187" bodyend="212"/>
+    <listofallmembers>
+      <member refid="classnodes_1_1GenericSLAMNode_1a5b79ee9230014777e3e746ac2600e562" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>best_effort_profile</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a81430a36c8c264ffd491d275ff44dce2" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>best_effort_qos</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a5c9a89d1981198da97332bc70c36b461" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>blue_cones</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1a1f318187ca815ffc561acc5a1ba20f0f" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>cone_callback</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1a70b5875fc03b01134851f4bf19e97d92" prot="private" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>cone_msg_t</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a9e2dc515faed67f46f8833853ec043e1" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>cone_sub</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a0361459b479a7710fb411660ecd74939" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>cones</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1a5f5155279b79253ebffa60b34ce32667" prot="public" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>ControlsSimSLAMNode</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1ad321582bae34358afb0d0f4d6791acce" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>cur_sync_callback_time</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a2f490a869053d4f426550f5ce5512933" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>declare_yaml_params</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1ac9913e82bb32e56d48e660f2b5b49240" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>dt</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1a2233fdb5bffa86adf2f3746f49a57406" prot="private" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>dummy_orientation_msg_t</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1ac3e7b0efbfdf99de62dd12249a6b7b4c" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>file_opened</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a58d83801be4bff20d25cf082f82b044b" prot="public" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>GenericSLAMNode</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1add60599f53e6fcc111caae5fde661dff" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>get_noise_inputs</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a11b35a330285720008d97405ead9ea32" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>gps_position</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1ab271b8cbc773ca67eead78dfd93a66cc" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>init_lon_lat</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a65cc2fec07dea2e13e5f813c7e40a6ed" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>init_x_y</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1aed83b931419f4d668f2cc6faf289f450" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>orange_cones</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a80846119c099ff6d03614bc8c955b96d" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>outfile</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1a70a01cbc401365ad59febe7fb8bb9e3b" prot="protected" virt="virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>perform_subscribes</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a7aa44f46ec28c8f0dc6e81c3a57fcf0b" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>pose_cones</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1a52945132033a7367bea6cdcf33e28cd1" prot="private" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>pose_msg_t</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a94064913429f785ae60b65126bd4c525" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>prev_filter_time</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a5b28b46b60a0cc8f629dc2f9bf2b0aed" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>prev_sync_callback_time</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1afbf813fbfc9c31773de427271ed6239e" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>publish_slam_data</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a8b83c878922eb0a915c38d3e0a9e7894" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>reliable_profile</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a102a8ba600108b8374f5afeb288d59bb" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>slam_chunk_publisher</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a1c8e5e7be01a1f6a8c12035bb4045117" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>slam_instance</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a163b73f677228ba27e11fc392e47b324" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>slam_pose_publisher</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1a46fd52977bb69a6f862fa4c8ccc41e9e" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>sync</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1ac2e8cc8480c0eccafb4d33a783339d6d" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>sync_callback</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1af98a1752d0c1b59c034fee069bc9412e" prot="private" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>sync_policy</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a263ca5f766c32bfbb7eaf6b460fbd7fc" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>timer</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a83aa8579d505cc8a98a5743af38afbf3" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>vehicle_angle_sub</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1a0b069a62e41b8f2d28e41fb1af00c95d" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>vehicle_pos_callback</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1af909eea548ea81bc6b7e9e4646e9a1f2" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>vehicle_pos_sub</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1a2fd7db48e293897ab28285e8a403cd46" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>vehicle_vel_callback</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a3952b006efaa689c3359802004991f3d" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>vehicle_vel_sub</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1aef0fb75590c57ef972d0723a2648fe93" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>velocity</name></member>
+      <member refid="classnodes_1_1ControlsSimSLAMNode_1a00160b1f927bd97b34a4828a2888df12" prot="private" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>velocity_msg_t</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1aa06d32c5d2f2e7a112b5925c43718d64" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>yaw</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1abd8bc9fe10c5e3620a0db348b2a84af9" prot="protected" virt="non-virtual"><scope>nodes::ControlsSimSLAMNode</scope><name>yellow_cones</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

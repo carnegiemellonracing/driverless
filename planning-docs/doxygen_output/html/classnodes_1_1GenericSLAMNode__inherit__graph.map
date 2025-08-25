@@ -1,0 +1,5 @@
+<map id="nodes::GenericSLAMNode&lt; cone_msg_t, velocity_msg_t, orientation_msg_t, position_msg_t &gt;" name="nodes::GenericSLAMNode&lt; cone_msg_t, velocity_msg_t, orientation_msg_t, position_msg_t &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,79,182,150"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="46,5,141,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,47,96,78,91,78,91,47"/>
+</map>

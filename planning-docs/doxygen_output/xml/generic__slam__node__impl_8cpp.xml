@@ -1,0 +1,361 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="generic__slam__node__impl_8cpp" kind="file" language="C++">
+    <compoundname>generic_slam_node_impl.cpp</compoundname>
+    <includes refid="generic__slam__node_8cpp" local="yes">generic_slam_node.cpp</includes>
+    <incdepgraph>
+      <node id="34">
+        <label>constants.hpp</label>
+        <link refid="constants_8hpp"/>
+        <childnode refid="35" relation="include">
+        </childnode>
+      </node>
+      <node id="50">
+        <label>data_association.hpp</label>
+        <link refid="data__association_8hpp"/>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+        <childnode refid="53" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="54" relation="include">
+        </childnode>
+      </node>
+      <node id="36">
+        <label>isam2.hpp</label>
+        <link refid="isam2_8hpp"/>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="49" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="50" relation="include">
+        </childnode>
+        <childnode refid="55" relation="include">
+        </childnode>
+        <childnode refid="54" relation="include">
+        </childnode>
+        <childnode refid="57" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>isam2_nodes.hpp</label>
+        <link refid="isam2__nodes_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+      </node>
+      <node id="57">
+        <label>loop_closure.hpp</label>
+        <link refid="loop__closure_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>ros_utils.hpp</label>
+        <link refid="ros__utils_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="54">
+        <label>slam_est_and_mcov.hpp</label>
+        <link refid="slam__est__and__mcov_8hpp"/>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="55">
+        <label>unary_factor.hpp</label>
+        <link refid="unary__factor_8hpp"/>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="56" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>generic_slam_node.cpp</label>
+        <link refid="generic__slam__node_8cpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>src/nodes/generic_slam_node_impl.cpp</label>
+        <link refid="generic__slam__node__impl_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="52">
+        <label>algorithm</label>
+      </node>
+      <node id="37">
+        <label>bits/stdc++.h</label>
+      </node>
+      <node id="24">
+        <label>boost/shared_ptr.hpp</label>
+      </node>
+      <node id="29">
+        <label>chrono</label>
+      </node>
+      <node id="30">
+        <label>climits</label>
+      </node>
+      <node id="28">
+        <label>cmath</label>
+      </node>
+      <node id="27">
+        <label>deque</label>
+      </node>
+      <node id="38">
+        <label>eigen3/Eigen/Dense</label>
+      </node>
+      <node id="53">
+        <label>float.h</label>
+      </node>
+      <node id="31">
+        <label>fmt/format.h</label>
+      </node>
+      <node id="26">
+        <label>fstream</label>
+      </node>
+      <node id="21">
+        <label>geometry_msgs/msg/point.hpp</label>
+      </node>
+      <node id="15">
+        <label>geometry_msgs/msg/pose_stamped.hpp</label>
+      </node>
+      <node id="17">
+        <label>geometry_msgs/msg/quaternion_stamped.hpp</label>
+      </node>
+      <node id="20">
+        <label>geometry_msgs/msg/twist.hpp</label>
+      </node>
+      <node id="18">
+        <label>geometry_msgs/msg/twist_stamped.hpp</label>
+      </node>
+      <node id="19">
+        <label>geometry_msgs/msg/twist_with_covariance.hpp</label>
+      </node>
+      <node id="16">
+        <label>geometry_msgs/msg/vector3_stamped.hpp</label>
+      </node>
+      <node id="32">
+        <label>gtsam/geometry/Point2.h</label>
+      </node>
+      <node id="33">
+        <label>gtsam/geometry/Pose2.h</label>
+      </node>
+      <node id="39">
+        <label>gtsam/inference/Symbol.h</label>
+      </node>
+      <node id="44">
+        <label>gtsam/nonlinear/DoglegOptimizer.h</label>
+      </node>
+      <node id="45">
+        <label>gtsam/nonlinear/GaussNewtonOptimizer.h</label>
+      </node>
+      <node id="40">
+        <label>gtsam/nonlinear/ISAM2.h</label>
+      </node>
+      <node id="43">
+        <label>gtsam/nonlinear/LevenbergMarquardtOptimizer.h</label>
+      </node>
+      <node id="46">
+        <label>gtsam/nonlinear/NonlinearConjugateGradientOptimizer.h</label>
+      </node>
+      <node id="56">
+        <label>gtsam/nonlinear/NonlinearFactor.h</label>
+      </node>
+      <node id="41">
+        <label>gtsam/nonlinear/NonlinearFactorGraph.h</label>
+      </node>
+      <node id="42">
+        <label>gtsam/nonlinear/Values.h</label>
+      </node>
+      <node id="49">
+        <label>gtsam/sam/BearingRangeFactor.h</label>
+      </node>
+      <node id="48">
+        <label>gtsam/slam/BetweenFactor.h</label>
+      </node>
+      <node id="47">
+        <label>gtsam/slam/ProjectionFactor.h</label>
+      </node>
+      <node id="11">
+        <label>interfaces/msg/cone_array.hpp</label>
+      </node>
+      <node id="12">
+        <label>interfaces/msg/cone_array_with_odom.hpp</label>
+      </node>
+      <node id="14">
+        <label>interfaces/msg/slam_chunk.hpp</label>
+      </node>
+      <node id="13">
+        <label>interfaces/msg/slam_pose.hpp</label>
+      </node>
+      <node id="5">
+        <label>memory</label>
+      </node>
+      <node id="8">
+        <label>message_filters/subscriber.h</label>
+      </node>
+      <node id="10">
+        <label>message_filters/sync_policies/approximate_time.h</label>
+      </node>
+      <node id="9">
+        <label>message_filters/synchronizer.h</label>
+      </node>
+      <node id="6">
+        <label>optional</label>
+      </node>
+      <node id="7">
+        <label>rclcpp/rclcpp.hpp</label>
+      </node>
+      <node id="22">
+        <label>sensor_msgs/msg/nav_sat_fix.hpp</label>
+      </node>
+      <node id="23">
+        <label>std_msgs/msg/string.hpp</label>
+      </node>
+      <node id="35">
+        <label>string</label>
+      </node>
+      <node id="51">
+        <label>tuple</label>
+      </node>
+      <node id="25">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <innernamespace refid="namespacenodes">nodes</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="generic__slam__node_8cpp" kindref="compound">generic_slam_node.cpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacenodes" kindref="compound">nodes</ref><sp/>{</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classnodes_1_1GenericSLAMNode" kindref="compound">GenericSLAMNode</ref>&lt;interfaces::msg::ConeArray,</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::TwistStamped,</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::QuaternionStamped,</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::Vector3Stamped&gt;;</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classnodes_1_1GenericSLAMNode" kindref="compound">GenericSLAMNode</ref>&lt;interfaces::msg::ConeArray,</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::TwistStamped,</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::QuaternionStamped,</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::PoseStamped&gt;;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="src/nodes/generic_slam_node_impl.cpp"/>
+  </compounddef>
+</doxygen>

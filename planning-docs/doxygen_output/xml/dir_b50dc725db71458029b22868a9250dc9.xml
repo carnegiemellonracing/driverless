@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="dir_b50dc725db71458029b22868a9250dc9" kind="dir">
+    <compoundname>src/nodes</compoundname>
+    <innerfile refid="controls__sim__slam__node_8cpp">controls_sim_slam_node.cpp</innerfile>
+    <innerfile refid="generic__slam__node_8cpp">generic_slam_node.cpp</innerfile>
+    <innerfile refid="generic__slam__node__impl_8cpp">generic_slam_node_impl.cpp</innerfile>
+    <innerfile refid="real__data__slam__node__gps_8cpp">real_data_slam_node_gps.cpp</innerfile>
+    <innerfile refid="real__data__slam__node__no__gps_8cpp">real_data_slam_node_no_gps.cpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="src/nodes/"/>
+  </compounddef>
+</doxygen>

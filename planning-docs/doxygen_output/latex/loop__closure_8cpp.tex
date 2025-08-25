@@ -1,0 +1,35 @@
+\doxysection{src/utils/loop\+\_\+closure.cpp File Reference}
+\hypertarget{loop__closure_8cpp}{}\label{loop__closure_8cpp}\index{src/utils/loop\_closure.cpp@{src/utils/loop\_closure.cpp}}
+
+
+Utility functions used in loop closure detection for SLAM.  
+
+
+{\ttfamily \#include "{}loop\+\_\+closure.\+hpp"{}}\newline
+Include dependency graph for loop\+\_\+closure.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{loop__closure_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceloop__closure__utils}{loop\+\_\+closure\+\_\+utils}}
+\begin{DoxyCompactList}\small\item\em Contains helper functions to support loop closure detection in SLAM. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespaceloop__closure__utils_a4460c330fb085c199facc6d4dd8bb7d7}{loop\+\_\+closure\+\_\+utils\+::xy\+\_\+sign\+\_\+from\+\_\+global\+\_\+bearing}} (double \&x\+\_\+sign, double \&y\+\_\+sign, gtsam\+::\+Pose2 \&cur\+\_\+pose)
+\begin{DoxyCompactList}\small\item\em Determines the x and y sign directions from the global yaw angle. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespaceloop__closure__utils_ae21fdb252c15e783c9be0dae81ba9457}{loop\+\_\+closure\+\_\+utils\+::start\+\_\+pose\+\_\+in\+\_\+front}} (gtsam\+::\+Pose2 \&cur\+\_\+pose, gtsam\+::\+Pose2 \&first\+\_\+pose, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Determiens whether the robot is facing the start pose. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{namespaceloop__closure__utils_acf73e33a4333dddf3b0e1f89a25c3148}{loop\+\_\+closure\+\_\+utils\+::detect\+\_\+loop\+\_\+closure}} (double dist\+\_\+from\+\_\+start\+\_\+loop\+\_\+closure\+\_\+th, gtsam\+::\+Pose2 \&cur\+\_\+pose, gtsam\+::\+Pose2 \&first\+\_\+pose, int pose\+\_\+num, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Detects if a loop closure should be triggered. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Utility functions used in loop closure detection for SLAM. 
+

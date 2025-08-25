@@ -1,0 +1,118 @@
+\doxysection{data\+\_\+association\+\_\+utils Namespace Reference}
+\hypertarget{namespacedata__association__utils}{}\label{namespacedata__association__utils}\index{data\_association\_utils@{data\_association\_utils}}
+
+
+Utility functions for data association.  
+
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo}{New\+Cone\+Info}}
+\item 
+struct \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo}{Old\+Cone\+Info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::pair$<$ std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo}{Old\+Cone\+Info}} $>$, std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo}{New\+Cone\+Info}} $>$ $>$ \mbox{\hyperlink{namespacedata__association__utils_a8618a0ce5124334358fd054e92483fd9}{get\+\_\+old\+\_\+new\+\_\+cones}} (std\+::vector$<$ gtsam\+::\+Point2 $>$ global\+\_\+cone\+\_\+obs, std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+obs, std\+::vector$<$ std\+::vector$<$ double $>$ $>$ distances, double m\+\_\+dist\+\_\+th, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Distinguishes obsered cones into old and new cones. \end{DoxyCompactList}\item 
+std\+::pair$<$ std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo}{Old\+Cone\+Info}} $>$, std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo}{New\+Cone\+Info}} $>$ $>$ \mbox{\hyperlink{namespacedata__association__utils_a6f7228a0a6bea9eb932a06b409ec2d3e}{perform\+\_\+data\+\_\+association}} (gtsam\+::\+Pose2 cur\+\_\+pose, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger, \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov}{slam\+::\+SLAMEst\+And\+MCov}} \&slam\+\_\+est\+\_\+and\+\_\+mcov, double m\+\_\+dist\+\_\+th, double cone\+\_\+dist\+\_\+th)
+\begin{DoxyCompactList}\small\item\em Performs data association between the observed cones and the SLAM estimates. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Utility functions for data association. 
+
+\label{doc-func-members}
+\Hypertarget{namespacedata__association__utils_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacedata__association__utils_a8618a0ce5124334358fd054e92483fd9}\index{data\_association\_utils@{data\_association\_utils}!get\_old\_new\_cones@{get\_old\_new\_cones}}
+\index{get\_old\_new\_cones@{get\_old\_new\_cones}!data\_association\_utils@{data\_association\_utils}}
+\doxysubsubsection{\texorpdfstring{get\_old\_new\_cones()}{get\_old\_new\_cones()}}
+{\footnotesize\ttfamily \label{namespacedata__association__utils_a8618a0ce5124334358fd054e92483fd9} 
+std\+::pair$<$ std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo}{Old\+Cone\+Info}} $>$, std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo}{New\+Cone\+Info}} $>$ $>$ data\+\_\+association\+\_\+utils\+::get\+\_\+old\+\_\+new\+\_\+cones (\begin{DoxyParamCaption}\item[{std\+::vector$<$ gtsam\+::\+Point2 $>$}]{global\+\_\+cone\+\_\+obs}{, }\item[{std\+::vector$<$ gtsam\+::\+Point2 $>$}]{cone\+\_\+obs}{, }\item[{std\+::vector$<$ std\+::vector$<$ double $>$ $>$}]{distances}{, }\item[{double}]{m\+\_\+dist\+\_\+th}{, }\item[{std\+::optional$<$ rclcpp\+::\+Logger $>$}]{logger}{}\end{DoxyParamCaption})}
+
+
+
+Distinguishes obsered cones into old and new cones. 
+
+Distinguishes obsered cones into old and new cones by Mahalanobis distance.
+
+
+\begin{DoxyParams}{Parameters}
+{\em global\+\_\+cone\+\_\+obs} & The observed cones in the global frame \\
+\hline
+{\em cone\+\_\+obs} & The observed cones in the local frame \\
+\hline
+{\em distances} & A vector where the ith vector represents mahalanobis distances wrt the ith observed cone \\
+\hline
+{\em m\+\_\+dist\+\_\+th} & The mahalanobis distance threshold \\
+\hline
+{\em logger} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::pair\texorpdfstring{$<$}{<}std\+::vector$<$\+Old\+Cone\+Info$>$, std\+::vector$<$\+New\+Cone\+Info$>$\texorpdfstring{$>$}{>}
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em global\+\_\+cone\+\_\+obs} & The observed cones in the global frame \\
+\hline
+{\em cone\+\_\+obs} & The observed cones in the local frame \\
+\hline
+{\em distances} & A vector where the ith vector represents mahalanobis distances with respect to the ith observed cone \\
+\hline
+{\em logger} & Optional logger for debug output\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pair of vectors\+: vector of \doxylink{structdata__association__utils_1_1OldConeInfo}{Old\+Cone\+Info} for cones matched to known landmarks, vector of \doxylink{structdata__association__utils_1_1NewConeInfo}{New\+Cone\+Info} for cones considered new landmarks 
+\end{DoxyReturn}
+\Hypertarget{namespacedata__association__utils_a6f7228a0a6bea9eb932a06b409ec2d3e}\index{data\_association\_utils@{data\_association\_utils}!perform\_data\_association@{perform\_data\_association}}
+\index{perform\_data\_association@{perform\_data\_association}!data\_association\_utils@{data\_association\_utils}}
+\doxysubsubsection{\texorpdfstring{perform\_data\_association()}{perform\_data\_association()}}
+{\footnotesize\ttfamily \label{namespacedata__association__utils_a6f7228a0a6bea9eb932a06b409ec2d3e} 
+std\+::pair$<$ std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo}{Old\+Cone\+Info}} $>$, std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo}{New\+Cone\+Info}} $>$ $>$ data\+\_\+association\+\_\+utils\+::perform\+\_\+data\+\_\+association (\begin{DoxyParamCaption}\item[{gtsam\+::\+Pose2}]{cur\+\_\+pose}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs}{, }\item[{std\+::optional$<$ rclcpp\+::\+Logger $>$}]{logger}{, }\item[{\mbox{\hyperlink{classslam_1_1SLAMEstAndMCov}{slam\+::\+SLAMEst\+And\+MCov}} \&}]{slam\+\_\+est\+\_\+and\+\_\+mcov}{, }\item[{double}]{m\+\_\+dist\+\_\+th}{, }\item[{double}]{cone\+\_\+dist\+\_\+th}{}\end{DoxyParamCaption})}
+
+
+
+Performs data association between the observed cones and the SLAM estimates. 
+
+Performs full data association for the current frame of cone observations.
+
+
+\begin{DoxyParams}{Parameters}
+{\em cur\+\_\+pose} & The current pose of the car \\
+\hline
+{\em cone\+\_\+obs} & A vector of observed cones \\
+\hline
+{\em logger} & \\
+\hline
+{\em slam\+\_\+est\+\_\+and\+\_\+mcov} & \\
+\hline
+{\em m\+\_\+dist\+\_\+th} & The Mahalanobis distance threshold\\
+\hline
+{\em cone\+\_\+dist\+\_\+th} & The range threshold to decide which cones to data associate and which to ignore\\
+\hline
+\end{DoxyParams}
+This function filters observed cones by distance threshold, transforms them into the global frame, calculates Mahalanobis distances to existing SLAM landmarks, and then classifies cones as old or new
+
+
+\begin{DoxyParams}{Parameters}
+{\em cur\+\_\+pose} & The current estimated pose of the car \\
+\hline
+{\em cone\+\_\+obs} & The observed cones in the local frame \\
+\hline
+{\em logger} & Optional logger for debug output \\
+\hline
+{\em slam\+\_\+est\+\_\+and\+\_\+mcov} & Reference to the SLAMEst\+And\+MCov object for accessing current SLAM state \\
+\hline
+{\em m\+\_\+dist\+\_\+th} & Threshold for Mahalanobis distance to differentiate old and new cones \\
+\hline
+{\em cone\+\_\+dist\+\_\+th} & Maximum distance threshold to filter out cones too far from the vehicle\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pair of vectors classifying cones as old or new, same as get\+\_\+old\+\_\+new\+\_\+cones return 
+\end{DoxyReturn}

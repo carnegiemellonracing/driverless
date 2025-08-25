@@ -1,0 +1,1002 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="constants_8hpp" kind="file" language="C++">
+    <compoundname>constants.hpp</compoundname>
+    <includes local="no">string</includes>
+    <includedby refid="ros__utils_8hpp" local="yes">include/ros_utils.hpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>include/constants.hpp</label>
+        <link refid="constants_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>string</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>include/constants.hpp</label>
+        <link refid="constants_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>include/data_association.hpp</label>
+        <link refid="data__association_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>include/isam2.hpp</label>
+        <link refid="isam2_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>include/isam2_nodes.hpp</label>
+        <link refid="isam2__nodes_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>include/loop_closure.hpp</label>
+        <link refid="loop__closure_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>include/ros_utils.hpp</label>
+        <link refid="ros__utils_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="15">
+        <label>include/slam_est_and_mcov.hpp</label>
+        <link refid="slam__est__and__mcov_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>src/isam2/isam2.cpp</label>
+        <link refid="isam2_8cpp"/>
+      </node>
+      <node id="16">
+        <label>src/isam2/slam_est_and_mcov.cpp</label>
+        <link refid="slam__est__and__mcov_8cpp"/>
+      </node>
+      <node id="6">
+        <label>src/nodes/controls_sim_slam_node.cpp</label>
+        <link refid="controls__sim__slam__node_8cpp"/>
+      </node>
+      <node id="7">
+        <label>src/nodes/generic_slam_node.cpp</label>
+        <link refid="generic__slam__node_8cpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>src/nodes/generic_slam_node_impl.cpp</label>
+        <link refid="generic__slam__node__impl_8cpp"/>
+      </node>
+      <node id="9">
+        <label>src/nodes/real_data_slam_node_gps.cpp</label>
+        <link refid="real__data__slam__node__gps_8cpp"/>
+      </node>
+      <node id="10">
+        <label>src/nodes/real_data_slam_node_no_gps.cpp</label>
+        <link refid="real__data__slam__node__no__gps_8cpp"/>
+      </node>
+      <node id="12">
+        <label>src/utils/data_association.cpp</label>
+        <link refid="data__association_8cpp"/>
+      </node>
+      <node id="14">
+        <label>src/utils/loop_closure.cpp</label>
+        <link refid="loop__closure_8cpp"/>
+      </node>
+      <node id="17">
+        <label>src/utils/ros_utils.cpp</label>
+        <link refid="ros__utils_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="constants_8hpp_1a0cfbdb0241e2d233010097154e8e186a" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool DEBUG_POSES</definition>
+        <argsstring></argsstring>
+        <name>DEBUG_POSES</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="5" column="16" bodyfile="include/constants.hpp" bodystart="5" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1af7ce9f70fb089c8e2d25a37f15d2d18b" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool DEBUG_STEP</definition>
+        <argsstring></argsstring>
+        <name>DEBUG_STEP</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="6" column="16" bodyfile="include/constants.hpp" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1acab5aa8052556bc42799b17c45d58bf5" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool DEBUG_VIZ</definition>
+        <argsstring></argsstring>
+        <name>DEBUG_VIZ</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="7" column="16" bodyfile="include/constants.hpp" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a3ec98e2c4e8966f70c9f3d2d6468740e" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool DEBUG_PARAMS_IN_USE</definition>
+        <argsstring></argsstring>
+        <name>DEBUG_PARAMS_IN_USE</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="8" column="16" bodyfile="include/constants.hpp" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a43af69ac180e75980494a40dde4b0766" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool DEBUG_UPDATE</definition>
+        <argsstring></argsstring>
+        <name>DEBUG_UPDATE</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="9" column="16" bodyfile="include/constants.hpp" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a408b6e210da50b4a34d8ae5bcef9e082" prot="public" static="no" mutable="no">
+        <type>const std::string</type>
+        <definition>const std::string ESTIMATES_FILE</definition>
+        <argsstring></argsstring>
+        <name>ESTIMATES_FILE</name>
+        <initializer>= &quot;src/isam2/data/current_estimates.txt&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="11" column="19" bodyfile="include/constants.hpp" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a50749e5a77a2d34569cdd21831365243" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool EUFS_SIM_SETTINGS</definition>
+        <argsstring></argsstring>
+        <name>EUFS_SIM_SETTINGS</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="12" column="16" bodyfile="include/constants.hpp" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a2924395ddfcb0a0ee772330a11645707" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double BEARING_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>BEARING_STD_DEV</name>
+        <initializer>= 0.00045</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="32" column="18" bodyfile="include/constants.hpp" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1ac8b3500acbbbbe79157d399cf5470083" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double RANGE_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>RANGE_STD_DEV</name>
+        <initializer>= 0.03</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="33" column="18" bodyfile="include/constants.hpp" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a679a0a7bca83d5a467b7375c350099b6" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double IMU_X_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>IMU_X_STD_DEV</name>
+        <initializer>= 0.22</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="49" column="18" bodyfile="include/constants.hpp" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1ad70c10b51b08f27558f07b7c271d71cc" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double IMU_Y_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>IMU_Y_STD_DEV</name>
+        <initializer>= 0.22</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="50" column="18" bodyfile="include/constants.hpp" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a1852f50e788c3ea01e25a3d3794f074a" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double IMU_HEADING_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>IMU_HEADING_STD_DEV</name>
+        <initializer>= 0.00015707963</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="51" column="18" bodyfile="include/constants.hpp" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a6bbb347325e8ba0244109a63faeaa935" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double GPS_X_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>GPS_X_STD_DEV</name>
+        <initializer>= 0.01</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="66" column="18" bodyfile="include/constants.hpp" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a47940d04a5651b198450d2e69ba7af8d" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double GPS_Y_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>GPS_Y_STD_DEV</name>
+        <initializer>= 0.01</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="67" column="18" bodyfile="include/constants.hpp" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1aa83e05f48d5afbff7ba7953ff53fcda0" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double EUFS_SIM_RANGE_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>EUFS_SIM_RANGE_STD_DEV</name>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="71" column="18" bodyfile="include/constants.hpp" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a271deb105c69c414e6cd3c2fdcb0e2ed" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double EUFS_SIM_BEARING_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>EUFS_SIM_BEARING_STD_DEV</name>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="72" column="18" bodyfile="include/constants.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1ad66c11e75ed8a6e2974a091683386385" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double EUFS_SIM_IMU_X_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>EUFS_SIM_IMU_X_STD_DEV</name>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="73" column="18" bodyfile="include/constants.hpp" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a08837ca2af62fea012e8a96f2f0c7e2c" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double EUFS_SIM_IMU_Y_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>EUFS_SIM_IMU_Y_STD_DEV</name>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="74" column="18" bodyfile="include/constants.hpp" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a856fd37f34cee0cc4239095eae920928" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double EUFS_SIM_IMU_HEADING_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>EUFS_SIM_IMU_HEADING_STD_DEV</name>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="75" column="18" bodyfile="include/constants.hpp" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a631bf87e31487c5be02ca6ad6136989f" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double EUFS_SIM_GPS_X_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>EUFS_SIM_GPS_X_STD_DEV</name>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="76" column="18" bodyfile="include/constants.hpp" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1aa74d482d09776edaba3cb6dcc3483517" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double EUFS_SIM_GPS_Y_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>EUFS_SIM_GPS_Y_STD_DEV</name>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="77" column="18" bodyfile="include/constants.hpp" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a48fe76edf3d4052e13fb5eb7f78d6041" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double CONTROLS_BEARING_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>CONTROLS_BEARING_STD_DEV</name>
+        <initializer>= 0.00045</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="80" column="18" bodyfile="include/constants.hpp" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a0d749f36aa999ff4b92f6846382d28bf" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double CONTROLS_RANGE_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>CONTROLS_RANGE_STD_DEV</name>
+        <initializer>= 0.03</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="81" column="18" bodyfile="include/constants.hpp" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1aeb569da46685a0ac3d50a5b2df0e942f" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double CONTROLS_IMU_X_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>CONTROLS_IMU_X_STD_DEV</name>
+        <initializer>= 0.22</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="82" column="18" bodyfile="include/constants.hpp" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a2683260f82b8cac447caf0ba005f8867" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double CONTROLS_IMU_Y_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>CONTROLS_IMU_Y_STD_DEV</name>
+        <initializer>= 0.22</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="83" column="18" bodyfile="include/constants.hpp" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a9a9e84e70043eb7c6fa339aa6fbf9312" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double CONTROLS_IMU_HEADING_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>CONTROLS_IMU_HEADING_STD_DEV</name>
+        <initializer>= 0.00872665</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="84" column="18" bodyfile="include/constants.hpp" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1ab1b6ba4c39c3abd3449ad16f206d4b4b" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double CONTROLS_GPS_X_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>CONTROLS_GPS_X_STD_DEV</name>
+        <initializer>= 0.01</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="85" column="18" bodyfile="include/constants.hpp" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a740f6ff9eb90da92717472c307e8d073" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double CONTROLS_GPS_Y_STD_DEV</definition>
+        <argsstring></argsstring>
+        <name>CONTROLS_GPS_Y_STD_DEV</name>
+        <initializer>= 0.01</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="86" column="18" bodyfile="include/constants.hpp" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a616da97fd5f650be10b35180eaf60480" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>long</type>
+        <definition>long SEC_TO_NANOSEC</definition>
+        <argsstring></argsstring>
+        <name>SEC_TO_NANOSEC</name>
+        <initializer>= 1e9</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="88" column="16" bodyfile="include/constants.hpp" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1ac9d2880719f12dcb9d8981a27b13cb4d" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double IMU_OFFSET</definition>
+        <argsstring></argsstring>
+        <name>IMU_OFFSET</name>
+        <initializer>= 0.3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="89" column="18" bodyfile="include/constants.hpp" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1aadcb9d89b1ef0bbe27f2784462178ff9" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double LIDAR_OFFSET</definition>
+        <argsstring></argsstring>
+        <name>LIDAR_OFFSET</name>
+        <initializer>= 0.3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="90" column="18" bodyfile="include/constants.hpp" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1ada42544decc969afd04148fb0b684114" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double MAX_CONE_RANGE</definition>
+        <argsstring></argsstring>
+        <name>MAX_CONE_RANGE</name>
+        <initializer>= 15</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="91" column="18" bodyfile="include/constants.hpp" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a89c80a289dc717aaa5f6a6c4dd171e42" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double TURNING_MAX_CONE_RANGE</definition>
+        <argsstring></argsstring>
+        <name>TURNING_MAX_CONE_RANGE</name>
+        <initializer>= 15</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="92" column="18" bodyfile="include/constants.hpp" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a8bd64902944688aa663c233b75f276a6" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double VELOCITY_MOVING_TH</definition>
+        <argsstring></argsstring>
+        <name>VELOCITY_MOVING_TH</name>
+        <initializer>= 0.1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="93" column="18" bodyfile="include/constants.hpp" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1ac0cd59596527ab43cadc4d81fcfa5668" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double TURNING_TH</definition>
+        <argsstring></argsstring>
+        <name>TURNING_TH</name>
+        <initializer>= 0.2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="94" column="18" bodyfile="include/constants.hpp" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a8434f7b2f400eb70a451eb2f8b2a74ce" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double DIST_FROM_START_LOOP_CLOSURE_TH</definition>
+        <argsstring></argsstring>
+        <name>DIST_FROM_START_LOOP_CLOSURE_TH</name>
+        <initializer>= 5</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="96" column="18" bodyfile="include/constants.hpp" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a65c24ee9176f2806a19bd1d1f2ab041e" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double M_DIST_TH</definition>
+        <argsstring></argsstring>
+        <name>M_DIST_TH</name>
+        <initializer>= 0.0009</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="98" column="18" bodyfile="include/constants.hpp" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a352e28edf7c9a17454772a568c05b7ba" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>double</type>
+        <definition>double TURNING_M_DIST_TH</definition>
+        <argsstring></argsstring>
+        <name>TURNING_M_DIST_TH</name>
+        <initializer>= 0.0009</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="99" column="18" bodyfile="include/constants.hpp" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1ad241bdd58f78d43bb01d1b62a2659cf9" prot="public" static="no" mutable="no">
+        <type>const std::string</type>
+        <definition>const std::string STEP_INPUT_FILE</definition>
+        <argsstring></argsstring>
+        <name>STEP_INPUT_FILE</name>
+        <initializer>= &quot;src/isam2/data/step_input.txt&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="102" column="19" bodyfile="include/constants.hpp" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1adb1c953d94839e423c4d24fb79a2e779" prot="public" static="no" mutable="no">
+        <type>const std::string</type>
+        <definition>const std::string CONE_DATA_TOPIC</definition>
+        <argsstring></argsstring>
+        <name>CONE_DATA_TOPIC</name>
+        <initializer>= &quot;/perc_cones&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="104" column="19" bodyfile="include/constants.hpp" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a8bd26ac04d1d1e0dc4656870d5a7708e" prot="public" static="no" mutable="no">
+        <type>const std::string</type>
+        <definition>const std::string VEHICLE_POS_TOPIC</definition>
+        <argsstring></argsstring>
+        <name>VEHICLE_POS_TOPIC</name>
+        <initializer>= &quot;/filter/pose&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="105" column="19" bodyfile="include/constants.hpp" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1ac120e14b05ae7bb7b7b153f419f3dfc0" prot="public" static="no" mutable="no">
+        <type>const std::string</type>
+        <definition>const std::string VEHICLE_ANGLE_TOPIC</definition>
+        <argsstring></argsstring>
+        <name>VEHICLE_ANGLE_TOPIC</name>
+        <initializer>= &quot;/filter/quaternion&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="106" column="19" bodyfile="include/constants.hpp" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a5b024d0930b5473fef649ea4a9241574" prot="public" static="no" mutable="no">
+        <type>const std::string</type>
+        <definition>const std::string VEHICLE_VEL_TOPIC</definition>
+        <argsstring></argsstring>
+        <name>VEHICLE_VEL_TOPIC</name>
+        <initializer>= &quot;/filter/twist&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="107" column="19" bodyfile="include/constants.hpp" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1aaa68cace55541b4c6fe52abee4fe55e1" prot="public" static="no" mutable="no">
+        <type>const std::string</type>
+        <definition>const std::string SLAM_POSE_TOPIC</definition>
+        <argsstring></argsstring>
+        <name>SLAM_POSE_TOPIC</name>
+        <initializer>= &quot;/slam_pose&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="108" column="19" bodyfile="include/constants.hpp" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a1923a063156dc2b7360ed897b9f1264a" prot="public" static="no" mutable="no">
+        <type>const std::string</type>
+        <definition>const std::string SLAM_CHUNK_TOPIC</definition>
+        <argsstring></argsstring>
+        <name>SLAM_CHUNK_TOPIC</name>
+        <initializer>= &quot;/slam_chunk&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="109" column="19" bodyfile="include/constants.hpp" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1ad2621efbf689d237023ac588d4adac1d" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t LOOK_RADIUS</definition>
+        <argsstring></argsstring>
+        <name>LOOK_RADIUS</name>
+        <initializer>= 20</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="112" column="23" bodyfile="include/constants.hpp" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1acd9de2a135b49ab524844ec7ea918525" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t MIN_CONES_UPDATE_ALL</definition>
+        <argsstring></argsstring>
+        <name>MIN_CONES_UPDATE_ALL</name>
+        <initializer>= 50</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="113" column="23" bodyfile="include/constants.hpp" bodystart="113" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a83758e03ec63c9cb44ec7bbba6a2b68d" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t UPDATE_START_AFTER_N</definition>
+        <argsstring></argsstring>
+        <name>UPDATE_START_AFTER_N</name>
+        <initializer>= 50</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="114" column="23" bodyfile="include/constants.hpp" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a71a806ef167dbaf2ce22355d7a2c0d9f" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t UPDATE_START_N</definition>
+        <argsstring></argsstring>
+        <name>UPDATE_START_N</name>
+        <initializer>= 30</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="115" column="23" bodyfile="include/constants.hpp" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1aadf34d16837e6f05ddfd90d6ad578fd2" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t UPDATE_RECENT_N</definition>
+        <argsstring></argsstring>
+        <name>UPDATE_RECENT_N</name>
+        <initializer>= 20</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="116" column="23" bodyfile="include/constants.hpp" bodystart="116" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a7b7e67ce964f45fdb26f2d776bfbb1d6" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t WINDOW_UPDATE</definition>
+        <argsstring></argsstring>
+        <name>WINDOW_UPDATE</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="117" column="23" bodyfile="include/constants.hpp" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1ac4763eb36d3d9b8e98581a24967ecac3" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t UPDATE_ITERATIONS_N</definition>
+        <argsstring></argsstring>
+        <name>UPDATE_ITERATIONS_N</name>
+        <initializer>= 10</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="118" column="23" bodyfile="include/constants.hpp" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="constants_8hpp_1a5e3ba1fdbe5063e8131fd6a3a9cf5b8b" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t RETURN_N_CONES</definition>
+        <argsstring></argsstring>
+        <name>RETURN_N_CONES</name>
+        <initializer>= 22</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/constants.hpp" line="120" column="23" bodyfile="include/constants.hpp" bodystart="120" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">/**************<sp/>DEBUG<sp/>CONSTANTS<sp/>**************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5" refid="constants_8hpp_1a0cfbdb0241e2d233010097154e8e186a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a0cfbdb0241e2d233010097154e8e186a" kindref="member">DEBUG_POSES</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="6" refid="constants_8hpp_1af7ce9f70fb089c8e2d25a37f15d2d18b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1af7ce9f70fb089c8e2d25a37f15d2d18b" kindref="member">DEBUG_STEP</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="7" refid="constants_8hpp_1acab5aa8052556bc42799b17c45d58bf5" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1acab5aa8052556bc42799b17c45d58bf5" kindref="member">DEBUG_VIZ</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="8" refid="constants_8hpp_1a3ec98e2c4e8966f70c9f3d2d6468740e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a3ec98e2c4e8966f70c9f3d2d6468740e" kindref="member">DEBUG_PARAMS_IN_USE</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="9" refid="constants_8hpp_1a43af69ac180e75980494a40dde4b0766" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a43af69ac180e75980494a40dde4b0766" kindref="member">DEBUG_UPDATE</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="constants_8hpp_1a408b6e210da50b4a34d8ae5bcef9e082" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="constants_8hpp_1a408b6e210da50b4a34d8ae5bcef9e082" kindref="member">ESTIMATES_FILE</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;src/isam2/data/current_estimates.txt&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="12" refid="constants_8hpp_1a50749e5a77a2d34569cdd21831365243" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a50749e5a77a2d34569cdd21831365243" kindref="member">EUFS_SIM_SETTINGS</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>Bearing<sp/>and<sp/>range<sp/>error</highlight></codeline>
+<codeline lineno="14"><highlight class="comment">*<sp/>Corresponds<sp/>to<sp/>the<sp/>usage<sp/>of<sp/>the<sp/>BearingRangeFactor<sp/>we<sp/>are<sp/>using</highlight></codeline>
+<codeline lineno="15"><highlight class="comment">*</highlight></codeline>
+<codeline lineno="16"><highlight class="comment">*<sp/>Source:<sp/>https://chem.libretexts.org/Bookshelves/Analytical_Chemistry/</highlight></codeline>
+<codeline lineno="17"><highlight class="comment">*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Supplemental_Modules_(Analytical_Chemistry)/Quantifying_Nature/</highlight></codeline>
+<codeline lineno="18"><highlight class="comment">*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Significant_Digits/Propagation_of_Error</highlight></codeline>
+<codeline lineno="19"><highlight class="comment">*<sp/>Source:<sp/>User<sp/>manual<sp/>for<sp/>the<sp/>AT128<sp/>Hesai<sp/>LiDAR</highlight></codeline>
+<codeline lineno="20"><highlight class="comment">*<sp/></highlight></codeline>
+<codeline lineno="21"><highlight class="comment">*<sp/>bearing<sp/>error<sp/>in<sp/>radians</highlight></codeline>
+<codeline lineno="22"><highlight class="comment">*<sp/>Calculation<sp/>for<sp/>error<sp/>per<sp/>radian:<sp/></highlight></codeline>
+<codeline lineno="23"><highlight class="comment">*<sp/>We<sp/>use<sp/>atan2(y,<sp/>x)<sp/>and<sp/>we<sp/>know<sp/>that<sp/>z<sp/>=<sp/>atan(u)<sp/>has<sp/>derivative<sp/>1/(1+u^2)<sp/></highlight></codeline>
+<codeline lineno="24"><highlight class="comment">*<sp/>std.dev_{u}<sp/>=<sp/>sqrt(0.03^2<sp/>+<sp/>0.03^2)<sp/>=<sp/>0.0424</highlight></codeline>
+<codeline lineno="25"><highlight class="comment">*<sp/>std.dev_{z}<sp/>=<sp/>(1/(1+1^2))^2<sp/>*<sp/>std.dev_{u}^2<sp/>=<sp/>1/4<sp/>*<sp/>0.0424^2<sp/>=<sp/>0.00045</highlight></codeline>
+<codeline lineno="26"><highlight class="comment">*<sp/></highlight></codeline>
+<codeline lineno="27"><highlight class="comment">*<sp/>Source:<sp/>User<sp/>manual<sp/>for<sp/>the<sp/>AT128<sp/>Hesai<sp/>LiDAR</highlight></codeline>
+<codeline lineno="28"><highlight class="comment">*<sp/>range<sp/>error<sp/>in<sp/>meters</highlight></codeline>
+<codeline lineno="29"><highlight class="comment">*<sp/>std.dev_{u}<sp/>=<sp/>0.0424<sp/>-&gt;<sp/>changed<sp/>to<sp/>0.03</highlight></codeline>
+<codeline lineno="30"><highlight class="comment">*<sp/></highlight></codeline>
+<codeline lineno="31"><highlight class="comment">*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="constants_8hpp_1a2924395ddfcb0a0ee772330a11645707" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a2924395ddfcb0a0ee772330a11645707" kindref="member">BEARING_STD_DEV</ref><sp/>=<sp/>0.00045;</highlight></codeline>
+<codeline lineno="33" refid="constants_8hpp_1ac8b3500acbbbbe79157d399cf5470083" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1ac8b3500acbbbbe79157d399cf5470083" kindref="member">RANGE_STD_DEV</ref><sp/>=<sp/>0.03;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>Go<sp/>from<sp/>1<sp/>pose<sp/>to<sp/>another<sp/>pose</highlight></codeline>
+<codeline lineno="37"><highlight class="comment">*<sp/>Source:<sp/>https://www.movella.com/products/sensor-modules/xsens-mti-680g-rtk-gnss-ins</highlight></codeline>
+<codeline lineno="38"><highlight class="comment">*</highlight></codeline>
+<codeline lineno="39"><highlight class="comment">*<sp/>x<sp/>error<sp/>in<sp/>meters<sp/>(must<sp/>be<sp/>based<sp/>on<sp/>velocity<sp/>error)</highlight></codeline>
+<codeline lineno="40"><highlight class="comment">*<sp/>y<sp/>error<sp/>in<sp/>meters<sp/>(must<sp/>be<sp/>based<sp/>on<sp/>velocity<sp/>error)</highlight></codeline>
+<codeline lineno="41"><highlight class="comment">*<sp/>velocity<sp/>error<sp/>=<sp/>0.05<sp/>m/s<sp/>RMS</highlight></codeline>
+<codeline lineno="42"><highlight class="comment">*<sp/>Calculation<sp/>for<sp/>the<sp/>error<sp/>per<sp/>meter:<sp/>1m<sp/>=<sp/>(1<sp/>+-<sp/>0.05<sp/>m/s)<sp/>*<sp/>(1<sp/>+-<sp/>1e-9<sp/>s)</highlight></codeline>
+<codeline lineno="43"><highlight class="comment">*<sp/>std.<sp/>dev<sp/>=<sp/>1<sp/>*<sp/>sqrt((0.05/1)^2<sp/>+<sp/>(1e-9/1)^2)<sp/>=<sp/>0.05<sp/></highlight></codeline>
+<codeline lineno="44"><highlight class="comment">*</highlight></codeline>
+<codeline lineno="45"><highlight class="comment">*<sp/>yaw<sp/>error<sp/>was<sp/>0.5<sp/>degrees<sp/>RMS<sp/>=<sp/>std<sp/>dev<sp/>(Must<sp/>convert<sp/>to<sp/>radians)</highlight></codeline>
+<codeline lineno="46"><highlight class="comment">*<sp/>changed<sp/>to<sp/>0.009<sp/>degrees<sp/>(Must<sp/>convert<sp/>to<sp/>radians)</highlight></codeline>
+<codeline lineno="47"><highlight class="comment">*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49" refid="constants_8hpp_1a679a0a7bca83d5a467b7375c350099b6" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a679a0a7bca83d5a467b7375c350099b6" kindref="member">IMU_X_STD_DEV</ref><sp/>=<sp/>0.22;</highlight></codeline>
+<codeline lineno="50" refid="constants_8hpp_1ad70c10b51b08f27558f07b7c271d71cc" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1ad70c10b51b08f27558f07b7c271d71cc" kindref="member">IMU_Y_STD_DEV</ref><sp/>=<sp/>0.22;</highlight></codeline>
+<codeline lineno="51" refid="constants_8hpp_1a1852f50e788c3ea01e25a3d3794f074a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a1852f50e788c3ea01e25a3d3794f074a" kindref="member">IMU_HEADING_STD_DEV</ref><sp/>=<sp/>0.00015707963;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>GPS<sp/>noise<sp/>model<sp/></highlight></codeline>
+<codeline lineno="56"><highlight class="comment">*<sp/>Use<sp/>the<sp/>covariances<sp/>from<sp/>positionlla</highlight></codeline>
+<codeline lineno="57"><highlight class="comment">*</highlight></codeline>
+<codeline lineno="58"><highlight class="comment">*<sp/>Covariance<sp/>matrix<sp/>diagonal<sp/>elements<sp/>represent<sp/>variances</highlight></codeline>
+<codeline lineno="59"><highlight class="comment">*<sp/>Variance<sp/>=<sp/>(std.dev)^2<sp/>meaning:</highlight></codeline>
+<codeline lineno="60"><highlight class="comment">*<sp/>Variance<sp/>=<sp/>0.2<sp/>=&gt;<sp/>std.dev<sp/>=<sp/>sqrt(0.2)<sp/>=<sp/>0.45</highlight></codeline>
+<codeline lineno="61"><highlight class="comment">*<sp/></highlight></codeline>
+<codeline lineno="62"><highlight class="comment">*<sp/>However<sp/>positionlla<sp/>already<sp/>accounts<sp/>for<sp/>the<sp/>covariance</highlight></codeline>
+<codeline lineno="63"><highlight class="comment">*<sp/>so<sp/>we<sp/>are<sp/>using<sp/>std.dev<sp/>=<sp/>0.01</highlight></codeline>
+<codeline lineno="64"><highlight class="comment">*<sp/></highlight></codeline>
+<codeline lineno="65"><highlight class="comment">*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66" refid="constants_8hpp_1a6bbb347325e8ba0244109a63faeaa935" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a6bbb347325e8ba0244109a63faeaa935" kindref="member">GPS_X_STD_DEV</ref><sp/>=<sp/>0.01;</highlight></codeline>
+<codeline lineno="67" refid="constants_8hpp_1a47940d04a5651b198450d2e69ba7af8d" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a47940d04a5651b198450d2e69ba7af8d" kindref="member">GPS_Y_STD_DEV</ref><sp/>=<sp/>0.01;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight><highlight class="comment">/*****<sp/>EUFS_SIM<sp/>******/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71" refid="constants_8hpp_1aa83e05f48d5afbff7ba7953ff53fcda0" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1aa83e05f48d5afbff7ba7953ff53fcda0" kindref="member">EUFS_SIM_RANGE_STD_DEV</ref><sp/>=<sp/>0.0;</highlight></codeline>
+<codeline lineno="72" refid="constants_8hpp_1a271deb105c69c414e6cd3c2fdcb0e2ed" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a271deb105c69c414e6cd3c2fdcb0e2ed" kindref="member">EUFS_SIM_BEARING_STD_DEV</ref><sp/>=<sp/>0.0;</highlight></codeline>
+<codeline lineno="73" refid="constants_8hpp_1ad66c11e75ed8a6e2974a091683386385" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1ad66c11e75ed8a6e2974a091683386385" kindref="member">EUFS_SIM_IMU_X_STD_DEV</ref><sp/>=<sp/>0.0;</highlight></codeline>
+<codeline lineno="74" refid="constants_8hpp_1a08837ca2af62fea012e8a96f2f0c7e2c" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a08837ca2af62fea012e8a96f2f0c7e2c" kindref="member">EUFS_SIM_IMU_Y_STD_DEV</ref><sp/>=<sp/>0.0;</highlight></codeline>
+<codeline lineno="75" refid="constants_8hpp_1a856fd37f34cee0cc4239095eae920928" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a856fd37f34cee0cc4239095eae920928" kindref="member">EUFS_SIM_IMU_HEADING_STD_DEV</ref><sp/>=<sp/>0.0;</highlight></codeline>
+<codeline lineno="76" refid="constants_8hpp_1a631bf87e31487c5be02ca6ad6136989f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a631bf87e31487c5be02ca6ad6136989f" kindref="member">EUFS_SIM_GPS_X_STD_DEV</ref><sp/>=<sp/>0.0;</highlight></codeline>
+<codeline lineno="77" refid="constants_8hpp_1aa74d482d09776edaba3cb6dcc3483517" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1aa74d482d09776edaba3cb6dcc3483517" kindref="member">EUFS_SIM_GPS_Y_STD_DEV</ref><sp/>=<sp/>0.0;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight><highlight class="comment">/*****<sp/>CONTROLS<sp/>SIM<sp/>******/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80" refid="constants_8hpp_1a48fe76edf3d4052e13fb5eb7f78d6041" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a48fe76edf3d4052e13fb5eb7f78d6041" kindref="member">CONTROLS_BEARING_STD_DEV</ref><sp/>=<sp/>0.00045;</highlight></codeline>
+<codeline lineno="81" refid="constants_8hpp_1a0d749f36aa999ff4b92f6846382d28bf" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a0d749f36aa999ff4b92f6846382d28bf" kindref="member">CONTROLS_RANGE_STD_DEV</ref><sp/>=<sp/>0.03;</highlight></codeline>
+<codeline lineno="82" refid="constants_8hpp_1aeb569da46685a0ac3d50a5b2df0e942f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1aeb569da46685a0ac3d50a5b2df0e942f" kindref="member">CONTROLS_IMU_X_STD_DEV</ref><sp/>=<sp/>0.22;</highlight></codeline>
+<codeline lineno="83" refid="constants_8hpp_1a2683260f82b8cac447caf0ba005f8867" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a2683260f82b8cac447caf0ba005f8867" kindref="member">CONTROLS_IMU_Y_STD_DEV</ref><sp/>=<sp/>0.22;</highlight></codeline>
+<codeline lineno="84" refid="constants_8hpp_1a9a9e84e70043eb7c6fa339aa6fbf9312" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a9a9e84e70043eb7c6fa339aa6fbf9312" kindref="member">CONTROLS_IMU_HEADING_STD_DEV</ref><sp/>=<sp/>0.00872665;</highlight></codeline>
+<codeline lineno="85" refid="constants_8hpp_1ab1b6ba4c39c3abd3449ad16f206d4b4b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1ab1b6ba4c39c3abd3449ad16f206d4b4b" kindref="member">CONTROLS_GPS_X_STD_DEV</ref><sp/>=<sp/>0.01;</highlight></codeline>
+<codeline lineno="86" refid="constants_8hpp_1a740f6ff9eb90da92717472c307e8d073" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a740f6ff9eb90da92717472c307e8d073" kindref="member">CONTROLS_GPS_Y_STD_DEV</ref><sp/>=<sp/>0.01;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88" refid="constants_8hpp_1a616da97fd5f650be10b35180eaf60480" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a616da97fd5f650be10b35180eaf60480" kindref="member">SEC_TO_NANOSEC</ref><sp/>=<sp/>1e9;</highlight></codeline>
+<codeline lineno="89" refid="constants_8hpp_1ac9d2880719f12dcb9d8981a27b13cb4d" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1ac9d2880719f12dcb9d8981a27b13cb4d" kindref="member">IMU_OFFSET</ref><sp/>=<sp/>0.3;<sp/></highlight><highlight class="comment">//meters;<sp/>offset<sp/>from<sp/>the<sp/>center<sp/>of<sp/>the<sp/>car</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="90" refid="constants_8hpp_1aadcb9d89b1ef0bbe27f2784462178ff9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1aadcb9d89b1ef0bbe27f2784462178ff9" kindref="member">LIDAR_OFFSET</ref><sp/>=<sp/>0.3;<sp/></highlight><highlight class="comment">//meters;<sp/>offset<sp/>from<sp/>the<sp/>center<sp/>of<sp/>the<sp/>car</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91" refid="constants_8hpp_1ada42544decc969afd04148fb0b684114" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1ada42544decc969afd04148fb0b684114" kindref="member">MAX_CONE_RANGE</ref><sp/>=<sp/>15;</highlight></codeline>
+<codeline lineno="92" refid="constants_8hpp_1a89c80a289dc717aaa5f6a6c4dd171e42" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a89c80a289dc717aaa5f6a6c4dd171e42" kindref="member">TURNING_MAX_CONE_RANGE</ref><sp/>=<sp/>15;</highlight></codeline>
+<codeline lineno="93" refid="constants_8hpp_1a8bd64902944688aa663c233b75f276a6" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a8bd64902944688aa663c233b75f276a6" kindref="member">VELOCITY_MOVING_TH</ref><sp/>=<sp/>0.1;<sp/></highlight><highlight class="comment">//meters<sp/>per<sp/>second</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94" refid="constants_8hpp_1ac0cd59596527ab43cadc4d81fcfa5668" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1ac0cd59596527ab43cadc4d81fcfa5668" kindref="member">TURNING_TH</ref><sp/>=<sp/>0.2;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96" refid="constants_8hpp_1a8434f7b2f400eb70a451eb2f8b2a74ce" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a8434f7b2f400eb70a451eb2f8b2a74ce" kindref="member">DIST_FROM_START_LOOP_CLOSURE_TH</ref><sp/>=<sp/>5;<sp/></highlight><highlight class="comment">//meters;<sp/>distance<sp/>from<sp/>the<sp/>start<sp/>for<sp/>loop<sp/>closure<sp/>detection</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98" refid="constants_8hpp_1a65c24ee9176f2806a19bd1d1f2ab041e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a65c24ee9176f2806a19bd1d1f2ab041e" kindref="member">M_DIST_TH</ref><sp/>=<sp/>0.0009;</highlight></codeline>
+<codeline lineno="99" refid="constants_8hpp_1a352e28edf7c9a17454772a568c05b7ba" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="constants_8hpp_1a352e28edf7c9a17454772a568c05b7ba" kindref="member">TURNING_M_DIST_TH</ref><sp/>=<sp/>0.0009;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102" refid="constants_8hpp_1ad241bdd58f78d43bb01d1b62a2659cf9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="constants_8hpp_1ad241bdd58f78d43bb01d1b62a2659cf9" kindref="member">STEP_INPUT_FILE</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;src/isam2/data/step_input.txt&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104" refid="constants_8hpp_1adb1c953d94839e423c4d24fb79a2e779" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="constants_8hpp_1adb1c953d94839e423c4d24fb79a2e779" kindref="member">CONE_DATA_TOPIC</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;/perc_cones&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="105" refid="constants_8hpp_1a8bd26ac04d1d1e0dc4656870d5a7708e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="constants_8hpp_1a8bd26ac04d1d1e0dc4656870d5a7708e" kindref="member">VEHICLE_POS_TOPIC</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;/filter/pose&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="106" refid="constants_8hpp_1ac120e14b05ae7bb7b7b153f419f3dfc0" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="constants_8hpp_1ac120e14b05ae7bb7b7b153f419f3dfc0" kindref="member">VEHICLE_ANGLE_TOPIC</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;/filter/quaternion&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="107" refid="constants_8hpp_1a5b024d0930b5473fef649ea4a9241574" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="constants_8hpp_1a5b024d0930b5473fef649ea4a9241574" kindref="member">VEHICLE_VEL_TOPIC</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;/filter/twist&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="108" refid="constants_8hpp_1aaa68cace55541b4c6fe52abee4fe55e1" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="constants_8hpp_1aaa68cace55541b4c6fe52abee4fe55e1" kindref="member">SLAM_POSE_TOPIC</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;/slam_pose&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="109" refid="constants_8hpp_1a1923a063156dc2b7360ed897b9f1264a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="constants_8hpp_1a1923a063156dc2b7360ed897b9f1264a" kindref="member">SLAM_CHUNK_TOPIC</ref><sp/>=<sp/></highlight><highlight class="stringliteral">&quot;/slam_chunk&quot;</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight><highlight class="comment">//<sp/>const<sp/>std::string<sp/>SLAM_TOPIC<sp/>=<sp/>&quot;/slam_data&quot;;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112" refid="constants_8hpp_1ad2621efbf689d237023ac588d4adac1d" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::size_t<sp/><ref refid="constants_8hpp_1ad2621efbf689d237023ac588d4adac1d" kindref="member">LOOK_RADIUS</ref><sp/>=<sp/>20;</highlight></codeline>
+<codeline lineno="113" refid="constants_8hpp_1acd9de2a135b49ab524844ec7ea918525" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::size_t<sp/><ref refid="constants_8hpp_1acd9de2a135b49ab524844ec7ea918525" kindref="member">MIN_CONES_UPDATE_ALL</ref><sp/>=<sp/>50;</highlight></codeline>
+<codeline lineno="114" refid="constants_8hpp_1a83758e03ec63c9cb44ec7bbba6a2b68d" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::size_t<sp/><ref refid="constants_8hpp_1a83758e03ec63c9cb44ec7bbba6a2b68d" kindref="member">UPDATE_START_AFTER_N</ref><sp/>=<sp/>50;</highlight></codeline>
+<codeline lineno="115" refid="constants_8hpp_1a71a806ef167dbaf2ce22355d7a2c0d9f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::size_t<sp/><ref refid="constants_8hpp_1a71a806ef167dbaf2ce22355d7a2c0d9f" kindref="member">UPDATE_START_N</ref><sp/>=<sp/>30;</highlight></codeline>
+<codeline lineno="116" refid="constants_8hpp_1aadf34d16837e6f05ddfd90d6ad578fd2" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::size_t<sp/><ref refid="constants_8hpp_1aadf34d16837e6f05ddfd90d6ad578fd2" kindref="member">UPDATE_RECENT_N</ref><sp/>=<sp/>20;</highlight></codeline>
+<codeline lineno="117" refid="constants_8hpp_1a7b7e67ce964f45fdb26f2d776bfbb1d6" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::size_t<sp/><ref refid="constants_8hpp_1a7b7e67ce964f45fdb26f2d776bfbb1d6" kindref="member">WINDOW_UPDATE</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="118" refid="constants_8hpp_1ac4763eb36d3d9b8e98581a24967ecac3" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::size_t<sp/><ref refid="constants_8hpp_1ac4763eb36d3d9b8e98581a24967ecac3" kindref="member">UPDATE_ITERATIONS_N</ref><sp/>=<sp/>10;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120" refid="constants_8hpp_1a5e3ba1fdbe5063e8131fd6a3a9cf5b8b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>std::size_t<sp/><ref refid="constants_8hpp_1a5e3ba1fdbe5063e8131fd6a3a9cf5b8b" kindref="member">RETURN_N_CONES</ref><sp/>=<sp/>22;</highlight></codeline>
+    </programlisting>
+    <location file="include/constants.hpp"/>
+  </compounddef>
+</doxygen>

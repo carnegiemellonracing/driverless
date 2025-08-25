@@ -1,0 +1,557 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="isam2_8hpp" kind="file" language="C++">
+    <compoundname>isam2.hpp</compoundname>
+    <includes local="no">bits/stdc++.h</includes>
+    <includes local="no">gtsam/geometry/Point2.h</includes>
+    <includes local="no">gtsam/geometry/Pose2.h</includes>
+    <includes local="no">eigen3/Eigen/Dense</includes>
+    <includes local="no">gtsam/inference/Symbol.h</includes>
+    <includes local="no">gtsam/nonlinear/ISAM2.h</includes>
+    <includes local="no">gtsam/nonlinear/NonlinearFactorGraph.h</includes>
+    <includes local="no">gtsam/nonlinear/Values.h</includes>
+    <includes local="no">gtsam/nonlinear/LevenbergMarquardtOptimizer.h</includes>
+    <includes local="no">gtsam/nonlinear/DoglegOptimizer.h</includes>
+    <includes local="no">gtsam/nonlinear/GaussNewtonOptimizer.h</includes>
+    <includes local="no">gtsam/nonlinear/NonlinearConjugateGradientOptimizer.h</includes>
+    <includes local="no">gtsam/slam/ProjectionFactor.h</includes>
+    <includes local="no">gtsam/slam/BetweenFactor.h</includes>
+    <includes local="no">gtsam/sam/BearingRangeFactor.h</includes>
+    <includes refid="ros__utils_8hpp" local="yes">ros_utils.hpp</includes>
+    <includes refid="data__association_8hpp" local="yes">data_association.hpp</includes>
+    <includes refid="unary__factor_8hpp" local="yes">unary_factor.hpp</includes>
+    <includes refid="slam__est__and__mcov_8hpp" local="yes">slam_est_and_mcov.hpp</includes>
+    <includes refid="loop__closure_8hpp" local="yes">loop_closure.hpp</includes>
+    <includedby refid="isam2__nodes_8hpp" local="yes">include/isam2_nodes.hpp</includedby>
+    <includedby refid="isam2_8cpp" local="yes">src/isam2/isam2.cpp</includedby>
+    <incdepgraph>
+      <node id="45">
+        <label>constants.hpp</label>
+        <link refid="constants_8hpp"/>
+        <childnode refid="46" relation="include">
+        </childnode>
+      </node>
+      <node id="47">
+        <label>data_association.hpp</label>
+        <link refid="data__association_8hpp"/>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="49" relation="include">
+        </childnode>
+        <childnode refid="50" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>include/isam2.hpp</label>
+        <link refid="isam2_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+        <childnode refid="54" relation="include">
+        </childnode>
+      </node>
+      <node id="54">
+        <label>loop_closure.hpp</label>
+        <link refid="loop__closure_8hpp"/>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>ros_utils.hpp</label>
+        <link refid="ros__utils_8hpp"/>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+      </node>
+      <node id="51">
+        <label>slam_est_and_mcov.hpp</label>
+        <link refid="slam__est__and__mcov_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+      </node>
+      <node id="52">
+        <label>unary_factor.hpp</label>
+        <link refid="unary__factor_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="53" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="49">
+        <label>algorithm</label>
+      </node>
+      <node id="2">
+        <label>bits/stdc++.h</label>
+      </node>
+      <node id="37">
+        <label>boost/shared_ptr.hpp</label>
+      </node>
+      <node id="42">
+        <label>chrono</label>
+      </node>
+      <node id="43">
+        <label>climits</label>
+      </node>
+      <node id="41">
+        <label>cmath</label>
+      </node>
+      <node id="40">
+        <label>deque</label>
+      </node>
+      <node id="5">
+        <label>eigen3/Eigen/Dense</label>
+      </node>
+      <node id="50">
+        <label>float.h</label>
+      </node>
+      <node id="44">
+        <label>fmt/format.h</label>
+      </node>
+      <node id="39">
+        <label>fstream</label>
+      </node>
+      <node id="34">
+        <label>geometry_msgs/msg/point.hpp</label>
+      </node>
+      <node id="28">
+        <label>geometry_msgs/msg/pose_stamped.hpp</label>
+      </node>
+      <node id="30">
+        <label>geometry_msgs/msg/quaternion_stamped.hpp</label>
+      </node>
+      <node id="33">
+        <label>geometry_msgs/msg/twist.hpp</label>
+      </node>
+      <node id="31">
+        <label>geometry_msgs/msg/twist_stamped.hpp</label>
+      </node>
+      <node id="32">
+        <label>geometry_msgs/msg/twist_with_covariance.hpp</label>
+      </node>
+      <node id="29">
+        <label>geometry_msgs/msg/vector3_stamped.hpp</label>
+      </node>
+      <node id="3">
+        <label>gtsam/geometry/Point2.h</label>
+      </node>
+      <node id="4">
+        <label>gtsam/geometry/Pose2.h</label>
+      </node>
+      <node id="6">
+        <label>gtsam/inference/Symbol.h</label>
+      </node>
+      <node id="11">
+        <label>gtsam/nonlinear/DoglegOptimizer.h</label>
+      </node>
+      <node id="12">
+        <label>gtsam/nonlinear/GaussNewtonOptimizer.h</label>
+      </node>
+      <node id="7">
+        <label>gtsam/nonlinear/ISAM2.h</label>
+      </node>
+      <node id="10">
+        <label>gtsam/nonlinear/LevenbergMarquardtOptimizer.h</label>
+      </node>
+      <node id="13">
+        <label>gtsam/nonlinear/NonlinearConjugateGradientOptimizer.h</label>
+      </node>
+      <node id="53">
+        <label>gtsam/nonlinear/NonlinearFactor.h</label>
+      </node>
+      <node id="8">
+        <label>gtsam/nonlinear/NonlinearFactorGraph.h</label>
+      </node>
+      <node id="9">
+        <label>gtsam/nonlinear/Values.h</label>
+      </node>
+      <node id="16">
+        <label>gtsam/sam/BearingRangeFactor.h</label>
+      </node>
+      <node id="15">
+        <label>gtsam/slam/BetweenFactor.h</label>
+      </node>
+      <node id="14">
+        <label>gtsam/slam/ProjectionFactor.h</label>
+      </node>
+      <node id="24">
+        <label>interfaces/msg/cone_array.hpp</label>
+      </node>
+      <node id="25">
+        <label>interfaces/msg/cone_array_with_odom.hpp</label>
+      </node>
+      <node id="27">
+        <label>interfaces/msg/slam_chunk.hpp</label>
+      </node>
+      <node id="26">
+        <label>interfaces/msg/slam_pose.hpp</label>
+      </node>
+      <node id="18">
+        <label>memory</label>
+      </node>
+      <node id="21">
+        <label>message_filters/subscriber.h</label>
+      </node>
+      <node id="23">
+        <label>message_filters/sync_policies/approximate_time.h</label>
+      </node>
+      <node id="22">
+        <label>message_filters/synchronizer.h</label>
+      </node>
+      <node id="19">
+        <label>optional</label>
+      </node>
+      <node id="20">
+        <label>rclcpp/rclcpp.hpp</label>
+      </node>
+      <node id="35">
+        <label>sensor_msgs/msg/nav_sat_fix.hpp</label>
+      </node>
+      <node id="36">
+        <label>std_msgs/msg/string.hpp</label>
+      </node>
+      <node id="46">
+        <label>string</label>
+      </node>
+      <node id="48">
+        <label>tuple</label>
+      </node>
+      <node id="38">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>include/isam2.hpp</label>
+        <link refid="isam2_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>include/isam2_nodes.hpp</label>
+        <link refid="isam2__nodes_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>src/isam2/isam2.cpp</label>
+        <link refid="isam2_8cpp"/>
+      </node>
+      <node id="3">
+        <label>src/nodes/controls_sim_slam_node.cpp</label>
+        <link refid="controls__sim__slam__node_8cpp"/>
+      </node>
+      <node id="4">
+        <label>src/nodes/generic_slam_node.cpp</label>
+        <link refid="generic__slam__node_8cpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>src/nodes/generic_slam_node_impl.cpp</label>
+        <link refid="generic__slam__node__impl_8cpp"/>
+      </node>
+      <node id="6">
+        <label>src/nodes/real_data_slam_node_gps.cpp</label>
+        <link refid="real__data__slam__node__gps_8cpp"/>
+      </node>
+      <node id="7">
+        <label>src/nodes/real_data_slam_node_no_gps.cpp</label>
+        <link refid="real__data__slam__node__no__gps_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classslam_1_1slamISAM" prot="public">slam::slamISAM</innerclass>
+    <innernamespace refid="namespaceslam">slam</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;bits/stdc++.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Camera<sp/>observations<sp/>of<sp/>landmarks<sp/>will<sp/>be<sp/>stored<sp/>as<sp/>Point2<sp/>(x,<sp/>y).</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/geometry/Point2.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/geometry/Pose2.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;eigen3/Eigen/Dense&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Each<sp/>variable<sp/>in<sp/>the<sp/>system<sp/>(sposes<sp/>and<sp/>landmarks)<sp/>must<sp/>be<sp/>identified<sp/>with<sp/>a</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/>unique<sp/>key.<sp/>We<sp/>can<sp/>either<sp/>use<sp/>simple<sp/>integer<sp/>keys<sp/>(1,<sp/>2,<sp/>3,<sp/>...)<sp/>or<sp/>symbols</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/>(X1,<sp/>X2,<sp/>L1).<sp/>Here<sp/>we<sp/>will<sp/>use<sp/>Symbols</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/inference/Symbol.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/>We<sp/>want<sp/>to<sp/>use<sp/>iSAM2<sp/>to<sp/>solve<sp/>the<sp/>structure-from-motion<sp/>problem</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//<sp/>incrementally,<sp/>so<sp/>include<sp/>iSAM2<sp/>here</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/nonlinear/ISAM2.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//<sp/>iSAM2<sp/>requires<sp/>as<sp/>input<sp/>a<sp/>set<sp/>of<sp/>new<sp/>factors<sp/>to<sp/>be<sp/>added<sp/>stored<sp/>in<sp/>a<sp/>factor</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//<sp/>graph,<sp/>and<sp/>initial<sp/>guesses<sp/>for<sp/>any<sp/>new<sp/>variables<sp/>used<sp/>in<sp/>the<sp/>added<sp/>factors</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/nonlinear/NonlinearFactorGraph.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/nonlinear/Values.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/nonlinear/LevenbergMarquardtOptimizer.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/nonlinear/DoglegOptimizer.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/nonlinear/GaussNewtonOptimizer.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/nonlinear/NonlinearConjugateGradientOptimizer.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="comment">//<sp/>In<sp/>GTSAM,<sp/>measurement<sp/>functions<sp/>are<sp/>represented<sp/>as<sp/>&apos;factors&apos;.<sp/>Several<sp/>common</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="comment">//<sp/>factors<sp/>have<sp/>been<sp/>provided<sp/>with<sp/>the<sp/>library<sp/>for<sp/>solving<sp/>robotics/SLAM/Bundle</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Adjustment<sp/>problems.<sp/>Here<sp/>we<sp/>will<sp/>use<sp/>Projection<sp/>factors<sp/>to<sp/>model<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="comment">//<sp/>camera&apos;s<sp/>landmark<sp/>observations.<sp/>Also,<sp/>we<sp/>will<sp/>initialize<sp/>the<sp/>robot<sp/>at<sp/>some</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="comment">//<sp/>location<sp/>using<sp/>a<sp/>Prior<sp/>factor.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/slam/ProjectionFactor.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/slam/BetweenFactor.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;gtsam/sam/BearingRangeFactor.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="ros__utils_8hpp" kindref="compound">ros_utils.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="data__association_8hpp" kindref="compound">data_association.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="unary__factor_8hpp" kindref="compound">unary_factor.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="slam__est__and__mcov_8hpp" kindref="compound">slam_est_and_mcov.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="loop__closure_8hpp" kindref="compound">loop_closure.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="namespaceslam" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespaceslam" kindref="compound">slam</ref><sp/>{</highlight></codeline>
+<codeline lineno="40" refid="namespaceslam_1a74c5ff6a5f23be28ef1b570f909b8449" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal"><ref refid="namespaceslam_1a74c5ff6a5f23be28ef1b570f909b8449" kindref="member">slam_output_t</ref><sp/>=<sp/>std::tuple&lt;std::vector&lt;geometry_msgs::msg::Point&gt;,<sp/></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;geometry_msgs::msg::Point&gt;,<sp/></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::Point&gt;;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="44" refid="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">enum<sp/>class</highlight><highlight class="normal"><sp/><ref refid="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449" kindref="member">RunSettings</ref><sp/>{</highlight></codeline>
+<codeline lineno="45" refid="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449a7f80fcc452c2f1ed2bb51b39d0864df1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449a7f80fcc452c2f1ed2bb51b39d0864df1" kindref="member">Real</ref>,</highlight></codeline>
+<codeline lineno="46" refid="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449a69d734ae5c73fbb6a4d4221bb5ba20c6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449a69d734ae5c73fbb6a4d4221bb5ba20c6" kindref="member">EUFSSim</ref>,</highlight></codeline>
+<codeline lineno="47" refid="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449ae4438a611ac230ecdb056c4f171bc547" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespaceslam_1aebac8ff6e81586b3187a1e1b1f472449ae4438a611ac230ecdb056c4f171bc547" kindref="member">ControlsSim</ref></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51" refid="classslam_1_1slamISAM" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classslam_1_1slamISAM_1a0f15f59ec41b33eeca84b0399a6429dc" kindref="member">slamISAM</ref><sp/>{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Variables<sp/>related<sp/>to<sp/>ISAM2<sp/>factor<sp/>graph*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::ISAM2Params<sp/>parameters;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;gtsam::ISAM2&gt;<sp/>isam2;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::NonlinearFactorGraph<sp/>graph;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Values<sp/>values;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Functions<sp/>for<sp/>adding<sp/>symbols<sp/>to<sp/>the<sp/>ISAM2<sp/>factor<sp/>graph<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>gtsam::Symbol<sp/>X(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>robot_pose_id);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>gtsam::Symbol<sp/>BLUE_L(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>cone_pose_id);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>gtsam::Symbol<sp/>YELLOW_L(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>cone_pose_id);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Pose<sp/>and<sp/>odometry<sp/>information<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Pose2<sp/>first_pose;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>pose_num;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>first_pose_added<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Current<sp/>vector<sp/>of<sp/>mahalanobis<sp/>distance<sp/>calculations<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;double&gt;<sp/>m_dist;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Lap<sp/>and<sp/>loop<sp/>closure<sp/>related<sp/>variables<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>loop_closure;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>new_lap;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>lap_count;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>SLAM<sp/>history<sp/>of<sp/>estimates<sp/>and<sp/>marginal<sp/>covariance<sp/>matrices<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classslam_1_1SLAMEstAndMCov" kindref="compound">SLAMEstAndMCov</ref><sp/>blue_slam_est_and_mcov;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classslam_1_1SLAMEstAndMCov" kindref="compound">SLAMEstAndMCov</ref><sp/>yellow_slam_est_and_mcov;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>checkpoint_to_update_beginning;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>blue_checkpoint_id;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>yellow_checkpoint_id;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::chrono::high_resolution_clock::time_point<sp/>start;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::chrono::high_resolution_clock::time_point<sp/>end;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Noise<sp/>models<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Vector<sp/>LandmarkNoiseModel;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::noiseModel::Diagonal::shared_ptr<sp/>landmark_model;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Vector<sp/>PriorNoiseModel;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::noiseModel::Diagonal::shared_ptr<sp/>prior_model;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Vector<sp/>OdomNoiseModel;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::noiseModel::Diagonal::shared_ptr<sp/>odom_model;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Vector<sp/>UnaryNoiseModel;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::noiseModel::Diagonal::shared_ptr<sp/>unary_model;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;rclcpp::Logger&gt;<sp/>logger;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Tunable<sp/>and<sp/>adjustable<sp/>parameters<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>look_radius;</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>min_cones_update_all;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>window_update;</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>update_start_n;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>update_recent_n;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>imu_offset;<sp/></highlight><highlight class="comment">//<sp/>meters;<sp/>offset<sp/>from<sp/>the<sp/>center<sp/>of<sp/>the<sp/>car</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>lidar_offset;<sp/></highlight><highlight class="comment">//<sp/>meters;<sp/>offset<sp/>from<sp/>the<sp/>center<sp/>of<sp/>the<sp/>car</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>max_cone_range;<sp/></highlight><highlight class="comment">//<sp/>meters;<sp/>how<sp/>far<sp/>from<sp/>the<sp/>car<sp/>will<sp/>we<sp/>accept<sp/>a<sp/>cone<sp/>to<sp/>process</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>turning_max_cone_range;<sp/></highlight><highlight class="comment">//meters;<sp/>how<sp/>far<sp/>from<sp/>the<sp/>car<sp/>will<sp/>we<sp/>accept<sp/>a<sp/>cone<sp/>to<sp/>process</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dist_from_start_loop_closure_th;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>m_dist_th;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>turning_m_dist_th;</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>update_iterations_n;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::size_t<sp/>return_n_cones;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>init_noise_models(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::optional&lt;yaml_params::NoiseInputs&gt;<sp/>&amp;yaml_noise_inputs);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>init_tunable_constants(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::optional&lt;yaml_params::NoiseInputs&gt;<sp/>&amp;yaml_noise_inputs);</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>init_params(std::optional&lt;rclcpp::Logger&gt;<sp/>input_logger);</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>print_estimates();</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>log_params_in_use(</highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>has_value);</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespaceslam_1a74c5ff6a5f23be28ef1b570f909b8449" kindref="member">slam_output_t</ref><sp/>get_recent_SLAM_estimates(gtsam::Pose2<sp/>cur_pose);</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Pose2<sp/>update_poses(</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;gtsam::Point2&gt;<sp/>gps_position,</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>yaw,</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Pose2<sp/>velocity,<sp/></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dt,<sp/></highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;rclcpp::Logger&gt;<sp/>logger</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>update_landmarks(</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;data_association_utils::OldConeInfo&gt;<sp/>&amp;old_cones,</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;data_association_utils::NewConeInfo&gt;<sp/>&amp;new_cones,</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Pose2<sp/>cur_pose,</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classslam_1_1SLAMEstAndMCov" kindref="compound">SLAMEstAndMCov</ref><sp/>&amp;slam_est_and_mcov);</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"></highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:<sp/></highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classslam_1_1slamISAM_1a339835603720c6ba0db771b8fd9a8828" kindref="member">slamISAM</ref>(std::optional&lt;rclcpp::Logger&gt;<sp/>input_logger,<sp/>std::optional&lt;yaml_params::NoiseInputs&gt;<sp/>&amp;yaml_noise_inputs);</highlight></codeline>
+<codeline lineno="193" refid="classslam_1_1slamISAM_1a339835603720c6ba0db771b8fd9a8828" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classslam_1_1slamISAM_1a339835603720c6ba0db771b8fd9a8828" kindref="member">slamISAM</ref>(){};<sp/></highlight><highlight class="comment">/*<sp/>Empty<sp/>constructor<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespaceslam_1a74c5ff6a5f23be28ef1b570f909b8449" kindref="member">slam_output_t</ref><sp/><ref refid="classslam_1_1slamISAM_1a59469d87c99142bec093ab4a13c9cff5" kindref="member">step</ref>(</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;gtsam::Point2&gt;<sp/>gps_opt,<sp/></highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>yaw,</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;cone_obs_blue,<sp/></highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;cone_obs_yellow,</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;gtsam::Point2&gt;<sp/>&amp;orange_ref_cones,<sp/></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Pose2<sp/>velocity,</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>dt</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="204"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="include/isam2.hpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,1273 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="classslam_1_1slamISAM" kind="class" language="C++" prot="public">
+    <compoundname>slam::slamISAM</compoundname>
+    <includes refid="isam2_8hpp" local="no">isam2.hpp</includes>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1ae9c13554ac6d6259e09418d65732a705" prot="private" static="no" mutable="no">
+        <type>gtsam::ISAM2Params</type>
+        <definition>gtsam::ISAM2Params slam::slamISAM::parameters</definition>
+        <argsstring></argsstring>
+        <name>parameters</name>
+        <qualifiedname>slam::slamISAM::parameters</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="54" column="32" bodyfile="include/isam2.hpp" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a5814a31ff385ad751aa3fd345f383905" prot="private" static="no" mutable="no">
+        <type>std::shared_ptr&lt; gtsam::ISAM2 &gt;</type>
+        <definition>std::shared_ptr&lt;gtsam::ISAM2&gt; slam::slamISAM::isam2</definition>
+        <argsstring></argsstring>
+        <name>isam2</name>
+        <qualifiedname>slam::slamISAM::isam2</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="55" column="29" bodyfile="include/isam2.hpp" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1af732f4fa584f073646a4bc9fd8270e1f" prot="private" static="no" mutable="no">
+        <type>gtsam::NonlinearFactorGraph</type>
+        <definition>gtsam::NonlinearFactorGraph slam::slamISAM::graph</definition>
+        <argsstring></argsstring>
+        <name>graph</name>
+        <qualifiedname>slam::slamISAM::graph</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="56" column="41" bodyfile="include/isam2.hpp" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1ace59af201f024f98d274c239c9bea16c" prot="private" static="no" mutable="no">
+        <type>gtsam::Values</type>
+        <definition>gtsam::Values slam::slamISAM::values</definition>
+        <argsstring></argsstring>
+        <name>values</name>
+        <qualifiedname>slam::slamISAM::values</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="57" column="27" bodyfile="include/isam2.hpp" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a33735fe1e6c4f908658f2b3cab57791a" prot="private" static="no" mutable="no">
+        <type>gtsam::Pose2</type>
+        <definition>gtsam::Pose2 slam::slamISAM::first_pose</definition>
+        <argsstring></argsstring>
+        <name>first_pose</name>
+        <qualifiedname>slam::slamISAM::first_pose</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="65" column="26" bodyfile="include/isam2.hpp" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1ab7b4aef9739a36e371d838b055fac8e4" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::pose_num</definition>
+        <argsstring></argsstring>
+        <name>pose_num</name>
+        <qualifiedname>slam::slamISAM::pose_num</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="66" column="25" bodyfile="include/isam2.hpp" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1ad7cf8859d54b42f1ffe125b30268f3f9" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool slam::slamISAM::first_pose_added</definition>
+        <argsstring></argsstring>
+        <name>first_pose_added</name>
+        <qualifiedname>slam::slamISAM::first_pose_added</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="67" column="18" bodyfile="include/isam2.hpp" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1ab937fa17ad58cebd6f9122397fcd8c8c" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; double &gt;</type>
+        <definition>std::vector&lt;double&gt; slam::slamISAM::m_dist</definition>
+        <argsstring></argsstring>
+        <name>m_dist</name>
+        <qualifiedname>slam::slamISAM::m_dist</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="70" column="25" bodyfile="include/isam2.hpp" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a9e897253e1ea7fe60a1d52e257012d25" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool slam::slamISAM::loop_closure</definition>
+        <argsstring></argsstring>
+        <name>loop_closure</name>
+        <qualifiedname>slam::slamISAM::loop_closure</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="73" column="18" bodyfile="include/isam2.hpp" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1ac85cc2cba2241bc919c67483a3373c94" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool slam::slamISAM::new_lap</definition>
+        <argsstring></argsstring>
+        <name>new_lap</name>
+        <qualifiedname>slam::slamISAM::new_lap</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="74" column="18" bodyfile="include/isam2.hpp" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1aeb06303067eee97bb62babc9f8d47b58" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::lap_count</definition>
+        <argsstring></argsstring>
+        <name>lap_count</name>
+        <qualifiedname>slam::slamISAM::lap_count</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="75" column="25" bodyfile="include/isam2.hpp" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1adb4e5740568ba39fe64ed281e22c6829" prot="private" static="no" mutable="no">
+        <type><ref refid="classslam_1_1SLAMEstAndMCov" kindref="compound">SLAMEstAndMCov</ref></type>
+        <definition>SLAMEstAndMCov slam::slamISAM::blue_slam_est_and_mcov</definition>
+        <argsstring></argsstring>
+        <name>blue_slam_est_and_mcov</name>
+        <qualifiedname>slam::slamISAM::blue_slam_est_and_mcov</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="79" column="28" bodyfile="include/isam2.hpp" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a095cad954d32cac0f2f67ae4eccd4a5b" prot="private" static="no" mutable="no">
+        <type><ref refid="classslam_1_1SLAMEstAndMCov" kindref="compound">SLAMEstAndMCov</ref></type>
+        <definition>SLAMEstAndMCov slam::slamISAM::yellow_slam_est_and_mcov</definition>
+        <argsstring></argsstring>
+        <name>yellow_slam_est_and_mcov</name>
+        <qualifiedname>slam::slamISAM::yellow_slam_est_and_mcov</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="80" column="28" bodyfile="include/isam2.hpp" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1ad8609adc780f2de943fdf662aea75be6" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::checkpoint_to_update_beginning</definition>
+        <argsstring></argsstring>
+        <name>checkpoint_to_update_beginning</name>
+        <qualifiedname>slam::slamISAM::checkpoint_to_update_beginning</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="83" column="25" bodyfile="include/isam2.hpp" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a7387987ac551f83b95c81ab7aa473716" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::blue_checkpoint_id</definition>
+        <argsstring></argsstring>
+        <name>blue_checkpoint_id</name>
+        <qualifiedname>slam::slamISAM::blue_checkpoint_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="84" column="25" bodyfile="include/isam2.hpp" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a333df35af0affe901507977bffde9517" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::yellow_checkpoint_id</definition>
+        <argsstring></argsstring>
+        <name>yellow_checkpoint_id</name>
+        <qualifiedname>slam::slamISAM::yellow_checkpoint_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="85" column="25" bodyfile="include/isam2.hpp" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1abf5e9c573a70e56fa7944ad389d58d71" prot="private" static="no" mutable="no">
+        <type>std::chrono::high_resolution_clock::time_point</type>
+        <definition>std::chrono::high_resolution_clock::time_point slam::slamISAM::start</definition>
+        <argsstring></argsstring>
+        <name>start</name>
+        <qualifiedname>slam::slamISAM::start</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="89" column="60" bodyfile="include/isam2.hpp" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1adedaa71ef5abf48a81a2f82ea9953786" prot="private" static="no" mutable="no">
+        <type>std::chrono::high_resolution_clock::time_point</type>
+        <definition>std::chrono::high_resolution_clock::time_point slam::slamISAM::end</definition>
+        <argsstring></argsstring>
+        <name>end</name>
+        <qualifiedname>slam::slamISAM::end</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="90" column="60" bodyfile="include/isam2.hpp" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1afbba907ebc7deeceb0472f870662df0d" prot="private" static="no" mutable="no">
+        <type>gtsam::Vector</type>
+        <definition>gtsam::Vector slam::slamISAM::LandmarkNoiseModel</definition>
+        <argsstring></argsstring>
+        <name>LandmarkNoiseModel</name>
+        <qualifiedname>slam::slamISAM::LandmarkNoiseModel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="93" column="27" bodyfile="include/isam2.hpp" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1ad07bc090d45037299c70a38815210697" prot="private" static="no" mutable="no">
+        <type>gtsam::noiseModel::Diagonal::shared_ptr</type>
+        <definition>gtsam::noiseModel::Diagonal::shared_ptr slam::slamISAM::landmark_model</definition>
+        <argsstring></argsstring>
+        <name>landmark_model</name>
+        <qualifiedname>slam::slamISAM::landmark_model</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="94" column="53" bodyfile="include/isam2.hpp" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1ac9dc36ecf3bea16235e8d1c1e0010cb5" prot="private" static="no" mutable="no">
+        <type>gtsam::Vector</type>
+        <definition>gtsam::Vector slam::slamISAM::PriorNoiseModel</definition>
+        <argsstring></argsstring>
+        <name>PriorNoiseModel</name>
+        <qualifiedname>slam::slamISAM::PriorNoiseModel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="95" column="27" bodyfile="include/isam2.hpp" bodystart="95" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a6194d3a1998380920d52dcf70cd78e27" prot="private" static="no" mutable="no">
+        <type>gtsam::noiseModel::Diagonal::shared_ptr</type>
+        <definition>gtsam::noiseModel::Diagonal::shared_ptr slam::slamISAM::prior_model</definition>
+        <argsstring></argsstring>
+        <name>prior_model</name>
+        <qualifiedname>slam::slamISAM::prior_model</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="96" column="53" bodyfile="include/isam2.hpp" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a6cf0f3da7f72352b0f4f833579c5efed" prot="private" static="no" mutable="no">
+        <type>gtsam::Vector</type>
+        <definition>gtsam::Vector slam::slamISAM::OdomNoiseModel</definition>
+        <argsstring></argsstring>
+        <name>OdomNoiseModel</name>
+        <qualifiedname>slam::slamISAM::OdomNoiseModel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="97" column="27" bodyfile="include/isam2.hpp" bodystart="97" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a6896403bd11f78df940d58023b7b5e50" prot="private" static="no" mutable="no">
+        <type>gtsam::noiseModel::Diagonal::shared_ptr</type>
+        <definition>gtsam::noiseModel::Diagonal::shared_ptr slam::slamISAM::odom_model</definition>
+        <argsstring></argsstring>
+        <name>odom_model</name>
+        <qualifiedname>slam::slamISAM::odom_model</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="98" column="53" bodyfile="include/isam2.hpp" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1ae5d4b4812f0917fa592ccbfece209b89" prot="private" static="no" mutable="no">
+        <type>gtsam::Vector</type>
+        <definition>gtsam::Vector slam::slamISAM::UnaryNoiseModel</definition>
+        <argsstring></argsstring>
+        <name>UnaryNoiseModel</name>
+        <qualifiedname>slam::slamISAM::UnaryNoiseModel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="99" column="27" bodyfile="include/isam2.hpp" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1af395bf470d9db5a0432cc5bf84173552" prot="private" static="no" mutable="no">
+        <type>gtsam::noiseModel::Diagonal::shared_ptr</type>
+        <definition>gtsam::noiseModel::Diagonal::shared_ptr slam::slamISAM::unary_model</definition>
+        <argsstring></argsstring>
+        <name>unary_model</name>
+        <qualifiedname>slam::slamISAM::unary_model</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="100" column="53" bodyfile="include/isam2.hpp" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a6c8776734709d796fcde9a5890cd29b5" prot="private" static="no" mutable="no">
+        <type>std::optional&lt; rclcpp::Logger &gt;</type>
+        <definition>std::optional&lt;rclcpp::Logger&gt; slam::slamISAM::logger</definition>
+        <argsstring></argsstring>
+        <name>logger</name>
+        <qualifiedname>slam::slamISAM::logger</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="101" column="27" bodyfile="include/isam2.hpp" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a60c2fd568200421e89c16a106da6298a" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::look_radius</definition>
+        <argsstring></argsstring>
+        <name>look_radius</name>
+        <qualifiedname>slam::slamISAM::look_radius</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="105" column="25" bodyfile="include/isam2.hpp" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a1f5035d2be540e2eb9e599643bf6af6c" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::min_cones_update_all</definition>
+        <argsstring></argsstring>
+        <name>min_cones_update_all</name>
+        <qualifiedname>slam::slamISAM::min_cones_update_all</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="106" column="25" bodyfile="include/isam2.hpp" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a514b72a6fad3a2686ff3112fa7fcdc06" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::window_update</definition>
+        <argsstring></argsstring>
+        <name>window_update</name>
+        <qualifiedname>slam::slamISAM::window_update</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="107" column="25" bodyfile="include/isam2.hpp" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a7e1aa63948391792687f268e0837ca38" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::update_start_n</definition>
+        <argsstring></argsstring>
+        <name>update_start_n</name>
+        <qualifiedname>slam::slamISAM::update_start_n</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="108" column="25" bodyfile="include/isam2.hpp" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a2352774731f5b76dcbe7f83c6aaf0e0d" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::update_recent_n</definition>
+        <argsstring></argsstring>
+        <name>update_recent_n</name>
+        <qualifiedname>slam::slamISAM::update_recent_n</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="109" column="25" bodyfile="include/isam2.hpp" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a6796d164aac1c3edfd6d6c81188b37a6" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double slam::slamISAM::imu_offset</definition>
+        <argsstring></argsstring>
+        <name>imu_offset</name>
+        <qualifiedname>slam::slamISAM::imu_offset</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="111" column="20" bodyfile="include/isam2.hpp" bodystart="111" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a08c35f8163d84c9da626be48e013f81a" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double slam::slamISAM::lidar_offset</definition>
+        <argsstring></argsstring>
+        <name>lidar_offset</name>
+        <qualifiedname>slam::slamISAM::lidar_offset</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="112" column="20" bodyfile="include/isam2.hpp" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a6ed15b30018e73d5552a042554fd2627" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double slam::slamISAM::max_cone_range</definition>
+        <argsstring></argsstring>
+        <name>max_cone_range</name>
+        <qualifiedname>slam::slamISAM::max_cone_range</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="113" column="20" bodyfile="include/isam2.hpp" bodystart="113" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1afd5f62c1bab64c7ec2d343649be42eb2" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double slam::slamISAM::turning_max_cone_range</definition>
+        <argsstring></argsstring>
+        <name>turning_max_cone_range</name>
+        <qualifiedname>slam::slamISAM::turning_max_cone_range</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="114" column="20" bodyfile="include/isam2.hpp" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a49beaa8ef4e326d4a55a35d620d0e0e8" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double slam::slamISAM::dist_from_start_loop_closure_th</definition>
+        <argsstring></argsstring>
+        <name>dist_from_start_loop_closure_th</name>
+        <qualifiedname>slam::slamISAM::dist_from_start_loop_closure_th</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="115" column="20" bodyfile="include/isam2.hpp" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a169b474848ac6ec1af3d5d3bdcdf9c81" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double slam::slamISAM::m_dist_th</definition>
+        <argsstring></argsstring>
+        <name>m_dist_th</name>
+        <qualifiedname>slam::slamISAM::m_dist_th</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="116" column="20" bodyfile="include/isam2.hpp" bodystart="116" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1a336258365becaf14ef0467a66ecc62b1" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double slam::slamISAM::turning_m_dist_th</definition>
+        <argsstring></argsstring>
+        <name>turning_m_dist_th</name>
+        <qualifiedname>slam::slamISAM::turning_m_dist_th</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="117" column="20" bodyfile="include/isam2.hpp" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1aba09d7f56817cee0eb1a014688028865" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::update_iterations_n</definition>
+        <argsstring></argsstring>
+        <name>update_iterations_n</name>
+        <qualifiedname>slam::slamISAM::update_iterations_n</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="118" column="25" bodyfile="include/isam2.hpp" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classslam_1_1slamISAM_1aee762e585ccd241105d86118b501ebb0" prot="private" static="no" mutable="no">
+        <type>std::size_t</type>
+        <definition>std::size_t slam::slamISAM::return_n_cones</definition>
+        <argsstring></argsstring>
+        <name>return_n_cones</name>
+        <qualifiedname>slam::slamISAM::return_n_cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="119" column="25" bodyfile="include/isam2.hpp" bodystart="119" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="classslam_1_1slamISAM_1a904d88ea6eb189074d3ed2c9f8535ce8" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Symbol</type>
+        <definition>gtsam::Symbol slam::slamISAM::X</definition>
+        <argsstring>(int robot_pose_id)</argsstring>
+        <name>X</name>
+        <qualifiedname>slam::slamISAM::X</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>robot_pose_id</declname>
+        </param>
+        <briefdescription>
+<para>Helper function to create a symbol representing the robot pose in the factor graph of the iSAM2 SLAM model. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>robot_pose_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para><linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>gtsam::Symbol </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="60" column="34" bodyfile="src/isam2/isam2.cpp" bodystart="201" bodyend="203"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1slamISAM_1a2dc08747d8d259473657792e445dbfcf" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Symbol</type>
+        <definition>gtsam::Symbol slam::slamISAM::BLUE_L</definition>
+        <argsstring>(int cone_pose_id)</argsstring>
+        <name>BLUE_L</name>
+        <qualifiedname>slam::slamISAM::BLUE_L</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>cone_pose_id</declname>
+          <defname>cone_id</defname>
+        </param>
+        <briefdescription>
+<para>Helper function to create a symbol representing the blue landmark estimate in the factor graph of the iSAM2 SLAM model. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cone_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>gtsam::Symbol </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="61" column="34" bodyfile="src/isam2/isam2.cpp" bodystart="211" bodyend="213"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1slamISAM_1a9aaf82ba8462926d8270a177c9d10fdb" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Symbol</type>
+        <definition>gtsam::Symbol slam::slamISAM::YELLOW_L</definition>
+        <argsstring>(int cone_pose_id)</argsstring>
+        <name>YELLOW_L</name>
+        <qualifiedname>slam::slamISAM::YELLOW_L</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>cone_pose_id</declname>
+          <defname>cone_id</defname>
+        </param>
+        <briefdescription>
+<para>Helper function to create a symbol representing the yellow landmark estimate in the factor graph of the iSAM2 SLAM model. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cone_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>gtsam::Symbol </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="62" column="34" bodyfile="src/isam2/isam2.cpp" bodystart="221" bodyend="223"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-func">
+      <memberdef kind="function" id="classslam_1_1slamISAM_1a036ac78732b74d660e859738b8e1624d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::slamISAM::init_noise_models</definition>
+        <argsstring>(const std::optional&lt; yaml_params::NoiseInputs &gt; &amp;yaml_noise_inputs)</argsstring>
+        <name>init_noise_models</name>
+        <qualifiedname>slam::slamISAM::init_noise_models</qualifiedname>
+        <param>
+          <type>const std::optional&lt; <ref refid="structyaml__params_1_1NoiseInputs" kindref="compound">yaml_params::NoiseInputs</ref> &gt; &amp;</type>
+          <declname>yaml_noise_inputs</declname>
+        </param>
+        <briefdescription>
+<para>Initializes the noise models for the SLAM model. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>yaml_noise_inputs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>An optional NoiseInputs struct containing information from the config yaml file, if one was provided. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="128" column="18" bodyfile="src/isam2/isam2.cpp" bodystart="18" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1slamISAM_1af5dde9847cb0231f5b38d54e0cc6c669" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::slamISAM::init_tunable_constants</definition>
+        <argsstring>(const std::optional&lt; yaml_params::NoiseInputs &gt; &amp;yaml_noise_inputs)</argsstring>
+        <name>init_tunable_constants</name>
+        <qualifiedname>slam::slamISAM::init_tunable_constants</qualifiedname>
+        <param>
+          <type>const std::optional&lt; <ref refid="structyaml__params_1_1NoiseInputs" kindref="compound">yaml_params::NoiseInputs</ref> &gt; &amp;</type>
+          <declname>yaml_noise_inputs</declname>
+        </param>
+        <briefdescription>
+<para>Initializes the tunable parameters for the SLAM model. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>yaml_noise_inputs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>An optional NoiseInputs struct containing information from the config yaml file, if one was provided. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="136" column="18" bodyfile="src/isam2/isam2.cpp" bodystart="93" bodyend="133"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1slamISAM_1a439a023fa2a119ee1f455174cf1efc05" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::slamISAM::init_params</definition>
+        <argsstring>(std::optional&lt; rclcpp::Logger &gt; input_logger)</argsstring>
+        <name>init_params</name>
+        <qualifiedname>slam::slamISAM::init_params</qualifiedname>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>input_logger</declname>
+        </param>
+        <briefdescription>
+<para>A helper function for the constructor to initialize the parameters. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>input_logger</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+Also calls the init_noise_models and init_tunable_params functions</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>yaml_noise_inputs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>An optional NoiseInputs struct containing information from the config yaml file, if one was provided. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="143" column="18" bodyfile="src/isam2/isam2.cpp" bodystart="140" bodyend="166"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1slamISAM_1a6c377b105fb29b201ae1ac8cbef1bbd0" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::slamISAM::print_estimates</definition>
+        <argsstring>()</argsstring>
+        <name>print_estimates</name>
+        <qualifiedname>slam::slamISAM::print_estimates</qualifiedname>
+        <briefdescription>
+<para>Logs the current SLAM estimates to a file for visualization or debugging. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is useful for offline inspection or visualization tools </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="145" column="18" bodyfile="src/isam2/isam2.cpp" bodystart="632" bodyend="660"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1slamISAM_1adeaddd6fcb8efae58917bbe1ab39d7f6" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::slamISAM::log_params_in_use</definition>
+        <argsstring>(bool has_value)</argsstring>
+        <name>log_params_in_use</name>
+        <qualifiedname>slam::slamISAM::log_params_in_use</qualifiedname>
+        <param>
+          <type>bool</type>
+          <declname>has_value</declname>
+          <defname>yaml_has_value</defname>
+        </param>
+        <briefdescription>
+<para>Sanity check function for logging the parameters and constants that are in use and whether the yaml file is being used. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>yaml_has_value</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Boolean indicating whether or not the yaml file exists. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="147" column="18" bodyfile="src/isam2/isam2.cpp" bodystart="230" bodyend="247"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1slamISAM_1a54b59618e93fc6ad4e560548cb503e2b" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="namespaceslam_1a74c5ff6a5f23be28ef1b570f909b8449" kindref="member">slam_output_t</ref></type>
+        <definition>slam_output_t slam::slamISAM::get_recent_SLAM_estimates</definition>
+        <argsstring>(gtsam::Pose2 cur_pose)</argsstring>
+        <name>get_recent_SLAM_estimates</name>
+        <qualifiedname>slam::slamISAM::get_recent_SLAM_estimates</qualifiedname>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>cur_pose</declname>
+        </param>
+        <briefdescription>
+<para>Retrieves the most recent SLAM landmark estimates. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function extracts the latest estimated landmark positions for both blue and yellow cones from the SLAM state. It returns a fixed number of the most recent cones (or all of them if fewer than the threshold exist), transformed into ROS geometry messages in the car&apos;s reference frame.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>cur_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current global pose of the car</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A tuple containing:<itemizedlist>
+<listitem><para>A vector of geometry_msgs::msg::Point for blue cone landmarks.</para>
+</listitem><listitem><para>A vector of geometry_msgs::msg::Point for yellow cone landmarks.</para>
+</listitem><listitem><para>A geometry_msgs::msg::Point representing the current vehicle position. </para>
+</listitem></itemizedlist>
+</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="149" column="27" bodyfile="src/isam2/isam2.cpp" bodystart="440" bodyend="470"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1slamISAM_1af0d88f3a599b0679ade73757b79049db" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Pose2</type>
+        <definition>gtsam::Pose2 slam::slamISAM::update_poses</definition>
+        <argsstring>(std::optional&lt; gtsam::Point2 &gt; gps_position, double yaw, gtsam::Pose2 velocity, double dt, std::optional&lt; rclcpp::Logger &gt; logger)</argsstring>
+        <name>update_poses</name>
+        <qualifiedname>slam::slamISAM::update_poses</qualifiedname>
+        <param>
+          <type>std::optional&lt; gtsam::Point2 &gt;</type>
+          <declname>gps_position</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>yaw</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>velocity</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dt</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>logger</declname>
+        </param>
+        <briefdescription>
+<para>Updates the poses in the SLAM model. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>During the first pose, the estimate is not returned for stability.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gps_position</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>An optional GPS position of the car </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yaw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the heading of the car </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>velocity</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the velocity of the car </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the change in time </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the logger</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>: gtsam::Pose2 representing the current pose of the car </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="163" column="26" bodyfile="src/isam2/isam2.cpp" bodystart="261" bodyend="335"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1slamISAM_1ace64d3b4a148316eccb520f71375efa0" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slam::slamISAM::update_landmarks</definition>
+        <argsstring>(const std::vector&lt; data_association_utils::OldConeInfo &gt; &amp;old_cones, const std::vector&lt; data_association_utils::NewConeInfo &gt; &amp;new_cones, gtsam::Pose2 cur_pose, SLAMEstAndMCov &amp;slam_est_and_mcov)</argsstring>
+        <name>update_landmarks</name>
+        <qualifiedname>slam::slamISAM::update_landmarks</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="structdata__association__utils_1_1OldConeInfo" kindref="compound">data_association_utils::OldConeInfo</ref> &gt; &amp;</type>
+          <declname>old_cones</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="structdata__association__utils_1_1NewConeInfo" kindref="compound">data_association_utils::NewConeInfo</ref> &gt; &amp;</type>
+          <declname>new_cones</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>cur_pose</declname>
+        </param>
+        <param>
+          <type><ref refid="classslam_1_1SLAMEstAndMCov" kindref="compound">SLAMEstAndMCov</ref> &amp;</type>
+          <declname>slam_est_and_mcov</declname>
+        </param>
+        <briefdescription>
+<para>Updates the landmarks in the SLAM model. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function is used to update the landmarks for a given cone color at a time. This function will update the SLAM model accordingly using the cone information stored in old_cones and new_cones. This function will also update the slam_est_and_mcov object.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>old_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the old cones </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>new_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the new cones </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cur_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the current pose of the car </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>slam_est_and_mcov</parametername>
+</parameternamelist>
+<parameterdescription>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>: returns the new number of landmarks</para>
+</simplesect>
+This function is used to update the landmarks for a given cone color at a time. This function will update the SLAM model accordingly using the cone information stored in old_cones and new_cones. This function will also update the slam_est_and_mcov object.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>old_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A vector of previously seen cones with known associations </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>new_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A vector of newly detected cones with no prior association </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cur_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current pose of the robot in the global frame </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>slam_est_and_mcov</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to the object managing landmark estimates and marginal covariances </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="185" column="18" bodyfile="src/isam2/isam2.cpp" bodystart="349" bodyend="425"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classslam_1_1slamISAM_1a0f15f59ec41b33eeca84b0399a6429dc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>slam::slamISAM::slamISAM</definition>
+        <argsstring>(std::optional&lt; rclcpp::Logger &gt; input_logger, std::optional&lt; yaml_params::NoiseInputs &gt; &amp;yaml_noise_inputs)</argsstring>
+        <name>slamISAM</name>
+        <qualifiedname>slam::slamISAM::slamISAM</qualifiedname>
+        <param>
+          <type>std::optional&lt; rclcpp::Logger &gt;</type>
+          <declname>input_logger</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; <ref refid="structyaml__params_1_1NoiseInputs" kindref="compound">yaml_params::NoiseInputs</ref> &gt; &amp;</type>
+          <declname>yaml_noise_inputs</declname>
+        </param>
+        <briefdescription>
+<para>Constructor for the <ref refid="classslam_1_1slamISAM" kindref="compound">slamISAM</ref> class. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Initializes noise models, tunable constants, and internal parameters required for iSAM2 SLAM operation. It also sets up the noise models used for different factor types (landmark, odometry, prior, and unary).</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>input_logger</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional ROS 2 logger for debug output </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yaml_noise_inputs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional struct containing SLAM tuning parameters </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="192" column="13" bodyfile="src/isam2/isam2.cpp" bodystart="178" bodyend="193"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1slamISAM_1a339835603720c6ba0db771b8fd9a8828" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>slam::slamISAM::slamISAM</definition>
+        <argsstring>()</argsstring>
+        <name>slamISAM</name>
+        <qualifiedname>slam::slamISAM::slamISAM</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="193" column="13" bodyfile="include/isam2.hpp" bodystart="193" bodyend="193"/>
+      </memberdef>
+      <memberdef kind="function" id="classslam_1_1slamISAM_1a59469d87c99142bec093ab4a13c9cff5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="namespaceslam_1a74c5ff6a5f23be28ef1b570f909b8449" kindref="member">slam_output_t</ref></type>
+        <definition>slam_output_t slam::slamISAM::step</definition>
+        <argsstring>(std::optional&lt; gtsam::Point2 &gt; gps_opt, double yaw, const std::vector&lt; gtsam::Point2 &gt; &amp;cone_obs_blue, const std::vector&lt; gtsam::Point2 &gt; &amp;cone_obs_yellow, const std::vector&lt; gtsam::Point2 &gt; &amp;orange_ref_cones, gtsam::Pose2 velocity, double dt)</argsstring>
+        <name>step</name>
+        <qualifiedname>slam::slamISAM::step</qualifiedname>
+        <param>
+          <type>std::optional&lt; gtsam::Point2 &gt;</type>
+          <declname>gps_opt</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>yaw</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>cone_obs_blue</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>cone_obs_yellow</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; gtsam::Point2 &gt; &amp;</type>
+          <declname>orange_ref_cones</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>velocity</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dt</declname>
+        </param>
+        <briefdescription>
+<para>Performs a full SLAM update step using odometry and observed cone landmarks. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function updates the SLAM factor graph using new motion data and cone observations. It includes steps such as pose prediction, data association, graph updates with both existing and new landmarks, and optional loop closure detection.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>gps_opt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional GPS position of the car </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yaw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The heading of the car in radians </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_obs_blue</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The observed blue cones in the local frame </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cone_obs_yellow</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The observed yellow cones in the local frame </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>orange_ref_cones</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The orange reference cones </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>velocity</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The car&apos;s motion since the last step as a relative Pose2 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Time elapsed since the last SLAM step</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A tuple containing:<itemizedlist>
+<listitem><para>A vector of the most recent estimated blue cone positions as Points</para>
+</listitem><listitem><para>A vector of the most recent estimated yellow cone positions as Points</para>
+</listitem><listitem><para>A Point representing the current pose of the car </para>
+</listitem></itemizedlist>
+</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2.hpp" line="194" column="27" bodyfile="src/isam2/isam2.cpp" bodystart="490" bodyend="624"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/isam2.hpp" line="51" column="5" bodyfile="include/isam2.hpp" bodystart="51" bodyend="203"/>
+    <listofallmembers>
+      <member refid="classslam_1_1slamISAM_1a7387987ac551f83b95c81ab7aa473716" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>blue_checkpoint_id</name></member>
+      <member refid="classslam_1_1slamISAM_1a2dc08747d8d259473657792e445dbfcf" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>BLUE_L</name></member>
+      <member refid="classslam_1_1slamISAM_1adb4e5740568ba39fe64ed281e22c6829" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>blue_slam_est_and_mcov</name></member>
+      <member refid="classslam_1_1slamISAM_1ad8609adc780f2de943fdf662aea75be6" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>checkpoint_to_update_beginning</name></member>
+      <member refid="classslam_1_1slamISAM_1a49beaa8ef4e326d4a55a35d620d0e0e8" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>dist_from_start_loop_closure_th</name></member>
+      <member refid="classslam_1_1slamISAM_1adedaa71ef5abf48a81a2f82ea9953786" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>end</name></member>
+      <member refid="classslam_1_1slamISAM_1a33735fe1e6c4f908658f2b3cab57791a" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>first_pose</name></member>
+      <member refid="classslam_1_1slamISAM_1ad7cf8859d54b42f1ffe125b30268f3f9" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>first_pose_added</name></member>
+      <member refid="classslam_1_1slamISAM_1a54b59618e93fc6ad4e560548cb503e2b" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>get_recent_SLAM_estimates</name></member>
+      <member refid="classslam_1_1slamISAM_1af732f4fa584f073646a4bc9fd8270e1f" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>graph</name></member>
+      <member refid="classslam_1_1slamISAM_1a6796d164aac1c3edfd6d6c81188b37a6" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>imu_offset</name></member>
+      <member refid="classslam_1_1slamISAM_1a036ac78732b74d660e859738b8e1624d" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>init_noise_models</name></member>
+      <member refid="classslam_1_1slamISAM_1a439a023fa2a119ee1f455174cf1efc05" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>init_params</name></member>
+      <member refid="classslam_1_1slamISAM_1af5dde9847cb0231f5b38d54e0cc6c669" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>init_tunable_constants</name></member>
+      <member refid="classslam_1_1slamISAM_1a5814a31ff385ad751aa3fd345f383905" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>isam2</name></member>
+      <member refid="classslam_1_1slamISAM_1ad07bc090d45037299c70a38815210697" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>landmark_model</name></member>
+      <member refid="classslam_1_1slamISAM_1afbba907ebc7deeceb0472f870662df0d" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>LandmarkNoiseModel</name></member>
+      <member refid="classslam_1_1slamISAM_1aeb06303067eee97bb62babc9f8d47b58" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>lap_count</name></member>
+      <member refid="classslam_1_1slamISAM_1a08c35f8163d84c9da626be48e013f81a" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>lidar_offset</name></member>
+      <member refid="classslam_1_1slamISAM_1adeaddd6fcb8efae58917bbe1ab39d7f6" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>log_params_in_use</name></member>
+      <member refid="classslam_1_1slamISAM_1a6c8776734709d796fcde9a5890cd29b5" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>logger</name></member>
+      <member refid="classslam_1_1slamISAM_1a60c2fd568200421e89c16a106da6298a" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>look_radius</name></member>
+      <member refid="classslam_1_1slamISAM_1a9e897253e1ea7fe60a1d52e257012d25" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>loop_closure</name></member>
+      <member refid="classslam_1_1slamISAM_1ab937fa17ad58cebd6f9122397fcd8c8c" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>m_dist</name></member>
+      <member refid="classslam_1_1slamISAM_1a169b474848ac6ec1af3d5d3bdcdf9c81" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>m_dist_th</name></member>
+      <member refid="classslam_1_1slamISAM_1a6ed15b30018e73d5552a042554fd2627" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>max_cone_range</name></member>
+      <member refid="classslam_1_1slamISAM_1a1f5035d2be540e2eb9e599643bf6af6c" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>min_cones_update_all</name></member>
+      <member refid="classslam_1_1slamISAM_1ac85cc2cba2241bc919c67483a3373c94" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>new_lap</name></member>
+      <member refid="classslam_1_1slamISAM_1a6896403bd11f78df940d58023b7b5e50" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>odom_model</name></member>
+      <member refid="classslam_1_1slamISAM_1a6cf0f3da7f72352b0f4f833579c5efed" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>OdomNoiseModel</name></member>
+      <member refid="classslam_1_1slamISAM_1ae9c13554ac6d6259e09418d65732a705" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>parameters</name></member>
+      <member refid="classslam_1_1slamISAM_1ab7b4aef9739a36e371d838b055fac8e4" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>pose_num</name></member>
+      <member refid="classslam_1_1slamISAM_1a6c377b105fb29b201ae1ac8cbef1bbd0" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>print_estimates</name></member>
+      <member refid="classslam_1_1slamISAM_1a6194d3a1998380920d52dcf70cd78e27" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>prior_model</name></member>
+      <member refid="classslam_1_1slamISAM_1ac9dc36ecf3bea16235e8d1c1e0010cb5" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>PriorNoiseModel</name></member>
+      <member refid="classslam_1_1slamISAM_1aee762e585ccd241105d86118b501ebb0" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>return_n_cones</name></member>
+      <member refid="classslam_1_1slamISAM_1a0f15f59ec41b33eeca84b0399a6429dc" prot="public" virt="non-virtual"><scope>slam::slamISAM</scope><name>slamISAM</name></member>
+      <member refid="classslam_1_1slamISAM_1a339835603720c6ba0db771b8fd9a8828" prot="public" virt="non-virtual"><scope>slam::slamISAM</scope><name>slamISAM</name></member>
+      <member refid="classslam_1_1slamISAM_1abf5e9c573a70e56fa7944ad389d58d71" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>start</name></member>
+      <member refid="classslam_1_1slamISAM_1a59469d87c99142bec093ab4a13c9cff5" prot="public" virt="non-virtual"><scope>slam::slamISAM</scope><name>step</name></member>
+      <member refid="classslam_1_1slamISAM_1a336258365becaf14ef0467a66ecc62b1" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>turning_m_dist_th</name></member>
+      <member refid="classslam_1_1slamISAM_1afd5f62c1bab64c7ec2d343649be42eb2" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>turning_max_cone_range</name></member>
+      <member refid="classslam_1_1slamISAM_1af395bf470d9db5a0432cc5bf84173552" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>unary_model</name></member>
+      <member refid="classslam_1_1slamISAM_1ae5d4b4812f0917fa592ccbfece209b89" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>UnaryNoiseModel</name></member>
+      <member refid="classslam_1_1slamISAM_1aba09d7f56817cee0eb1a014688028865" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>update_iterations_n</name></member>
+      <member refid="classslam_1_1slamISAM_1ace64d3b4a148316eccb520f71375efa0" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>update_landmarks</name></member>
+      <member refid="classslam_1_1slamISAM_1af0d88f3a599b0679ade73757b79049db" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>update_poses</name></member>
+      <member refid="classslam_1_1slamISAM_1a2352774731f5b76dcbe7f83c6aaf0e0d" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>update_recent_n</name></member>
+      <member refid="classslam_1_1slamISAM_1a7e1aa63948391792687f268e0837ca38" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>update_start_n</name></member>
+      <member refid="classslam_1_1slamISAM_1ace59af201f024f98d274c239c9bea16c" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>values</name></member>
+      <member refid="classslam_1_1slamISAM_1a514b72a6fad3a2686ff3112fa7fcdc06" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>window_update</name></member>
+      <member refid="classslam_1_1slamISAM_1a904d88ea6eb189074d3ed2c9f8535ce8" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>X</name></member>
+      <member refid="classslam_1_1slamISAM_1a333df35af0affe901507977bffde9517" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>yellow_checkpoint_id</name></member>
+      <member refid="classslam_1_1slamISAM_1a9aaf82ba8462926d8270a177c9d10fdb" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>YELLOW_L</name></member>
+      <member refid="classslam_1_1slamISAM_1a095cad954d32cac0f2f67ae4eccd4a5b" prot="private" virt="non-virtual"><scope>slam::slamISAM</scope><name>yellow_slam_est_and_mcov</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

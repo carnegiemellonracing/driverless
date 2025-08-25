@@ -1,0 +1,136 @@
+\doxysection{cone\+\_\+utils Namespace Reference}
+\hypertarget{namespacecone__utils}{}\label{namespacecone__utils}\index{cone\_utils@{cone\_utils}}
+
+
+Functions for cone observations and coordinate frame transformations between local vehicle and global frames.  
+
+
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{namespacecone__utils_a9bc76bdcb0522d5218d1d5a03d7127af}{calc\+\_\+cone\+\_\+range\+\_\+from\+\_\+car}} (const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs)
+\begin{DoxyCompactList}\small\item\em Calculates the Euclidean range from the car to each cone. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{namespacecone__utils_a02dc4c44ca6f8140811d5de556f19cf0}{calc\+\_\+cone\+\_\+bearing\+\_\+from\+\_\+car}} (const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs)
+\begin{DoxyCompactList}\small\item\em Calculates the bearing angle from the car to each cone in radians. \end{DoxyCompactList}\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{namespacecone__utils_a2ce07ff1b21a72732a23f0bc6ac20be5}{remove\+\_\+far\+\_\+cones}} (std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+obs, double threshold)
+\begin{DoxyCompactList}\small\item\em Removes far away observed cones. \end{DoxyCompactList}\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{namespacecone__utils_a07cae07d0c1ed2294ea8e0ff72b69028}{local\+\_\+to\+\_\+global\+\_\+frame}} (std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+obs, gtsam\+::\+Pose2 cur\+\_\+pose)
+\begin{DoxyCompactList}\small\item\em Converts local cone coordinates to the global frame, accounting for LIDAR offset. \end{DoxyCompactList}\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{namespacecone__utils_a4a852a4280f355e50814747476ddf3ca}{global\+\_\+to\+\_\+local\+\_\+frame}} (std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+obs, gtsam\+::\+Pose2 cur\+\_\+pose)
+\begin{DoxyCompactList}\small\item\em Converts global cone coordinates to the local car frame. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Functions for cone observations and coordinate frame transformations between local vehicle and global frames. 
+
+\label{doc-func-members}
+\Hypertarget{namespacecone__utils_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacecone__utils_a02dc4c44ca6f8140811d5de556f19cf0}\index{cone\_utils@{cone\_utils}!calc\_cone\_bearing\_from\_car@{calc\_cone\_bearing\_from\_car}}
+\index{calc\_cone\_bearing\_from\_car@{calc\_cone\_bearing\_from\_car}!cone\_utils@{cone\_utils}}
+\doxysubsubsection{\texorpdfstring{calc\_cone\_bearing\_from\_car()}{calc\_cone\_bearing\_from\_car()}}
+{\footnotesize\ttfamily \label{namespacecone__utils_a02dc4c44ca6f8140811d5de556f19cf0} 
+Eigen\+::\+Matrix\+Xd cone\+\_\+utils\+::calc\+\_\+cone\+\_\+bearing\+\_\+from\+\_\+car (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs}{}\end{DoxyParamCaption})}
+
+
+
+Calculates the bearing angle from the car to each cone in radians. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em cone\+\_\+obs} & Vector of cone positions relative to the car. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Eigen\+::\+Matrix\+Xd Vector of bearings for each cone. 
+\end{DoxyReturn}
+Intuition\+: Perceptions gives us cones in DV axes\+: y forwards and x right
+
+Directly in front of us, the bearing is 0
+\begin{DoxyItemize}
+\item The bearing is the angle from the axis directly in front of us
+\item counter clockwise is positive bearing
+\item clockwise is negative bearing
+\end{DoxyItemize}
+
+Given the DV axes, to calculate the bearing is atan2(-\/x, y)
+\begin{DoxyItemize}
+\item If the bearing was to the left (counter clockwise from 0)
+\item The bearing would be a positive angle
+\end{DoxyItemize}\Hypertarget{namespacecone__utils_a9bc76bdcb0522d5218d1d5a03d7127af}\index{cone\_utils@{cone\_utils}!calc\_cone\_range\_from\_car@{calc\_cone\_range\_from\_car}}
+\index{calc\_cone\_range\_from\_car@{calc\_cone\_range\_from\_car}!cone\_utils@{cone\_utils}}
+\doxysubsubsection{\texorpdfstring{calc\_cone\_range\_from\_car()}{calc\_cone\_range\_from\_car()}}
+{\footnotesize\ttfamily \label{namespacecone__utils_a9bc76bdcb0522d5218d1d5a03d7127af} 
+Eigen\+::\+Matrix\+Xd cone\+\_\+utils\+::calc\+\_\+cone\+\_\+range\+\_\+from\+\_\+car (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs}{}\end{DoxyParamCaption})}
+
+
+
+Calculates the Euclidean range from the car to each cone. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em cone\+\_\+obs} & Vector of cone positions relative to the car. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Eigen\+::\+Matrix\+Xd Vector of ranges for each cone. 
+\end{DoxyReturn}
+\Hypertarget{namespacecone__utils_a4a852a4280f355e50814747476ddf3ca}\index{cone\_utils@{cone\_utils}!global\_to\_local\_frame@{global\_to\_local\_frame}}
+\index{global\_to\_local\_frame@{global\_to\_local\_frame}!cone\_utils@{cone\_utils}}
+\doxysubsubsection{\texorpdfstring{global\_to\_local\_frame()}{global\_to\_local\_frame()}}
+{\footnotesize\ttfamily \label{namespacecone__utils_a4a852a4280f355e50814747476ddf3ca} 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+utils\+::global\+\_\+to\+\_\+local\+\_\+frame (\begin{DoxyParamCaption}\item[{std\+::vector$<$ gtsam\+::\+Point2 $>$}]{cone\+\_\+obs}{, }\item[{gtsam\+::\+Pose2}]{cur\+\_\+pose}{}\end{DoxyParamCaption})}
+
+
+
+Converts global cone coordinates to the local car frame. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em cone\+\_\+obs} & Vector of global cone points. \\
+\hline
+{\em cur\+\_\+pose} & Current vehicle pose. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$gtsam\+::\+Point2$>$ Vector of cone points in local frame. 
+\end{DoxyReturn}
+\Hypertarget{namespacecone__utils_a07cae07d0c1ed2294ea8e0ff72b69028}\index{cone\_utils@{cone\_utils}!local\_to\_global\_frame@{local\_to\_global\_frame}}
+\index{local\_to\_global\_frame@{local\_to\_global\_frame}!cone\_utils@{cone\_utils}}
+\doxysubsubsection{\texorpdfstring{local\_to\_global\_frame()}{local\_to\_global\_frame()}}
+{\footnotesize\ttfamily \label{namespacecone__utils_a07cae07d0c1ed2294ea8e0ff72b69028} 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+utils\+::local\+\_\+to\+\_\+global\+\_\+frame (\begin{DoxyParamCaption}\item[{std\+::vector$<$ gtsam\+::\+Point2 $>$}]{cone\+\_\+obs}{, }\item[{gtsam\+::\+Pose2}]{cur\+\_\+pose}{}\end{DoxyParamCaption})}
+
+
+
+Converts local cone coordinates to the global frame, accounting for LIDAR offset. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em cone\+\_\+obs} & Vector of local cone points. \\
+\hline
+{\em cur\+\_\+pose} & Current vehicle pose. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$gtsam\+::\+Point2$>$ Vector of cone points in global frame. 
+\end{DoxyReturn}
+\Hypertarget{namespacecone__utils_a2ce07ff1b21a72732a23f0bc6ac20be5}\index{cone\_utils@{cone\_utils}!remove\_far\_cones@{remove\_far\_cones}}
+\index{remove\_far\_cones@{remove\_far\_cones}!cone\_utils@{cone\_utils}}
+\doxysubsubsection{\texorpdfstring{remove\_far\_cones()}{remove\_far\_cones()}}
+{\footnotesize\ttfamily \label{namespacecone__utils_a2ce07ff1b21a72732a23f0bc6ac20be5} 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+utils\+::remove\+\_\+far\+\_\+cones (\begin{DoxyParamCaption}\item[{std\+::vector$<$ gtsam\+::\+Point2 $>$}]{cone\+\_\+obs}{, }\item[{double}]{threshold}{}\end{DoxyParamCaption})}
+
+
+
+Removes far away observed cones. 
+
+Observed cones that are far away are more erroneous
+
+
+\begin{DoxyParams}{Parameters}
+{\em cone\+\_\+obs} & The observed cones \\
+\hline
+{\em threshold} & The threshold distance from the car \\
+\hline
+\end{DoxyParams}

@@ -1,0 +1,73 @@
+\doxysection{slam Namespace Reference}
+\hypertarget{namespaceslam}{}\label{namespaceslam}\index{slam@{slam}}
+
+
+Namespace encapsulating SLAM logic for cone-\/based track mapping and localization.  
+
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov}{SLAMEst\+And\+MCov}}
+\begin{DoxyCompactList}\small\item\em Maintains and updates landmark estimates and marginal covariance matrices using i\+SAM2. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classslam_1_1slamISAM}{slam\+ISAM}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\+\_\+output\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449}{Run\+Settings}} \{ \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449a7f80fcc452c2f1ed2bb51b39d0864df1}{Real}}
+, \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449a69d734ae5c73fbb6a4d4221bb5ba20c6}{EUFSSim}}
+, \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449ae4438a611ac230ecdb056c4f171bc547}{Controls\+Sim}}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Namespace encapsulating SLAM logic for cone-\/based track mapping and localization. 
+
+\label{doc-typedef-members}
+\Hypertarget{namespaceslam_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}\index{slam@{slam}!slam\_output\_t@{slam\_output\_t}}
+\index{slam\_output\_t@{slam\_output\_t}!slam@{slam}}
+\doxysubsubsection{\texorpdfstring{slam\_output\_t}{slam\_output\_t}}
+{\footnotesize\ttfamily \label{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449} 
+using \mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\+::slam\+\_\+output\+\_\+t}}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ std::tuple<std::vector<geometry\_msgs::msg::Point>,\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<geometry\_msgs::msg::Point>,\ }
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ geometry\_msgs::msg::Point>}
+
+\end{DoxyCode}
+
+
+\label{doc-enum-members}
+\Hypertarget{namespaceslam_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449}\index{slam@{slam}!RunSettings@{RunSettings}}
+\index{RunSettings@{RunSettings}!slam@{slam}}
+\doxysubsubsection{\texorpdfstring{RunSettings}{RunSettings}}
+{\footnotesize\ttfamily \label{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449} 
+enum class \mbox{\hyperlink{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449}{slam\+::\+Run\+Settings}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Real@{Real}!slam@{slam}}\index{slam@{slam}!Real@{Real}}}\Hypertarget{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449a7f80fcc452c2f1ed2bb51b39d0864df1}\label{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449a7f80fcc452c2f1ed2bb51b39d0864df1} 
+Real&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EUFSSim@{EUFSSim}!slam@{slam}}\index{slam@{slam}!EUFSSim@{EUFSSim}}}\Hypertarget{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449a69d734ae5c73fbb6a4d4221bb5ba20c6}\label{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449a69d734ae5c73fbb6a4d4221bb5ba20c6} 
+EUFSSim&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ControlsSim@{ControlsSim}!slam@{slam}}\index{slam@{slam}!ControlsSim@{ControlsSim}}}\Hypertarget{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449ae4438a611ac230ecdb056c4f171bc547}\label{namespaceslam_aebac8ff6e81586b3187a1e1b1f472449ae4438a611ac230ecdb056c4f171bc547} 
+Controls\+Sim&\\
+\hline
+
+\end{DoxyEnumFields}

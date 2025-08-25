@@ -1,0 +1,90 @@
+\doxysection{src/utils/ros\+\_\+utils.cpp File Reference}
+\hypertarget{ros__utils_8cpp}{}\label{ros__utils_8cpp}\index{src/utils/ros\_utils.cpp@{src/utils/ros\_utils.cpp}}
+
+
+This file contains utility functions used for converting ROS messages to appropriate data types and for any necessary calculations.  
+
+
+{\ttfamily \#include "{}ros\+\_\+utils.\+hpp"{}}\newline
+Include dependency graph for ros\+\_\+utils.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{ros__utils_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceros__msg__conversions}{ros\+\_\+msg\+\_\+conversions}}
+\begin{DoxyCompactList}\small\item\em Defines conversion functions for converting between types when subscribing to or publishing messages. \end{DoxyCompactList}\item 
+namespace \mbox{\hyperlink{namespacemotion__modeling}{motion\+\_\+modeling}}
+\begin{DoxyCompactList}\small\item\em Contains functions related to vehicle motion modeling including IMU and GPS motion models, coordinate conversions, and velocity processing. \end{DoxyCompactList}\item 
+namespace \mbox{\hyperlink{namespacecone__utils}{cone\+\_\+utils}}
+\begin{DoxyCompactList}\small\item\em Functions for cone observations and coordinate frame transformations between local vehicle and global frames. \end{DoxyCompactList}\item 
+namespace \mbox{\hyperlink{namespacelogging__utils}{logging\+\_\+utils}}
+\begin{DoxyCompactList}\small\item\em Utilities for logging cone observations, vehicle poses, and step inputs with optional ROS logging. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{namespaceros__msg__conversions_a43258d8e39d67e439f47c2bf9f781771}{ros\+\_\+msg\+\_\+conversions\+::cone\+\_\+msg\+\_\+to\+\_\+vectors}} (const interfaces\+::msg\+::\+Cone\+Array\+::\+Const\+Shared\+Ptr \&cone\+\_\+data, std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cones, std\+::vector$<$ gtsam\+::\+Point2 $>$ \&blue\+\_\+cones, std\+::vector$<$ gtsam\+::\+Point2 $>$ \&yellow\+\_\+cones, std\+::vector$<$ gtsam\+::\+Point2 $>$ \&orange\+\_\+cones)
+\begin{DoxyCompactList}\small\item\em Parses a Cone\+Array message and organizes cones by color. \end{DoxyCompactList}\item 
+gtsam\+::\+Pose2 \mbox{\hyperlink{namespaceros__msg__conversions_a3b767f68f61f319945b205b57c8732d9}{ros\+\_\+msg\+\_\+conversions\+::velocity\+\_\+msg\+\_\+to\+\_\+pose2}} (const geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped\+::\+Const\+Shared\+Ptr \&vehicle\+\_\+vel\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Converts a Twist\+Stamped message to a gtsam\+::\+Pose2 representing velocity. \end{DoxyCompactList}\item 
+gtsam\+::\+Pose2 \mbox{\hyperlink{namespaceros__msg__conversions_a461002f6b790bdb2e6c050b06e5f3025}{ros\+\_\+msg\+\_\+conversions\+::posestamped\+\_\+msg\+\_\+to\+\_\+pose2}} (const geometry\+\_\+msgs\+::msg\+::\+Pose\+Stamped\+::\+Const\+Shared\+Ptr \&vehicle\+\_\+pos\+\_\+data, gtsam\+::\+Point2 init\+\_\+x\+\_\+y, rclcpp\+::\+Logger logger)
+\begin{DoxyCompactList}\small\item\em Converts a Pose\+Stamped message to a gtsam\+::\+Pose2, applying an initial offset. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespaceros__msg__conversions_a41262306052e228495aa0b7d79395a92}{ros\+\_\+msg\+\_\+conversions\+::quat\+\_\+msg\+\_\+to\+\_\+yaw}} (const geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped\+::\+Const\+Shared\+Ptr \&vehicle\+\_\+angle\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Converts a Quaternion\+Stamped message to yaw angle in radians. \end{DoxyCompactList}\item 
+gtsam\+::\+Point2 \mbox{\hyperlink{namespaceros__msg__conversions_a2881affaecfd34774e8d067fe8bdbd1e}{ros\+\_\+msg\+\_\+conversions\+::vector3\+\_\+msg\+\_\+to\+\_\+gps}} (const geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped\+::\+Const\+Shared\+Ptr \&vehicle\+\_\+pos\+\_\+data, gtsam\+::\+Point2 init\+\_\+lon\+\_\+lat, rclcpp\+::\+Logger logger)
+\begin{DoxyCompactList}\small\item\em Converts a Vector3\+Stamped GPS message to a local gtsam\+::\+Point2 using an initial GPS offset. \end{DoxyCompactList}\item 
+geometry\+\_\+msgs\+::msg\+::\+Point \mbox{\hyperlink{namespaceros__msg__conversions_a414bcfa2d2236d8e30775d340e4b0c6b}{ros\+\_\+msg\+\_\+conversions\+::point2\+\_\+to\+\_\+geometry\+\_\+msg}} (gtsam\+::\+Point2 gtsam\+\_\+point)
+\begin{DoxyCompactList}\small\item\em Converts a gtsam\+::\+Point2 to a ROS geometry\+\_\+msgs\+::\+Point message. \end{DoxyCompactList}\item 
+std\+::vector$<$ geometry\+\_\+msgs\+::msg\+::\+Point $>$ \mbox{\hyperlink{namespaceros__msg__conversions_ae2942353ab0b099167eb67145f231e16}{ros\+\_\+msg\+\_\+conversions\+::slam\+\_\+est\+\_\+to\+\_\+points}} (std\+::vector$<$ gtsam\+::\+Point2 $>$ gtsam\+\_\+points, gtsam\+::\+Pose2 pose)
+\begin{DoxyCompactList}\small\item\em Converts a vector of gtsam\+::\+Point2 into ROS geometry\+\_\+msgs\+::\+Point messages, transforming points into local frame. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacemotion__modeling_a39ba4eb9731177cb314756a64210fc8f}{motion\+\_\+modeling\+::imu\+\_\+axes\+\_\+to\+\_\+\+DV\+\_\+axes}} (double \&x, double \&y)
+\begin{DoxyCompactList}\small\item\em Converts IMU axes to DV axes by swapping and negating coordinates. \end{DoxyCompactList}\item 
+gtsam\+::\+Point2 \mbox{\hyperlink{namespacemotion__modeling_a2e2d9615e5a4c50fe1c2702f18e250df}{motion\+\_\+modeling\+::calc\+\_\+lateral\+\_\+velocity\+\_\+error}} (double ang\+\_\+velocity, double yaw)
+\begin{DoxyCompactList}\small\item\em Calculates the lateral velocity error as a result of turning. \end{DoxyCompactList}\item 
+std\+::pair$<$ gtsam\+::\+Pose2, gtsam\+::\+Pose2 $>$ \mbox{\hyperlink{namespacemotion__modeling_a66146b526c37cb7eff7a748a928730c2}{motion\+\_\+modeling\+::velocity\+\_\+motion\+\_\+model}} (gtsam\+::\+Pose2 velocity, double dt, gtsam\+::\+Pose2 prev\+\_\+pose, double yaw)
+\begin{DoxyCompactList}\small\item\em Applies velocity motion model to predict new pose and odometry over a time step. \end{DoxyCompactList}\item 
+gtsam\+::\+Point2 \mbox{\hyperlink{namespacemotion__modeling_a957433c974fcf73b2a3807728ed19cd3}{motion\+\_\+modeling\+::calc\+\_\+offset\+\_\+imu\+\_\+to\+\_\+car\+\_\+center}} (double yaw)
+\begin{DoxyCompactList}\small\item\em Calculates the offset vector from IMU sensor to car center in global frame. \end{DoxyCompactList}\item 
+gtsam\+::\+Point2 \mbox{\hyperlink{namespacemotion__modeling_add9aa4093755c7775b713624c1817aca}{motion\+\_\+modeling\+::calc\+\_\+offset\+\_\+lidar\+\_\+to\+\_\+car\+\_\+center}} (double yaw)
+\begin{DoxyCompactList}\small\item\em Calculates the offset vector from LIDAR sensor to car center in global frame. \end{DoxyCompactList}\item 
+std\+::pair$<$ gtsam\+::\+Pose2, gtsam\+::\+Pose2 $>$ \mbox{\hyperlink{namespacemotion__modeling_a955d143c19d97c8fd0f36074e5b5ed43}{motion\+\_\+modeling\+::gps\+\_\+motion\+\_\+model}} (gtsam\+::\+Pose2 prev\+\_\+pose, gtsam\+::\+Pose2 global\+\_\+odom)
+\begin{DoxyCompactList}\small\item\em Applies GPS motion model to compute new pose and odometry with IMU offset correction. \end{DoxyCompactList}\item 
+std\+::pair$<$ bool, bool $>$ \mbox{\hyperlink{namespacemotion__modeling_ab6ec7b19eb78645dec9adf9e6aaa5966}{motion\+\_\+modeling\+::determine\+\_\+movement}} (gtsam\+::\+Pose2 velocity)
+\begin{DoxyCompactList}\small\item\em Returns a pair of bools where the first element is true if the car is moving, and the second element is true if the car is turning. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespacemotion__modeling_a7bab04641800da6e420949c71512a1d7}{motion\+\_\+modeling\+::header\+\_\+to\+\_\+nanosec}} (const std\+\_\+msgs\+::msg\+::\+Header \&header)
+\begin{DoxyCompactList}\small\item\em Converts a ROS message header timestamp to nanoseconds. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespacemotion__modeling_a8e8e40aa9a9185045cf3a72cae60ecdc}{motion\+\_\+modeling\+::header\+\_\+to\+\_\+dt}} (std\+::optional$<$ std\+\_\+msgs\+::msg\+::\+Header $>$ prev, std\+::optional$<$ std\+\_\+msgs\+::msg\+::\+Header $>$ cur)
+\begin{DoxyCompactList}\small\item\em Calculates time difference (dt) between two ROS message headers. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespacemotion__modeling_a96aa2b77878997dcdfe58fd7ad47f969}{motion\+\_\+modeling\+::degrees\+\_\+to\+\_\+radians}} (double degrees)
+\begin{DoxyCompactList}\small\item\em Converts degrees to radians. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{namespacecone__utils_a9bc76bdcb0522d5218d1d5a03d7127af}{cone\+\_\+utils\+::calc\+\_\+cone\+\_\+range\+\_\+from\+\_\+car}} (const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs)
+\begin{DoxyCompactList}\small\item\em Calculates the Euclidean range from the car to each cone. \end{DoxyCompactList}\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{namespacecone__utils_a02dc4c44ca6f8140811d5de556f19cf0}{cone\+\_\+utils\+::calc\+\_\+cone\+\_\+bearing\+\_\+from\+\_\+car}} (const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs)
+\begin{DoxyCompactList}\small\item\em Calculates the bearing angle from the car to each cone in radians. \end{DoxyCompactList}\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{namespacecone__utils_a2ce07ff1b21a72732a23f0bc6ac20be5}{cone\+\_\+utils\+::remove\+\_\+far\+\_\+cones}} (std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+obs, double threshold)
+\begin{DoxyCompactList}\small\item\em Removes far away observed cones. \end{DoxyCompactList}\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{namespacecone__utils_a4a852a4280f355e50814747476ddf3ca}{cone\+\_\+utils\+::global\+\_\+to\+\_\+local\+\_\+frame}} (std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+obs, gtsam\+::\+Pose2 cur\+\_\+pose)
+\begin{DoxyCompactList}\small\item\em Converts global cone coordinates to the local car frame. \end{DoxyCompactList}\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{namespacecone__utils_a07cae07d0c1ed2294ea8e0ff72b69028}{cone\+\_\+utils\+::local\+\_\+to\+\_\+global\+\_\+frame}} (std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+obs, gtsam\+::\+Pose2 cur\+\_\+pose)
+\begin{DoxyCompactList}\small\item\em Converts local cone coordinates to the global frame, accounting for LIDAR offset. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacelogging__utils_a0e0bddea577907b98ab583c2de51cca6}{logging\+\_\+utils\+::log\+\_\+string}} (std\+::optional$<$ rclcpp\+::\+Logger $>$ logger, std\+::string input\+\_\+string, bool flag)
+\begin{DoxyCompactList}\small\item\em This function cases on whether the logger exists and uses it to print out the following string. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacelogging__utils_a6118bde88f643b186486f7e64ec50358}{logging\+\_\+utils\+::print\+\_\+cone\+\_\+obs}} (const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs, const std\+::string \&cone\+\_\+color, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Logs positions of cones with color label using the provided logger. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacelogging__utils_aa24ee8d875fd8174dfd4f086803d6a90}{logging\+\_\+utils\+::log\+\_\+step\+\_\+input}} (std\+::optional$<$ rclcpp\+::\+Logger $>$ logger, std\+::optional$<$ gtsam\+::\+Point2 $>$ gps\+\_\+opt, double yaw, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+blue, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+yellow, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&orange\+\_\+ref\+\_\+cones, gtsam\+::\+Pose2 velocity, double dt)
+\begin{DoxyCompactList}\small\item\em Logs various step inputs including GPS, yaw, cone observations, velocity, and time delta. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacelogging__utils_ad3a35de905ea643eb9c20f766d1812c3}{logging\+\_\+utils\+::print\+\_\+update\+\_\+poses}} (gtsam\+::\+Pose2 \&prev\+\_\+pose, gtsam\+::\+Pose2 \&new\+\_\+pose, gtsam\+::\+Pose2 \&odometry, gtsam\+::\+Pose2 \&imu\+\_\+offset\+\_\+global\+\_\+odom, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Logs previous and new poses, odometry, and IMU offset pose. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacelogging__utils_a05b5b0c375d5b11c2b503560a2e7ba2d}{logging\+\_\+utils\+::record\+\_\+step\+\_\+inputs}} (std\+::optional$<$ rclcpp\+::\+Logger $>$ logger, std\+::optional$<$ gtsam\+::\+Point2 $>$ gps\+\_\+opt, double yaw, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+blue, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+yellow, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&orange\+\_\+ref\+\_\+cones, gtsam\+::\+Pose2 velocity, double dt)
+\begin{DoxyCompactList}\small\item\em Records step inputs to a file, including GPS, yaw, cones, velocity, and time delta. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file contains utility functions used for converting ROS messages to appropriate data types and for any necessary calculations. 
+
+Most functions in this value pass in the result container by reference. This reference is modified to store the results. The result reference is always the first parameter that is passed in. 

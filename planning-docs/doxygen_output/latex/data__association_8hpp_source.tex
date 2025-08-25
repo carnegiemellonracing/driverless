@@ -1,0 +1,66 @@
+\doxysection{data\+\_\+association.\+hpp}
+\hypertarget{data__association_8hpp_source}{}\label{data__association_8hpp_source}\index{include/data\_association.hpp@{include/data\_association.hpp}}
+\mbox{\hyperlink{data__association_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <tuple>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <eigen3/Eigen/Dense>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <gtsam/inference/Symbol.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <gtsam/nonlinear/ISAM2.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <float.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ros__utils_8hpp}{ros\_utils.hpp}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{slam__est__and__mcov_8hpp}{slam\_est\_and\_mcov.hpp}}"{}}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacedata__association__utils}{data\_association\_utils}}\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a1708017db364e9492e2816f89244a028}{NewConeInfo}}\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ gtsam::Point2\ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a7e15947dc2094703634cdf78960b0b0e}{local\_cone\_pos}};}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a09f32bca8355d01cf811a6c777f7a5e0}{bearing}};}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ gtsam::Point2\ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a075eb411214dcfdc2010a89bc49fb046}{global\_cone\_pos}};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a1708017db364e9492e2816f89244a028}{NewConeInfo}}\ (gtsam::Point2\ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a7e15947dc2094703634cdf78960b0b0e}{local\_cone\_pos}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a09f32bca8355d01cf811a6c777f7a5e0}{bearing}},\ gtsam::Point2\ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a075eb411214dcfdc2010a89bc49fb046}{global\_cone\_pos}})}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a7e15947dc2094703634cdf78960b0b0e}{local\_cone\_pos}}(\mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a7e15947dc2094703634cdf78960b0b0e}{local\_cone\_pos}})}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a09f32bca8355d01cf811a6c777f7a5e0}{bearing}}(\mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a09f32bca8355d01cf811a6c777f7a5e0}{bearing}})}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a075eb411214dcfdc2010a89bc49fb046}{global\_cone\_pos}}(\mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo_a075eb411214dcfdc2010a89bc49fb046}{global\_cone\_pos}})}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \{\}}
+\DoxyCodeLine{00027\ \ \ \ \ \};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_a22445efe162acafd65e09c13497ff731}{OldConeInfo}}\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ gtsam::Point2\ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_a6494d0639b9439faebd2f15b41ad8eeb}{local\_cone\_pos}};}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_ae61260e27dc64e5d89b6aee0d2bf7b74}{bearing}};}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_aadbe53fb2f3ab16f385776da145423a8}{min\_id}};\ \textcolor{comment}{//\ The\ id\ of\ the\ old\ cone\ observed\ cone\ was\ associated\ with}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_a22445efe162acafd65e09c13497ff731}{OldConeInfo}}\ (gtsam::Point2\ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_a6494d0639b9439faebd2f15b41ad8eeb}{local\_cone\_pos}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_ae61260e27dc64e5d89b6aee0d2bf7b74}{bearing}},\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_aadbe53fb2f3ab16f385776da145423a8}{min\_id}})}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_a6494d0639b9439faebd2f15b41ad8eeb}{local\_cone\_pos}}(\mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_a6494d0639b9439faebd2f15b41ad8eeb}{local\_cone\_pos}})}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_ae61260e27dc64e5d89b6aee0d2bf7b74}{bearing}}(\mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_ae61260e27dc64e5d89b6aee0d2bf7b74}{bearing}})}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_aadbe53fb2f3ab16f385776da145423a8}{min\_id}}(\mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo_aadbe53fb2f3ab16f385776da145423a8}{min\_id}})}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \{\}}
+\DoxyCodeLine{00039\ \ \ \ \ \};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ }
+\DoxyCodeLine{00053\ \ \ \ \ std::pair<std::vector<OldConeInfo>,\ std::vector<NewConeInfo>>\ \mbox{\hyperlink{namespacedata__association__utils_a8618a0ce5124334358fd054e92483fd9}{get\_old\_new\_cones}}(}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ std::vector<gtsam::Point2>\ global\_cone\_obs,\ }
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ std::vector<gtsam::Point2>\ cone\_obs,\ }
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ std::vector<std::vector<double>>\ distances,\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ m\_dist\_th,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ std::optional<rclcpp::Logger>\ logger}
+\DoxyCodeLine{00059\ \ \ \ \ );}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00075\ \ \ \ \ std::pair<std::vector<OldConeInfo>,\ std::vector<NewConeInfo>>\ \mbox{\hyperlink{namespacedata__association__utils_a6f7228a0a6bea9eb932a06b409ec2d3e}{perform\_data\_association}}\ (}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ gtsam::Pose2\ cur\_pose,\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<gtsam::Point2>\ \&cone\_obs,\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ std::optional<rclcpp::Logger>\ logger,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov}{slam::SLAMEstAndMCov}}\&\ slam\_est\_and\_mcov,\ \ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ m\_dist\_th,\ }
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ cone\_dist\_th}
+\DoxyCodeLine{00082\ \ \ \ \ );}
+\DoxyCodeLine{00083\ \}}
+
+\end{DoxyCode}

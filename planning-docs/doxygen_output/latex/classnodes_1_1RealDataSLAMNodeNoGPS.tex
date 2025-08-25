@@ -1,0 +1,364 @@
+\doxysection{nodes\+::Real\+Data\+SLAMNode\+No\+GPS Class Reference}
+\hypertarget{classnodes_1_1RealDataSLAMNodeNoGPS}{}\label{classnodes_1_1RealDataSLAMNodeNoGPS}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+
+
+Sometimes we run on rosbag data and GPS.  
+
+
+
+
+{\ttfamily \#include $<$isam2\+\_\+nodes.\+hpp$>$}
+
+
+
+Inheritance diagram for nodes\+::Real\+Data\+SLAMNode\+No\+GPS\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classnodes_1_1RealDataSLAMNodeNoGPS__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for nodes\+::Real\+Data\+SLAMNode\+No\+GPS\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classnodes_1_1RealDataSLAMNodeNoGPS__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_acaf1f59b9214a157067f58b3b5cd1fc1}{Real\+Data\+SLAMNode\+No\+GPS}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_ae1b8e1097d65bdbfca78748e0446c4a8}{perform\+\_\+subscribes}} () override
+\item 
+void \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_adcf935f870a695b186697286a891033d}{cone\+\_\+callback}} (const cone\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&cone\+\_\+data)
+\item 
+void \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_a7e167afa3f01b7ddce006036c4b78fd5}{vehicle\+\_\+vel\+\_\+callback}} (const velocity\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&vehicle\+\_\+vel\+\_\+data)
+\item 
+void \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_ae53470d602951437d3d1068366a0f5a0}{vehicle\+\_\+angle\+\_\+callback}} (const orientation\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&vehicle\+\_\+angle\+\_\+data)
+\item 
+void \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_abe7346b23388bc96725aa9d75f964d97}{sync\+\_\+callback}} (const cone\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&cone\+\_\+data, const velocity\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&vehicle\+\_\+vel\+\_\+data, const orientation\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&vehicle\+\_\+angle\+\_\+data)
+\item 
+void \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a2f490a869053d4f426550f5ce5512933}{declare\+\_\+yaml\+\_\+params}} ()
+\item 
+std\+::optional$<$ \mbox{\hyperlink{structyaml__params_1_1NoiseInputs}{yaml\+\_\+params\+::\+Noise\+Inputs}} $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_add60599f53e6fcc111caae5fde661dff}{get\+\_\+noise\+\_\+inputs}} ()
+\item 
+void \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_afbf813fbfc9c31773de427271ed6239e}{publish\+\_\+slam\+\_\+data}} (const \mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\+::slam\+\_\+output\+\_\+t}} \&slam\+\_\+data, std\+\_\+msgs\+::msg\+::\+Header header)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ message\+\_\+filters\+::\+Synchronizer$<$ sync\+\_\+policy $>$ $>$ \mbox{\hyperlink{classnodes_1_1RealDataSLAMNodeNoGPS_a43d44a87d76cb9fbeb4eb04af647fb25}{sync}}
+\item 
+\mbox{\hyperlink{classslam_1_1slamISAM}{slam\+::slam\+ISAM}} \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a1c8e5e7be01a1f6a8c12035bb4045117}{slam\+\_\+instance}}
+\item 
+std\+::chrono\+::high\+\_\+resolution\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ad321582bae34358afb0d0f4d6791acce}{cur\+\_\+sync\+\_\+callback\+\_\+time}}
+\item 
+std\+::optional$<$ std\+::chrono\+::high\+\_\+resolution\+\_\+clock\+::time\+\_\+point $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b28b46b60a0cc8f629dc2f9bf2b0aed}{prev\+\_\+sync\+\_\+callback\+\_\+time}}
+\item 
+rclcpp\+::\+Publisher$<$ interfaces\+::msg\+::\+SLAMPose $>$\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a163b73f677228ba27e11fc392e47b324}{slam\+\_\+pose\+\_\+publisher}}
+\item 
+rclcpp\+::\+Publisher$<$ interfaces\+::msg\+::\+SLAMChunk $>$\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a102a8ba600108b8374f5afeb288d59bb}{slam\+\_\+chunk\+\_\+publisher}}
+\item 
+gtsam\+::\+Pose2 \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_aef0fb75590c57ef972d0723a2648fe93}{velocity}}
+\item 
+std\+::optional$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ab271b8cbc773ca67eead78dfd93a66cc}{init\+\_\+lon\+\_\+lat}}
+\item 
+std\+::optional$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a65cc2fec07dea2e13e5f813c7e40a6ed}{init\+\_\+x\+\_\+y}}
+\item 
+gtsam\+::\+Point2 \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a11b35a330285720008d97405ead9ea32}{gps\+\_\+position}}
+\item 
+double \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_aa06d32c5d2f2e7a112b5925c43718d64}{yaw}}
+\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a0361459b479a7710fb411660ecd74939}{cones}}
+\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_aed83b931419f4d668f2cc6faf289f450}{orange\+\_\+cones}}
+\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5c9a89d1981198da97332bc70c36b461}{blue\+\_\+cones}}
+\item 
+std\+::vector$<$ gtsam\+::\+Point2 $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_abd8bc9fe10c5e3620a0db348b2a84af9}{yellow\+\_\+cones}}
+\item 
+bool \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ac3e7b0efbfdf99de62dd12249a6b7b4c}{file\+\_\+opened}}
+\item 
+rclcpp\+::\+Timer\+Base\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a263ca5f766c32bfbb7eaf6b460fbd7fc}{timer}}
+\item 
+double \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ac9913e82bb32e56d48e660f2b5b49240}{dt}}
+\item 
+std\+::optional$<$ std\+\_\+msgs\+::msg\+::\+Header $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a94064913429f785ae60b65126bd4c525}{prev\+\_\+filter\+\_\+time}}
+\item 
+std\+::ofstream \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a80846119c099ff6d03614bc8c955b96d}{outfile}}
+\item 
+std\+::ofstream \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a7aa44f46ec28c8f0dc6e81c3a57fcf0b}{pose\+\_\+cones}}
+\item 
+const rmw\+\_\+qos\+\_\+profile\+\_\+t \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a8b83c878922eb0a915c38d3e0a9e7894}{reliable\+\_\+profile}}
+\item 
+const rmw\+\_\+qos\+\_\+profile\+\_\+t \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562}{best\+\_\+effort\+\_\+profile}}
+\item 
+const rclcpp\+::\+QoS \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a81430a36c8c264ffd491d275ff44dce2}{best\+\_\+effort\+\_\+qos}}
+\item 
+message\+\_\+filters\+::\+Subscriber$<$ interfaces\+::msg\+::\+Cone\+Array $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a9e2dc515faed67f46f8833853ec043e1}{cone\+\_\+sub}}
+\item 
+message\+\_\+filters\+::\+Subscriber$<$ geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a3952b006efaa689c3359802004991f3d}{vehicle\+\_\+vel\+\_\+sub}}
+\item 
+message\+\_\+filters\+::\+Subscriber$<$ geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a83aa8579d505cc8a98a5743af38afbf3}{vehicle\+\_\+angle\+\_\+sub}}
+\item 
+message\+\_\+filters\+::\+Subscriber$<$ geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_af909eea548ea81bc6b7e9e4646e9a1f2}{vehicle\+\_\+pos\+\_\+sub}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Sometimes we run on rosbag data and GPS. 
+
+\label{doc-constructors}
+\Hypertarget{classnodes_1_1RealDataSLAMNodeNoGPS_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classnodes_1_1RealDataSLAMNodeNoGPS_acaf1f59b9214a157067f58b3b5cd1fc1}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!RealDataSLAMNodeNoGPS@{RealDataSLAMNodeNoGPS}}
+\index{RealDataSLAMNodeNoGPS@{RealDataSLAMNodeNoGPS}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{RealDataSLAMNodeNoGPS()}{RealDataSLAMNodeNoGPS()}}
+{\footnotesize\ttfamily \label{classnodes_1_1RealDataSLAMNodeNoGPS_acaf1f59b9214a157067f58b3b5cd1fc1} 
+nodes\+::\+Real\+Data\+SLAMNode\+No\+GPS\+::\+Real\+Data\+SLAMNode\+No\+GPS (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+\label{doc-func-members}
+\Hypertarget{classnodes_1_1RealDataSLAMNodeNoGPS_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classnodes_1_1RealDataSLAMNodeNoGPS_adcf935f870a695b186697286a891033d}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!cone\_callback@{cone\_callback}}
+\index{cone\_callback@{cone\_callback}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{cone\_callback()}{cone\_callback()}}
+{\footnotesize\ttfamily \label{classnodes_1_1RealDataSLAMNodeNoGPS_adcf935f870a695b186697286a891033d} 
+void nodes\+::\+Real\+Data\+SLAMNode\+No\+GPS\+::cone\+\_\+callback (\begin{DoxyParamCaption}\item[{const cone\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&}]{cone\+\_\+data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a2f490a869053d4f426550f5ce5512933}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!declare\_yaml\_params@{declare\_yaml\_params}}
+\index{declare\_yaml\_params@{declare\_yaml\_params}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{declare\_yaml\_params()}{declare\_yaml\_params()}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a2f490a869053d4f426550f5ce5512933} 
+void \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::declare\+\_\+yaml\+\_\+params (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_add60599f53e6fcc111caae5fde661dff}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!get\_noise\_inputs@{get\_noise\_inputs}}
+\index{get\_noise\_inputs@{get\_noise\_inputs}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{get\_noise\_inputs()}{get\_noise\_inputs()}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_add60599f53e6fcc111caae5fde661dff} 
+std\+::optional$<$ \mbox{\hyperlink{structyaml__params_1_1NoiseInputs}{yaml\+\_\+params\+::\+Noise\+Inputs}} $>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::get\+\_\+noise\+\_\+inputs (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1RealDataSLAMNodeNoGPS_ae1b8e1097d65bdbfca78748e0446c4a8}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!perform\_subscribes@{perform\_subscribes}}
+\index{perform\_subscribes@{perform\_subscribes}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{perform\_subscribes()}{perform\_subscribes()}}
+{\footnotesize\ttfamily \label{classnodes_1_1RealDataSLAMNodeNoGPS_ae1b8e1097d65bdbfca78748e0446c4a8} 
+void nodes\+::\+Real\+Data\+SLAMNode\+No\+GPS\+::perform\+\_\+subscribes (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a58ea6cb4af16c570cdedb00f07186e57}{nodes\+::\+Generic\+SLAMNode$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$}}.
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_afbf813fbfc9c31773de427271ed6239e}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!publish\_slam\_data@{publish\_slam\_data}}
+\index{publish\_slam\_data@{publish\_slam\_data}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{publish\_slam\_data()}{publish\_slam\_data()}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_afbf813fbfc9c31773de427271ed6239e} 
+void \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::publish\+\_\+slam\+\_\+data (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\+::slam\+\_\+output\+\_\+t}} \&}]{slam\+\_\+data}{, }\item[{std\+\_\+msgs\+::msg\+::\+Header}]{header}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1RealDataSLAMNodeNoGPS_abe7346b23388bc96725aa9d75f964d97}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!sync\_callback@{sync\_callback}}
+\index{sync\_callback@{sync\_callback}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{sync\_callback()}{sync\_callback()}}
+{\footnotesize\ttfamily \label{classnodes_1_1RealDataSLAMNodeNoGPS_abe7346b23388bc96725aa9d75f964d97} 
+void nodes\+::\+Real\+Data\+SLAMNode\+No\+GPS\+::sync\+\_\+callback (\begin{DoxyParamCaption}\item[{const cone\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&}]{cone\+\_\+data}{, }\item[{const velocity\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&}]{vehicle\+\_\+vel\+\_\+data}{, }\item[{const orientation\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&}]{vehicle\+\_\+angle\+\_\+data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1RealDataSLAMNodeNoGPS_ae53470d602951437d3d1068366a0f5a0}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!vehicle\_angle\_callback@{vehicle\_angle\_callback}}
+\index{vehicle\_angle\_callback@{vehicle\_angle\_callback}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{vehicle\_angle\_callback()}{vehicle\_angle\_callback()}}
+{\footnotesize\ttfamily \label{classnodes_1_1RealDataSLAMNodeNoGPS_ae53470d602951437d3d1068366a0f5a0} 
+void nodes\+::\+Real\+Data\+SLAMNode\+No\+GPS\+::vehicle\+\_\+angle\+\_\+callback (\begin{DoxyParamCaption}\item[{const orientation\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&}]{vehicle\+\_\+angle\+\_\+data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1RealDataSLAMNodeNoGPS_a7e167afa3f01b7ddce006036c4b78fd5}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!vehicle\_vel\_callback@{vehicle\_vel\_callback}}
+\index{vehicle\_vel\_callback@{vehicle\_vel\_callback}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{vehicle\_vel\_callback()}{vehicle\_vel\_callback()}}
+{\footnotesize\ttfamily \label{classnodes_1_1RealDataSLAMNodeNoGPS_a7e167afa3f01b7ddce006036c4b78fd5} 
+void nodes\+::\+Real\+Data\+SLAMNode\+No\+GPS\+::vehicle\+\_\+vel\+\_\+callback (\begin{DoxyParamCaption}\item[{const velocity\+\_\+msg\+\_\+t\+::\+Const\+Shared\+Ptr \&}]{vehicle\+\_\+vel\+\_\+data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+\label{doc-variable-members}
+\Hypertarget{classnodes_1_1RealDataSLAMNodeNoGPS_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!best\_effort\_profile@{best\_effort\_profile}}
+\index{best\_effort\_profile@{best\_effort\_profile}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{best\_effort\_profile}{best\_effort\_profile}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a5b79ee9230014777e3e746ac2600e562} 
+const rmw\+\_\+qos\+\_\+profile\+\_\+t \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::best\+\_\+effort\+\_\+profile\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a81430a36c8c264ffd491d275ff44dce2}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!best\_effort\_qos@{best\_effort\_qos}}
+\index{best\_effort\_qos@{best\_effort\_qos}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{best\_effort\_qos}{best\_effort\_qos}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a81430a36c8c264ffd491d275ff44dce2} 
+const rclcpp\+::\+QoS \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::best\+\_\+effort\+\_\+qos\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a5c9a89d1981198da97332bc70c36b461}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!blue\_cones@{blue\_cones}}
+\index{blue\_cones@{blue\_cones}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{blue\_cones}{blue\_cones}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a5c9a89d1981198da97332bc70c36b461} 
+std\+::vector$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::blue\+\_\+cones\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a9e2dc515faed67f46f8833853ec043e1}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!cone\_sub@{cone\_sub}}
+\index{cone\_sub@{cone\_sub}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{cone\_sub}{cone\_sub}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a9e2dc515faed67f46f8833853ec043e1} 
+message\+\_\+filters\+::\+Subscriber$<$interfaces\+::msg\+::\+Cone\+Array$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::cone\+\_\+sub\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a0361459b479a7710fb411660ecd74939}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!cones@{cones}}
+\index{cones@{cones}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{cones}{cones}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a0361459b479a7710fb411660ecd74939} 
+std\+::vector$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::cones\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_ad321582bae34358afb0d0f4d6791acce}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!cur\_sync\_callback\_time@{cur\_sync\_callback\_time}}
+\index{cur\_sync\_callback\_time@{cur\_sync\_callback\_time}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{cur\_sync\_callback\_time}{cur\_sync\_callback\_time}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_ad321582bae34358afb0d0f4d6791acce} 
+std\+::chrono\+::high\+\_\+resolution\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::cur\+\_\+sync\+\_\+callback\+\_\+time\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_ac9913e82bb32e56d48e660f2b5b49240}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!dt@{dt}}
+\index{dt@{dt}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{dt}{dt}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_ac9913e82bb32e56d48e660f2b5b49240} 
+double \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::dt\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_ac3e7b0efbfdf99de62dd12249a6b7b4c}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!file\_opened@{file\_opened}}
+\index{file\_opened@{file\_opened}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{file\_opened}{file\_opened}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_ac3e7b0efbfdf99de62dd12249a6b7b4c} 
+bool \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::file\+\_\+opened\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a11b35a330285720008d97405ead9ea32}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!gps\_position@{gps\_position}}
+\index{gps\_position@{gps\_position}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{gps\_position}{gps\_position}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a11b35a330285720008d97405ead9ea32} 
+gtsam\+::\+Point2 \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::gps\+\_\+position\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_ab271b8cbc773ca67eead78dfd93a66cc}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!init\_lon\_lat@{init\_lon\_lat}}
+\index{init\_lon\_lat@{init\_lon\_lat}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{init\_lon\_lat}{init\_lon\_lat}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_ab271b8cbc773ca67eead78dfd93a66cc} 
+std\+::optional$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::init\+\_\+lon\+\_\+lat\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a65cc2fec07dea2e13e5f813c7e40a6ed}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!init\_x\_y@{init\_x\_y}}
+\index{init\_x\_y@{init\_x\_y}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{init\_x\_y}{init\_x\_y}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a65cc2fec07dea2e13e5f813c7e40a6ed} 
+std\+::optional$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::init\+\_\+x\+\_\+y\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_aed83b931419f4d668f2cc6faf289f450}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!orange\_cones@{orange\_cones}}
+\index{orange\_cones@{orange\_cones}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{orange\_cones}{orange\_cones}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_aed83b931419f4d668f2cc6faf289f450} 
+std\+::vector$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::orange\+\_\+cones\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a80846119c099ff6d03614bc8c955b96d}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!outfile@{outfile}}
+\index{outfile@{outfile}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{outfile}{outfile}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a80846119c099ff6d03614bc8c955b96d} 
+std\+::ofstream \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::outfile\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a7aa44f46ec28c8f0dc6e81c3a57fcf0b}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!pose\_cones@{pose\_cones}}
+\index{pose\_cones@{pose\_cones}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{pose\_cones}{pose\_cones}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a7aa44f46ec28c8f0dc6e81c3a57fcf0b} 
+std\+::ofstream \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::pose\+\_\+cones\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a94064913429f785ae60b65126bd4c525}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!prev\_filter\_time@{prev\_filter\_time}}
+\index{prev\_filter\_time@{prev\_filter\_time}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{prev\_filter\_time}{prev\_filter\_time}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a94064913429f785ae60b65126bd4c525} 
+std\+::optional$<$std\+\_\+msgs\+::msg\+::\+Header$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::prev\+\_\+filter\+\_\+time\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a5b28b46b60a0cc8f629dc2f9bf2b0aed}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!prev\_sync\_callback\_time@{prev\_sync\_callback\_time}}
+\index{prev\_sync\_callback\_time@{prev\_sync\_callback\_time}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{prev\_sync\_callback\_time}{prev\_sync\_callback\_time}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a5b28b46b60a0cc8f629dc2f9bf2b0aed} 
+std\+::optional$<$std\+::chrono\+::high\+\_\+resolution\+\_\+clock\+::time\+\_\+point$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::prev\+\_\+sync\+\_\+callback\+\_\+time\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a8b83c878922eb0a915c38d3e0a9e7894}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!reliable\_profile@{reliable\_profile}}
+\index{reliable\_profile@{reliable\_profile}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{reliable\_profile}{reliable\_profile}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a8b83c878922eb0a915c38d3e0a9e7894} 
+const rmw\+\_\+qos\+\_\+profile\+\_\+t \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::reliable\+\_\+profile\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a102a8ba600108b8374f5afeb288d59bb}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!slam\_chunk\_publisher@{slam\_chunk\_publisher}}
+\index{slam\_chunk\_publisher@{slam\_chunk\_publisher}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{slam\_chunk\_publisher}{slam\_chunk\_publisher}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a102a8ba600108b8374f5afeb288d59bb} 
+rclcpp\+::\+Publisher$<$interfaces\+::msg\+::\+SLAMChunk$>$\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::slam\+\_\+chunk\+\_\+publisher\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a1c8e5e7be01a1f6a8c12035bb4045117}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!slam\_instance@{slam\_instance}}
+\index{slam\_instance@{slam\_instance}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{slam\_instance}{slam\_instance}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a1c8e5e7be01a1f6a8c12035bb4045117} 
+\mbox{\hyperlink{classslam_1_1slamISAM}{slam\+::slam\+ISAM}} \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::slam\+\_\+instance\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a163b73f677228ba27e11fc392e47b324}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!slam\_pose\_publisher@{slam\_pose\_publisher}}
+\index{slam\_pose\_publisher@{slam\_pose\_publisher}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{slam\_pose\_publisher}{slam\_pose\_publisher}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a163b73f677228ba27e11fc392e47b324} 
+rclcpp\+::\+Publisher$<$interfaces\+::msg\+::\+SLAMPose$>$\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::slam\+\_\+pose\+\_\+publisher\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1RealDataSLAMNodeNoGPS_a43d44a87d76cb9fbeb4eb04af647fb25}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!sync@{sync}}
+\index{sync@{sync}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{sync}{sync}}
+{\footnotesize\ttfamily \label{classnodes_1_1RealDataSLAMNodeNoGPS_a43d44a87d76cb9fbeb4eb04af647fb25} 
+std\+::shared\+\_\+ptr$<$message\+\_\+filters\+::\+Synchronizer$<$sync\+\_\+policy$>$ $>$ nodes\+::\+Real\+Data\+SLAMNode\+No\+GPS\+::sync\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a263ca5f766c32bfbb7eaf6b460fbd7fc}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!timer@{timer}}
+\index{timer@{timer}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{timer}{timer}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a263ca5f766c32bfbb7eaf6b460fbd7fc} 
+rclcpp\+::\+Timer\+Base\+::\+Shared\+Ptr \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::timer\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a83aa8579d505cc8a98a5743af38afbf3}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!vehicle\_angle\_sub@{vehicle\_angle\_sub}}
+\index{vehicle\_angle\_sub@{vehicle\_angle\_sub}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{vehicle\_angle\_sub}{vehicle\_angle\_sub}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a83aa8579d505cc8a98a5743af38afbf3} 
+message\+\_\+filters\+::\+Subscriber$<$geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::vehicle\+\_\+angle\+\_\+sub\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_af909eea548ea81bc6b7e9e4646e9a1f2}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!vehicle\_pos\_sub@{vehicle\_pos\_sub}}
+\index{vehicle\_pos\_sub@{vehicle\_pos\_sub}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{vehicle\_pos\_sub}{vehicle\_pos\_sub}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_af909eea548ea81bc6b7e9e4646e9a1f2} 
+message\+\_\+filters\+::\+Subscriber$<$geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::vehicle\+\_\+pos\+\_\+sub\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_a3952b006efaa689c3359802004991f3d}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!vehicle\_vel\_sub@{vehicle\_vel\_sub}}
+\index{vehicle\_vel\_sub@{vehicle\_vel\_sub}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{vehicle\_vel\_sub}{vehicle\_vel\_sub}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_a3952b006efaa689c3359802004991f3d} 
+message\+\_\+filters\+::\+Subscriber$<$geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::vehicle\+\_\+vel\+\_\+sub\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_aef0fb75590c57ef972d0723a2648fe93}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!velocity@{velocity}}
+\index{velocity@{velocity}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{velocity}{velocity}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_aef0fb75590c57ef972d0723a2648fe93} 
+gtsam\+::\+Pose2 \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::velocity\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_aa06d32c5d2f2e7a112b5925c43718d64}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!yaw@{yaw}}
+\index{yaw@{yaw}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{yaw}{yaw}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_aa06d32c5d2f2e7a112b5925c43718d64} 
+double \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::yaw\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\Hypertarget{classnodes_1_1GenericSLAMNode_abd8bc9fe10c5e3620a0db348b2a84af9}\index{nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}!yellow\_cones@{yellow\_cones}}
+\index{yellow\_cones@{yellow\_cones}!nodes::RealDataSLAMNodeNoGPS@{nodes::RealDataSLAMNodeNoGPS}}
+\doxysubsubsection{\texorpdfstring{yellow\_cones}{yellow\_cones}}
+{\footnotesize\ttfamily \label{classnodes_1_1GenericSLAMNode_abd8bc9fe10c5e3620a0db348b2a84af9} 
+std\+::vector$<$gtsam\+::\+Point2$>$ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode}{nodes\+::\+Generic\+SLAMNode}}$<$ interfaces\+::msg\+::\+Cone\+Array, geometry\+\_\+msgs\+::msg\+::\+Twist\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Quaternion\+Stamped, geometry\+\_\+msgs\+::msg\+::\+Vector3\+Stamped $>$\+::yellow\+\_\+cones\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{isam2__nodes_8hpp}{isam2\+\_\+nodes.\+hpp}}\item 
+src/nodes/\mbox{\hyperlink{real__data__slam__node__no__gps_8cpp}{real\+\_\+data\+\_\+slam\+\_\+node\+\_\+no\+\_\+gps.\+cpp}}\end{DoxyCompactItemize}

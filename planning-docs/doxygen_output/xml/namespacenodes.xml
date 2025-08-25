@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="namespacenodes" kind="namespace" language="C++">
+    <compoundname>nodes</compoundname>
+    <innerclass refid="classnodes_1_1ControlsSimSLAMNode" prot="public">nodes::ControlsSimSLAMNode</innerclass>
+    <innerclass refid="classnodes_1_1GenericSLAMNode" prot="public">nodes::GenericSLAMNode</innerclass>
+    <innerclass refid="classnodes_1_1RealDataSLAMNodeGPS" prot="public">nodes::RealDataSLAMNodeGPS</innerclass>
+    <innerclass refid="classnodes_1_1RealDataSLAMNodeNoGPS" prot="public">nodes::RealDataSLAMNodeNoGPS</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/isam2_nodes.hpp" line="22" column="1"/>
+  </compounddef>
+</doxygen>

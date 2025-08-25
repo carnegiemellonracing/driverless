@@ -1,0 +1,564 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="isam2__nodes_8hpp" kind="file" language="C++">
+    <compoundname>isam2_nodes.hpp</compoundname>
+    <includes refid="ros__utils_8hpp" local="yes">ros_utils.hpp</includes>
+    <includes refid="isam2_8hpp" local="yes">isam2.hpp</includes>
+    <includedby refid="controls__sim__slam__node_8cpp" local="yes">src/nodes/controls_sim_slam_node.cpp</includedby>
+    <includedby refid="generic__slam__node_8cpp" local="yes">src/nodes/generic_slam_node.cpp</includedby>
+    <includedby refid="real__data__slam__node__gps_8cpp" local="yes">src/nodes/real_data_slam_node_gps.cpp</includedby>
+    <includedby refid="real__data__slam__node__no__gps_8cpp" local="yes">src/nodes/real_data_slam_node_no_gps.cpp</includedby>
+    <incdepgraph>
+      <node id="32">
+        <label>constants.hpp</label>
+        <link refid="constants_8hpp"/>
+        <childnode refid="33" relation="include">
+        </childnode>
+      </node>
+      <node id="48">
+        <label>data_association.hpp</label>
+        <link refid="data__association_8hpp"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="49" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="50" relation="include">
+        </childnode>
+        <childnode refid="51" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+      </node>
+      <node id="34">
+        <label>isam2.hpp</label>
+        <link refid="isam2_8hpp"/>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="44" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="53" relation="include">
+        </childnode>
+        <childnode refid="52" relation="include">
+        </childnode>
+        <childnode refid="55" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>include/isam2_nodes.hpp</label>
+        <link refid="isam2__nodes_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="55">
+        <label>loop_closure.hpp</label>
+        <link refid="loop__closure_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>ros_utils.hpp</label>
+        <link refid="ros__utils_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="27" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+      </node>
+      <node id="52">
+        <label>slam_est_and_mcov.hpp</label>
+        <link refid="slam__est__and__mcov_8hpp"/>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="53">
+        <label>unary_factor.hpp</label>
+        <link refid="unary__factor_8hpp"/>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="54" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+      </node>
+      <node id="50">
+        <label>algorithm</label>
+      </node>
+      <node id="35">
+        <label>bits/stdc++.h</label>
+      </node>
+      <node id="22">
+        <label>boost/shared_ptr.hpp</label>
+      </node>
+      <node id="27">
+        <label>chrono</label>
+      </node>
+      <node id="28">
+        <label>climits</label>
+      </node>
+      <node id="26">
+        <label>cmath</label>
+      </node>
+      <node id="25">
+        <label>deque</label>
+      </node>
+      <node id="36">
+        <label>eigen3/Eigen/Dense</label>
+      </node>
+      <node id="51">
+        <label>float.h</label>
+      </node>
+      <node id="29">
+        <label>fmt/format.h</label>
+      </node>
+      <node id="24">
+        <label>fstream</label>
+      </node>
+      <node id="19">
+        <label>geometry_msgs/msg/point.hpp</label>
+      </node>
+      <node id="13">
+        <label>geometry_msgs/msg/pose_stamped.hpp</label>
+      </node>
+      <node id="15">
+        <label>geometry_msgs/msg/quaternion_stamped.hpp</label>
+      </node>
+      <node id="18">
+        <label>geometry_msgs/msg/twist.hpp</label>
+      </node>
+      <node id="16">
+        <label>geometry_msgs/msg/twist_stamped.hpp</label>
+      </node>
+      <node id="17">
+        <label>geometry_msgs/msg/twist_with_covariance.hpp</label>
+      </node>
+      <node id="14">
+        <label>geometry_msgs/msg/vector3_stamped.hpp</label>
+      </node>
+      <node id="30">
+        <label>gtsam/geometry/Point2.h</label>
+      </node>
+      <node id="31">
+        <label>gtsam/geometry/Pose2.h</label>
+      </node>
+      <node id="37">
+        <label>gtsam/inference/Symbol.h</label>
+      </node>
+      <node id="42">
+        <label>gtsam/nonlinear/DoglegOptimizer.h</label>
+      </node>
+      <node id="43">
+        <label>gtsam/nonlinear/GaussNewtonOptimizer.h</label>
+      </node>
+      <node id="38">
+        <label>gtsam/nonlinear/ISAM2.h</label>
+      </node>
+      <node id="41">
+        <label>gtsam/nonlinear/LevenbergMarquardtOptimizer.h</label>
+      </node>
+      <node id="44">
+        <label>gtsam/nonlinear/NonlinearConjugateGradientOptimizer.h</label>
+      </node>
+      <node id="54">
+        <label>gtsam/nonlinear/NonlinearFactor.h</label>
+      </node>
+      <node id="39">
+        <label>gtsam/nonlinear/NonlinearFactorGraph.h</label>
+      </node>
+      <node id="40">
+        <label>gtsam/nonlinear/Values.h</label>
+      </node>
+      <node id="47">
+        <label>gtsam/sam/BearingRangeFactor.h</label>
+      </node>
+      <node id="46">
+        <label>gtsam/slam/BetweenFactor.h</label>
+      </node>
+      <node id="45">
+        <label>gtsam/slam/ProjectionFactor.h</label>
+      </node>
+      <node id="9">
+        <label>interfaces/msg/cone_array.hpp</label>
+      </node>
+      <node id="10">
+        <label>interfaces/msg/cone_array_with_odom.hpp</label>
+      </node>
+      <node id="12">
+        <label>interfaces/msg/slam_chunk.hpp</label>
+      </node>
+      <node id="11">
+        <label>interfaces/msg/slam_pose.hpp</label>
+      </node>
+      <node id="3">
+        <label>memory</label>
+      </node>
+      <node id="6">
+        <label>message_filters/subscriber.h</label>
+      </node>
+      <node id="8">
+        <label>message_filters/sync_policies/approximate_time.h</label>
+      </node>
+      <node id="7">
+        <label>message_filters/synchronizer.h</label>
+      </node>
+      <node id="4">
+        <label>optional</label>
+      </node>
+      <node id="5">
+        <label>rclcpp/rclcpp.hpp</label>
+      </node>
+      <node id="20">
+        <label>sensor_msgs/msg/nav_sat_fix.hpp</label>
+      </node>
+      <node id="21">
+        <label>std_msgs/msg/string.hpp</label>
+      </node>
+      <node id="33">
+        <label>string</label>
+      </node>
+      <node id="49">
+        <label>tuple</label>
+      </node>
+      <node id="23">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>include/isam2_nodes.hpp</label>
+        <link refid="isam2__nodes_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>src/nodes/controls_sim_slam_node.cpp</label>
+        <link refid="controls__sim__slam__node_8cpp"/>
+      </node>
+      <node id="3">
+        <label>src/nodes/generic_slam_node.cpp</label>
+        <link refid="generic__slam__node_8cpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>src/nodes/generic_slam_node_impl.cpp</label>
+        <link refid="generic__slam__node__impl_8cpp"/>
+      </node>
+      <node id="5">
+        <label>src/nodes/real_data_slam_node_gps.cpp</label>
+        <link refid="real__data__slam__node__gps_8cpp"/>
+      </node>
+      <node id="6">
+        <label>src/nodes/real_data_slam_node_no_gps.cpp</label>
+        <link refid="real__data__slam__node__no__gps_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classnodes_1_1GenericSLAMNode" prot="public">nodes::GenericSLAMNode</innerclass>
+    <innerclass refid="classnodes_1_1RealDataSLAMNodeGPS" prot="public">nodes::RealDataSLAMNodeGPS</innerclass>
+    <innerclass refid="classnodes_1_1RealDataSLAMNodeNoGPS" prot="public">nodes::RealDataSLAMNodeNoGPS</innerclass>
+    <innerclass refid="classnodes_1_1ControlsSimSLAMNode" prot="public">nodes::ControlsSimSLAMNode</innerclass>
+    <innernamespace refid="namespacenodes">nodes</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="ros__utils_8hpp" kindref="compound">ros_utils.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="isam2_8hpp" kindref="compound">isam2.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22" refid="namespacenodes" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespacenodes" kindref="compound">nodes</ref><sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>cone_msg_t,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>velocity_msg_t,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>orientation_msg_t,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>position_msg_t&gt;<sp/></highlight></codeline>
+<codeline lineno="24" refid="classnodes_1_1GenericSLAMNode" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classnodes_1_1GenericSLAMNode_1a58d83801be4bff20d25cf082f82b044b" kindref="member">GenericSLAMNode</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>rclcpp::Node<sp/>{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:<sp/></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classnodes_1_1GenericSLAMNode_1a58d83801be4bff20d25cf082f82b044b" kindref="member">GenericSLAMNode</ref>();</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="29" refid="classnodes_1_1GenericSLAMNode_1a1c8e5e7be01a1f6a8c12035bb4045117" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classslam_1_1slamISAM" kindref="compound">slam::slamISAM</ref><sp/><ref refid="classnodes_1_1GenericSLAMNode_1a1c8e5e7be01a1f6a8c12035bb4045117" kindref="member">slam_instance</ref>;<sp/></highlight><highlight class="comment">/*<sp/>We<sp/>need<sp/>to<sp/>initialize<sp/>this<sp/>because<sp/>it<sp/>is<sp/>used<sp/>in<sp/>the<sp/>constructor<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30" refid="classnodes_1_1GenericSLAMNode_1ad321582bae34358afb0d0f4d6791acce" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::chrono::high_resolution_clock::time_point<sp/><ref refid="classnodes_1_1GenericSLAMNode_1ad321582bae34358afb0d0f4d6791acce" kindref="member">cur_sync_callback_time</ref>;</highlight></codeline>
+<codeline lineno="31" refid="classnodes_1_1GenericSLAMNode_1a5b28b46b60a0cc8f629dc2f9bf2b0aed" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;std::chrono::high_resolution_clock::time_point&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a5b28b46b60a0cc8f629dc2f9bf2b0aed" kindref="member">prev_sync_callback_time</ref>;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>rclcpp::Publisher&lt;interfaces::msg::SLAMData&gt;::SharedPtr<sp/>slam_publisher_;<sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34" refid="classnodes_1_1GenericSLAMNode_1a163b73f677228ba27e11fc392e47b324" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rclcpp::Publisher&lt;interfaces::msg::SLAMPose&gt;::SharedPtr<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a163b73f677228ba27e11fc392e47b324" kindref="member">slam_pose_publisher</ref>;<sp/></highlight></codeline>
+<codeline lineno="35" refid="classnodes_1_1GenericSLAMNode_1a102a8ba600108b8374f5afeb288d59bb" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rclcpp::Publisher&lt;interfaces::msg::SLAMChunk&gt;::SharedPtr<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a102a8ba600108b8374f5afeb288d59bb" kindref="member">slam_chunk_publisher</ref>;<sp/></highlight></codeline>
+<codeline lineno="36" refid="classnodes_1_1GenericSLAMNode_1aef0fb75590c57ef972d0723a2648fe93" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Pose2<sp/><ref refid="classnodes_1_1GenericSLAMNode_1aef0fb75590c57ef972d0723a2648fe93" kindref="member">velocity</ref>;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38" refid="classnodes_1_1GenericSLAMNode_1ab271b8cbc773ca67eead78dfd93a66cc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;gtsam::Point2&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1ab271b8cbc773ca67eead78dfd93a66cc" kindref="member">init_lon_lat</ref>;<sp/></highlight><highlight class="comment">//<sp/>local<sp/>variable<sp/>to<sp/>load<sp/>odom<sp/>into<sp/>SLAM<sp/>instance<sp/>when<sp/>msg<sp/>in<sp/>lon<sp/>lat</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="classnodes_1_1GenericSLAMNode_1a65cc2fec07dea2e13e5f813c7e40a6ed" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;gtsam::Point2&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a65cc2fec07dea2e13e5f813c7e40a6ed" kindref="member">init_x_y</ref>;<sp/></highlight><highlight class="comment">//<sp/>local<sp/>variable<sp/>to<sp/>load<sp/>odom<sp/>into<sp/>SLAM<sp/>instance<sp/>when<sp/>msg<sp/>in<sp/>x<sp/>and<sp/>y<sp/>meters</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="classnodes_1_1GenericSLAMNode_1a11b35a330285720008d97405ead9ea32" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gtsam::Point2<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a11b35a330285720008d97405ead9ea32" kindref="member">gps_position</ref>;<sp/></highlight><highlight class="comment">//<sp/>local<sp/>variable<sp/>to<sp/>load<sp/>odom<sp/>into<sp/>SLAM<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42" refid="classnodes_1_1GenericSLAMNode_1aa06d32c5d2f2e7a112b5925c43718d64" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1GenericSLAMNode_1aa06d32c5d2f2e7a112b5925c43718d64" kindref="member">yaw</ref>;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="classnodes_1_1GenericSLAMNode_1a0361459b479a7710fb411660ecd74939" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;gtsam::Point2&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a0361459b479a7710fb411660ecd74939" kindref="member">cones</ref>;<sp/></highlight><highlight class="comment">//<sp/>local<sp/>variable<sp/>to<sp/>load<sp/>cone<sp/>observations<sp/>into<sp/>SLAM<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="classnodes_1_1GenericSLAMNode_1aed83b931419f4d668f2cc6faf289f450" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;gtsam::Point2&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1aed83b931419f4d668f2cc6faf289f450" kindref="member">orange_cones</ref>;<sp/></highlight><highlight class="comment">//<sp/>local<sp/>variable<sp/>to<sp/>load<sp/>cone<sp/>observations<sp/>into<sp/>SLAM<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46" refid="classnodes_1_1GenericSLAMNode_1a5c9a89d1981198da97332bc70c36b461" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;gtsam::Point2&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a5c9a89d1981198da97332bc70c36b461" kindref="member">blue_cones</ref>;<sp/></highlight><highlight class="comment">//local<sp/>variable<sp/>to<sp/>store<sp/>the<sp/>blue<sp/>observed<sp/>cones</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="classnodes_1_1GenericSLAMNode_1abd8bc9fe10c5e3620a0db348b2a84af9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;gtsam::Point2&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1abd8bc9fe10c5e3620a0db348b2a84af9" kindref="member">yellow_cones</ref>;<sp/></highlight><highlight class="comment">//local<sp/>variable<sp/>to<sp/>store<sp/>the<sp/>yellow<sp/>observed<sp/>cones</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50" refid="classnodes_1_1GenericSLAMNode_1ac3e7b0efbfdf99de62dd12249a6b7b4c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1GenericSLAMNode_1ac3e7b0efbfdf99de62dd12249a6b7b4c" kindref="member">file_opened</ref>;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="classnodes_1_1GenericSLAMNode_1a263ca5f766c32bfbb7eaf6b460fbd7fc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rclcpp::TimerBase::SharedPtr<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a263ca5f766c32bfbb7eaf6b460fbd7fc" kindref="member">timer</ref>;</highlight></codeline>
+<codeline lineno="53" refid="classnodes_1_1GenericSLAMNode_1ac9913e82bb32e56d48e660f2b5b49240" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1GenericSLAMNode_1ac9913e82bb32e56d48e660f2b5b49240" kindref="member">dt</ref>;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55" refid="classnodes_1_1GenericSLAMNode_1a94064913429f785ae60b65126bd4c525" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;std_msgs::msg::Header&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a94064913429f785ae60b65126bd4c525" kindref="member">prev_filter_time</ref>;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//print<sp/>files</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58" refid="classnodes_1_1GenericSLAMNode_1a80846119c099ff6d03614bc8c955b96d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::ofstream<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a80846119c099ff6d03614bc8c955b96d" kindref="member">outfile</ref>;</highlight></codeline>
+<codeline lineno="59" refid="classnodes_1_1GenericSLAMNode_1a7aa44f46ec28c8f0dc6e81c3a57fcf0b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::ofstream<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a7aa44f46ec28c8f0dc6e81c3a57fcf0b" kindref="member">pose_cones</ref>;<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>QOS<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62" refid="classnodes_1_1GenericSLAMNode_1a8b83c878922eb0a915c38d3e0a9e7894" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rmw_qos_profile_t<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a8b83c878922eb0a915c38d3e0a9e7894" kindref="member">reliable_profile</ref><sp/>=<sp/>{</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_POLICY_HISTORY_KEEP_LAST,</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>30,</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_POLICY_RELIABILITY_RELIABLE,</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_POLICY_DURABILITY_VOLATILE,</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_DEADLINE_DEFAULT,</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_LIFESPAN_DEFAULT,</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT,</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="73" refid="classnodes_1_1GenericSLAMNode_1a5b79ee9230014777e3e746ac2600e562" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rmw_qos_profile_t<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a5b79ee9230014777e3e746ac2600e562" kindref="member">best_effort_profile</ref><sp/>=<sp/>{</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_POLICY_HISTORY_KEEP_LAST,</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>30,</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_POLICY_DURABILITY_VOLATILE,</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_DEADLINE_DEFAULT,</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_LIFESPAN_DEFAULT,</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT,</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85" refid="classnodes_1_1GenericSLAMNode_1a81430a36c8c264ffd491d275ff44dce2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp::QoS<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a81430a36c8c264ffd491d275ff44dce2" kindref="member">best_effort_qos</ref><sp/>=<sp/>rclcpp::QoS(</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rclcpp::QoSInitialization(</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classnodes_1_1GenericSLAMNode_1a5b79ee9230014777e3e746ac2600e562" kindref="member">best_effort_profile</ref>.history,</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classnodes_1_1GenericSLAMNode_1a5b79ee9230014777e3e746ac2600e562" kindref="member">best_effort_profile</ref>.depth),</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classnodes_1_1GenericSLAMNode_1a5b79ee9230014777e3e746ac2600e562" kindref="member">best_effort_profile</ref>);</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91" refid="classnodes_1_1GenericSLAMNode_1a9e2dc515faed67f46f8833853ec043e1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>message_filters::Subscriber&lt;cone_msg_t&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a9e2dc515faed67f46f8833853ec043e1" kindref="member">cone_sub</ref>;</highlight></codeline>
+<codeline lineno="92" refid="classnodes_1_1GenericSLAMNode_1a3952b006efaa689c3359802004991f3d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>message_filters::Subscriber&lt;velocity_msg_t&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a3952b006efaa689c3359802004991f3d" kindref="member">vehicle_vel_sub</ref>;</highlight></codeline>
+<codeline lineno="93" refid="classnodes_1_1GenericSLAMNode_1a83aa8579d505cc8a98a5743af38afbf3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>message_filters::Subscriber&lt;orientation_msg_t&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1a83aa8579d505cc8a98a5743af38afbf3" kindref="member">vehicle_angle_sub</ref>;<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="94" refid="classnodes_1_1GenericSLAMNode_1af909eea548ea81bc6b7e9e4646e9a1f2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>message_filters::Subscriber&lt;position_msg_t&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1af909eea548ea81bc6b7e9e4646e9a1f2" kindref="member">vehicle_pos_sub</ref>;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1GenericSLAMNode_1a2f490a869053d4f426550f5ce5512933" kindref="member">declare_yaml_params</ref>();</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::optional&lt;yaml_params::NoiseInputs&gt;<sp/><ref refid="classnodes_1_1GenericSLAMNode_1add60599f53e6fcc111caae5fde661dff" kindref="member">get_noise_inputs</ref>();</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1GenericSLAMNode_1afbf813fbfc9c31773de427271ed6239e" kindref="member">publish_slam_data</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="namespaceslam_1a74c5ff6a5f23be28ef1b570f909b8449" kindref="member">slam::slam_output_t</ref>&amp;<sp/>slam_data,<sp/>std_msgs::msg::Header<sp/>header);</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100" refid="classnodes_1_1GenericSLAMNode_1a58ea6cb4af16c570cdedb00f07186e57" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1GenericSLAMNode_1a58ea6cb4af16c570cdedb00f07186e57" kindref="member">perform_subscribes</ref>()<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="109" refid="classnodes_1_1RealDataSLAMNodeGPS" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classnodes_1_1RealDataSLAMNodeGPS_1a6813696f2a37934a3e14454007ea3fe3" kindref="member">RealDataSLAMNodeGPS</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1GenericSLAMNode_1a58d83801be4bff20d25cf082f82b044b" kindref="member">GenericSLAMNode</ref>&lt;interfaces::msg::ConeArray,</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::TwistStamped,</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::QuaternionStamped,</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::Vector3Stamped&gt;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">cone_msg_t<sp/>=<sp/>interfaces::msg::ConeArray;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">velocity_msg_t<sp/>=<sp/>geometry_msgs::msg::TwistStamped;<sp/></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">orientation_msg_t<sp/>=<sp/>geometry_msgs::msg::QuaternionStamped;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">position_msg_t<sp/>=<sp/>geometry_msgs::msg::Vector3Stamped;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">sync_policy<sp/>=<sp/>message_filters::sync_policies::ApproximateTime&lt;cone_msg_t,<sp/>velocity_msg_t,<sp/>orientation_msg_t,<sp/>position_msg_t&gt;;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Subscribers*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1RealDataSLAMNodeGPS_1a834904dd3712978e1000ebb2997137cf" kindref="member">perform_subscribes</ref>()<sp/></highlight><highlight class="keyword">override</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Callbacks<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1RealDataSLAMNodeGPS_1a6e368336bad667376bea18a760fbf838" kindref="member">cone_callback</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>cone_msg_t::ConstSharedPtr<sp/>&amp;cone_data);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1RealDataSLAMNodeGPS_1a19b825a0197f6c3c67a619647b76d821" kindref="member">vehicle_vel_callback</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>velocity_msg_t::ConstSharedPtr<sp/>&amp;vehicle_vel_data);</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1RealDataSLAMNodeGPS_1a1f4797f6b59e46d4a059b4452742ac55" kindref="member">vehicle_angle_callback</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>orientation_msg_t::ConstSharedPtr<sp/>&amp;vehicle_angle_data);</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1RealDataSLAMNodeGPS_1a37d465a4a06fda5dca6dfab124e5d856" kindref="member">vehicle_pos_callback</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>position_msg_t::ConstSharedPtr<sp/>&amp;vehicle_pos_data);</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1RealDataSLAMNodeGPS_1aa9e35fda92238cdb157b92f0de049881" kindref="member">sync_callback</ref><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cone_msg_t::ConstSharedPtr<sp/>&amp;cone_data,</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>velocity_msg_t::ConstSharedPtr<sp/>&amp;vehicle_vel_data,</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>orientation_msg_t::ConstSharedPtr<sp/>&amp;vehicle_angle_data,<sp/></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>position_msg_t::ConstSharedPtr<sp/>&amp;vehicle_pos_data);</highlight></codeline>
+<codeline lineno="136" refid="classnodes_1_1RealDataSLAMNodeGPS_1a93be06b5dccdbcac326a3c7ec605285b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;message_filters::Synchronizer&lt;sync_policy&gt;&gt;<sp/><ref refid="classnodes_1_1RealDataSLAMNodeGPS_1a93be06b5dccdbcac326a3c7ec605285b" kindref="member">sync</ref>;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:<sp/></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classnodes_1_1RealDataSLAMNodeGPS_1a6813696f2a37934a3e14454007ea3fe3" kindref="member">RealDataSLAMNodeGPS</ref>();</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147" refid="classnodes_1_1RealDataSLAMNodeNoGPS" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS_1acaf1f59b9214a157067f58b3b5cd1fc1" kindref="member">RealDataSLAMNodeNoGPS</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1GenericSLAMNode_1a58d83801be4bff20d25cf082f82b044b" kindref="member">GenericSLAMNode</ref>&lt;interfaces::msg::ConeArray,</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::TwistStamped,</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::QuaternionStamped,</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::Vector3Stamped&gt;</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">cone_msg_t<sp/>=<sp/>interfaces::msg::ConeArray;</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">velocity_msg_t<sp/>=<sp/>geometry_msgs::msg::TwistStamped;<sp/></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">orientation_msg_t<sp/>=<sp/>geometry_msgs::msg::QuaternionStamped;</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">dummy_position_msg_t<sp/>=<sp/>geometry_msgs::msg::Vector3Stamped;</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">sync_policy<sp/>=<sp/>message_filters::sync_policies::ApproximateTime&lt;cone_msg_t,<sp/>velocity_msg_t,<sp/>orientation_msg_t&gt;;</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Subscribers*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS_1ae1b8e1097d65bdbfca78748e0446c4a8" kindref="member">perform_subscribes</ref>()<sp/></highlight><highlight class="keyword">override</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"></highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Callbacks<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS_1adcf935f870a695b186697286a891033d" kindref="member">cone_callback</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cone_msg_t::ConstSharedPtr<sp/>&amp;cone_data);</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS_1a7e167afa3f01b7ddce006036c4b78fd5" kindref="member">vehicle_vel_callback</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>velocity_msg_t::ConstSharedPtr<sp/>&amp;vehicle_vel_data);</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS_1ae53470d602951437d3d1068366a0f5a0" kindref="member">vehicle_angle_callback</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>orientation_msg_t::ConstSharedPtr<sp/>&amp;vehicle_angle_data);</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS_1abe7346b23388bc96725aa9d75f964d97" kindref="member">sync_callback</ref><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cone_msg_t::ConstSharedPtr<sp/>&amp;cone_data,</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>velocity_msg_t::ConstSharedPtr<sp/>&amp;vehicle_vel_data,</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>orientation_msg_t::ConstSharedPtr<sp/>&amp;vehicle_angle_data);</highlight></codeline>
+<codeline lineno="171" refid="classnodes_1_1RealDataSLAMNodeNoGPS_1a43d44a87d76cb9fbeb4eb04af647fb25" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;message_filters::Synchronizer&lt;sync_policy&gt;&gt;<sp/><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS_1a43d44a87d76cb9fbeb4eb04af647fb25" kindref="member">sync</ref>;</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"></highlight></codeline>
+<codeline lineno="173"><highlight class="normal"></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classnodes_1_1RealDataSLAMNodeNoGPS_1acaf1f59b9214a157067f58b3b5cd1fc1" kindref="member">RealDataSLAMNodeNoGPS</ref>();</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"></highlight></codeline>
+<codeline lineno="183" refid="classnodes_1_1ControlsSimSLAMNode" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classnodes_1_1ControlsSimSLAMNode_1a5f5155279b79253ebffa60b34ce32667" kindref="member">ControlsSimSLAMNode</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1GenericSLAMNode_1a58d83801be4bff20d25cf082f82b044b" kindref="member">GenericSLAMNode</ref><sp/>&lt;interfaces::msg::ConeArray,</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::TwistStamped,<sp/></highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::QuaternionStamped,</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geometry_msgs::msg::PoseStamped&gt;</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">cone_msg_t<sp/>=<sp/>interfaces::msg::ConeArray;</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">velocity_msg_t<sp/>=<sp/>geometry_msgs::msg::TwistStamped;<sp/></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">dummy_orientation_msg_t<sp/>=<sp/>geometry_msgs::msg::QuaternionStamped;</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">pose_msg_t<sp/>=<sp/>geometry_msgs::msg::PoseStamped;</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">sync_policy<sp/>=<sp/>message_filters::sync_policies::ApproximateTime&lt;cone_msg_t,<sp/>velocity_msg_t,<sp/>pose_msg_t&gt;;</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"></highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Subscribers<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1ControlsSimSLAMNode_1a70a01cbc401365ad59febe7fb8bb9e3b" kindref="member">perform_subscribes</ref>()<sp/></highlight><highlight class="keyword">override</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Callbacks<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1ControlsSimSLAMNode_1a1f318187ca815ffc561acc5a1ba20f0f" kindref="member">cone_callback</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cone_msg_t::ConstSharedPtr<sp/>&amp;cone_data);</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1ControlsSimSLAMNode_1a2fd7db48e293897ab28285e8a403cd46" kindref="member">vehicle_vel_callback</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>velocity_msg_t::ConstSharedPtr<sp/>&amp;vehicle_vel_data);</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1ControlsSimSLAMNode_1a0b069a62e41b8f2d28e41fb1af00c95d" kindref="member">vehicle_pos_callback</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>pose_msg_t::ConstSharedPtr<sp/>&amp;vehicle_pos_data);</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classnodes_1_1ControlsSimSLAMNode_1ac2e8cc8480c0eccafb4d33a783339d6d" kindref="member">sync_callback</ref><sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>cone_msg_t::ConstSharedPtr<sp/>&amp;cone_data,</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>velocity_msg_t::ConstSharedPtr<sp/>&amp;vehicle_vel_data,</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>pose_msg_t::ConstSharedPtr<sp/>&amp;vehicle_pos_data);</highlight></codeline>
+<codeline lineno="207" refid="classnodes_1_1ControlsSimSLAMNode_1a46fd52977bb69a6f862fa4c8ccc41e9e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;message_filters::Synchronizer&lt;sync_policy&gt;&gt;<sp/><ref refid="classnodes_1_1ControlsSimSLAMNode_1a46fd52977bb69a6f862fa4c8ccc41e9e" kindref="member">sync</ref>;</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"></highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="classnodes_1_1ControlsSimSLAMNode_1a5f5155279b79253ebffa60b34ce32667" kindref="member">ControlsSimSLAMNode</ref>();</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"></highlight></codeline>
+<codeline lineno="214"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="include/isam2_nodes.hpp"/>
+  </compounddef>
+</doxygen>

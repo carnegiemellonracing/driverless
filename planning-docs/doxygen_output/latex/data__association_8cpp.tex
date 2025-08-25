@@ -1,0 +1,33 @@
+\doxysection{src/utils/data\+\_\+association.cpp File Reference}
+\hypertarget{data__association_8cpp}{}\label{data__association_8cpp}\index{src/utils/data\_association.cpp@{src/utils/data\_association.cpp}}
+
+
+Perform data association in preparation for feeding data to SLAM.  
+
+
+{\ttfamily \#include "{}data\+\_\+association.\+hpp"{}}\newline
+Include dependency graph for data\+\_\+association.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{data__association_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacedata__association__utils}{data\+\_\+association\+\_\+utils}}
+\begin{DoxyCompactList}\small\item\em Utility functions for data association. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::pair$<$ std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo}{Old\+Cone\+Info}} $>$, std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo}{New\+Cone\+Info}} $>$ $>$ \mbox{\hyperlink{namespacedata__association__utils_a8618a0ce5124334358fd054e92483fd9}{data\+\_\+association\+\_\+utils\+::get\+\_\+old\+\_\+new\+\_\+cones}} (std\+::vector$<$ gtsam\+::\+Point2 $>$ global\+\_\+cone\+\_\+obs, std\+::vector$<$ gtsam\+::\+Point2 $>$ cone\+\_\+obs, std\+::vector$<$ std\+::vector$<$ double $>$ $>$ distances, double m\+\_\+dist\+\_\+th, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger)
+\begin{DoxyCompactList}\small\item\em Distinguishes obsered cones into old and new cones. \end{DoxyCompactList}\item 
+std\+::pair$<$ std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1OldConeInfo}{Old\+Cone\+Info}} $>$, std\+::vector$<$ \mbox{\hyperlink{structdata__association__utils_1_1NewConeInfo}{New\+Cone\+Info}} $>$ $>$ \mbox{\hyperlink{namespacedata__association__utils_a6f7228a0a6bea9eb932a06b409ec2d3e}{data\+\_\+association\+\_\+utils\+::perform\+\_\+data\+\_\+association}} (gtsam\+::\+Pose2 cur\+\_\+pose, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs, std\+::optional$<$ rclcpp\+::\+Logger $>$ logger, \mbox{\hyperlink{classslam_1_1SLAMEstAndMCov}{slam\+::\+SLAMEst\+And\+MCov}} \&slam\+\_\+est\+\_\+and\+\_\+mcov, double m\+\_\+dist\+\_\+th, double cone\+\_\+dist\+\_\+th)
+\begin{DoxyCompactList}\small\item\em Performs data association between the observed cones and the SLAM estimates. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Perform data association in preparation for feeding data to SLAM. 
+

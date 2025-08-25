@@ -1,0 +1,729 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="classnodes_1_1RealDataSLAMNodeNoGPS" kind="class" language="C++" prot="public">
+    <compoundname>nodes::RealDataSLAMNodeNoGPS</compoundname>
+    <basecompoundref refid="classnodes_1_1GenericSLAMNode" prot="public" virt="non-virtual">nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;</basecompoundref>
+    <includes refid="isam2__nodes_8hpp" local="no">isam2_nodes.hpp</includes>
+    <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="classnodes_1_1RealDataSLAMNodeNoGPS_1a721ce7c93102e56bfdf803d4490dcb9e" prot="private" static="no">
+        <type>interfaces::msg::ConeArray</type>
+        <definition>using nodes::RealDataSLAMNodeNoGPS::cone_msg_t =  interfaces::msg::ConeArray</definition>
+        <argsstring></argsstring>
+        <name>cone_msg_t</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::cone_msg_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="152" column="9" bodyfile="include/isam2_nodes.hpp" bodystart="152" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classnodes_1_1RealDataSLAMNodeNoGPS_1addc9a0bf3bc9ed7d381abfb3226e726e" prot="private" static="no">
+        <type>geometry_msgs::msg::TwistStamped</type>
+        <definition>using nodes::RealDataSLAMNodeNoGPS::velocity_msg_t =  geometry_msgs::msg::TwistStamped</definition>
+        <argsstring></argsstring>
+        <name>velocity_msg_t</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::velocity_msg_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="153" column="9" bodyfile="include/isam2_nodes.hpp" bodystart="153" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classnodes_1_1RealDataSLAMNodeNoGPS_1a5f4f9d5b14cab50ae30273b05ba3caab" prot="private" static="no">
+        <type>geometry_msgs::msg::QuaternionStamped</type>
+        <definition>using nodes::RealDataSLAMNodeNoGPS::orientation_msg_t =  geometry_msgs::msg::QuaternionStamped</definition>
+        <argsstring></argsstring>
+        <name>orientation_msg_t</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::orientation_msg_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="154" column="9" bodyfile="include/isam2_nodes.hpp" bodystart="154" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classnodes_1_1RealDataSLAMNodeNoGPS_1ae55b23ad3547de97351aa8ee0336f229" prot="private" static="no">
+        <type>geometry_msgs::msg::Vector3Stamped</type>
+        <definition>using nodes::RealDataSLAMNodeNoGPS::dummy_position_msg_t =  geometry_msgs::msg::Vector3Stamped</definition>
+        <argsstring></argsstring>
+        <name>dummy_position_msg_t</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::dummy_position_msg_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="155" column="9" bodyfile="include/isam2_nodes.hpp" bodystart="155" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="classnodes_1_1RealDataSLAMNodeNoGPS_1a84484e68f774640655a48a9b7007bbf5" prot="private" static="no">
+        <type>message_filters::sync_policies::ApproximateTime&lt; cone_msg_t, velocity_msg_t, orientation_msg_t &gt;</type>
+        <definition>using nodes::RealDataSLAMNodeNoGPS::sync_policy =  message_filters::sync_policies::ApproximateTime&lt;cone_msg_t, velocity_msg_t, orientation_msg_t&gt;</definition>
+        <argsstring></argsstring>
+        <name>sync_policy</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::sync_policy</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="156" column="9" bodyfile="include/isam2_nodes.hpp" bodystart="156" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="protected-attrib">
+      <memberdef kind="variable" id="classnodes_1_1RealDataSLAMNodeNoGPS_1a43d44a87d76cb9fbeb4eb04af647fb25" prot="protected" static="no" mutable="no">
+        <type>std::shared_ptr&lt; message_filters::Synchronizer&lt; sync_policy &gt; &gt;</type>
+        <definition>std::shared_ptr&lt;message_filters::Synchronizer&lt;sync_policy&gt; &gt; nodes::RealDataSLAMNodeNoGPS::sync</definition>
+        <argsstring></argsstring>
+        <name>sync</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::sync</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="171" column="25" bodyfile="include/isam2_nodes.hpp" bodystart="171" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a1c8e5e7be01a1f6a8c12035bb4045117" prot="protected" static="no" mutable="no">
+        <type><ref refid="classslam_1_1slamISAM" kindref="compound">slam::slamISAM</ref></type>
+        <definition>slam::slamISAM nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::slam_instance</definition>
+        <argsstring></argsstring>
+        <name>slam_instance</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::slam_instance</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="29" column="24" bodyfile="include/isam2_nodes.hpp" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1ad321582bae34358afb0d0f4d6791acce" prot="protected" static="no" mutable="no">
+        <type>std::chrono::high_resolution_clock::time_point</type>
+        <definition>std::chrono::high_resolution_clock::time_point nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::cur_sync_callback_time</definition>
+        <argsstring></argsstring>
+        <name>cur_sync_callback_time</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::cur_sync_callback_time</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="30" column="56" bodyfile="include/isam2_nodes.hpp" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a5b28b46b60a0cc8f629dc2f9bf2b0aed" prot="protected" static="no" mutable="no">
+        <type>std::optional&lt; std::chrono::high_resolution_clock::time_point &gt;</type>
+        <definition>std::optional&lt;std::chrono::high_resolution_clock::time_point&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::prev_sync_callback_time</definition>
+        <argsstring></argsstring>
+        <name>prev_sync_callback_time</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::prev_sync_callback_time</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="31" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a163b73f677228ba27e11fc392e47b324" prot="protected" static="no" mutable="no">
+        <type>rclcpp::Publisher&lt; interfaces::msg::SLAMPose &gt;::SharedPtr</type>
+        <definition>rclcpp::Publisher&lt;interfaces::msg::SLAMPose&gt;::SharedPtr nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::slam_pose_publisher</definition>
+        <argsstring></argsstring>
+        <name>slam_pose_publisher</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::slam_pose_publisher</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="34" column="39" bodyfile="include/isam2_nodes.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a102a8ba600108b8374f5afeb288d59bb" prot="protected" static="no" mutable="no">
+        <type>rclcpp::Publisher&lt; interfaces::msg::SLAMChunk &gt;::SharedPtr</type>
+        <definition>rclcpp::Publisher&lt;interfaces::msg::SLAMChunk&gt;::SharedPtr nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::slam_chunk_publisher</definition>
+        <argsstring></argsstring>
+        <name>slam_chunk_publisher</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::slam_chunk_publisher</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="35" column="39" bodyfile="include/isam2_nodes.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1aef0fb75590c57ef972d0723a2648fe93" prot="protected" static="no" mutable="no">
+        <type>gtsam::Pose2</type>
+        <definition>gtsam::Pose2 nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::velocity</definition>
+        <argsstring></argsstring>
+        <name>velocity</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::velocity</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="36" column="22" bodyfile="include/isam2_nodes.hpp" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1ab271b8cbc773ca67eead78dfd93a66cc" prot="protected" static="no" mutable="no">
+        <type>std::optional&lt; gtsam::Point2 &gt;</type>
+        <definition>std::optional&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::init_lon_lat</definition>
+        <argsstring></argsstring>
+        <name>init_lon_lat</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::init_lon_lat</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="38" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a65cc2fec07dea2e13e5f813c7e40a6ed" prot="protected" static="no" mutable="no">
+        <type>std::optional&lt; gtsam::Point2 &gt;</type>
+        <definition>std::optional&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::init_x_y</definition>
+        <argsstring></argsstring>
+        <name>init_x_y</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::init_x_y</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="39" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a11b35a330285720008d97405ead9ea32" prot="protected" static="no" mutable="no">
+        <type>gtsam::Point2</type>
+        <definition>gtsam::Point2 nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::gps_position</definition>
+        <argsstring></argsstring>
+        <name>gps_position</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::gps_position</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="41" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1aa06d32c5d2f2e7a112b5925c43718d64" prot="protected" static="no" mutable="no">
+        <type>double</type>
+        <definition>double nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::yaw</definition>
+        <argsstring></argsstring>
+        <name>yaw</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::yaw</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="42" column="16" bodyfile="include/isam2_nodes.hpp" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a0361459b479a7710fb411660ecd74939" prot="protected" static="no" mutable="no">
+        <type>std::vector&lt; gtsam::Point2 &gt;</type>
+        <definition>std::vector&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::cones</definition>
+        <argsstring></argsstring>
+        <name>cones</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="44" column="21" bodyfile="include/isam2_nodes.hpp" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1aed83b931419f4d668f2cc6faf289f450" prot="protected" static="no" mutable="no">
+        <type>std::vector&lt; gtsam::Point2 &gt;</type>
+        <definition>std::vector&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::orange_cones</definition>
+        <argsstring></argsstring>
+        <name>orange_cones</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::orange_cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="45" column="21" bodyfile="include/isam2_nodes.hpp" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a5c9a89d1981198da97332bc70c36b461" prot="protected" static="no" mutable="no">
+        <type>std::vector&lt; gtsam::Point2 &gt;</type>
+        <definition>std::vector&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::blue_cones</definition>
+        <argsstring></argsstring>
+        <name>blue_cones</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::blue_cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="46" column="21" bodyfile="include/isam2_nodes.hpp" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1abd8bc9fe10c5e3620a0db348b2a84af9" prot="protected" static="no" mutable="no">
+        <type>std::vector&lt; gtsam::Point2 &gt;</type>
+        <definition>std::vector&lt;gtsam::Point2&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::yellow_cones</definition>
+        <argsstring></argsstring>
+        <name>yellow_cones</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::yellow_cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="47" column="21" bodyfile="include/isam2_nodes.hpp" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1ac3e7b0efbfdf99de62dd12249a6b7b4c" prot="protected" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::file_opened</definition>
+        <argsstring></argsstring>
+        <name>file_opened</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::file_opened</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="50" column="14" bodyfile="include/isam2_nodes.hpp" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a263ca5f766c32bfbb7eaf6b460fbd7fc" prot="protected" static="no" mutable="no">
+        <type>rclcpp::TimerBase::SharedPtr</type>
+        <definition>rclcpp::TimerBase::SharedPtr nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::timer</definition>
+        <argsstring></argsstring>
+        <name>timer</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::timer</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="52" column="38" bodyfile="include/isam2_nodes.hpp" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1ac9913e82bb32e56d48e660f2b5b49240" prot="protected" static="no" mutable="no">
+        <type>double</type>
+        <definition>double nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::dt</definition>
+        <argsstring></argsstring>
+        <name>dt</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::dt</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="53" column="16" bodyfile="include/isam2_nodes.hpp" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a94064913429f785ae60b65126bd4c525" prot="protected" static="no" mutable="no">
+        <type>std::optional&lt; std_msgs::msg::Header &gt;</type>
+        <definition>std::optional&lt;std_msgs::msg::Header&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::prev_filter_time</definition>
+        <argsstring></argsstring>
+        <name>prev_filter_time</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::prev_filter_time</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="55" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a80846119c099ff6d03614bc8c955b96d" prot="protected" static="no" mutable="no">
+        <type>std::ofstream</type>
+        <definition>std::ofstream nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::outfile</definition>
+        <argsstring></argsstring>
+        <name>outfile</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::outfile</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="58" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a7aa44f46ec28c8f0dc6e81c3a57fcf0b" prot="protected" static="no" mutable="no">
+        <type>std::ofstream</type>
+        <definition>std::ofstream nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::pose_cones</definition>
+        <argsstring></argsstring>
+        <name>pose_cones</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::pose_cones</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="59" column="23" bodyfile="include/isam2_nodes.hpp" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a8b83c878922eb0a915c38d3e0a9e7894" prot="protected" static="no" mutable="no">
+        <type>const rmw_qos_profile_t</type>
+        <definition>const rmw_qos_profile_t nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::reliable_profile</definition>
+        <argsstring></argsstring>
+        <name>reliable_profile</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::reliable_profile</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="62" column="33" bodyfile="include/isam2_nodes.hpp" bodystart="62" bodyend="72"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a5b79ee9230014777e3e746ac2600e562" prot="protected" static="no" mutable="no">
+        <type>const rmw_qos_profile_t</type>
+        <definition>const rmw_qos_profile_t nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::best_effort_profile</definition>
+        <argsstring></argsstring>
+        <name>best_effort_profile</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::best_effort_profile</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="73" column="33" bodyfile="include/isam2_nodes.hpp" bodystart="73" bodyend="83"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a81430a36c8c264ffd491d275ff44dce2" prot="protected" static="no" mutable="no">
+        <type>const rclcpp::QoS</type>
+        <definition>const rclcpp::QoS nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::best_effort_qos</definition>
+        <argsstring></argsstring>
+        <name>best_effort_qos</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::best_effort_qos</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="85" column="27" bodyfile="include/isam2_nodes.hpp" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a9e2dc515faed67f46f8833853ec043e1" prot="protected" static="no" mutable="no">
+        <type>message_filters::Subscriber&lt; interfaces::msg::ConeArray &gt;</type>
+        <definition>message_filters::Subscriber&lt;interfaces::msg::ConeArray&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::cone_sub</definition>
+        <argsstring></argsstring>
+        <name>cone_sub</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::cone_sub</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="91" column="37" bodyfile="include/isam2_nodes.hpp" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a3952b006efaa689c3359802004991f3d" prot="protected" static="no" mutable="no">
+        <type>message_filters::Subscriber&lt; geometry_msgs::msg::TwistStamped &gt;</type>
+        <definition>message_filters::Subscriber&lt;geometry_msgs::msg::TwistStamped&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::vehicle_vel_sub</definition>
+        <argsstring></argsstring>
+        <name>vehicle_vel_sub</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::vehicle_vel_sub</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="92" column="37" bodyfile="include/isam2_nodes.hpp" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1a83aa8579d505cc8a98a5743af38afbf3" prot="protected" static="no" mutable="no">
+        <type>message_filters::Subscriber&lt; geometry_msgs::msg::QuaternionStamped &gt;</type>
+        <definition>message_filters::Subscriber&lt;geometry_msgs::msg::QuaternionStamped&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::vehicle_angle_sub</definition>
+        <argsstring></argsstring>
+        <name>vehicle_angle_sub</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::vehicle_angle_sub</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="93" column="37" bodyfile="include/isam2_nodes.hpp" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classnodes_1_1GenericSLAMNode_1af909eea548ea81bc6b7e9e4646e9a1f2" prot="protected" static="no" mutable="no">
+        <type>message_filters::Subscriber&lt; geometry_msgs::msg::Vector3Stamped &gt;</type>
+        <definition>message_filters::Subscriber&lt;geometry_msgs::msg::Vector3Stamped&gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::vehicle_pos_sub</definition>
+        <argsstring></argsstring>
+        <name>vehicle_pos_sub</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::vehicle_pos_sub</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="94" column="37" bodyfile="include/isam2_nodes.hpp" bodystart="94" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="protected-func">
+      <memberdef kind="function" id="classnodes_1_1RealDataSLAMNodeNoGPS_1ae1b8e1097d65bdbfca78748e0446c4a8" prot="protected" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void nodes::RealDataSLAMNodeNoGPS::perform_subscribes</definition>
+        <argsstring>() override</argsstring>
+        <name>perform_subscribes</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::perform_subscribes</qualifiedname>
+        <reimplements refid="classnodes_1_1GenericSLAMNode_1a58ea6cb4af16c570cdedb00f07186e57">perform_subscribes</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="162" column="14" bodyfile="src/nodes/real_data_slam_node_no_gps.cpp" bodystart="111" bodyend="115"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1RealDataSLAMNodeNoGPS_1adcf935f870a695b186697286a891033d" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::RealDataSLAMNodeNoGPS::cone_callback</definition>
+        <argsstring>(const cone_msg_t::ConstSharedPtr &amp;cone_data)</argsstring>
+        <name>cone_callback</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::cone_callback</qualifiedname>
+        <param>
+          <type>const cone_msg_t::ConstSharedPtr &amp;</type>
+          <declname>cone_data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="165" column="14" bodyfile="src/nodes/real_data_slam_node_no_gps.cpp" bodystart="23" bodyend="37"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1RealDataSLAMNodeNoGPS_1a7e167afa3f01b7ddce006036c4b78fd5" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::RealDataSLAMNodeNoGPS::vehicle_vel_callback</definition>
+        <argsstring>(const velocity_msg_t::ConstSharedPtr &amp;vehicle_vel_data)</argsstring>
+        <name>vehicle_vel_callback</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::vehicle_vel_callback</qualifiedname>
+        <param>
+          <type>const velocity_msg_t::ConstSharedPtr &amp;</type>
+          <declname>vehicle_vel_data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="166" column="14" bodyfile="src/nodes/real_data_slam_node_no_gps.cpp" bodystart="39" bodyend="47"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1RealDataSLAMNodeNoGPS_1ae53470d602951437d3d1068366a0f5a0" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::RealDataSLAMNodeNoGPS::vehicle_angle_callback</definition>
+        <argsstring>(const orientation_msg_t::ConstSharedPtr &amp;vehicle_angle_data)</argsstring>
+        <name>vehicle_angle_callback</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::vehicle_angle_callback</qualifiedname>
+        <param>
+          <type>const orientation_msg_t::ConstSharedPtr &amp;</type>
+          <declname>vehicle_angle_data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="167" column="14" bodyfile="src/nodes/real_data_slam_node_no_gps.cpp" bodystart="50" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1RealDataSLAMNodeNoGPS_1abe7346b23388bc96725aa9d75f964d97" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::RealDataSLAMNodeNoGPS::sync_callback</definition>
+        <argsstring>(const cone_msg_t::ConstSharedPtr &amp;cone_data, const velocity_msg_t::ConstSharedPtr &amp;vehicle_vel_data, const orientation_msg_t::ConstSharedPtr &amp;vehicle_angle_data)</argsstring>
+        <name>sync_callback</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::sync_callback</qualifiedname>
+        <param>
+          <type>const cone_msg_t::ConstSharedPtr &amp;</type>
+          <declname>cone_data</declname>
+        </param>
+        <param>
+          <type>const velocity_msg_t::ConstSharedPtr &amp;</type>
+          <declname>vehicle_vel_data</declname>
+        </param>
+        <param>
+          <type>const orientation_msg_t::ConstSharedPtr &amp;</type>
+          <declname>vehicle_angle_data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="168" column="14" bodyfile="src/nodes/real_data_slam_node_no_gps.cpp" bodystart="61" bodyend="109"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1GenericSLAMNode_1a2f490a869053d4f426550f5ce5512933" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::declare_yaml_params</definition>
+        <argsstring>()</argsstring>
+        <name>declare_yaml_params</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::declare_yaml_params</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="96" column="14" bodyfile="src/nodes/generic_slam_node.cpp" bodystart="48" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1GenericSLAMNode_1add60599f53e6fcc111caae5fde661dff" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::optional&lt; <ref refid="structyaml__params_1_1NoiseInputs" kindref="compound">yaml_params::NoiseInputs</ref> &gt;</type>
+        <definition>std::optional&lt; yaml_params::NoiseInputs &gt; nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::get_noise_inputs</definition>
+        <argsstring>()</argsstring>
+        <name>get_noise_inputs</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::get_noise_inputs</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="97" column="23" bodyfile="src/nodes/generic_slam_node.cpp" bodystart="81" bodyend="131"/>
+      </memberdef>
+      <memberdef kind="function" id="classnodes_1_1GenericSLAMNode_1afbf813fbfc9c31773de427271ed6239e" prot="protected" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::publish_slam_data</definition>
+        <argsstring>(const slam::slam_output_t &amp;slam_data, std_msgs::msg::Header header)</argsstring>
+        <name>publish_slam_data</name>
+        <qualifiedname>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;::publish_slam_data</qualifiedname>
+        <param>
+          <type>const <ref refid="namespaceslam_1a74c5ff6a5f23be28ef1b570f909b8449" kindref="member">slam::slam_output_t</ref> &amp;</type>
+          <declname>slam_data</declname>
+        </param>
+        <param>
+          <type>std_msgs::msg::Header</type>
+          <declname>header</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="98" column="14" bodyfile="src/nodes/generic_slam_node.cpp" bodystart="30" bodyend="44"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classnodes_1_1RealDataSLAMNodeNoGPS_1acaf1f59b9214a157067f58b3b5cd1fc1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>nodes::RealDataSLAMNodeNoGPS::RealDataSLAMNodeNoGPS</definition>
+        <argsstring>()</argsstring>
+        <name>RealDataSLAMNodeNoGPS</name>
+        <qualifiedname>nodes::RealDataSLAMNodeNoGPS::RealDataSLAMNodeNoGPS</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/isam2_nodes.hpp" line="175" column="9" bodyfile="src/nodes/real_data_slam_node_no_gps.cpp" bodystart="8" bodyend="21"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Sometimes we run on rosbag data and GPS. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;</label>
+        <link refid="classnodes_1_1GenericSLAMNode"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>nodes::RealDataSLAMNodeNoGPS</label>
+        <link refid="classnodes_1_1RealDataSLAMNodeNoGPS"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>rclcpp::Node</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>nodes::GenericSLAMNode&lt; interfaces::msg::ConeArray, geometry_msgs::msg::TwistStamped, geometry_msgs::msg::QuaternionStamped, geometry_msgs::msg::Vector3Stamped &gt;</label>
+        <link refid="classnodes_1_1GenericSLAMNode"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+        <childnode refid="4" relation="usage">
+          <edgelabel>slam_instance</edgelabel>
+        </childnode>
+      </node>
+      <node id="1">
+        <label>nodes::RealDataSLAMNodeNoGPS</label>
+        <link refid="classnodes_1_1RealDataSLAMNodeNoGPS"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>rclcpp::Node</label>
+      </node>
+      <node id="4">
+        <label>slam::slamISAM</label>
+        <link refid="classslam_1_1slamISAM"/>
+      </node>
+    </collaborationgraph>
+    <location file="include/isam2_nodes.hpp" line="147" column="5" bodyfile="include/isam2_nodes.hpp" bodystart="151" bodyend="176"/>
+    <listofallmembers>
+      <member refid="classnodes_1_1GenericSLAMNode_1a5b79ee9230014777e3e746ac2600e562" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>best_effort_profile</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a81430a36c8c264ffd491d275ff44dce2" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>best_effort_qos</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a5c9a89d1981198da97332bc70c36b461" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>blue_cones</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1adcf935f870a695b186697286a891033d" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>cone_callback</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1a721ce7c93102e56bfdf803d4490dcb9e" prot="private" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>cone_msg_t</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a9e2dc515faed67f46f8833853ec043e1" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>cone_sub</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a0361459b479a7710fb411660ecd74939" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>cones</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1ad321582bae34358afb0d0f4d6791acce" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>cur_sync_callback_time</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a2f490a869053d4f426550f5ce5512933" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>declare_yaml_params</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1ac9913e82bb32e56d48e660f2b5b49240" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>dt</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1ae55b23ad3547de97351aa8ee0336f229" prot="private" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>dummy_position_msg_t</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1ac3e7b0efbfdf99de62dd12249a6b7b4c" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>file_opened</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a58d83801be4bff20d25cf082f82b044b" prot="public" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>GenericSLAMNode</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1add60599f53e6fcc111caae5fde661dff" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>get_noise_inputs</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a11b35a330285720008d97405ead9ea32" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>gps_position</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1ab271b8cbc773ca67eead78dfd93a66cc" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>init_lon_lat</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a65cc2fec07dea2e13e5f813c7e40a6ed" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>init_x_y</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1aed83b931419f4d668f2cc6faf289f450" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>orange_cones</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1a5f4f9d5b14cab50ae30273b05ba3caab" prot="private" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>orientation_msg_t</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a80846119c099ff6d03614bc8c955b96d" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>outfile</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1ae1b8e1097d65bdbfca78748e0446c4a8" prot="protected" virt="virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>perform_subscribes</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a7aa44f46ec28c8f0dc6e81c3a57fcf0b" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>pose_cones</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a94064913429f785ae60b65126bd4c525" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>prev_filter_time</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a5b28b46b60a0cc8f629dc2f9bf2b0aed" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>prev_sync_callback_time</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1afbf813fbfc9c31773de427271ed6239e" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>publish_slam_data</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1acaf1f59b9214a157067f58b3b5cd1fc1" prot="public" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>RealDataSLAMNodeNoGPS</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a8b83c878922eb0a915c38d3e0a9e7894" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>reliable_profile</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a102a8ba600108b8374f5afeb288d59bb" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>slam_chunk_publisher</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a1c8e5e7be01a1f6a8c12035bb4045117" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>slam_instance</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a163b73f677228ba27e11fc392e47b324" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>slam_pose_publisher</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1a43d44a87d76cb9fbeb4eb04af647fb25" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>sync</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1abe7346b23388bc96725aa9d75f964d97" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>sync_callback</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1a84484e68f774640655a48a9b7007bbf5" prot="private" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>sync_policy</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a263ca5f766c32bfbb7eaf6b460fbd7fc" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>timer</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1ae53470d602951437d3d1068366a0f5a0" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>vehicle_angle_callback</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a83aa8579d505cc8a98a5743af38afbf3" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>vehicle_angle_sub</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1af909eea548ea81bc6b7e9e4646e9a1f2" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>vehicle_pos_sub</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1a7e167afa3f01b7ddce006036c4b78fd5" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>vehicle_vel_callback</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1a3952b006efaa689c3359802004991f3d" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>vehicle_vel_sub</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1aef0fb75590c57ef972d0723a2648fe93" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>velocity</name></member>
+      <member refid="classnodes_1_1RealDataSLAMNodeNoGPS_1addc9a0bf3bc9ed7d381abfb3226e726e" prot="private" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>velocity_msg_t</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1aa06d32c5d2f2e7a112b5925c43718d64" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>yaw</name></member>
+      <member refid="classnodes_1_1GenericSLAMNode_1abd8bc9fe10c5e3620a0db348b2a84af9" prot="protected" virt="non-virtual"><scope>nodes::RealDataSLAMNodeNoGPS</scope><name>yellow_cones</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

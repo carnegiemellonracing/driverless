@@ -1,0 +1,66 @@
+\doxysection{unary\+\_\+factor.\+hpp}
+\hypertarget{unary__factor_8hpp_source}{}\label{unary__factor_8hpp_source}\index{include/unary\_factor.hpp@{include/unary\_factor.hpp}}
+\mbox{\hyperlink{unary__factor_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <bits/stdc++.h>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <gtsam/nonlinear/NonlinearFactor.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <gtsam/geometry/Pose2.h>}}
+\DoxyCodeLine{00006\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ @brief\ This\ is\ a\ factor\ used\ for\ localizing\ car\ poses.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ Unary\ factors\ are\ added\ to\ car\ poses.\ Car\ poses}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ are\ calculated\ by\ the\ velocity\ motion\ model,\ unary}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ factors\ are\ contain\ the\ GPS\ measurments}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classUnaryFactor_a5b075904be9c89a653bb6905b3bfb965}{UnaryFactor}}\ :\ \textcolor{keyword}{public}\ gtsam::NoiseModelFactor1<gtsam::Pose2>\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{comment}{//\ x\ y\ measurements\ from\ GPS}}
+\DoxyCodeLine{00014\ \ \ \ \ gtsam::Pose2\ z;}
+\DoxyCodeLine{00015\ \ \ \ \ gtsam::Key\ key;}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{typedef}\ std::shared\_ptr<UnaryFactor>\ \mbox{\hyperlink{classUnaryFactor_a94e14dba4c8062fa38a155683e1c64f0}{shared\_ptr}};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ \ \ \ \ *\ In\ the\ iSAM2\ paper,\ each\ factor\ f(q)\ is\ proportional\ to}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ \ \ \ \ *\ exp(-\/||h(q)\ -\/\ z\_\{t\}||\string^2)}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ \ \ \ \ *}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ \ \ \ *\ q\ is\ the\ unknown\ variable}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ \ \ \ \ *\ z\_\{t\}\ is\ our\ measurement\ (GPS\ in\ this\ case)\ at\ time\ t}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ \ \ \ \ *\ -\/\ Here\ we\ represented\ this\ as\ x\ and\ y.}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ \ \ \ \ *\ \ \ (gtsam\ Factor\ Graph\ tutorial)}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ \ \ \ \ *}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ \ \ \ \ *\ This\ function\ represents\ our\ likelihood\ of\ q\ given\ measurement\ z}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ \ \ \ \ *\ -\/\ We\ want\ to\ maximize\ this\ likelihood\ by\ minimizing\ the\ squared\ error}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ \ \ \ \ *\ \ \ In\ a\ sense,\ this\ function\ represents\ the\ error\ between\ an\ unknown}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ \ \ \ \ *\ \ \ variable\ and\ the\ measurement\ we\ receive}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ \ \ \ \ *}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ \ \ \ \ *\ h(q)\ is\ a\ nonlinear\ measurement\ function\ (gtsam\ Factor\ Graph\ tutorial)}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ \ \ \ \ *\ -\/\ in\ our\ case\ we\ just\ return\ the\ variable\ itself\ (identity)}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ \ \ \ \ *}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ \ \ \ \ *\ What\ is\ q\ in\ the\ context\ of\ our\ problem:\ q\ is\ either\ a\ pose\ or\ a\ landmark}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ \ \ \ \ *\ -\/\ (a\ variable\ node)}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ \ \ \ \ *}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ \ \ \ \ *\ Below\ is\ the\ constructor}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{classUnaryFactor_a5b075904be9c89a653bb6905b3bfb965}{UnaryFactor}}(gtsam::Key\ k,\ \textcolor{keyword}{const}\ gtsam::Pose2\&\ input\_GPS,\ \textcolor{keyword}{const}\ gtsam::SharedNoiseModel\&\ model):}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ NoiseModelFactor1<gtsam::Pose2>(model,\ k),\ z(input\_GPS.x(),\ input\_GPS.y(),\ input\_GPS.theta()),\ key(k)\ \{\}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classUnaryFactor_a080d71cece2117cb2995aa2b5eb068dc}{\string~UnaryFactor}}()\ \{\}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{/*\ @brief\ Evaluates\ the\ error\ between\ an\ unknown\ variable\ and\ the}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ \ \ \ \ *\ GPS\ measurement\ we\ receive}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00051\ \ \ \ \ gtsam::Vector\ \mbox{\hyperlink{classUnaryFactor_a6636ce47bc1c8825844a2c8f81d3c8a8}{evaluateError}}(\textcolor{keyword}{const}\ gtsam::Pose2\&\ q,\ gtsam::OptionalMatrixType\ H)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ \ \ \ \ *\ @brief\ Clones\ this\ factor}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00055\ \ \ \ \ gtsam::NonlinearFactor::shared\_ptr\ \mbox{\hyperlink{classUnaryFactor_a05b9ea54c3d7dc57dc0af05656468a09}{clone}}()\textcolor{keyword}{\ const\ override\ }\{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<UnaryFactor>(this-\/>key,\ z,\ this-\/>noiseModel\_);}
+\DoxyCodeLine{00057\ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ }
+
+\end{DoxyCode}

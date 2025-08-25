@@ -1,0 +1,450 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="namespacemotion__modeling" kind="namespace" language="C++">
+    <compoundname>motion_modeling</compoundname>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacemotion__modeling_1a39ba4eb9731177cb314756a64210fc8f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void motion_modeling::imu_axes_to_DV_axes</definition>
+        <argsstring>(double &amp;x, double &amp;y)</argsstring>
+        <name>imu_axes_to_DV_axes</name>
+        <qualifiedname>motion_modeling::imu_axes_to_DV_axes</qualifiedname>
+        <param>
+          <type>double &amp;</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>double &amp;</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+<para>Converts IMU axes to DV axes by swapping and negating coordinates. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to x coordinate (will be modified). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reference to y coordinate (will be modified). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="209" column="10" bodyfile="src/utils/ros_utils.cpp" bodystart="209" bodyend="213" declfile="include/ros_utils.hpp" declline="65" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacemotion__modeling_1a2e2d9615e5a4c50fe1c2702f18e250df" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Point2</type>
+        <definition>gtsam::Point2 motion_modeling::calc_lateral_velocity_error</definition>
+        <argsstring>(double ang_velocity, double yaw)</argsstring>
+        <name>calc_lateral_velocity_error</name>
+        <qualifiedname>motion_modeling::calc_lateral_velocity_error</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>ang_velocity</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>yaw</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the lateral velocity error as a result of turning. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The IMU is offset from the center of the car. There&apos;s extra lateral velocity error due to the offset. <simplesect kind="return"><para>Returns a pair where the first element is the new_pose and the second element is the odometry. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Intuition: In the local frame, create a triangle T from the global bearing of the car</para>
+<para>ang_velocity represents the magnitude of the angular velocity vector<itemizedlist>
+<listitem><para>To get the x component (global frame x), let the vertical side of the triangle be the radius</para>
+</listitem><listitem><para>To get the y component (global frame y), let the horizontal side of the triangle be the radius</para>
+</listitem></itemizedlist>
+</para>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="222" column="19" bodyfile="src/utils/ros_utils.cpp" bodystart="222" bodyend="235" declfile="include/ros_utils.hpp" declline="66" declcolumn="19"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacemotion__modeling_1a66146b526c37cb7eff7a748a928730c2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::pair&lt; gtsam::Pose2, gtsam::Pose2 &gt;</type>
+        <definition>std::pair&lt; gtsam::Pose2, gtsam::Pose2 &gt; motion_modeling::velocity_motion_model</definition>
+        <argsstring>(gtsam::Pose2 velocity, double dt, gtsam::Pose2 prev_pose, double yaw)</argsstring>
+        <name>velocity_motion_model</name>
+        <qualifiedname>motion_modeling::velocity_motion_model</qualifiedname>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>velocity</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>dt</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>prev_pose</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>yaw</declname>
+        </param>
+        <briefdescription>
+<para>Applies velocity motion model to predict new pose and odometry over a time step. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>velocity</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Velocity pose (linear x,y and angular theta). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Time step duration. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>prev_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Previous pose of the vehicle. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>yaw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current yaw angle. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::pair&lt;gtsam::Pose2, gtsam::Pose2&gt; Pair of new pose and odometry delta. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="246" column="15" bodyfile="src/utils/ros_utils.cpp" bodystart="246" bodyend="262" declfile="include/ros_utils.hpp" declline="68" declcolumn="15"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacemotion__modeling_1a957433c974fcf73b2a3807728ed19cd3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Point2</type>
+        <definition>gtsam::Point2 motion_modeling::calc_offset_imu_to_car_center</definition>
+        <argsstring>(double yaw)</argsstring>
+        <name>calc_offset_imu_to_car_center</name>
+        <qualifiedname>motion_modeling::calc_offset_imu_to_car_center</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>yaw</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the offset vector from IMU sensor to car center in global frame. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>yaw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current yaw angle. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>gtsam::Point2 Offset vector from IMU to car center. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="270" column="19" bodyfile="src/utils/ros_utils.cpp" bodystart="270" bodyend="274" declfile="include/ros_utils.hpp" declline="70" declcolumn="19"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacemotion__modeling_1add9aa4093755c7775b713624c1817aca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>gtsam::Point2</type>
+        <definition>gtsam::Point2 motion_modeling::calc_offset_lidar_to_car_center</definition>
+        <argsstring>(double yaw)</argsstring>
+        <name>calc_offset_lidar_to_car_center</name>
+        <qualifiedname>motion_modeling::calc_offset_lidar_to_car_center</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>yaw</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the offset vector from LIDAR sensor to car center in global frame. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>yaw</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current yaw angle. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>gtsam::Point2 Offset vector from LIDAR to car center. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="282" column="19" bodyfile="src/utils/ros_utils.cpp" bodystart="282" bodyend="286" declfile="include/ros_utils.hpp" declline="71" declcolumn="19"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacemotion__modeling_1a955d143c19d97c8fd0f36074e5b5ed43" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::pair&lt; gtsam::Pose2, gtsam::Pose2 &gt;</type>
+        <definition>std::pair&lt; gtsam::Pose2, gtsam::Pose2 &gt; motion_modeling::gps_motion_model</definition>
+        <argsstring>(gtsam::Pose2 prev_pose, gtsam::Pose2 global_odom)</argsstring>
+        <name>gps_motion_model</name>
+        <qualifiedname>motion_modeling::gps_motion_model</qualifiedname>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>prev_pose</declname>
+        </param>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>global_odom</declname>
+        </param>
+        <briefdescription>
+<para>Applies GPS motion model to compute new pose and odometry with IMU offset correction. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>odometry</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>velocity</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>prev_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>global_odom</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::pair&lt;gtsam::Pose2, gtsam::Pose2&gt; Returns a pair where the first element is the new_pose and the second element is the odometry.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>prev_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Previous pose of the vehicle. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>global_odom</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>GPS odometry pose. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::pair&lt;gtsam::Pose2, gtsam::Pose2&gt; Pair of corrected new pose and odometry delta. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="295" column="15" bodyfile="src/utils/ros_utils.cpp" bodystart="295" bodyend="308" declfile="include/ros_utils.hpp" declline="84" declcolumn="15"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacemotion__modeling_1ab6ec7b19eb78645dec9adf9e6aaa5966" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::pair&lt; bool, bool &gt;</type>
+        <definition>std::pair&lt; bool, bool &gt; motion_modeling::determine_movement</definition>
+        <argsstring>(gtsam::Pose2 velocity)</argsstring>
+        <name>determine_movement</name>
+        <qualifiedname>motion_modeling::determine_movement</qualifiedname>
+        <param>
+          <type>gtsam::Pose2</type>
+          <declname>velocity</declname>
+        </param>
+        <briefdescription>
+<para>Returns a pair of bools where the first element is true if the car is moving, and the second element is true if the car is turning. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Determines whether the vehicle is moving and/or turning based on velocity thresholds.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>velocity</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::pair&lt;bool, bool&gt;</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>velocity</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Current velocity pose. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>std::pair&lt;bool, bool&gt; First element: is moving, second element: is turning. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="316" column="15" bodyfile="src/utils/ros_utils.cpp" bodystart="316" bodyend="333" declfile="include/ros_utils.hpp" declline="93" declcolumn="15"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacemotion__modeling_1a7bab04641800da6e420949c71512a1d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double motion_modeling::header_to_nanosec</definition>
+        <argsstring>(const std_msgs::msg::Header &amp;header)</argsstring>
+        <name>header_to_nanosec</name>
+        <qualifiedname>motion_modeling::header_to_nanosec</qualifiedname>
+        <param>
+          <type>const std_msgs::msg::Header &amp;</type>
+          <declname>header</declname>
+        </param>
+        <briefdescription>
+<para>Converts a ROS message header timestamp to nanoseconds. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>header</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>ROS std_msgs Header. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>double Timestamp in nanoseconds. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="341" column="12" bodyfile="src/utils/ros_utils.cpp" bodystart="341" bodyend="343" declfile="include/ros_utils.hpp" declline="94" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacemotion__modeling_1a8e8e40aa9a9185045cf3a72cae60ecdc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double motion_modeling::header_to_dt</definition>
+        <argsstring>(std::optional&lt; std_msgs::msg::Header &gt; prev, std::optional&lt; std_msgs::msg::Header &gt; cur)</argsstring>
+        <name>header_to_dt</name>
+        <qualifiedname>motion_modeling::header_to_dt</qualifiedname>
+        <param>
+          <type>std::optional&lt; std_msgs::msg::Header &gt;</type>
+          <declname>prev</declname>
+        </param>
+        <param>
+          <type>std::optional&lt; std_msgs::msg::Header &gt;</type>
+          <declname>cur</declname>
+        </param>
+        <briefdescription>
+<para>Calculates time difference (dt) between two ROS message headers. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>prev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional previous header. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cur</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional current header. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>double Time difference in seconds. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="352" column="12" bodyfile="src/utils/ros_utils.cpp" bodystart="352" bodyend="358" declfile="include/ros_utils.hpp" declline="95" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacemotion__modeling_1a96aa2b77878997dcdfe58fd7ad47f969" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double motion_modeling::degrees_to_radians</definition>
+        <argsstring>(double degrees)</argsstring>
+        <name>degrees_to_radians</name>
+        <qualifiedname>motion_modeling::degrees_to_radians</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>degrees</declname>
+        </param>
+        <briefdescription>
+<para>Converts degrees to radians. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>degrees</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Angle in degrees. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>double Angle in radians. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="src/utils/ros_utils.cpp" line="366" column="12" bodyfile="src/utils/ros_utils.cpp" bodystart="366" bodyend="368" declfile="include/ros_utils.hpp" declline="96" declcolumn="12"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Contains functions related to vehicle motion modeling including IMU and GPS motion models, coordinate conversions, and velocity processing. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/ros_utils.hpp" line="64" column="1"/>
+  </compounddef>
+</doxygen>

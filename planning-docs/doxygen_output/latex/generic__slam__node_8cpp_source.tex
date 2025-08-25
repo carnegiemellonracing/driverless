@@ -1,0 +1,146 @@
+\doxysection{generic\+\_\+slam\+\_\+node.\+cpp}
+\hypertarget{generic__slam__node_8cpp_source}{}\label{generic__slam__node_8cpp_source}\index{src/nodes/generic\_slam\_node.cpp@{src/nodes/generic\_slam\_node.cpp}}
+\mbox{\hyperlink{generic__slam__node_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{isam2__nodes_8hpp}{isam2\_nodes.hpp}}"{}}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacenodes}{nodes}}\ \{}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ cone\_msg\_t,\ \textcolor{keyword}{typename}\ velocity\_msg\_t,\ \textcolor{keyword}{typename}\ orientation\_msg\_t,\ \textcolor{keyword}{typename}\ position\_msg\_t>\ }
+\DoxyCodeLine{00006\ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a58d83801be4bff20d25cf082f82b044b}{GenericSLAMNode<cone\_msg\_t,\ velocity\_msg\_t,\ orientation\_msg\_t,\ position\_msg\_t>::GenericSLAMNode}}()\ :\ Node(\textcolor{stringliteral}{"{}slam\_node"{}})}
+\DoxyCodeLine{00007\ \ \ \ \ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ slam\_publisher\_\ =\ this-\/>create\_publisher<interfaces::msg::SLAMData>(SLAM\_TOPIC,\ 10);}}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a163b73f677228ba27e11fc392e47b324}{slam\_pose\_publisher}}\ =\ this-\/>create\_publisher<interfaces::msg::SLAMPose>(\mbox{\hyperlink{constants_8hpp_aaa68cace55541b4c6fe52abee4fe55e1}{SLAM\_POSE\_TOPIC}},\ 10);}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a102a8ba600108b8374f5afeb288d59bb}{slam\_chunk\_publisher}}\ =\ this-\/>create\_publisher<interfaces::msg::SLAMChunk>(\mbox{\hyperlink{constants_8hpp_a1923a063156dc2b7360ed897b9f1264a}{SLAM\_CHUNK\_TOPIC}},\ 10);}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a2f490a869053d4f426550f5ce5512933}{declare\_yaml\_params}}();}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Update\ sync\ policy\ and\ subs\ when\ switching\ betw\ real\ data\ and\ sim*/}\ }
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ac9913e82bb32e56d48e660f2b5b49240}{dt}}\ =\ 0.0;}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ std::optional<yaml\_params::NoiseInputs>\ noise\_inputs\ =\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_add60599f53e6fcc111caae5fde661dff}{get\_noise\_inputs}}();}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a1c8e5e7be01a1f6a8c12035bb4045117}{slam\_instance}}\ =\ \mbox{\hyperlink{classslam_1_1slamISAM}{slam::slamISAM}}(this-\/>get\_logger(),\ noise\_inputs);}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ab271b8cbc773ca67eead78dfd93a66cc}{init\_lon\_lat}}\ =\ std::nullopt;}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a65cc2fec07dea2e13e5f813c7e40a6ed}{init\_x\_y}}\ =\ std::nullopt;}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_ac3e7b0efbfdf99de62dd12249a6b7b4c}{file\_opened}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a94064913429f785ae60b65126bd4c525}{prev\_filter\_time}}\ =\ std::nullopt;}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a5b28b46b60a0cc8f629dc2f9bf2b0aed}{prev\_sync\_callback\_time}}\ =\ std::nullopt;}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ RCLCPP\_INFO(this-\/>get\_logger(),\ \textcolor{stringliteral}{"{}-\/-\/-\/-\/-\/\ Reminder\ to\ subscribe\ to\ the\ right\ topics\ in\ constants.hpp\ -\/-\/-\/-\/-\/"{}});}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ cone\_msg\_t,\ \textcolor{keyword}{typename}\ velocity\_msg\_t,\ \textcolor{keyword}{typename}\ orientation\_msg\_t,\ \textcolor{keyword}{typename}\ position\_msg\_t>\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_afbf813fbfc9c31773de427271ed6239e}{GenericSLAMNode<cone\_msg\_t,\ velocity\_msg\_t,\ orientation\_msg\_t,\ position\_msg\_t>::publish\_slam\_data}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam::slam\_output\_t}}\&\ slam\_data,\ std\_msgs::msg::Header\ header)\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ interfaces::msg::SLAMPose\ pose\_msg\ =\ interfaces::msg::SLAMPose();}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ pose\_msg.header\ =\ header;}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ pose\_msg.current\_chunk\_id.data\ =\ 0;}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ pose\_msg.pose\ =\ std::get<2>(slam\_data);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ interfaces::msg::SLAMChunk\ chunk\_msg\ =\ interfaces::msg::SLAMChunk();}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ chunk\_msg.header\ =\ header;}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ chunk\_msg.blue\_cones\ =\ std::get<0>(slam\_data);}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ chunk\_msg.chunk\_id.data\ =\ 0;}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ chunk\_msg.yellow\_cones\ =\ std::get<1>(slam\_data);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a163b73f677228ba27e11fc392e47b324}{slam\_pose\_publisher}}-\/>publish(pose\_msg);}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a102a8ba600108b8374f5afeb288d59bb}{slam\_chunk\_publisher}}-\/>publish(chunk\_msg);}
+\DoxyCodeLine{00044\ \ \ \ \ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ cone\_msg\_t,\ \textcolor{keyword}{typename}\ velocity\_msg\_t,\ \textcolor{keyword}{typename}\ orientation\_msg\_t,\ \textcolor{keyword}{typename}\ position\_msg\_t>\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_a2f490a869053d4f426550f5ce5512933}{GenericSLAMNode<cone\_msg\_t,\ velocity\_msg\_t,\ orientation\_msg\_t,\ position\_msg\_t>::declare\_yaml\_params}}()\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<bool>(\textcolor{stringliteral}{"{}use\_yaml"{}},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_prior\_imu\_x\_std\_dev"{}},\ \mbox{\hyperlink{constants_8hpp_a679a0a7bca83d5a467b7375c350099b6}{IMU\_X\_STD\_DEV}});}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_prior\_imu\_y\_std\_dev"{}},\ \mbox{\hyperlink{constants_8hpp_ad70c10b51b08f27558f07b7c271d71cc}{IMU\_Y\_STD\_DEV}});}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_prior\_imu\_heading\_std\_dev"{}},\ \mbox{\hyperlink{constants_8hpp_a1852f50e788c3ea01e25a3d3794f074a}{IMU\_HEADING\_STD\_DEV}});}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_bearing\_std\_dev"{}},\ \mbox{\hyperlink{constants_8hpp_a2924395ddfcb0a0ee772330a11645707}{BEARING\_STD\_DEV}});}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_range\_std\_dev"{}},\ \mbox{\hyperlink{constants_8hpp_ac8b3500acbbbbe79157d399cf5470083}{RANGE\_STD\_DEV}});}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_imu\_x\_std\_dev"{}},\ \mbox{\hyperlink{constants_8hpp_a679a0a7bca83d5a467b7375c350099b6}{IMU\_X\_STD\_DEV}});}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_imu\_y\_std\_dev"{}},\ \mbox{\hyperlink{constants_8hpp_ad70c10b51b08f27558f07b7c271d71cc}{IMU\_Y\_STD\_DEV}});}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_imu\_heading\_std\_dev"{}},\ \mbox{\hyperlink{constants_8hpp_a1852f50e788c3ea01e25a3d3794f074a}{IMU\_HEADING\_STD\_DEV}});}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_gps\_x\_std\_dev"{}},\ \mbox{\hyperlink{constants_8hpp_a6bbb347325e8ba0244109a63faeaa935}{GPS\_X\_STD\_DEV}});}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_gps\_y\_std\_dev"{}},\ \mbox{\hyperlink{constants_8hpp_a47940d04a5651b198450d2e69ba7af8d}{GPS\_Y\_STD\_DEV}});}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<int>(\textcolor{stringliteral}{"{}yaml\_look\_radius"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\mbox{\hyperlink{constants_8hpp_ad2621efbf689d237023ac588d4adac1d}{LOOK\_RADIUS}}));\ \textcolor{comment}{//\ tell\ us\ how\ many\ cones\ back\ and\ forth\ to\ update\ in\ slam\_est}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<int>(\textcolor{stringliteral}{"{}yaml\_min\_cones\_update\_all"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\mbox{\hyperlink{constants_8hpp_acd9de2a135b49ab524844ec7ea918525}{MIN\_CONES\_UPDATE\_ALL}}));}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<int>(\textcolor{stringliteral}{"{}yaml\_window\_update"{}},\ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\mbox{\hyperlink{constants_8hpp_a7b7e67ce964f45fdb26f2d776bfbb1d6}{WINDOW\_UPDATE}}));}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<int>(\textcolor{stringliteral}{"{}yaml\_update\_start\_n"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\mbox{\hyperlink{constants_8hpp_a71a806ef167dbaf2ce22355d7a2c0d9f}{UPDATE\_START\_N}}));\ \textcolor{comment}{//\ tell\ us\ how\ many\ cones\ back\ and\ forth\ to\ update\ in\ slam\_est}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<int>(\textcolor{stringliteral}{"{}yaml\_update\_recent\_n"{}},\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\mbox{\hyperlink{constants_8hpp_aadf34d16837e6f05ddfd90d6ad578fd2}{UPDATE\_RECENT\_N}}));}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_imu\_offset"{}},\ \mbox{\hyperlink{constants_8hpp_ac9d2880719f12dcb9d8981a27b13cb4d}{IMU\_OFFSET}});\ \textcolor{comment}{//meters;\ offset\ from\ the\ center\ of\ the\ car}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_lidar\_offset"{}},\ \mbox{\hyperlink{constants_8hpp_aadcb9d89b1ef0bbe27f2784462178ff9}{LIDAR\_OFFSET}});\ \textcolor{comment}{//meters;\ offset\ from\ the\ center\ of\ the\ car}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_max\_cone\_range"{}},\ \mbox{\hyperlink{constants_8hpp_ada42544decc969afd04148fb0b684114}{MAX\_CONE\_RANGE}});}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_turning\_max\_cone\_range"{}},\ \mbox{\hyperlink{constants_8hpp_a89c80a289dc717aaa5f6a6c4dd171e42}{TURNING\_MAX\_CONE\_RANGE}});}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_dist\_from\_start\_loop\_closure\_th"{}},\ \mbox{\hyperlink{constants_8hpp_a8434f7b2f400eb70a451eb2f8b2a74ce}{DIST\_FROM\_START\_LOOP\_CLOSURE\_TH}});\ \textcolor{comment}{//meters;\ distance\ from\ the\ start\ for\ loop\ closure\ detection}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_m\_dist\_th"{}},\ \mbox{\hyperlink{constants_8hpp_a65c24ee9176f2806a19bd1d1f2ab041e}{M\_DIST\_TH}});}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<double>(\textcolor{stringliteral}{"{}yaml\_turning\_m\_dist\_th"{}},\ \mbox{\hyperlink{constants_8hpp_a352e28edf7c9a17454772a568c05b7ba}{TURNING\_M\_DIST\_TH}});}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<int>(\textcolor{stringliteral}{"{}yaml\_update\_iterations\_n"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\mbox{\hyperlink{constants_8hpp_ac4763eb36d3d9b8e98581a24967ecac3}{UPDATE\_ITERATIONS\_N}}));}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ this-\/>declare\_parameter<int>(\textcolor{stringliteral}{"{}yaml\_return\_n\_cones"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\mbox{\hyperlink{constants_8hpp_a5e3ba1fdbe5063e8131fd6a3a9cf5b8b}{RETURN\_N\_CONES}}));}
+\DoxyCodeLine{00078\ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \ \ \ \ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ cone\_msg\_t,\ \textcolor{keyword}{typename}\ velocity\_msg\_t,\ \textcolor{keyword}{typename}\ orientation\_msg\_t,\ \textcolor{keyword}{typename}\ position\_msg\_t>\ }
+\DoxyCodeLine{00081\ \ \ \ \ std::optional<yaml\_params::NoiseInputs>\ \mbox{\hyperlink{classnodes_1_1GenericSLAMNode_add60599f53e6fcc111caae5fde661dff}{GenericSLAMNode<cone\_msg\_t,\ velocity\_msg\_t,\ orientation\_msg\_t,\ position\_msg\_t>::get\_noise\_inputs}}()\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ std::optional<yaml\_params::NoiseInputs>\ noise\_inputs\ =\ std::nullopt;}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Note:\ get\_parameter\ returns\ int64\_t\ for\ ints.\ However,\ no\ parameter\ at\ the\ moment\ needs\ to\ be\ in64\_t}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ *\ so\ we\ static\_cast\ to\ int32\_t\ */}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ RCLCPP\_INFO(this-\/>get\_logger(),\ \textcolor{stringliteral}{"{}-\/-\/-\/-\/-\/-\/-\/-\/has\_parameter\ 'use\_yaml':\ \%s\ -\/-\/-\/-\/-\/-\/-\/-\/"{}},\ (this-\/>has\_parameter(\textcolor{stringliteral}{"{}use\_yaml"{}})\ ?\ \textcolor{stringliteral}{"{}true"{}}\ :\ \textcolor{stringliteral}{"{}false"{}}));}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>has\_parameter(\textcolor{stringliteral}{"{}use\_yaml"{}}))\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ RCLCPP\_INFO(this-\/>get\_logger(),\ \textcolor{stringliteral}{"{}-\/-\/-\/-\/-\/-\/-\/-\/use\_yaml:\ \%s\ -\/-\/-\/-\/-\/-\/-\/-\/"{}},\ (this-\/>get\_parameter(\textcolor{stringliteral}{"{}use\_yaml"{}}).as\_bool()\ ?\ \textcolor{stringliteral}{"{}true"{}}\ :\ \textcolor{stringliteral}{"{}false"{}}));}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>has\_parameter(\textcolor{stringliteral}{"{}use\_yaml"{}})\ \&\&\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}use\_yaml"{}}).as\_bool())\ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structyaml__params_1_1NoiseInputs}{yaml\_params::NoiseInputs}}\ noise\_inputs\_literal;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a7d085a72f636ad802c6b771442db314b}{yaml\_prior\_imu\_x\_std\_dev}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_prior\_imu\_x\_std\_dev"{}}).as\_double();}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_af3f5b87c5859df83b9b83feb10f9a888}{yaml\_prior\_imu\_y\_std\_dev}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_prior\_imu\_y\_std\_dev"{}}).as\_double();}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a273e03eb7a4a343501f936e280f95aa1}{yaml\_prior\_imu\_heading\_std\_dev}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_prior\_imu\_heading\_std\_dev"{}}).as\_double();}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a6bf6b6cc6ee4454adad727522df04dcc}{yaml\_bearing\_std\_dev}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_bearing\_std\_dev"{}}).as\_double();}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a2a55e15ca783885e160bd69c18585aa1}{yaml\_range\_std\_dev}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_range\_std\_dev"{}}).as\_double();}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_afc782fe902c0cc8cd1e31cd61bf14285}{yaml\_imu\_x\_std\_dev}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_imu\_x\_std\_dev"{}}).as\_double();}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a9866d0198e1cde6d56bb55544d1795cf}{yaml\_imu\_y\_std\_dev}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_imu\_y\_std\_dev"{}}).as\_double();}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_aee2bde62bb358e8620fd6794c5025c09}{yaml\_imu\_heading\_std\_dev}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_imu\_heading\_std\_dev"{}}).as\_double();}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a086767c7f360269ed5669a01c83a8372}{yaml\_gps\_x\_std\_dev}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_gps\_x\_std\_dev"{}}).as\_double();}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a2794333e9b89f9587b979823d920b3aa}{yaml\_gps\_y\_std\_dev}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_gps\_y\_std\_dev"{}}).as\_double();}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a989236ec38677aeae7fe608ebf6031fa}{yaml\_look\_radius}}\ =\ \textcolor{keyword}{static\_cast<}std::size\_t\textcolor{keyword}{>}(this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_look\_radius"{}}).as\_int());}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a3cf7dd22d2ef9f235cfaf0ed599c7741}{yaml\_min\_cones\_update\_all}}\ =\ \textcolor{keyword}{static\_cast<}std::size\_t\textcolor{keyword}{>}(this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_min\_cones\_update\_all"{}}).as\_int());}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a242231efb0a57c097faaa12ec57f281f}{yaml\_window\_update}}\ =\ \ \ \textcolor{keyword}{static\_cast<}std::size\_t\textcolor{keyword}{>}(this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_window\_update"{}}).as\_int());}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a32405e2b3595b8112b02c3572a81d2f0}{yaml\_update\_start\_n}}\ =\ \ \textcolor{keyword}{static\_cast<}std::size\_t\textcolor{keyword}{>}(this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_update\_start\_n"{}}).as\_int());}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a0d038c540b0f56356322af75d59f5476}{yaml\_update\_recent\_n}}\ =\ \textcolor{keyword}{static\_cast<}std::size\_t\textcolor{keyword}{>}(this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_update\_recent\_n"{}}).as\_int());}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a65087fb09f16571930c388ed3a21041e}{yaml\_imu\_offset}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_imu\_offset"{}}).as\_double();}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_af6c56a5678051b6c65d2cf07b5aaa8d6}{yaml\_lidar\_offset}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_lidar\_offset"{}}).as\_double();}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a88212f21f77634c6ec91a2b65d357e6c}{yaml\_max\_cone\_range}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_max\_cone\_range"{}}).as\_double();}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a1a3bdc929fba1e0dd6411a32da291f73}{yaml\_turning\_max\_cone\_range}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_turning\_max\_cone\_range"{}}).as\_double();}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a3c9f96daac36dcbf9c3fef4f682acb0c}{yaml\_dist\_from\_start\_loop\_closure\_th}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_dist\_from\_start\_loop\_closure\_th"{}}).as\_double();}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_afad760107fa08e72e17c13fc7a6550ef}{yaml\_m\_dist\_th}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_m\_dist\_th"{}}).as\_double();}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_adfcd4f028a676aed5cc583395c108ffb}{yaml\_turning\_m\_dist\_th}}\ =\ this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_turning\_m\_dist\_th"{}}).as\_double();}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a21de25c3ce35e12da4bfc38d78f320c0}{yaml\_update\_iterations\_n}}\ =\ \textcolor{keyword}{static\_cast<}std::size\_t\textcolor{keyword}{>}(this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_update\_iterations\_n"{}}).as\_int());}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\_literal.\mbox{\hyperlink{structyaml__params_1_1NoiseInputs_a3aae726d8ef2b9fc8dc63b39eb1f5fa2}{yaml\_return\_n\_cones}}\ =\ \textcolor{keyword}{static\_cast<}std::size\_t\textcolor{keyword}{>}(this-\/>get\_parameter(\textcolor{stringliteral}{"{}yaml\_return\_n\_cones"{}}).as\_int());}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ noise\_inputs\ =\ noise\_inputs\_literal;}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ RCLCPP\_INFO(this-\/>get\_logger(),\ \textcolor{stringliteral}{"{}-\/-\/-\/-\/-\/-\/-\/-\/No\ yaml\ file\ found\ -\/-\/-\/-\/-\/-\/-\/-\/"{}});}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ noise\_inputs;}
+\DoxyCodeLine{00131\ \ \ \ \ \}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ }
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ }
+
+\end{DoxyCode}

@@ -1,0 +1,93 @@
+\doxysection{slam\+::slam\+ISAM Class Reference}
+\hypertarget{classslam_1_1slamISAM}{}\label{classslam_1_1slamISAM}\index{slam::slamISAM@{slam::slamISAM}}
+
+
+{\ttfamily \#include $<$isam2.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classslam_1_1slamISAM_a0f15f59ec41b33eeca84b0399a6429dc}{slam\+ISAM}} (std\+::optional$<$ rclcpp\+::\+Logger $>$ input\+\_\+logger, std\+::optional$<$ \mbox{\hyperlink{structyaml__params_1_1NoiseInputs}{yaml\+\_\+params\+::\+Noise\+Inputs}} $>$ \&yaml\+\_\+noise\+\_\+inputs)
+\begin{DoxyCompactList}\small\item\em Constructor for the \doxylink{classslam_1_1slamISAM}{slam\+ISAM} class. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classslam_1_1slamISAM_a339835603720c6ba0db771b8fd9a8828}{slam\+ISAM}} ()
+\item 
+\mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\+\_\+output\+\_\+t}} \mbox{\hyperlink{classslam_1_1slamISAM_a59469d87c99142bec093ab4a13c9cff5}{step}} (std\+::optional$<$ gtsam\+::\+Point2 $>$ gps\+\_\+opt, double yaw, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+blue, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&cone\+\_\+obs\+\_\+yellow, const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&orange\+\_\+ref\+\_\+cones, gtsam\+::\+Pose2 velocity, double dt)
+\begin{DoxyCompactList}\small\item\em Performs a full SLAM update step using odometry and observed cone landmarks. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{classslam_1_1slamISAM_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classslam_1_1slamISAM_a0f15f59ec41b33eeca84b0399a6429dc}\index{slam::slamISAM@{slam::slamISAM}!slamISAM@{slamISAM}}
+\index{slamISAM@{slamISAM}!slam::slamISAM@{slam::slamISAM}}
+\doxysubsubsection{\texorpdfstring{slamISAM()}{slamISAM()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classslam_1_1slamISAM_a0f15f59ec41b33eeca84b0399a6429dc} 
+slam\+::slam\+ISAM\+::slam\+ISAM (\begin{DoxyParamCaption}\item[{std\+::optional$<$ rclcpp\+::\+Logger $>$}]{input\+\_\+logger}{, }\item[{std\+::optional$<$ \mbox{\hyperlink{structyaml__params_1_1NoiseInputs}{yaml\+\_\+params\+::\+Noise\+Inputs}} $>$ \&}]{yaml\+\_\+noise\+\_\+inputs}{}\end{DoxyParamCaption})}
+
+
+
+Constructor for the \doxylink{classslam_1_1slamISAM}{slam\+ISAM} class. 
+
+Initializes noise models, tunable constants, and internal parameters required for i\+SAM2 SLAM operation. It also sets up the noise models used for different factor types (landmark, odometry, prior, and unary).
+
+
+\begin{DoxyParams}{Parameters}
+{\em input\+\_\+logger} & Optional ROS 2 logger for debug output \\
+\hline
+{\em yaml\+\_\+noise\+\_\+inputs} & Optional struct containing SLAM tuning parameters \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classslam_1_1slamISAM_a339835603720c6ba0db771b8fd9a8828}\index{slam::slamISAM@{slam::slamISAM}!slamISAM@{slamISAM}}
+\index{slamISAM@{slamISAM}!slam::slamISAM@{slam::slamISAM}}
+\doxysubsubsection{\texorpdfstring{slamISAM()}{slamISAM()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classslam_1_1slamISAM_a339835603720c6ba0db771b8fd9a8828} 
+slam\+::slam\+ISAM\+::slam\+ISAM (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{classslam_1_1slamISAM_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classslam_1_1slamISAM_a59469d87c99142bec093ab4a13c9cff5}\index{slam::slamISAM@{slam::slamISAM}!step@{step}}
+\index{step@{step}!slam::slamISAM@{slam::slamISAM}}
+\doxysubsubsection{\texorpdfstring{step()}{step()}}
+{\footnotesize\ttfamily \label{classslam_1_1slamISAM_a59469d87c99142bec093ab4a13c9cff5} 
+\mbox{\hyperlink{namespaceslam_a74c5ff6a5f23be28ef1b570f909b8449}{slam\+\_\+output\+\_\+t}} slam\+::slam\+ISAM\+::step (\begin{DoxyParamCaption}\item[{std\+::optional$<$ gtsam\+::\+Point2 $>$}]{gps\+\_\+opt}{, }\item[{double}]{yaw}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs\+\_\+blue}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{cone\+\_\+obs\+\_\+yellow}{, }\item[{const std\+::vector$<$ gtsam\+::\+Point2 $>$ \&}]{orange\+\_\+ref\+\_\+cones}{, }\item[{gtsam\+::\+Pose2}]{velocity}{, }\item[{double}]{dt}{}\end{DoxyParamCaption})}
+
+
+
+Performs a full SLAM update step using odometry and observed cone landmarks. 
+
+This function updates the SLAM factor graph using new motion data and cone observations. It includes steps such as pose prediction, data association, graph updates with both existing and new landmarks, and optional loop closure detection.
+
+
+\begin{DoxyParams}{Parameters}
+{\em gps\+\_\+opt} & Optional GPS position of the car \\
+\hline
+{\em yaw} & The heading of the car in radians \\
+\hline
+{\em cone\+\_\+obs\+\_\+blue} & The observed blue cones in the local frame \\
+\hline
+{\em cone\+\_\+obs\+\_\+yellow} & The observed yellow cones in the local frame \\
+\hline
+{\em orange\+\_\+ref\+\_\+cones} & The orange reference cones \\
+\hline
+{\em velocity} & The car\textquotesingle{}s motion since the last step as a relative Pose2 \\
+\hline
+{\em dt} & Time elapsed since the last SLAM step\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A tuple containing\+:
+\begin{DoxyItemize}
+\item A vector of the most recent estimated blue cone positions as Points
+\item A vector of the most recent estimated yellow cone positions as Points
+\item A Point representing the current pose of the car 
+\end{DoxyItemize}
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{isam2_8hpp}{isam2.\+hpp}}\item 
+src/isam2/\mbox{\hyperlink{isam2_8cpp}{isam2.\+cpp}}\end{DoxyCompactItemize}
