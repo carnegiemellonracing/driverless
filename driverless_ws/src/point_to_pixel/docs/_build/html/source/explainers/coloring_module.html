@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coloring Module Concepts &mdash; CMR Driverless Perceptions 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="API Reference" href="../implementation/api_reference.html" />
+    <link rel="prev" title="LiDAR Module Concepts" href="lidar_module.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            CMR Driverless Perceptions
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="explainers.html">Explainers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lidar_module.html">LiDAR Module Concepts</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Coloring Module Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#goal-of-the-coloring-module">Goal of the Coloring Module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#algorithm">Algorithm</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#simplified-point-to-pixel-mapping-algorithm">Simplified Point to Pixel Mapping Algorithm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#complexities-related-to-sensor-frame-timestamps">Complexities related to sensor frame timestamps</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#direct-linear-transform-dlt">Direct Linear Transform (DLT)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#what-is-dlt">What is DLT?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#why-use-dlt">Why use DLT?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../implementation/api_reference.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">CMR Driverless Perceptions</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="explainers.html">Explainers</a></li>
+      <li class="breadcrumb-item active">Coloring Module Concepts</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source/explainers/coloring_module.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="coloring-module-concepts">
+<h1>Coloring Module Concepts<a class="headerlink" href="#coloring-module-concepts" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>RGB cameras provide a source color information. Though the Stereolabs ZED cameras also have <a class="reference external" href="https://en.wikipedia.org/wiki/Stereo_camera">stereoscopic</a> capability,
+the pipeline avoids any depth processing due to latency concerns. Instead cameras are used purely for color information.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../../_images/zed2.png"><img alt="../../_images/zed2.png" src="../../_images/zed2.png" style="width: 200px;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Stereolabs ZED2 Camera used on 25a</em></span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="goal-of-the-coloring-module">
+<h3>Goal of the Coloring Module<a class="headerlink" href="#goal-of-the-coloring-module" title="Link to this heading"></a></h3>
+<p>The Coloring Module aims to apply RGB color information from cameras to classify cones coming in from the <a class="reference internal" href="lidar_module.html"><span class="doc">LiDAR Module</span></a> by color.
+Color classification delineates the sides of the track and allows <a class="reference external" href="https://cmr.red/planning-docs">Path Planning</a> and <a class="reference external" href="https://cmr.red/controls-docs">Controls</a> to do higher-level processing.</p>
+<div class="admonition-info admonition">
+<p class="admonition-title">Info</p>
+<ul class="simple">
+<li><p>We use ROS2 to implement our pipeline. See <a class="reference external" href="https://cmr.red/software-arch-docs">Software Architecture</a> for more.</p></li>
+<li><p>Our coloring module is housed in our custom ROS2 package, <a class="reference internal" href="../implementation/coloring_module.html"><span class="doc">point_to_pixel</span></a>.</p></li>
+</ul>
+<p><strong>Input:</strong> a set of uncolored cone centroids.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/cpp_cones</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">interfaces::msg::PPMConeArray</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p><strong>Output:</strong> a set of colored cone centroids passed down the pipeline to <a class="reference external" href="https://cmr.red/planning-docs">Path Planning</a> and <a class="reference external" href="https://cmr.red/controls-docs">Controls</a>.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">/perc_cones</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">interfaces::msg::ConeArray</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</section>
+</section>
+<section id="algorithm">
+<h2>Algorithm<a class="headerlink" href="#algorithm" title="Link to this heading"></a></h2>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="../../_images/coloring_algo_diagram.svg"><img alt="../../_images/coloring_algo_diagram.svg" src="../../_images/coloring_algo_diagram.svg" style="width: 1000px;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Algorithm diagram</em></span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="simplified-point-to-pixel-mapping-algorithm">
+<h3>Simplified Point to Pixel Mapping Algorithm<a class="headerlink" href="#simplified-point-to-pixel-mapping-algorithm" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>for each set of cone centroids / camera image do:
+    YOLO v5 cone detection inference: bounding boxes of different color/size classes
+
+    for each cone centroid do:
+        transform to image space via transform matrix (see Direct Linear Transform below)
+
+        if point is within a single bounding box classify as that color
+
+        if point is in multiple boxes use a rough depth heuristic to pick one box
+
+        else label the point as unknown
+</pre></div>
+</div>
+<section id="notes">
+<h4>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Point to Pixel Mapping makes the assumption that the cameras remain rigid with respect to the LiDAR at all times.</p></li>
+<li><p>Our YOLO v5 is trained on data from <a class="reference external" href="https://fsoco.github.io/fsoco-dataset/">Formula Student Objects in Context Dataset (FSOCO)</a></p></li>
+<li><p>Depth heuristic uses the idea that the area of the bounding box roughly corresponds to depth</p></li>
+</ul>
+</section>
+</section>
+<section id="complexities-related-to-sensor-frame-timestamps">
+<h3>Complexities related to sensor frame timestamps<a class="headerlink" href="#complexities-related-to-sensor-frame-timestamps" title="Link to this heading"></a></h3>
+<p>The implementation is forced to solve two problems that crop up as a result of unsynchronized data.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Our sensors have no synchronous trigger, and thus we need to find a way to synchronize data as best as possible.</p></li>
+<li><p>Our system needs to be robust to a a few errors in coloring due to this LiDAR - camera temporal synchronization issue.</p></li>
+</ol>
+</div></blockquote>
+<p>This adds some additional steps to the algorithm:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>for each incoming set of cone centroids do:
+    find the camera image in buffer closes to timestamp of centroids (but after)
+
+    apply YOLO v5 cone detection to that image: bounding boxes of different color/size classes
+
+    For each cone centroid do:
+        motion model point based on velocity and yaw deltas between LiDAR centroid timestamp and image timestamp
+
+        transform to image space via transform matrix (see Direct Linear Transform below)
+
+        if point is within a single bounding box classify as that color
+
+        if point is in multiple boxes use a rough depth heuristic to pick one box
+
+        else label the point as unknown
+
+    feed centroids into cone history algorithm to minimize the effect of misclassifications
+
+    apply support vector machine to correct for up to 1-2 misclassifications
+</pre></div>
+</div>
+<section id="id1">
+<h4>Notes<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Our Movella IMU is used to get velocity and yaw deltas.</p></li>
+<li><p>Cone histories and support vector machines make the algorithm far more robust to synchronization issues–especially at faster speeds.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="direct-linear-transform-dlt">
+<h2>Direct Linear Transform (DLT)<a class="headerlink" href="#direct-linear-transform-dlt" title="Link to this heading"></a></h2>
+<section id="what-is-dlt">
+<h3>What is DLT?<a class="headerlink" href="#what-is-dlt" title="Link to this heading"></a></h3>
+<p>Direct Linear Transform (DLT) is the technique we use to solve for the static transform matrix from LiDAR to camera space.
+It consists a calibration sequence that uses a series of (at least 6) points identified by
+hand in both the lidar and camera frames and a mathematical formula to solve for the matrix.</p>
+</section>
+<section id="why-use-dlt">
+<h3>Why use DLT?<a class="headerlink" href="#why-use-dlt" title="Link to this heading"></a></h3>
+<p>It is insufficient to use geometric approaches, e.g, measuring or CAD to estimate the static transformation matrix from camera to LiDAR.
+This is due to a multitude of reasons, but primarily results from the difference between design and fabrication. DLT allows for an accurate
+transform to be calculated via calibration instead.</p>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="../../_images/ppm_calibration.JPG"><img alt="../../_images/ppm_calibration.JPG" src="../../_images/ppm_calibration.JPG" style="width: 400px;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure: calibration setup consisting of many cones spread throughout at different heights and depths</em></span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method is heavily dependant on a good calibration. If the sensors move relative to each other
+or if the calibration points weren’t picked at various depths / heights, the accuracy drops off steeply.</p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lidar_module.html" class="btn btn-neutral float-left" title="LiDAR Module Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../implementation/api_reference.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Arya Lohia.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

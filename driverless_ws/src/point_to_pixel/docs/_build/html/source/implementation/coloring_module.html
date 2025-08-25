@@ -1,0 +1,667 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perceptions Coloring Module &mdash; CMR Driverless Perceptions 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Perceptions LiDAR Module" href="lidar_module.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            CMR Driverless Perceptions
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../explainers/explainers.html">Explainers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lidar_module.html">Perceptions LiDAR Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Perceptions Coloring Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv414point_to_pixel"><code class="docutils literal notranslate"><span class="pre">point_to_pixel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel5ConesE"><code class="docutils literal notranslate"><span class="pre">Cones</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel12StampedFrameE"><code class="docutils literal notranslate"><span class="pre">StampedFrame</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel5StateE"><code class="docutils literal notranslate"><span class="pre">State</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel9ConeClassE"><code class="docutils literal notranslate"><span class="pre">ConeClass</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel17find_closest_coneERK5Cones"><code class="docutils literal notranslate"><span class="pre">find_closest_cone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel15calculate_angleERK4ConeRK4Cone"><code class="docutils literal notranslate"><span class="pre">calculate_angle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel11order_conesERK5Conesd"><code class="docutils literal notranslate"><span class="pre">order_cones()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel11cones_to_xyERK11TrackBounds"><code class="docutils literal notranslate"><span class="pre">cones_to_xy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel16supplement_conesER11TrackBounds"><code class="docutils literal notranslate"><span class="pre">supplement_cones()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel21local_to_global_frameENSt4pairIddEEd"><code class="docutils literal notranslate"><span class="pre">local_to_global_frame()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel4ConeE"><code class="docutils literal notranslate"><span class="pre">point_to_pixel::Cone</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel11TrackBoundsE"><code class="docutils literal notranslate"><span class="pre">point_to_pixel::TrackBounds</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel16GeneralPredictorE"><code class="docutils literal notranslate"><span class="pre">point_to_pixel::GeneralPredictor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel12HSVPredictorE"><code class="docutils literal notranslate"><span class="pre">point_to_pixel::HSVPredictor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel13YoloPredictorE"><code class="docutils literal notranslate"><span class="pre">point_to_pixel::YoloPredictor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel13CameraManagerE"><code class="docutils literal notranslate"><span class="pre">point_to_pixel::CameraManager</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel12StateManagerE"><code class="docutils literal notranslate"><span class="pre">point_to_pixel::StateManager</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel11ObsConeInfoE"><code class="docutils literal notranslate"><span class="pre">point_to_pixel::ObsConeInfo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel15ConeHistoryNodeE"><code class="docutils literal notranslate"><span class="pre">point_to_pixel::ConeHistoryNode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel16PointToPixelNodeE"><code class="docutils literal notranslate"><span class="pre">point_to_pixel::PointToPixelNode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N14point_to_pixel10recoloringE"><code class="docutils literal notranslate"><span class="pre">point_to_pixel::recoloring</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">CMR Driverless Perceptions</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api_reference.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Perceptions Coloring Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source/implementation/coloring_module.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="perceptions-coloring-module">
+<h1>Perceptions Coloring Module<a class="headerlink" href="#perceptions-coloring-module" title="Link to this heading"></a></h1>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv414point_to_pixel">
+<span id="_CPPv314point_to_pixel"></span><span id="_CPPv214point_to_pixel"></span><span id="point_to_pixel"></span><span class="target" id="namespacepoint__to__pixel"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">point_to_pixel</span></span></span><a class="headerlink" href="#_CPPv414point_to_pixel" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel5ConesE">
+<span id="_CPPv3N14point_to_pixel5ConesE"></span><span id="_CPPv2N14point_to_pixel5ConesE"></span><span id="point_to_pixel::Cones"></span><span class="target" id="namespacepoint__to__pixel_1a037088edd8e022426fd679ae1dd7d504"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N14point_to_pixel4ConeE" title="point_to_pixel::Cone"><span class="n"><span class="pre">Cone</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Cones</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel5ConesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel12StampedFrameE">
+<span id="_CPPv3N14point_to_pixel12StampedFrameE"></span><span id="_CPPv2N14point_to_pixel12StampedFrameE"></span><span id="point_to_pixel::StampedFrame"></span><span class="target" id="namespacepoint__to__pixel_1a327be30a96022ec4b38022783eacc971"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint64_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Mat</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StampedFrame</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel12StampedFrameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel5StateE">
+<span id="_CPPv3N14point_to_pixel5StateE"></span><span id="_CPPv2N14point_to_pixel5StateE"></span><span id="point_to_pixel::State"></span><span class="target" id="namespacepoint__to__pixel_1a42a258c66f424c72fb8076efb713dd7b"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">geometry_msgs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TwistStamped</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">SharedPtr</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">geometry_msgs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Vector3Stamped</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">SharedPtr</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">State</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel5StateE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum-class">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel9ConeClassE">
+<span id="_CPPv3N14point_to_pixel9ConeClassE"></span><span id="_CPPv2N14point_to_pixel9ConeClassE"></span><span class="target" id="namespacepoint__to__pixel_1acce7b1f7fedfa3251ec5385c1c33d0b3"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ConeClass</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel9ConeClassE" title="Link to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel9ConeClass6ORANGEE">
+<span id="_CPPv3N14point_to_pixel9ConeClass6ORANGEE"></span><span id="_CPPv2N14point_to_pixel9ConeClass6ORANGEE"></span><span class="target" id="namespacepoint__to__pixel_1acce7b1f7fedfa3251ec5385c1c33d0b3a5b6490317b6f7270bc3ab5ffd07c1f52"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ORANGE</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel9ConeClass6ORANGEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel9ConeClass6YELLOWE">
+<span id="_CPPv3N14point_to_pixel9ConeClass6YELLOWE"></span><span id="_CPPv2N14point_to_pixel9ConeClass6YELLOWE"></span><span class="target" id="namespacepoint__to__pixel_1acce7b1f7fedfa3251ec5385c1c33d0b3a8a568e5f41b7e4da88fe5c4a00aad34e"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">YELLOW</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel9ConeClass6YELLOWE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel9ConeClass4BLUEE">
+<span id="_CPPv3N14point_to_pixel9ConeClass4BLUEE"></span><span id="_CPPv2N14point_to_pixel9ConeClass4BLUEE"></span><span class="target" id="namespacepoint__to__pixel_1acce7b1f7fedfa3251ec5385c1c33d0b3a1b3e1ee9bff86431dea6b181365ba65f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BLUE</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel9ConeClass4BLUEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel9ConeClass7UNKNOWNE">
+<span id="_CPPv3N14point_to_pixel9ConeClass7UNKNOWNE"></span><span id="_CPPv2N14point_to_pixel9ConeClass7UNKNOWNE"></span><span class="target" id="namespacepoint__to__pixel_1acce7b1f7fedfa3251ec5385c1c33d0b3a696b031073e74bf2cb98e5ef201d4aa3"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">UNKNOWN</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel9ConeClass7UNKNOWNE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel17find_closest_coneERK5Cones">
+<span id="_CPPv3N14point_to_pixel17find_closest_coneERK5Cones"></span><span id="_CPPv2N14point_to_pixel17find_closest_coneERK5Cones"></span><span id="point_to_pixel::find_closest_cone__ConesCR"></span><span class="target" id="namespacepoint__to__pixel_1a42b8ecc752dc9d1e577081c9aa69365a"></span><a class="reference internal" href="#_CPPv4N14point_to_pixel4ConeE" title="point_to_pixel::Cone"><span class="n"><span class="pre">Cone</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">find_closest_cone</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N14point_to_pixel5ConesE" title="point_to_pixel::Cones"><span class="n"><span class="pre">Cones</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cones</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel17find_closest_coneERK5Cones" title="Link to this definition"></a><br /></dt>
+<dd><p>Finds the next closest cone to the first cone in the vector. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cones</strong> – Vector of cones </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structpoint__to__pixel_1_1Cone"><span class="std std-ref">Cone</span></a> Closest cone </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel15calculate_angleERK4ConeRK4Cone">
+<span id="_CPPv3N14point_to_pixel15calculate_angleERK4ConeRK4Cone"></span><span id="_CPPv2N14point_to_pixel15calculate_angleERK4ConeRK4Cone"></span><span id="point_to_pixel::calculate_angle__ConeCR.ConeCR"></span><span class="target" id="namespacepoint__to__pixel_1ae86eb94b91bf457b02d8d25ca169876a"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">calculate_angle</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N14point_to_pixel4ConeE" title="point_to_pixel::Cone"><span class="n"><span class="pre">Cone</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">from</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N14point_to_pixel4ConeE" title="point_to_pixel::Cone"><span class="n"><span class="pre">Cone</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">to</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel15calculate_angleERK4ConeRK4Cone" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates the angle between two cones. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>from</strong> – First cone </p></li>
+<li><p><strong>to</strong> – Second cone </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>double Angle in radians </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel11order_conesERK5Conesd">
+<span id="_CPPv3N14point_to_pixel11order_conesERK5Conesd"></span><span id="_CPPv2N14point_to_pixel11order_conesERK5Conesd"></span><span id="point_to_pixel::order_cones__ConesCR.double"></span><span class="target" id="namespacepoint__to__pixel_1ac963c6a35a8749cae29ba1d68efc20a4"></span><a class="reference internal" href="#_CPPv4N14point_to_pixel5ConesE" title="point_to_pixel::Cones"><span class="n"><span class="pre">Cones</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">order_cones</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N14point_to_pixel5ConesE" title="point_to_pixel::Cones"><span class="n"><span class="pre">Cones</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">unordered_cones</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max_distance_threshold</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel11order_conesERK5Conesd" title="Link to this definition"></a><br /></dt>
+<dd><p>Orders cones by their path direction. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>unordered_cones</strong> – Vector of unordered cones </p></li>
+<li><p><strong>max_distance_threshold</strong> – Maximum distance between two cones before ordering clips detected cones </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Cones Vector of ordered cones </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel11cones_to_xyERK11TrackBounds">
+<span id="_CPPv3N14point_to_pixel11cones_to_xyERK11TrackBounds"></span><span id="_CPPv2N14point_to_pixel11cones_to_xyERK11TrackBounds"></span><span id="point_to_pixel::cones_to_xy__TrackBoundsCR"></span><span class="target" id="namespacepoint__to__pixel_1a69f722f9b03919ae2954360911bab34f"></span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cones_to_xy</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N14point_to_pixel11TrackBoundsE" title="point_to_pixel::TrackBounds"><span class="n"><span class="pre">TrackBounds</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">track_bounds</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel11cones_to_xyERK11TrackBounds" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts <a class="reference internal" href="#structpoint__to__pixel_1_1TrackBounds"><span class="std std-ref">TrackBounds</span></a>, a struct containing yellow cone vector and blue cone vector, to XY training data. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>track_bounds</strong> – <a class="reference internal" href="#structpoint__to__pixel_1_1TrackBounds"><span class="std std-ref">TrackBounds</span></a> stuct </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>std::pair&lt;std::vector&lt;std::vector&lt;double&gt;&gt;, std::vector&lt;double&gt;&gt; Feature matrix and label vector </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel16supplement_conesER11TrackBounds">
+<span id="_CPPv3N14point_to_pixel16supplement_conesER11TrackBounds"></span><span id="_CPPv2N14point_to_pixel16supplement_conesER11TrackBounds"></span><span id="point_to_pixel::supplement_cones__TrackBoundsR"></span><span class="target" id="namespacepoint__to__pixel_1a385443895d9c56708dc666b9eb66b1fe"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">supplement_cones</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N14point_to_pixel11TrackBoundsE" title="point_to_pixel::TrackBounds"><span class="n"><span class="pre">TrackBounds</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">track_bounds</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel16supplement_conesER11TrackBounds" title="Link to this definition"></a><br /></dt>
+<dd><p>Adds dummy cones to the side of the car, blue on left and yellow on right. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>track_bounds</strong> – <a class="reference internal" href="#structpoint__to__pixel_1_1TrackBounds"><span class="std std-ref">TrackBounds</span></a> struct </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel21local_to_global_frameENSt4pairIddEEd">
+<span id="_CPPv3N14point_to_pixel21local_to_global_frameENSt4pairIddEEd"></span><span id="_CPPv2N14point_to_pixel21local_to_global_frameENSt4pairIddEEd"></span><span id="point_to_pixel::local_to_global_frame__std::pair:double.double:.double"></span><span class="target" id="namespacepoint__to__pixel_1a11955c79b50aeb077ed55963eebc654b"></span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">local_to_global_frame</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cmr_x_cmr_y_change</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">yaw</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel21local_to_global_frameENSt4pairIddEEd" title="Link to this definition"></a><br /></dt>
+<dd><p>Used for determining the position of a cone in global frame given local frame information. </p>
+</dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel4ConeE">
+<span id="_CPPv3N14point_to_pixel4ConeE"></span><span id="_CPPv2N14point_to_pixel4ConeE"></span><span id="point_to_pixel::Cone"></span><span class="target" id="structpoint__to__pixel_1_1Cone"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Cone</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel4ConeE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;cones.hpp&gt;</em></div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel11TrackBoundsE">
+<span id="_CPPv3N14point_to_pixel11TrackBoundsE"></span><span id="_CPPv2N14point_to_pixel11TrackBoundsE"></span><span id="point_to_pixel::TrackBounds"></span><span class="target" id="structpoint__to__pixel_1_1TrackBounds"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TrackBounds</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel11TrackBoundsE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;cones.hpp&gt;</em></div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel16GeneralPredictorE">
+<span id="_CPPv3N14point_to_pixel16GeneralPredictorE"></span><span id="_CPPv2N14point_to_pixel16GeneralPredictorE"></span><span id="point_to_pixel::GeneralPredictor"></span><span class="target" id="classpoint__to__pixel_1_1GeneralPredictor"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GeneralPredictor</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel16GeneralPredictorE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;general_predictor.hpp&gt;</em></div>
+<p>Subclassed by <a class="reference internal" href="#classpoint__to__pixel_1_1HSVPredictor"><span class="std std-ref">point_to_pixel::HSVPredictor</span></a>, <a class="reference internal" href="#classpoint__to__pixel_1_1YoloPredictor"><span class="std std-ref">point_to_pixel::YoloPredictor</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel16GeneralPredictorD0Ev">
+<span id="_CPPv3N14point_to_pixel16GeneralPredictorD0Ev"></span><span id="_CPPv2N14point_to_pixel16GeneralPredictorD0Ev"></span><span id="point_to_pixel::GeneralPredictor::~GeneralPredictor"></span><span class="target" id="classpoint__to__pixel_1_1GeneralPredictor_1a6218821945689e3d49e554393cd26b72"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~GeneralPredictor</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel16GeneralPredictorD0Ev" title="Link to this definition"></a><br /></dt>
+<dd><p>default destructor </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel16GeneralPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd">
+<span id="_CPPv3N14point_to_pixel16GeneralPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd"></span><span id="_CPPv2N14point_to_pixel16GeneralPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd"></span><span id="point_to_pixel::GeneralPredictor::predict_color__std::pair:Eigen::Vector3d.Eigen::Vector3d:.std::pair:cv::Mat.cv::Mat:.double"></span><span class="target" id="classpoint__to__pixel_1_1GeneralPredictor_1a98c22fc5a5ac01a50ef71d4f53d9d73a"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N14point_to_pixel9ConeClassE" title="point_to_pixel::ConeClass"><span class="n"><span class="pre">ConeClass</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">predict_color</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Vector3d</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Vector3d</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pixel_pair</span></span>, <a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Mat</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Mat</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">frame_pair</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">confidence_threshold</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel16GeneralPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd" title="Link to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pixel_pair</strong> – </p></li>
+<li><p><strong>frame_pair</strong> – </p></li>
+<li><p><strong>confidence_threshold</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel12HSVPredictorE">
+<span id="_CPPv3N14point_to_pixel12HSVPredictorE"></span><span id="_CPPv2N14point_to_pixel12HSVPredictorE"></span><span id="point_to_pixel::HSVPredictor"></span><span class="target" id="classpoint__to__pixel_1_1HSVPredictor"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HSVPredictor</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414point_to_pixel" title="point_to_pixel"><span class="n"><span class="pre">point_to_pixel</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N14point_to_pixel16GeneralPredictorE" title="point_to_pixel::GeneralPredictor"><span class="n"><span class="pre">GeneralPredictor</span></span></a><a class="headerlink" href="#_CPPv4N14point_to_pixel12HSVPredictorE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;hsv_predictor.hpp&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel12HSVPredictor12HSVPredictorERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarE">
+<span id="_CPPv3N14point_to_pixel12HSVPredictor12HSVPredictorERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarE"></span><span id="_CPPv2N14point_to_pixel12HSVPredictor12HSVPredictorERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarE"></span><span id="point_to_pixel::HSVPredictor::HSVPredictor__cv::ScalarCR.cv::ScalarCR.cv::ScalarCR.cv::ScalarCR.cv::ScalarCR.cv::ScalarCR"></span><span class="target" id="classpoint__to__pixel_1_1HSVPredictor_1ae80a0931aacc813419095ae33f536438"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HSVPredictor</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Scalar</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">yellow_filter_low</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Scalar</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">yellow_filter_high</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Scalar</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">blue_filter_low</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Scalar</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">blue_filter_high</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Scalar</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">orange_filter_low</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Scalar</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">orange_filter_high</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel12HSVPredictor12HSVPredictorERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarERKN2cv6ScalarE" title="Link to this definition"></a><br /></dt>
+<dd><p>constructor </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>yellow_filter_low</strong> – min clipping val for yellow filter </p></li>
+<li><p><strong>yellow_filter_high</strong> – max clipping val for yellow filter </p></li>
+<li><p><strong>blue_filter_low</strong> – min clipping val for blue filter </p></li>
+<li><p><strong>blue_filter_high</strong> – max clipping val for blue filter </p></li>
+<li><p><strong>orange_filter_low</strong> – min clipping val for orange filter </p></li>
+<li><p><strong>orange_filter_high</strong> – max clipping val for orange filter </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#classpoint__to__pixel_1_1HSVPredictor"><span class="std std-ref">HSVPredictor</span></a> object </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel12HSVPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd">
+<span id="_CPPv3N14point_to_pixel12HSVPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd"></span><span id="_CPPv2N14point_to_pixel12HSVPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd"></span><span id="point_to_pixel::HSVPredictor::predict_color__std::pair:Eigen::Vector3d.Eigen::Vector3d:.std::pair:cv::Mat.cv::Mat:.double"></span><span class="target" id="classpoint__to__pixel_1_1HSVPredictor_1a1cd1fbee0e0095b67b4d2ac1368d2eca"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N14point_to_pixel9ConeClassE" title="point_to_pixel::ConeClass"><span class="n"><span class="pre">ConeClass</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">predict_color</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Vector3d</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Vector3d</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pixel_pair</span></span>, <a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Mat</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Mat</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">frame_pair</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">confidence_threshold</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel12HSVPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd" title="Link to this definition"></a><br /></dt>
+<dd><p>applies HSV predictor on images and classifies pixels based on the colors (in HSV) of the pixels around. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pixel_pair</strong> – pair of two pixels (left and right image) representing a cone centroid transformed to image space. </p></li>
+<li><p><strong>frame_pair</strong> – pair of image frames </p></li>
+<li><p><strong>confidence_threshold</strong> – YOLO min confidence threshold for classification </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>ConeClass of the pixel_pair representing a cone centroid. ORANGE == 0; YELLOW == 1; BLUE == 2; UNKNOWN == -1 </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel13YoloPredictorE">
+<span id="_CPPv3N14point_to_pixel13YoloPredictorE"></span><span id="_CPPv2N14point_to_pixel13YoloPredictorE"></span><span id="point_to_pixel::YoloPredictor"></span><span class="target" id="classpoint__to__pixel_1_1YoloPredictor"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">YoloPredictor</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv414point_to_pixel" title="point_to_pixel"><span class="n"><span class="pre">point_to_pixel</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N14point_to_pixel16GeneralPredictorE" title="point_to_pixel::GeneralPredictor"><span class="n"><span class="pre">GeneralPredictor</span></span></a><a class="headerlink" href="#_CPPv4N14point_to_pixel13YoloPredictorE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;yolo_predictor.hpp&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel13YoloPredictor13YoloPredictorERKNSt6stringE">
+<span id="_CPPv3N14point_to_pixel13YoloPredictor13YoloPredictorERKNSt6stringE"></span><span id="_CPPv2N14point_to_pixel13YoloPredictor13YoloPredictorERKNSt6stringE"></span><span id="point_to_pixel::YoloPredictor::YoloPredictor__ssCR"></span><span class="target" id="classpoint__to__pixel_1_1YoloPredictor_1a6f8a527da549b1109aa8f58dd8edd8b9"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">YoloPredictor</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">model_path</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel13YoloPredictor13YoloPredictorERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>constructor </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_path</strong> – string path to .onnx file </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#classpoint__to__pixel_1_1YoloPredictor"><span class="std std-ref">YoloPredictor</span></a> object </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel13YoloPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd">
+<span id="_CPPv3N14point_to_pixel13YoloPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd"></span><span id="_CPPv2N14point_to_pixel13YoloPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd"></span><span id="point_to_pixel::YoloPredictor::predict_color__std::pair:Eigen::Vector3d.Eigen::Vector3d:.std::pair:cv::Mat.cv::Mat:.double"></span><span class="target" id="classpoint__to__pixel_1_1YoloPredictor_1a05ee4b05a1075f46ce558bc5f2034eb8"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N14point_to_pixel9ConeClassE" title="point_to_pixel::ConeClass"><span class="n"><span class="pre">ConeClass</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">predict_color</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Vector3d</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Vector3d</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pixel_pair</span></span>, <a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Mat</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Mat</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">frame_pair</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">confidence_threshold</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel13YoloPredictor13predict_colorENSt4pairIN5Eigen8Vector3dEN5Eigen8Vector3dEEENSt4pairIN2cv3MatEN2cv3MatEEEd" title="Link to this definition"></a><br /></dt>
+<dd><p>applies YOLO model on images and classifies pixels based on the bounding box classes they fall in. If a pixel fall in multiple bounding boxes, a heuristic is applied that compares pixel depth and bounding box area. The idea is that the smaller the bounding box, the greater the depth of the cone it corresponds to. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pixel_pair</strong> – pair of two pixels (left and right image) representing a cone centroid transformed to image space. </p></li>
+<li><p><strong>frame_pair</strong> – pair of image frames </p></li>
+<li><p><strong>confidence_threshold</strong> – YOLO min confidence threshold for classification </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>ConeClass of the pixel_pair representing a cone centroid. ORANGE == 0; YELLOW == 1; BLUE == 2; UNKNOWN == -1 </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel13YoloPredictor13process_frameERKN2cv3MatEb">
+<span id="_CPPv3N14point_to_pixel13YoloPredictor13process_frameERKN2cv3MatEb"></span><span id="_CPPv2N14point_to_pixel13YoloPredictor13process_frameERKN2cv3MatEb"></span><span id="point_to_pixel::YoloPredictor::process_frame__cv::MatCR.b"></span><span class="target" id="classpoint__to__pixel_1_1YoloPredictor_1ac392e7f1762b3f81f5dd59ded3eeb4a7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">process_frame</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Mat</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">frame</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">is_left_frame</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel13YoloPredictor13process_frameERKN2cv3MatEb" title="Link to this definition"></a><br /></dt>
+<dd><p>applies YOLO model to image </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frame</strong> – camera frame </p></li>
+<li><p><strong>is_left_frame</strong> – boolean flag that decides which instance variable to save YOLO output to </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel13YoloPredictor19draw_bounding_boxesERN2cv3MatERN2cv3MatENSt6vectorIN2cv3MatEEEiid">
+<span id="_CPPv3N14point_to_pixel13YoloPredictor19draw_bounding_boxesERN2cv3MatERN2cv3MatENSt6vectorIN2cv3MatEEEiid"></span><span id="_CPPv2N14point_to_pixel13YoloPredictor19draw_bounding_boxesERN2cv3MatERN2cv3MatENSt6vectorIN2cv3MatEEEiid"></span><span id="point_to_pixel::YoloPredictor::draw_bounding_boxes__cv::MatR.cv::MatR.std::vector:cv::Mat:.i.i.double"></span><span class="target" id="classpoint__to__pixel_1_1YoloPredictor_1ac210c219dc07054c47ed4a82b73ff657"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">draw_bounding_boxes</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Mat</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">frame</span></span>, <span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Mat</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">canvas</span></span>, <a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Mat</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">detections</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">rows</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cols</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">confidence_threshold</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel13YoloPredictor19draw_bounding_boxesERN2cv3MatERN2cv3MatENSt6vectorIN2cv3MatEEEiid" title="Link to this definition"></a><br /></dt>
+<dd><p>uses cv2 to draw filled bounding boxes on the frames for visualization </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frame</strong> – camera frame </p></li>
+<li><p><strong>canvas</strong> – canvas frame </p></li>
+<li><p><strong>detections</strong> – output from YOLO model </p></li>
+<li><p><strong>rows</strong> – rows of detection matrix to parse detections </p></li>
+<li><p><strong>cols</strong> – cols of detection matrix to parse detections </p></li>
+<li><p><strong>confidence_threshold</strong> – YOLO min confidence threshold for classification </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel13CameraManagerE">
+<span id="_CPPv3N14point_to_pixel13CameraManagerE"></span><span id="_CPPv2N14point_to_pixel13CameraManagerE"></span><span id="point_to_pixel::CameraManager"></span><span class="target" id="classpoint__to__pixel_1_1CameraManager"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CameraManager</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel13CameraManagerE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;camera_manager.hpp&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel13CameraManager18find_closest_frameERKN6rclcpp4TimeERKN6rclcpp6LoggerE">
+<span id="_CPPv3N14point_to_pixel13CameraManager18find_closest_frameERKN6rclcpp4TimeERKN6rclcpp6LoggerE"></span><span id="_CPPv2N14point_to_pixel13CameraManager18find_closest_frameERKN6rclcpp4TimeERKN6rclcpp6LoggerE"></span><span id="point_to_pixel::CameraManager::find_closest_frame__rclcpp::TimeCR.rclcpp::LoggerCR"></span><span class="target" id="classpoint__to__pixel_1_1CameraManager_1a721ae2a38588c41eb99887311357ee22"></span><a class="reference internal" href="#_CPPv4N14point_to_pixel12StampedFrameE" title="point_to_pixel::StampedFrame"><span class="n"><span class="pre">StampedFrame</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">find_closest_frame</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Time</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">callbackTime</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Logger</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">logger</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel13CameraManager18find_closest_frameERKN6rclcpp4TimeERKN6rclcpp6LoggerE" title="Link to this definition"></a><br /></dt>
+<dd><p>Finds the closest frame to a callback time from the image deque. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>callbackTime</strong> – The time to find a matching frame for </p></li>
+<li><p><strong>logger</strong> – ROS logger for error reporting </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>camera_manager::StampedFrame The closest frame with timestamp </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel13CameraManager17initialize_cameraERKN6rclcpp6LoggerE">
+<span id="_CPPv3N14point_to_pixel13CameraManager17initialize_cameraERKN6rclcpp6LoggerE"></span><span id="_CPPv2N14point_to_pixel13CameraManager17initialize_cameraERKN6rclcpp6LoggerE"></span><span id="point_to_pixel::CameraManager::initialize_camera__rclcpp::LoggerCR"></span><span class="target" id="classpoint__to__pixel_1_1CameraManager_1ab69731894fc3eb034f0c9d4c0c1a4276"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">initialize_camera</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Logger</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">logger</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel13CameraManager17initialize_cameraERKN6rclcpp6LoggerE" title="Link to this definition"></a><br /></dt>
+<dd><p>Dynamically assigns camera ids and corrects initial id assigmment. Also initializes ZED camera with intrinsic rectification matrices. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>logger</strong> – ROS logger for status messages </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool Success status </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel13CameraManager25capture_and_rectify_frameERKN6rclcpp6LoggerEbb">
+<span id="_CPPv3N14point_to_pixel13CameraManager25capture_and_rectify_frameERKN6rclcpp6LoggerEbb"></span><span id="_CPPv2N14point_to_pixel13CameraManager25capture_and_rectify_frameERKN6rclcpp6LoggerEbb"></span><span id="point_to_pixel::CameraManager::capture_and_rectify_frame__rclcpp::LoggerCR.b.b"></span><span class="target" id="classpoint__to__pixel_1_1CameraManager_1a415d9d534185a5d3f20019a542f8b04c"></span><a class="reference internal" href="#_CPPv4N14point_to_pixel12StampedFrameE" title="point_to_pixel::StampedFrame"><span class="n"><span class="pre">StampedFrame</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">capture_and_rectify_frame</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Logger</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">logger</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">is_left_camera</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">use_inner_lens</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel13CameraManager25capture_and_rectify_frameERKN6rclcpp6LoggerEbb" title="Link to this definition"></a><br /></dt>
+<dd><p>Captures and rectifies a frame from a ZED camera. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> – ROS logger for status messages </p></li>
+<li><p><strong>is_left_camera</strong> – If using left sided zed set to true </p></li>
+<li><p><strong>use_inner_lens</strong> – If using inner lenses set to true </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>camera_manager::StampedFrame The timestamp and rectified frame </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel13CameraManager12update_dequeE12StampedFrame">
+<span id="_CPPv3N14point_to_pixel13CameraManager12update_dequeE12StampedFrame"></span><span id="_CPPv2N14point_to_pixel13CameraManager12update_dequeE12StampedFrame"></span><span id="point_to_pixel::CameraManager::update_deque__StampedFrame"></span><span class="target" id="classpoint__to__pixel_1_1CameraManager_1ad26ad79f2696bdbfe65e482da3fdc82e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">update_deque</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N14point_to_pixel12StampedFrameE" title="point_to_pixel::StampedFrame"><span class="n"><span class="pre">StampedFrame</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">new_frame</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel13CameraManager12update_dequeE12StampedFrame" title="Link to this definition"></a><br /></dt>
+<dd><p>Updates the deque with a new frame. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_frame</strong> – The new frame to add to the deque </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel12StateManagerE">
+<span id="_CPPv3N14point_to_pixel12StateManagerE"></span><span id="_CPPv2N14point_to_pixel12StateManagerE"></span><span id="point_to_pixel::StateManager"></span><span class="target" id="classpoint__to__pixel_1_1StateManager"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StateManager</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel12StateManagerE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;state_manager.hpp&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel12StateManager15transform_pointERKN6rclcpp6LoggerERN13geometry_msgs3msg7Vector3E7int64_t7int64_t7int64_tRKNSt4pairIN5Eigen6MatrixIdXL3EEXL4EEEEN5Eigen6MatrixIdXL3EEXL4EEEEEE">
+<span id="_CPPv3N14point_to_pixel12StateManager15transform_pointERKN6rclcpp6LoggerERN13geometry_msgs3msg7Vector3E7int64_t7int64_t7int64_tRKNSt4pairIN5Eigen6MatrixIdXL3EEXL4EEEEN5Eigen6MatrixIdXL3EEXL4EEEEEE"></span><span id="_CPPv2N14point_to_pixel12StateManager15transform_pointERKN6rclcpp6LoggerERN13geometry_msgs3msg7Vector3E7int64_t7int64_t7int64_tRKNSt4pairIN5Eigen6MatrixIdX3EX4EEEN5Eigen6MatrixIdX3EX4EEEEE"></span><span id="point_to_pixel::StateManager::transform_point__rclcpp::LoggerCR.geometry_msgs::msg::Vector3R.int64_t.int64_t.int64_t.std::pair:Eigen::Matrix:double.3.4:.Eigen::Matrix:double.3.4::CR"></span><span class="target" id="classpoint__to__pixel_1_1StateManager_1ad4840954a0bde0225a9b375e68ddcdc3"></span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Vector3d</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Vector3d</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transform_point</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Logger</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">logger</span></span>, <span class="n"><span class="pre">geometry_msgs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Vector3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point</span></span>, <span class="n"><span class="pre">int64_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">left_frame_time</span></span>, <span class="n"><span class="pre">int64_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">right_frame_time</span></span>, <span class="n"><span class="pre">int64_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">lidar_frame_time</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Matrix</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">Eigen</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Matrix</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">4</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">projection_matrix_pair</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel12StateManager15transform_pointERKN6rclcpp6LoggerERN13geometry_msgs3msg7Vector3E7int64_t7int64_t7int64_tRKNSt4pairIN5Eigen6MatrixIdXL3EEXL4EEEEN5Eigen6MatrixIdXL3EEXL4EEEEEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Transforms a 3D point in LiDAR space to 2D pixel coordinates in camera space. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> – The 3D point from LiDAR </p></li>
+<li><p><strong>projection_matrix_l</strong> – Projection matrix for left camera </p></li>
+<li><p><strong>projection_matrix_r</strong> – Projection matrix for right camera </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>std::pair&lt;Eigen::Vector2d, Eigen::Vector2d&gt; Pixel coordinates in both cameras </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel12StateManager27global_frame_to_local_frameENSt4pairIddEEd">
+<span id="_CPPv3N14point_to_pixel12StateManager27global_frame_to_local_frameENSt4pairIddEEd"></span><span id="_CPPv2N14point_to_pixel12StateManager27global_frame_to_local_frameENSt4pairIddEEd"></span><span id="point_to_pixel::StateManager::global_frame_to_local_frame__std::pair:double.double:.double"></span><span class="target" id="classpoint__to__pixel_1_1StateManager_1acf72911bd3aa3b948abdf85652b5ada1"></span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">global_frame_to_local_frame</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">global_frame_change</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">yaw</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel12StateManager27global_frame_to_local_frameENSt4pairIddEEd" title="Link to this definition"></a><br /></dt>
+<dd><p>Takes a change in x and y in global frame and returns a change in x and y in local CMR frame. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>global_frame_change</strong> – The change in x and y in global frame </p></li>
+<li><p><strong>yaw</strong> – yaw in radians </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>std::pair&lt;double, double&gt; </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel12StateManager14get_prev_stateERKN6rclcpp6LoggerE8uint64_t">
+<span id="_CPPv3N14point_to_pixel12StateManager14get_prev_stateERKN6rclcpp6LoggerE8uint64_t"></span><span id="_CPPv2N14point_to_pixel12StateManager14get_prev_stateERKN6rclcpp6LoggerE8uint64_t"></span><span id="point_to_pixel::StateManager::get_prev_state__rclcpp::LoggerCR.uint64_t"></span><span class="target" id="classpoint__to__pixel_1_1StateManager_1aca4949aae1a13155d1f4e7f530d3208e"></span><a class="reference internal" href="#_CPPv4N14point_to_pixel5StateE" title="point_to_pixel::State"><span class="n"><span class="pre">State</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_prev_state</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Logger</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">logger</span></span>, <span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">frame_time</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel12StateManager14get_prev_stateERKN6rclcpp6LoggerE8uint64_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the velocity and yaw at the time of the frame. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> – Logger for logging messages </p></li>
+<li><p><strong>frame_time</strong> – Time of the frame in nanoseconds </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>std::pair&lt;geometry_msgs::msg::TwistStamped::SharedPtr, geometry_msgs::msg::Vector3Stamped::SharedPtr&gt; </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel12StateManager16update_vel_dequeEN13geometry_msgs3msg12TwistStamped9SharedPtrE">
+<span id="_CPPv3N14point_to_pixel12StateManager16update_vel_dequeEN13geometry_msgs3msg12TwistStamped9SharedPtrE"></span><span id="_CPPv2N14point_to_pixel12StateManager16update_vel_dequeEN13geometry_msgs3msg12TwistStamped9SharedPtrE"></span><span id="point_to_pixel::StateManager::update_vel_deque__geometry_msgs::msg::TwistStamped::SharedPtr"></span><span class="target" id="classpoint__to__pixel_1_1StateManager_1afc3cb9ee66c155f06be1ad8c19f6cb4d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">update_vel_deque</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">geometry_msgs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TwistStamped</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">SharedPtr</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">vel_msg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel12StateManager16update_vel_dequeEN13geometry_msgs3msg12TwistStamped9SharedPtrE" title="Link to this definition"></a><br /></dt>
+<dd><p>Update velocity deque. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vel_msg</strong> – Velocity message </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel12StateManager16update_yaw_dequeEN13geometry_msgs3msg14Vector3Stamped9SharedPtrE">
+<span id="_CPPv3N14point_to_pixel12StateManager16update_yaw_dequeEN13geometry_msgs3msg14Vector3Stamped9SharedPtrE"></span><span id="_CPPv2N14point_to_pixel12StateManager16update_yaw_dequeEN13geometry_msgs3msg14Vector3Stamped9SharedPtrE"></span><span id="point_to_pixel::StateManager::update_yaw_deque__geometry_msgs::msg::Vector3Stamped::SharedPtr"></span><span class="target" id="classpoint__to__pixel_1_1StateManager_1ae03b55d796b80721c52702dc95019ec7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">update_yaw_deque</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">geometry_msgs</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Vector3Stamped</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">SharedPtr</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">yaw_msg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel12StateManager16update_yaw_dequeEN13geometry_msgs3msg14Vector3Stamped9SharedPtrE" title="Link to this definition"></a><br /></dt>
+<dd><p>Update yaw deque. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>yaw_msg</strong> – Yaw message </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>void </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel11ObsConeInfoE">
+<span id="_CPPv3N14point_to_pixel11ObsConeInfoE"></span><span id="_CPPv2N14point_to_pixel11ObsConeInfoE"></span><span id="point_to_pixel::ObsConeInfo"></span><span class="target" id="structpoint__to__pixel_1_1ObsConeInfo"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ObsConeInfo</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel11ObsConeInfoE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;cone_history_node.hpp&gt;</em></div>
+<p>We motion model on the position of the car to the observer, instead of thinking in global frame wrt to the start. This is because we want the current position to be the most accurate, and other positions to be less accurate. </p>
+<p>what do you need to be able to do<ul class="simple">
+<li><p>update an old cone with some new cone that data associates to it</p></li>
+<li><p>much easier to just track the global position with respect to the start position</p></li>
+<li><p>track a counter for how many times the cone was seen with a certain color</p></li>
+<li><p>- then vote on the most commonly seen color</p></li>
+</ul>
+</p>
+<p>obsconeinfo should track the calculated global cone position everytime we data associate a cone to it we will update the global position with the more recent one</p>
+<p>1.) make a change to obsconeinfo to just store<ul class="simple">
+<li><p>global cone position normalized to the start pose</p></li>
+<li><p>store a lifespan for the current history</p></li>
+</ul>
+</p>
+<p>2.) </p>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel15ConeHistoryNodeE">
+<span id="_CPPv3N14point_to_pixel15ConeHistoryNodeE"></span><span id="_CPPv2N14point_to_pixel15ConeHistoryNodeE"></span><span id="point_to_pixel::ConeHistoryNode"></span><span class="target" id="classpoint__to__pixel_1_1ConeHistoryNode"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ConeHistoryNode</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Node</span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel15ConeHistoryNodeE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;cone_history_node.hpp&gt;</em></div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel16PointToPixelNodeE">
+<span id="_CPPv3N14point_to_pixel16PointToPixelNodeE"></span><span id="_CPPv2N14point_to_pixel16PointToPixelNodeE"></span><span id="point_to_pixel::PointToPixelNode"></span><span class="target" id="classpoint__to__pixel_1_1PointToPixelNode"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PointToPixelNode</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Node</span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel16PointToPixelNodeE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;point_to_pixel_node.hpp&gt;</em></div>
+</dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel10recoloringE">
+<span id="_CPPv3N14point_to_pixel10recoloringE"></span><span id="_CPPv2N14point_to_pixel10recoloringE"></span><span id="point_to_pixel::recoloring"></span><span class="target" id="namespacepoint__to__pixel_1_1recoloring"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">recoloring</span></span></span><a class="headerlink" href="#_CPPv4N14point_to_pixel10recoloringE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel10recoloring14node_predictorERKNSt6vectorIdEEPK9svm_model">
+<span id="_CPPv3N14point_to_pixel10recoloring14node_predictorERKNSt6vectorIdEEPK9svm_model"></span><span id="_CPPv2N14point_to_pixel10recoloring14node_predictorERKNSt6vectorIdEEPK9svm_model"></span><span id="point_to_pixel::recoloring::node_predictor__std::vector:double:CR.svm_modelCP"></span><span class="target" id="namespacepoint__to__pixel_1_1recoloring_1a19f9f16e5954c1ac61775253282bbfce"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">node_predictor</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="lidar_module.html#_CPPv4St" title="std"><span class="n"><span class="pre">std</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cone</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">svm_model</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">model</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel10recoloring14node_predictorERKNSt6vectorIdEEPK9svm_model" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N14point_to_pixel10recoloring13recolor_conesE11TrackBoundsd">
+<span id="_CPPv3N14point_to_pixel10recoloring13recolor_conesE11TrackBoundsd"></span><span id="_CPPv2N14point_to_pixel10recoloring13recolor_conesE11TrackBoundsd"></span><span id="point_to_pixel::recoloring::recolor_cones__TrackBounds.double"></span><span class="target" id="namespacepoint__to__pixel_1_1recoloring_1aecf5a33e1fbbad1e848529d310a32b8e"></span><a class="reference internal" href="#_CPPv4N14point_to_pixel11TrackBoundsE" title="point_to_pixel::TrackBounds"><span class="n"><span class="pre">TrackBounds</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">recolor_cones</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N14point_to_pixel11TrackBoundsE" title="point_to_pixel::TrackBounds"><span class="n"><span class="pre">TrackBounds</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">track_bounds</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">C</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N14point_to_pixel10recoloring13recolor_conesE11TrackBoundsd" title="Link to this definition"></a><br /></dt>
+<dd><p>applies support vector machines to correct for misclassified cones. The algorithm takes in two sets of cones, calculates the best seperation boundary between them, and then reclassifies the cones </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>track_bounds</strong> – set of yellow and set of blue <a class="reference internal" href="#structpoint__to__pixel_1_1Cone"><span class="std std-ref">Cone</span></a> objects </p></li>
+<li><p><strong>C</strong> – C param for svm controls trade-off between correct classification and maximum margin seperation boundary </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#structpoint__to__pixel_1_1TrackBounds"><span class="std std-ref">TrackBounds</span></a> object that represents a newly reclassified left and right set of cones </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lidar_module.html" class="btn btn-neutral float-left" title="Perceptions LiDAR Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Arya Lohia.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

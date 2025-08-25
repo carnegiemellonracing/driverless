@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perceptions LiDAR Module &mdash; CMR Driverless Perceptions 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Perceptions Coloring Module" href="coloring_module.html" />
+    <link rel="prev" title="API Reference" href="api_reference.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            CMR Driverless Perceptions
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../explainers/explainers.html">Explainers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Perceptions LiDAR Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#c._USE_MATH_DEFINES"><code class="docutils literal notranslate"><span class="pre">_USE_MATH_DEFINES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv48radial_t"><code class="docutils literal notranslate"><span class="pre">radial_t</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv412point2radial8PointXYZ"><code class="docutils literal notranslate"><span class="pre">point2radial()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv412radial2point8radial_t"><code class="docutils literal notranslate"><span class="pre">radial2point()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv410min_height6vectorI8radial_tE"><code class="docutils literal notranslate"><span class="pre">min_height()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv414GraceAndConrad10PointCloudI8PointXYZEdid"><code class="docutils literal notranslate"><span class="pre">GraceAndConrad()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv417euclideanDistanceRK8PointXYZRK8PointXYZ"><code class="docutils literal notranslate"><span class="pre">euclideanDistance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv411regionQueryR10PointCloudI8PointXYZERK8PointXYZd"><code class="docutils literal notranslate"><span class="pre">regionQuery()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv413expandClusterR10PointCloudI8PointXYZER6vectorIbER6vectorIiEiR6vectorIiEidi"><code class="docutils literal notranslate"><span class="pre">expandCluster()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv416computeCentroidsR10PointCloudI8PointXYZERK13unordered_mapIi6vectorIiEE"><code class="docutils literal notranslate"><span class="pre">computeCentroids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv46DBSCANR10PointCloudI8PointXYZEdi"><code class="docutils literal notranslate"><span class="pre">DBSCAN()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv47DBSCAN2R10PointCloudI8PointXYZEdi"><code class="docutils literal notranslate"><span class="pre">DBSCAN2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv426color_cones_without_cameraRK10PointCloudI8PointXYZE"><code class="docutils literal notranslate"><span class="pre">color_cones_without_camera()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv417run_pipeline_darkR10PointCloudI8PointXYZEdiddidiRKN6rclcpp6LoggerE"><code class="docutils literal notranslate"><span class="pre">run_pipeline_dark()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv412run_pipelineR10PointCloudI8PointXYZEdiddidiRKN6rclcpp6LoggerE"><code class="docutils literal notranslate"><span class="pre">run_pipeline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv46radial"><code class="docutils literal notranslate"><span class="pre">radial</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6radial5angleE"><code class="docutils literal notranslate"><span class="pre">angle</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6radial6radiusE"><code class="docutils literal notranslate"><span class="pre">radius</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6radial1zE"><code class="docutils literal notranslate"><span class="pre">z</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv4St"><code class="docutils literal notranslate"><span class="pre">std</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv43pcl"><code class="docutils literal notranslate"><span class="pre">pcl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="coloring_module.html">Perceptions Coloring Module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">CMR Driverless Perceptions</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api_reference.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Perceptions LiDAR Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source/implementation/lidar_module.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="perceptions-lidar-module">
+<h1>Perceptions LiDAR Module<a class="headerlink" href="#perceptions-lidar-module" title="Link to this heading"></a></h1>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c._USE_MATH_DEFINES">
+<span class="target" id="CMR__CPP__Pipeline_8cpp_1a525335710b53cb064ca56b936120431e"></span><span class="sig-name descname"><span class="n"><span class="pre">_USE_MATH_DEFINES</span></span></span><a class="headerlink" href="#c._USE_MATH_DEFINES" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv48radial_t">
+<span id="_CPPv38radial_t"></span><span id="_CPPv28radial_t"></span><span id="radial_t"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1a1298c2d4177a95bf81386614feb957e3"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv46radial" title="radial"><span class="n"><span class="pre">radial</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">radial_t</span></span></span><a class="headerlink" href="#_CPPv48radial_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Radial struct for points. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv412point2radial8PointXYZ">
+<span id="_CPPv312point2radial8PointXYZ"></span><span id="_CPPv212point2radial8PointXYZ"></span><span id="point2radial__PointXYZ"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1a5da8b8a2ab5f5b8ea714601657fbb79f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv48radial_t" title="radial_t"><span class="n"><span class="pre">radial_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">point2radial</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PointXYZ</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">pt</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412point2radial8PointXYZ" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts (x,y,z) to (radius,ang,z), where ang is in radians. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pt</strong> – The (x,y,z) point to convert </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the converted point </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv412radial2point8radial_t">
+<span id="_CPPv312radial2point8radial_t"></span><span id="_CPPv212radial2point8radial_t"></span><span id="radial2point__radial_t"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1a55433f48558ff3c0397cc7fe0a44a4d4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PointXYZ</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">radial2point</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv48radial_t" title="radial_t"><span class="n"><span class="pre">radial_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">rd</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412radial2point8radial_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts (radius,ang,z) to (x,y,z), where ang is in radians. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rd</strong> – The (radius,ang,z) point to convert </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the converted point </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv410min_height6vectorI8radial_tE">
+<span id="_CPPv310min_height6vectorI8radial_tE"></span><span id="_CPPv210min_height6vectorI8radial_tE"></span><span id="min_height__vector:radial_t:"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1a350017a41589e4efedff158aa6a6e1b7"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv48radial_t" title="radial_t"><span class="n"><span class="pre">radial_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">min_height</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48radial_t" title="radial_t"><span class="n"><span class="pre">radial_t</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bin</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv410min_height6vectorI8radial_tE" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the minimum point in a bin. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bin</strong> – The bin to search </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the point with the lowest z </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414GraceAndConrad10PointCloudI8PointXYZEdid">
+<span id="_CPPv314GraceAndConrad10PointCloudI8PointXYZEdid"></span><span id="_CPPv214GraceAndConrad10PointCloudI8PointXYZEdid"></span><span id="GraceAndConrad__PointCloud:PointXYZ:.double.i.double"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1a2cb979ffdd82621e9536054435c9bb23"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GraceAndConrad</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cloud</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">alpha</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">num_bins</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">height_threshold</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414GraceAndConrad10PointCloudI8PointXYZEdid" title="Link to this definition"></a><br /></dt>
+<dd><p>Function implementing the GraceAndConrad algorithm. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cloud</strong> – The input vector of rectangular points to parse </p></li>
+<li><p><strong>alpha</strong> – The size of each segment (radians) </p></li>
+<li><p><strong>num_bins</strong> – The number of bins per segment </p></li>
+<li><p><strong>height_threshold</strong> – Keep all points this distance above the best fit line </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A point cloud of ground-filtered points </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417euclideanDistanceRK8PointXYZRK8PointXYZ">
+<span id="_CPPv317euclideanDistanceRK8PointXYZRK8PointXYZ"></span><span id="_CPPv217euclideanDistanceRK8PointXYZRK8PointXYZ"></span><span id="euclideanDistance__PointXYZCR.PointXYZCR"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1ac22081d10dce89c46ca4c2508a3a3a67"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">euclideanDistance</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">PointXYZ</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">PointXYZ</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417euclideanDistanceRK8PointXYZRK8PointXYZ" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates Euclidean distance between two PointXYZ. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411regionQueryR10PointCloudI8PointXYZERK8PointXYZd">
+<span id="_CPPv311regionQueryR10PointCloudI8PointXYZERK8PointXYZd"></span><span id="_CPPv211regionQueryR10PointCloudI8PointXYZERK8PointXYZd"></span><span id="regionQuery__PointCloud:PointXYZ:R.PointXYZCR.double"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1a76481b130a0413b3525a788692cce1ba"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">regionQuery</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cloud</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">PointXYZ</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411regionQueryR10PointCloudI8PointXYZERK8PointXYZd" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns indices of points in cloud that are within epsilon of point. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413expandClusterR10PointCloudI8PointXYZER6vectorIbER6vectorIiEiR6vectorIiEidi">
+<span id="_CPPv313expandClusterR10PointCloudI8PointXYZER6vectorIbER6vectorIiEiR6vectorIiEidi"></span><span id="_CPPv213expandClusterR10PointCloudI8PointXYZER6vectorIbER6vectorIiEiR6vectorIiEidi"></span><span id="expandCluster__PointCloud:PointXYZ:R.vector:b:R.vector:i:R.i.vector:i:R.i.double.i"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1ae35c91df2078d0898756a075ff7d8e04"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">expandCluster</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cloud</span></span>, <span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">visited</span></span>, <span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cluster</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">point_idx</span></span>, <span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">neighbors</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">cluster_id</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">min_points</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413expandClusterR10PointCloudI8PointXYZER6vectorIbER6vectorIiEiR6vectorIiEidi" title="Link to this definition"></a><br /></dt>
+<dd><p>Expands the cluster by checking neighbors and assigning them as needed. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416computeCentroidsR10PointCloudI8PointXYZERK13unordered_mapIi6vectorIiEE">
+<span id="_CPPv316computeCentroidsR10PointCloudI8PointXYZERK13unordered_mapIi6vectorIiEE"></span><span id="_CPPv216computeCentroidsR10PointCloudI8PointXYZERK13unordered_mapIi6vectorIiEE"></span><span id="computeCentroids__PointCloud:PointXYZ:R.unordered_map:i.vector:i::CR"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1abe534d631147feb1a2e2e248599b422f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computeCentroids</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cloud</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">clusters</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416computeCentroidsR10PointCloudI8PointXYZERK13unordered_mapIi6vectorIiEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes centroids for the clusters. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv46DBSCANR10PointCloudI8PointXYZEdi">
+<span id="_CPPv36DBSCANR10PointCloudI8PointXYZEdi"></span><span id="_CPPv26DBSCANR10PointCloudI8PointXYZEdi"></span><span id="DBSCAN__PointCloud:PointXYZ:R.double.i"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1a5bb0f85f02287ddfeadef0f3b18e531e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DBSCAN</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cloud</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">min_points</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv46DBSCANR10PointCloudI8PointXYZEdi" title="Link to this definition"></a><br /></dt>
+<dd><p>Implementation of Density-Based Spatial Clustering of Applications with Noise (DBSCAN) to calculate cone centroids. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cloud</strong> – pointcloud </p></li>
+<li><p><strong>epsilon</strong> – neighborhood radius to search for each point </p></li>
+<li><p><strong>min_points</strong> – minimum number of points in a neighborhood to continute a dense cluster </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Clustered pointcloud. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv47DBSCAN2R10PointCloudI8PointXYZEdi">
+<span id="_CPPv37DBSCAN2R10PointCloudI8PointXYZEdi"></span><span id="_CPPv27DBSCAN2R10PointCloudI8PointXYZEdi"></span><span id="DBSCAN2__PointCloud:PointXYZ:R.double.i"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1a65cc4c4b6206a8469602e9ec8dccdd7b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DBSCAN2</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cloud</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">min_points</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv47DBSCAN2R10PointCloudI8PointXYZEdi" title="Link to this definition"></a><br /></dt>
+<dd><p>Implementation of Density-Based Spatial Clustering of Applications with Noise (DBSCAN) used for secondary filtering to get rid of extraneous clusters outside of cones. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cloud</strong> – pointcloud </p></li>
+<li><p><strong>epsilon</strong> – neighborhood radius to search for each point </p></li>
+<li><p><strong>min_points</strong> – minimum number of points in a neighborhood to continute a dense cluster </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Clustered pointcloud. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426color_cones_without_cameraRK10PointCloudI8PointXYZE">
+<span id="_CPPv326color_cones_without_cameraRK10PointCloudI8PointXYZE"></span><span id="_CPPv226color_cones_without_cameraRK10PointCloudI8PointXYZE"></span><span id="color_cones_without_camera__PointCloud:PointXYZ:CR"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1a6c5bb975d914eb60b0cb8abfab42514a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">interfaces</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ConeArray</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">color_cones_without_camera</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cloud</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426color_cones_without_cameraRK10PointCloudI8PointXYZE" title="Link to this definition"></a><br /></dt>
+<dd><p>Cone coloring implementation that uses a geometric approach to classifying cone colors. Point to pixel is not used. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417run_pipeline_darkR10PointCloudI8PointXYZEdiddidiRKN6rclcpp6LoggerE">
+<span id="_CPPv317run_pipeline_darkR10PointCloudI8PointXYZEdiddidiRKN6rclcpp6LoggerE"></span><span id="_CPPv217run_pipeline_darkR10PointCloudI8PointXYZEdiddidiRKN6rclcpp6LoggerE"></span><span id="run_pipeline_dark__PointCloud:PointXYZ:R.double.i.double.double.i.double.i.rclcpp::LoggerCR"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1a4f0f14404f3ecf954dd83d1fb1a780b8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">interfaces</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ConeArray</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">run_pipeline_dark</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cloud</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">alpha</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">num_bins</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">height_threshold</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">min_points</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon2</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">min_points2</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Logger</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">logger</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417run_pipeline_darkR10PointCloudI8PointXYZEdiddidiRKN6rclcpp6LoggerE" title="Link to this definition"></a><br /></dt>
+<dd><p>Perceptions pipeline implementation without cameras (geometric coloring). </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv412run_pipelineR10PointCloudI8PointXYZEdiddidiRKN6rclcpp6LoggerE">
+<span id="_CPPv312run_pipelineR10PointCloudI8PointXYZEdiddidiRKN6rclcpp6LoggerE"></span><span id="_CPPv212run_pipelineR10PointCloudI8PointXYZEdiddidiRKN6rclcpp6LoggerE"></span><span id="run_pipeline__PointCloud:PointXYZ:R.double.i.double.double.i.double.i.rclcpp::LoggerCR"></span><span class="target" id="CMR__CPP__Pipeline_8cpp_1a53d26bd8c189e2b625e2c1242a9b1fe9"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">run_pipeline</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PointCloud</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">PointXYZ</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cloud</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">alpha</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">num_bins</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">height_threshold</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">min_points</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon2</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">min_points2</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">rclcpp</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Logger</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">logger</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412run_pipelineR10PointCloudI8PointXYZEdiddidiRKN6rclcpp6LoggerE" title="Link to this definition"></a><br /></dt>
+<dd><p>Main Perceptions pipline function. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cloud</strong> – pointcloud </p></li>
+<li><p><strong>alpha</strong> – GraceAndConrad parameter </p></li>
+<li><p><strong>height_threshold</strong> – GraceAndConrad parameter </p></li>
+<li><p><strong>epsilon</strong> – DBSCAN parameter </p></li>
+<li><p><strong>min_points</strong> – DBSCAN parameter </p></li>
+<li><p><strong>epsilon2</strong> – DBSCAN2 parameter </p></li>
+<li><p><strong>min_points2</strong> – DBSCAN2 parameter </p></li>
+<li><p><strong>logger</strong> – ROS2 logger object for consistant logging </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv46radial">
+<span id="_CPPv36radial"></span><span id="_CPPv26radial"></span><span id="radial"></span><span class="target" id="structradial"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">radial</span></span></span><a class="headerlink" href="#_CPPv46radial" title="Link to this definition"></a><br /></dt>
+<dd><p>Radial struct for points. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N6radial5angleE">
+<span id="_CPPv3N6radial5angleE"></span><span id="_CPPv2N6radial5angleE"></span><span id="radial::angle__double"></span><span class="target" id="structradial_1aa95b7615a058ef6c9138ed718dbd8e43"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">angle</span></span></span><a class="headerlink" href="#_CPPv4N6radial5angleE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N6radial6radiusE">
+<span id="_CPPv3N6radial6radiusE"></span><span id="_CPPv2N6radial6radiusE"></span><span id="radial::radius__double"></span><span class="target" id="structradial_1a291d97c034828ebe096891db5a763108"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">radius</span></span></span><a class="headerlink" href="#_CPPv4N6radial6radiusE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N6radial1zE">
+<span id="_CPPv3N6radial1zE"></span><span id="_CPPv2N6radial1zE"></span><span id="radial::z__double"></span><span class="target" id="structradial_1a701242383c0deaae2163442d3508596c"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">z</span></span></span><a class="headerlink" href="#_CPPv4N6radial1zE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4St">
+<span id="_CPPv3St"></span><span id="_CPPv2St"></span><span id="std"></span><span class="target" id="namespacestd"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">std</span></span></span><a class="headerlink" href="#_CPPv4St" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv43pcl">
+<span id="_CPPv33pcl"></span><span id="_CPPv23pcl"></span><span id="pcl"></span><span class="target" id="namespacepcl"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pcl</span></span></span><a class="headerlink" href="#_CPPv43pcl" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api_reference.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="coloring_module.html" class="btn btn-neutral float-right" title="Perceptions Coloring Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Arya Lohia.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
