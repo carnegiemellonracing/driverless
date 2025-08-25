@@ -1,0 +1,193 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software Architecture &mdash; CMR Driverless Software 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            CMR Driverless Software
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Software Architecture</a><ul>
+<li><a class="reference internal" href="#system-overview">System Overview</a></li>
+<li><a class="reference internal" href="#node-architecture">Node Architecture</a></li>
+<li><a class="reference internal" href="#startup-procedure">Startup Procedure</a></li>
+<li><a class="reference internal" href="#heartbeat-system">Heartbeat System</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">CMR Driverless Software</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Software Architecture</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="software-architecture">
+<h1>Software Architecture<a class="headerlink" href="#software-architecture" title="Link to this heading"></a></h1>
+<p>Our autonomous system operates on Ubuntu 20.04 with ROS2 Foxy. Our pipeline uses a distributed node-based approach where individual components communicate through the ROS2 middleware, enabling scalable and maintainable system design.</p>
+<section id="system-overview">
+<h2>System Overview<a class="headerlink" href="#system-overview" title="Link to this heading"></a></h2>
+<a class="reference internal image-reference" href="_images/data-flow.png"><img alt="Data Flow Graph" src="_images/data-flow.png" style="width: 650px;" />
+</a>
+</section>
+<section id="node-architecture">
+<h2>Node Architecture<a class="headerlink" href="#node-architecture" title="Link to this heading"></a></h2>
+<p>Our software follows the standard ROS2 publisher-subscriber communication pattern:</p>
+<p><strong>Publishers</strong></p>
+<ul class="simple">
+<li><p>Sensor nodes publish raw data to specific topics</p></li>
+<li><p>Processing nodes publish filtered/processed data</p></li>
+<li><p>Control nodes publish command messages</p></li>
+</ul>
+<p><strong>Subscribers</strong></p>
+<ul class="simple">
+<li><p>Processing nodes subscribe to sensor data topics</p></li>
+<li><p>Decision-making nodes subscribe to processed data</p></li>
+</ul>
+<p>This decoupled architecture allows nodes to be developed, tested, and deployed independently while maintaining system-wide coordination.</p>
+</section>
+<section id="startup-procedure">
+<h2>Startup Procedure<a class="headerlink" href="#startup-procedure" title="Link to this heading"></a></h2>
+<p>The system launches automatically when the vehicle’s low voltage (LV) system powers the compute unit:</p>
+<ol class="arabic simple">
+<li><p><strong>Power-On</strong>: LV system activates, powering the compute</p></li>
+<li><p><strong>Boot Sequence</strong>: Ubuntu 20.04 loads and initializes</p></li>
+<li><p><strong>CRON Launch</strong>: System startup triggers CRON job on &#64;reboot</p></li>
+<li><p><strong>TMUX Session</strong>: Main software pipeline launches within a persistent TMUX session</p></li>
+<li><p><strong>Node Initialization</strong>: All ROS2 nodes start in predetermined order</p></li>
+<li><p><strong>System Ready</strong>: Heartbeat monitoring begins once all nodes are active</p></li>
+</ol>
+<p>The CRON job ensures the system launches reliably without manual intervention, while TMUX provides session persistence and easy debugging access.</p>
+</section>
+<section id="heartbeat-system">
+<h2>Heartbeat System<a class="headerlink" href="#heartbeat-system" title="Link to this heading"></a></h2>
+<p>A dedicated heartbeat monitor ensures system reliability by continuously checking node health:</p>
+<p><strong>Monitoring Cycle</strong></p>
+<ul class="simple">
+<li><p>Heartbeat pulses every 5 seconds</p></li>
+<li><p>Checks for node presence in ROS2 graph</p></li>
+<li><p>Verifies active publishing on expected topics</p></li>
+<li><p>Restarts failed nodes automatically</p></li>
+</ul>
+<p><strong>Pseudocode Reference</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>HEARTBEAT MONITOR:
+
+REPEAT every 5 seconds:
+    FOR each critical node:
+        IF node does not exist in ROS2 graph:
+            Log error message
+            Restart the node
+            Continue to next node
+
+        FOR each expected topic from this node:
+            IF topic is not publishing data:
+                Log error message
+                Restart the node
+                Break out of topic loop
+
+    Log &quot;All nodes healthy&quot; message
+
+
+RESTART NODE PROCEDURE:
+    Log restart message
+    Kill the node process
+    Wait 2 seconds for cleanup
+    Launch the node again
+
+
+CHECK NODE EXISTS:
+    Get list of all active nodes
+    Return true if node name is in the list
+
+
+CHECK TOPIC PUBLISHING:
+    Echo topic to see if it has received messages recently
+    Return true if message rate is greater than 0
+</pre></div>
+</div>
+<p>This monitoring system ensures high availability and automatic recovery from node failures, critical for autonomous start up.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Matthew Rao.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
