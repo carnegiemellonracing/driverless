@@ -122,7 +122,7 @@ PointCloud<PointXYZ> DBSCAN(PointCloud<PointXYZ> &cloud, double epsilon, int min
   return computeCentroids(cloud, clusters);
 }
 
-//Use for secondary filtering to get rid of extraneous clusters outside of cones
+// Use for secondary filtering to get rid of extraneous clusters outside of cones
 PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon, int min_points) {
   // visited[i] indicates whether the point has been visited.
   // cluster[i] = -1 for unclassified, 0 for noise, >0 for cluster ID.
@@ -145,6 +145,6 @@ PointCloud<PointXYZ> DBSCAN2(PointCloud<PointXYZ> &cloud, double epsilon, int mi
       expandCluster(cloud, visited, cluster, static_cast<int>(i), neighbors, cluster_id, epsilon, min_points);
     }
   }
-
+  
   return cloud;
 }

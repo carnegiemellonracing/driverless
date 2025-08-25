@@ -105,8 +105,9 @@ PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> &cloud, double alpha,
     PointXYZ pt = cloud.points[i];
     const radial_t rd = point2radial(pt);
 
-    if (pt.y > 1.5 || pt.y < -1.75) continue; // MOVIA filter objects outside of lane bc breezeway is very noisy
-    // if (pt.x > 2. || pt.x < -1.75) continue; // HESAI filter objects outside of lane bc breezeway is very noisy
+    // if (pt.y > 1.5 || pt.y < -2.75) continue; // MOVIA filter objects outside of lane bc breezeway is very noisy
+    // if (rd.radius < 2.) continue; // MOVIA ignore all points closer than 2 meters (car envelope)
+    if (pt.x > 2. || pt.x < -1.75) continue; // HESAI filter objects outside of lane bc breezeway is very noisy
 
     if (rd.radius < radius_max && rd.angle >= fov_angle_min && rd.angle <= fov_angle_max) {
       int seg_index = static_cast<int>(std::floor((rd.angle - fov_angle_min) * inv_alpha));

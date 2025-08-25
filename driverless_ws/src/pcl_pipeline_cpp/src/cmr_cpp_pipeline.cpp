@@ -66,8 +66,8 @@ class CMRCppPipelineNode : public rclcpp::Node {
     rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr hesai_lidar_sub_;
 
     double alpha_ = .1;
-    int num_bins_ = 10;
-    double height_threshold_ = .13;
+    int num_bins_ = 3;
+    double height_threshold_ = .12;
 
     double epsilon_ = .2;
     int min_points_ = 3;
