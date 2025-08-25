@@ -2,14 +2,26 @@ cmake_minimum_required(VERSION 3.8)
 project(pcl_pipeline_cpp)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra) # -Wpedantic)
 endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(interfaces REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(PCL REQUIRED)
+find_package(pcl_conversions REQUIRED)
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
 
-add_executable(cmr_cpp_pipeline src/cmr_cpp_pipeline.cpp)
+add_executable(cmr_cpp_pipeline 
+  src/cmr_cpp_pipeline.cpp 
+  src/clustering.cpp 
+  src/ground_filtering.cpp
+)
+
 target_include_directories(cmr_cpp_pipeline PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
@@ -18,6 +30,8 @@ ament_target_dependencies(
   cmr_cpp_pipeline
   "rclcpp"
   "sensor_msgs"
+  "PCL"
+  "pcl_conversions"
   "interfaces"
 )
 
