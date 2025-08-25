@@ -2,9 +2,9 @@
 Builds Directory Package
 Contains modules for build directory
 """
-from directories.workspace.build_controls import BuildControlsModule
-from directories.workspace.build_point_to_pixel import BuildP2PModule
-from directories.workspace.remove_directory import RemoveDirectoryModule
+from app.directories.workspace.build_controls import BuildControlsModule
+from app.directories.workspace.build_point_to_pixel import BuildP2PModule
+from app.directories.workspace.remove_directory import RemoveDirectoryModule
 from utils.types import Directory
 
 description = Directory(

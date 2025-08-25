@@ -9,5 +9,5 @@ BuildP2PModule = Module(
     title="Build Point to Pixel",
     description="Run ./build_point_to_pixel",
     command=_build_point_to_pixel_command,
-    icon='build_controls.png'
+    icon='build.png'
 )

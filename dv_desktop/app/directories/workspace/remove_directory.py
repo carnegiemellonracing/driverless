@@ -11,5 +11,5 @@ RemoveDirectoryModule = Module(
     title="Remove Directories",
     description="Remove build, log, install directories from driverless_ws",
     command=_remove_directory_command,
-    icon='remove_directory.png'
+    icon='trash-2.png'
 )

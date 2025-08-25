@@ -1,6 +1,6 @@
 from utils.types import Module
 import tkinter as tk
-from ui.colors import get_colors
+from app.ui.colors import get_colors
 
 def _settings_command():
     """Open settings window"""

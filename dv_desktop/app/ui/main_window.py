@@ -8,9 +8,9 @@ import logging
 
 from config.app_config import AppSettings
 from utils.directory_utils import DirectoryManager
-from ui.sidebar import Sidebar
-from ui.content_area import ContentArea
-from ui.colors import get_colors
+from .sidebar import Sidebar
+from .content_area import ContentArea
+from .colors import get_colors
 
 class DVDesktop:
     """Main application window class"""

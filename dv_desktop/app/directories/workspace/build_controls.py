@@ -2,7 +2,7 @@ from utils.types import Module
 from utils.platform_utils import center_window
 import subprocess
 import tkinter as tk
-from ui.colors import get_colors
+from app.ui.colors import get_colors
 
 FLAGS = [
     ("Enable Asserts", "--asserts"),
@@ -78,5 +78,5 @@ BuildControlsModule = Module(
     title="Build Controls",
     description="Run ./build_controls with configurable flag options",
     command=_build_controls_command,
-    icon='build_controls.png'
+    icon='build.png'
 )

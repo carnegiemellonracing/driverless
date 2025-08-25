@@ -5,7 +5,7 @@ Defines the structure and content of application directories
 
 from typing import Dict, List, Any
 from utils.types import Module
-from directories.test import description
+from .constants import PROJECT_ROOT
 import importlib
 import os
 
@@ -16,8 +16,8 @@ class DirectoryManager:
     def __init__(self):
         # Get all directory names (excluding __pycache__ and other non-Python files)
         all_directories = [
-            d for d in os.listdir("directories") 
-            if os.path.isdir(os.path.join("directories", d)) 
+            d for d in os.listdir(os.path.join(PROJECT_ROOT, "app/directories"))
+            if os.path.isdir(os.path.join(PROJECT_ROOT, "app/directories", d)) 
             and not d.startswith('__')
             and not d.startswith('.')
         ]
@@ -27,7 +27,7 @@ class DirectoryManager:
         for directory_name in all_directories:
             try:
                 # Dynamically import the module
-                module = importlib.import_module(f"directories.{directory_name}")
+                module = importlib.import_module(f"app.directories.{directory_name}")
                 
                 # Check if the module has a description attribute
                 if hasattr(module, 'description'):

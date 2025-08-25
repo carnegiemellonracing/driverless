@@ -3,7 +3,7 @@ from utils.types import Module
 def _text_editor_command():
         """Open text editor window"""
         import tkinter as tk
-        from ui.colors import get_colors
+        from app.ui.colors import get_colors
         
         colors = get_colors()
         editor_window = tk.Toplevel()
